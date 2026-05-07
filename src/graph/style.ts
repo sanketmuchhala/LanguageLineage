@@ -99,9 +99,8 @@ export function getCytoscapeStyle(
 
         // Display logo, carefully sized to fit within the circular node
         'background-image': 'data(logoUrl)' as any,
-        'background-fit': 'contain' as any,
-        'background-width': '60%' as any,
-        'background-height': '60%' as any,
+        'background-width': '65%' as any,
+        'background-height': '65%' as any,
         'background-position-x': '50%' as any,
         'background-position-y': '50%' as any,
         'background-repeat': 'no-repeat' as any,
