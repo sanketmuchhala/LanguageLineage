@@ -53,101 +53,15 @@
   
 
   <h2>Relationship Graph</h2>
-<p style="font-size:13px;color:var(--text-tertiary);margin-bottom:12px">Click any node to navigate to that language's page.</p>
-<div id="graph-viz" style="width:100%;height:500px;background:#0d0d0f;border:1px solid rgba(245,240,232,0.08);border-radius:12px;margin-bottom:8px"></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
-<script>
-(function() {
-  var data = {"nodes":[{"data":{"id":"tool:mrustc","label":"mrustc","cluster":"tools","isCenter":true,"href":"/tools/mrustc"}},{"data":{"id":"lang:cxx","label":"C++","cluster":"systems","isCenter":false,"href":"/languages/cxx"}}],"edges":[{"data":{"id":"e0","source":"lang:cxx","target":"tool:mrustc","rel":"compiler_written_in"}}]};
-  var CC = {"c_family":"#e07a5f","jvm_dotnet":"#7a9e7e","js_engines":"#c9a87c","functional":"#9b7bb8","systems":"#5a8a7d","scripting":"#8b9a7d","compilers":"#9a958c","other":"#8a857c","clr":"#7a8aa8","dynamic":"#7da88a","historical":"#b8a07a","jvm":"#6b8ba8","roots":"#9a958c","scientific":"#6a9aa8","tools":"#8a9598"};
-  var RC = {"compiler_written_in":"#c9a87c","runtime_written_in":"#8b9a7d","bootstrap_written_in":"#7da88a","rewritten_in":"#b8a07a","influenced":"#9b7bb8","transpiled_to":"#e07a5f"};
-  var centerId = "tool:mrustc";
-
-  var cy = cytoscape({
-    container: document.getElementById('graph-viz'),
-    elements: data.nodes.concat(data.edges),
-    style: [
-      {
-        selector: 'node',
-        style: {
-          'width': 44, 'height': 44,
-          'background-color': function(ele) { return CC[ele.data('cluster')] || '#8a857c'; },
-          'border-width': 2, 'border-color': '#00000030',
-          'label': 'data(label)',
-          'color': '#f5f0e8',
-          'font-size': 11,
-          'font-weight': 600,
-          'text-valign': 'bottom',
-          'text-halign': 'center',
-          'text-margin-y': 6,
-          'text-outline-width': 2,
-          'text-outline-color': '#0a0a0b',
-          'text-outline-opacity': 0.9,
-          'cursor': 'pointer',
-        }
-      },
-      {
-        selector: 'node[?isCenter]',
-        style: {
-          'width': 70, 'height': 70,
-          'background-color': '#c9a87c',
-          'border-width': 3,
-          'border-color': '#dfc4a0',
-          'font-size': 13,
-          'font-weight': 700,
-          'z-index': 10,
-        }
-      },
-      {
-        selector: 'node:hover',
-        style: { 'border-color': '#c9a87c', 'border-width': 3, 'overlay-opacity': 0.08, 'overlay-color': '#c9a87c' }
-      },
-      {
-        selector: 'edge',
-        style: {
-          'width': 1.5,
-          'line-color': function(ele) { return RC[ele.data('rel')] || '#555'; },
-          'target-arrow-color': function(ele) { return RC[ele.data('rel')] || '#555'; },
-          'target-arrow-shape': 'triangle',
-          'curve-style': 'bezier',
-          'opacity': 0.7,
-          'arrow-scale': 0.8,
-        }
-      },
-      {
-        selector: 'edge:hover',
-        style: { 'width': 2.5, 'opacity': 1, 'z-index': 5 }
-      }
-    ],
-    layout: {
-      name: 'cose',
-      animate: false,
-      randomize: true,
-      nodeRepulsion: function() { return 8000; },
-      idealEdgeLength: function() { return 120; },
-      gravity: 0.4,
-      numIter: 500,
-      padding: 40,
-    },
-    userZoomingEnabled: true,
-    userPanningEnabled: true,
-    minZoom: 0.3,
-    maxZoom: 3,
-  });
-
-  cy.on('tap', 'node', function(evt) {
-    var href = evt.target.data('href');
-    if (href) window.location.href = href;
-  });
-
-  cy.on('mouseover', 'node', function(evt) {
-    document.getElementById('graph-viz').style.cursor = 'pointer';
-  });
-  cy.on('mouseout', 'node', function(evt) {
-    document.getElementById('graph-viz').style.cursor = 'default';
-  });
-})();
-</script>
+<p style="font-size:13px;color:var(--text-tertiary);margin-bottom:12px">All directly connected languages. Click any node to navigate to its page.</p>
+<iframe
+  src="/embed?lang=mrustc"
+  loading="lazy"
+  width="100%"
+  height="500"
+  style="border:none;border-radius:12px;display:block;background:#0a0a0b"
+  title="mrustc relationship graph"
+></iframe>
 
   
 <h2>Frequently Asked Questions</h2>

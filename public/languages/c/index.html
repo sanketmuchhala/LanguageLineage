@@ -86,101 +86,15 @@
 <li><a href="/languages/ada">Ada</a> — Ada influenced by C's systems programming</li></ul>
 
   <h2>Relationship Graph</h2>
-<p style="font-size:13px;color:var(--text-tertiary);margin-bottom:12px">Click any node to navigate to that language's page.</p>
-<div id="graph-viz" style="width:100%;height:500px;background:#0d0d0f;border:1px solid rgba(245,240,232,0.08);border-radius:12px;margin-bottom:8px"></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
-<script>
-(function() {
-  var data = {"nodes":[{"data":{"id":"lang:c","label":"C","cluster":"systems","isCenter":true,"href":"/languages/c"}},{"data":{"id":"lang:b","label":"B","cluster":"historical","isCenter":false,"href":"/languages/b"}},{"data":{"id":"lang:algol","label":"ALGOL","cluster":"historical","isCenter":false,"href":"/languages/algol"}},{"data":{"id":"lang:cxx","label":"C++","cluster":"systems","isCenter":false,"href":"/languages/cxx"}},{"data":{"id":"lang:objective_c","label":"Objective-C","cluster":"systems","isCenter":false,"href":"/languages/objective-c"}},{"data":{"id":"lang:perl","label":"Perl","cluster":"dynamic","isCenter":false,"href":"/languages/perl"}},{"data":{"id":"lang:lua","label":"Lua","cluster":"dynamic","isCenter":false,"href":"/languages/lua"}},{"data":{"id":"lang:python","label":"Python","cluster":"dynamic","isCenter":false,"href":"/languages/python"}},{"data":{"id":"lang:php","label":"PHP","cluster":"dynamic","isCenter":false,"href":"/languages/php"}},{"data":{"id":"lang:ruby","label":"Ruby","cluster":"dynamic","isCenter":false,"href":"/languages/ruby"}},{"data":{"id":"lang:r","label":"R","cluster":"scientific","isCenter":false,"href":"/languages/r"}},{"data":{"id":"lang:go","label":"Go","cluster":"systems","isCenter":false,"href":"/languages/go"}},{"data":{"id":"lang:rust","label":"Rust","cluster":"systems","isCenter":false,"href":"/languages/rust"}},{"data":{"id":"lang:ocaml","label":"OCaml","cluster":"functional","isCenter":false,"href":"/languages/ocaml"}},{"data":{"id":"lang:haskell","label":"Haskell","cluster":"functional","isCenter":false,"href":"/languages/haskell"}},{"data":{"id":"tool:gcc","label":"GCC","cluster":"tools","isCenter":false,"href":"/tools/gcc"}},{"data":{"id":"tool:beam","label":"BEAM VM","cluster":"tools","isCenter":false,"href":"/tools/beam"}},{"data":{"id":"lang:javascript","label":"JavaScript","cluster":"dynamic","isCenter":false,"href":"/languages/javascript"}},{"data":{"id":"tool:javascriptcore","label":"JavaScriptCore","cluster":"tools","isCenter":false,"href":"/tools/javascriptcore"}},{"data":{"id":"tool:dotnet_runtime","label":".NET Runtime","cluster":"tools","isCenter":false,"href":"/tools/dotnet-runtime"}},{"data":{"id":"lang:swift","label":"Swift","cluster":"systems","isCenter":false,"href":"/languages/swift"}},{"data":{"id":"lang:nim","label":"Nim","cluster":"systems","isCenter":false,"href":"/languages/nim"}},{"data":{"id":"lang:v","label":"V","cluster":"systems","isCenter":false,"href":"/languages/v"}},{"data":{"id":"lang:ada","label":"Ada","cluster":"systems","isCenter":false,"href":"/languages/ada"}},{"data":{"id":"tool:ghc","label":"GHC","cluster":"tools","isCenter":false,"href":"/tools/ghc"}},{"data":{"id":"lang:fortran","label":"Fortran","cluster":"historical","isCenter":false,"href":"/languages/fortran"}},{"data":{"id":"lang:d","label":"D","cluster":"systems","isCenter":false,"href":"/languages/d"}},{"data":{"id":"lang:zig","label":"Zig","cluster":"systems","isCenter":false,"href":"/languages/zig"}},{"data":{"id":"lang:julia","label":"Julia","cluster":"scientific","isCenter":false,"href":"/languages/julia"}},{"data":{"id":"lang:erlang","label":"Erlang","cluster":"functional","isCenter":false,"href":"/languages/erlang"}},{"data":{"id":"lang:cython","label":"Cython","cluster":"other","isCenter":false,"href":"/languages/cython"}},{"data":{"id":"lang:bcpl","label":"BCPL","cluster":"historical","isCenter":false,"href":"/languages/bcpl"}},{"data":{"id":"lang:algol68","label":"ALGOL 68","cluster":"other","isCenter":false,"href":"/languages/algol68"}},{"data":{"id":"lang:bash","label":"Bash","cluster":"other","isCenter":false,"href":"/languages/bash"}},{"data":{"id":"lang:awk","label":"AWK","cluster":"other","isCenter":false,"href":"/languages/awk"}},{"data":{"id":"lang:apl","label":"APL","cluster":"other","isCenter":false,"href":"/languages/apl"}},{"data":{"id":"lang:smalltalk","label":"Smalltalk","cluster":"historical","isCenter":false,"href":"/languages/smalltalk"}},{"data":{"id":"lang:ml","label":"ML","cluster":"functional","isCenter":false,"href":"/languages/ml"}},{"data":{"id":"lang:scheme","label":"Scheme","cluster":"functional","isCenter":false,"href":"/languages/scheme"}},{"data":{"id":"lang:s","label":"S","cluster":"other","isCenter":false,"href":"/languages/s"}},{"data":{"id":"lang:icon","label":"Icon","cluster":"other","isCenter":false,"href":"/languages/icon"}},{"data":{"id":"lang:sh","label":"Bourne Shell","cluster":"other","isCenter":false,"href":"/languages/sh"}},{"data":{"id":"lang:matlab","label":"MATLAB","cluster":"other","isCenter":false,"href":"/languages/matlab"}},{"data":{"id":"lang:miranda","label":"Miranda","cluster":"other","isCenter":false,"href":"/languages/miranda"}},{"data":{"id":"lang:abc","label":"ABC","cluster":"other","isCenter":false,"href":"/languages/abc"}},{"data":{"id":"lang:newsqueak","label":"Newsqueak","cluster":"other","isCenter":false,"href":"/languages/newsqueak"}},{"data":{"id":"lang:modula3","label":"Modula-3","cluster":"other","isCenter":false,"href":"/languages/modula3"}},{"data":{"id":"lang:tcl","label":"Tcl","cluster":"other","isCenter":false,"href":"/languages/tcl"}},{"data":{"id":"lang:j","label":"J","cluster":"other","isCenter":false,"href":"/languages/j"}},{"data":{"id":"lang:alef","label":"Alef","cluster":"other","isCenter":false,"href":"/languages/alef"}},{"data":{"id":"lang:dylan","label":"Dylan","cluster":"other","isCenter":false,"href":"/languages/dylan"}},{"data":{"id":"lang:guile","label":"GNU Guile","cluster":"other","isCenter":false,"href":"/languages/guile"}},{"data":{"id":"lang:limbo","label":"Limbo","cluster":"other","isCenter":false,"href":"/languages/limbo"}},{"data":{"id":"lang:fortran95","label":"Fortran 95","cluster":"other","isCenter":false,"href":"/languages/fortran95"}},{"data":{"id":"lang:cyclone","label":"Cyclone","cluster":"other","isCenter":false,"href":"/languages/cyclone"}},{"data":{"id":"lang:luajit","label":"LuaJIT","cluster":"other","isCenter":false,"href":"/languages/luajit"}},{"data":{"id":"lang:pharo","label":"Pharo","cluster":"other","isCenter":false,"href":"/languages/pharo"}}],"edges":[{"data":{"id":"e0","source":"lang:b","target":"lang:c","rel":"influenced"}},{"data":{"id":"e1","source":"lang:b","target":"lang:c","rel":"bootstrap_written_in"}},{"data":{"id":"e2","source":"lang:algol","target":"lang:c","rel":"influenced"}},{"data":{"id":"e3","source":"lang:c","target":"lang:cxx","rel":"influenced"}},{"data":{"id":"e4","source":"lang:c","target":"lang:objective_c","rel":"influenced"}},{"data":{"id":"e5","source":"lang:c","target":"lang:perl","rel":"runtime_written_in"}},{"data":{"id":"e6","source":"lang:c","target":"lang:lua","rel":"runtime_written_in"}},{"data":{"id":"e7","source":"lang:c","target":"lang:python","rel":"runtime_written_in"}},{"data":{"id":"e8","source":"lang:c","target":"lang:php","rel":"runtime_written_in"}},{"data":{"id":"e9","source":"lang:c","target":"lang:ruby","rel":"runtime_written_in"}},{"data":{"id":"e10","source":"lang:c","target":"lang:r","rel":"runtime_written_in"}},{"data":{"id":"e11","source":"lang:c","target":"lang:go","rel":"compiler_written_in"}},{"data":{"id":"e12","source":"lang:c","target":"lang:rust","rel":"compiler_written_in"}},{"data":{"id":"e13","source":"lang:c","target":"lang:ocaml","rel":"runtime_written_in"}},{"data":{"id":"e14","source":"lang:c","target":"lang:haskell","rel":"runtime_written_in"}},{"data":{"id":"e15","source":"lang:c","target":"tool:gcc","rel":"compiler_written_in"}},{"data":{"id":"e16","source":"lang:c","target":"tool:beam","rel":"runtime_written_in"}},{"data":{"id":"e17","source":"lang:c","target":"lang:javascript","rel":"runtime_written_in"}},{"data":{"id":"e18","source":"lang:c","target":"tool:javascriptcore","rel":"runtime_written_in"}},{"data":{"id":"e19","source":"lang:c","target":"tool:dotnet_runtime","rel":"runtime_written_in"}},{"data":{"id":"e20","source":"lang:c","target":"lang:swift","rel":"compiler_written_in"}},{"data":{"id":"e21","source":"lang:nim","target":"lang:c","rel":"transpiled_to"}},{"data":{"id":"e22","source":"lang:v","target":"lang:c","rel":"transpiled_to"}},{"data":{"id":"e23","source":"lang:c","target":"lang:ada","rel":"influenced"}},{"data":{"id":"e24","source":"lang:c","target":"tool:ghc","rel":"runtime_written_in"}},{"data":{"id":"e25","source":"lang:c","target":"lang:python","rel":"influenced"}},{"data":{"id":"e26","source":"lang:fortran","target":"lang:c","rel":"influenced"}},{"data":{"id":"e27","source":"lang:c","target":"lang:d","rel":"influenced"}},{"data":{"id":"e28","source":"lang:c","target":"lang:zig","rel":"influenced"}},{"data":{"id":"e29","source":"lang:c","target":"lang:go","rel":"influenced"}},{"data":{"id":"e30","source":"lang:c","target":"lang:v","rel":"influenced"}},{"data":{"id":"e31","source":"lang:c","target":"lang:julia","rel":"runtime_written_in"}},{"data":{"id":"e32","source":"lang:c","target":"lang:erlang","rel":"runtime_written_in"}},{"data":{"id":"e33","source":"lang:c","target":"lang:cython","rel":"runtime_written_in"}},{"data":{"id":"e34","source":"lang:bcpl","target":"lang:c","rel":"influenced"}},{"data":{"id":"e35","source":"lang:c","target":"lang:perl","rel":"influenced"}},{"data":{"id":"e36","source":"lang:c","target":"lang:php","rel":"influenced"}},{"data":{"id":"e37","source":"lang:algol68","target":"lang:c","rel":"influenced"}},{"data":{"id":"e38","source":"lang:c","target":"lang:bash","rel":"influenced"}},{"data":{"id":"e39","source":"lang:c","target":"lang:bash","rel":"runtime_written_in"}},{"data":{"id":"e40","source":"lang:c","target":"lang:awk","rel":"influenced"}},{"data":{"id":"e41","source":"lang:c","target":"lang:apl","rel":"runtime_written_in"}},{"data":{"id":"e42","source":"lang:c","target":"lang:smalltalk","rel":"runtime_written_in"}},{"data":{"id":"e43","source":"lang:c","target":"lang:ml","rel":"runtime_written_in"}},{"data":{"id":"e44","source":"lang:c","target":"lang:scheme","rel":"runtime_written_in"}},{"data":{"id":"e45","source":"lang:c","target":"lang:s","rel":"runtime_written_in"}},{"data":{"id":"e46","source":"lang:c","target":"lang:icon","rel":"compiler_written_in"}},{"data":{"id":"e47","source":"lang:c","target":"lang:awk","rel":"runtime_written_in"}},{"data":{"id":"e48","source":"lang:c","target":"lang:sh","rel":"runtime_written_in"}},{"data":{"id":"e49","source":"lang:c","target":"lang:matlab","rel":"runtime_written_in"}},{"data":{"id":"e50","source":"lang:c","target":"lang:miranda","rel":"compiler_written_in"}},{"data":{"id":"e51","source":"lang:c","target":"lang:abc","rel":"runtime_written_in"}},{"data":{"id":"e52","source":"lang:c","target":"lang:newsqueak","rel":"compiler_written_in"}},{"data":{"id":"e53","source":"lang:c","target":"lang:modula3","rel":"compiler_written_in"}},{"data":{"id":"e54","source":"lang:c","target":"lang:tcl","rel":"runtime_written_in"}},{"data":{"id":"e55","source":"lang:c","target":"lang:j","rel":"runtime_written_in"}},{"data":{"id":"e56","source":"lang:c","target":"lang:alef","rel":"compiler_written_in"}},{"data":{"id":"e57","source":"lang:c","target":"lang:dylan","rel":"runtime_written_in"}},{"data":{"id":"e58","source":"lang:c","target":"lang:guile","rel":"runtime_written_in"}},{"data":{"id":"e59","source":"lang:c","target":"lang:limbo","rel":"compiler_written_in"}},{"data":{"id":"e60","source":"lang:c","target":"lang:fortran95","rel":"compiler_written_in"}},{"data":{"id":"e61","source":"lang:c","target":"lang:cyclone","rel":"compiler_written_in"}},{"data":{"id":"e62","source":"lang:c","target":"lang:luajit","rel":"runtime_written_in"}},{"data":{"id":"e63","source":"lang:c","target":"lang:pharo","rel":"runtime_written_in"}}]};
-  var CC = {"c_family":"#e07a5f","jvm_dotnet":"#7a9e7e","js_engines":"#c9a87c","functional":"#9b7bb8","systems":"#5a8a7d","scripting":"#8b9a7d","compilers":"#9a958c","other":"#8a857c","clr":"#7a8aa8","dynamic":"#7da88a","historical":"#b8a07a","jvm":"#6b8ba8","roots":"#9a958c","scientific":"#6a9aa8","tools":"#8a9598"};
-  var RC = {"compiler_written_in":"#c9a87c","runtime_written_in":"#8b9a7d","bootstrap_written_in":"#7da88a","rewritten_in":"#b8a07a","influenced":"#9b7bb8","transpiled_to":"#e07a5f"};
-  var centerId = "lang:c";
-
-  var cy = cytoscape({
-    container: document.getElementById('graph-viz'),
-    elements: data.nodes.concat(data.edges),
-    style: [
-      {
-        selector: 'node',
-        style: {
-          'width': 44, 'height': 44,
-          'background-color': function(ele) { return CC[ele.data('cluster')] || '#8a857c'; },
-          'border-width': 2, 'border-color': '#00000030',
-          'label': 'data(label)',
-          'color': '#f5f0e8',
-          'font-size': 11,
-          'font-weight': 600,
-          'text-valign': 'bottom',
-          'text-halign': 'center',
-          'text-margin-y': 6,
-          'text-outline-width': 2,
-          'text-outline-color': '#0a0a0b',
-          'text-outline-opacity': 0.9,
-          'cursor': 'pointer',
-        }
-      },
-      {
-        selector: 'node[?isCenter]',
-        style: {
-          'width': 70, 'height': 70,
-          'background-color': '#c9a87c',
-          'border-width': 3,
-          'border-color': '#dfc4a0',
-          'font-size': 13,
-          'font-weight': 700,
-          'z-index': 10,
-        }
-      },
-      {
-        selector: 'node:hover',
-        style: { 'border-color': '#c9a87c', 'border-width': 3, 'overlay-opacity': 0.08, 'overlay-color': '#c9a87c' }
-      },
-      {
-        selector: 'edge',
-        style: {
-          'width': 1.5,
-          'line-color': function(ele) { return RC[ele.data('rel')] || '#555'; },
-          'target-arrow-color': function(ele) { return RC[ele.data('rel')] || '#555'; },
-          'target-arrow-shape': 'triangle',
-          'curve-style': 'bezier',
-          'opacity': 0.7,
-          'arrow-scale': 0.8,
-        }
-      },
-      {
-        selector: 'edge:hover',
-        style: { 'width': 2.5, 'opacity': 1, 'z-index': 5 }
-      }
-    ],
-    layout: {
-      name: 'cose',
-      animate: false,
-      randomize: true,
-      nodeRepulsion: function() { return 8000; },
-      idealEdgeLength: function() { return 120; },
-      gravity: 0.4,
-      numIter: 500,
-      padding: 40,
-    },
-    userZoomingEnabled: true,
-    userPanningEnabled: true,
-    minZoom: 0.3,
-    maxZoom: 3,
-  });
-
-  cy.on('tap', 'node', function(evt) {
-    var href = evt.target.data('href');
-    if (href) window.location.href = href;
-  });
-
-  cy.on('mouseover', 'node', function(evt) {
-    document.getElementById('graph-viz').style.cursor = 'pointer';
-  });
-  cy.on('mouseout', 'node', function(evt) {
-    document.getElementById('graph-viz').style.cursor = 'default';
-  });
-})();
-</script>
+<p style="font-size:13px;color:var(--text-tertiary);margin-bottom:12px">All directly connected languages. Click any node to navigate to its page.</p>
+<iframe
+  src="/embed?lang=c"
+  loading="lazy"
+  width="100%"
+  height="500"
+  style="border:none;border-radius:12px;display:block;background:#0a0a0b"
+  title="C relationship graph"
+></iframe>
 
   
 <h2>Frequently Asked Questions</h2>

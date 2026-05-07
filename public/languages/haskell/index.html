@@ -78,101 +78,15 @@
 <li><a href="/languages/coffeescript">CoffeeScript</a> — Partial influence, lower confidence</li></ul>
 
   <h2>Relationship Graph</h2>
-<p style="font-size:13px;color:var(--text-tertiary);margin-bottom:12px">Click any node to navigate to that language's page.</p>
-<div id="graph-viz" style="width:100%;height:500px;background:#0d0d0f;border:1px solid rgba(245,240,232,0.08);border-radius:12px;margin-bottom:8px"></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
-<script>
-(function() {
-  var data = {"nodes":[{"data":{"id":"lang:haskell","label":"Haskell","cluster":"functional","isCenter":true,"href":"/languages/haskell"}},{"data":{"id":"lang:ml","label":"ML","cluster":"functional","isCenter":false,"href":"/languages/ml"}},{"data":{"id":"lang:elm","label":"Elm","cluster":"functional","isCenter":false,"href":"/languages/elm"}},{"data":{"id":"lang:purescript","label":"PureScript","cluster":"functional","isCenter":false,"href":"/languages/purescript"}},{"data":{"id":"lang:coffeescript","label":"CoffeeScript","cluster":"dynamic","isCenter":false,"href":"/languages/coffeescript"}},{"data":{"id":"lang:rust","label":"Rust","cluster":"systems","isCenter":false,"href":"/languages/rust"}},{"data":{"id":"lang:c","label":"C","cluster":"systems","isCenter":false,"href":"/languages/c"}},{"data":{"id":"lang:fsharp","label":"F#","cluster":"clr","isCenter":false,"href":"/languages/fsharp"}},{"data":{"id":"tool:ghc","label":"GHC","cluster":"tools","isCenter":false,"href":"/tools/ghc"}},{"data":{"id":"lang:python","label":"Python","cluster":"dynamic","isCenter":false,"href":"/languages/python"}},{"data":{"id":"lang:miranda","label":"Miranda","cluster":"other","isCenter":false,"href":"/languages/miranda"}},{"data":{"id":"lang:lisp","label":"Lisp","cluster":"functional","isCenter":false,"href":"/languages/lisp"}},{"data":{"id":"lang:scala","label":"Scala","cluster":"jvm","isCenter":false,"href":"/languages/scala"}},{"data":{"id":"lang:swift","label":"Swift","cluster":"systems","isCenter":false,"href":"/languages/swift"}},{"data":{"id":"lang:idris","label":"Idris","cluster":"other","isCenter":false,"href":"/languages/idris"}},{"data":{"id":"lang:agda","label":"Agda","cluster":"other","isCenter":false,"href":"/languages/agda"}},{"data":{"id":"lang:kotlin","label":"Kotlin","cluster":"jvm","isCenter":false,"href":"/languages/kotlin"}},{"data":{"id":"lang:typescript","label":"TypeScript","cluster":"dynamic","isCenter":false,"href":"/languages/typescript"}}],"edges":[{"data":{"id":"e0","source":"lang:ml","target":"lang:haskell","rel":"influenced"}},{"data":{"id":"e1","source":"lang:haskell","target":"lang:elm","rel":"influenced"}},{"data":{"id":"e2","source":"lang:haskell","target":"lang:purescript","rel":"influenced"}},{"data":{"id":"e3","source":"lang:haskell","target":"lang:coffeescript","rel":"influenced"}},{"data":{"id":"e4","source":"lang:haskell","target":"lang:rust","rel":"influenced"}},{"data":{"id":"e5","source":"lang:haskell","target":"lang:haskell","rel":"compiler_written_in"}},{"data":{"id":"e6","source":"lang:haskell","target":"lang:elm","rel":"compiler_written_in"}},{"data":{"id":"e7","source":"lang:haskell","target":"lang:purescript","rel":"compiler_written_in"}},{"data":{"id":"e8","source":"lang:c","target":"lang:haskell","rel":"runtime_written_in"}},{"data":{"id":"e9","source":"lang:haskell","target":"lang:fsharp","rel":"influenced"}},{"data":{"id":"e10","source":"lang:haskell","target":"tool:ghc","rel":"compiler_written_in"}},{"data":{"id":"e11","source":"lang:haskell","target":"lang:python","rel":"influenced"}},{"data":{"id":"e12","source":"lang:miranda","target":"lang:haskell","rel":"influenced"}},{"data":{"id":"e13","source":"lang:lisp","target":"lang:haskell","rel":"influenced"}},{"data":{"id":"e14","source":"lang:haskell","target":"lang:scala","rel":"influenced"}},{"data":{"id":"e15","source":"lang:haskell","target":"lang:swift","rel":"influenced"}},{"data":{"id":"e16","source":"lang:haskell","target":"lang:idris","rel":"influenced"}},{"data":{"id":"e17","source":"lang:haskell","target":"lang:agda","rel":"influenced"}},{"data":{"id":"e18","source":"lang:haskell","target":"lang:kotlin","rel":"influenced"}},{"data":{"id":"e19","source":"lang:haskell","target":"lang:typescript","rel":"influenced"}},{"data":{"id":"e20","source":"lang:haskell","target":"lang:agda","rel":"compiler_written_in"}},{"data":{"id":"e21","source":"lang:haskell","target":"lang:idris","rel":"bootstrap_written_in"}}]};
-  var CC = {"c_family":"#e07a5f","jvm_dotnet":"#7a9e7e","js_engines":"#c9a87c","functional":"#9b7bb8","systems":"#5a8a7d","scripting":"#8b9a7d","compilers":"#9a958c","other":"#8a857c","clr":"#7a8aa8","dynamic":"#7da88a","historical":"#b8a07a","jvm":"#6b8ba8","roots":"#9a958c","scientific":"#6a9aa8","tools":"#8a9598"};
-  var RC = {"compiler_written_in":"#c9a87c","runtime_written_in":"#8b9a7d","bootstrap_written_in":"#7da88a","rewritten_in":"#b8a07a","influenced":"#9b7bb8","transpiled_to":"#e07a5f"};
-  var centerId = "lang:haskell";
-
-  var cy = cytoscape({
-    container: document.getElementById('graph-viz'),
-    elements: data.nodes.concat(data.edges),
-    style: [
-      {
-        selector: 'node',
-        style: {
-          'width': 44, 'height': 44,
-          'background-color': function(ele) { return CC[ele.data('cluster')] || '#8a857c'; },
-          'border-width': 2, 'border-color': '#00000030',
-          'label': 'data(label)',
-          'color': '#f5f0e8',
-          'font-size': 11,
-          'font-weight': 600,
-          'text-valign': 'bottom',
-          'text-halign': 'center',
-          'text-margin-y': 6,
-          'text-outline-width': 2,
-          'text-outline-color': '#0a0a0b',
-          'text-outline-opacity': 0.9,
-          'cursor': 'pointer',
-        }
-      },
-      {
-        selector: 'node[?isCenter]',
-        style: {
-          'width': 70, 'height': 70,
-          'background-color': '#c9a87c',
-          'border-width': 3,
-          'border-color': '#dfc4a0',
-          'font-size': 13,
-          'font-weight': 700,
-          'z-index': 10,
-        }
-      },
-      {
-        selector: 'node:hover',
-        style: { 'border-color': '#c9a87c', 'border-width': 3, 'overlay-opacity': 0.08, 'overlay-color': '#c9a87c' }
-      },
-      {
-        selector: 'edge',
-        style: {
-          'width': 1.5,
-          'line-color': function(ele) { return RC[ele.data('rel')] || '#555'; },
-          'target-arrow-color': function(ele) { return RC[ele.data('rel')] || '#555'; },
-          'target-arrow-shape': 'triangle',
-          'curve-style': 'bezier',
-          'opacity': 0.7,
-          'arrow-scale': 0.8,
-        }
-      },
-      {
-        selector: 'edge:hover',
-        style: { 'width': 2.5, 'opacity': 1, 'z-index': 5 }
-      }
-    ],
-    layout: {
-      name: 'cose',
-      animate: false,
-      randomize: true,
-      nodeRepulsion: function() { return 8000; },
-      idealEdgeLength: function() { return 120; },
-      gravity: 0.4,
-      numIter: 500,
-      padding: 40,
-    },
-    userZoomingEnabled: true,
-    userPanningEnabled: true,
-    minZoom: 0.3,
-    maxZoom: 3,
-  });
-
-  cy.on('tap', 'node', function(evt) {
-    var href = evt.target.data('href');
-    if (href) window.location.href = href;
-  });
-
-  cy.on('mouseover', 'node', function(evt) {
-    document.getElementById('graph-viz').style.cursor = 'pointer';
-  });
-  cy.on('mouseout', 'node', function(evt) {
-    document.getElementById('graph-viz').style.cursor = 'default';
-  });
-})();
-</script>
+<p style="font-size:13px;color:var(--text-tertiary);margin-bottom:12px">All directly connected languages. Click any node to navigate to its page.</p>
+<iframe
+  src="/embed?lang=haskell"
+  loading="lazy"
+  width="100%"
+  height="500"
+  style="border:none;border-radius:12px;display:block;background:#0a0a0b"
+  title="Haskell relationship graph"
+></iframe>
 
   
 <h2>Frequently Asked Questions</h2>

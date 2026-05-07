@@ -10,6 +10,7 @@ import { Seo } from '../seo/Seo';
 import './App.css';
 
 const GraphExplorer = lazy(() => import('./GraphExplorer'));
+const EmbedGraph = lazy(() => import('./EmbedGraph'));
 
 function LoadingScreen() {
   return (
@@ -57,6 +58,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LandingPageWrapper />} />
           <Route path="/explore" element={<GraphExplorerWrapper />} />
+          <Route path="/embed" element={<Suspense fallback={null}><EmbedGraph /></Suspense>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Analytics />
