@@ -14,7 +14,7 @@ interface MinimalPanelProps {
 }
 
 export function MinimalPanel({ onBackToLanding }: MinimalPanelProps) {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => window.innerWidth < 640);
   const { dataset, filters, validationReport, updateFilters, attributeFilters, setAttributeFilters, resetAttributeFilters, isDarkMode, toggleDarkMode } = useGraphStore();
 
   const handleLayoutChange = (mode: 'dag' | 'force' | 'cluster' | 'timeline') => {
@@ -240,6 +240,10 @@ export function MinimalPanel({ onBackToLanding }: MinimalPanelProps) {
           </section>
         </div>
       </aside>
+
+      {!collapsed && (
+        <div className="sidebar-backdrop" onClick={() => setCollapsed(true)} />
+      )}
 
       <button
         className={`sidebar-toggle-tab ${collapsed ? 'collapsed' : ''}`}

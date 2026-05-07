@@ -480,22 +480,124 @@
 }
 
 /* ============================================
-   MOBILE
+   BACKDROP (mobile only, hidden on desktop)
    ============================================ */
-@media (max-width: 768px) {
+.sidebar-backdrop {
+  display: none;
+}
+
+/* ============================================
+   TABLET (641–1024px)
+   ============================================ */
+@media (max-width: 1024px) and (min-width: 641px) {
   .sidebar {
-    width: 280px;
+    width: 260px;
   }
 
   .sidebar.collapsed {
-    transform: translateX(-280px);
+    transform: translateX(-260px);
   }
 
   .sidebar-toggle-tab {
-    left: 280px;
+    left: 260px;
   }
 
   .sidebar-toggle-tab.collapsed {
     left: 0;
+  }
+}
+
+/* ============================================
+   MOBILE (≤640px)
+   ============================================ */
+@media (max-width: 640px) {
+  /* Sidebar: full-width overlay drawer */
+  .sidebar {
+    width: min(340px, 88vw);
+  }
+
+  .sidebar.collapsed {
+    transform: translateX(-100%);
+  }
+
+  .sidebar-inner {
+    border-right: none;
+    border-radius: 0 16px 16px 0;
+    box-shadow: 4px 0 32px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Toggle tab: larger touch target, positioned at edge of sidebar */
+  .sidebar-toggle-tab {
+    left: min(340px, 88vw);
+    width: 32px;
+    height: 72px;
+    border-radius: 0 12px 12px 0;
+  }
+
+  .sidebar-toggle-tab.collapsed {
+    left: 0;
+    width: 32px;
+    height: 72px;
+  }
+
+  /* Backdrop overlay */
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 199;
+    animation: backdropFadeIn 0.22s ease;
+  }
+
+  @keyframes backdropFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* Panel sections: more touch-friendly */
+  .panel-section {
+    padding: 14px 14px;
+  }
+
+  .panel-header {
+    padding: 16px 14px 14px;
+  }
+
+  .icon-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .filter-chip {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+
+  .layout-toggle button {
+    padding: 8px 4px;
+    min-height: 36px;
+  }
+
+  .graph-mode-toggle button {
+    padding: 10px 6px;
+    min-height: 44px;
+  }
+
+  .search-box {
+    padding: 10px 14px;
+    font-size: 15px;
+    min-height: 44px;
+  }
+
+  .toggle {
+    padding: 4px 0;
+    min-height: 36px;
+    gap: 12px;
+  }
+
+  .toggle input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
   }
 }
