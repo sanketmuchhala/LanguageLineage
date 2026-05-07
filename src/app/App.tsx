@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import { useGraphStore } from '../store/useGraphStore';
 import { loadDataset } from '../data/loadDataset';
 import { validateDataset } from '../data/validateDataset';
@@ -11,42 +12,21 @@ import { Legend } from '../ui/Legend';
 import { EdgeTooltip } from '../ui/EdgeTooltip';
 import { TimelineControls } from '../ui/TimelineControls';
 import { NavigationControls } from '../ui/NavigationControls';
+import { LandingPage } from '../ui/LandingPage';
 import { deactivateFocusMode } from '../graph/selectors';
 import { DAG_LAYOUT, FORCE_LAYOUT, CLUSTER_LAYOUT, buildTimelineLayout } from '../graph/layouts';
 
 import './App.css';
 
-function App() {
-  const { setDataset, setDatasetIndex, setValidationReport } = useGraphStore();
+// Graph Explorer Page Component
+function GraphExplorer() {
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    async function initializeDataset() {
-      try {
-        console.log('Loading dataset...');
-        const rawDataset = await loadDataset('v4');
+  const handleBackToLanding = () => {
+    navigate('/');
+  };
 
-        console.log('Validating dataset...');
-        const validationReport = validateDataset(rawDataset);
-        setValidationReport(validationReport);
-
-        console.log('Normalizing dataset...');
-        const normalizedDataset = normalizeDataset(rawDataset);
-        setDataset(normalizedDataset);
-
-        console.log('Indexing dataset...');
-        const datasetIndex = indexDataset(normalizedDataset);
-        setDatasetIndex(datasetIndex);
-
-        console.log('✅ Dataset loaded successfully');
-      } catch (error) {
-        console.error('Failed to load dataset:', error);
-      }
-    }
-
-    initializeDataset();
-  }, [setDataset, setDatasetIndex, setValidationReport]);
-
-  // Keyboard shortcuts
+  // Keyboard shortcuts for graph view
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement).tagName;
@@ -100,7 +80,7 @@ function App() {
     <div className="app">
       <div className="graph-container">
         <GraphView />
-        <MinimalPanel />
+        <MinimalPanel onBackToLanding={handleBackToLanding} />
         <Legend />
         <EdgeTooltip />
         <TimelineControls />
@@ -108,6 +88,58 @@ function App() {
       </div>
       <SideDrawer />
     </div>
+  );
+}
+
+// Landing Page Wrapper
+function LandingPageWrapper() {
+  const navigate = useNavigate();
+
+  const handleEnterGraph = () => {
+    navigate('/explore');
+  };
+
+  return <LandingPage onEnterGraph={handleEnterGraph} />;
+}
+
+function App() {
+  const { setDataset, setDatasetIndex, setValidationReport } = useGraphStore();
+
+  // Load dataset on app mount
+  useEffect(() => {
+    async function initializeDataset() {
+      try {
+        console.log('Loading dataset...');
+        const rawDataset = await loadDataset('v4');
+
+        console.log('Validating dataset...');
+        const validationReport = validateDataset(rawDataset);
+        setValidationReport(validationReport);
+
+        console.log('Normalizing dataset...');
+        const normalizedDataset = normalizeDataset(rawDataset);
+        setDataset(normalizedDataset);
+
+        console.log('Indexing dataset...');
+        const datasetIndex = indexDataset(normalizedDataset);
+        setDatasetIndex(datasetIndex);
+
+        console.log('Dataset loaded successfully');
+      } catch (error) {
+        console.error('Failed to load dataset:', error);
+      }
+    }
+
+    initializeDataset();
+  }, [setDataset, setDatasetIndex, setValidationReport]);
+
+  return (
+    <BrowserRouter basename="/ProgrammingLanguageGraph">
+      <Routes>
+        <Route path="/" element={<LandingPageWrapper />} />
+        <Route path="/explore" element={<GraphExplorer />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

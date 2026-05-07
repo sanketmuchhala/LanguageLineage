@@ -9,11 +9,22 @@ import './MinimalPanel.css';
 
 const DECADES = [1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020];
 
-export function MinimalPanel() {
+interface MinimalPanelProps {
+  onBackToLanding?: () => void;
+}
+
+export function MinimalPanel({ onBackToLanding }: MinimalPanelProps) {
   const { dataset, filters, validationReport, updateFilters, attributeFilters, setAttributeFilters, resetAttributeFilters, isDarkMode, toggleDarkMode } = useGraphStore();
 
   const handleLayoutChange = (mode: 'dag' | 'force' | 'cluster' | 'timeline') => {
     updateFilters({ layoutMode: mode });
+  };
+
+  const handleGraphModeChange = (mode: 'implementation' | 'influence') => {
+    updateFilters({
+      graphMode: mode,
+      ...(mode === 'influence' ? { layoutMode: 'force' } : {}),
+    });
   };
 
   const handleRelationshipFilter = (relationship: RelationshipType, enabled: boolean) => {
@@ -56,8 +67,16 @@ export function MinimalPanel() {
     <aside className="minimal-panel">
       <header className="panel-header">
         <div className="panel-header-text">
+          {onBackToLanding && (
+            <button className="back-button" onClick={onBackToLanding} title="Back to home">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+              </svg>
+              <span>Back</span>
+            </button>
+          )}
           <h1>Language Lineage</h1>
-          <p>Programming language implementations &amp; bootstrapping</p>
+          <p>{filters.graphMode === 'influence' ? 'How programming languages inspired each other' : 'Programming language implementations & bootstrapping'}</p>
         </div>
         <button
           className="theme-toggle"
@@ -67,6 +86,25 @@ export function MinimalPanel() {
           {isDarkMode ? '\u2600' : '\u263E'}
         </button>
       </header>
+
+      <section className="panel-section mode-toggle-section">
+        <div className="graph-mode-toggle">
+          <button
+            className={filters.graphMode === 'implementation' ? 'active' : ''}
+            onClick={() => handleGraphModeChange('implementation')}
+          >
+            <span className="mode-label">Implementation</span>
+            <span className="mode-sublabel">What built what</span>
+          </button>
+          <button
+            className={filters.graphMode === 'influence' ? 'active' : ''}
+            onClick={() => handleGraphModeChange('influence')}
+          >
+            <span className="mode-label">Influence</span>
+            <span className="mode-sublabel">What inspired what</span>
+          </button>
+        </div>
+      </section>
 
       {hasWarnings && (
         <div className="validation-warning">
@@ -124,12 +162,20 @@ export function MinimalPanel() {
         />
       </section>
 
-      <section className="panel-section">
-        <RelationshipFilters
-          filters={filters.relationshipFilters}
-          onChange={handleRelationshipFilter}
-        />
-      </section>
+      {filters.graphMode === 'influence' ? (
+        <section className="panel-section">
+          <div className="influence-mode-note">
+            Showing 189 documented conceptual influence relationships between languages.
+          </div>
+        </section>
+      ) : (
+        <section className="panel-section">
+          <RelationshipFilters
+            filters={filters.relationshipFilters}
+            onChange={handleRelationshipFilter}
+          />
+        </section>
+      )}
 
       <section className="panel-section">
         <h3>Display Options</h3>

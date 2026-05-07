@@ -33,14 +33,22 @@ export function NavigationControls() {
 
   return (
     <div className="nav-controls">
-      <button className="nav-btn" onClick={handleFit} title="Zoom to Fit">
-        Fit
+      <button className="nav-btn" onClick={handleFit} title="Fit all nodes in view">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+        </svg>
       </button>
-      <button className="nav-btn" onClick={handleCenter} title="Center on Selection">
-        Ctr
+      <button className="nav-btn" onClick={handleCenter} title="Center on selected node">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M12 2v4M12 18v4M2 12h4M18 12h4"/>
+        </svg>
       </button>
-      <button className="nav-btn" onClick={handleReset} title="Reset Layout">
-        Rst
+      <button className="nav-btn" onClick={handleReset} title="Reset layout">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M1 4v6h6M23 20v-6h-6"/>
+          <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+        </svg>
       </button>
     </div>
   );

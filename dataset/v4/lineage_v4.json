@@ -700,7 +700,7 @@
       "self_hosting": true,
       "notes": "Martin Odersky at EPFL. Scala 3 (Dotty) bootstrapped. Runs on JVM. Combines OOP and FP.",
       "cluster_hint": "jvm",
-      "company": "École Polytechnique Fédérale de Lausanne",
+      "company": "\u00c9cole Polytechnique F\u00e9d\u00e9rale de Lausanne",
       "garbage_collected": true,
       "logo_url": null,
       "peak_year": null,
@@ -882,7 +882,7 @@
       "typing": "dynamic",
       "runtime_model": "vm",
       "self_hosting": true,
-      "notes": "José Valim. Runs on BEAM. Bootstrap compiler in Erlang, then self-hosting. Deliberately keeps Erlang bootstrap.",
+      "notes": "Jos\u00e9 Valim. Runs on BEAM. Bootstrap compiler in Erlang, then self-hosting. Deliberately keeps Erlang bootstrap.",
       "cluster_hint": "functional",
       "company": null,
       "garbage_collected": true,
@@ -1372,7 +1372,7 @@
       "typing": "unspecified",
       "runtime_model": "tool",
       "self_hosting": false,
-      "notes": "Bogdan/Björn's Erlang Abstract Machine. Written in C. Runs Erlang, Elixir, Gleam, LFE.",
+      "notes": "Bogdan/Bj\u00f6rn's Erlang Abstract Machine. Written in C. Runs Erlang, Elixir, Gleam, LFE.",
       "cluster_hint": "tools",
       "company": null,
       "garbage_collected": null,
@@ -5230,6 +5230,476 @@
       "confidence": 0.9,
       "evidence_source": "https://en.wikipedia.org/wiki/Crystal_(programming_language)",
       "notes": "Crystal compiler bootstrapped from Ruby initially"
+    },
+    {
+      "from_language": "lang:assembly",
+      "to_language": "lang:flow_matic",
+      "relationship": "compiler_written_in",
+      "start_year": 1955,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://en.wikipedia.org/wiki/FLOW-MATIC",
+      "notes": "FLOW-MATIC compiler written in assembly for UNIVAC I"
+    },
+    {
+      "from_language": "lang:assembly",
+      "to_language": "lang:comtran",
+      "relationship": "compiler_written_in",
+      "start_year": 1957,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://en.wikipedia.org/wiki/COMTRAN",
+      "notes": "COMTRAN compiler written in assembly for IBM 702"
+    },
+    {
+      "from_language": "lang:assembly",
+      "to_language": "lang:algol",
+      "relationship": "compiler_written_in",
+      "start_year": 1960,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://en.wikipedia.org/wiki/ALGOL_60",
+      "notes": "Early ALGOL 60 compilers written in assembly"
+    },
+    {
+      "from_language": "lang:assembly",
+      "to_language": "lang:lisp",
+      "relationship": "compiler_written_in",
+      "start_year": 1958,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://en.wikipedia.org/wiki/Lisp_(programming_language)",
+      "notes": "Original Lisp interpreter written in IBM 704 assembly by Steve Russell"
+    },
+    {
+      "from_language": "lang:assembly",
+      "to_language": "lang:cobol",
+      "relationship": "compiler_written_in",
+      "start_year": 1959,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://en.wikipedia.org/wiki/COBOL",
+      "notes": "Early COBOL compilers written in assembly; GnuCOBOL later written in C"
+    },
+    {
+      "from_language": "lang:algol",
+      "to_language": "lang:simula",
+      "relationship": "compiler_written_in",
+      "start_year": 1962,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://en.wikipedia.org/wiki/Simula",
+      "notes": "Simula 67 compiler implemented in ALGOL"
+    },
+    {
+      "from_language": "lang:assembly",
+      "to_language": "lang:pl1",
+      "relationship": "compiler_written_in",
+      "start_year": 1964,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://en.wikipedia.org/wiki/PL/I",
+      "notes": "Early PL/I compilers for IBM System/360 written in assembly"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:apl",
+      "relationship": "runtime_written_in",
+      "start_year": 1973,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://en.wikipedia.org/wiki/Dyalog_APL",
+      "notes": "Dyalog APL runtime written in C"
+    },
+    {
+      "from_language": "lang:assembly",
+      "to_language": "lang:algol68",
+      "relationship": "compiler_written_in",
+      "start_year": 1968,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://en.wikipedia.org/wiki/ALGOL_68",
+      "notes": "Early ALGOL 68 compilers written in assembly"
+    },
+    {
+      "from_language": "lang:lisp",
+      "to_language": "lang:planner",
+      "relationship": "runtime_written_in",
+      "start_year": 1969,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://en.wikipedia.org/wiki/Planner_(programming_language)",
+      "notes": "Planner was implemented as a Lisp system at MIT"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:smalltalk",
+      "relationship": "runtime_written_in",
+      "start_year": 1995,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://en.wikipedia.org/wiki/Squeak",
+      "notes": "Squeak and Pharo VMs (primary Smalltalk implementations) written in C"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:ml",
+      "relationship": "runtime_written_in",
+      "start_year": 1984,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://en.wikipedia.org/wiki/Standard_ML",
+      "notes": "Standard ML of New Jersey (SML/NJ) runtime written in C"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:scheme",
+      "relationship": "runtime_written_in",
+      "start_year": 1984,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://en.wikipedia.org/wiki/MIT_Scheme",
+      "notes": "MIT Scheme runtime written in C"
+    },
+    {
+      "from_language": "lang:assembly",
+      "to_language": "lang:clu",
+      "relationship": "compiler_written_in",
+      "start_year": 1975,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://en.wikipedia.org/wiki/CLU_(programming_language)",
+      "notes": "CLU compiler at MIT written in assembly and PDP-10 machine code"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:s",
+      "relationship": "runtime_written_in",
+      "start_year": 1976,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://en.wikipedia.org/wiki/S_(programming_language)",
+      "notes": "S statistical language runtime written in C and Fortran at Bell Labs"
+    },
+    {
+      "from_language": "lang:fortran",
+      "to_language": "lang:s",
+      "relationship": "runtime_written_in",
+      "start_year": 1976,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://en.wikipedia.org/wiki/S_(programming_language)",
+      "notes": "S statistical language uses Fortran for numerical computation"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:icon",
+      "relationship": "compiler_written_in",
+      "start_year": 1977,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://en.wikipedia.org/wiki/Icon_(programming_language)",
+      "notes": "Icon compiler and runtime written in C"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:awk",
+      "relationship": "runtime_written_in",
+      "start_year": 1977,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://en.wikipedia.org/wiki/AWK",
+      "notes": "AWK runtime (gawk, nawk, mawk) written in C"
+    },
+    {
+      "from_language": "lang:pascal",
+      "to_language": "lang:modula2",
+      "relationship": "compiler_written_in",
+      "start_year": 1978,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://en.wikipedia.org/wiki/Modula-2",
+      "notes": "Early Modula-2 compilers written in Pascal"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:sh",
+      "relationship": "runtime_written_in",
+      "start_year": 1979,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://en.wikipedia.org/wiki/Bourne_shell",
+      "notes": "Bourne shell written in C by Steve Bourne at Bell Labs"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "lang:objective_c",
+      "relationship": "compiler_written_in",
+      "start_year": 2007,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://en.wikipedia.org/wiki/Clang",
+      "notes": "Clang (written in C++) is the primary Objective-C compiler"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:matlab",
+      "relationship": "runtime_written_in",
+      "start_year": 1984,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://en.wikipedia.org/wiki/MATLAB",
+      "notes": "MATLAB runtime engine written in C and C++"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:miranda",
+      "relationship": "compiler_written_in",
+      "start_year": 1985,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://en.wikipedia.org/wiki/Miranda_(programming_language)",
+      "notes": "Miranda compiler written in C"
+    },
+    {
+      "from_language": "lang:modula2",
+      "to_language": "lang:oberon",
+      "relationship": "bootstrap_written_in",
+      "start_year": 1987,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://en.wikipedia.org/wiki/Oberon_(programming_language)",
+      "notes": "Oberon compiler bootstrapped from Modula-2"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:abc",
+      "relationship": "runtime_written_in",
+      "start_year": 1987,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://en.wikipedia.org/wiki/ABC_(programming_language)",
+      "notes": "ABC interpreter written in C at CWI"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "lang:self",
+      "relationship": "runtime_written_in",
+      "start_year": 1987,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://en.wikipedia.org/wiki/Self_(programming_language)",
+      "notes": "Self VM written in C++ at Stanford/Sun"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:newsqueak",
+      "relationship": "compiler_written_in",
+      "start_year": 1988,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://en.wikipedia.org/wiki/Newsqueak",
+      "notes": "Newsqueak compiler written in C at Bell Labs"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:modula3",
+      "relationship": "compiler_written_in",
+      "start_year": 1988,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://en.wikipedia.org/wiki/Modula-3",
+      "notes": "Modula-3 compiler (m3cg) written in C"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:tcl",
+      "relationship": "runtime_written_in",
+      "start_year": 1988,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://en.wikipedia.org/wiki/Tcl",
+      "notes": "Tcl interpreter written in C by John Ousterhout"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:j",
+      "relationship": "runtime_written_in",
+      "start_year": 1990,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://en.wikipedia.org/wiki/J_(programming_language)",
+      "notes": "J interpreter written in C by Ken Iverson and Roger Hui"
+    },
+    {
+      "from_language": "lang:oberon",
+      "to_language": "lang:oberon2",
+      "relationship": "compiler_written_in",
+      "start_year": 1991,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://en.wikipedia.org/wiki/Oberon-2",
+      "notes": "Oberon-2 compiler derived from Oberon compiler"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:alef",
+      "relationship": "compiler_written_in",
+      "start_year": 1992,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://en.wikipedia.org/wiki/Alef_(programming_language)",
+      "notes": "Alef compiler written in C at Bell Labs"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:dylan",
+      "relationship": "runtime_written_in",
+      "start_year": 1992,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://en.wikipedia.org/wiki/Dylan_(programming_language)",
+      "notes": "Open Dylan runtime written in C"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:guile",
+      "relationship": "runtime_written_in",
+      "start_year": 1993,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://en.wikipedia.org/wiki/GNU_Guile",
+      "notes": "GNU Guile interpreter written in C"
+    },
+    {
+      "from_language": "lang:pascal",
+      "to_language": "lang:freepascal",
+      "relationship": "bootstrap_written_in",
+      "start_year": 1993,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://en.wikipedia.org/wiki/Free_Pascal",
+      "notes": "Free Pascal compiler initially written in Turbo Pascal then self-hosted"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:limbo",
+      "relationship": "compiler_written_in",
+      "start_year": 1995,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://en.wikipedia.org/wiki/Limbo_(programming_language)",
+      "notes": "Limbo compiler written in C as part of Plan 9"
+    },
+    {
+      "from_language": "lang:pascal",
+      "to_language": "lang:delphi",
+      "relationship": "bootstrap_written_in",
+      "start_year": 1995,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://en.wikipedia.org/wiki/Delphi_(software)",
+      "notes": "Delphi compiler bootstrapped from Turbo Pascal, now self-hosted"
+    },
+    {
+      "from_language": "lang:prolog",
+      "to_language": "lang:mercury",
+      "relationship": "bootstrap_written_in",
+      "start_year": 1995,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://en.wikipedia.org/wiki/Mercury_(programming_language)",
+      "notes": "Mercury compiler initially written in Prolog, then self-hosted"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:fortran95",
+      "relationship": "compiler_written_in",
+      "start_year": 1997,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://en.wikipedia.org/wiki/GNU_Fortran",
+      "notes": "GNU Fortran (gfortran) compiler written in C as part of GCC"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:cyclone",
+      "relationship": "compiler_written_in",
+      "start_year": 2002,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://en.wikipedia.org/wiki/Cyclone_(programming_language)",
+      "notes": "Cyclone compiler written in C at Cornell/AT&T"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:luajit",
+      "relationship": "runtime_written_in",
+      "start_year": 2005,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://luajit.org/",
+      "notes": "LuaJIT runtime written in C and assembly by Mike Pall"
+    },
+    {
+      "from_language": "lang:haskell",
+      "to_language": "lang:agda",
+      "relationship": "compiler_written_in",
+      "start_year": 2007,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://en.wikipedia.org/wiki/Agda_(programming_language)",
+      "notes": "Agda proof assistant and compiler written in Haskell"
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "lang:pharo",
+      "relationship": "runtime_written_in",
+      "start_year": 2008,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://en.wikipedia.org/wiki/Pharo",
+      "notes": "Pharo VM (based on Squeak) written in C"
+    },
+    {
+      "from_language": "lang:haskell",
+      "to_language": "lang:idris",
+      "relationship": "bootstrap_written_in",
+      "start_year": 2011,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://en.wikipedia.org/wiki/Idris_(programming_language)",
+      "notes": "Idris compiler initially written in Haskell, later self-hosted"
+    },
+    {
+      "from_language": "lang:python",
+      "to_language": "lang:mypy",
+      "relationship": "compiler_written_in",
+      "start_year": 2012,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://mypy-lang.org/",
+      "notes": "mypy type checker written in Python"
+    },
+    {
+      "from_language": "lang:typescript",
+      "to_language": "lang:angular",
+      "relationship": "compiler_written_in",
+      "start_year": 2016,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://angular.io/",
+      "notes": "Angular framework and AOT compiler written in TypeScript"
+    },
+    {
+      "from_language": "lang:rust",
+      "to_language": "lang:gleam",
+      "relationship": "compiler_written_in",
+      "start_year": 2019,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://gleam.run/",
+      "notes": "Gleam compiler written in Rust"
     }
   ]
 }

@@ -1,35 +1,60 @@
-/* Theme: Light Mode (default) */
+/* ============================================
+   LANGUAGE LINEAGE — Graph Explorer Theme
+   Editorial / Museum Exhibition Aesthetic
+   Matching Landing Page Design System
+   ============================================ */
+
+/* Theme: Dark Mode (Default) - Matching Landing Page */
 :root {
-  --bg-canvas: #f0f2f5;
-  --bg-surface: #ffffff;
-  --bg-surface-hover: #f3f4f6;
-  --bg-elevated: #ffffff;
-  --border-primary: #e2e5e9;
-  --border-secondary: #eef0f3;
-  --text-primary: #1a1b1e;
-  --text-secondary: #5c6370;
-  --text-tertiary: #9ca3af;
-  --accent: #6366f1;
-  --accent-hover: #4f46e5;
-  --accent-subtle: #eef2ff;
-  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+  --bg-canvas: #0a0a0b;
+  --bg-surface: #141416;
+  --bg-surface-hover: #1a1a1d;
+  --bg-elevated: #1a1a1d;
+  --bg-card: #1a1a1d;
+  --border-primary: rgba(245, 240, 232, 0.08);
+  --border-secondary: rgba(255, 255, 255, 0.04);
+  --border-accent: rgba(201, 168, 124, 0.25);
+  --text-primary: #f5f0e8;
+  --text-secondary: #9a958c;
+  --text-tertiary: #5a564f;
+  --accent: #c9a87c;
+  --accent-hover: #dfc4a0;
+  --accent-subtle: rgba(201, 168, 124, 0.12);
+  --accent-glow: rgba(201, 168, 124, 0.25);
+  --color-secondary: #8b9a7d;
+  --color-highlight: #e07a5f;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 20px rgba(0,0,0,0.2);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.35);
+  --grain-opacity: 0.025;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-/* Theme: Dark Mode */
-:root.dark {
-  --bg-canvas: #0d1117;
-  --bg-surface: #161b22;
-  --bg-surface-hover: #1c2128;
-  --bg-elevated: #1c2128;
-  --border-primary: #30363d;
-  --border-secondary: #21262d;
-  --text-primary: #e6edf3;
-  --text-secondary: #8b949e;
-  --text-tertiary: #6e7681;
-  --accent: #818cf8;
-  --accent-hover: #6366f1;
-  --accent-subtle: rgba(99,102,241,0.15);
-  --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2);
+/* Theme: Light Mode */
+:root.light {
+  --bg-canvas: #f5f0e8;
+  --bg-surface: rgba(255, 255, 255, 0.95);
+  --bg-surface-hover: rgba(245, 240, 232, 0.95);
+  --bg-elevated: #ffffff;
+  --bg-card: #ffffff;
+  --border-primary: rgba(26, 26, 27, 0.1);
+  --border-secondary: rgba(26, 26, 27, 0.06);
+  --border-accent: rgba(201, 168, 124, 0.35);
+  --text-primary: #1a1a1b;
+  --text-secondary: #5a564f;
+  --text-tertiary: #9a958c;
+  --accent: #c9a87c;
+  --accent-hover: #b8956a;
+  --accent-subtle: rgba(201, 168, 124, 0.1);
+  --accent-glow: rgba(201, 168, 124, 0.25);
+  --color-secondary: #8b9a7d;
+  --color-highlight: #e07a5f;
+  --shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 20px rgba(0,0,0,0.03);
+  --shadow-lg: 0 4px 32px rgba(0,0,0,0.06);
+  --grain-opacity: 0.015;
 }
 
 * {
@@ -38,14 +63,32 @@
   box-sizing: border-box;
 }
 
+html {
+  font-size: 16px;
+}
+
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow: hidden;
   background-color: var(--bg-canvas);
   color: var(--text-primary);
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color 0.4s var(--ease-out-quart), color 0.3s ease;
+}
+
+/* Subtle grain texture */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  z-index: 9999;
 }
 
 .app {
@@ -61,50 +104,67 @@ body {
   overflow: hidden;
 }
 
-/* Legend */
+/* ============================================
+   LEGEND
+   ============================================ */
 .legend {
   position: absolute;
-  bottom: 20px;
-  right: 20px;
-  background-color: var(--bg-surface);
+  bottom: 24px;
+  right: 24px;
+  background: var(--bg-surface);
   border: 1px solid var(--border-primary);
-  border-radius: 12px;
-  padding: 12px;
-  box-shadow: var(--shadow);
-  max-width: 250px;
+  border-radius: 16px;
+  padding: 20px;
+  max-width: 280px;
   z-index: 100;
-  transition: background-color 0.2s, border-color 0.2s;
+  transition: all 0.3s var(--ease-out-quart);
+}
+
+.legend:hover {
+  border-color: var(--border-accent);
 }
 
 .legend.collapsed {
-  padding: 8px 12px;
+  padding: 14px 20px;
 }
 
 .legend-toggle {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
+  font-family: var(--font-body);
   color: var(--text-primary);
   padding: 0;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 10px;
+  transition: color 0.2s ease;
 }
 
 .legend-toggle:hover {
-  color: var(--text-secondary);
+  color: var(--accent);
+}
+
+.legend-toggle svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.3s var(--ease-out-quart);
+}
+
+.legend.collapsed .legend-toggle svg {
+  transform: rotate(-90deg);
 }
 
 .legend-content {
-  margin-top: 12px;
+  margin-top: 20px;
   max-height: 400px;
   overflow-y: auto;
 }
 
 .legend-section {
-  margin-bottom: 16px;
+  margin-bottom: 24px;
 }
 
 .legend-section:last-child {
@@ -112,18 +172,22 @@ body {
 }
 
 .legend-section h4 {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
-  margin-bottom: 8px;
-  color: var(--text-primary);
+  font-family: var(--font-mono);
+  margin-bottom: 14px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
 }
 
 .legend-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 6px;
-  font-size: 11px;
+  gap: 14px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  font-family: var(--font-body);
   color: var(--text-secondary);
 }
 
@@ -132,6 +196,7 @@ body {
   height: 16px;
   border-radius: 4px;
   border: 1px solid var(--border-primary);
+  flex-shrink: 0;
 }
 
 .legend-text {
@@ -140,9 +205,9 @@ body {
 
 .legend-line {
   display: inline-block;
-  width: 24px;
+  width: 28px;
   height: 0;
-  border-top: 2px solid var(--text-secondary);
+  border-top: 2px solid var(--text-tertiary);
   vertical-align: middle;
   flex-shrink: 0;
 }
@@ -158,7 +223,7 @@ body {
 .legend-circle {
   display: inline-block;
   border-radius: 50%;
-  background-color: #42a5f5;
+  background-color: var(--accent);
   border: 1px solid var(--border-primary);
   flex-shrink: 0;
 }
@@ -173,21 +238,26 @@ body {
   height: 24px;
 }
 
-/* Mobile Responsive */
+/* ============================================
+   MOBILE RESPONSIVE
+   ============================================ */
 @media (max-width: 768px) {
   .minimal-panel {
     width: 100%;
     height: auto;
-    max-height: 40vh;
+    max-height: 45vh;
     overflow-y: auto;
     border-right: none;
     border-bottom: 1px solid var(--border-primary);
+    border-radius: 0 0 16px 16px;
+    top: 0;
+    left: 0;
   }
 
   .legend {
-    bottom: 10px;
-    right: 10px;
-    max-width: 180px;
-    font-size: 10px;
+    bottom: 12px;
+    right: 12px;
+    max-width: 200px;
+    padding: 14px;
   }
 }

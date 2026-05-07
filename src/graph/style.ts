@@ -6,32 +6,34 @@ const MIN_NODE_SIZE = 50;
 const MAX_NODE_SIZE = 110;
 const DEFAULT_NODE_COLOR = '#42a5f5';
 
+// Museum-inspired muted color palette - matching landing page aesthetic
 export const CLUSTER_COLORS: Record<ClusterType, string> = {
-  c_family: '#ef5350',
-  jvm_dotnet: '#42a5f5',
-  js_engines: '#ffa726',
-  functional: '#ab47bc',
-  systems: '#26a69a',
-  scripting: '#66bb6a',
-  compilers: '#78909c',
-  other: '#90a4ae',
-  clr: '#5c6bc0',
-  dynamic: '#66bb6a',
-  historical: '#ffa726',
-  jvm: '#42a5f5',
-  roots: '#78909c',
-  scientific: '#29b6f6',
-  tools: '#78909c',
+  c_family: '#e07a5f',      // Warm coral (landing highlight)
+  jvm_dotnet: '#7a9e7e',    // Muted sage
+  js_engines: '#c9a87c',    // Warm tan (landing accent)
+  functional: '#9b7bb8',    // Muted lavender
+  systems: '#5a8a7d',       // Deep teal
+  scripting: '#8b9a7d',     // Sage green (landing secondary)
+  compilers: '#9a958c',     // Warm stone
+  other: '#8a857c',         // Darker stone
+  clr: '#7a8aa8',           // Muted slate blue
+  dynamic: '#7da88a',       // Soft sage
+  historical: '#b8a07a',    // Aged tan
+  jvm: '#6b8ba8',           // Muted blue
+  roots: '#9a958c',         // Warm stone
+  scientific: '#6a9aa8',    // Muted teal
+  tools: '#8a9598',         // Cool stone
 };
 
+// Cohesive edge colors matching museum palette
 export const RELATIONSHIP_COLORS: Record<RelationshipType, string> = {
-  compiler_written_in: '#ef5350',
-  runtime_written_in: '#42a5f5',
-  bootstrap_written_in: '#26a69a',
-  rewritten_in: '#ffa726',
-  influenced: '#90a4ae',
-  influenced_by: '#90a4ae',
-  transpiled_to: '#ab47bc',
+  compiler_written_in: '#c9a87c',   // Warm tan accent
+  runtime_written_in: '#8b9a7d',    // Sage green
+  bootstrap_written_in: '#7da88a',  // Soft green
+  rewritten_in: '#b8a07a',          // Aged tan
+  influenced: '#c9a87c',            // Warm tan accent
+  influenced_by: '#c9a87c',         // Warm tan accent
+  transpiled_to: '#e07a5f',         // Coral highlight
 };
 
 export const RELATIONSHIP_LINE_STYLES: Record<RelationshipType, string> = {
@@ -63,9 +65,9 @@ export function getCytoscapeStyle(
         height: `mapData(degree, 0, 30, ${MIN_NODE_SIZE}, ${MAX_NODE_SIZE})` as any,
         'background-color': clusterColoring
           ? ((ele: any) => {
-              const cluster = ele.data('cluster') as ClusterType;
-              return CLUSTER_COLORS[cluster] || DEFAULT_NODE_COLOR;
-            })
+            const cluster = ele.data('cluster') as ClusterType;
+            return CLUSTER_COLORS[cluster] || DEFAULT_NODE_COLOR;
+          })
           : DEFAULT_NODE_COLOR,
         'border-width': 2,
         'border-color': '#00000020',
@@ -95,11 +97,11 @@ export function getCytoscapeStyle(
           return getAdaptiveLogoBackground(logoColor, isDarkMode);
         }) as any,
 
-        // Display full logo, filling the node
+        // Display logo, carefully sized to fit within the circular node
         'background-image': 'data(logoUrl)' as any,
         'background-fit': 'contain' as any,
-        'background-width': '100%' as any,
-        'background-height': '100%' as any,
+        'background-width': '60%' as any,
+        'background-height': '60%' as any,
         'background-position-x': '50%' as any,
         'background-position-y': '50%' as any,
         'background-repeat': 'no-repeat' as any,
@@ -121,13 +123,16 @@ export function getCytoscapeStyle(
       },
     },
 
-    // Logo node hover effect
+    // Logo node hover effect - warm accent glow
     {
       selector: 'node[logoUrl].hovered',
       style: {
-        'border-width': 3.5,
-        'border-opacity': 0.9,
+        'border-width': 4,
+        'border-color': '#c9a87c',
+        'border-opacity': 1,
         'z-index': 1001,
+        'overlay-opacity': 0.15,
+        'overlay-color': '#c9a87c',
       },
     },
 
@@ -162,26 +167,30 @@ export function getCytoscapeStyle(
       },
     },
 
-    // Hovered node
+    // Hovered node - warm accent glow
     {
       selector: 'node.hovered',
       style: {
         label: 'data(label)' as any,
-        'border-width': 3,
-        'border-color': isDarkMode ? '#ffffff40' : '#00000030',
-        'border-opacity': 1,
+        'border-width': 3.5,
+        'border-color': '#c9a87c',
+        'border-opacity': 0.9,
         'z-index': 1001,
+        'overlay-opacity': 0.12,
+        'overlay-color': '#c9a87c',
       },
     },
 
-    // Selected/highlighted node
+    // Selected/highlighted node - warm accent glow
     {
       selector: 'node.highlighted',
       style: {
-        'border-width': 3,
-        'border-color': isDarkMode ? '#ffffff40' : '#00000030',
-        'border-opacity': 1,
+        'border-width': 3.5,
+        'border-color': '#c9a87c',
+        'border-opacity': 0.9,
         'z-index': 1000,
+        'overlay-opacity': 0.1,
+        'overlay-color': '#c9a87c',
       },
     },
 
@@ -207,6 +216,7 @@ export function getCytoscapeStyle(
       style: {
         width: ((ele: any) => {
           const relationship = ele.data('relationship') as RelationshipType;
+          if (relationship === 'influenced' || relationship === 'influenced_by') return 2.5;
           return relationship === 'runtime_written_in' ? 1.5 : 2;
         }) as any,
         'line-color': ((ele: any) => {
@@ -225,6 +235,8 @@ export function getCytoscapeStyle(
         'target-arrow-shape': 'triangle',
         'curve-style': 'bezier',
         opacity: ((ele: any) => {
+          const relationship = ele.data('relationship') as RelationshipType;
+          if (relationship === 'influenced' || relationship === 'influenced_by') return 0.65;
           const confidence = ele.data('confidence') as number;
           if (confidence >= 0.9) return 0.7;
           if (confidence >= 0.7) return 0.5;
@@ -234,13 +246,15 @@ export function getCytoscapeStyle(
       },
     },
 
-    // Highlighted edges
+    // Highlighted edges - warm accent
     {
       selector: 'edge.highlighted',
       style: {
-        width: 3,
-        opacity: 1,
+        width: 3.5,
+        opacity: 0.95,
         'z-index': 999,
+        'line-color': '#c9a87c',
+        'target-arrow-color': '#c9a87c',
       },
     },
 

@@ -110,6 +110,7 @@ export interface FilterState {
   clusterColoring: boolean;
   showAllLabels: boolean;
   layoutMode: 'dag' | 'force' | 'cluster' | 'timeline';
+  graphMode: 'implementation' | 'influence';
 }
 
 // Cytoscape element types

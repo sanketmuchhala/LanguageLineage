@@ -32,9 +32,14 @@ export function buildCytoscapeElements(
   const visibleEdges: CytoscapeEdge[] = [];
 
   for (const edge of dataset.edges) {
-    // Filter by relationship type
-    if (!filters.relationshipFilters[edge.relationship]) {
-      continue;
+    // Filter by relationship type, split by graphMode
+    const isInfluenceEdge = edge.relationship === 'influenced' || edge.relationship === 'influenced_by';
+
+    if (filters.graphMode === 'influence') {
+      if (!isInfluenceEdge) continue;
+    } else {
+      if (isInfluenceEdge) continue;
+      if (!filters.relationshipFilters[edge.relationship]) continue;
     }
 
     // Filter by confidence threshold

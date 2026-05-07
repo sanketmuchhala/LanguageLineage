@@ -1,44 +1,62 @@
+/* ============================================
+   NAVIGATION CONTROLS - Editorial Style
+   ============================================ */
+
 .nav-controls {
   position: absolute;
-  bottom: 80px;
-  right: 20px;
+  bottom: 100px;
+  right: 24px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
   z-index: 100;
 }
 
 .nav-btn {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border: 1px solid var(--border-primary);
-  background-color: var(--bg-surface);
+  background: var(--bg-surface);
   cursor: pointer;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
-  border-radius: 8px;
-  transition: all 0.2s;
+  font-family: var(--font-body);
+  border-radius: 12px;
+  transition: all 0.3s var(--ease-out-quart);
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--text-secondary);
-  box-shadow: var(--shadow);
 }
 
 .nav-btn:hover {
-  background-color: var(--bg-surface-hover);
-  color: var(--text-primary);
+  border-color: var(--border-accent);
+  color: var(--accent);
+  transform: translateY(-2px);
 }
 
+.nav-btn:active {
+  transform: scale(0.98);
+}
+
+.nav-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ============================================
+   MOBILE RESPONSIVE
+   ============================================ */
 @media (max-width: 768px) {
   .nav-controls {
-    bottom: 70px;
-    right: 10px;
+    bottom: 80px;
+    right: 12px;
+    gap: 6px;
   }
 
   .nav-btn {
-    width: 32px;
-    height: 32px;
-    font-size: 11px;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
   }
 }

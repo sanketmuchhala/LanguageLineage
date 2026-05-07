@@ -1,208 +1,302 @@
+/* ============================================
+   MINIMAL PANEL - Editorial Control Center
+   Matching Landing Page Aesthetic
+   ============================================ */
+
 .minimal-panel {
   position: absolute;
-  top: 20px;
-  left: 20px;
-  width: 280px;
-  max-height: calc(100vh - 40px);
-  background-color: var(--bg-surface);
+  top: 24px;
+  left: 24px;
+  width: 320px;
+  max-height: calc(100vh - 48px);
+  background: var(--bg-surface);
   border: 1px solid var(--border-primary);
-  border-radius: 12px;
+  border-radius: 16px;
   overflow-y: auto;
-  padding: 20px;
+  overflow-x: hidden;
+  padding: 28px;
   box-sizing: border-box;
-  box-shadow: var(--shadow);
   z-index: 200;
-  transition: background-color 0.2s, border-color 0.2s;
+  transition: border-color 0.3s var(--ease-out-quart);
 }
 
-@media (max-width: 1024px) {
-  .minimal-panel {
-    width: 260px;
-  }
+.minimal-panel:hover {
+  border-color: var(--border-accent);
 }
 
-@media (max-width: 768px) {
-  .minimal-panel {
-    width: calc(100% - 20px);
-    height: auto;
-    padding: 12px;
-    max-height: 50vh;
-    top: 10px;
-    left: 10px;
-    right: 10px;
-  }
-
-  .panel-header {
-    margin-bottom: 12px;
-    padding-bottom: 8px;
-  }
-
-  .panel-header h1 {
-    font-size: 16px;
-  }
-
-  .panel-header p {
-    font-size: 11px;
-  }
-
-  .panel-section {
-    margin-bottom: 12px;
-  }
-
-  /* Touch-friendly buttons (minimum 44px tap targets) */
-  .layout-toggle button {
-    min-height: 44px;
-    padding: 10px 8px;
-    font-size: 13px;
-  }
-
-  .theme-toggle {
-    min-width: 44px;
-    min-height: 44px;
-    padding: 10px;
-  }
-
-  /* Compact search box */
-  .search-box {
-    min-height: 44px;
-    font-size: 14px;
-  }
-
-  /* Compact filter chips */
-  .filter-chip {
-    padding: 8px 12px;
-    font-size: 12px;
-    min-height: 36px;
-  }
-
-  /* Hide description on small screens for more space */
-  .panel-header-text p {
-    display: none;
-  }
+/* Custom scrollbar */
+.minimal-panel::-webkit-scrollbar {
+  width: 6px;
 }
 
-/* Extra small mobile devices */
-@media (max-width: 480px) {
-  .minimal-panel {
-    padding: 10px;
-    max-height: 60vh;
-  }
-
-  .panel-section h3 {
-    font-size: 13px;
-  }
-
-  .layout-toggle {
-    gap: 4px;
-  }
-
-  .layout-toggle button {
-    font-size: 11px;
-    padding: 8px 6px;
-  }
+.minimal-panel::-webkit-scrollbar-track {
+  background: transparent;
 }
 
+.minimal-panel::-webkit-scrollbar-thumb {
+  background: var(--border-primary);
+  border-radius: 3px;
+}
+
+.minimal-panel::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
 .panel-header {
-  margin-bottom: 24px;
-  border-bottom: 2px solid var(--border-primary);
-  padding-bottom: 12px;
+  margin-bottom: 28px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border-primary);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
 }
 
+.panel-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  margin-bottom: 16px;
+  background: transparent;
+  border: 1px solid var(--accent);
+  border-radius: 100px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  transition: all 0.3s var(--ease-out-quart);
+  width: fit-content;
+}
+
+.back-button:hover {
+  background: var(--accent);
+  color: var(--bg-canvas);
+}
+
+.back-button:active {
+  transform: scale(0.98);
+}
+
+.back-button svg {
+  width: 16px;
+  height: 16px;
+}
+
 .panel-header-text h1 {
-  font-size: 20px;
-  font-weight: 700;
-  margin: 0 0 8px 0;
+  font-size: 28px;
+  font-weight: 500;
+  font-family: var(--font-display);
+  margin: 0;
   color: var(--text-primary);
+  letter-spacing: -0.01em;
+  line-height: 1.1;
 }
 
 .panel-header-text p {
-  font-size: 13px;
+  font-size: 14px;
+  font-family: var(--font-body);
   color: var(--text-secondary);
   margin: 0;
+  line-height: 1.5;
 }
 
 .theme-toggle {
-  background: none;
+  background: var(--bg-card);
   border: 1px solid var(--border-primary);
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
-  padding: 6px 8px;
-  font-size: 16px;
+  padding: 12px;
+  font-size: 18px;
   line-height: 1;
   color: var(--text-secondary);
-  transition: background-color 0.2s, border-color 0.2s;
+  transition: all 0.3s var(--ease-out-quart);
   flex-shrink: 0;
+  margin-top: 8px;
 }
 
 .theme-toggle:hover {
-  background-color: var(--bg-surface-hover);
-  border-color: var(--accent);
+  border-color: var(--border-accent);
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.theme-toggle:active {
+  transform: scale(0.98);
+}
+
+/* ============================================
+   VALIDATION WARNING
+   ============================================ */
+.validation-warning {
+  background: var(--accent-subtle);
+  border: 1px solid var(--border-accent);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 24px;
+  font-size: 13px;
+  font-family: var(--font-body);
   color: var(--accent);
 }
 
-.validation-warning {
-  background-color: #fff3cd;
-  border: 1px solid #ffc107;
-  border-radius: 8px;
-  padding: 12px;
-  margin-bottom: 20px;
-  font-size: 13px;
-  color: #856404;
+/* ============================================
+   SECTIONS
+   ============================================ */
+.panel-section {
+  margin-bottom: 28px;
 }
 
-.panel-section {
-  margin-bottom: 24px;
+.panel-section:last-child {
+  margin-bottom: 0;
 }
 
 .panel-section h3 {
-  font-size: 14px;
+  font-size: 11px;
   font-weight: 600;
-  margin: 0 0 12px 0;
-  color: var(--text-primary);
+  font-family: var(--font-mono);
+  margin: 0 0 16px 0;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.layout-toggle {
+/* ============================================
+   GRAPH MODE TOGGLE
+   ============================================ */
+.mode-toggle-section {
+  margin-bottom: 28px;
+}
+
+.graph-mode-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.graph-mode-toggle button {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+  flex-direction: column;
+  align-items: center;
+  padding: 18px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border-primary);
+  background: var(--bg-card);
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.3s var(--ease-out-quart);
+}
+
+.graph-mode-toggle button:hover {
+  border-color: var(--border-accent);
+  color: var(--text-primary);
+  transform: translateY(-2px);
+}
+
+.graph-mode-toggle button.active {
+  background: var(--accent);
+  color: var(--bg-canvas);
+  border-color: var(--accent);
+}
+
+.graph-mode-toggle button:active {
+  transform: scale(0.98);
+}
+
+.mode-label {
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  line-height: 1;
+}
+
+.mode-sublabel {
+  font-size: 11px;
+  font-family: var(--font-body);
+  opacity: 0.7;
+  margin-top: 6px;
+  line-height: 1;
+}
+
+.influence-mode-note {
+  font-size: 13px;
+  font-family: var(--font-body);
+  color: var(--text-secondary);
+  background: var(--accent-subtle);
+  border: 1px solid var(--border-accent);
+  border-radius: 12px;
+  padding: 14px 16px;
+  line-height: 1.5;
+}
+
+/* ============================================
+   LAYOUT TOGGLE
+   ============================================ */
+.layout-toggle {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
 }
 
 .layout-toggle button {
-  flex: 1 1 40%;
-  padding: 6px 8px;
+  padding: 14px 10px;
   border: 1px solid var(--border-primary);
-  background-color: var(--bg-surface);
+  background: var(--bg-card);
   cursor: pointer;
   font-size: 12px;
-  font-weight: 500;
-  border-radius: 8px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  border-radius: 10px;
   color: var(--text-secondary);
-  transition: all 0.2s;
+  transition: all 0.3s var(--ease-out-quart);
 }
 
 .layout-toggle button:hover {
-  background-color: var(--bg-surface-hover);
+  border-color: var(--border-accent);
+  color: var(--text-primary);
+  transform: translateY(-2px);
 }
 
 .layout-toggle button.active {
-  background-color: var(--accent);
-  color: #fff;
+  background: var(--accent);
+  color: var(--bg-canvas);
   border-color: var(--accent);
+}
+
+.layout-toggle button:active {
+  transform: scale(0.98);
+}
+
+/* ============================================
+   SEARCH BOX
+   ============================================ */
+.search-wrapper {
+  position: relative;
 }
 
 .search-box {
   width: 100%;
-  padding: 8px 12px;
+  padding: 14px 16px;
   border: 1px solid var(--border-primary);
-  border-radius: 8px;
-  font-size: 13px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-family: var(--font-body);
   box-sizing: border-box;
-  background-color: var(--bg-canvas);
+  background: var(--bg-card);
   color: var(--text-primary);
-  transition: border-color 0.2s, background-color 0.2s;
+  transition: all 0.3s var(--ease-out-quart);
 }
 
 .search-box:focus {
@@ -214,21 +308,15 @@
   color: var(--text-tertiary);
 }
 
-.search-wrapper {
-  position: relative;
-}
-
 .search-dropdown {
   position: absolute;
-  top: 100%;
+  top: calc(100% + 8px);
   left: 0;
   right: 0;
-  background-color: var(--bg-elevated);
+  background: var(--bg-surface);
   border: 1px solid var(--border-primary);
-  border-top: none;
-  border-radius: 0 0 8px 8px;
-  box-shadow: var(--shadow);
-  max-height: 240px;
+  border-radius: 12px;
+  max-height: 280px;
   overflow-y: auto;
   z-index: 300;
 }
@@ -237,62 +325,91 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 12px;
+  padding: 12px 16px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 14px;
+  font-family: var(--font-body);
   color: var(--text-primary);
+  transition: all 0.2s ease;
+}
+
+.search-result:first-child {
+  border-radius: 11px 11px 0 0;
+}
+
+.search-result:last-child {
+  border-radius: 0 0 11px 11px;
 }
 
 .search-result:hover {
-  background-color: var(--bg-surface-hover);
+  background: var(--accent-subtle);
+  color: var(--accent);
 }
 
 .search-result-name {
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .search-result-year {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-tertiary);
+  font-weight: 500;
 }
 
+/* ============================================
+   SLIDER CONTROL
+   ============================================ */
 .slider-control {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 }
 
 .slider-label {
   font-size: 13px;
+  font-family: var(--font-body);
   color: var(--text-primary);
   font-weight: 500;
+  display: flex;
+  justify-content: space-between;
 }
 
 .slider-value {
-  font-weight: 700;
-  color: var(--text-secondary);
+  font-weight: 600;
+  color: var(--accent);
+  font-family: var(--font-mono);
 }
 
 .slider {
   width: 100%;
   cursor: pointer;
   accent-color: var(--accent);
+  height: 6px;
 }
 
+/* ============================================
+   TOGGLE
+   ============================================ */
 .toggle {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
+  gap: 12px;
+  margin-bottom: 14px;
   cursor: pointer;
   font-size: 13px;
+  font-family: var(--font-body);
   color: var(--text-primary);
+  transition: color 0.2s ease;
+}
+
+.toggle:hover {
+  color: var(--accent);
 }
 
 .toggle input[type="checkbox"] {
   cursor: pointer;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   accent-color: var(--accent);
 }
 
@@ -300,65 +417,190 @@
   user-select: none;
 }
 
+/* ============================================
+   RELATIONSHIP FILTERS
+   ============================================ */
 .relationship-filters h3 {
-  font-size: 14px;
+  font-size: 11px;
   font-weight: 600;
-  margin: 0 0 12px 0;
-  color: var(--text-primary);
+  font-family: var(--font-mono);
+  margin: 0 0 16px 0;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
 }
 
+/* ============================================
+   ATTRIBUTE FILTERS
+   ============================================ */
 .clear-filters-btn {
-  float: right;
   background: none;
   border: none;
   font-size: 11px;
+  font-family: var(--font-body);
   color: var(--text-tertiary);
   cursor: pointer;
-  padding: 0;
-  font-weight: 500;
+  padding: 4px 10px;
+  font-weight: 600;
+  border-radius: 100px;
+  transition: all 0.2s ease;
 }
 
 .clear-filters-btn:hover {
   color: var(--accent);
+  background: var(--accent-subtle);
+}
+
+.clear-filters-btn:active {
+  transform: scale(0.98);
 }
 
 .filter-group {
-  margin-bottom: 12px;
+  margin-bottom: 20px;
+}
+
+.filter-group:last-child {
+  margin-bottom: 0;
 }
 
 .filter-group-label {
   display: block;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
+  font-family: var(--font-body);
   color: var(--text-secondary);
-  margin-bottom: 6px;
+  margin-bottom: 10px;
 }
 
 .filter-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 8px;
 }
 
 .filter-chip {
-  padding: 3px 8px;
+  padding: 8px 14px;
   border: 1px solid var(--border-primary);
-  background-color: var(--bg-surface);
+  background: var(--bg-card);
   cursor: pointer;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
-  border-radius: 9999px;
+  font-family: var(--font-body);
+  border-radius: 100px;
   color: var(--text-secondary);
-  transition: all 0.2s;
+  transition: all 0.25s var(--ease-out-quart);
+  text-transform: capitalize;
 }
 
 .filter-chip:hover {
-  background-color: var(--bg-surface-hover);
-  border-color: var(--accent);
+  border-color: var(--border-accent);
+  color: var(--text-primary);
 }
 
 .filter-chip.active {
-  background-color: var(--accent);
-  color: #fff;
+  background: var(--accent-subtle);
+  color: var(--accent);
   border-color: var(--accent);
+}
+
+.filter-chip:active {
+  transform: scale(0.98);
+}
+
+/* ============================================
+   TABLET RESPONSIVE
+   ============================================ */
+@media (max-width: 1024px) {
+  .minimal-panel {
+    width: 300px;
+    padding: 24px;
+  }
+
+  .layout-toggle {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ============================================
+   MOBILE RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+  .minimal-panel {
+    width: calc(100% - 24px);
+    max-width: none;
+    height: auto;
+    padding: 20px;
+    max-height: 50vh;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+  }
+
+  .panel-header {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+  }
+
+  .panel-header-text h1 {
+    font-size: 22px;
+  }
+
+  .panel-header-text p {
+    font-size: 12px;
+  }
+
+  .panel-section {
+    margin-bottom: 20px;
+  }
+
+  .layout-toggle button {
+    min-height: 48px;
+    padding: 12px 8px;
+    font-size: 12px;
+  }
+
+  .theme-toggle {
+    min-width: 48px;
+    min-height: 48px;
+    padding: 12px;
+  }
+
+  .search-box {
+    min-height: 48px;
+    font-size: 16px;
+  }
+
+  .filter-chip {
+    padding: 10px 14px;
+    font-size: 13px;
+    min-height: 40px;
+  }
+
+  .back-button {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+}
+
+/* ============================================
+   EXTRA SMALL MOBILE
+   ============================================ */
+@media (max-width: 480px) {
+  .minimal-panel {
+    padding: 16px;
+    max-height: 55vh;
+  }
+
+  .panel-section h3 {
+    font-size: 10px;
+  }
+
+  .layout-toggle {
+    gap: 6px;
+  }
+
+  .layout-toggle button {
+    font-size: 11px;
+    padding: 10px 6px;
+  }
 }

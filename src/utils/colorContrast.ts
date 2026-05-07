@@ -15,9 +15,8 @@ export function calculateLuminance(hexColor: string): number {
   return 0.2126 * rLinear + 0.7152 * gLinear + 0.0722 * bLinear;
 }
 
-// Get logo background color - use the logo's own color for seamless blend
-// For logos with built-in backgrounds (like JS yellow square), this prevents
-// the "nested square" effect by matching the node background to the logo background
+// Get logo background color - provide contrasting background for visibility
+// Uses luminance of logo color to decide light vs dark background
 export function getAdaptiveLogoBackground(
   logoColor: string | null,
   isDarkMode: boolean
@@ -27,13 +26,21 @@ export function getAdaptiveLogoBackground(
     return isDarkMode ? '#1c2128' : '#ffffff';
   }
 
-  // Use the logo's own dominant color as the node background
-  // This creates a seamless blend between logo and node
-  return logoColor;
+  const luminance = calculateLuminance(logoColor);
+
+  // Light logos (high luminance) need dark backgrounds
+  // Dark logos (low luminance) need light backgrounds
+  if (luminance > 0.5) {
+    // Light logo - use dark background
+    return isDarkMode ? '#1a1a1d' : '#2a2a2d';
+  } else {
+    // Dark logo - use light background
+    return isDarkMode ? '#f5f0e8' : '#ffffff';
+  }
 }
 
 // Get border color that creates subtle contrast with logo background
-// Light logos get darker borders, dark logos get lighter borders
+// Uses logo color as the border for a cohesive look
 export function getLogoBorderColor(
   logoColor: string | null,
   isDarkMode: boolean
@@ -43,8 +50,6 @@ export function getLogoBorderColor(
     return isDarkMode ? '#30363d' : '#e2e5e9';
   }
 
-  const luminance = calculateLuminance(logoColor);
-
-  // Create subtle contrast: light logos get dark borders, dark logos get light borders
-  return luminance > 0.5 ? '#00000030' : '#ffffff30';
+  // Use the logo's dominant color as the border for cohesive branding
+  return logoColor;
 }

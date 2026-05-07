@@ -1,13 +1,19 @@
 import { useState } from 'react';
 import { CLUSTER_COLORS, RELATIONSHIP_COLORS } from '../graph/style';
+import { useGraphStore } from '../store/useGraphStore';
 
 export function Legend() {
   const [collapsed, setCollapsed] = useState(true);
+  const { filters } = useGraphStore();
+  const isInfluenceMode = filters.graphMode === 'influence';
 
   return (
     <div className={`legend ${collapsed ? 'collapsed' : ''}`}>
       <button className="legend-toggle" onClick={() => setCollapsed(!collapsed)}>
-        {collapsed ? '▶ Legend' : '▼ Legend'}
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d={collapsed ? "M9 18l6-6-6-6" : "M6 9l6 6 6-6"} />
+        </svg>
+        <span>Legend</span>
       </button>
 
       {!collapsed && (
@@ -34,31 +40,41 @@ export function Legend() {
             </div>
           </div>
 
-          <div className="legend-section">
-            <h4>Edge Types</h4>
-            {Object.entries(RELATIONSHIP_COLORS).map(([relationship, color]) => (
-              <div key={relationship} className="legend-item">
-                <span className="legend-color" style={{ backgroundColor: color }} />
-                <span className="legend-text">{relationship.replace(/_/g, ' ')}</span>
+          {isInfluenceMode ? (
+            <div className="legend-section">
+              <h4>Edge Type</h4>
+              <div className="legend-item">
+                <span className="legend-color" style={{ backgroundColor: '#f59e0b' }} />
+                <span className="legend-text">Conceptual influence</span>
               </div>
-            ))}
-          </div>
+            </div>
+          ) : (
+            <div className="legend-section">
+              <h4>Edge Types</h4>
+              {Object.entries(RELATIONSHIP_COLORS)
+                .filter(([rel]) => rel !== 'influenced' && rel !== 'influenced_by')
+                .map(([relationship, color]) => (
+                  <div key={relationship} className="legend-item">
+                    <span className="legend-color" style={{ backgroundColor: color }} />
+                    <span className="legend-text">{relationship.replace(/_/g, ' ')}</span>
+                  </div>
+                ))}
+            </div>
+          )}
 
-          <div className="legend-section">
-            <h4>Edge Styles</h4>
-            <div className="legend-item">
-              <span className="legend-line legend-line-solid" />
-              <span className="legend-text">Implementation</span>
+          {!isInfluenceMode && (
+            <div className="legend-section">
+              <h4>Edge Styles</h4>
+              <div className="legend-item">
+                <span className="legend-line legend-line-solid" />
+                <span className="legend-text">Implementation</span>
+              </div>
+              <div className="legend-item">
+                <span className="legend-line legend-line-dashed" />
+                <span className="legend-text">Bootstrap / Rewrite / Transpile</span>
+              </div>
             </div>
-            <div className="legend-item">
-              <span className="legend-line legend-line-dashed" />
-              <span className="legend-text">Bootstrap / Rewrite / Transpile</span>
-            </div>
-            <div className="legend-item">
-              <span className="legend-line legend-line-dotted" />
-              <span className="legend-text">Influence</span>
-            </div>
-          </div>
+          )}
 
           <div className="legend-section">
             <h4>Edge Confidence</h4>

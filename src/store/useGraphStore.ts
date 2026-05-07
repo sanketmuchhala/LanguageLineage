@@ -54,14 +54,15 @@ const DEFAULT_FILTERS: FilterState = {
     runtime_written_in: true,
     bootstrap_written_in: true,
     rewritten_in: true,
-    influenced: true,
-    influenced_by: true,
+    influenced: false,
+    influenced_by: false,
     transpiled_to: true,
   },
   showSelfLoops: false,
   clusterColoring: true,
   showAllLabels: false, // Progressive disclosure by default; toggle on for all labels
-  layoutMode: 'force', // Start with force layout for better visual
+  layoutMode: 'force',
+  graphMode: 'implementation',
 };
 
 export const useGraphStore = create<GraphStore>((set) => ({
@@ -80,7 +81,7 @@ export const useGraphStore = create<GraphStore>((set) => ({
   isTimelinePlaying: false,
   explorationMode: 'none',
   attributeFilters: { paradigms: [], typing: null, decade: null },
-  isDarkMode: false,
+  isDarkMode: true,
 
   // Actions
   setDataset: (dataset) => set({ dataset }),
@@ -131,7 +132,8 @@ export const useGraphStore = create<GraphStore>((set) => ({
   toggleDarkMode: () =>
     set((state) => {
       const next = !state.isDarkMode;
-      document.documentElement.classList.toggle('dark', next);
+      // Dark mode is default, so we add .light class when NOT in dark mode
+      document.documentElement.classList.toggle('light', !next);
       return { isDarkMode: next };
     }),
 }));
