@@ -67,7 +67,7 @@ if (manifest) {
 // index.html
 const indexHtml = readFileSync(join(ROOT, 'index.html'), 'utf8');
 const indexChecks = [
-  ['canonical', '<link rel="canonical"'],
+  // canonical intentionally omitted from index.html — react-helmet-async sets it per route
   ['og:title', 'og:title'],
   ['og:description', 'og:description'],
   ['og:image', 'og:image'],

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Programming Language Lineage Dataset | Language Lineage</title>
+  <meta name="description" content="Open dataset of 112 programming languages with 347 implementation and influence relationships, evidence sources, and confidence scores." />
+  <link rel="canonical" href="https://languagelineage.org/dataset" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/seo.css" />
+  <meta property="og:title" content="Programming Language Lineage Dataset" />
+  <meta property="og:description" content="Open dataset of 112 programming languages with 347 relationships." />
+  <meta property="og:url" content="https://languagelineage.org/dataset" />
+  <meta property="og:image" content="https://languagelineage.org/og-image.svg" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"Programming Language Lineage Dataset","description":"Structured dataset of 112 programming languages and tools with 347 documented implementation and influence relationships.","url":"https://languagelineage.org/dataset","creator":{"@type":"Organization","name":"Language Lineage","url":"https://languagelineage.org"},"license":"https://creativecommons.org/licenses/by/4.0/","temporalCoverage":"1949/2023","variableMeasured":["influenced","bootstrap_written_in","compiler_written_in","runtime_written_in","rewritten_in","transpiled_to"]}</script>
+</head>
+<body class="seo-page">
+<nav class="seo-nav">
+  <a href="/">Language Lineage</a>
+  <a href="/explore">Graph Explorer</a>
+  <a href="/dataset">Dataset</a>
+</nav>
+<main class="seo-main">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; Dataset
+  </nav>
+
+  <h1>Programming Language Lineage Dataset</h1>
+
+  <p>An open, evidence-backed dataset of programming language implementation and influence relationships. Every relationship includes a confidence score and at least one evidence source URL.</p>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <span class="stat-number">112</span>
+      <span class="stat-label">Total nodes</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-number">98</span>
+      <span class="stat-label">Languages</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-number">14</span>
+      <span class="stat-label">Tools</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-number">347</span>
+      <span class="stat-label">Relationships</span>
+    </div>
+  </div>
+
+  <h2>Relationship Breakdown</h2>
+  <table>
+    <thead><tr><th>Type</th><th>Count</th></tr></thead>
+    <tbody><tr><td>influenced</td><td>189</td></tr>
+<tr><td>compiler written in</td><td>78</td></tr>
+<tr><td>runtime written in</td><td>56</td></tr>
+<tr><td>bootstrap written in</td><td>14</td></tr>
+<tr><td>transpiled to</td><td>8</td></tr>
+<tr><td>rewritten in</td><td>2</td></tr></tbody>
+  </table>
+
+  <h2>Schema</h2>
+  <p>Each language node contains: <code>id</code>, <code>name</code>, <code>first_release_year</code>, <code>paradigm</code>, <code>typing</code>, <code>cluster_hint</code>.</p>
+  <p>Each relationship contains: <code>from_language</code>, <code>to_language</code>, <code>relationship</code>, <code>confidence</code> (0–1), <code>evidence_source</code> (URL), <code>notes</code>.</p>
+
+  <h2>Download</h2>
+  <p>The raw dataset JSON is available at:</p>
+  <pre>https://languagelineage.org/dataset/v4/lineage_v4.json</pre>
+
+  <h2>Citation</h2>
+  <pre>Language Lineage dataset (languagelineage.org). Accessed 2026.</pre>
+
+  <a class="explore-btn" href="/explore">Explore in Graph &rarr;</a>
+</main>
+<footer class="seo-footer">
+  <a href="/">Language Lineage</a>
+  <span>&middot;</span>
+  <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+</footer>
+</body>
+</html>

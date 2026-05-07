@@ -38,10 +38,17 @@ function idToPrefix(id: string): string {
   return id.startsWith('tool:') ? 'tools' : 'languages';
 }
 
-function confidenceLabel(c: number): string {
-  if (c >= 0.95) return 'well-documented';
-  if (c >= 0.85) return 'documented';
-  return 'reported';
+function confidenceNote(c: number): string {
+  if (c >= 0.95) return ' (well-documented)';
+  if (c >= 0.85) return ' (documented)';
+  return ' (reported)';
+}
+
+function joinNames(names: string[]): string {
+  if (names.length === 0) return '';
+  if (names.length === 1) return names[0];
+  if (names.length === 2) return `${names[0]} and ${names[1]}`;
+  return `${names.slice(0, -1).join(', ')}, and ${names[names.length - 1]}`;
 }
 
 function confidenceClass(c: number): string {
@@ -93,23 +100,24 @@ function buildAnswerBox(node: Language, rels: Relationship[], nodeMap: Map<strin
   if (compilerRels.length > 0) {
     const names = compilerRels.map(r => nameFromId(r.from_language, nodeMap));
     const conf = Math.min(...compilerRels.map(r => r.confidence));
-    parts.push(`The <strong>${escapeHtml(node.name)}</strong> compiler is ${confidenceLabel(conf)} written in <strong>${names.map(escapeHtml).join(' and ')}</strong>.`);
+    parts.push(`The <strong>${escapeHtml(node.name)}</strong> compiler is written in <strong>${joinNames(names.map(escapeHtml))}</strong>${confidenceNote(conf)}.`);
   }
 
   if (runtimeRels.length > 0) {
     const names = runtimeRels.map(r => nameFromId(r.from_language, nodeMap));
     const conf = Math.min(...runtimeRels.map(r => r.confidence));
-    parts.push(`Its runtime is ${confidenceLabel(conf)} implemented in <strong>${names.map(escapeHtml).join(' and ')}</strong>.`);
+    parts.push(`Its runtime is implemented in <strong>${joinNames(names.map(escapeHtml))}</strong>${confidenceNote(conf)}.`);
   }
 
   if (bootstrapRels.length > 0) {
     const names = bootstrapRels.map(r => nameFromId(r.from_language, nodeMap));
-    parts.push(`${escapeHtml(node.name)} uses a ${confidenceLabel(bootstrapRels[0].confidence)} bootstrap chain from <strong>${names.map(escapeHtml).join(' and ')}</strong>.`);
+    const conf = bootstrapRels[0].confidence;
+    parts.push(`${escapeHtml(node.name)} uses a bootstrap chain from <strong>${joinNames(names.map(escapeHtml))}</strong>${confidenceNote(conf)}.`);
   }
 
   if (rewrittenRels.length > 0) {
     const names = rewrittenRels.map(r => nameFromId(r.from_language, nodeMap));
-    parts.push(`It has been rewritten in <strong>${names.map(escapeHtml).join(' and ')}</strong>.`);
+    parts.push(`It has been rewritten in <strong>${joinNames(names.map(escapeHtml))}</strong>.`);
   }
 
   return `<div class="answer-box">${parts.join(' ')}</div>`;
@@ -728,7 +736,7 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
     slug: 'how-python-is-implemented',
     title: 'How Python is Implemented | Language Lineage',
     h1: 'How Python is Implemented',
-    description: 'CPython, the reference Python implementation, is written in C. PyPy is written in RPython. Learn how Python interpreters work and which language they are written in.',
+    description: 'CPython is the reference Python implementation, written in C. PyPy uses RPython. Learn how Python interpreters work and what language each is written in.',
     content: `<div class="answer-box"><strong>CPython</strong>, the reference Python implementation, is written in <strong>C</strong>. It interprets Python bytecode via a virtual machine. Alternative implementations include PyPy (written in RPython) and Jython (written in Java).</div>
 
 <h2>CPython</h2>
