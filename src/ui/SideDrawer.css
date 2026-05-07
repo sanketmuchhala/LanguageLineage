@@ -372,3 +372,23 @@
     display: none !important;
   }
 }
+
+.drawer-details-link {
+  display: block;
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--accent-subtle);
+  border: 1px solid var(--border-accent);
+  border-radius: 8px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.drawer-details-link:hover {
+  background: var(--accent-glow);
+  border-color: var(--accent);
+}

@@ -26,6 +26,10 @@ export function SideDrawer() {
     const incoming = datasetIndex?.incomingEdges.get(selectedNodeId) || [];
     const outgoing = datasetIndex?.outgoingEdges.get(selectedNodeId) || [];
 
+    const prefix = selectedNodeId.startsWith('tool:') ? 'tools' : 'languages';
+    const slug = selectedNodeId.replace(/^(lang|tool):/, '').replace(/_/g, '-');
+    const detailsUrl = `/${prefix}/${slug}`;
+
     return (
       <>
         <div className="side-drawer-backdrop visible" onClick={handleClose} />
@@ -132,6 +136,12 @@ export function SideDrawer() {
                 Full Lineage
               </button>
             </div>
+          </section>
+
+          <section className="drawer-section">
+            <a href={detailsUrl} className="drawer-details-link">
+              View full details page &rarr;
+            </a>
           </section>
 
           {outgoing.length > 0 && (

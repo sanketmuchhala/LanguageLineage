@@ -385,6 +385,42 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
         </div>
       </section>
 
+      {/* Language Index */}
+      <section id="languages" className="section" style={{ background: 'var(--bg-surface)', borderTop: '1px solid var(--border-primary)', borderBottom: '1px solid var(--border-primary)', padding: '64px 40px' }}>
+        <div style={{ maxWidth: '960px', margin: '0 auto' }}>
+          <p className="section-eyebrow reveal">Browse</p>
+          <h2 className="section-title reveal" style={{ marginBottom: '32px' }}>Language Index</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '8px', marginBottom: '24px' }}>
+            {[
+              { name: 'C', slug: 'c' }, { name: 'C++', slug: 'cxx' }, { name: 'Python', slug: 'python' },
+              { name: 'JavaScript', slug: 'javascript' }, { name: 'TypeScript', slug: 'typescript' }, { name: 'Rust', slug: 'rust' },
+              { name: 'Go', slug: 'go' }, { name: 'Java', slug: 'java' }, { name: 'Haskell', slug: 'haskell' },
+              { name: 'Lisp', slug: 'lisp' }, { name: 'Fortran', slug: 'fortran' }, { name: 'Kotlin', slug: 'kotlin' },
+              { name: 'Swift', slug: 'swift' }, { name: 'Ruby', slug: 'ruby' }, { name: 'Erlang', slug: 'erlang' },
+              { name: 'OCaml', slug: 'ocaml' }, { name: 'Scala', slug: 'scala' }, { name: 'Clojure', slug: 'clojure' },
+              { name: 'Elixir', slug: 'elixir' }, { name: 'Dart', slug: 'dart' }, { name: 'Julia', slug: 'julia' },
+              { name: 'Zig', slug: 'zig' }, { name: 'Nim', slug: 'nim' }, { name: 'Assembly', slug: 'assembly' },
+            ].map(({ name, slug }) => (
+              <a
+                key={slug}
+                href={`/languages/${slug}`}
+                style={{ display: 'block', padding: '10px 14px', background: 'var(--bg-card)', border: '1px solid var(--border-primary)', borderRadius: '8px', fontSize: '13px', fontWeight: 500, color: 'var(--text-secondary)', textDecoration: 'none', transition: 'border-color 0.15s, color 0.15s' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'var(--accent)'; (e.currentTarget as HTMLAnchorElement).style.color = 'var(--accent)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.borderColor = 'var(--border-primary)'; (e.currentTarget as HTMLAnchorElement).style.color = 'var(--text-secondary)'; }}
+              >
+                {name}
+              </a>
+            ))}
+          </div>
+          <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+            <a href="/dataset" style={{ fontSize: '14px', color: 'var(--accent)', textDecoration: 'none', fontWeight: 500 }}>View dataset &rarr;</a>
+            <a href="/relationships/compiler-written-in" style={{ fontSize: '14px', color: 'var(--text-secondary)', textDecoration: 'none' }}>Compiler relationships</a>
+            <a href="/guides/what-is-compiler-bootstrapping" style={{ fontSize: '14px', color: 'var(--text-secondary)', textDecoration: 'none' }}>What is bootstrapping?</a>
+            <a href="/guides/how-python-is-implemented" style={{ fontSize: '14px', color: 'var(--text-secondary)', textDecoration: 'none' }}>How Python is implemented</a>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="landing-footer">
         <div className="footer-content">
