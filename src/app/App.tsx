@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { useGraphStore } from '../store/useGraphStore';
 import { loadDataset } from '../data/loadDataset';
 import { validateDataset } from '../data/validateDataset';
@@ -141,6 +142,7 @@ function App() {
         <Route path="/explore" element={<GraphExplorer />} />
       </Routes>
       <Analytics />
+      <SpeedInsights />
     </BrowserRouter>
   );
 }
