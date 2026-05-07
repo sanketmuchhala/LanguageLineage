@@ -61,6 +61,12 @@ export function SideDrawer() {
           })()}
 
           <section className="drawer-section">
+            <a href={detailsUrl} className="drawer-details-link">
+              View full details page &rarr;
+            </a>
+          </section>
+
+          <section className="drawer-section">
             <h3>Details</h3>
             <p>
               <strong>First Release:</strong> {node.first_release_year || 'N/A'}
@@ -136,12 +142,6 @@ export function SideDrawer() {
                 Full Lineage
               </button>
             </div>
-          </section>
-
-          <section className="drawer-section">
-            <a href={detailsUrl} className="drawer-details-link">
-              View full details page &rarr;
-            </a>
           </section>
 
           {outgoing.length > 0 && (

@@ -386,11 +386,11 @@ ${faqs.map(f => `<div class="faq-item">
 
   ${buildAnswerBox(node, rels, nodeMap)}
 
+  ${buildGraphSection(node)}
+
   ${buildImplSection(node, rels, nodeMap)}
 
   ${buildInfluenceSection(node, rels, nodeMap)}
-
-  ${buildGraphSection(node)}
 
   ${faqSection}
 
