@@ -68,6 +68,9 @@ function assignCluster(node: { id: string; name: string }): ClusterType {
 }
 
 export function normalizeDataset(rawDataset: RawDataset): NormalizedDataset {
+  // Support both v2 (edges) and v4 (relationships)
+  const edges = rawDataset.relationships || rawDataset.edges || [];
+
   // Calculate degree for each language (count incoming + outgoing edges)
   const degreeMap = new Map<string, number>();
 
@@ -75,7 +78,7 @@ export function normalizeDataset(rawDataset: RawDataset): NormalizedDataset {
     degreeMap.set(lang.id, 0);
   }
 
-  for (const edge of rawDataset.edges) {
+  for (const edge of edges) {
     const fromDegree = degreeMap.get(edge.from_language) || 0;
     const toDegree = degreeMap.get(edge.to_language) || 0;
     degreeMap.set(edge.from_language, fromDegree + 1);
@@ -86,11 +89,12 @@ export function normalizeDataset(rawDataset: RawDataset): NormalizedDataset {
   const normalizedLanguages: NormalizedLanguageNode[] = rawDataset.languages.map((lang) => ({
     ...lang,
     degree: degreeMap.get(lang.id) || 0,
-    cluster: assignCluster(lang),
+    // Use cluster_hint from v4, or compute for v2
+    cluster: (lang.cluster_hint as ClusterType) || assignCluster(lang),
   }));
 
   // Create normalized edges with unique IDs
-  const normalizedEdges: NormalizedEdge[] = rawDataset.edges.map((edge, index) => ({
+  const normalizedEdges: NormalizedEdge[] = edges.map((edge, index) => ({
     ...edge,
     id: `edge-${index}-${edge.from_language}-${edge.to_language}`,
   }));
@@ -108,7 +112,7 @@ export function normalizeDataset(rawDataset: RawDataset): NormalizedDataset {
 
   return {
     languages: normalizedLanguages,
-    implementations: rawDataset.implementations,
+    implementations: rawDataset.implementations || [],
     edges: normalizedEdges,
     languageMap,
     edgeMap,

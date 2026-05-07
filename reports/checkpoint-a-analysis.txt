@@ -1,0 +1,3780 @@
+
+> programming-language-graph@1.0.0 analyze:v4
+> tsx scripts/analyzeDataset.ts dataset/v4/lineage_v4.json
+
+================================================================================
+DATASET ANALYSIS REPORT
+================================================================================
+
+Dataset: dataset/v4/lineage_v4.json
+Timestamp: 2026-03-06T07:19:50.167Z
+
+────────────────────────────────────────────────────────────────────────────────
+1. SCHEMA VALIDATION
+────────────────────────────────────────────────────────────────────────────────
+❌ SCHEMA VALIDATION FAILED
+
+Validation Errors:
+
+  Error 1:
+    Path: languages → 0 → company
+    Message: Required
+
+  Error 2:
+    Path: languages → 0 → garbage_collected
+    Message: Required
+
+  Error 3:
+    Path: languages → 0 → logo_url
+    Message: Required
+
+  Error 4:
+    Path: languages → 0 → peak_year
+    Message: Required
+
+  Error 5:
+    Path: languages → 0 → current_users_estimate
+    Message: Required
+
+  Error 6:
+    Path: languages → 1 → company
+    Message: Required
+
+  Error 7:
+    Path: languages → 1 → garbage_collected
+    Message: Required
+
+  Error 8:
+    Path: languages → 1 → logo_url
+    Message: Required
+
+  Error 9:
+    Path: languages → 1 → peak_year
+    Message: Required
+
+  Error 10:
+    Path: languages → 1 → current_users_estimate
+    Message: Required
+
+  Error 11:
+    Path: languages → 2 → company
+    Message: Required
+
+  Error 12:
+    Path: languages → 2 → garbage_collected
+    Message: Required
+
+  Error 13:
+    Path: languages → 2 → logo_url
+    Message: Required
+
+  Error 14:
+    Path: languages → 2 → peak_year
+    Message: Required
+
+  Error 15:
+    Path: languages → 2 → current_users_estimate
+    Message: Required
+
+  Error 16:
+    Path: languages → 3 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'multi-paradigm'
+
+  Error 17:
+    Path: languages → 3 → company
+    Message: Required
+
+  Error 18:
+    Path: languages → 3 → garbage_collected
+    Message: Required
+
+  Error 19:
+    Path: languages → 3 → logo_url
+    Message: Required
+
+  Error 20:
+    Path: languages → 3 → peak_year
+    Message: Required
+
+  Error 21:
+    Path: languages → 3 → current_users_estimate
+    Message: Required
+
+  Error 22:
+    Path: languages → 4 → company
+    Message: Required
+
+  Error 23:
+    Path: languages → 4 → garbage_collected
+    Message: Required
+
+  Error 24:
+    Path: languages → 4 → logo_url
+    Message: Required
+
+  Error 25:
+    Path: languages → 4 → peak_year
+    Message: Required
+
+  Error 26:
+    Path: languages → 4 → current_users_estimate
+    Message: Required
+
+  Error 27:
+    Path: languages → 5 → company
+    Message: Required
+
+  Error 28:
+    Path: languages → 5 → garbage_collected
+    Message: Required
+
+  Error 29:
+    Path: languages → 5 → logo_url
+    Message: Required
+
+  Error 30:
+    Path: languages → 5 → peak_year
+    Message: Required
+
+  Error 31:
+    Path: languages → 5 → current_users_estimate
+    Message: Required
+
+  Error 32:
+    Path: languages → 6 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 33:
+    Path: languages → 6 → company
+    Message: Required
+
+  Error 34:
+    Path: languages → 6 → garbage_collected
+    Message: Required
+
+  Error 35:
+    Path: languages → 6 → logo_url
+    Message: Required
+
+  Error 36:
+    Path: languages → 6 → peak_year
+    Message: Required
+
+  Error 37:
+    Path: languages → 6 → current_users_estimate
+    Message: Required
+
+  Error 38:
+    Path: languages → 7 → company
+    Message: Required
+
+  Error 39:
+    Path: languages → 7 → garbage_collected
+    Message: Required
+
+  Error 40:
+    Path: languages → 7 → logo_url
+    Message: Required
+
+  Error 41:
+    Path: languages → 7 → peak_year
+    Message: Required
+
+  Error 42:
+    Path: languages → 7 → current_users_estimate
+    Message: Required
+
+  Error 43:
+    Path: languages → 8 → company
+    Message: Required
+
+  Error 44:
+    Path: languages → 8 → garbage_collected
+    Message: Required
+
+  Error 45:
+    Path: languages → 8 → logo_url
+    Message: Required
+
+  Error 46:
+    Path: languages → 8 → peak_year
+    Message: Required
+
+  Error 47:
+    Path: languages → 8 → current_users_estimate
+    Message: Required
+
+  Error 48:
+    Path: languages → 9 → company
+    Message: Required
+
+  Error 49:
+    Path: languages → 9 → garbage_collected
+    Message: Required
+
+  Error 50:
+    Path: languages → 9 → logo_url
+    Message: Required
+
+  Error 51:
+    Path: languages → 9 → peak_year
+    Message: Required
+
+  Error 52:
+    Path: languages → 9 → current_users_estimate
+    Message: Required
+
+  Error 53:
+    Path: languages → 10 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 54:
+    Path: languages → 10 → runtime_model
+    Message: Invalid enum value. Expected 'compiled' | 'interpreted' | 'jit_compiled' | 'bytecode_vm' | 'transpiled' | 'none' | 'native', received 'vm'
+
+  Error 55:
+    Path: languages → 10 → company
+    Message: Required
+
+  Error 56:
+    Path: languages → 10 → garbage_collected
+    Message: Required
+
+  Error 57:
+    Path: languages → 10 → logo_url
+    Message: Required
+
+  Error 58:
+    Path: languages → 10 → peak_year
+    Message: Required
+
+  Error 59:
+    Path: languages → 10 → current_users_estimate
+    Message: Required
+
+  Error 60:
+    Path: languages → 11 → company
+    Message: Required
+
+  Error 61:
+    Path: languages → 11 → garbage_collected
+    Message: Required
+
+  Error 62:
+    Path: languages → 11 → logo_url
+    Message: Required
+
+  Error 63:
+    Path: languages → 11 → peak_year
+    Message: Required
+
+  Error 64:
+    Path: languages → 11 → current_users_estimate
+    Message: Required
+
+  Error 65:
+    Path: languages → 12 → company
+    Message: Required
+
+  Error 66:
+    Path: languages → 12 → garbage_collected
+    Message: Required
+
+  Error 67:
+    Path: languages → 12 → logo_url
+    Message: Required
+
+  Error 68:
+    Path: languages → 12 → peak_year
+    Message: Required
+
+  Error 69:
+    Path: languages → 12 → current_users_estimate
+    Message: Required
+
+  Error 70:
+    Path: languages → 13 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'multi-paradigm'
+
+  Error 71:
+    Path: languages → 13 → company
+    Message: Required
+
+  Error 72:
+    Path: languages → 13 → garbage_collected
+    Message: Required
+
+  Error 73:
+    Path: languages → 13 → logo_url
+    Message: Required
+
+  Error 74:
+    Path: languages → 13 → peak_year
+    Message: Required
+
+  Error 75:
+    Path: languages → 13 → current_users_estimate
+    Message: Required
+
+  Error 76:
+    Path: languages → 14 → company
+    Message: Required
+
+  Error 77:
+    Path: languages → 14 → garbage_collected
+    Message: Required
+
+  Error 78:
+    Path: languages → 14 → logo_url
+    Message: Required
+
+  Error 79:
+    Path: languages → 14 → peak_year
+    Message: Required
+
+  Error 80:
+    Path: languages → 14 → current_users_estimate
+    Message: Required
+
+  Error 81:
+    Path: languages → 15 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 82:
+    Path: languages → 15 → company
+    Message: Required
+
+  Error 83:
+    Path: languages → 15 → garbage_collected
+    Message: Required
+
+  Error 84:
+    Path: languages → 15 → logo_url
+    Message: Required
+
+  Error 85:
+    Path: languages → 15 → peak_year
+    Message: Required
+
+  Error 86:
+    Path: languages → 15 → current_users_estimate
+    Message: Required
+
+  Error 87:
+    Path: languages → 16 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 88:
+    Path: languages → 16 → paradigm → 2
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'generic'
+
+  Error 89:
+    Path: languages → 16 → company
+    Message: Required
+
+  Error 90:
+    Path: languages → 16 → garbage_collected
+    Message: Required
+
+  Error 91:
+    Path: languages → 16 → logo_url
+    Message: Required
+
+  Error 92:
+    Path: languages → 16 → peak_year
+    Message: Required
+
+  Error 93:
+    Path: languages → 16 → current_users_estimate
+    Message: Required
+
+  Error 94:
+    Path: languages → 17 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 95:
+    Path: languages → 17 → company
+    Message: Required
+
+  Error 96:
+    Path: languages → 17 → garbage_collected
+    Message: Required
+
+  Error 97:
+    Path: languages → 17 → logo_url
+    Message: Required
+
+  Error 98:
+    Path: languages → 17 → peak_year
+    Message: Required
+
+  Error 99:
+    Path: languages → 17 → current_users_estimate
+    Message: Required
+
+  Error 100:
+    Path: languages → 18 → runtime_model
+    Message: Invalid enum value. Expected 'compiled' | 'interpreted' | 'jit_compiled' | 'bytecode_vm' | 'transpiled' | 'none' | 'native', received 'vm'
+
+  Error 101:
+    Path: languages → 18 → company
+    Message: Required
+
+  Error 102:
+    Path: languages → 18 → garbage_collected
+    Message: Required
+
+  Error 103:
+    Path: languages → 18 → logo_url
+    Message: Required
+
+  Error 104:
+    Path: languages → 18 → peak_year
+    Message: Required
+
+  Error 105:
+    Path: languages → 18 → current_users_estimate
+    Message: Required
+
+  Error 106:
+    Path: languages → 19 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'multi-paradigm'
+
+  Error 107:
+    Path: languages → 19 → company
+    Message: Required
+
+  Error 108:
+    Path: languages → 19 → garbage_collected
+    Message: Required
+
+  Error 109:
+    Path: languages → 19 → logo_url
+    Message: Required
+
+  Error 110:
+    Path: languages → 19 → peak_year
+    Message: Required
+
+  Error 111:
+    Path: languages → 19 → current_users_estimate
+    Message: Required
+
+  Error 112:
+    Path: languages → 20 → company
+    Message: Required
+
+  Error 113:
+    Path: languages → 20 → garbage_collected
+    Message: Required
+
+  Error 114:
+    Path: languages → 20 → logo_url
+    Message: Required
+
+  Error 115:
+    Path: languages → 20 → peak_year
+    Message: Required
+
+  Error 116:
+    Path: languages → 20 → current_users_estimate
+    Message: Required
+
+  Error 117:
+    Path: languages → 21 → company
+    Message: Required
+
+  Error 118:
+    Path: languages → 21 → garbage_collected
+    Message: Required
+
+  Error 119:
+    Path: languages → 21 → logo_url
+    Message: Required
+
+  Error 120:
+    Path: languages → 21 → peak_year
+    Message: Required
+
+  Error 121:
+    Path: languages → 21 → current_users_estimate
+    Message: Required
+
+  Error 122:
+    Path: languages → 22 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 123:
+    Path: languages → 22 → company
+    Message: Required
+
+  Error 124:
+    Path: languages → 22 → garbage_collected
+    Message: Required
+
+  Error 125:
+    Path: languages → 22 → logo_url
+    Message: Required
+
+  Error 126:
+    Path: languages → 22 → peak_year
+    Message: Required
+
+  Error 127:
+    Path: languages → 22 → current_users_estimate
+    Message: Required
+
+  Error 128:
+    Path: languages → 23 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'multi-paradigm'
+
+  Error 129:
+    Path: languages → 23 → company
+    Message: Required
+
+  Error 130:
+    Path: languages → 23 → garbage_collected
+    Message: Required
+
+  Error 131:
+    Path: languages → 23 → logo_url
+    Message: Required
+
+  Error 132:
+    Path: languages → 23 → peak_year
+    Message: Required
+
+  Error 133:
+    Path: languages → 23 → current_users_estimate
+    Message: Required
+
+  Error 134:
+    Path: languages → 24 → paradigm → 2
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 135:
+    Path: languages → 24 → company
+    Message: Required
+
+  Error 136:
+    Path: languages → 24 → garbage_collected
+    Message: Required
+
+  Error 137:
+    Path: languages → 24 → logo_url
+    Message: Required
+
+  Error 138:
+    Path: languages → 24 → peak_year
+    Message: Required
+
+  Error 139:
+    Path: languages → 24 → current_users_estimate
+    Message: Required
+
+  Error 140:
+    Path: languages → 25 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 141:
+    Path: languages → 25 → runtime_model
+    Message: Invalid enum value. Expected 'compiled' | 'interpreted' | 'jit_compiled' | 'bytecode_vm' | 'transpiled' | 'none' | 'native', received 'vm'
+
+  Error 142:
+    Path: languages → 25 → company
+    Message: Required
+
+  Error 143:
+    Path: languages → 25 → garbage_collected
+    Message: Required
+
+  Error 144:
+    Path: languages → 25 → logo_url
+    Message: Required
+
+  Error 145:
+    Path: languages → 25 → peak_year
+    Message: Required
+
+  Error 146:
+    Path: languages → 25 → current_users_estimate
+    Message: Required
+
+  Error 147:
+    Path: languages → 26 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 148:
+    Path: languages → 26 → runtime_model
+    Message: Invalid enum value. Expected 'compiled' | 'interpreted' | 'jit_compiled' | 'bytecode_vm' | 'transpiled' | 'none' | 'native', received 'vm'
+
+  Error 149:
+    Path: languages → 26 → company
+    Message: Required
+
+  Error 150:
+    Path: languages → 26 → garbage_collected
+    Message: Required
+
+  Error 151:
+    Path: languages → 26 → logo_url
+    Message: Required
+
+  Error 152:
+    Path: languages → 26 → peak_year
+    Message: Required
+
+  Error 153:
+    Path: languages → 26 → current_users_estimate
+    Message: Required
+
+  Error 154:
+    Path: languages → 27 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 155:
+    Path: languages → 27 → company
+    Message: Required
+
+  Error 156:
+    Path: languages → 27 → garbage_collected
+    Message: Required
+
+  Error 157:
+    Path: languages → 27 → logo_url
+    Message: Required
+
+  Error 158:
+    Path: languages → 27 → peak_year
+    Message: Required
+
+  Error 159:
+    Path: languages → 27 → current_users_estimate
+    Message: Required
+
+  Error 160:
+    Path: languages → 28 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 161:
+    Path: languages → 28 → company
+    Message: Required
+
+  Error 162:
+    Path: languages → 28 → garbage_collected
+    Message: Required
+
+  Error 163:
+    Path: languages → 28 → logo_url
+    Message: Required
+
+  Error 164:
+    Path: languages → 28 → peak_year
+    Message: Required
+
+  Error 165:
+    Path: languages → 28 → current_users_estimate
+    Message: Required
+
+  Error 166:
+    Path: languages → 29 → company
+    Message: Required
+
+  Error 167:
+    Path: languages → 29 → garbage_collected
+    Message: Required
+
+  Error 168:
+    Path: languages → 29 → logo_url
+    Message: Required
+
+  Error 169:
+    Path: languages → 29 → peak_year
+    Message: Required
+
+  Error 170:
+    Path: languages → 29 → current_users_estimate
+    Message: Required
+
+  Error 171:
+    Path: languages → 30 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'multi-paradigm'
+
+  Error 172:
+    Path: languages → 30 → runtime_model
+    Message: Invalid enum value. Expected 'compiled' | 'interpreted' | 'jit_compiled' | 'bytecode_vm' | 'transpiled' | 'none' | 'native', received 'vm'
+
+  Error 173:
+    Path: languages → 30 → company
+    Message: Required
+
+  Error 174:
+    Path: languages → 30 → garbage_collected
+    Message: Required
+
+  Error 175:
+    Path: languages → 30 → logo_url
+    Message: Required
+
+  Error 176:
+    Path: languages → 30 → peak_year
+    Message: Required
+
+  Error 177:
+    Path: languages → 30 → current_users_estimate
+    Message: Required
+
+  Error 178:
+    Path: languages → 31 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 179:
+    Path: languages → 31 → runtime_model
+    Message: Invalid enum value. Expected 'compiled' | 'interpreted' | 'jit_compiled' | 'bytecode_vm' | 'transpiled' | 'none' | 'native', received 'vm'
+
+  Error 180:
+    Path: languages → 31 → company
+    Message: Required
+
+  Error 181:
+    Path: languages → 31 → garbage_collected
+    Message: Required
+
+  Error 182:
+    Path: languages → 31 → logo_url
+    Message: Required
+
+  Error 183:
+    Path: languages → 31 → peak_year
+    Message: Required
+
+  Error 184:
+    Path: languages → 31 → current_users_estimate
+    Message: Required
+
+  Error 185:
+    Path: languages → 32 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'multi-paradigm'
+
+  Error 186:
+    Path: languages → 32 → company
+    Message: Required
+
+  Error 187:
+    Path: languages → 32 → garbage_collected
+    Message: Required
+
+  Error 188:
+    Path: languages → 32 → logo_url
+    Message: Required
+
+  Error 189:
+    Path: languages → 32 → peak_year
+    Message: Required
+
+  Error 190:
+    Path: languages → 32 → current_users_estimate
+    Message: Required
+
+  Error 191:
+    Path: languages → 33 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 192:
+    Path: languages → 33 → company
+    Message: Required
+
+  Error 193:
+    Path: languages → 33 → garbage_collected
+    Message: Required
+
+  Error 194:
+    Path: languages → 33 → logo_url
+    Message: Required
+
+  Error 195:
+    Path: languages → 33 → peak_year
+    Message: Required
+
+  Error 196:
+    Path: languages → 33 → current_users_estimate
+    Message: Required
+
+  Error 197:
+    Path: languages → 34 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 198:
+    Path: languages → 34 → runtime_model
+    Message: Invalid enum value. Expected 'compiled' | 'interpreted' | 'jit_compiled' | 'bytecode_vm' | 'transpiled' | 'none' | 'native', received 'vm'
+
+  Error 199:
+    Path: languages → 34 → company
+    Message: Required
+
+  Error 200:
+    Path: languages → 34 → garbage_collected
+    Message: Required
+
+  Error 201:
+    Path: languages → 34 → logo_url
+    Message: Required
+
+  Error 202:
+    Path: languages → 34 → peak_year
+    Message: Required
+
+  Error 203:
+    Path: languages → 34 → current_users_estimate
+    Message: Required
+
+  Error 204:
+    Path: languages → 35 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 205:
+    Path: languages → 35 → runtime_model
+    Message: Invalid enum value. Expected 'compiled' | 'interpreted' | 'jit_compiled' | 'bytecode_vm' | 'transpiled' | 'none' | 'native', received 'vm'
+
+  Error 206:
+    Path: languages → 35 → company
+    Message: Required
+
+  Error 207:
+    Path: languages → 35 → garbage_collected
+    Message: Required
+
+  Error 208:
+    Path: languages → 35 → logo_url
+    Message: Required
+
+  Error 209:
+    Path: languages → 35 → peak_year
+    Message: Required
+
+  Error 210:
+    Path: languages → 35 → current_users_estimate
+    Message: Required
+
+  Error 211:
+    Path: languages → 36 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'multi-paradigm'
+
+  Error 212:
+    Path: languages → 36 → runtime_model
+    Message: Invalid enum value. Expected 'compiled' | 'interpreted' | 'jit_compiled' | 'bytecode_vm' | 'transpiled' | 'none' | 'native', received 'vm'
+
+  Error 213:
+    Path: languages → 36 → company
+    Message: Required
+
+  Error 214:
+    Path: languages → 36 → garbage_collected
+    Message: Required
+
+  Error 215:
+    Path: languages → 36 → logo_url
+    Message: Required
+
+  Error 216:
+    Path: languages → 36 → peak_year
+    Message: Required
+
+  Error 217:
+    Path: languages → 36 → current_users_estimate
+    Message: Required
+
+  Error 218:
+    Path: languages → 37 → company
+    Message: Required
+
+  Error 219:
+    Path: languages → 37 → garbage_collected
+    Message: Required
+
+  Error 220:
+    Path: languages → 37 → logo_url
+    Message: Required
+
+  Error 221:
+    Path: languages → 37 → peak_year
+    Message: Required
+
+  Error 222:
+    Path: languages → 37 → current_users_estimate
+    Message: Required
+
+  Error 223:
+    Path: languages → 38 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 224:
+    Path: languages → 38 → company
+    Message: Required
+
+  Error 225:
+    Path: languages → 38 → garbage_collected
+    Message: Required
+
+  Error 226:
+    Path: languages → 38 → logo_url
+    Message: Required
+
+  Error 227:
+    Path: languages → 38 → peak_year
+    Message: Required
+
+  Error 228:
+    Path: languages → 38 → current_users_estimate
+    Message: Required
+
+  Error 229:
+    Path: languages → 39 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'systems'
+
+  Error 230:
+    Path: languages → 39 → company
+    Message: Required
+
+  Error 231:
+    Path: languages → 39 → garbage_collected
+    Message: Required
+
+  Error 232:
+    Path: languages → 39 → logo_url
+    Message: Required
+
+  Error 233:
+    Path: languages → 39 → peak_year
+    Message: Required
+
+  Error 234:
+    Path: languages → 39 → current_users_estimate
+    Message: Required
+
+  Error 235:
+    Path: languages → 40 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 236:
+    Path: languages → 40 → runtime_model
+    Message: Invalid enum value. Expected 'compiled' | 'interpreted' | 'jit_compiled' | 'bytecode_vm' | 'transpiled' | 'none' | 'native', received 'vm'
+
+  Error 237:
+    Path: languages → 40 → company
+    Message: Required
+
+  Error 238:
+    Path: languages → 40 → garbage_collected
+    Message: Required
+
+  Error 239:
+    Path: languages → 40 → logo_url
+    Message: Required
+
+  Error 240:
+    Path: languages → 40 → peak_year
+    Message: Required
+
+  Error 241:
+    Path: languages → 40 → current_users_estimate
+    Message: Required
+
+  Error 242:
+    Path: languages → 41 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 243:
+    Path: languages → 41 → company
+    Message: Required
+
+  Error 244:
+    Path: languages → 41 → garbage_collected
+    Message: Required
+
+  Error 245:
+    Path: languages → 41 → logo_url
+    Message: Required
+
+  Error 246:
+    Path: languages → 41 → peak_year
+    Message: Required
+
+  Error 247:
+    Path: languages → 41 → current_users_estimate
+    Message: Required
+
+  Error 248:
+    Path: languages → 42 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 249:
+    Path: languages → 42 → runtime_model
+    Message: Invalid enum value. Expected 'compiled' | 'interpreted' | 'jit_compiled' | 'bytecode_vm' | 'transpiled' | 'none' | 'native', received 'vm'
+
+  Error 250:
+    Path: languages → 42 → company
+    Message: Required
+
+  Error 251:
+    Path: languages → 42 → garbage_collected
+    Message: Required
+
+  Error 252:
+    Path: languages → 42 → logo_url
+    Message: Required
+
+  Error 253:
+    Path: languages → 42 → peak_year
+    Message: Required
+
+  Error 254:
+    Path: languages → 42 → current_users_estimate
+    Message: Required
+
+  Error 255:
+    Path: languages → 43 → runtime_model
+    Message: Invalid enum value. Expected 'compiled' | 'interpreted' | 'jit_compiled' | 'bytecode_vm' | 'transpiled' | 'none' | 'native', received 'vm'
+
+  Error 256:
+    Path: languages → 43 → company
+    Message: Required
+
+  Error 257:
+    Path: languages → 43 → garbage_collected
+    Message: Required
+
+  Error 258:
+    Path: languages → 43 → logo_url
+    Message: Required
+
+  Error 259:
+    Path: languages → 43 → peak_year
+    Message: Required
+
+  Error 260:
+    Path: languages → 43 → current_users_estimate
+    Message: Required
+
+  Error 261:
+    Path: languages → 44 → company
+    Message: Required
+
+  Error 262:
+    Path: languages → 44 → garbage_collected
+    Message: Required
+
+  Error 263:
+    Path: languages → 44 → logo_url
+    Message: Required
+
+  Error 264:
+    Path: languages → 44 → peak_year
+    Message: Required
+
+  Error 265:
+    Path: languages → 44 → current_users_estimate
+    Message: Required
+
+  Error 266:
+    Path: languages → 45 → paradigm → 2
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'scientific'
+
+  Error 267:
+    Path: languages → 45 → runtime_model
+    Message: Invalid enum value. Expected 'compiled' | 'interpreted' | 'jit_compiled' | 'bytecode_vm' | 'transpiled' | 'none' | 'native', received 'jit'
+
+  Error 268:
+    Path: languages → 45 → company
+    Message: Required
+
+  Error 269:
+    Path: languages → 45 → garbage_collected
+    Message: Required
+
+  Error 270:
+    Path: languages → 45 → logo_url
+    Message: Required
+
+  Error 271:
+    Path: languages → 45 → peak_year
+    Message: Required
+
+  Error 272:
+    Path: languages → 45 → current_users_estimate
+    Message: Required
+
+  Error 273:
+    Path: languages → 46 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 274:
+    Path: languages → 46 → company
+    Message: Required
+
+  Error 275:
+    Path: languages → 46 → garbage_collected
+    Message: Required
+
+  Error 276:
+    Path: languages → 46 → logo_url
+    Message: Required
+
+  Error 277:
+    Path: languages → 46 → peak_year
+    Message: Required
+
+  Error 278:
+    Path: languages → 46 → current_users_estimate
+    Message: Required
+
+  Error 279:
+    Path: languages → 47 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 280:
+    Path: languages → 47 → company
+    Message: Required
+
+  Error 281:
+    Path: languages → 47 → garbage_collected
+    Message: Required
+
+  Error 282:
+    Path: languages → 47 → logo_url
+    Message: Required
+
+  Error 283:
+    Path: languages → 47 → peak_year
+    Message: Required
+
+  Error 284:
+    Path: languages → 47 → current_users_estimate
+    Message: Required
+
+  Error 285:
+    Path: languages → 48 → company
+    Message: Required
+
+  Error 286:
+    Path: languages → 48 → garbage_collected
+    Message: Required
+
+  Error 287:
+    Path: languages → 48 → logo_url
+    Message: Required
+
+  Error 288:
+    Path: languages → 48 → peak_year
+    Message: Required
+
+  Error 289:
+    Path: languages → 48 → current_users_estimate
+    Message: Required
+
+  Error 290:
+    Path: languages → 49 → paradigm → 2
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 291:
+    Path: languages → 49 → company
+    Message: Required
+
+  Error 292:
+    Path: languages → 49 → garbage_collected
+    Message: Required
+
+  Error 293:
+    Path: languages → 49 → logo_url
+    Message: Required
+
+  Error 294:
+    Path: languages → 49 → peak_year
+    Message: Required
+
+  Error 295:
+    Path: languages → 49 → current_users_estimate
+    Message: Required
+
+  Error 296:
+    Path: languages → 50 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 297:
+    Path: languages → 50 → company
+    Message: Required
+
+  Error 298:
+    Path: languages → 50 → garbage_collected
+    Message: Required
+
+  Error 299:
+    Path: languages → 50 → logo_url
+    Message: Required
+
+  Error 300:
+    Path: languages → 50 → peak_year
+    Message: Required
+
+  Error 301:
+    Path: languages → 50 → current_users_estimate
+    Message: Required
+
+  Error 302:
+    Path: languages → 51 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'systems'
+
+  Error 303:
+    Path: languages → 51 → company
+    Message: Required
+
+  Error 304:
+    Path: languages → 51 → garbage_collected
+    Message: Required
+
+  Error 305:
+    Path: languages → 51 → logo_url
+    Message: Required
+
+  Error 306:
+    Path: languages → 51 → peak_year
+    Message: Required
+
+  Error 307:
+    Path: languages → 51 → current_users_estimate
+    Message: Required
+
+  Error 308:
+    Path: languages → 52 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'systems'
+
+  Error 309:
+    Path: languages → 52 → company
+    Message: Required
+
+  Error 310:
+    Path: languages → 52 → garbage_collected
+    Message: Required
+
+  Error 311:
+    Path: languages → 52 → logo_url
+    Message: Required
+
+  Error 312:
+    Path: languages → 52 → peak_year
+    Message: Required
+
+  Error 313:
+    Path: languages → 52 → current_users_estimate
+    Message: Required
+
+  Error 314:
+    Path: languages → 53 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'systems'
+
+  Error 315:
+    Path: languages → 53 → company
+    Message: Required
+
+  Error 316:
+    Path: languages → 53 → garbage_collected
+    Message: Required
+
+  Error 317:
+    Path: languages → 53 → logo_url
+    Message: Required
+
+  Error 318:
+    Path: languages → 53 → peak_year
+    Message: Required
+
+  Error 319:
+    Path: languages → 53 → current_users_estimate
+    Message: Required
+
+  Error 320:
+    Path: languages → 54 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'systems'
+
+  Error 321:
+    Path: languages → 54 → paradigm → 2
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'scientific'
+
+  Error 322:
+    Path: languages → 54 → company
+    Message: Required
+
+  Error 323:
+    Path: languages → 54 → garbage_collected
+    Message: Required
+
+  Error 324:
+    Path: languages → 54 → logo_url
+    Message: Required
+
+  Error 325:
+    Path: languages → 54 → peak_year
+    Message: Required
+
+  Error 326:
+    Path: languages → 54 → current_users_estimate
+    Message: Required
+
+  Error 327:
+    Path: languages → 55 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 328:
+    Path: languages → 55 → runtime_model
+    Message: Invalid enum value. Expected 'compiled' | 'interpreted' | 'jit_compiled' | 'bytecode_vm' | 'transpiled' | 'none' | 'native', received 'vm'
+
+  Error 329:
+    Path: languages → 55 → company
+    Message: Required
+
+  Error 330:
+    Path: languages → 55 → garbage_collected
+    Message: Required
+
+  Error 331:
+    Path: languages → 55 → logo_url
+    Message: Required
+
+  Error 332:
+    Path: languages → 55 → peak_year
+    Message: Required
+
+  Error 333:
+    Path: languages → 55 → current_users_estimate
+    Message: Required
+
+  Error 334:
+    Path: languages → 56 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 335:
+    Path: languages → 56 → runtime_model
+    Message: Invalid enum value. Expected 'compiled' | 'interpreted' | 'jit_compiled' | 'bytecode_vm' | 'transpiled' | 'none' | 'native', received 'vm'
+
+  Error 336:
+    Path: languages → 56 → company
+    Message: Required
+
+  Error 337:
+    Path: languages → 56 → garbage_collected
+    Message: Required
+
+  Error 338:
+    Path: languages → 56 → logo_url
+    Message: Required
+
+  Error 339:
+    Path: languages → 56 → peak_year
+    Message: Required
+
+  Error 340:
+    Path: languages → 56 → current_users_estimate
+    Message: Required
+
+  Error 341:
+    Path: languages → 57 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'tool'
+
+  Error 342:
+    Path: languages → 57 → typing
+    Message: Invalid enum value. Expected 'static' | 'dynamic' | 'gradual' | 'weak' | 'strong' | 'none' | 'untyped', received 'unspecified'
+
+  Error 343:
+    Path: languages → 57 → runtime_model
+    Message: Invalid enum value. Expected 'compiled' | 'interpreted' | 'jit_compiled' | 'bytecode_vm' | 'transpiled' | 'none' | 'native', received 'tool'
+
+  Error 344:
+    Path: languages → 57 → company
+    Message: Required
+
+  Error 345:
+    Path: languages → 57 → garbage_collected
+    Message: Required
+
+  Error 346:
+    Path: languages → 57 → logo_url
+    Message: Required
+
+  Error 347:
+    Path: languages → 57 → peak_year
+    Message: Required
+
+  Error 348:
+    Path: languages → 57 → current_users_estimate
+    Message: Required
+
+  Error 349:
+    Path: languages → 58 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'tool'
+
+  Error 350:
+    Path: languages → 58 → typing
+    Message: Invalid enum value. Expected 'static' | 'dynamic' | 'gradual' | 'weak' | 'strong' | 'none' | 'untyped', received 'unspecified'
+
+  Error 351:
+    Path: languages → 58 → runtime_model
+    Message: Invalid enum value. Expected 'compiled' | 'interpreted' | 'jit_compiled' | 'bytecode_vm' | 'transpiled' | 'none' | 'native', received 'tool'
+
+  Error 352:
+    Path: languages → 58 → company
+    Message: Required
+
+  Error 353:
+    Path: languages → 58 → garbage_collected
+    Message: Required
+
+  Error 354:
+    Path: languages → 58 → logo_url
+    Message: Required
+
+  Error 355:
+    Path: languages → 58 → peak_year
+    Message: Required
+
+  Error 356:
+    Path: languages → 58 → current_users_estimate
+    Message: Required
+
+  Error 357:
+    Path: languages → 59 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'tool'
+
+  Error 358:
+    Path: languages → 59 → typing
+    Message: Invalid enum value. Expected 'static' | 'dynamic' | 'gradual' | 'weak' | 'strong' | 'none' | 'untyped', received 'unspecified'
+
+  Error 359:
+    Path: languages → 59 → runtime_model
+    Message: Invalid enum value. Expected 'compiled' | 'interpreted' | 'jit_compiled' | 'bytecode_vm' | 'transpiled' | 'none' | 'native', received 'tool'
+
+  Error 360:
+    Path: languages → 59 → company
+    Message: Required
+
+  Error 361:
+    Path: languages → 59 → garbage_collected
+    Message: Required
+
+  Error 362:
+    Path: languages → 59 → logo_url
+    Message: Required
+
+  Error 363:
+    Path: languages → 59 → peak_year
+    Message: Required
+
+  Error 364:
+    Path: languages → 59 → current_users_estimate
+    Message: Required
+
+  Error 365:
+    Path: languages → 60 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'tool'
+
+  Error 366:
+    Path: languages → 60 → typing
+    Message: Invalid enum value. Expected 'static' | 'dynamic' | 'gradual' | 'weak' | 'strong' | 'none' | 'untyped', received 'unspecified'
+
+  Error 367:
+    Path: languages → 60 → runtime_model
+    Message: Invalid enum value. Expected 'compiled' | 'interpreted' | 'jit_compiled' | 'bytecode_vm' | 'transpiled' | 'none' | 'native', received 'tool'
+
+  Error 368:
+    Path: languages → 60 → company
+    Message: Required
+
+  Error 369:
+    Path: languages → 60 → garbage_collected
+    Message: Required
+
+  Error 370:
+    Path: languages → 60 → logo_url
+    Message: Required
+
+  Error 371:
+    Path: languages → 60 → peak_year
+    Message: Required
+
+  Error 372:
+    Path: languages → 60 → current_users_estimate
+    Message: Required
+
+  Error 373:
+    Path: languages → 61 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'tool'
+
+  Error 374:
+    Path: languages → 61 → typing
+    Message: Invalid enum value. Expected 'static' | 'dynamic' | 'gradual' | 'weak' | 'strong' | 'none' | 'untyped', received 'unspecified'
+
+  Error 375:
+    Path: languages → 61 → runtime_model
+    Message: Invalid enum value. Expected 'compiled' | 'interpreted' | 'jit_compiled' | 'bytecode_vm' | 'transpiled' | 'none' | 'native', received 'tool'
+
+  Error 376:
+    Path: languages → 61 → company
+    Message: Required
+
+  Error 377:
+    Path: languages → 61 → garbage_collected
+    Message: Required
+
+  Error 378:
+    Path: languages → 61 → logo_url
+    Message: Required
+
+  Error 379:
+    Path: languages → 61 → peak_year
+    Message: Required
+
+  Error 380:
+    Path: languages → 61 → current_users_estimate
+    Message: Required
+
+  Error 381:
+    Path: languages → 62 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'tool'
+
+  Error 382:
+    Path: languages → 62 → typing
+    Message: Invalid enum value. Expected 'static' | 'dynamic' | 'gradual' | 'weak' | 'strong' | 'none' | 'untyped', received 'unspecified'
+
+  Error 383:
+    Path: languages → 62 → runtime_model
+    Message: Invalid enum value. Expected 'compiled' | 'interpreted' | 'jit_compiled' | 'bytecode_vm' | 'transpiled' | 'none' | 'native', received 'tool'
+
+  Error 384:
+    Path: languages → 62 → company
+    Message: Required
+
+  Error 385:
+    Path: languages → 62 → garbage_collected
+    Message: Required
+
+  Error 386:
+    Path: languages → 62 → logo_url
+    Message: Required
+
+  Error 387:
+    Path: languages → 62 → peak_year
+    Message: Required
+
+  Error 388:
+    Path: languages → 62 → current_users_estimate
+    Message: Required
+
+  Error 389:
+    Path: languages → 63 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'tool'
+
+  Error 390:
+    Path: languages → 63 → typing
+    Message: Invalid enum value. Expected 'static' | 'dynamic' | 'gradual' | 'weak' | 'strong' | 'none' | 'untyped', received 'unspecified'
+
+  Error 391:
+    Path: languages → 63 → runtime_model
+    Message: Invalid enum value. Expected 'compiled' | 'interpreted' | 'jit_compiled' | 'bytecode_vm' | 'transpiled' | 'none' | 'native', received 'tool'
+
+  Error 392:
+    Path: languages → 63 → company
+    Message: Required
+
+  Error 393:
+    Path: languages → 63 → garbage_collected
+    Message: Required
+
+  Error 394:
+    Path: languages → 63 → logo_url
+    Message: Required
+
+  Error 395:
+    Path: languages → 63 → peak_year
+    Message: Required
+
+  Error 396:
+    Path: languages → 63 → current_users_estimate
+    Message: Required
+
+  Error 397:
+    Path: languages → 64 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'tool'
+
+  Error 398:
+    Path: languages → 64 → typing
+    Message: Invalid enum value. Expected 'static' | 'dynamic' | 'gradual' | 'weak' | 'strong' | 'none' | 'untyped', received 'unspecified'
+
+  Error 399:
+    Path: languages → 64 → runtime_model
+    Message: Invalid enum value. Expected 'compiled' | 'interpreted' | 'jit_compiled' | 'bytecode_vm' | 'transpiled' | 'none' | 'native', received 'tool'
+
+  Error 400:
+    Path: languages → 64 → company
+    Message: Required
+
+  Error 401:
+    Path: languages → 64 → garbage_collected
+    Message: Required
+
+  Error 402:
+    Path: languages → 64 → logo_url
+    Message: Required
+
+  Error 403:
+    Path: languages → 64 → peak_year
+    Message: Required
+
+  Error 404:
+    Path: languages → 64 → current_users_estimate
+    Message: Required
+
+  Error 405:
+    Path: languages → 65 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'tool'
+
+  Error 406:
+    Path: languages → 65 → typing
+    Message: Invalid enum value. Expected 'static' | 'dynamic' | 'gradual' | 'weak' | 'strong' | 'none' | 'untyped', received 'unspecified'
+
+  Error 407:
+    Path: languages → 65 → runtime_model
+    Message: Invalid enum value. Expected 'compiled' | 'interpreted' | 'jit_compiled' | 'bytecode_vm' | 'transpiled' | 'none' | 'native', received 'tool'
+
+  Error 408:
+    Path: languages → 65 → company
+    Message: Required
+
+  Error 409:
+    Path: languages → 65 → garbage_collected
+    Message: Required
+
+  Error 410:
+    Path: languages → 65 → logo_url
+    Message: Required
+
+  Error 411:
+    Path: languages → 65 → peak_year
+    Message: Required
+
+  Error 412:
+    Path: languages → 65 → current_users_estimate
+    Message: Required
+
+  Error 413:
+    Path: languages → 66 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'tool'
+
+  Error 414:
+    Path: languages → 66 → typing
+    Message: Invalid enum value. Expected 'static' | 'dynamic' | 'gradual' | 'weak' | 'strong' | 'none' | 'untyped', received 'unspecified'
+
+  Error 415:
+    Path: languages → 66 → runtime_model
+    Message: Invalid enum value. Expected 'compiled' | 'interpreted' | 'jit_compiled' | 'bytecode_vm' | 'transpiled' | 'none' | 'native', received 'tool'
+
+  Error 416:
+    Path: languages → 66 → company
+    Message: Required
+
+  Error 417:
+    Path: languages → 66 → garbage_collected
+    Message: Required
+
+  Error 418:
+    Path: languages → 66 → logo_url
+    Message: Required
+
+  Error 419:
+    Path: languages → 66 → peak_year
+    Message: Required
+
+  Error 420:
+    Path: languages → 66 → current_users_estimate
+    Message: Required
+
+  Error 421:
+    Path: languages → 67 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'tool'
+
+  Error 422:
+    Path: languages → 67 → typing
+    Message: Invalid enum value. Expected 'static' | 'dynamic' | 'gradual' | 'weak' | 'strong' | 'none' | 'untyped', received 'unspecified'
+
+  Error 423:
+    Path: languages → 67 → runtime_model
+    Message: Invalid enum value. Expected 'compiled' | 'interpreted' | 'jit_compiled' | 'bytecode_vm' | 'transpiled' | 'none' | 'native', received 'tool'
+
+  Error 424:
+    Path: languages → 67 → company
+    Message: Required
+
+  Error 425:
+    Path: languages → 67 → garbage_collected
+    Message: Required
+
+  Error 426:
+    Path: languages → 67 → logo_url
+    Message: Required
+
+  Error 427:
+    Path: languages → 67 → peak_year
+    Message: Required
+
+  Error 428:
+    Path: languages → 67 → current_users_estimate
+    Message: Required
+
+  Error 429:
+    Path: languages → 68 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'tool'
+
+  Error 430:
+    Path: languages → 68 → typing
+    Message: Invalid enum value. Expected 'static' | 'dynamic' | 'gradual' | 'weak' | 'strong' | 'none' | 'untyped', received 'unspecified'
+
+  Error 431:
+    Path: languages → 68 → runtime_model
+    Message: Invalid enum value. Expected 'compiled' | 'interpreted' | 'jit_compiled' | 'bytecode_vm' | 'transpiled' | 'none' | 'native', received 'tool'
+
+  Error 432:
+    Path: languages → 68 → company
+    Message: Required
+
+  Error 433:
+    Path: languages → 68 → garbage_collected
+    Message: Required
+
+  Error 434:
+    Path: languages → 68 → logo_url
+    Message: Required
+
+  Error 435:
+    Path: languages → 68 → peak_year
+    Message: Required
+
+  Error 436:
+    Path: languages → 68 → current_users_estimate
+    Message: Required
+
+  Error 437:
+    Path: languages → 69 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'tool'
+
+  Error 438:
+    Path: languages → 69 → typing
+    Message: Invalid enum value. Expected 'static' | 'dynamic' | 'gradual' | 'weak' | 'strong' | 'none' | 'untyped', received 'unspecified'
+
+  Error 439:
+    Path: languages → 69 → runtime_model
+    Message: Invalid enum value. Expected 'compiled' | 'interpreted' | 'jit_compiled' | 'bytecode_vm' | 'transpiled' | 'none' | 'native', received 'tool'
+
+  Error 440:
+    Path: languages → 69 → company
+    Message: Required
+
+  Error 441:
+    Path: languages → 69 → garbage_collected
+    Message: Required
+
+  Error 442:
+    Path: languages → 69 → logo_url
+    Message: Required
+
+  Error 443:
+    Path: languages → 69 → peak_year
+    Message: Required
+
+  Error 444:
+    Path: languages → 69 → current_users_estimate
+    Message: Required
+
+  Error 445:
+    Path: languages → 70 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'tool'
+
+  Error 446:
+    Path: languages → 70 → typing
+    Message: Invalid enum value. Expected 'static' | 'dynamic' | 'gradual' | 'weak' | 'strong' | 'none' | 'untyped', received 'unspecified'
+
+  Error 447:
+    Path: languages → 70 → runtime_model
+    Message: Invalid enum value. Expected 'compiled' | 'interpreted' | 'jit_compiled' | 'bytecode_vm' | 'transpiled' | 'none' | 'native', received 'tool'
+
+  Error 448:
+    Path: languages → 70 → company
+    Message: Required
+
+  Error 449:
+    Path: languages → 70 → garbage_collected
+    Message: Required
+
+  Error 450:
+    Path: languages → 70 → logo_url
+    Message: Required
+
+  Error 451:
+    Path: languages → 70 → peak_year
+    Message: Required
+
+  Error 452:
+    Path: languages → 70 → current_users_estimate
+    Message: Required
+
+  Error 453:
+    Path: languages → 71 → first_release_year
+    Message: Required
+
+  Error 454:
+    Path: languages → 71 → current_primary_implementation_language
+    Message: Required
+
+  Error 455:
+    Path: languages → 71 → runtime_model
+    Message: Required
+
+  Error 456:
+    Path: languages → 71 → self_hosting
+    Message: Required
+
+  Error 457:
+    Path: languages → 71 → notes
+    Message: Required
+
+  Error 458:
+    Path: languages → 71 → cluster_hint
+    Message: Required
+
+  Error 459:
+    Path: languages → 71 → company
+    Message: Required
+
+  Error 460:
+    Path: languages → 71 → garbage_collected
+    Message: Required
+
+  Error 461:
+    Path: languages → 71 → logo_url
+    Message: Required
+
+  Error 462:
+    Path: languages → 71 → peak_year
+    Message: Required
+
+  Error 463:
+    Path: languages → 71 → current_users_estimate
+    Message: Required
+
+  Error 464:
+    Path: languages → 72 → first_release_year
+    Message: Required
+
+  Error 465:
+    Path: languages → 72 → current_primary_implementation_language
+    Message: Required
+
+  Error 466:
+    Path: languages → 72 → runtime_model
+    Message: Required
+
+  Error 467:
+    Path: languages → 72 → self_hosting
+    Message: Required
+
+  Error 468:
+    Path: languages → 72 → notes
+    Message: Required
+
+  Error 469:
+    Path: languages → 72 → cluster_hint
+    Message: Required
+
+  Error 470:
+    Path: languages → 72 → company
+    Message: Required
+
+  Error 471:
+    Path: languages → 72 → garbage_collected
+    Message: Required
+
+  Error 472:
+    Path: languages → 72 → logo_url
+    Message: Required
+
+  Error 473:
+    Path: languages → 72 → peak_year
+    Message: Required
+
+  Error 474:
+    Path: languages → 72 → current_users_estimate
+    Message: Required
+
+  Error 475:
+    Path: languages → 73 → first_release_year
+    Message: Required
+
+  Error 476:
+    Path: languages → 73 → current_primary_implementation_language
+    Message: Required
+
+  Error 477:
+    Path: languages → 73 → runtime_model
+    Message: Required
+
+  Error 478:
+    Path: languages → 73 → self_hosting
+    Message: Required
+
+  Error 479:
+    Path: languages → 73 → notes
+    Message: Required
+
+  Error 480:
+    Path: languages → 73 → cluster_hint
+    Message: Required
+
+  Error 481:
+    Path: languages → 73 → company
+    Message: Required
+
+  Error 482:
+    Path: languages → 73 → garbage_collected
+    Message: Required
+
+  Error 483:
+    Path: languages → 73 → logo_url
+    Message: Required
+
+  Error 484:
+    Path: languages → 73 → peak_year
+    Message: Required
+
+  Error 485:
+    Path: languages → 73 → current_users_estimate
+    Message: Required
+
+  Error 486:
+    Path: languages → 74 → first_release_year
+    Message: Required
+
+  Error 487:
+    Path: languages → 74 → current_primary_implementation_language
+    Message: Required
+
+  Error 488:
+    Path: languages → 74 → runtime_model
+    Message: Required
+
+  Error 489:
+    Path: languages → 74 → self_hosting
+    Message: Required
+
+  Error 490:
+    Path: languages → 74 → notes
+    Message: Required
+
+  Error 491:
+    Path: languages → 74 → cluster_hint
+    Message: Required
+
+  Error 492:
+    Path: languages → 74 → company
+    Message: Required
+
+  Error 493:
+    Path: languages → 74 → garbage_collected
+    Message: Required
+
+  Error 494:
+    Path: languages → 74 → logo_url
+    Message: Required
+
+  Error 495:
+    Path: languages → 74 → peak_year
+    Message: Required
+
+  Error 496:
+    Path: languages → 74 → current_users_estimate
+    Message: Required
+
+  Error 497:
+    Path: languages → 75 → first_release_year
+    Message: Required
+
+  Error 498:
+    Path: languages → 75 → current_primary_implementation_language
+    Message: Required
+
+  Error 499:
+    Path: languages → 75 → runtime_model
+    Message: Required
+
+  Error 500:
+    Path: languages → 75 → self_hosting
+    Message: Required
+
+  Error 501:
+    Path: languages → 75 → notes
+    Message: Required
+
+  Error 502:
+    Path: languages → 75 → cluster_hint
+    Message: Required
+
+  Error 503:
+    Path: languages → 75 → company
+    Message: Required
+
+  Error 504:
+    Path: languages → 75 → garbage_collected
+    Message: Required
+
+  Error 505:
+    Path: languages → 75 → logo_url
+    Message: Required
+
+  Error 506:
+    Path: languages → 75 → peak_year
+    Message: Required
+
+  Error 507:
+    Path: languages → 75 → current_users_estimate
+    Message: Required
+
+  Error 508:
+    Path: languages → 76 → first_release_year
+    Message: Required
+
+  Error 509:
+    Path: languages → 76 → current_primary_implementation_language
+    Message: Required
+
+  Error 510:
+    Path: languages → 76 → runtime_model
+    Message: Required
+
+  Error 511:
+    Path: languages → 76 → self_hosting
+    Message: Required
+
+  Error 512:
+    Path: languages → 76 → notes
+    Message: Required
+
+  Error 513:
+    Path: languages → 76 → cluster_hint
+    Message: Required
+
+  Error 514:
+    Path: languages → 76 → company
+    Message: Required
+
+  Error 515:
+    Path: languages → 76 → garbage_collected
+    Message: Required
+
+  Error 516:
+    Path: languages → 76 → logo_url
+    Message: Required
+
+  Error 517:
+    Path: languages → 76 → peak_year
+    Message: Required
+
+  Error 518:
+    Path: languages → 76 → current_users_estimate
+    Message: Required
+
+  Error 519:
+    Path: languages → 77 → first_release_year
+    Message: Required
+
+  Error 520:
+    Path: languages → 77 → current_primary_implementation_language
+    Message: Required
+
+  Error 521:
+    Path: languages → 77 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 522:
+    Path: languages → 77 → runtime_model
+    Message: Required
+
+  Error 523:
+    Path: languages → 77 → self_hosting
+    Message: Required
+
+  Error 524:
+    Path: languages → 77 → notes
+    Message: Required
+
+  Error 525:
+    Path: languages → 77 → cluster_hint
+    Message: Required
+
+  Error 526:
+    Path: languages → 77 → company
+    Message: Required
+
+  Error 527:
+    Path: languages → 77 → garbage_collected
+    Message: Required
+
+  Error 528:
+    Path: languages → 77 → logo_url
+    Message: Required
+
+  Error 529:
+    Path: languages → 77 → peak_year
+    Message: Required
+
+  Error 530:
+    Path: languages → 77 → current_users_estimate
+    Message: Required
+
+  Error 531:
+    Path: languages → 78 → first_release_year
+    Message: Required
+
+  Error 532:
+    Path: languages → 78 → current_primary_implementation_language
+    Message: Required
+
+  Error 533:
+    Path: languages → 78 → runtime_model
+    Message: Required
+
+  Error 534:
+    Path: languages → 78 → self_hosting
+    Message: Required
+
+  Error 535:
+    Path: languages → 78 → notes
+    Message: Required
+
+  Error 536:
+    Path: languages → 78 → cluster_hint
+    Message: Required
+
+  Error 537:
+    Path: languages → 78 → company
+    Message: Required
+
+  Error 538:
+    Path: languages → 78 → garbage_collected
+    Message: Required
+
+  Error 539:
+    Path: languages → 78 → logo_url
+    Message: Required
+
+  Error 540:
+    Path: languages → 78 → peak_year
+    Message: Required
+
+  Error 541:
+    Path: languages → 78 → current_users_estimate
+    Message: Required
+
+  Error 542:
+    Path: languages → 79 → first_release_year
+    Message: Required
+
+  Error 543:
+    Path: languages → 79 → current_primary_implementation_language
+    Message: Required
+
+  Error 544:
+    Path: languages → 79 → runtime_model
+    Message: Required
+
+  Error 545:
+    Path: languages → 79 → self_hosting
+    Message: Required
+
+  Error 546:
+    Path: languages → 79 → notes
+    Message: Required
+
+  Error 547:
+    Path: languages → 79 → cluster_hint
+    Message: Required
+
+  Error 548:
+    Path: languages → 79 → company
+    Message: Required
+
+  Error 549:
+    Path: languages → 79 → garbage_collected
+    Message: Required
+
+  Error 550:
+    Path: languages → 79 → logo_url
+    Message: Required
+
+  Error 551:
+    Path: languages → 79 → peak_year
+    Message: Required
+
+  Error 552:
+    Path: languages → 79 → current_users_estimate
+    Message: Required
+
+  Error 553:
+    Path: languages → 80 → first_release_year
+    Message: Required
+
+  Error 554:
+    Path: languages → 80 → current_primary_implementation_language
+    Message: Required
+
+  Error 555:
+    Path: languages → 80 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 556:
+    Path: languages → 80 → runtime_model
+    Message: Required
+
+  Error 557:
+    Path: languages → 80 → self_hosting
+    Message: Required
+
+  Error 558:
+    Path: languages → 80 → notes
+    Message: Required
+
+  Error 559:
+    Path: languages → 80 → cluster_hint
+    Message: Required
+
+  Error 560:
+    Path: languages → 80 → company
+    Message: Required
+
+  Error 561:
+    Path: languages → 80 → garbage_collected
+    Message: Required
+
+  Error 562:
+    Path: languages → 80 → logo_url
+    Message: Required
+
+  Error 563:
+    Path: languages → 80 → peak_year
+    Message: Required
+
+  Error 564:
+    Path: languages → 80 → current_users_estimate
+    Message: Required
+
+  Error 565:
+    Path: languages → 81 → first_release_year
+    Message: Required
+
+  Error 566:
+    Path: languages → 81 → current_primary_implementation_language
+    Message: Required
+
+  Error 567:
+    Path: languages → 81 → runtime_model
+    Message: Required
+
+  Error 568:
+    Path: languages → 81 → self_hosting
+    Message: Required
+
+  Error 569:
+    Path: languages → 81 → notes
+    Message: Required
+
+  Error 570:
+    Path: languages → 81 → cluster_hint
+    Message: Required
+
+  Error 571:
+    Path: languages → 81 → company
+    Message: Required
+
+  Error 572:
+    Path: languages → 81 → garbage_collected
+    Message: Required
+
+  Error 573:
+    Path: languages → 81 → logo_url
+    Message: Required
+
+  Error 574:
+    Path: languages → 81 → peak_year
+    Message: Required
+
+  Error 575:
+    Path: languages → 81 → current_users_estimate
+    Message: Required
+
+  Error 576:
+    Path: languages → 82 → first_release_year
+    Message: Required
+
+  Error 577:
+    Path: languages → 82 → current_primary_implementation_language
+    Message: Required
+
+  Error 578:
+    Path: languages → 82 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 579:
+    Path: languages → 82 → runtime_model
+    Message: Required
+
+  Error 580:
+    Path: languages → 82 → self_hosting
+    Message: Required
+
+  Error 581:
+    Path: languages → 82 → notes
+    Message: Required
+
+  Error 582:
+    Path: languages → 82 → cluster_hint
+    Message: Required
+
+  Error 583:
+    Path: languages → 82 → company
+    Message: Required
+
+  Error 584:
+    Path: languages → 82 → garbage_collected
+    Message: Required
+
+  Error 585:
+    Path: languages → 82 → logo_url
+    Message: Required
+
+  Error 586:
+    Path: languages → 82 → peak_year
+    Message: Required
+
+  Error 587:
+    Path: languages → 82 → current_users_estimate
+    Message: Required
+
+  Error 588:
+    Path: languages → 83 → first_release_year
+    Message: Required
+
+  Error 589:
+    Path: languages → 83 → current_primary_implementation_language
+    Message: Required
+
+  Error 590:
+    Path: languages → 83 → runtime_model
+    Message: Required
+
+  Error 591:
+    Path: languages → 83 → self_hosting
+    Message: Required
+
+  Error 592:
+    Path: languages → 83 → notes
+    Message: Required
+
+  Error 593:
+    Path: languages → 83 → cluster_hint
+    Message: Required
+
+  Error 594:
+    Path: languages → 83 → company
+    Message: Required
+
+  Error 595:
+    Path: languages → 83 → garbage_collected
+    Message: Required
+
+  Error 596:
+    Path: languages → 83 → logo_url
+    Message: Required
+
+  Error 597:
+    Path: languages → 83 → peak_year
+    Message: Required
+
+  Error 598:
+    Path: languages → 83 → current_users_estimate
+    Message: Required
+
+  Error 599:
+    Path: languages → 84 → first_release_year
+    Message: Required
+
+  Error 600:
+    Path: languages → 84 → current_primary_implementation_language
+    Message: Required
+
+  Error 601:
+    Path: languages → 84 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 602:
+    Path: languages → 84 → runtime_model
+    Message: Required
+
+  Error 603:
+    Path: languages → 84 → self_hosting
+    Message: Required
+
+  Error 604:
+    Path: languages → 84 → notes
+    Message: Required
+
+  Error 605:
+    Path: languages → 84 → cluster_hint
+    Message: Required
+
+  Error 606:
+    Path: languages → 84 → company
+    Message: Required
+
+  Error 607:
+    Path: languages → 84 → garbage_collected
+    Message: Required
+
+  Error 608:
+    Path: languages → 84 → logo_url
+    Message: Required
+
+  Error 609:
+    Path: languages → 84 → peak_year
+    Message: Required
+
+  Error 610:
+    Path: languages → 84 → current_users_estimate
+    Message: Required
+
+  Error 611:
+    Path: languages → 85 → first_release_year
+    Message: Required
+
+  Error 612:
+    Path: languages → 85 → current_primary_implementation_language
+    Message: Required
+
+  Error 613:
+    Path: languages → 85 → runtime_model
+    Message: Required
+
+  Error 614:
+    Path: languages → 85 → self_hosting
+    Message: Required
+
+  Error 615:
+    Path: languages → 85 → notes
+    Message: Required
+
+  Error 616:
+    Path: languages → 85 → cluster_hint
+    Message: Required
+
+  Error 617:
+    Path: languages → 85 → company
+    Message: Required
+
+  Error 618:
+    Path: languages → 85 → garbage_collected
+    Message: Required
+
+  Error 619:
+    Path: languages → 85 → logo_url
+    Message: Required
+
+  Error 620:
+    Path: languages → 85 → peak_year
+    Message: Required
+
+  Error 621:
+    Path: languages → 85 → current_users_estimate
+    Message: Required
+
+  Error 622:
+    Path: languages → 86 → first_release_year
+    Message: Required
+
+  Error 623:
+    Path: languages → 86 → current_primary_implementation_language
+    Message: Required
+
+  Error 624:
+    Path: languages → 86 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 625:
+    Path: languages → 86 → runtime_model
+    Message: Required
+
+  Error 626:
+    Path: languages → 86 → self_hosting
+    Message: Required
+
+  Error 627:
+    Path: languages → 86 → notes
+    Message: Required
+
+  Error 628:
+    Path: languages → 86 → cluster_hint
+    Message: Required
+
+  Error 629:
+    Path: languages → 86 → company
+    Message: Required
+
+  Error 630:
+    Path: languages → 86 → garbage_collected
+    Message: Required
+
+  Error 631:
+    Path: languages → 86 → logo_url
+    Message: Required
+
+  Error 632:
+    Path: languages → 86 → peak_year
+    Message: Required
+
+  Error 633:
+    Path: languages → 86 → current_users_estimate
+    Message: Required
+
+  Error 634:
+    Path: languages → 87 → first_release_year
+    Message: Required
+
+  Error 635:
+    Path: languages → 87 → current_primary_implementation_language
+    Message: Required
+
+  Error 636:
+    Path: languages → 87 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'modular'
+
+  Error 637:
+    Path: languages → 87 → runtime_model
+    Message: Required
+
+  Error 638:
+    Path: languages → 87 → self_hosting
+    Message: Required
+
+  Error 639:
+    Path: languages → 87 → notes
+    Message: Required
+
+  Error 640:
+    Path: languages → 87 → cluster_hint
+    Message: Required
+
+  Error 641:
+    Path: languages → 87 → company
+    Message: Required
+
+  Error 642:
+    Path: languages → 87 → garbage_collected
+    Message: Required
+
+  Error 643:
+    Path: languages → 87 → logo_url
+    Message: Required
+
+  Error 644:
+    Path: languages → 87 → peak_year
+    Message: Required
+
+  Error 645:
+    Path: languages → 87 → current_users_estimate
+    Message: Required
+
+  Error 646:
+    Path: languages → 88 → first_release_year
+    Message: Required
+
+  Error 647:
+    Path: languages → 88 → current_primary_implementation_language
+    Message: Required
+
+  Error 648:
+    Path: languages → 88 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 649:
+    Path: languages → 88 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'prototype-based'
+
+  Error 650:
+    Path: languages → 88 → runtime_model
+    Message: Required
+
+  Error 651:
+    Path: languages → 88 → self_hosting
+    Message: Required
+
+  Error 652:
+    Path: languages → 88 → notes
+    Message: Required
+
+  Error 653:
+    Path: languages → 88 → cluster_hint
+    Message: Required
+
+  Error 654:
+    Path: languages → 88 → company
+    Message: Required
+
+  Error 655:
+    Path: languages → 88 → garbage_collected
+    Message: Required
+
+  Error 656:
+    Path: languages → 88 → logo_url
+    Message: Required
+
+  Error 657:
+    Path: languages → 88 → peak_year
+    Message: Required
+
+  Error 658:
+    Path: languages → 88 → current_users_estimate
+    Message: Required
+
+  Error 659:
+    Path: languages → 89 → first_release_year
+    Message: Required
+
+  Error 660:
+    Path: languages → 89 → current_primary_implementation_language
+    Message: Required
+
+  Error 661:
+    Path: languages → 89 → runtime_model
+    Message: Required
+
+  Error 662:
+    Path: languages → 89 → self_hosting
+    Message: Required
+
+  Error 663:
+    Path: languages → 89 → notes
+    Message: Required
+
+  Error 664:
+    Path: languages → 89 → cluster_hint
+    Message: Required
+
+  Error 665:
+    Path: languages → 89 → company
+    Message: Required
+
+  Error 666:
+    Path: languages → 89 → garbage_collected
+    Message: Required
+
+  Error 667:
+    Path: languages → 89 → logo_url
+    Message: Required
+
+  Error 668:
+    Path: languages → 89 → peak_year
+    Message: Required
+
+  Error 669:
+    Path: languages → 89 → current_users_estimate
+    Message: Required
+
+  Error 670:
+    Path: languages → 90 → first_release_year
+    Message: Required
+
+  Error 671:
+    Path: languages → 90 → current_primary_implementation_language
+    Message: Required
+
+  Error 672:
+    Path: languages → 90 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'array'
+
+  Error 673:
+    Path: languages → 90 → runtime_model
+    Message: Required
+
+  Error 674:
+    Path: languages → 90 → self_hosting
+    Message: Required
+
+  Error 675:
+    Path: languages → 90 → notes
+    Message: Required
+
+  Error 676:
+    Path: languages → 90 → cluster_hint
+    Message: Required
+
+  Error 677:
+    Path: languages → 90 → company
+    Message: Required
+
+  Error 678:
+    Path: languages → 90 → garbage_collected
+    Message: Required
+
+  Error 679:
+    Path: languages → 90 → logo_url
+    Message: Required
+
+  Error 680:
+    Path: languages → 90 → peak_year
+    Message: Required
+
+  Error 681:
+    Path: languages → 90 → current_users_estimate
+    Message: Required
+
+  Error 682:
+    Path: languages → 91 → first_release_year
+    Message: Required
+
+  Error 683:
+    Path: languages → 91 → current_primary_implementation_language
+    Message: Required
+
+  Error 684:
+    Path: languages → 91 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'dependent-typed'
+
+  Error 685:
+    Path: languages → 91 → runtime_model
+    Message: Required
+
+  Error 686:
+    Path: languages → 91 → self_hosting
+    Message: Required
+
+  Error 687:
+    Path: languages → 91 → notes
+    Message: Required
+
+  Error 688:
+    Path: languages → 91 → cluster_hint
+    Message: Required
+
+  Error 689:
+    Path: languages → 91 → company
+    Message: Required
+
+  Error 690:
+    Path: languages → 91 → garbage_collected
+    Message: Required
+
+  Error 691:
+    Path: languages → 91 → logo_url
+    Message: Required
+
+  Error 692:
+    Path: languages → 91 → peak_year
+    Message: Required
+
+  Error 693:
+    Path: languages → 91 → current_users_estimate
+    Message: Required
+
+  Error 694:
+    Path: languages → 92 → first_release_year
+    Message: Required
+
+  Error 695:
+    Path: languages → 92 → current_primary_implementation_language
+    Message: Required
+
+  Error 696:
+    Path: languages → 92 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'proof-assistant'
+
+  Error 697:
+    Path: languages → 92 → runtime_model
+    Message: Required
+
+  Error 698:
+    Path: languages → 92 → self_hosting
+    Message: Required
+
+  Error 699:
+    Path: languages → 92 → notes
+    Message: Required
+
+  Error 700:
+    Path: languages → 92 → cluster_hint
+    Message: Required
+
+  Error 701:
+    Path: languages → 92 → company
+    Message: Required
+
+  Error 702:
+    Path: languages → 92 → garbage_collected
+    Message: Required
+
+  Error 703:
+    Path: languages → 92 → logo_url
+    Message: Required
+
+  Error 704:
+    Path: languages → 92 → peak_year
+    Message: Required
+
+  Error 705:
+    Path: languages → 92 → current_users_estimate
+    Message: Required
+
+  Error 706:
+    Path: languages → 93 → first_release_year
+    Message: Required
+
+  Error 707:
+    Path: languages → 93 → current_primary_implementation_language
+    Message: Required
+
+  Error 708:
+    Path: languages → 93 → runtime_model
+    Message: Required
+
+  Error 709:
+    Path: languages → 93 → self_hosting
+    Message: Required
+
+  Error 710:
+    Path: languages → 93 → notes
+    Message: Required
+
+  Error 711:
+    Path: languages → 93 → cluster_hint
+    Message: Required
+
+  Error 712:
+    Path: languages → 93 → company
+    Message: Required
+
+  Error 713:
+    Path: languages → 93 → garbage_collected
+    Message: Required
+
+  Error 714:
+    Path: languages → 93 → logo_url
+    Message: Required
+
+  Error 715:
+    Path: languages → 93 → peak_year
+    Message: Required
+
+  Error 716:
+    Path: languages → 93 → current_users_estimate
+    Message: Required
+
+  Error 717:
+    Path: languages → 94 → first_release_year
+    Message: Required
+
+  Error 718:
+    Path: languages → 94 → current_primary_implementation_language
+    Message: Required
+
+  Error 719:
+    Path: languages → 94 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'array'
+
+  Error 720:
+    Path: languages → 94 → runtime_model
+    Message: Required
+
+  Error 721:
+    Path: languages → 94 → self_hosting
+    Message: Required
+
+  Error 722:
+    Path: languages → 94 → notes
+    Message: Required
+
+  Error 723:
+    Path: languages → 94 → cluster_hint
+    Message: Required
+
+  Error 724:
+    Path: languages → 94 → company
+    Message: Required
+
+  Error 725:
+    Path: languages → 94 → garbage_collected
+    Message: Required
+
+  Error 726:
+    Path: languages → 94 → logo_url
+    Message: Required
+
+  Error 727:
+    Path: languages → 94 → peak_year
+    Message: Required
+
+  Error 728:
+    Path: languages → 94 → current_users_estimate
+    Message: Required
+
+  Error 729:
+    Path: languages → 95 → first_release_year
+    Message: Required
+
+  Error 730:
+    Path: languages → 95 → current_primary_implementation_language
+    Message: Required
+
+  Error 731:
+    Path: languages → 95 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 732:
+    Path: languages → 95 → runtime_model
+    Message: Required
+
+  Error 733:
+    Path: languages → 95 → self_hosting
+    Message: Required
+
+  Error 734:
+    Path: languages → 95 → notes
+    Message: Required
+
+  Error 735:
+    Path: languages → 95 → cluster_hint
+    Message: Required
+
+  Error 736:
+    Path: languages → 95 → company
+    Message: Required
+
+  Error 737:
+    Path: languages → 95 → garbage_collected
+    Message: Required
+
+  Error 738:
+    Path: languages → 95 → logo_url
+    Message: Required
+
+  Error 739:
+    Path: languages → 95 → peak_year
+    Message: Required
+
+  Error 740:
+    Path: languages → 95 → current_users_estimate
+    Message: Required
+
+  Error 741:
+    Path: languages → 96 → first_release_year
+    Message: Required
+
+  Error 742:
+    Path: languages → 96 → current_primary_implementation_language
+    Message: Required
+
+  Error 743:
+    Path: languages → 96 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'array'
+
+  Error 744:
+    Path: languages → 96 → runtime_model
+    Message: Required
+
+  Error 745:
+    Path: languages → 96 → self_hosting
+    Message: Required
+
+  Error 746:
+    Path: languages → 96 → notes
+    Message: Required
+
+  Error 747:
+    Path: languages → 96 → cluster_hint
+    Message: Required
+
+  Error 748:
+    Path: languages → 96 → company
+    Message: Required
+
+  Error 749:
+    Path: languages → 96 → garbage_collected
+    Message: Required
+
+  Error 750:
+    Path: languages → 96 → logo_url
+    Message: Required
+
+  Error 751:
+    Path: languages → 96 → peak_year
+    Message: Required
+
+  Error 752:
+    Path: languages → 96 → current_users_estimate
+    Message: Required
+
+  Error 753:
+    Path: languages → 97 → first_release_year
+    Message: Required
+
+  Error 754:
+    Path: languages → 97 → current_primary_implementation_language
+    Message: Required
+
+  Error 755:
+    Path: languages → 97 → runtime_model
+    Message: Required
+
+  Error 756:
+    Path: languages → 97 → self_hosting
+    Message: Required
+
+  Error 757:
+    Path: languages → 97 → notes
+    Message: Required
+
+  Error 758:
+    Path: languages → 97 → cluster_hint
+    Message: Required
+
+  Error 759:
+    Path: languages → 97 → company
+    Message: Required
+
+  Error 760:
+    Path: languages → 97 → garbage_collected
+    Message: Required
+
+  Error 761:
+    Path: languages → 97 → logo_url
+    Message: Required
+
+  Error 762:
+    Path: languages → 97 → peak_year
+    Message: Required
+
+  Error 763:
+    Path: languages → 97 → current_users_estimate
+    Message: Required
+
+  Error 764:
+    Path: languages → 98 → first_release_year
+    Message: Required
+
+  Error 765:
+    Path: languages → 98 → current_primary_implementation_language
+    Message: Required
+
+  Error 766:
+    Path: languages → 98 → runtime_model
+    Message: Required
+
+  Error 767:
+    Path: languages → 98 → self_hosting
+    Message: Required
+
+  Error 768:
+    Path: languages → 98 → notes
+    Message: Required
+
+  Error 769:
+    Path: languages → 98 → cluster_hint
+    Message: Required
+
+  Error 770:
+    Path: languages → 98 → company
+    Message: Required
+
+  Error 771:
+    Path: languages → 98 → garbage_collected
+    Message: Required
+
+  Error 772:
+    Path: languages → 98 → logo_url
+    Message: Required
+
+  Error 773:
+    Path: languages → 98 → peak_year
+    Message: Required
+
+  Error 774:
+    Path: languages → 98 → current_users_estimate
+    Message: Required
+
+  Error 775:
+    Path: languages → 99 → first_release_year
+    Message: Required
+
+  Error 776:
+    Path: languages → 99 → current_primary_implementation_language
+    Message: Required
+
+  Error 777:
+    Path: languages → 99 → runtime_model
+    Message: Required
+
+  Error 778:
+    Path: languages → 99 → self_hosting
+    Message: Required
+
+  Error 779:
+    Path: languages → 99 → notes
+    Message: Required
+
+  Error 780:
+    Path: languages → 99 → cluster_hint
+    Message: Required
+
+  Error 781:
+    Path: languages → 99 → company
+    Message: Required
+
+  Error 782:
+    Path: languages → 99 → garbage_collected
+    Message: Required
+
+  Error 783:
+    Path: languages → 99 → logo_url
+    Message: Required
+
+  Error 784:
+    Path: languages → 99 → peak_year
+    Message: Required
+
+  Error 785:
+    Path: languages → 99 → current_users_estimate
+    Message: Required
+
+  Error 786:
+    Path: languages → 100 → first_release_year
+    Message: Required
+
+  Error 787:
+    Path: languages → 100 → current_primary_implementation_language
+    Message: Required
+
+  Error 788:
+    Path: languages → 100 → runtime_model
+    Message: Required
+
+  Error 789:
+    Path: languages → 100 → self_hosting
+    Message: Required
+
+  Error 790:
+    Path: languages → 100 → notes
+    Message: Required
+
+  Error 791:
+    Path: languages → 100 → cluster_hint
+    Message: Required
+
+  Error 792:
+    Path: languages → 100 → company
+    Message: Required
+
+  Error 793:
+    Path: languages → 100 → garbage_collected
+    Message: Required
+
+  Error 794:
+    Path: languages → 100 → logo_url
+    Message: Required
+
+  Error 795:
+    Path: languages → 100 → peak_year
+    Message: Required
+
+  Error 796:
+    Path: languages → 100 → current_users_estimate
+    Message: Required
+
+  Error 797:
+    Path: languages → 101 → first_release_year
+    Message: Required
+
+  Error 798:
+    Path: languages → 101 → current_primary_implementation_language
+    Message: Required
+
+  Error 799:
+    Path: languages → 101 → runtime_model
+    Message: Required
+
+  Error 800:
+    Path: languages → 101 → self_hosting
+    Message: Required
+
+  Error 801:
+    Path: languages → 101 → notes
+    Message: Required
+
+  Error 802:
+    Path: languages → 101 → cluster_hint
+    Message: Required
+
+  Error 803:
+    Path: languages → 101 → company
+    Message: Required
+
+  Error 804:
+    Path: languages → 101 → garbage_collected
+    Message: Required
+
+  Error 805:
+    Path: languages → 101 → logo_url
+    Message: Required
+
+  Error 806:
+    Path: languages → 101 → peak_year
+    Message: Required
+
+  Error 807:
+    Path: languages → 101 → current_users_estimate
+    Message: Required
+
+  Error 808:
+    Path: languages → 102 → first_release_year
+    Message: Required
+
+  Error 809:
+    Path: languages → 102 → current_primary_implementation_language
+    Message: Required
+
+  Error 810:
+    Path: languages → 102 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'data-driven'
+
+  Error 811:
+    Path: languages → 102 → runtime_model
+    Message: Required
+
+  Error 812:
+    Path: languages → 102 → self_hosting
+    Message: Required
+
+  Error 813:
+    Path: languages → 102 → notes
+    Message: Required
+
+  Error 814:
+    Path: languages → 102 → cluster_hint
+    Message: Required
+
+  Error 815:
+    Path: languages → 102 → company
+    Message: Required
+
+  Error 816:
+    Path: languages → 102 → garbage_collected
+    Message: Required
+
+  Error 817:
+    Path: languages → 102 → logo_url
+    Message: Required
+
+  Error 818:
+    Path: languages → 102 → peak_year
+    Message: Required
+
+  Error 819:
+    Path: languages → 102 → current_users_estimate
+    Message: Required
+
+  Error 820:
+    Path: languages → 103 → first_release_year
+    Message: Required
+
+  Error 821:
+    Path: languages → 103 → current_primary_implementation_language
+    Message: Required
+
+  Error 822:
+    Path: languages → 103 → runtime_model
+    Message: Required
+
+  Error 823:
+    Path: languages → 103 → self_hosting
+    Message: Required
+
+  Error 824:
+    Path: languages → 103 → notes
+    Message: Required
+
+  Error 825:
+    Path: languages → 103 → cluster_hint
+    Message: Required
+
+  Error 826:
+    Path: languages → 103 → company
+    Message: Required
+
+  Error 827:
+    Path: languages → 103 → garbage_collected
+    Message: Required
+
+  Error 828:
+    Path: languages → 103 → logo_url
+    Message: Required
+
+  Error 829:
+    Path: languages → 103 → peak_year
+    Message: Required
+
+  Error 830:
+    Path: languages → 103 → current_users_estimate
+    Message: Required
+
+  Error 831:
+    Path: languages → 104 → first_release_year
+    Message: Required
+
+  Error 832:
+    Path: languages → 104 → current_primary_implementation_language
+    Message: Required
+
+  Error 833:
+    Path: languages → 104 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 834:
+    Path: languages → 104 → runtime_model
+    Message: Required
+
+  Error 835:
+    Path: languages → 104 → self_hosting
+    Message: Required
+
+  Error 836:
+    Path: languages → 104 → notes
+    Message: Required
+
+  Error 837:
+    Path: languages → 104 → cluster_hint
+    Message: Required
+
+  Error 838:
+    Path: languages → 104 → company
+    Message: Required
+
+  Error 839:
+    Path: languages → 104 → garbage_collected
+    Message: Required
+
+  Error 840:
+    Path: languages → 104 → logo_url
+    Message: Required
+
+  Error 841:
+    Path: languages → 104 → peak_year
+    Message: Required
+
+  Error 842:
+    Path: languages → 104 → current_users_estimate
+    Message: Required
+
+  Error 843:
+    Path: languages → 105 → first_release_year
+    Message: Required
+
+  Error 844:
+    Path: languages → 105 → current_primary_implementation_language
+    Message: Required
+
+  Error 845:
+    Path: languages → 105 → runtime_model
+    Message: Required
+
+  Error 846:
+    Path: languages → 105 → self_hosting
+    Message: Required
+
+  Error 847:
+    Path: languages → 105 → notes
+    Message: Required
+
+  Error 848:
+    Path: languages → 105 → cluster_hint
+    Message: Required
+
+  Error 849:
+    Path: languages → 105 → company
+    Message: Required
+
+  Error 850:
+    Path: languages → 105 → garbage_collected
+    Message: Required
+
+  Error 851:
+    Path: languages → 105 → logo_url
+    Message: Required
+
+  Error 852:
+    Path: languages → 105 → peak_year
+    Message: Required
+
+  Error 853:
+    Path: languages → 105 → current_users_estimate
+    Message: Required
+
+  Error 854:
+    Path: languages → 106 → first_release_year
+    Message: Required
+
+  Error 855:
+    Path: languages → 106 → current_primary_implementation_language
+    Message: Required
+
+  Error 856:
+    Path: languages → 106 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'statistical'
+
+  Error 857:
+    Path: languages → 106 → runtime_model
+    Message: Required
+
+  Error 858:
+    Path: languages → 106 → self_hosting
+    Message: Required
+
+  Error 859:
+    Path: languages → 106 → notes
+    Message: Required
+
+  Error 860:
+    Path: languages → 106 → cluster_hint
+    Message: Required
+
+  Error 861:
+    Path: languages → 106 → company
+    Message: Required
+
+  Error 862:
+    Path: languages → 106 → garbage_collected
+    Message: Required
+
+  Error 863:
+    Path: languages → 106 → logo_url
+    Message: Required
+
+  Error 864:
+    Path: languages → 106 → peak_year
+    Message: Required
+
+  Error 865:
+    Path: languages → 106 → current_users_estimate
+    Message: Required
+
+  Error 866:
+    Path: languages → 107 → first_release_year
+    Message: Required
+
+  Error 867:
+    Path: languages → 107 → current_primary_implementation_language
+    Message: Required
+
+  Error 868:
+    Path: languages → 107 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 869:
+    Path: languages → 107 → runtime_model
+    Message: Required
+
+  Error 870:
+    Path: languages → 107 → self_hosting
+    Message: Required
+
+  Error 871:
+    Path: languages → 107 → notes
+    Message: Required
+
+  Error 872:
+    Path: languages → 107 → cluster_hint
+    Message: Required
+
+  Error 873:
+    Path: languages → 107 → company
+    Message: Required
+
+  Error 874:
+    Path: languages → 107 → garbage_collected
+    Message: Required
+
+  Error 875:
+    Path: languages → 107 → logo_url
+    Message: Required
+
+  Error 876:
+    Path: languages → 107 → peak_year
+    Message: Required
+
+  Error 877:
+    Path: languages → 107 → current_users_estimate
+    Message: Required
+
+  Error 878:
+    Path: languages → 108 → first_release_year
+    Message: Required
+
+  Error 879:
+    Path: languages → 108 → current_primary_implementation_language
+    Message: Required
+
+  Error 880:
+    Path: languages → 108 → runtime_model
+    Message: Required
+
+  Error 881:
+    Path: languages → 108 → self_hosting
+    Message: Required
+
+  Error 882:
+    Path: languages → 108 → notes
+    Message: Required
+
+  Error 883:
+    Path: languages → 108 → cluster_hint
+    Message: Required
+
+  Error 884:
+    Path: languages → 108 → company
+    Message: Required
+
+  Error 885:
+    Path: languages → 108 → garbage_collected
+    Message: Required
+
+  Error 886:
+    Path: languages → 108 → logo_url
+    Message: Required
+
+  Error 887:
+    Path: languages → 108 → peak_year
+    Message: Required
+
+  Error 888:
+    Path: languages → 108 → current_users_estimate
+    Message: Required
+
+  Error 889:
+    Path: languages → 109 → first_release_year
+    Message: Required
+
+  Error 890:
+    Path: languages → 109 → current_primary_implementation_language
+    Message: Required
+
+  Error 891:
+    Path: languages → 109 → paradigm → 0
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'static-analysis'
+
+  Error 892:
+    Path: languages → 109 → runtime_model
+    Message: Required
+
+  Error 893:
+    Path: languages → 109 → self_hosting
+    Message: Required
+
+  Error 894:
+    Path: languages → 109 → notes
+    Message: Required
+
+  Error 895:
+    Path: languages → 109 → cluster_hint
+    Message: Required
+
+  Error 896:
+    Path: languages → 109 → company
+    Message: Required
+
+  Error 897:
+    Path: languages → 109 → garbage_collected
+    Message: Required
+
+  Error 898:
+    Path: languages → 109 → logo_url
+    Message: Required
+
+  Error 899:
+    Path: languages → 109 → peak_year
+    Message: Required
+
+  Error 900:
+    Path: languages → 109 → current_users_estimate
+    Message: Required
+
+  Error 901:
+    Path: languages → 110 → first_release_year
+    Message: Required
+
+  Error 902:
+    Path: languages → 110 → current_primary_implementation_language
+    Message: Required
+
+  Error 903:
+    Path: languages → 110 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'object-oriented'
+
+  Error 904:
+    Path: languages → 110 → runtime_model
+    Message: Required
+
+  Error 905:
+    Path: languages → 110 → self_hosting
+    Message: Required
+
+  Error 906:
+    Path: languages → 110 → notes
+    Message: Required
+
+  Error 907:
+    Path: languages → 110 → cluster_hint
+    Message: Required
+
+  Error 908:
+    Path: languages → 110 → company
+    Message: Required
+
+  Error 909:
+    Path: languages → 110 → garbage_collected
+    Message: Required
+
+  Error 910:
+    Path: languages → 110 → logo_url
+    Message: Required
+
+  Error 911:
+    Path: languages → 110 → peak_year
+    Message: Required
+
+  Error 912:
+    Path: languages → 110 → current_users_estimate
+    Message: Required
+
+  Error 913:
+    Path: languages → 111 → first_release_year
+    Message: Required
+
+  Error 914:
+    Path: languages → 111 → current_primary_implementation_language
+    Message: Required
+
+  Error 915:
+    Path: languages → 111 → paradigm → 1
+    Message: Invalid enum value. Expected 'imperative' | 'procedural' | 'object_oriented' | 'functional' | 'declarative' | 'logic' | 'concurrent' | 'scripting' | 'markup' | 'query' | 'dataflow' | 'low-level', received 'array'
+
+  Error 916:
+    Path: languages → 111 → runtime_model
+    Message: Required
+
+  Error 917:
+    Path: languages → 111 → self_hosting
+    Message: Required
+
+  Error 918:
+    Path: languages → 111 → notes
+    Message: Required
+
+  Error 919:
+    Path: languages → 111 → cluster_hint
+    Message: Required
+
+  Error 920:
+    Path: languages → 111 → company
+    Message: Required
+
+  Error 921:
+    Path: languages → 111 → garbage_collected
+    Message: Required
+
+  Error 922:
+    Path: languages → 111 → logo_url
+    Message: Required
+
+  Error 923:
+    Path: languages → 111 → peak_year
+    Message: Required
+
+  Error 924:
+    Path: languages → 111 → current_users_estimate
+    Message: Required
+
+
+────────────────────────────────────────────────────────────────────────────────
+2. INTEGRITY CHECKS
+────────────────────────────────────────────────────────────────────────────────
+✅ No duplicate language IDs
+✅ All relationship references resolved
+✅ No duplicate edges
+✅ No circular bootstrap chains
+
+Total integrity errors: 0
+
+────────────────────────────────────────────────────────────────────────────────
+3. HISTORICAL LOGIC VALIDATION
+────────────────────────────────────────────────────────────────────────────────
+❌ Historical logic errors:
+  - lang:rust: start_year (2011) < release year (2015)
+  - lang:haskell: start_year (1989) < release year (1990)
+  - lang:elm: start_year (2006) < release year (2012)
+  - lang:rust: start_year (2014) < release year (2015)
+  - lang:haskell: start_year (1989) < release year (1990)
+  - lang:typescript: start_year (2011) < release year (2012)
+  - lang:java: start_year (1994) < release year (1995)
+
+Total historical errors: 7
+
+────────────────────────────────────────────────────────────────────────────────
+4. GRAPH METRICS
+────────────────────────────────────────────────────────────────────────────────
+Top 10 Most Connected Languages (by total degree):
+  1. C (lang:c)
+     Total: 41 (in: 8, out: 33)
+  2. Python (lang:python)
+     Total: 27 (in: 15, out: 12)
+  3. C++ (lang:cxx)
+     Total: 23 (in: 4, out: 19)
+  4. Rust (lang:rust)
+     Total: 20 (in: 15, out: 5)
+  5. Haskell (lang:haskell)
+     Total: 19 (in: 4, out: 15)
+  6. Java (lang:java)
+     Total: 16 (in: 4, out: 12)
+  7. JavaScript (lang:javascript)
+     Total: 16 (in: 12, out: 4)
+  8. Go (lang:go)
+     Total: 15 (in: 12, out: 3)
+  9. Ruby (lang:ruby)
+     Total: 13 (in: 5, out: 8)
+  10. Lisp (lang:lisp)
+     Total: 12 (in: 0, out: 12)
+
+Connected Components: 1
+  Component 1: 112 nodes (lang:machine_code, ...)
+
+────────────────────────────────────────────────────────────────────────────────
+5. SUMMARY STATISTICS
+────────────────────────────────────────────────────────────────────────────────
+Languages: 112
+Relationships: 300
+Self-loops: 28
+Connected components: 1
+Isolated nodes: 0
+
+================================================================================
+END OF REPORT
+================================================================================
+

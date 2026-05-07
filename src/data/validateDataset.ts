@@ -1,6 +1,9 @@
 import type { RawDataset, ValidationReport } from './types';
 
 export function validateDataset(dataset: RawDataset): ValidationReport {
+  // Support both v2 (edges) and v4 (relationships)
+  const edges = dataset.relationships || dataset.edges || [];
+
   const report: ValidationReport = {
     missing_nodes_referenced_by_edges: [],
     duplicate_ids: [],
@@ -9,8 +12,8 @@ export function validateDataset(dataset: RawDataset): ValidationReport {
     edges_confidence_lt_0_8: [],
     summary: {
       total_languages: dataset.languages.length,
-      total_edges: dataset.edges.length,
-      valid_edges: dataset.edges.length,
+      total_edges: edges.length,
+      valid_edges: edges.length,
       warnings: 0,
     },
   };
@@ -33,7 +36,7 @@ export function validateDataset(dataset: RawDataset): ValidationReport {
   }
 
   // Validate edges
-  for (const edge of dataset.edges) {
+  for (const edge of edges) {
     // Check for missing nodes
     if (!languageIds.has(edge.from_language)) {
       if (!report.missing_nodes_referenced_by_edges.includes(edge.from_language)) {

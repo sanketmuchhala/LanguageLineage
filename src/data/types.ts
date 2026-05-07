@@ -1,6 +1,7 @@
 // Core data types from the dataset
 
 export type ClusterType =
+  // v2 clusters (legacy)
   | 'c_family'
   | 'jvm_dotnet'
   | 'js_engines'
@@ -8,13 +9,24 @@ export type ClusterType =
   | 'systems'
   | 'scripting'
   | 'compilers'
-  | 'other';
+  | 'other'
+  // v4 clusters
+  | 'clr'
+  | 'dynamic'
+  | 'historical'
+  | 'jvm'
+  | 'roots'
+  | 'scientific'
+  | 'tools';
 
 export type RelationshipType =
   | 'compiler_written_in'
   | 'runtime_written_in'
   | 'bootstrap_written_in'
-  | 'rewritten_in';
+  | 'rewritten_in'
+  | 'influenced'
+  | 'influenced_by'
+  | 'transpiled_to';
 
 // Raw dataset types (from JSON)
 export interface RawLanguageNode {
@@ -22,7 +34,18 @@ export interface RawLanguageNode {
   name: string;
   first_release_year: number;
   current_primary_implementation_language: string;
-  notes: string;
+  paradigm?: string[];
+  typing?: string;
+  runtime_model?: string;
+  self_hosting?: boolean;
+  notes: string | null;
+  cluster_hint?: string | null;
+  // v4 enriched fields
+  company?: string | null;
+  garbage_collected?: boolean | null;
+  logo_url?: string | null;
+  peak_year?: number | null;
+  current_users_estimate?: 'niche' | 'moderate' | 'large' | 'dominant' | null;
 }
 
 export interface RawImplementation {
@@ -36,16 +59,20 @@ export interface RawEdge {
   from_language: string;
   to_language: string;
   relationship: RelationshipType;
-  start_year: number;
+  start_year: number | null;
   end_year: number | null;
   confidence: number;
   evidence_source: string;
+  notes?: string | null;
 }
 
 export interface RawDataset {
+  version?: string;
+  description?: string;
   languages: RawLanguageNode[];
-  implementations: RawImplementation[];
-  edges: RawEdge[];
+  implementations?: RawImplementation[];
+  edges?: RawEdge[];
+  relationships?: RawEdge[]; // v4 uses "relationships" instead of "edges"
 }
 
 // Normalized types (after processing)
@@ -75,11 +102,15 @@ export interface FilterState {
     runtime_written_in: boolean;
     bootstrap_written_in: boolean;
     rewritten_in: boolean;
+    influenced: boolean;
+    influenced_by: boolean;
+    transpiled_to: boolean;
   };
   showSelfLoops: boolean;
   clusterColoring: boolean;
   showAllLabels: boolean;
-  layoutMode: 'dag' | 'force';
+  layoutMode: 'dag' | 'force' | 'cluster' | 'timeline';
+  graphMode: 'implementation' | 'influence';
 }
 
 // Cytoscape element types
@@ -89,9 +120,13 @@ export interface CytoscapeNodeData {
   name: string;
   first_release_year: number;
   current_primary_implementation_language: string;
-  notes: string;
+  notes: string | null;
   degree: number;
   cluster: ClusterType;
+  parent?: string;
+  logoUrl?: string | null;
+  logoColor?: string | null;
+  abbr?: string;
 }
 
 export interface CytoscapeEdgeData {
@@ -99,10 +134,11 @@ export interface CytoscapeEdgeData {
   source: string;
   target: string;
   relationship: RelationshipType;
-  start_year: number;
+  start_year: number | null;
   end_year: number | null;
   confidence: number;
   evidence_source: string;
+  notes?: string | null;
 }
 
 export interface CytoscapeNode {

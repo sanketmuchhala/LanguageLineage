@@ -2,8 +2,8 @@ import type { CytoscapeOptions } from 'cytoscape';
 
 export const BASE_CYTOSCAPE_CONFIG: Partial<CytoscapeOptions> = {
   // Zoom and pan settings
-  minZoom: 0.5,
-  maxZoom: 2.5,
+  minZoom: 0.15,
+  maxZoom: 3.0,
   wheelSensitivity: 0.15,
 
   // Interaction settings

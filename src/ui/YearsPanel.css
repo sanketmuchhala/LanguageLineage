@@ -1,24 +1,25 @@
 .years-panel {
   width: 300px;
   height: 100%;
-  background-color: #fafafa;
-  border-left: 1px solid #ddd;
+  background-color: var(--bg-surface);
+  border-left: 1px solid var(--border-primary);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  transition: background-color 0.2s, border-color 0.2s;
 }
 
 .years-header {
   padding: 20px 16px 12px 16px;
-  border-bottom: 2px solid #333;
+  border-bottom: 2px solid var(--border-primary);
 }
 
 .years-header h2 {
   font-size: 18px;
   font-weight: 700;
   margin: 0 0 12px 0;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .years-sort {
@@ -29,30 +30,31 @@
 .years-sort button {
   flex: 1;
   padding: 6px 10px;
-  border: 1px solid #ddd;
-  background-color: #fff;
+  border: 1px solid var(--border-primary);
+  background-color: var(--bg-surface);
   cursor: pointer;
   font-size: 12px;
   font-weight: 500;
-  border-radius: 4px;
+  border-radius: 8px;
+  color: var(--text-secondary);
   transition: all 0.2s;
 }
 
 .years-sort button:hover {
-  background-color: #f5f5f5;
+  background-color: var(--bg-surface-hover);
 }
 
 .years-sort button.active {
-  background-color: #333;
+  background-color: var(--accent);
   color: #fff;
-  border-color: #333;
+  border-color: var(--accent);
 }
 
 .years-count {
   padding: 12px 16px;
   font-size: 12px;
-  color: #666;
-  border-bottom: 1px solid #eee;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-secondary);
 }
 
 .years-list {
@@ -65,19 +67,19 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 16px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--border-secondary);
   cursor: pointer;
   transition: background-color 0.15s;
 }
 
 .years-item:hover {
-  background-color: #f8f8f8;
+  background-color: var(--bg-surface-hover);
 }
 
 .years-name {
   font-size: 13px;
   font-weight: 500;
-  color: #333;
+  color: var(--text-primary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -87,7 +89,7 @@
 
 .years-year {
   font-size: 12px;
-  color: #666;
+  color: var(--text-secondary);
   font-weight: 400;
   white-space: nowrap;
 }

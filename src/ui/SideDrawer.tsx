@@ -1,8 +1,10 @@
 import { useGraphStore } from '../store/useGraphStore';
+import { LOGO_MAP, LOGO_COLORS } from '../data/logoMap';
+import { getAdaptiveLogoBackground, getLogoBorderColor } from '../utils/colorContrast';
 import './SideDrawer.css';
 
 export function SideDrawer() {
-  const { dataset, datasetIndex, selectedNodeId, selectedEdgeId, sideDrawerOpen, setSideDrawerOpen } =
+  const { dataset, datasetIndex, selectedNodeId, selectedEdgeId, sideDrawerOpen, setSideDrawerOpen, explorationMode, setExplorationMode, isDarkMode } =
     useGraphStore();
 
   if (!sideDrawerOpen || !dataset) {
@@ -25,7 +27,9 @@ export function SideDrawer() {
     const outgoing = datasetIndex?.outgoingEdges.get(selectedNodeId) || [];
 
     return (
-      <div className="side-drawer">
+      <>
+        <div className="side-drawer-backdrop visible" onClick={handleClose} />
+        <div className="side-drawer">
         <div className="drawer-header">
           <h2>{node.name}</h2>
           <button className="drawer-close" onClick={handleClose}>
@@ -34,16 +38,26 @@ export function SideDrawer() {
         </div>
 
         <div className="drawer-content">
-          {/* TODO: Add language logo once dataset v3 includes logo_url field */}
-          {/* <div className="language-logo">
-            <img src={node.logo_url} alt={`${node.name} logo`} />
-          </div> */}
+          {LOGO_MAP[selectedNodeId] && (() => {
+            const logoColor = LOGO_COLORS[selectedNodeId] || null;
+            const logoBg = getAdaptiveLogoBackground(logoColor, isDarkMode);
+            const logoBorder = getLogoBorderColor(logoColor, isDarkMode);
+
+            return (
+              <div
+                className="language-logo"
+                style={{
+                  backgroundColor: logoBg,
+                  borderColor: logoBorder
+                }}
+              >
+                <img src={LOGO_MAP[selectedNodeId]!} alt={`${node.name} logo`} />
+              </div>
+            );
+          })()}
 
           <section className="drawer-section">
             <h3>Details</h3>
-            <p>
-              <strong>ID:</strong> {node.id}
-            </p>
             <p>
               <strong>First Release:</strong> {node.first_release_year || 'N/A'}
             </p>
@@ -57,19 +71,68 @@ export function SideDrawer() {
             )}
           </section>
 
-          {/* TODO: Add usage statistics once dataset includes these fields */}
-          {/* <section className="drawer-section">
-            <h3>Usage Statistics</h3>
+          <section className="drawer-section">
+            <h3>Attributes</h3>
             <p>
-              <strong>Current Users:</strong> {node.current_users?.toLocaleString() || 'N/A'}
+              <strong>Paradigm:</strong> {node.paradigm?.join(', ') || 'N/A'}
             </p>
             <p>
-              <strong>Peak Users:</strong> {node.peak_users?.toLocaleString() || 'N/A'}
+              <strong>Typing:</strong> {node.typing || 'N/A'}
             </p>
             <p>
-              <strong>Peak Year:</strong> {node.peak_year || 'N/A'}
+              <strong>Runtime:</strong> {node.runtime_model || 'N/A'}
             </p>
-          </section> */}
+            <p>
+              <strong>Self-hosting:</strong> {node.self_hosting === true ? 'Yes' : node.self_hosting === false ? 'No' : 'N/A'}
+            </p>
+            {node.company && (
+              <p>
+                <strong>Company:</strong> {node.company}
+              </p>
+            )}
+          </section>
+
+          <section className="drawer-section">
+            <h3>Graph Metrics</h3>
+            <div className="drawer-metrics">
+              <div className="metric">
+                <span className="metric-value">{incoming.length}</span>
+                <span className="metric-label">In</span>
+              </div>
+              <div className="metric">
+                <span className="metric-value">{outgoing.length}</span>
+                <span className="metric-label">Out</span>
+              </div>
+              <div className="metric">
+                <span className="metric-value">{incoming.length + outgoing.length}</span>
+                <span className="metric-label">Total</span>
+              </div>
+            </div>
+          </section>
+
+          <section className="drawer-section">
+            <h3>Explore</h3>
+            <div className="explore-buttons">
+              <button
+                className={`explore-btn ${explorationMode === 'ancestors' ? 'active' : ''}`}
+                onClick={() => setExplorationMode(explorationMode === 'ancestors' ? 'none' : 'ancestors')}
+              >
+                Ancestors
+              </button>
+              <button
+                className={`explore-btn ${explorationMode === 'descendants' ? 'active' : ''}`}
+                onClick={() => setExplorationMode(explorationMode === 'descendants' ? 'none' : 'descendants')}
+              >
+                Descendants
+              </button>
+              <button
+                className={`explore-btn ${explorationMode === 'focus' ? 'active' : ''}`}
+                onClick={() => setExplorationMode(explorationMode === 'focus' ? 'none' : 'focus')}
+              >
+                Full Lineage
+              </button>
+            </div>
+          </section>
 
           {outgoing.length > 0 && (
             <section className="drawer-section">
@@ -104,6 +167,7 @@ export function SideDrawer() {
           )}
         </div>
       </div>
+      </>
     );
   }
 
@@ -119,7 +183,9 @@ export function SideDrawer() {
     const targetNode = dataset.languageMap.get(edge.to_language);
 
     return (
-      <div className="side-drawer">
+      <>
+        <div className="side-drawer-backdrop visible" onClick={handleClose} />
+        <div className="side-drawer">
         <div className="drawer-header">
           <h2>Edge Details</h2>
           <button className="drawer-close" onClick={handleClose}>
@@ -170,6 +236,7 @@ export function SideDrawer() {
           )}
         </div>
       </div>
+      </>
     );
   }
 

@@ -1,322 +1,289 @@
-# 🔗 Programming Language Lineage Graph
+# Programming Language Lineage Graph
 
-An interactive visualization exploring the implementation relationships and bootstrapping chains of programming languages, compilers, and runtimes.
+An interactive graph visualization mapping the lineage, influence, and implementation relationships between 112 programming languages, from Machine Code (year 0) to Zig (2023).
 
-## 🌐 Live Demo
+## Live Demo
 
-**[View Live Visualization](#)** _(Update with your GitHub Pages URL after deployment)_
+[View Live Visualization](#) (Update with deployment URL)
 
-## ✨ Features
+## Overview
 
-### Interactive Exploration
-- **Dual Layouts**: Toggle between hierarchical DAG and organic force-directed layouts
-- **Smart Filtering**: Filter by relationship type, confidence threshold, and search
-- **Rich Tooltips**: Hover over nodes and edges to see detailed information including evidence sources
-- **Cluster Visualization**: Color-coded by language families (C-family, JVM/.NET, JS engines, functional, systems, scripting)
+This project visualizes how programming languages are connected through compiler chains, runtime dependencies, influence relationships, and bootstrapping paths. The dataset (v4) covers 112 languages and 300 relationships, each backed by evidence sources and confidence scores.
 
-### Visual Encoding
-- **Node Size** = Degree (number of connections)
-- **Node Color** = Language cluster/family
-- **Edge Color** = Relationship type (compiler, runtime, bootstrap, rewrite)
-- **Edge Opacity** = Confidence level (0.0-1.0)
+### What You Can Explore
 
-### Data Export
-- 📄 **SVG Export**: Vector graphics for publications
-- 🖼️ **PNG Export**: High-resolution raster images
-- 📊 **Validation Report**: JSON report with data quality metrics
+- How C underpins nearly everything (41 connections, the most connected node)
+- The Go 1.5 bootstrap: C compiler to self-hosting Go compiler (2015)
+- Rust's path: OCaml to C to self-hosting Rust via staged bootstrapping
+- How Lisp (1958) influenced 12 languages with zero incoming edges
+- JavaScript engine diversity: V8, SpiderMonkey, JavaScriptCore, all written in C++
+- The JVM ecosystem: Java, Kotlin, Scala, Clojure, Groovy sharing a runtime
 
-### Validation & Quality
-- Automatic validation on page load
-- Detects missing nodes, duplicates, dangling edges
-- Flags low-confidence edges (< 0.8)
-- View full report in browser console or download as JSON
+## Architecture
 
-## 🚀 Quick Start
+```
+ProgrammingLanguageGraph/
+├── src/
+│   ├── app/                        App shell and CSS
+│   │   ├── App.tsx                 Root component, loads/validates/normalizes dataset
+│   │   └── App.css
+│   ├── data/                       Data pipeline
+│   │   ├── types.ts                TypeScript types (languages, edges, filters, Cytoscape elements)
+│   │   ├── loadDataset.ts          Fetch dataset JSON by version (v1/v2/v4)
+│   │   ├── validateDataset.ts      Integrity checks (duplicates, dangling refs, confidence)
+│   │   ├── normalizeDataset.ts     Compute degrees, assign clusters, build lookup maps
+│   │   └── indexDataset.ts         Build search index for fast lookups
+│   ├── graph/                      Cytoscape.js rendering
+│   │   ├── GraphView.tsx           Cytoscape container and lifecycle management
+│   │   ├── buildElements.ts        Filter to Cytoscape element conversion
+│   │   ├── style.ts                Node/edge styles, cluster colors, relationship colors
+│   │   ├── layouts.ts              DAG (tree) and force-directed layout configs
+│   │   ├── cytoscapeConfig.ts      Cytoscape core settings
+│   │   └── selectors.ts            Cytoscape selector helpers
+│   ├── store/                      State management
+│   │   └── useGraphStore.ts        Zustand store (dataset, filters, selection, Cytoscape ref)
+│   ├── ui/                         UI components
+│   │   ├── MinimalPanel.tsx        Floating control panel (layout, search, filters)
+│   │   ├── SideDrawer.tsx          Node/edge detail drawer
+│   │   ├── YearsPanel.tsx          Timeline panel
+│   │   ├── Legend.tsx              Color legend
+│   │   ├── RelationshipFilters.tsx Edge type toggles
+│   │   ├── SearchBox.tsx           Search input
+│   │   ├── Slider.tsx              Confidence threshold slider
+│   │   └── Toggle.tsx              Boolean toggle component
+│   └── utils/                      Shared utilities
+├── dataset/
+│   ├── v1/                         28 languages, initial dataset
+│   ├── v2/                         67 languages, 128 edges
+│   ├── v3/                         71 languages, 169 edges
+│   └── v4/                         112 languages, 300 edges (current)
+│       └── lineage_v4.json
+├── scripts/                        Dataset tooling
+│   ├── schema.ts                   Zod validation schemas (15 language fields, 8 edge fields)
+│   ├── analyzeDataset.ts           CLI analyzer (schema, integrity, metrics)
+│   ├── addNewFields.ts             Helper: add null defaults for new fields
+│   ├── enrichData.ts               Helper: populate high-confidence metadata
+│   ├── fixMalformedEntries.ts      Helper: normalize inconsistent entries
+│   └── future-work-plan.md         Planned enhancements (documentation only)
+├── reports/                        Analysis outputs
+│   ├── checkpoint-a-analysis.txt
+│   └── checkpoint-b-analysis.txt
+└── research/                       Reference PDFs
+```
 
-### Option 1: Open Locally
+## Tech Stack
 
-Simply open `index.html` in your web browser. No build process, no dependencies to install!
+| Layer | Technology | Purpose |
+|-------|-----------|---------|
+| Build | Vite 5 | Dev server, production bundling, HMR |
+| UI | React 18 | Component rendering |
+| Language | TypeScript 5 | Strict type safety across data pipeline |
+| Graph | Cytoscape.js 3.28 | Graph rendering, layouts, interaction |
+| Layout | cose-bilkent 4.1 | Force-directed layout algorithm |
+| State | Zustand 4 | Lightweight store for filters, selection, Cytoscape ref |
+| Validation | Zod 3.23 | Runtime schema validation for dataset tooling |
+| Scripts | tsx 4.7 | TypeScript execution for scripts (no compilation step) |
+
+## Dataset (v4)
+
+### Scale
+
+- 112 languages, from Machine Code and Assembly to Zig, V, and Gleam
+- 300 relationships, each with confidence score and evidence source
+- 15 fields per language (10 core + 5 enriched metadata fields)
+
+### Language Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Unique identifier (e.g., `lang:rust`) |
+| `name` | string | Display name |
+| `first_release_year` | int | Year of first public release |
+| `current_primary_implementation_language` | string | What the main compiler/interpreter is written in |
+| `paradigm` | string[] | Programming paradigms (e.g., `["imperative", "functional"]`) |
+| `typing` | string | Type system: `static`, `dynamic`, `gradual`, etc. |
+| `runtime_model` | string | Execution model: `compiled`, `interpreted`, `jit`, `vm`, etc. |
+| `self_hosting` | boolean | Whether the language compiles itself |
+| `notes` | string or null | Historical context, caveats |
+| `cluster_hint` | string | Visual grouping hint for graph layout |
+| `company` | string or null | Creating company/org if unambiguous |
+| `garbage_collected` | boolean or null | Automatic memory management |
+| `logo_url` | null | Reserved for future use |
+| `peak_year` | int or null | Year of historically documented peak popularity |
+| `current_users_estimate` | enum or null | `niche` / `moderate` / `large` / `dominant` |
+
+### Relationship Types
+
+| Type | Count | Color | Description |
+|------|-------|-------|-------------|
+| `influenced` | 189 | Muted yellow | Language A influenced the design of language B |
+| `compiler_written_in` | 54 | Muted red | Language A's compiler is written in language B |
+| `runtime_written_in` | 38 | Muted blue | Language A's runtime is written in language B |
+| `bootstrap_written_in` | 9 | Muted green | Bootstrap binary seed relationship |
+| `transpiled_to` | 8 | Muted purple | Language A compiles to language B |
+| `rewritten_in` | 2 | Muted orange | Implementation rewritten from one language to another |
+| `influenced_by` | 0 | Muted yellow | Reverse influence (schema supports it, no auto-created edges) |
+
+Each relationship includes: `start_year`, `end_year`, `confidence` (0.0-1.0), `evidence_source` (URL), and `notes`.
+
+### Cluster Distribution
+
+| Cluster | Count | Description |
+|---------|-------|-------------|
+| other | 41 | General purpose, uncategorized |
+| tools | 14 | Build tools, analyzers, linters |
+| systems | 13 | Systems programming (C, Rust, Zig, Go) |
+| functional | 13 | Functional languages (Haskell, OCaml, Elm) |
+| historical | 9 | Pre-1970 languages (COBOL, ALGOL, Fortran) |
+| dynamic | 9 | Dynamic/scripting (Python, Ruby, JavaScript) |
+| jvm | 5 | JVM ecosystem (Java, Kotlin, Scala) |
+| scientific | 3 | Scientific computing (R, MATLAB, Julia) |
+| clr | 3 | .NET/CLR ecosystem (C#, F#) |
+| roots | 2 | Machine Code, Assembly |
+
+### Graph Metrics
+
+From the dataset analyzer:
+
+- Most connected: C (41), Python (27), C++ (23), Rust (20), Haskell (19)
+- Connected components: 1 (fully connected graph)
+- Self-loops: 28 (self-hosting languages)
+- Isolated nodes: 0
+
+## Data Pipeline
+
+```
+loadDataset          Fetch JSON by version
+    |
+validateDataset      Check integrity (duplicates, dangling refs, confidence)
+    |
+normalizeDataset     Compute degrees, assign clusters, build lookup maps
+    |
+indexDataset         Build search index
+    |
+buildCytoscapeElements   Apply filters, convert to Cytoscape nodes/edges
+    |
+GraphView            Render with Cytoscape.js
+```
+
+### Validation Checks (runtime)
+
+- Duplicate language IDs
+- Dangling edge references (edges pointing to nonexistent languages)
+- Missing required fields on nodes and edges
+- Low-confidence edges (below 0.8) flagged as warnings
+
+### Schema Validation (scripts)
+
+The `scripts/analyzeDataset.ts` tool runs comprehensive validation:
+
+- Zod schema validation (all 15 language fields, all 8 edge fields)
+- Integrity: duplicates, unresolved refs, duplicate edges, circular bootstrap chains
+- Historical logic: start_year must be >= release year, end_year must be >= start_year
+- Graph metrics: degree distribution, connected components, top 10 nodes
 
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/ProgrammingLanguageGraph.git
+npm run analyze:v4
+```
+
+## Quick Start
+
+```bash
+git clone https://github.com/sanketmuchhala/ProgrammingLanguageGraph.git
 cd ProgrammingLanguageGraph
 
-# Open in browser (macOS)
-open index.html
+npm install
 
-# Or on Linux
-xdg-open index.html
+# Development server
+npm run dev
 
-# Or on Windows
-start index.html
+# Production build
+npm run build
+
+# Type check
+npm run type-check
+
+# Run dataset analyzer
+npm run analyze:v4
 ```
 
-### Option 2: Host on GitHub Pages
+## Controls
 
-1. Go to your repository settings
-2. Navigate to **Pages** section
-3. Under **Source**, select:
-   - Branch: `main`
-   - Folder: `/ (root)`
-4. Click **Save**
-5. Your site will be published at: `https://yourusername.github.io/ProgrammingLanguageGraph/`
+### Layout Modes
 
-That's it! No build process required.
+- **Tree (DAG)**: Hierarchical top-down layout, good for seeing lineage chains
+- **Network (Force)**: Organic clustering, shows communities and influence patterns
 
-## 📊 Data Source
+### Filters
 
-The visualization is powered by the **Programming Language Lineage Dataset** located in `research/Programming Language Lineage Dataset.pdf`.
-
-### Dataset Schema
-
-The dataset contains three main entity types:
-
-**Languages** (~28 languages/tools)
-- Machine code, Assembly, BCPL, B, C, C++
-- Go, Rust, Python, Ruby, OCaml, Haskell
-- Java, JavaScript, C#, Kotlin, Swift
-- GCC, LLVM, Clang, V8, SpiderMonkey, JavaScriptCore, HotSpot, .NET Runtime, Roslyn, GHC, mrustc
-
-**Edges** (~50+ relationships)
-- `compiler_written_in`: Language X's compiler is written in language Y
-- `runtime_written_in`: Language X's runtime is written in language Y
-- `bootstrap_written_in`: Bootstrap binary seed relationship
-- `rewritten_in`: Language X was rewritten in language Y
-
-Each edge includes:
-- Time range (start_year, end_year)
-- Confidence score (0.0-1.0)
-- Evidence sources (URLs to official documentation, repos, papers)
-
-### Notable Relationships Visualized
-
-- **Go 1.5 Bootstrap**: C → Go compiler transition (2009-2014 → 2015-present)
-- **Rust Bootstrap**: OCaml/C → Rust + staged bootstrapping (stage0/stage1/stage2)
-- **Swift Bootstrap**: C++/Swift mix with SwiftCompilerSources
-- **Self-Hosting**: C++, Go, Rust, OCaml, Haskell, Java all compile themselves
-
-## 🎨 Using the Visualization
-
-### Controls Panel
-
-**Layout**
-- **DAG**: Hierarchical top-down layout (deterministic, good for lineage)
-- **Force**: Organic clustering layout (shows communities)
-
-**Search**
-- Type language name or ID to filter nodes
-- Example: "rust", "java", "tool:gcc"
-
-**Confidence Threshold**
-- Slider: 0.00 - 1.00
-- Filters edges below the selected confidence level
-- Edges < 0.8 indicate historical uncertainty
-
-**Relationship Types**
-- ✅ Compiler Written In (red edges)
-- ✅ Runtime Written In (blue edges)
-- ✅ Bootstrap Written In (green edges)
-- ✅ Rewritten In (orange edges)
-
-**Display Options**
-- **Show Self-Loops**: Display self-referencing edges (e.g., Rust→Rust)
+- **Search**: Filter by language name or ID
+- **Confidence Threshold**: Slider from 0.00 to 1.00, hides uncertain edges
+- **Relationship Types**: Toggle each of the 7 edge types independently
+- **Self-Loops**: Show or hide self-hosting edges (e.g., Rust to Rust)
 - **Cluster Coloring**: Color nodes by language family
-- **Show All Labels**: Display labels for all nodes (default: only high-degree nodes)
+- **Labels**: Show or hide node labels
 
-### Tooltips
+### Interaction
 
-**Hover over nodes** to see:
-- Language name and ID
-- First release year
-- Current implementation language
-- Degree (number of connections)
-- Notes (historical context, caveats)
+- Click a node to open the detail drawer with metadata and connections
+- Click an edge to see relationship details, evidence source, and confidence
+- Drag to pan the graph
+- Scroll to zoom
+- Type in the search box to highlight matching nodes
 
-**Hover over edges** to see:
-- Relationship type
-- Time range (start year - end year)
-- Confidence score
-- Evidence source (clickable link)
+## Dataset Versioning
 
-### Keyboard & Mouse
+| Version | Languages | Edges | Key Changes |
+|---------|-----------|-------|-------------|
+| v1 | 28 | ~50 | Initial dataset, compilers and runtimes only |
+| v2 | 67 | 128 | Extended with more languages, implementations array |
+| v3 | 71 | 169 | Added influence relationships |
+| v4 | 112 | 300 | Full enrichment: 5 new metadata fields, influence edges, 41 data fixes |
 
-- **Click + Drag**: Pan the graph
-- **Scroll**: Zoom in/out
-- **Click Node**: Select and highlight
-- **Hover**: Show tooltip
+The app loads v4 by default. Previous versions remain available in `dataset/`.
 
-## 🔧 Technical Stack
+## Scripts
 
-### Zero Build Pipeline
-- **No Node.js required**
-- **No npm install**
-- **No build step**
-- **No transpilation**
+| Script | Command | Purpose |
+|--------|---------|---------|
+| `analyze` | `npm run analyze` | Run dataset analyzer on default path |
+| `analyze:v4` | `npm run analyze:v4` | Run analyzer on v4 dataset |
 
-Just pure HTML/CSS/JavaScript with CDN libraries!
+### Helper Scripts
 
-### Libraries (CDN)
-- **Cytoscape.js 3.28.1**: Graph visualization
-- **cose-bilkent 4.1.0**: Force-directed layout
+These were used during the v4 enrichment process and are kept for reference:
 
-### Why This Approach?
-- ✅ **Instant**: Open HTML file → it works
-- ✅ **Portable**: Works offline after first load
-- ✅ **Simple**: View source to see everything
-- ✅ **GitHub Pages Ready**: Upload and go
-- ✅ **Future-Proof**: No build system to break
+- `schema.ts` - Zod schemas with all enums and field definitions
+- `analyzeDataset.ts` - Full dataset validation and graph metrics
+- `addNewFields.ts` - Adds 5 null fields to all languages
+- `enrichData.ts` - Populates high-confidence metadata values
+- `fixMalformedEntries.ts` - Normalizes inconsistent entries from v4 source data
+- `future-work-plan.md` - Planned enhancements (logo URLs, popularity metrics, export formats, timeline view, new edge types)
 
-## 📝 Updating the Data
+## Notable Relationships
 
-### Manual Process (Current)
+- **C to Go Bootstrap (2009-2014)**: Go's compiler was written in C, then rewritten in Go for v1.5
+- **Rust Bootstrap**: OCaml (rustboot) to C++ (LLVM) to self-hosting Rust via staged builds
+- **Swift**: C++/Swift hybrid compiler with SwiftCompilerSources
+- **TypeScript to JavaScript**: Transpilation relationship (TypeScript compiles to JS)
+- **Lisp's Influence**: 12 outgoing influence edges, 0 incoming
+- **C's Dominance**: 41 total connections (33 outgoing), foundation of modern computing
 
-The dataset is embedded directly in `index.html` at line ~450.
+## Contributing
 
-To update:
+1. Fork the repository
+2. Create a feature branch
+3. Make changes with evidence sources
+4. Run `npm run analyze:v4` to validate
+5. Submit a pull request
 
-1. Extract updated JSON from `research/` PDF
-2. Open `index.html` in a text editor
-3. Find the `const DATASET = {` section
-4. Replace with new JSON
-5. Save and refresh browser
+### Data Contributions
 
-### Why Manual?
+- All new relationships must include `evidence_source` (URL)
+- Confidence scores required (1.0 = primary source, 0.8+ preferred)
+- Prefer null over guessing for enriched fields
+- Run the analyzer before submitting. Schema and integrity must pass.
 
-The dataset is relatively stable (historical facts). Manual embedding ensures:
-- Zero external dependencies
-- Works offline forever
-- No API rate limits
-- Complete transparency
+## License
 
-## 🧪 Validation Report
-
-On page load, the visualization automatically validates the data:
-
-**Checks performed:**
-- ✅ Missing nodes referenced by edges (dangling edges)
-- ✅ Duplicate IDs in languages/implementations
-- ✅ Edges with missing required fields
-- ✅ Nodes with missing required fields
-- ✅ Edges with confidence < 0.8
-
-**View report:**
-1. Open browser console (F12)
-2. Look for "Validation Report" log
-3. Or click "Download Validation Report" button
-
-**Example output:**
-```json
-{
-  "missing_nodes_referenced_by_edges": [],
-  "duplicate_ids": [],
-  "edges_with_missing_fields": [],
-  "nodes_with_missing_fields": [],
-  "edges_confidence_lt_0_8": [
-    {
-      "from_language": "lang:b",
-      "to_language": "lang:c",
-      "confidence": 0.75
-    }
-  ],
-  "summary": {
-    "total_languages": 28,
-    "total_edges": 48,
-    "valid_edges": 48,
-    "warnings": 1
-  }
-}
-```
-
-## 🎓 Understanding the Data
-
-### Confidence Scores
-
-- **1.0**: Directly documented in official sources
-- **0.9-0.95**: Well-documented in primary sources (GitHub, official docs)
-- **0.8-0.85**: Documented but with some interpretation
-- **< 0.8**: Relies on secondary sources or historical ambiguity
-
-**Examples:**
-- Go 1.5 C→Go transition: 0.95 (explicit in Go FAQ and release notes)
-- B→C lineage: 0.75 (historical, varies by source)
-- Haskell/GHC: 0.7 (implementation language mix not clearly stated in primary docs)
-
-### Self-Hosting & Bootstrapping
-
-**Self-Hosting**: A language's compiler is written in itself
-- Examples: C++, Go, Rust, OCaml, Haskell, Java
-
-**Bootstrapping Problem**: How do you compile a compiler written in itself?
-- **Solution 1**: Use another language first (C → Go in 2009, then Go → Go in 2015)
-- **Solution 2**: Use staged bootstrapping (Rust: stage0 → stage1 → stage2)
-- **Solution 3**: Use an alternative implementation (mrustc for Rust)
-
-**Visualization tip**: Toggle "Show Self-Loops" off to see the underlying dependency DAG
-
-### Time Ranges
-
-- `start_year`: When this relationship began
-- `end_year`: When it ended (or `null` for ongoing)
-
-**Examples:**
-- C → Go compiler: 2009-2014 (historical)
-- Go → Go compiler: 2015-present (current)
-
-## 🌟 Interesting Discoveries
-
-Explore the graph to find:
-
-1. **The C→Go Bootstrap**: How Go eliminated C from its toolchain in Go 1.5
-2. **Rust's Triple Bootstrap**: OCaml/C prehistory → Rust → staged builds
-3. **JavaScript Engine Diversity**: V8 (C++), SpiderMonkey (C++/Rust/JS), JavaScriptCore (C++/C)
-4. **JVM Self-Hosting**: Java compiler (javac) is in Java, but JVM (HotSpot) is in C++
-5. **Functional Lineages**: OCaml and Haskell both self-hosted with C runtimes
-
-## 📚 Evidence & Sources
-
-All edges include `evidence_source` fields with URLs to:
-- Official documentation (Go FAQ, Rust Dev Guide, LLVM docs)
-- GitHub repositories (rust-lang/rust, llvm/llvm-project)
-- Academic papers (Stroustrup's HOPL-II, Thompson's "Trusting Trust")
-- Release announcements (Go 1.5 blog post, Rust 1.0 announcement)
-
-**Hover over any edge to see sources and click through!**
-
-## 🐛 Known Limitations
-
-1. **Historical Languages**: BCPL, B, and early C have approximate dates due to sparse primary sources
-2. **Java 1.0**: Implementation language before OpenJDK is marked "unspecified"
-3. **Implementations Array**: Currently empty in the dataset (future expansion)
-4. **Mobile Layout**: Best experienced on desktop (responsive but dense)
-
-## 🤝 Contributing
-
-Want to add more languages or fix data?
-
-1. Update the dataset in `research/Programming Language Lineage Dataset.pdf`
-2. Re-extract the JSON
-3. Update the embedded data in `index.html`
-4. Submit a pull request with evidence sources!
-
-**Data requirements:**
-- Primary sources strongly preferred
-- Include confidence score
-- Add evidence URLs
-- Follow existing schema
-
-## 📜 License
-
-MIT License - See [LICENSE](LICENSE) file for details
-
-## 🙏 Acknowledgments
-
-- **Data Sources**: Go team, Rust team, LLVM project, OpenJDK, Mozilla, Apple, Microsoft, JetBrains
-- **Visualization**: Cytoscape.js community
-- **Inspiration**: "Trusting Trust" by Ken Thompson, bootstrapping research, programming language history
-
----
-
-**Built with ❤️ for programming language enthusiasts, compiler engineers, and history nerds**
-
-*No build process was harmed in the making of this visualization* ✨
+MIT License. See [LICENSE](LICENSE) for details.

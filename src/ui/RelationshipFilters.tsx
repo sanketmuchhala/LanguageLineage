@@ -11,6 +11,9 @@ const RELATIONSHIP_LABELS: Record<RelationshipType, string> = {
   runtime_written_in: 'Runtime written in',
   bootstrap_written_in: 'Bootstrap written in',
   rewritten_in: 'Rewritten in',
+  influenced: 'Influenced',
+  influenced_by: 'Influenced by',
+  transpiled_to: 'Transpiled to',
 };
 
 export function RelationshipFilters({ filters, onChange }: RelationshipFiltersProps) {

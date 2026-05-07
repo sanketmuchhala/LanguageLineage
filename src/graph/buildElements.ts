@@ -5,6 +5,7 @@ import type {
   CytoscapeNode,
   CytoscapeEdge,
 } from '../data/types';
+import { LOGO_MAP, LOGO_COLORS, getLetterAbbreviation } from '../data/logoMap';
 
 export function buildCytoscapeElements(
   dataset: NormalizedDataset,
@@ -31,9 +32,14 @@ export function buildCytoscapeElements(
   const visibleEdges: CytoscapeEdge[] = [];
 
   for (const edge of dataset.edges) {
-    // Filter by relationship type
-    if (!filters.relationshipFilters[edge.relationship]) {
-      continue;
+    // Filter by relationship type, split by graphMode
+    const isInfluenceEdge = edge.relationship === 'influenced' || edge.relationship === 'influenced_by';
+
+    if (filters.graphMode === 'influence') {
+      if (!isInfluenceEdge) continue;
+    } else {
+      if (isInfluenceEdge) continue;
+      if (!filters.relationshipFilters[edge.relationship]) continue;
     }
 
     // Filter by confidence threshold
@@ -76,9 +82,15 @@ export function buildCytoscapeElements(
     nodesWithEdges.add(edge.data.target);
   }
 
+  const isClusterLayout = filters.layoutMode === 'cluster';
+  const clusterSet = new Set<string>();
+
   for (const lang of dataset.languages) {
     // Include node if it matches search OR has visible edges
     if (visibleNodes.has(lang.id) || nodesWithEdges.has(lang.id)) {
+      const logoUrl = LOGO_MAP[lang.id] ?? null;
+      const logoColor = LOGO_COLORS[lang.id] ?? null;
+      const abbr = logoUrl ? '' : getLetterAbbreviation(lang.name);
       const node: CytoscapeNode = {
         data: {
           id: lang.id,
@@ -89,10 +101,28 @@ export function buildCytoscapeElements(
           notes: lang.notes,
           degree: lang.degree,
           cluster: lang.cluster,
+          parent: isClusterLayout ? `cluster:${lang.cluster}` : undefined,
+          logoUrl,
+          logoColor,
+          abbr,
         },
         group: 'nodes',
       };
       elements.push(node);
+
+      if (isClusterLayout) {
+        clusterSet.add(lang.cluster);
+      }
+    }
+  }
+
+  // Add compound parent nodes for cluster layout
+  if (isClusterLayout) {
+    for (const cluster of clusterSet) {
+      elements.push({
+        data: { id: `cluster:${cluster}`, label: cluster.replace(/_/g, ' ') },
+        group: 'nodes',
+      } as any);
     }
   }
 

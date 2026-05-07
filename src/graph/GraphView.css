@@ -1,6 +1,69 @@
+/* ============================================
+   GRAPH VIEW - Museum Canvas
+   ============================================ */
+
 .graph-view {
   width: 100%;
   height: 100%;
-  background-color: #f5f5f5;
+  background-color: var(--bg-canvas);
   position: relative;
+  transition: background-color 0.4s var(--ease-out-quart, ease);
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: grab;
+}
+
+.graph-view:active {
+  cursor: grabbing;
+}
+
+/* Subtle grid pattern matching landing page */
+.graph-view::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image:
+    linear-gradient(rgba(201, 168, 124, 0.5) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201, 168, 124, 0.5) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 20%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 20%, transparent 70%);
+}
+
+/* Subtle radial glow in center */
+.graph-view::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, rgba(201, 168, 124, 0.03) 0%, transparent 50%);
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .graph-view {
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .graph-view::before {
+    background-size: 50px 50px;
+  }
+}
+
+/* Prevent text selection and tap highlighting during touch interactions */
+@media (hover: none) and (pointer: coarse) {
+  .graph-view {
+    -webkit-tap-highlight-color: transparent;
+    cursor: default;
+  }
 }
