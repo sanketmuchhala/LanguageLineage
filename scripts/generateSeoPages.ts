@@ -487,6 +487,7 @@ ${faqs.map(f => `<div class="faq-item">
   <a href="/dataset">Dataset</a>
   <span>&middot;</span>
   <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+  <span class="seo-footer-copy">&copy; 2026 Sanket Muchhala</span>
 </footer>
 </body>
 </html>`;
@@ -692,6 +693,7 @@ function buildRelationshipPage(type: string, rels: Relationship[], nodeMap: Map<
   <a href="/dataset">Dataset</a>
   <span>&middot;</span>
   <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+  <span class="seo-footer-copy">&copy; 2026 Sanket Muchhala</span>
 </footer>
 </body>
 </html>`;
@@ -1005,6 +1007,7 @@ function buildGuidePage(guide: (typeof GUIDES)[0]): string {
   <a href="/dataset">Dataset</a>
   <span>&middot;</span>
   <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+  <span class="seo-footer-copy">&copy; 2026 Sanket Muchhala</span>
 </footer>
 </body>
 </html>`;
@@ -1051,6 +1054,7 @@ function buildLanguagesIndex(langs: Language[]): string {
   <a href="/dataset">Dataset</a>
   <span>&middot;</span>
   <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+  <span class="seo-footer-copy">&copy; 2026 Sanket Muchhala</span>
 </footer>
 </body>
 </html>`;
@@ -1097,6 +1101,7 @@ function buildToolsIndex(langs: Language[]): string {
   <a href="/dataset">Dataset</a>
   <span>&middot;</span>
   <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+  <span class="seo-footer-copy">&copy; 2026 Sanket Muchhala</span>
 </footer>
 </body>
 </html>`;
@@ -1138,6 +1143,7 @@ function buildGuidesIndex(): string {
   <a href="/dataset">Dataset</a>
   <span>&middot;</span>
   <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+  <span class="seo-footer-copy">&copy; 2026 Sanket Muchhala</span>
 </footer>
 </body>
 </html>`;
@@ -1182,6 +1188,7 @@ function buildRelationshipsIndex(): string {
   <a href="/dataset">Dataset</a>
   <span>&middot;</span>
   <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+  <span class="seo-footer-copy">&copy; 2026 Sanket Muchhala</span>
 </footer>
 </body>
 </html>`;
