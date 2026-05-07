@@ -285,7 +285,6 @@ td a { color: var(--accent); }
 
 .seo-footer a { color: var(--text-tertiary); }
 .seo-footer a:hover { color: var(--accent); }
-.seo-footer-copy { color: var(--text-tertiary); margin-left: auto; }
 
 /* Dataset page */
 .stat-grid {
