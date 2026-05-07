@@ -42,15 +42,34 @@ export function GraphView() {
     const elements = buildCytoscapeElements(dataset, filters);
     const { isDarkMode } = useGraphStore.getState();
     const style = getCytoscapeStyle(filters.clusterColoring, filters.showAllLabels, isDarkMode);
-    const layout = getLayout(filters.layoutMode);
 
     const instance = cytoscape({
       container: containerRef.current,
       elements,
       style,
-      layout,
+      layout: { name: 'preset', positions: () => ({ x: 0, y: 0 }) },
       ...BASE_CYTOSCAPE_CONFIG,
     });
+
+    // Place nodes on a tiny circle around origin so cose-bilkent repulsion has direction to work with
+    const nodeCount = instance.nodes().length;
+    instance.nodes().positions((_node: any, i: number) => ({
+      x: Math.cos((i / nodeCount) * Math.PI * 2) * 5,
+      y: Math.sin((i / nodeCount) * Math.PI * 2) * 5,
+    }));
+
+    // Center viewport on origin
+    const cx = containerRef.current!.offsetWidth / 2;
+    const cy = containerRef.current!.offsetHeight / 2;
+    instance.pan({ x: cx, y: cy });
+    instance.zoom(0.5);
+
+    // Animate nodes bursting outward from center
+    instance.layout({
+      ...getLayout(filters.layoutMode),
+      randomize: false,
+      animationDuration: 1800,
+    }).run();
 
     setCytoscape(instance);
 
