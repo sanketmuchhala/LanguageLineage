@@ -2,13 +2,18 @@
 
 An interactive graph visualization mapping the lineage, influence, and implementation relationships between 112 programming languages, from Machine Code (year 0) to Zig (2023).
 
-## Live Demo
+## Live Site
 
-[View Live Visualization](#) (Update with deployment URL)
+**[languagelineage.org](https://languagelineage.org)**
+
+- Interactive graph explorer: [languagelineage.org/explore](https://languagelineage.org/explore)
+- Dataset: [languagelineage.org/dataset](https://languagelineage.org/dataset)
+- Language pages: [languagelineage.org/languages/python](https://languagelineage.org/languages/python)
+- Guides: [languagelineage.org/guides](https://languagelineage.org/guides)
 
 ## Overview
 
-This project visualizes how programming languages are connected through compiler chains, runtime dependencies, influence relationships, and bootstrapping paths. The dataset (v4) covers 112 languages and 300 relationships, each backed by evidence sources and confidence scores.
+This project visualizes how programming languages are connected through compiler chains, runtime dependencies, influence relationships, and bootstrapping paths. The dataset (v4) covers 112 nodes (98 languages, 14 tools) and 347 relationships, each backed by evidence sources and confidence scores.
 
 ### What You Can Explore
 
@@ -88,8 +93,9 @@ ProgrammingLanguageGraph/
 
 ### Scale
 
-- 112 languages, from Machine Code and Assembly to Zig, V, and Gleam
-- 300 relationships, each with confidence score and evidence source
+- 112 nodes: 98 languages + 14 tools (compilers, runtimes, engines)
+- 347 relationships, each with confidence score and evidence source URL
+- 100% evidence coverage — every relationship has at least one source
 - 15 fields per language (10 core + 5 enriched metadata fields)
 
 ### Language Fields
@@ -197,14 +203,53 @@ npm install
 # Development server
 npm run dev
 
-# Production build
+# Production build (includes SEO page generation)
 npm run build
+
+# Generate SEO static pages only
+npm run seo:generate
+
+# Validate all SEO pages (0 errors expected)
+npm run seo:validate
 
 # Type check
 npm run type-check
 
 # Run dataset analyzer
 npm run analyze:v4
+```
+
+## Route Structure
+
+| Route | Type | Description |
+|-------|------|-------------|
+| `/` | SPA | Landing page with graph preview |
+| `/explore` | SPA | Interactive graph explorer |
+| `/dataset` | Static HTML | Dataset overview page |
+| `/languages` | Static HTML | Index of all 98 languages |
+| `/languages/{slug}` | Static HTML | Individual language page (112 total) |
+| `/tools` | Static HTML | Index of all 14 tools |
+| `/tools/{slug}` | Static HTML | Individual tool page |
+| `/guides` | Static HTML | Index of all guides |
+| `/guides/{slug}` | Static HTML | Individual guide (10 guides) |
+| `/relationships` | Static HTML | Index of all relationship types |
+| `/relationships/{slug}` | Static HTML | Individual relationship type page |
+| `/sitemap.xml` | XML | Sitemap (135 URLs) |
+| `/robots.txt` | Text | Crawler directives |
+| `/llms.txt` | Text | LLM-readable dataset summary |
+
+## Adding a New Language
+
+1. Edit `dataset/v4/lineage_v4.json` — add the language node and relationships
+2. Run `npm run seo:generate` — regenerates all 112+ static pages
+3. Run `npm run seo:validate` — confirms 0 errors
+4. Deploy (Vercel picks up changes automatically on push)
+
+## Citation
+
+```
+Language Lineage (languagelineage.org). Programming Language Lineage Dataset, v4.
+112 nodes, 347 relationships. Accessed 2026. https://languagelineage.org/dataset
 ```
 
 ## Controls
@@ -246,6 +291,10 @@ The app loads v4 by default. Previous versions remain available in `dataset/`.
 
 | Script | Command | Purpose |
 |--------|---------|---------|
+| `dev` | `npm run dev` | Start development server |
+| `build` | `npm run build` | SEO generate + TypeScript + Vite production build |
+| `seo:generate` | `npm run seo:generate` | Generate all static HTML pages, sitemap, llms.txt |
+| `seo:validate` | `npm run seo:validate` | Validate all generated pages (0 errors expected) |
 | `analyze` | `npm run analyze` | Run dataset analyzer on default path |
 | `analyze:v4` | `npm run analyze:v4` | Run analyzer on v4 dataset |
 

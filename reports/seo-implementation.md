@@ -117,3 +117,92 @@ CPython is the reference Python implementation, written in C. PyPy uses RPython.
 ```
 Validation complete: 0 errors, 0 warnings
 ```
+
+---
+
+## Pass 2: Content Quality + Completeness (2026-05-07)
+
+### Custom Titles for 14 Priority Pages
+
+Added `PRIORITY_TITLES` map in `scripts/generateSeoPages.ts`. Pages with custom titles now have implementation-named titles instead of the generic template.
+
+**Before (generic):**
+```
+What is Python written in? | Language Lineage
+```
+
+**After (custom):**
+```
+What is Python written in? CPython implementation explained | Language Lineage
+```
+
+**Pages with custom titles:** python, javascript, rust, go, java, c, cxx, ruby, typescript, v8, llvm, gcc, spidermonkey, ghc
+
+---
+
+### Answer Box Self-Hosting Note
+
+Self-hosting languages now include a closing sentence in their answer box.
+
+**Before:**
+```
+The Rust compiler is written in C, OCaml, Rust, and LLVM (well-documented).
+```
+
+**After:**
+```
+The Rust compiler is written in C, OCaml, Rust, and LLVM (well-documented). Rust is self-hosting.
+```
+
+---
+
+### Tool Intro Sections
+
+Tool pages now show a `<p class="tool-intro">` paragraph above the answer box, derived from the dataset `notes` field.
+
+**V8 page — before:** answer box appeared with no context about what V8 is.
+
+**V8 page — after:**
+```html
+<p class="tool-intro">Google JavaScript engine.</p>
+<div class="answer-box">Its runtime is implemented in C++ (well-documented).</div>
+```
+
+---
+
+### 2 New Guides Added
+
+| Slug | Title | Target keywords |
+|---|---|---|
+| `how-programming-languages-are-made` | How Are Programming Languages Made? | "how are programming languages made", "how do programming languages work" |
+| `v8-vs-spidermonkey-vs-javascriptcore` | V8 vs SpiderMonkey vs JavaScriptCore | "v8 vs spidermonkey", "javascript engine comparison" |
+
+Total guides: 10
+
+---
+
+### 4 Collection Index Pages
+
+| URL | H1 | Nodes linked |
+|---|---|---|
+| `/languages` | Programming Languages Index | 98 language pages |
+| `/tools` | Compilers, Runtimes, and Tools Index | 14 tool pages |
+| `/guides` | Programming Language Guides | 10 guide pages |
+| `/relationships` | Relationship Types | 6 relationship pages |
+
+---
+
+### Sitemap + Validator Updates
+
+- Sitemap: 4 index page URLs added (priority 0.75), 2 new guide slugs added. Total: 135 URLs.
+- Validator: added index page existence checks, guide count check (>=10), and priority title spot-checks for python, rust, javascript pages.
+
+---
+
+## Validation Output (Pass 2)
+
+```
+Validation complete: 0 errors, 0 warnings
+```
+
+All 135 sitemap URLs, 112 language/tool pages, 10 guides, 4 index pages, 3 priority title spot-checks: PASS.

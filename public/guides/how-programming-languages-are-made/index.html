@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How Are Programming Languages Made? | Language Lineage</title>
+  <meta name="description" content="Learn how programming languages are designed and implemented. Languages are built using other languages — compilers and interpreters are programs written in existing languages." />
+  <link rel="canonical" href="https://languagelineage.org/guides/how-programming-languages-are-made" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/seo.css" />
+  <meta property="og:title" content="How Are Programming Languages Made? | Language Lineage" />
+  <meta property="og:description" content="Learn how programming languages are designed and implemented. Languages are built using other languages — compilers and interpreters are programs written in existing languages." />
+  <meta property="og:url" content="https://languagelineage.org/guides/how-programming-languages-are-made" />
+  <meta property="og:image" content="https://languagelineage.org/og-image.svg" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How Are Programming Languages Made?","description":"Learn how programming languages are designed and implemented. Languages are built using other languages — compilers and interpreters are programs written in existing languages.","url":"https://languagelineage.org/guides/how-programming-languages-are-made","author":{"@type":"Organization","name":"Language Lineage","url":"https://languagelineage.org"}}</script>
+</head>
+<body class="seo-page">
+<nav class="seo-nav">
+  <a href="/">Language Lineage</a>
+  <a href="/explore">Graph Explorer</a>
+  <a href="/dataset">Dataset</a>
+</nav>
+<main class="seo-main">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; How Are Programming Languages Made?
+  </nav>
+
+  <h1>How Are Programming Languages Made?</h1>
+
+  <div class="answer-box">Programming languages are implemented using other languages. A compiler or interpreter is a program — and every program is written in some language. The first compilers were written in assembly; today most are self-hosting or written in C, C++, or Rust.</div>
+
+<h2>What is a Programming Language Implementation?</h2>
+<p>A programming language is defined by its specification (grammar, semantics). Its <em>implementation</em> is a compiler or interpreter that executes code written in that language. CPython implements Python; rustc implements Rust; V8 implements JavaScript.</p>
+
+<h2>What Compilers and Interpreters Do</h2>
+<p>A <strong>compiler</strong> translates source code to machine code or bytecode ahead of time. A <strong>interpreter</strong> reads and executes source code directly. Most languages use one or both: Java compiles to bytecode, then the JVM interprets or JIT-compiles that bytecode.</p>
+
+<h2>The Bootstrap Problem</h2>
+<p>To write a compiler for a new language, you need an existing language to write it in. Early compilers were written in assembly or C. Once a compiler is stable, it can be rewritten in the language itself — this is called bootstrapping. Languages like Rust, Go, Haskell, and OCaml are self-hosting: their compilers are written in themselves.</p>
+
+<h2>Examples from the Dataset</h2>
+<ul>
+<li><a href="/languages/python">Python (CPython)</a> is implemented in C</li>
+<li><a href="/languages/rust">Rust (rustc)</a> is self-hosting, with an original OCaml implementation</li>
+<li><a href="/languages/go">Go</a> has been self-hosting since version 1.5 (2015)</li>
+<li><a href="/languages/javascript">JavaScript</a> engines (V8, SpiderMonkey, JavaScriptCore) are written in C++</li>
+<li><a href="/languages/java">Java (javac)</a> is self-hosting; the HotSpot JVM is written in C++</li>
+</ul>
+
+<h2>Further Reading</h2>
+<ul>
+<li><a href="/guides/what-is-compiler-bootstrapping">What is compiler bootstrapping?</a></li>
+<li><a href="/guides/compiler-vs-interpreter-vs-runtime">Compiler vs interpreter vs runtime</a></li>
+<li><a href="/relationships/compiler-written-in">All compiler_written_in relationships</a></li>
+</ul>
+
+<a class="explore-btn" href="/explore">Explore the Full Graph &rarr;</a>
+
+</main>
+<footer class="seo-footer">
+  <a href="/">Language Lineage</a>
+  <span>&middot;</span>
+  <a href="/dataset">Dataset</a>
+  <span>&middot;</span>
+  <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+</footer>
+</body>
+</html>

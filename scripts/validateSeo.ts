@@ -152,11 +152,34 @@ const GUIDE_SLUGS = [
   'how-python-is-implemented',
   'how-rust-is-bootstrapped',
   'gcc-vs-llvm',
+  'how-programming-languages-are-made',
+  'v8-vs-spidermonkey-vs-javascriptcore',
 ];
 for (const slug of GUIDE_SLUGS) {
   checkFile(`guides/${slug}/index.html`);
 }
-ok(`${GUIDE_SLUGS.length} guide pages checked`);
+if (GUIDE_SLUGS.length < 10) warn(`Only ${GUIDE_SLUGS.length} guides — expected 10+`);
+else ok(`${GUIDE_SLUGS.length} guide pages checked`);
+
+// Collection index pages
+const indexPages = ['languages/index.html', 'tools/index.html', 'guides/index.html', 'relationships/index.html'];
+for (const p of indexPages) {
+  const content = checkFile(p);
+  if (content && !content.includes('<h1>')) fail(`${p}: missing h1`);
+}
+ok(`${indexPages.length} collection index pages checked`);
+
+// Priority title spot-checks
+const prioritySpotChecks: Array<[string, string]> = [
+  ['languages/python/index.html', 'CPython implementation explained'],
+  ['languages/rust/index.html', 'rustc bootstrapping explained'],
+  ['languages/javascript/index.html', 'V8, SpiderMonkey, and JSC'],
+];
+for (const [path, expectedSnippet] of prioritySpotChecks) {
+  const content = checkFile(path);
+  if (content && !content.includes(expectedSnippet)) fail(`${path}: missing custom title snippet "${expectedSnippet}"`);
+  else if (content) ok(`${path}: custom title present`);
+}
 
 // Summary
 console.log('');

@@ -32,12 +32,18 @@ const GUIDE_SLUGS = [
   'how-python-is-implemented',
   'how-rust-is-bootstrapped',
   'gcc-vs-llvm',
+  'how-programming-languages-are-made',
+  'v8-vs-spidermonkey-vs-javascriptcore',
 ];
 
 const urls: Array<{ loc: string; changefreq: string; priority: string }> = [
   { loc: `${SITE}/`, changefreq: 'monthly', priority: '1.0' },
   { loc: `${SITE}/explore`, changefreq: 'monthly', priority: '0.9' },
   { loc: `${SITE}/dataset`, changefreq: 'monthly', priority: '0.8' },
+  { loc: `${SITE}/languages`, changefreq: 'monthly', priority: '0.75' },
+  { loc: `${SITE}/tools`, changefreq: 'monthly', priority: '0.75' },
+  { loc: `${SITE}/guides`, changefreq: 'monthly', priority: '0.75' },
+  { loc: `${SITE}/relationships`, changefreq: 'monthly', priority: '0.75' },
 ];
 
 for (const lang of languages) {

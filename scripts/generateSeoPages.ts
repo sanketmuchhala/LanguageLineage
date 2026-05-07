@@ -81,6 +81,65 @@ function linkNode(id: string, nodeMap: Map<string, Language>): string {
   return `<a href="/${prefix}/${slug}">${escapeHtml(name)}</a>`;
 }
 
+const PRIORITY_TITLES: Record<string, { title: string; description: string }> = {
+  python: {
+    title: 'What is Python written in? CPython implementation explained | Language Lineage',
+    description: "Python's reference implementation, CPython, is written in C. Explore its runtime, bootstrap history, and language lineage.",
+  },
+  javascript: {
+    title: 'What is JavaScript written in? V8, SpiderMonkey, and JSC | Language Lineage',
+    description: 'JavaScript engines V8, SpiderMonkey, and JavaScriptCore are primarily written in C++. Explore their implementations and lineage.',
+  },
+  rust: {
+    title: 'What is Rust written in? rustc bootstrapping explained | Language Lineage',
+    description: 'Modern Rust is self-hosting — rustc is written in Rust. Explore its OCaml origins, bootstrap chain, and LLVM backend.',
+  },
+  go: {
+    title: 'What is Go written in? Go compiler lineage explained | Language Lineage',
+    description: "Modern Go is self-hosting since Go 1.5. The original compiler was written in C. Explore Go's compiler evolution and lineage.",
+  },
+  java: {
+    title: 'What is Java written in? javac and HotSpot explained | Language Lineage',
+    description: "javac is self-hosting and written in Java. The HotSpot JVM is written in C++. Explore Java's compiler and runtime lineage.",
+  },
+  c: {
+    title: 'What was C written in? C compiler lineage explained | Language Lineage',
+    description: 'C bootstrapped from B in the early 1970s and became self-hosting within its first year. Explore its compiler history.',
+  },
+  cxx: {
+    title: 'What is C++ written in? Cfront, GCC, LLVM, and Clang | Language Lineage',
+    description: 'C++ was originally translated to C via Cfront. GCC and Clang/LLVM are the primary modern implementations, written in C++.',
+  },
+  ruby: {
+    title: 'What is Ruby written in? CRuby and MRI explained | Language Lineage',
+    description: "Ruby's reference implementation, CRuby (MRI), is written in C. Explore its runtime, influences, and lineage.",
+  },
+  typescript: {
+    title: 'What is TypeScript written in? tsc compiler explained | Language Lineage',
+    description: "TypeScript's compiler, tsc, is self-hosting and written in TypeScript. Explore its implementation and language lineage.",
+  },
+  v8: {
+    title: "What is V8 written in? Google's JavaScript engine explained | Language Lineage",
+    description: "Google's V8 JavaScript engine is written in C++. It powers Chrome, Node.js, and Deno. Explore its implementation.",
+  },
+  llvm: {
+    title: 'What is LLVM written in? Compiler infrastructure explained | Language Lineage',
+    description: 'LLVM is written in C++. It is a compiler infrastructure used by Clang, Rust, Swift, and many other languages.',
+  },
+  gcc: {
+    title: 'What is GCC written in? GNU compiler collection explained | Language Lineage',
+    description: 'GCC (GNU Compiler Collection) is written in C and C++. It compiles C, C++, Fortran, Ada, Go, and other languages.',
+  },
+  spidermonkey: {
+    title: "What is SpiderMonkey written in? Mozilla's JS engine | Language Lineage",
+    description: "SpiderMonkey is written in C++, Rust, and JavaScript. It is Mozilla's JavaScript engine powering Firefox.",
+  },
+  ghc: {
+    title: 'What is GHC written in? Haskell compiler explained | Language Lineage',
+    description: 'GHC (Glasgow Haskell Compiler) is self-hosting and written in Haskell with a C runtime. Explore its lineage.',
+  },
+};
+
 function buildAnswerBox(node: Language, rels: Relationship[], nodeMap: Map<string, Language>): string {
   const id = node.id;
   const implTypes = new Set(['compiler_written_in', 'runtime_written_in', 'bootstrap_written_in', 'rewritten_in']);
@@ -118,6 +177,10 @@ function buildAnswerBox(node: Language, rels: Relationship[], nodeMap: Map<strin
   if (rewrittenRels.length > 0) {
     const names = rewrittenRels.map(r => nameFromId(r.from_language, nodeMap));
     parts.push(`It has been rewritten in <strong>${joinNames(names.map(escapeHtml))}</strong>.`);
+  }
+
+  if (node.self_hosting === true) {
+    parts.push(`${escapeHtml(node.name)} is self-hosting.`);
   }
 
   return `<div class="answer-box">${parts.join(' ')}</div>`;
@@ -301,17 +364,25 @@ function buildSources(node: Language, rels: Relationship[]): string {
   return `<h2>Evidence Sources</h2><ul class="source-list">${items}</ul>`;
 }
 
+function buildToolIntro(node: Language): string {
+  if (!node.id.startsWith('tool:') || !node.notes) return '';
+  const firstSentence = node.notes.split('.')[0].trim();
+  if (!firstSentence) return '';
+  return `<p class="tool-intro">${escapeHtml(firstSentence)}.</p>`;
+}
+
 function buildNodePage(node: Language, rels: Relationship[], nodeMap: Map<string, Language>): string {
   const prefix = idToPrefix(node.id);
   const slug = idToSlug(node.id);
   const url = `${SITE}/${prefix}/${slug}`;
-  const title = `What is ${node.name} written in? | Language Lineage`;
+  const priorityOverride = PRIORITY_TITLES[slug];
+  const title = priorityOverride ? priorityOverride.title : `What is ${node.name} written in? | Language Lineage`;
   const implRels = rels.filter(r => r.to_language === node.id && ['compiler_written_in', 'runtime_written_in', 'bootstrap_written_in'].includes(r.relationship));
   const implLangs = [...new Set(implRels.map(r => nameFromId(r.from_language, nodeMap)))];
   const descriptionBase = implLangs.length > 0
     ? `${node.name} is implemented in ${implLangs.slice(0, 2).join(' and ')}. Explore its compiler, runtime, and influence relationships.`
     : `Explore ${node.name}'s relationships, influences, and history in the Language Lineage graph.`;
-  const description = descriptionBase.slice(0, 160);
+  const description = (priorityOverride ? priorityOverride.description : descriptionBase).slice(0, 160);
 
   const faqs = buildFaqs(node, rels, nodeMap);
   const faqJsonLd = faqs.length > 0 ? JSON.stringify({
@@ -391,6 +462,8 @@ ${faqs.map(f => `<div class="faq-item">
   <h1>What is ${escapeHtml(node.name)} written in?</h1>
 
   ${buildMetaTags(node)}
+
+  ${buildToolIntro(node)}
 
   ${buildAnswerBox(node, rels, nodeMap)}
 
@@ -813,6 +886,76 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
 
 <a class="explore-btn" href="/explore">Explore Compiler Relationships in Graph &rarr;</a>`,
   },
+  {
+    slug: 'how-programming-languages-are-made',
+    title: 'How Are Programming Languages Made? | Language Lineage',
+    h1: 'How Are Programming Languages Made?',
+    description: 'Learn how programming languages are designed and implemented. Languages are built using other languages — compilers and interpreters are programs written in existing languages.',
+    content: `<div class="answer-box">Programming languages are implemented using other languages. A compiler or interpreter is a program — and every program is written in some language. The first compilers were written in assembly; today most are self-hosting or written in C, C++, or Rust.</div>
+
+<h2>What is a Programming Language Implementation?</h2>
+<p>A programming language is defined by its specification (grammar, semantics). Its <em>implementation</em> is a compiler or interpreter that executes code written in that language. CPython implements Python; rustc implements Rust; V8 implements JavaScript.</p>
+
+<h2>What Compilers and Interpreters Do</h2>
+<p>A <strong>compiler</strong> translates source code to machine code or bytecode ahead of time. A <strong>interpreter</strong> reads and executes source code directly. Most languages use one or both: Java compiles to bytecode, then the JVM interprets or JIT-compiles that bytecode.</p>
+
+<h2>The Bootstrap Problem</h2>
+<p>To write a compiler for a new language, you need an existing language to write it in. Early compilers were written in assembly or C. Once a compiler is stable, it can be rewritten in the language itself — this is called bootstrapping. Languages like Rust, Go, Haskell, and OCaml are self-hosting: their compilers are written in themselves.</p>
+
+<h2>Examples from the Dataset</h2>
+<ul>
+<li><a href="/languages/python">Python (CPython)</a> is implemented in C</li>
+<li><a href="/languages/rust">Rust (rustc)</a> is self-hosting, with an original OCaml implementation</li>
+<li><a href="/languages/go">Go</a> has been self-hosting since version 1.5 (2015)</li>
+<li><a href="/languages/javascript">JavaScript</a> engines (V8, SpiderMonkey, JavaScriptCore) are written in C++</li>
+<li><a href="/languages/java">Java (javac)</a> is self-hosting; the HotSpot JVM is written in C++</li>
+</ul>
+
+<h2>Further Reading</h2>
+<ul>
+<li><a href="/guides/what-is-compiler-bootstrapping">What is compiler bootstrapping?</a></li>
+<li><a href="/guides/compiler-vs-interpreter-vs-runtime">Compiler vs interpreter vs runtime</a></li>
+<li><a href="/relationships/compiler-written-in">All compiler_written_in relationships</a></li>
+</ul>
+
+<a class="explore-btn" href="/explore">Explore the Full Graph &rarr;</a>`,
+  },
+  {
+    slug: 'v8-vs-spidermonkey-vs-javascriptcore',
+    title: 'V8 vs SpiderMonkey vs JavaScriptCore | Language Lineage',
+    h1: 'V8 vs SpiderMonkey vs JavaScriptCore',
+    description: 'All three major JavaScript engines are written in C++. V8 powers Chrome and Node.js, SpiderMonkey powers Firefox, and JavaScriptCore powers Safari.',
+    content: `<div class="answer-box">All three major JavaScript engines are primarily written in <strong>C++</strong>. V8 (Google) powers Chrome and Node.js. SpiderMonkey (Mozilla) powers Firefox and also uses Rust and JavaScript. JavaScriptCore (Apple/WebKit) powers Safari.</div>
+
+<h2>V8</h2>
+<p>V8 is Google's open-source JavaScript and WebAssembly engine, written in C++. It compiles JavaScript directly to machine code using JIT compilation. V8 powers Google Chrome, Node.js, Deno, and Electron. It was first released in 2008.</p>
+
+<h2>SpiderMonkey</h2>
+<p>SpiderMonkey is Mozilla's JavaScript engine, written in C++, Rust, and JavaScript. It was the first JavaScript engine ever created, written by Brendan Eich in 1995. SpiderMonkey powers Firefox. It uses a tiered JIT compilation system (Baseline JIT + IonMonkey).</p>
+
+<h2>JavaScriptCore</h2>
+<p>JavaScriptCore (also called Nitro) is Apple's JavaScript engine, written in C++. It is part of the WebKit project and powers Safari on macOS and iOS. All iOS browsers are required by Apple to use JavaScriptCore. It uses a four-tier architecture (LLInt, Baseline JIT, DFG JIT, FTL JIT).</p>
+
+<h2>Comparison</h2>
+<table>
+<thead><tr><th>Engine</th><th>Creator</th><th>Written in</th><th>Powers</th></tr></thead>
+<tbody>
+<tr><td><a href="/tools/v8">V8</a></td><td>Google</td><td>C++</td><td>Chrome, Node.js, Deno</td></tr>
+<tr><td><a href="/tools/spidermonkey">SpiderMonkey</a></td><td>Mozilla</td><td>C++, Rust, JavaScript</td><td>Firefox</td></tr>
+<tr><td>JavaScriptCore</td><td>Apple/WebKit</td><td>C++</td><td>Safari, all iOS browsers</td></tr>
+</tbody>
+</table>
+
+<h2>Related Pages</h2>
+<ul>
+<li><a href="/languages/javascript">JavaScript language page</a></li>
+<li><a href="/tools/v8">V8 tool page</a></li>
+<li><a href="/tools/spidermonkey">SpiderMonkey tool page</a></li>
+<li><a href="/guides/how-javascript-engines-work">How JavaScript engines work</a></li>
+</ul>
+
+<a class="explore-btn" href="/explore">Explore JavaScript Relationships in Graph &rarr;</a>`,
+  },
 ];
 
 function buildGuidePage(guide: (typeof GUIDES)[0]): string {
@@ -867,6 +1010,183 @@ function buildGuidePage(guide: (typeof GUIDES)[0]): string {
 </html>`;
 }
 
+function buildLanguagesIndex(langs: Language[]): string {
+  const langNodes = langs.filter(l => l.id.startsWith('lang:')).sort((a, b) => a.name.localeCompare(b.name));
+  const cards = langNodes.map(l => {
+    const slug = idToSlug(l.id);
+    return `<a href="/languages/${slug}" class="related-card">${escapeHtml(l.name)}</a>`;
+  }).join('\n');
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Programming Languages Index | Language Lineage</title>
+  <meta name="description" content="Browse all ${langNodes.length} programming languages in the Language Lineage dataset. Find what each language is written in, its compiler, runtime, and lineage." />
+  <link rel="canonical" href="${SITE}/languages" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/seo.css" />
+  <meta property="og:title" content="Programming Languages Index | Language Lineage" />
+  <meta property="og:url" content="${SITE}/languages" />
+  <meta property="og:image" content="${SITE}/og-image.svg" />
+</head>
+<body class="seo-page">
+<nav class="seo-nav">
+  <a href="/">Language Lineage</a>
+  <a href="/explore">Graph Explorer</a>
+  <a href="/dataset">Dataset</a>
+</nav>
+<main class="seo-main">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; Languages
+  </nav>
+  <h1>Programming Languages Index</h1>
+  <p>${langNodes.length} programming languages with documented implementation and influence relationships.</p>
+  <div class="related-grid">${cards}</div>
+  <a class="explore-btn" href="/explore">Explore All in Graph &rarr;</a>
+</main>
+<footer class="seo-footer">
+  <a href="/">Language Lineage</a>
+  <span>&middot;</span>
+  <a href="/dataset">Dataset</a>
+  <span>&middot;</span>
+  <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+</footer>
+</body>
+</html>`;
+}
+
+function buildToolsIndex(langs: Language[]): string {
+  const toolNodes = langs.filter(l => l.id.startsWith('tool:')).sort((a, b) => a.name.localeCompare(b.name));
+  const cards = toolNodes.map(l => {
+    const slug = idToSlug(l.id);
+    return `<a href="/tools/${slug}" class="related-card">${escapeHtml(l.name)}</a>`;
+  }).join('\n');
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compilers, Runtimes, and Tools Index | Language Lineage</title>
+  <meta name="description" content="Browse all ${toolNodes.length} compilers, runtimes, and tools in the Language Lineage dataset. Find what each tool is written in and its implementation lineage." />
+  <link rel="canonical" href="${SITE}/tools" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/seo.css" />
+  <meta property="og:title" content="Compilers, Runtimes, and Tools Index | Language Lineage" />
+  <meta property="og:url" content="${SITE}/tools" />
+  <meta property="og:image" content="${SITE}/og-image.svg" />
+</head>
+<body class="seo-page">
+<nav class="seo-nav">
+  <a href="/">Language Lineage</a>
+  <a href="/explore">Graph Explorer</a>
+  <a href="/dataset">Dataset</a>
+</nav>
+<main class="seo-main">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; Tools
+  </nav>
+  <h1>Compilers, Runtimes, and Tools Index</h1>
+  <p>${toolNodes.length} compilers, runtimes, and tools with documented implementation relationships.</p>
+  <div class="related-grid">${cards}</div>
+  <a class="explore-btn" href="/explore">Explore All in Graph &rarr;</a>
+</main>
+<footer class="seo-footer">
+  <a href="/">Language Lineage</a>
+  <span>&middot;</span>
+  <a href="/dataset">Dataset</a>
+  <span>&middot;</span>
+  <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+</footer>
+</body>
+</html>`;
+}
+
+function buildGuidesIndex(): string {
+  const items = GUIDES.map(g => `<li><a href="/guides/${g.slug}">${escapeHtml(g.h1)}</a> &mdash; ${escapeHtml(g.description.slice(0, 100))}...</li>`).join('\n');
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Programming Language Guides | Language Lineage</title>
+  <meta name="description" content="Guides on how programming languages are implemented, bootstrapped, and related. Learn about compilers, interpreters, and language lineage." />
+  <link rel="canonical" href="${SITE}/guides" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/seo.css" />
+  <meta property="og:title" content="Programming Language Guides | Language Lineage" />
+  <meta property="og:url" content="${SITE}/guides" />
+  <meta property="og:image" content="${SITE}/og-image.svg" />
+</head>
+<body class="seo-page">
+<nav class="seo-nav">
+  <a href="/">Language Lineage</a>
+  <a href="/explore">Graph Explorer</a>
+  <a href="/dataset">Dataset</a>
+</nav>
+<main class="seo-main">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; Guides
+  </nav>
+  <h1>Programming Language Guides</h1>
+  <p>In-depth guides on how programming languages are made, implemented, and related to each other.</p>
+  <ul class="source-list">${items}</ul>
+</main>
+<footer class="seo-footer">
+  <a href="/">Language Lineage</a>
+  <span>&middot;</span>
+  <a href="/dataset">Dataset</a>
+  <span>&middot;</span>
+  <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+</footer>
+</body>
+</html>`;
+}
+
+function buildRelationshipsIndex(): string {
+  const items = Object.entries(RELATIONSHIP_DEFS).map(([type, def]) => {
+    const slug = type.replace(/_/g, '-');
+    return `<li><a href="/relationships/${slug}">${escapeHtml(def.label)}</a> &mdash; ${escapeHtml(def.description.slice(0, 100))}...</li>`;
+  }).join('\n');
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Relationship Types | Language Lineage</title>
+  <meta name="description" content="Browse all relationship types in the Language Lineage dataset: compiler_written_in, runtime_written_in, bootstrap_written_in, influenced, transpiled_to, rewritten_in." />
+  <link rel="canonical" href="${SITE}/relationships" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/seo.css" />
+  <meta property="og:title" content="Relationship Types | Language Lineage" />
+  <meta property="og:url" content="${SITE}/relationships" />
+  <meta property="og:image" content="${SITE}/og-image.svg" />
+</head>
+<body class="seo-page">
+<nav class="seo-nav">
+  <a href="/">Language Lineage</a>
+  <a href="/explore">Graph Explorer</a>
+  <a href="/dataset">Dataset</a>
+</nav>
+<main class="seo-main">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; Relationships
+  </nav>
+  <h1>Relationship Types</h1>
+  <p>The Language Lineage dataset tracks six types of relationships between programming languages and tools.</p>
+  <ul class="source-list">${items}</ul>
+</main>
+<footer class="seo-footer">
+  <a href="/">Language Lineage</a>
+  <span>&middot;</span>
+  <a href="/dataset">Dataset</a>
+  <span>&middot;</span>
+  <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+</footer>
+</body>
+</html>`;
+}
+
 // Main
 const raw = JSON.parse(readFileSync(DATASET_PATH, 'utf8'));
 const languages: Language[] = raw.languages ?? [];
@@ -902,5 +1222,12 @@ for (const guide of GUIDES) {
   writeFile(join(PUBLIC, 'guides', guide.slug, 'index.html'), buildGuidePage(guide));
 }
 console.log(`Generated ${GUIDES.length} guide pages`);
+
+// Collection index pages
+writeFile(join(PUBLIC, 'languages', 'index.html'), buildLanguagesIndex(languages));
+writeFile(join(PUBLIC, 'tools', 'index.html'), buildToolsIndex(languages));
+writeFile(join(PUBLIC, 'guides', 'index.html'), buildGuidesIndex());
+writeFile(join(PUBLIC, 'relationships', 'index.html'), buildRelationshipsIndex());
+console.log('Generated 4 collection index pages');
 
 console.log('SEO page generation complete.');
