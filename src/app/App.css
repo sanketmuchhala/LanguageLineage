@@ -242,18 +242,6 @@ body::before {
    MOBILE RESPONSIVE
    ============================================ */
 @media (max-width: 768px) {
-  .minimal-panel {
-    width: 100%;
-    height: auto;
-    max-height: 45vh;
-    overflow-y: auto;
-    border-right: none;
-    border-bottom: 1px solid var(--border-primary);
-    border-radius: 0 0 16px 16px;
-    top: 0;
-    left: 0;
-  }
-
   .legend {
     bottom: 12px;
     right: 12px;
