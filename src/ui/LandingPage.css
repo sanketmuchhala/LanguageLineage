@@ -90,8 +90,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px 48px;
-  background: linear-gradient(to bottom, var(--color-bg) 0%, transparent 100%);
+  padding: 0 48px;
+  height: 56px;
+  background: rgba(10, 10, 11, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-border);
+  overflow: hidden;
 }
 
 .nav-logo {
@@ -118,20 +123,32 @@
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 36px;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.nav-links::-webkit-scrollbar {
+  display: none;
 }
 
 .nav-links a {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--color-text-muted);
   text-decoration: none;
   letter-spacing: 0.02em;
-  transition: color 0.3s ease;
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: color 0.2s ease, background 0.2s ease;
+  flex-shrink: 0;
 }
 
 .nav-links a:hover {
-  color: var(--color-text);
+  color: var(--color-accent);
+  background: rgba(201, 168, 124, 0.07);
 }
 
 .nav-cta {
@@ -161,7 +178,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 120px 48px 80px;
+  padding: 100px 48px 80px;
   overflow: hidden;
   gap: 48px;
 }
@@ -1063,7 +1080,7 @@
    ============================================ */
 @media (min-width: 769px) and (max-width: 1024px) {
   .landing-nav {
-    padding: 18px 32px;
+    padding: 0 32px;
   }
 
   .hero {
@@ -1127,33 +1144,41 @@
 @media (max-width: 768px) {
   /* Nav */
   .landing-nav {
-    padding: 14px 20px;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    background: rgba(10, 10, 11, 0.88);
+    padding: 0 16px;
+    height: 48px;
+    gap: 0;
   }
 
   .logo-mark {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .logo-text {
-    font-size: 15px;
+    font-size: 14px;
+  }
+
+  .nav-logo {
+    gap: 8px;
+    flex-shrink: 0;
+    margin-right: 4px;
   }
 
   .nav-links a {
-    display: none;
+    font-size: 12px;
+    padding: 5px 7px;
   }
 
   .nav-cta {
-    padding: 8px 18px;
-    font-size: 13px;
-    min-height: 38px;
+    padding: 7px 14px;
+    font-size: 12px;
+    min-height: 34px;
+    flex-shrink: 0;
+    margin-left: 4px;
   }
 
   /* Hero */
   .hero {
-    padding: 88px 20px 56px;
+    padding: 72px 20px 56px;
     flex-direction: column;
     justify-content: center;
     min-height: 100svh;

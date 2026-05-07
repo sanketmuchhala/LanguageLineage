@@ -36,9 +36,11 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
           <span className="logo-text">Language Lineage</span>
         </div>
         <div className="nav-links">
-          <a href="#about">About</a>
-          <a href="#explore">Explore</a>
-          <a href="#why">Why</a>
+          <a href="/explore">Explore</a>
+          <a href="/languages">Languages</a>
+          <a href="/tools">Tools</a>
+          <a href="/guides">Guides</a>
+          <a href="/dataset">Dataset</a>
           <button className="nav-cta" onClick={onEnterGraph}>
             Enter Graph
           </button>
