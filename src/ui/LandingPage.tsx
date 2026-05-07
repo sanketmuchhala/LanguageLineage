@@ -396,7 +396,7 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
             Tracing the evolution of code since 2024.
           </p>
           <div className="footer-links">
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="https://github.com/sanketmuchhala/LanguageLineage" target="_blank" rel="noopener noreferrer">GitHub</a>
             <span className="footer-divider">·</span>
             <a href="#about">About</a>
             <span className="footer-divider">·</span>
