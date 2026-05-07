@@ -31,12 +31,12 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
     <div className="landing">
       {/* Navigation */}
       <nav className="landing-nav">
-        <div className="nav-logo">
+        <a href="/" className="nav-logo">
           <span className="logo-mark">LL</span>
           <span className="logo-text">Language Lineage</span>
-        </div>
+        </a>
         <div className="nav-links">
-          <a href="/explore">Explore</a>
+          <a href="/relationships">Relationships</a>
           <a href="/languages">Languages</a>
           <a href="/tools">Tools</a>
           <a href="/guides">Guides</a>

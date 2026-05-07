@@ -454,7 +454,7 @@ ${faqs.map(f => `<div class="faq-item">
 <body class="seo-page">
 <nav class="seo-nav">
   <a href="/" class="nav-brand">Language Lineage</a>
-  <a href="/explore">Explore</a>
+  <a href="/relationships">Relationships</a>
   <a href="/languages">Languages</a>
   <a href="/tools">Tools</a>
   <a href="/guides">Guides</a>
@@ -545,7 +545,7 @@ function buildDatasetPage(languages: Language[], rels: Relationship[]): string {
 <body class="seo-page">
 <nav class="seo-nav">
   <a href="/" class="nav-brand">Language Lineage</a>
-  <a href="/explore">Explore</a>
+  <a href="/relationships">Relationships</a>
   <a href="/languages">Languages</a>
   <a href="/tools">Tools</a>
   <a href="/guides">Guides</a>
@@ -682,7 +682,7 @@ function buildRelationshipPage(type: string, rels: Relationship[], nodeMap: Map<
 <body class="seo-page">
 <nav class="seo-nav">
   <a href="/" class="nav-brand">Language Lineage</a>
-  <a href="/explore">Explore</a>
+  <a href="/relationships">Relationships</a>
   <a href="/languages">Languages</a>
   <a href="/tools">Tools</a>
   <a href="/guides">Guides</a>
@@ -1009,7 +1009,7 @@ function buildGuidePage(guide: (typeof GUIDES)[0]): string {
 <body class="seo-page">
 <nav class="seo-nav">
   <a href="/" class="nav-brand">Language Lineage</a>
-  <a href="/explore">Explore</a>
+  <a href="/relationships">Relationships</a>
   <a href="/languages">Languages</a>
   <a href="/tools">Tools</a>
   <a href="/guides">Guides</a>
@@ -1077,7 +1077,7 @@ function buildLanguagesIndex(langs: Language[]): string {
 <body class="seo-page">
 <nav class="seo-nav">
   <a href="/" class="nav-brand">Language Lineage</a>
-  <a href="/explore">Explore</a>
+  <a href="/relationships">Relationships</a>
   <a href="/languages">Languages</a>
   <a href="/tools">Tools</a>
   <a href="/guides">Guides</a>
@@ -1141,7 +1141,7 @@ function buildToolsIndex(langs: Language[]): string {
 <body class="seo-page">
 <nav class="seo-nav">
   <a href="/" class="nav-brand">Language Lineage</a>
-  <a href="/explore">Explore</a>
+  <a href="/relationships">Relationships</a>
   <a href="/languages">Languages</a>
   <a href="/tools">Tools</a>
   <a href="/guides">Guides</a>
@@ -1194,7 +1194,7 @@ function buildGuidesIndex(): string {
 <body class="seo-page">
 <nav class="seo-nav">
   <a href="/" class="nav-brand">Language Lineage</a>
-  <a href="/explore">Explore</a>
+  <a href="/relationships">Relationships</a>
   <a href="/languages">Languages</a>
   <a href="/tools">Tools</a>
   <a href="/guides">Guides</a>
@@ -1256,7 +1256,7 @@ function buildRelationshipsIndex(rels: Relationship[]): string {
 <body class="seo-page">
 <nav class="seo-nav">
   <a href="/" class="nav-brand">Language Lineage</a>
-  <a href="/explore">Explore</a>
+  <a href="/relationships">Relationships</a>
   <a href="/languages">Languages</a>
   <a href="/tools">Tools</a>
   <a href="/guides">Guides</a>

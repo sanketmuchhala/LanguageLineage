@@ -38,7 +38,7 @@ a:hover { color: var(--accent-hover); text-decoration: underline; }
   position: sticky;
   top: 0;
   z-index: 10;
-  height: 52px;
+  height: 60px;
   overflow-x: auto;
 }
 
@@ -530,7 +530,7 @@ pre {
   .seo-nav {
     padding: 0 14px;
     gap: 0;
-    height: 48px;
+    height: 55px;
   }
 
   .seo-nav a {
