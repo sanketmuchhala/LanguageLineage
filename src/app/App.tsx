@@ -134,7 +134,7 @@ function App() {
   }, [setDataset, setDatasetIndex, setValidationReport]);
 
   return (
-    <BrowserRouter basename="/ProgrammingLanguageGraph">
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandingPageWrapper />} />
         <Route path="/explore" element={<GraphExplorer />} />
