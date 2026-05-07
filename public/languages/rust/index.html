@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>What is Rust written in? | Language Lineage</title>
+  <meta name="description" content="Rust is implemented in C and OCaml. Explore its compiler, runtime, and influence relationships." />
+  <link rel="canonical" href="https://languagelineage.org/languages/rust" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/seo.css" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="What is Rust written in? | Language Lineage" />
+  <meta property="og:description" content="Rust is implemented in C and OCaml. Explore its compiler, runtime, and influence relationships." />
+  <meta property="og:url" content="https://languagelineage.org/languages/rust" />
+  <meta property="og:image" content="https://languagelineage.org/og-image.svg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="What is Rust written in? | Language Lineage" />
+  <meta name="twitter:description" content="Rust is implemented in C and OCaml. Explore its compiler, runtime, and influence relationships." />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What is Rust written in?","description":"Rust is implemented in C and OCaml. Explore its compiler, runtime, and influence relationships.","url":"https://languagelineage.org/languages/rust","author":{"@type":"Organization","name":"Language Lineage","url":"https://languagelineage.org"},"about":{"@type":"SoftwareApplication","name":"Rust","dateCreated":"2015"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is Rust written in?","acceptedAnswer":{"@type":"Answer","text":"Rust is primarily implemented in C and OCaml and Rust and Machine Code and LLVM. See the implementation section above for details and source references."}},{"@type":"Question","name":"What languages influenced Rust?","acceptedAnswer":{"@type":"Answer","text":"Rust was influenced by Haskell, C++, Cyclone among others. See the influence section above for the full list."}},{"@type":"Question","name":"Which languages did Rust influence?","acceptedAnswer":{"@type":"Answer","text":"Rust influenced V, Gleam, Zig among others."}},{"@type":"Question","name":"Is Rust self-hosting?","acceptedAnswer":{"@type":"Answer","text":"Yes, Rust is self-hosting — its compiler can compile itself."}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://languagelineage.org"},{"@type":"ListItem","position":2,"name":"Languages","item":"https://languagelineage.org/languages"},{"@type":"ListItem","position":3,"name":"Rust","item":"https://languagelineage.org/languages/rust"}]}</script>
+</head>
+<body class="seo-page">
+<nav class="seo-nav">
+  <a href="/">Language Lineage</a>
+  <a href="/explore">Graph Explorer</a>
+  <a href="/dataset">Dataset</a>
+</nav>
+<main class="seo-main">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; <a href="/languages">Languages</a> &rsaquo; Rust
+  </nav>
+
+  <h1>What is Rust written in?</h1>
+
+  <div class="node-meta"><span class="meta-tag"><span class="meta-tag-label">Year</span> 2015</span>
+<span class="meta-tag"><span class="meta-tag-label">Paradigm</span> systems, imperative, functional</span>
+<span class="meta-tag"><span class="meta-tag-label">Typing</span> static</span>
+<span class="meta-tag"><span class="meta-tag-label">Self-hosting</span> yes</span></div>
+
+  <div class="answer-box">The <strong>Rust</strong> compiler is documented written in <strong>C and OCaml and Rust and LLVM</strong>. Rust uses a documented bootstrap chain from <strong>Machine Code</strong>.</div>
+
+  <h2>Compiler Implementation</h2>
+<table>
+  <thead><tr><th>Language</th><th>Confidence</th><th>Notes</th><th>Source</th></tr></thead>
+  <tbody><tr>
+        <td><a href="/languages/c">C</a></td>
+        <td class="confidence-mid">85%</td>
+        <td>Early Rust had C components before OCaml bootstrap compiler</td>
+        <td><a href="https://github.com/iohub/rustboot" rel="noopener noreferrer" target="_blank">Source</a></td>
+      </tr>
+<tr>
+        <td><a href="/languages/ocaml">OCaml</a></td>
+        <td class="confidence-high">95%</td>
+        <td>Original Rust compiler (rustboot) written in OCaml</td>
+        <td><a href="https://github.com/iohub/rustboot" rel="noopener noreferrer" target="_blank">Source</a></td>
+      </tr>
+<tr>
+        <td><a href="/languages/rust">Rust</a></td>
+        <td class="confidence-high">98%</td>
+        <td>rustc is self-hosting since ~2011</td>
+        <td><a href="https://github.com/rust-lang/rust" rel="noopener noreferrer" target="_blank">Source</a></td>
+      </tr>
+<tr>
+        <td><a href="/tools/llvm">LLVM</a></td>
+        <td class="confidence-high">95%</td>
+        <td>rustc uses LLVM as backend</td>
+        <td><a href="https://github.com/rust-lang/rust" rel="noopener noreferrer" target="_blank">Source</a></td>
+      </tr></tbody>
+</table>
+<h2>Bootstrap Chain</h2>
+<table>
+  <thead><tr><th>Language</th><th>Confidence</th><th>Notes</th><th>Source</th></tr></thead>
+  <tbody><tr>
+        <td><a href="/languages/machine-code">Machine Code</a></td>
+        <td class="confidence-mid">88%</td>
+        <td>Rust bootstrap chain starts at machine code level</td>
+        <td><a href="https://rustc-dev-guide.rust-lang.org/building/bootstrapping/what-bootstrapping-does.html" rel="noopener noreferrer" target="_blank">Source</a></td>
+      </tr></tbody>
+</table>
+
+  <h2>Influenced By</h2><ul><li><a href="/languages/cyclone">Cyclone</a> — Cyclone's region-based memory directly inspired Rust's ownership system</li>
+<li><a href="/languages/ml">ML</a> — ML family influenced Rust's type system and pattern matching</li>
+<li><a href="/languages/clu">CLU</a> — CLU influenced Rust's iterator protocol and exception handling</li>
+<li><a href="/languages/haskell">Haskell</a> — Rust adopted algebraic types and type classes from Haskell</li>
+<li><a href="/languages/cxx">C++</a> — Rust influenced by C++'s systems programming model</li>
+<li><a href="/languages/erlang">Erlang</a> — Erlang influenced Rust's actor-style concurrency model</li>
+<li><a href="/languages/alef">Alef</a> — Alef influenced Rust's concurrency model</li>
+<li><a href="/languages/limbo">Limbo</a> — Limbo influenced Rust's concurrency design</li>
+<li><a href="/languages/scheme">Scheme</a> — Scheme influenced Rust's macro and metaprogramming system</li>
+<li><a href="/languages/swift">Swift</a> — Swift and Rust mutually influenced each other</li>
+<li><a href="/languages/elm">Elm</a> — Elm influenced Rust's functional style and error handling</li></ul>
+<h2>Languages Rust Influenced</h2><ul><li><a href="/languages/gleam">Gleam</a> — Gleam's type system and tooling heavily inspired by Rust</li>
+<li><a href="/languages/zig">Zig</a> — Zig influenced by Rust's safety and systems programming approach</li>
+<li><a href="/languages/swift">Swift</a> — Rust influenced Swift's memory safety features</li>
+<li><a href="/languages/v">V</a> — V influenced by Rust's safety concepts</li></ul>
+
+  
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item">
+  <div class="faq-question">What language is Rust written in?</div>
+  <div class="faq-answer">Rust is primarily implemented in C and OCaml and Rust and Machine Code and LLVM. See the implementation section above for details and source references.</div>
+</div>
+<div class="faq-item">
+  <div class="faq-question">What languages influenced Rust?</div>
+  <div class="faq-answer">Rust was influenced by Haskell, C++, Cyclone among others. See the influence section above for the full list.</div>
+</div>
+<div class="faq-item">
+  <div class="faq-question">Which languages did Rust influence?</div>
+  <div class="faq-answer">Rust influenced V, Gleam, Zig among others.</div>
+</div>
+<div class="faq-item">
+  <div class="faq-question">Is Rust self-hosting?</div>
+  <div class="faq-answer">Yes, Rust is self-hosting — its compiler can compile itself.</div>
+</div>
+
+  <h2>Evidence Sources</h2><ul class="source-list"><li><a href="https://doc.rust-lang.org/reference/influences.html" rel="noopener noreferrer" target="_blank">https://doc.rust-lang.org/reference/influences.html</a></li>
+<li><a href="https://github.com/iohub/rustboot" rel="noopener noreferrer" target="_blank">https://github.com/iohub/rustboot</a></li>
+<li><a href="https://github.com/rust-lang/rust" rel="noopener noreferrer" target="_blank">https://github.com/rust-lang/rust</a></li>
+<li><a href="https://spidermonkey.dev/" rel="noopener noreferrer" target="_blank">https://spidermonkey.dev/</a></li>
+<li><a href="https://vlang.io/" rel="noopener noreferrer" target="_blank">https://vlang.io/</a></li>
+<li><a href="https://rustc-dev-guide.rust-lang.org/building/bootstrapping/what-bootstrapping-does.html" rel="noopener noreferrer" target="_blank">https://rustc-dev-guide.rust-lang.org/building/bootstrapping/what-bootstrapping-does.html</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Rust_(programming_language)" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/Rust_(programming_language)</a></li>
+<li><a href="https://gleam.run/" rel="noopener noreferrer" target="_blank">https://gleam.run/</a></li>
+<li><a href="https://ziglang.org/" rel="noopener noreferrer" target="_blank">https://ziglang.org/</a></li></ul>
+
+  <h2>Related Languages</h2><div class="related-grid"><a href="/languages/bcpl" class="related-card">BCPL</a>
+<a href="/languages/b" class="related-card">B</a>
+<a href="/languages/algol" class="related-card">ALGOL</a>
+<a href="/languages/simula" class="related-card">Simula</a>
+<a href="/languages/lisp" class="related-card">Lisp</a>
+<a href="/languages/scheme" class="related-card">Scheme</a>
+<a href="/languages/ml" class="related-card">ML</a>
+<a href="/languages/sml" class="related-card">Standard ML</a>
+<a href="/languages/haskell" class="related-card">Haskell</a>
+<a href="/languages/c" class="related-card">C</a>
+<a href="/languages/cxx" class="related-card">C++</a>
+<a href="/languages/pascal" class="related-card">Pascal</a></div>
+
+  <a class="explore-btn" href="/explore?lang=rust">Explore Rust in Graph &rarr;</a>
+</main>
+<footer class="seo-footer">
+  <a href="/">Language Lineage</a>
+  <span>&middot;</span>
+  <a href="/dataset">Dataset</a>
+  <span>&middot;</span>
+  <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+</footer>
+</body>
+</html>

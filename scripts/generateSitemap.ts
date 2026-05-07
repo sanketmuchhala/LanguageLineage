@@ -1,0 +1,70 @@
+import { readFileSync, writeFileSync, readdirSync, existsSync } from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const ROOT = join(__dirname, '..');
+const PUBLIC = join(ROOT, 'public');
+const SITE = 'https://languagelineage.org';
+
+function idToSlug(id: string): string {
+  return id.replace(/^(lang|tool):/, '').replace(/_/g, '-');
+}
+
+function idToPrefix(id: string): string {
+  return id.startsWith('tool:') ? 'tools' : 'languages';
+}
+
+interface Language { id: string }
+interface Relationship { relationship: string }
+
+const raw = JSON.parse(readFileSync(join(ROOT, 'dataset/v4/lineage_v4.json'), 'utf8'));
+const languages: Language[] = raw.languages ?? [];
+const rels: Relationship[] = raw.relationships ?? [];
+const relTypes = [...new Set(rels.map((r) => r.relationship))];
+
+const GUIDE_SLUGS = [
+  'what-is-compiler-bootstrapping',
+  'what-is-self-hosting',
+  'compiler-vs-interpreter-vs-runtime',
+  'programming-language-family-tree',
+  'how-javascript-engines-work',
+  'how-python-is-implemented',
+  'how-rust-is-bootstrapped',
+  'gcc-vs-llvm',
+];
+
+const urls: Array<{ loc: string; changefreq: string; priority: string }> = [
+  { loc: `${SITE}/`, changefreq: 'monthly', priority: '1.0' },
+  { loc: `${SITE}/explore`, changefreq: 'monthly', priority: '0.9' },
+  { loc: `${SITE}/dataset`, changefreq: 'monthly', priority: '0.8' },
+];
+
+for (const lang of languages) {
+  const prefix = idToPrefix(lang.id);
+  const slug = idToSlug(lang.id);
+  urls.push({ loc: `${SITE}/${prefix}/${slug}`, changefreq: 'monthly', priority: '0.7' });
+}
+
+for (const type of relTypes) {
+  const slug = type.replace(/_/g, '-');
+  urls.push({ loc: `${SITE}/relationships/${slug}`, changefreq: 'monthly', priority: '0.6' });
+}
+
+for (const slug of GUIDE_SLUGS) {
+  urls.push({ loc: `${SITE}/guides/${slug}`, changefreq: 'monthly', priority: '0.65' });
+}
+
+const today = new Date().toISOString().split('T')[0];
+const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls.map(u => `  <url>
+    <loc>${u.loc}</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>${u.changefreq}</changefreq>
+    <priority>${u.priority}</priority>
+  </url>`).join('\n')}
+</urlset>`;
+
+writeFileSync(join(PUBLIC, 'sitemap.xml'), xml, 'utf8');
+console.log(`Generated sitemap.xml with ${urls.length} URLs`);

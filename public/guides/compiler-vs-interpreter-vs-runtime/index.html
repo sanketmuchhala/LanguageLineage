@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compiler vs Interpreter vs Runtime | Language Lineage</title>
+  <meta name="description" content="Understand the difference between a compiler, interpreter, and runtime, and how these determine what language an implementation is written in." />
+  <link rel="canonical" href="https://languagelineage.org/guides/compiler-vs-interpreter-vs-runtime" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/seo.css" />
+  <meta property="og:title" content="Compiler vs Interpreter vs Runtime | Language Lineage" />
+  <meta property="og:description" content="Understand the difference between a compiler, interpreter, and runtime, and how these determine what language an implementation is written in." />
+  <meta property="og:url" content="https://languagelineage.org/guides/compiler-vs-interpreter-vs-runtime" />
+  <meta property="og:image" content="https://languagelineage.org/og-image.svg" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Compiler vs Interpreter vs Runtime","description":"Understand the difference between a compiler, interpreter, and runtime, and how these determine what language an implementation is written in.","url":"https://languagelineage.org/guides/compiler-vs-interpreter-vs-runtime","author":{"@type":"Organization","name":"Language Lineage","url":"https://languagelineage.org"}}</script>
+</head>
+<body class="seo-page">
+<nav class="seo-nav">
+  <a href="/">Language Lineage</a>
+  <a href="/explore">Graph Explorer</a>
+  <a href="/dataset">Dataset</a>
+</nav>
+<main class="seo-main">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Compiler vs Interpreter vs Runtime
+  </nav>
+
+  <h1>Compiler vs Interpreter vs Runtime</h1>
+
+  <div class="answer-box">A <strong>compiler</strong> translates source code to machine code ahead of time. An <strong>interpreter</strong> executes source code directly at runtime. A <strong>runtime</strong> is the environment that manages execution, memory, and I/O for a running program.</div>
+
+<h2>Compilers</h2>
+<p>A compiler takes source code and produces an executable (machine code, bytecode, or another language). Examples: GCC (C/C++), rustc (Rust), javac (Java). The compiler itself is written in some implementation language — this is what the Language Lineage "compiler_written_in" relationships track.</p>
+
+<h2>Interpreters</h2>
+<p>An interpreter reads and executes source code without a separate compilation step. CPython (the standard Python interpreter) is an interpreter written in C. The "runtime_written_in" relationship tracks what language the interpreter is written in.</p>
+
+<h2>Runtimes</h2>
+<p>A runtime provides services during program execution: garbage collection, thread management, standard library, FFI. JavaScript has V8 (written in C++). Java has the JVM. Go has its own runtime written in Go itself.</p>
+
+<a class="explore-btn" href="/explore">Explore Relationships in Graph &rarr;</a>
+
+</main>
+<footer class="seo-footer">
+  <a href="/">Language Lineage</a>
+  <span>&middot;</span>
+  <a href="/dataset">Dataset</a>
+  <span>&middot;</span>
+  <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+</footer>
+</body>
+</html>

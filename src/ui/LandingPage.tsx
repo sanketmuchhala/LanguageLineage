@@ -58,7 +58,7 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
             <span className="title-line accent">of Programming</span>
           </h1>
           <p className="hero-subtitle reveal">
-            Trace 80+ years of innovation. Discover how languages inspired each other,
+            Trace 75+ years of innovation. Discover how languages inspired each other,
             from FORTRAN to Rust, and understand the DNA of modern code.
           </p>
           <div className="hero-actions reveal">
@@ -151,23 +151,23 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
       {/* Stats Bar */}
       <section className="stats-bar">
         <div className="stat reveal">
-          <span className="stat-number">150+</span>
+          <span className="stat-number">112</span>
           <span className="stat-label">Languages Mapped</span>
         </div>
         <div className="stat-divider" />
         <div className="stat reveal">
-          <span className="stat-number">500+</span>
+          <span className="stat-number">347</span>
           <span className="stat-label">Relationships</span>
         </div>
         <div className="stat-divider" />
         <div className="stat reveal">
-          <span className="stat-number">1940</span>
+          <span className="stat-number">1949</span>
           <span className="stat-label">Earliest Language</span>
         </div>
         <div className="stat-divider" />
         <div className="stat reveal">
-          <span className="stat-number">2024</span>
-          <span className="stat-label">Latest Updates</span>
+          <span className="stat-number">2023</span>
+          <span className="stat-label">Latest Language</span>
         </div>
       </section>
 
@@ -269,7 +269,7 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
             <h3 className="feature-title">Timeline View</h3>
             <p className="feature-text">
               Watch programming evolve decade by decade. Play through history from
-              1940 to today and see languages emerge in their historical context.
+              1949 to today and see languages emerge in their historical context.
             </p>
           </div>
           <div className="feature reveal">

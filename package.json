@@ -5,11 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "npm run seo:generate && tsc && vite build",
     "preview": "vite preview",
     "type-check": "tsc --noEmit",
     "analyze": "tsx scripts/analyzeDataset.ts",
-    "analyze:v4": "tsx scripts/analyzeDataset.ts dataset/v4/lineage_v4.json"
+    "analyze:v4": "tsx scripts/analyzeDataset.ts dataset/v4/lineage_v4.json",
+    "seo:generate": "tsx scripts/generateSeoPages.ts && tsx scripts/generateSitemap.ts && tsx scripts/generateLlmsTxt.ts",
+    "seo:validate": "tsx scripts/validateSeo.ts"
   },
   "dependencies": {
     "@types/react-window": "^1.8.8",
@@ -19,6 +21,7 @@
     "cytoscape-cose-bilkent": "^4.1.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-helmet-async": "^3.0.0",
     "react-router-dom": "^7.15.0",
     "react-window": "^2.2.7",
     "zustand": "^4.5.0"

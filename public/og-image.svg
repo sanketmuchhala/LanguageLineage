@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#0a0a0b"/>
+
+  <!-- Subtle grid lines -->
+  <line x1="0" y1="210" x2="1200" y2="210" stroke="#ffffff" stroke-opacity="0.03" stroke-width="1"/>
+  <line x1="0" y1="420" x2="1200" y2="420" stroke="#ffffff" stroke-opacity="0.03" stroke-width="1"/>
+  <line x1="400" y1="0" x2="400" y2="630" stroke="#ffffff" stroke-opacity="0.03" stroke-width="1"/>
+  <line x1="800" y1="0" x2="800" y2="630" stroke="#ffffff" stroke-opacity="0.03" stroke-width="1"/>
+
+  <!-- Node-link graph motif (right side) -->
+  <g opacity="0.18">
+    <!-- Nodes -->
+    <circle cx="900" cy="200" r="22" fill="#c9a87c"/>
+    <circle cx="1020" cy="150" r="16" fill="#8b9a7d"/>
+    <circle cx="1080" cy="260" r="18" fill="#e07a5f"/>
+    <circle cx="960" cy="320" r="14" fill="#9b7bb8"/>
+    <circle cx="840" cy="310" r="20" fill="#5a8a7d"/>
+    <circle cx="1100" cy="180" r="12" fill="#c9a87c"/>
+    <circle cx="870" cy="150" r="14" fill="#7a9e7e"/>
+    <circle cx="1050" cy="360" r="12" fill="#8b9a7d"/>
+
+    <!-- Edges -->
+    <line x1="900" y1="200" x2="1020" y2="150" stroke="#c9a87c" stroke-width="2"/>
+    <line x1="900" y1="200" x2="1080" y2="260" stroke="#c9a87c" stroke-width="1.5"/>
+    <line x1="900" y1="200" x2="960" y2="320" stroke="#c9a87c" stroke-width="1.5"/>
+    <line x1="900" y1="200" x2="840" y2="310" stroke="#c9a87c" stroke-width="2"/>
+    <line x1="1020" y1="150" x2="1100" y2="180" stroke="#8b9a7d" stroke-width="1.5"/>
+    <line x1="1080" y1="260" x2="1050" y2="360" stroke="#e07a5f" stroke-width="1.5"/>
+    <line x1="960" y1="320" x2="1050" y2="360" stroke="#9b7bb8" stroke-width="1.5"/>
+    <line x1="900" y1="200" x2="870" y2="150" stroke="#7a9e7e" stroke-width="1.5"/>
+    <line x1="840" y1="310" x2="960" y2="320" stroke="#5a8a7d" stroke-width="1.5"/>
+  </g>
+
+  <!-- Gold accent bar -->
+  <rect x="80" y="220" width="4" height="100" fill="#c9a87c" rx="2"/>
+
+  <!-- Main title -->
+  <text x="110" y="280" font-family="Georgia, serif" font-size="64" font-weight="700" fill="#f5f0e8" letter-spacing="-1">Language Lineage</text>
+
+  <!-- Subtitle -->
+  <text x="110" y="336" font-family="system-ui, sans-serif" font-size="24" font-weight="400" fill="#9a958c" letter-spacing="0.5">What programming languages are written in</text>
+
+  <!-- Stats row -->
+  <g transform="translate(110, 400)">
+    <rect width="130" height="52" rx="8" fill="#1a1a1d"/>
+    <text x="65" y="22" font-family="system-ui, sans-serif" font-size="28" font-weight="700" fill="#c9a87c" text-anchor="middle">112</text>
+    <text x="65" y="42" font-family="system-ui, sans-serif" font-size="12" fill="#5a564f" text-anchor="middle">Languages</text>
+  </g>
+  <g transform="translate(256, 400)">
+    <rect width="130" height="52" rx="8" fill="#1a1a1d"/>
+    <text x="65" y="22" font-family="system-ui, sans-serif" font-size="28" font-weight="700" fill="#c9a87c" text-anchor="middle">347</text>
+    <text x="65" y="42" font-family="system-ui, sans-serif" font-size="12" fill="#5a564f" text-anchor="middle">Relationships</text>
+  </g>
+  <g transform="translate(402, 400)">
+    <rect width="130" height="52" rx="8" fill="#1a1a1d"/>
+    <text x="65" y="22" font-family="system-ui, sans-serif" font-size="28" font-weight="700" fill="#c9a87c" text-anchor="middle">75+</text>
+    <text x="65" y="42" font-family="system-ui, sans-serif" font-size="12" fill="#5a564f" text-anchor="middle">Years of history</text>
+  </g>
+
+  <!-- Domain watermark -->
+  <text x="110" y="580" font-family="system-ui, sans-serif" font-size="16" fill="#5a564f" letter-spacing="1">languagelineage.org</text>
+</svg>

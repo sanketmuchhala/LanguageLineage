@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How Python is Implemented | Language Lineage</title>
+  <meta name="description" content="CPython, the reference Python implementation, is written in C. PyPy is written in RPython. Learn how Python interpreters work and which language they are written in." />
+  <link rel="canonical" href="https://languagelineage.org/guides/how-python-is-implemented" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/seo.css" />
+  <meta property="og:title" content="How Python is Implemented | Language Lineage" />
+  <meta property="og:description" content="CPython, the reference Python implementation, is written in C. PyPy is written in RPython. Learn how Python interpreters work and which language they are written in." />
+  <meta property="og:url" content="https://languagelineage.org/guides/how-python-is-implemented" />
+  <meta property="og:image" content="https://languagelineage.org/og-image.svg" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How Python is Implemented","description":"CPython, the reference Python implementation, is written in C. PyPy is written in RPython. Learn how Python interpreters work and which language they are written in.","url":"https://languagelineage.org/guides/how-python-is-implemented","author":{"@type":"Organization","name":"Language Lineage","url":"https://languagelineage.org"}}</script>
+</head>
+<body class="seo-page">
+<nav class="seo-nav">
+  <a href="/">Language Lineage</a>
+  <a href="/explore">Graph Explorer</a>
+  <a href="/dataset">Dataset</a>
+</nav>
+<main class="seo-main">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; How Python is Implemented
+  </nav>
+
+  <h1>How Python is Implemented</h1>
+
+  <div class="answer-box"><strong>CPython</strong>, the reference Python implementation, is written in <strong>C</strong>. It interprets Python bytecode via a virtual machine. Alternative implementations include PyPy (written in RPython) and Jython (written in Java).</div>
+
+<h2>CPython</h2>
+<p>CPython is the canonical Python interpreter, maintained by the Python Software Foundation. It compiles Python source to bytecode (.pyc files) and executes that bytecode in a C-implemented virtual machine. CPython is available on GitHub at <a href="https://github.com/python/cpython" rel="noopener noreferrer" target="_blank">github.com/python/cpython</a>.</p>
+
+<h2>PyPy</h2>
+<p>PyPy is a high-performance Python interpreter written in RPython (a restricted subset of Python). It uses JIT compilation to achieve speeds often 5–10x faster than CPython. PyPy is ideal for long-running CPU-intensive programs.</p>
+
+<h2>Is Python Self-Hosting?</h2>
+<p>No, Python is not self-hosting in its standard distribution. CPython is written in C, not Python. PyPy is written in RPython (a Python subset), which is close but not standard Python.</p>
+
+<h2>Python's Influences</h2>
+<p>Python was influenced by ABC, C, Modula-3, Smalltalk, and Haskell. It in turn influenced Ruby, CoffeeScript, and many others. See the <a href="/languages/python">Python page</a> for the full relationship map.</p>
+
+<a class="explore-btn" href="/languages/python">View Python in Graph &rarr;</a>
+
+</main>
+<footer class="seo-footer">
+  <a href="/">Language Lineage</a>
+  <span>&middot;</span>
+  <a href="/dataset">Dataset</a>
+  <span>&middot;</span>
+  <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+</footer>
+</body>
+</html>

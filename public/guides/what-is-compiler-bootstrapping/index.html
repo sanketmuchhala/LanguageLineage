@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>What is Compiler Bootstrapping? | Language Lineage</title>
+  <meta name="description" content="Compiler bootstrapping is the process of writing a compiler for a language in that same language. Learn how it works and which languages use it." />
+  <link rel="canonical" href="https://languagelineage.org/guides/what-is-compiler-bootstrapping" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/seo.css" />
+  <meta property="og:title" content="What is Compiler Bootstrapping? | Language Lineage" />
+  <meta property="og:description" content="Compiler bootstrapping is the process of writing a compiler for a language in that same language. Learn how it works and which languages use it." />
+  <meta property="og:url" content="https://languagelineage.org/guides/what-is-compiler-bootstrapping" />
+  <meta property="og:image" content="https://languagelineage.org/og-image.svg" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"What is Compiler Bootstrapping?","description":"Compiler bootstrapping is the process of writing a compiler for a language in that same language. Learn how it works and which languages use it.","url":"https://languagelineage.org/guides/what-is-compiler-bootstrapping","author":{"@type":"Organization","name":"Language Lineage","url":"https://languagelineage.org"}}</script>
+</head>
+<body class="seo-page">
+<nav class="seo-nav">
+  <a href="/">Language Lineage</a>
+  <a href="/explore">Graph Explorer</a>
+  <a href="/dataset">Dataset</a>
+</nav>
+<main class="seo-main">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; What is Compiler Bootstrapping?
+  </nav>
+
+  <h1>What is Compiler Bootstrapping?</h1>
+
+  <div class="answer-box">Compiler bootstrapping is the process of writing a compiler for a programming language <strong>in that same language</strong>. A language whose compiler can compile itself is called <em>self-hosting</em>.</div>
+
+<h2>How Bootstrapping Works</h2>
+<p>To bootstrap a compiler, you first write a simple initial compiler (called a "stage 0" or "seed" compiler) in an existing language. This compiler may not support all language features. Then you use it to compile a richer compiler written in the new language itself.</p>
+<p>The process typically follows these stages:</p>
+<ul>
+<li><strong>Stage 0:</strong> Write a minimal compiler in C or another existing language</li>
+<li><strong>Stage 1:</strong> Use Stage 0 to compile the full compiler written in the new language</li>
+<li><strong>Stage 2:</strong> Use Stage 1 to compile itself — if the output matches Stage 1, bootstrapping succeeded</li>
+</ul>
+
+<h2>Why Bootstrap?</h2>
+<p>Self-hosting is a meaningful milestone because it proves the language is expressive enough to implement a real-world systems program. It also means the compiler can be improved using the language's own features.</p>
+
+<h2>Examples from the Dataset</h2>
+<p>Languages in the Language Lineage dataset with documented bootstrap chains include Rust, Go, Haskell, OCaml, and many others. See <a href="/relationships/bootstrap-written-in">all bootstrap relationships</a> for the complete list.</p>
+
+<a class="explore-btn" href="/explore">Explore Bootstrap Chains in Graph &rarr;</a>
+
+</main>
+<footer class="seo-footer">
+  <a href="/">Language Lineage</a>
+  <span>&middot;</span>
+  <a href="/dataset">Dataset</a>
+  <span>&middot;</span>
+  <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+</footer>
+</body>
+</html>

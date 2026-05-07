@@ -1,0 +1,12 @@
+{
+  "name": "Language Lineage",
+  "short_name": "Lineage",
+  "description": "Explore what programming languages are written in and how they evolved.",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#0a0a0b",
+  "background_color": "#0a0a0b",
+  "icons": [
+    { "src": "/favicon.svg", "type": "image/svg+xml", "sizes": "any" }
+  ]
+}

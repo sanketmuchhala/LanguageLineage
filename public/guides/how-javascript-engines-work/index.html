@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How JavaScript Engines Work | Language Lineage</title>
+  <meta name="description" content="JavaScript engines like V8, SpiderMonkey, and JavaScriptCore are written in C++. Learn how they parse, compile, and execute JavaScript code." />
+  <link rel="canonical" href="https://languagelineage.org/guides/how-javascript-engines-work" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/seo.css" />
+  <meta property="og:title" content="How JavaScript Engines Work | Language Lineage" />
+  <meta property="og:description" content="JavaScript engines like V8, SpiderMonkey, and JavaScriptCore are written in C++. Learn how they parse, compile, and execute JavaScript code." />
+  <meta property="og:url" content="https://languagelineage.org/guides/how-javascript-engines-work" />
+  <meta property="og:image" content="https://languagelineage.org/og-image.svg" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How JavaScript Engines Work","description":"JavaScript engines like V8, SpiderMonkey, and JavaScriptCore are written in C++. Learn how they parse, compile, and execute JavaScript code.","url":"https://languagelineage.org/guides/how-javascript-engines-work","author":{"@type":"Organization","name":"Language Lineage","url":"https://languagelineage.org"}}</script>
+</head>
+<body class="seo-page">
+<nav class="seo-nav">
+  <a href="/">Language Lineage</a>
+  <a href="/explore">Graph Explorer</a>
+  <a href="/dataset">Dataset</a>
+</nav>
+<main class="seo-main">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; How JavaScript Engines Work
+  </nav>
+
+  <h1>How JavaScript Engines Work</h1>
+
+  <div class="answer-box">JavaScript engines parse JavaScript source code, compile it to bytecode or machine code, and execute it. The major engines — V8, SpiderMonkey, and JavaScriptCore — are all written in <strong>C++</strong>.</div>
+
+<h2>V8 (Google / Node.js / Chrome)</h2>
+<p>V8 is an open-source JavaScript and WebAssembly engine written in C++. It compiles JavaScript directly to machine code before executing it (JIT compilation). V8 powers Google Chrome, Node.js, and Deno.</p>
+
+<h2>SpiderMonkey (Firefox)</h2>
+<p>SpiderMonkey is Mozilla's JavaScript engine, written in C++ and Rust. It was the first JavaScript engine ever created (1995) and powers Firefox. It uses a tiered JIT compilation approach.</p>
+
+<h2>JavaScriptCore (Safari / WebKit)</h2>
+<p>JavaScriptCore (also called Nitro) powers Safari and all iOS browsers. It is written in C++ and uses a four-tier JIT architecture.</p>
+
+<h2>Why C++?</h2>
+<p>JavaScript engines are written in C++ for performance: direct memory management, fine-grained control over compilation, and low-level platform access. <a href="/languages/javascript">JavaScript</a> itself is a high-level dynamic language — only its <em>engine</em> is in C++.</p>
+
+<a class="explore-btn" href="/explore">Explore JavaScript Relationships in Graph &rarr;</a>
+
+</main>
+<footer class="seo-footer">
+  <a href="/">Language Lineage</a>
+  <span>&middot;</span>
+  <a href="/dataset">Dataset</a>
+  <span>&middot;</span>
+  <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+</footer>
+</body>
+</html>

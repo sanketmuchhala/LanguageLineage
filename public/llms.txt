@@ -1,0 +1,70 @@
+# Language Lineage
+
+> An open dataset and interactive graph explorer documenting what programming languages are written in, how they are bootstrapped, and how they influenced each other.
+
+## About
+
+Language Lineage is a structured knowledge base of programming language implementation and influence relationships. It answers questions like "What is Python written in?", "How is Rust bootstrapped?", and "Which languages influenced JavaScript?".
+
+The dataset covers 112 programming languages and tools, 347 documented relationships, and spans from 1949 (Fortran) to 2023.
+
+## Dataset Facts
+
+- **Total nodes:** 112 (98 language nodes, 14 tool nodes)
+- **Total relationships:** 347
+- **Date range:** 1949–2023
+- **Evidence coverage:** 100% (all relationships have at least one evidence source)
+
+## Relationship Types
+
+| Type | Count |
+|---|---|
+| influenced | 189 |
+| compiler written in | 78 |
+| runtime written in | 56 |
+| bootstrap written in | 14 |
+| transpiled to | 8 |
+| rewritten in | 2 |
+
+## Key Pages
+
+- Home: https://languagelineage.org/
+- Graph Explorer: https://languagelineage.org/explore
+- Dataset: https://languagelineage.org/dataset
+- Sitemap: https://languagelineage.org/sitemap.xml
+
+### Popular Language Pages
+
+- Python: https://languagelineage.org/languages/python
+- JavaScript: https://languagelineage.org/languages/javascript
+- C: https://languagelineage.org/languages/c
+- Rust: https://languagelineage.org/languages/rust
+- Go: https://languagelineage.org/languages/go
+- Java: https://languagelineage.org/languages/java
+- C++: https://languagelineage.org/languages/cxx
+- Haskell: https://languagelineage.org/languages/haskell
+
+### Relationship Guides
+
+- What is compiler bootstrapping: https://languagelineage.org/guides/what-is-compiler-bootstrapping
+- What is self-hosting: https://languagelineage.org/guides/what-is-self-hosting
+- Compiler vs interpreter vs runtime: https://languagelineage.org/guides/compiler-vs-interpreter-vs-runtime
+- Programming language family tree: https://languagelineage.org/guides/programming-language-family-tree
+- How Python is implemented: https://languagelineage.org/guides/how-python-is-implemented
+- How Rust is bootstrapped: https://languagelineage.org/guides/how-rust-is-bootstrapped
+- How JavaScript engines work: https://languagelineage.org/guides/how-javascript-engines-work
+- GCC vs LLVM: https://languagelineage.org/guides/gcc-vs-llvm
+
+## Data Schema
+
+Each language node has: id, label, cluster, first_release_year, paradigm, typing, description.
+Each relationship has: from_language, to_language, relationship type, start_year, end_year, confidence (0–1), evidence_source (URL), notes.
+
+## Citation
+
+If you reference Language Lineage data, please cite as:
+"Language Lineage dataset (languagelineage.org). Accessed [date]."
+
+## Source
+
+Dataset source code and raw JSON: https://github.com/sanketmuchhala/LanguageLineage

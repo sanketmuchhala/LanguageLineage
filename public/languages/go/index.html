@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>What is Go written in? | Language Lineage</title>
+  <meta name="description" content="Go is implemented in C and Go. Explore its compiler, runtime, and influence relationships." />
+  <link rel="canonical" href="https://languagelineage.org/languages/go" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/seo.css" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="What is Go written in? | Language Lineage" />
+  <meta property="og:description" content="Go is implemented in C and Go. Explore its compiler, runtime, and influence relationships." />
+  <meta property="og:url" content="https://languagelineage.org/languages/go" />
+  <meta property="og:image" content="https://languagelineage.org/og-image.svg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="What is Go written in? | Language Lineage" />
+  <meta name="twitter:description" content="Go is implemented in C and Go. Explore its compiler, runtime, and influence relationships." />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What is Go written in?","description":"Go is implemented in C and Go. Explore its compiler, runtime, and influence relationships.","url":"https://languagelineage.org/languages/go","author":{"@type":"Organization","name":"Language Lineage","url":"https://languagelineage.org"},"about":{"@type":"SoftwareApplication","name":"Go","dateCreated":"2009"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is Go written in?","acceptedAnswer":{"@type":"Answer","text":"Go is primarily implemented in C and Go and Assembly. See the implementation section above for details and source references."}},{"@type":"Question","name":"What languages influenced Go?","acceptedAnswer":{"@type":"Answer","text":"Go was influenced by Newsqueak, Limbo, Alef among others. See the influence section above for the full list."}},{"@type":"Question","name":"Which languages did Go influence?","acceptedAnswer":{"@type":"Answer","text":"Go influenced V, Crystal among others."}},{"@type":"Question","name":"Is Go self-hosting?","acceptedAnswer":{"@type":"Answer","text":"Yes, Go is self-hosting — its compiler can compile itself."}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://languagelineage.org"},{"@type":"ListItem","position":2,"name":"Languages","item":"https://languagelineage.org/languages"},{"@type":"ListItem","position":3,"name":"Go","item":"https://languagelineage.org/languages/go"}]}</script>
+</head>
+<body class="seo-page">
+<nav class="seo-nav">
+  <a href="/">Language Lineage</a>
+  <a href="/explore">Graph Explorer</a>
+  <a href="/dataset">Dataset</a>
+</nav>
+<main class="seo-main">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; <a href="/languages">Languages</a> &rsaquo; Go
+  </nav>
+
+  <h1>What is Go written in?</h1>
+
+  <div class="node-meta"><span class="meta-tag"><span class="meta-tag-label">Year</span> 2009</span>
+<span class="meta-tag"><span class="meta-tag-label">Paradigm</span> imperative, concurrent</span>
+<span class="meta-tag"><span class="meta-tag-label">Typing</span> static</span>
+<span class="meta-tag"><span class="meta-tag-label">Self-hosting</span> yes</span></div>
+
+  <div class="answer-box">The <strong>Go</strong> compiler is well-documented written in <strong>C and Go</strong>. Its runtime is well-documented implemented in <strong>Go and Assembly</strong>.</div>
+
+  <h2>Compiler Implementation</h2>
+<table>
+  <thead><tr><th>Language</th><th>Confidence</th><th>Notes</th><th>Source</th></tr></thead>
+  <tbody><tr>
+        <td><a href="/languages/c">C</a></td>
+        <td class="confidence-high">98%</td>
+        <td>Original Go compiler in C, rewritten in Go in 1.5 (2015)</td>
+        <td><a href="https://go.dev/doc/faq#history" rel="noopener noreferrer" target="_blank">Source</a></td>
+      </tr>
+<tr>
+        <td><a href="/languages/go">Go</a></td>
+        <td class="confidence-high">98%</td>
+        <td>Go compiler rewritten in Go in version 1.5</td>
+        <td><a href="https://go.dev/doc/go1.5" rel="noopener noreferrer" target="_blank">Source</a></td>
+      </tr></tbody>
+</table>
+<h2>Runtime Implementation</h2>
+<table>
+  <thead><tr><th>Language</th><th>Confidence</th><th>Notes</th><th>Source</th></tr></thead>
+  <tbody><tr>
+        <td><a href="/languages/go">Go</a></td>
+        <td class="confidence-high">95%</td>
+        <td>Go runtime also written in Go since 1.5</td>
+        <td><a href="https://go.dev/doc/go1.5" rel="noopener noreferrer" target="_blank">Source</a></td>
+      </tr>
+<tr>
+        <td><a href="/languages/assembly">Assembly</a></td>
+        <td class="confidence-high">95%</td>
+        <td>Go runtime has assembly components</td>
+        <td><a href="https://go.dev/doc/go1.5" rel="noopener noreferrer" target="_blank">Source</a></td>
+      </tr></tbody>
+</table>
+
+  <h2>Influenced By</h2><ul><li><a href="/languages/newsqueak">Newsqueak</a> — Go's channel-based concurrency directly from Newsqueak</li>
+<li><a href="/languages/limbo">Limbo</a> — Limbo's concurrency model influenced Go</li>
+<li><a href="/languages/c">C</a> — Go's syntax influenced by C</li>
+<li><a href="/languages/alef">Alef</a> — Alef's CSP-style concurrency influenced Go</li>
+<li><a href="/languages/oberon2">Oberon-2</a> — Oberon-2 influenced Go's package system and declarations</li>
+<li><a href="/languages/modula2">Modula-2</a> — Go's package system influenced by Modula-2</li>
+<li><a href="/languages/oberon">Oberon</a> — Oberon influenced Go's module/package design</li>
+<li><a href="/languages/bcpl">BCPL</a> — BCPL influenced Go via C lineage</li>
+<li><a href="/languages/pascal">Pascal</a> — Pascal influenced Go's declaration syntax</li>
+<li><a href="/languages/smalltalk">Smalltalk</a> — Smalltalk influenced Go's interface system</li></ul>
+<h2>Languages Go Influenced</h2><ul><li><a href="/languages/v">V</a> — V's syntax heavily influenced by Go</li>
+<li><a href="/languages/crystal">Crystal</a> — Crystal influenced by Go's concurrency model</li></ul>
+
+  
+<h2>Frequently Asked Questions</h2>
+<div class="faq-item">
+  <div class="faq-question">What language is Go written in?</div>
+  <div class="faq-answer">Go is primarily implemented in C and Go and Assembly. See the implementation section above for details and source references.</div>
+</div>
+<div class="faq-item">
+  <div class="faq-question">What languages influenced Go?</div>
+  <div class="faq-answer">Go was influenced by Newsqueak, Limbo, Alef among others. See the influence section above for the full list.</div>
+</div>
+<div class="faq-item">
+  <div class="faq-question">Which languages did Go influence?</div>
+  <div class="faq-answer">Go influenced V, Crystal among others.</div>
+</div>
+<div class="faq-item">
+  <div class="faq-question">Is Go self-hosting?</div>
+  <div class="faq-answer">Yes, Go is self-hosting — its compiler can compile itself.</div>
+</div>
+
+  <h2>Evidence Sources</h2><ul class="source-list"><li><a href="https://go.dev/doc/faq#history" rel="noopener noreferrer" target="_blank">https://go.dev/doc/faq#history</a></li>
+<li><a href="https://go.dev/doc/go1.5" rel="noopener noreferrer" target="_blank">https://go.dev/doc/go1.5</a></li>
+<li><a href="https://vlang.io/" rel="noopener noreferrer" target="_blank">https://vlang.io/</a></li>
+<li><a href="https://devblogs.microsoft.com/typescript/typescript-native-port/" rel="noopener noreferrer" target="_blank">https://devblogs.microsoft.com/typescript/typescript-native-port/</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Go_(programming_language)" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/Go_(programming_language)</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Crystal_(programming_language)" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/Crystal_(programming_language)</a></li></ul>
+
+  <h2>Related Languages</h2><div class="related-grid"><a href="/languages/bcpl" class="related-card">BCPL</a>
+<a href="/languages/b" class="related-card">B</a>
+<a href="/languages/algol" class="related-card">ALGOL</a>
+<a href="/languages/simula" class="related-card">Simula</a>
+<a href="/languages/lisp" class="related-card">Lisp</a>
+<a href="/languages/scheme" class="related-card">Scheme</a>
+<a href="/languages/ml" class="related-card">ML</a>
+<a href="/languages/sml" class="related-card">Standard ML</a>
+<a href="/languages/haskell" class="related-card">Haskell</a>
+<a href="/languages/c" class="related-card">C</a>
+<a href="/languages/cxx" class="related-card">C++</a>
+<a href="/languages/pascal" class="related-card">Pascal</a></div>
+
+  <a class="explore-btn" href="/explore?lang=go">Explore Go in Graph &rarr;</a>
+</main>
+<footer class="seo-footer">
+  <a href="/">Language Lineage</a>
+  <span>&middot;</span>
+  <a href="/dataset">Dataset</a>
+  <span>&middot;</span>
+  <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+</footer>
+</body>
+</html>

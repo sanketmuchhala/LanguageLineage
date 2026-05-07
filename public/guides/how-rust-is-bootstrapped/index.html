@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How Rust is Bootstrapped | Language Lineage</title>
+  <meta name="description" content="Rust is a self-hosting language. The Rust compiler (rustc) is written in Rust itself. Learn how the Rust bootstrap process works." />
+  <link rel="canonical" href="https://languagelineage.org/guides/how-rust-is-bootstrapped" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/seo.css" />
+  <meta property="og:title" content="How Rust is Bootstrapped | Language Lineage" />
+  <meta property="og:description" content="Rust is a self-hosting language. The Rust compiler (rustc) is written in Rust itself. Learn how the Rust bootstrap process works." />
+  <meta property="og:url" content="https://languagelineage.org/guides/how-rust-is-bootstrapped" />
+  <meta property="og:image" content="https://languagelineage.org/og-image.svg" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How Rust is Bootstrapped","description":"Rust is a self-hosting language. The Rust compiler (rustc) is written in Rust itself. Learn how the Rust bootstrap process works.","url":"https://languagelineage.org/guides/how-rust-is-bootstrapped","author":{"@type":"Organization","name":"Language Lineage","url":"https://languagelineage.org"}}</script>
+</head>
+<body class="seo-page">
+<nav class="seo-nav">
+  <a href="/">Language Lineage</a>
+  <a href="/explore">Graph Explorer</a>
+  <a href="/dataset">Dataset</a>
+</nav>
+<main class="seo-main">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; How Rust is Bootstrapped
+  </nav>
+
+  <h1>How Rust is Bootstrapped</h1>
+
+  <div class="answer-box">The Rust compiler (<strong>rustc</strong>) is written in Rust. To bootstrap Rust from scratch, you need a prior version of rustc — the compiler bootstraps itself through a stage-based process.</div>
+
+<h2>The Rust Bootstrap Process</h2>
+<p>Rust uses a multi-stage bootstrap:</p>
+<ul>
+<li><strong>Stage 0:</strong> Download a pre-compiled rustc binary (the "beta" channel release)</li>
+<li><strong>Stage 1:</strong> Use Stage 0 to compile the current rustc source code</li>
+<li><strong>Stage 2:</strong> Use Stage 1 to compile rustc again — this is the final compiler</li>
+</ul>
+<p>Stage 2 is used because it ensures the compiler was compiled by the same-version compiler, catching any bootstrap-specific bugs.</p>
+
+<h2>Historical Bootstrap</h2>
+<p>Rust's original compiler (before it was rewritten in Rust) was written in OCaml. The transition to self-hosting happened around 2011–2012. The OCaml compiler was phased out once the Rust-in-Rust compiler was stable.</p>
+
+<h2>mrustc: An Alternative Bootstrap Path</h2>
+<p>mrustc is an alternative Rust compiler written in C++ that can compile older Rust code. It provides a bootstrap path that does not require a pre-compiled rustc binary, which is important for reproducible builds.</p>
+
+<a class="explore-btn" href="/languages/rust">View Rust in Graph &rarr;</a>
+
+</main>
+<footer class="seo-footer">
+  <a href="/">Language Lineage</a>
+  <span>&middot;</span>
+  <a href="/dataset">Dataset</a>
+  <span>&middot;</span>
+  <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+</footer>
+</body>
+</html>

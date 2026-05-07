@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GCC vs LLVM: Compiler Infrastructure | Language Lineage</title>
+  <meta name="description" content="GCC and LLVM are the two dominant open-source compiler infrastructures. Both are written in C++. Learn how they differ and which languages use each." />
+  <link rel="canonical" href="https://languagelineage.org/guides/gcc-vs-llvm" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/seo.css" />
+  <meta property="og:title" content="GCC vs LLVM: Compiler Infrastructure | Language Lineage" />
+  <meta property="og:description" content="GCC and LLVM are the two dominant open-source compiler infrastructures. Both are written in C++. Learn how they differ and which languages use each." />
+  <meta property="og:url" content="https://languagelineage.org/guides/gcc-vs-llvm" />
+  <meta property="og:image" content="https://languagelineage.org/og-image.svg" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"GCC vs LLVM: Compiler Infrastructure","description":"GCC and LLVM are the two dominant open-source compiler infrastructures. Both are written in C++. Learn how they differ and which languages use each.","url":"https://languagelineage.org/guides/gcc-vs-llvm","author":{"@type":"Organization","name":"Language Lineage","url":"https://languagelineage.org"}}</script>
+</head>
+<body class="seo-page">
+<nav class="seo-nav">
+  <a href="/">Language Lineage</a>
+  <a href="/explore">Graph Explorer</a>
+  <a href="/dataset">Dataset</a>
+</nav>
+<main class="seo-main">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; GCC vs LLVM: Compiler Infrastructure
+  </nav>
+
+  <h1>GCC vs LLVM: Compiler Infrastructure</h1>
+
+  <div class="answer-box">Both GCC (GNU Compiler Collection) and LLVM are written in <strong>C++</strong>. GCC is the older, traditionally Unix-focused compiler. LLVM is a modular, reusable compiler infrastructure used by Clang, Rust, Swift, Kotlin/Native, and many others.</div>
+
+<h2>GCC</h2>
+<p>GCC has been the primary open-source C/C++ compiler since 1987. It supports dozens of languages (C, C++, Fortran, Ada, Go, D) and targets hundreds of architectures. GCC is written in C++ (migrated from C in 2012) and is licensed under GPL.</p>
+
+<h2>LLVM</h2>
+<p>LLVM started as a research project at the University of Illinois in 2000. It provides a modular compiler infrastructure with a well-defined intermediate representation (LLVM IR). Languages that compile to LLVM IR can target any architecture LLVM supports.</p>
+
+<h2>Languages That Use LLVM</h2>
+<ul>
+<li>Clang (C/C++/Objective-C frontend)</li>
+<li>Rust (rustc uses LLVM as its backend)</li>
+<li>Swift</li>
+<li>Kotlin/Native</li>
+<li>Julia</li>
+<li>Haskell (GHC LLVM backend)</li>
+</ul>
+
+<h2>Key Differences</h2>
+<table>
+<thead><tr><th>Aspect</th><th>GCC</th><th>LLVM</th></tr></thead>
+<tbody>
+<tr><td>License</td><td>GPL</td><td>Apache 2.0</td></tr>
+<tr><td>Modularity</td><td>Monolithic</td><td>Highly modular</td></tr>
+<tr><td>IR</td><td>GIMPLE/RTL</td><td>LLVM IR</td></tr>
+<tr><td>JIT support</td><td>Limited</td><td>First-class (MCJIT)</td></tr>
+</tbody>
+</table>
+
+<a class="explore-btn" href="/explore">Explore Compiler Relationships in Graph &rarr;</a>
+
+</main>
+<footer class="seo-footer">
+  <a href="/">Language Lineage</a>
+  <span>&middot;</span>
+  <a href="/dataset">Dataset</a>
+  <span>&middot;</span>
+  <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+</footer>
+</body>
+</html>

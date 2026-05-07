@@ -7,8 +7,59 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <title>Language Lineage — The Evolution of Programming</title>
-    <meta name="description" content="Explore the fascinating family tree of programming languages. Discover how languages influenced each other and trace the evolution of code from 1940 to today." />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#0a0a0b" />
+    <title>Programming Language Lineage Graph | What Languages Are Written In</title>
+    <meta name="description" content="Explore what programming languages are written in, how compilers are bootstrapped, and how languages evolved. Interactive graph of 112 languages and 347 relationships." />
+    <link rel="canonical" href="https://languagelineage.org/" />
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Programming Language Lineage Graph | What Languages Are Written In" />
+    <meta property="og:description" content="Explore what programming languages are written in, how compilers are bootstrapped, and how languages evolved. Interactive graph of 112 languages and 347 relationships." />
+    <meta property="og:url" content="https://languagelineage.org/" />
+    <meta property="og:image" content="https://languagelineage.org/og-image.svg" />
+    <meta property="og:site_name" content="Language Lineage" />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Programming Language Lineage Graph | What Languages Are Written In" />
+    <meta name="twitter:description" content="Explore what programming languages are written in, how compilers are bootstrapped, and how languages evolved." />
+    <meta name="twitter:image" content="https://languagelineage.org/og-image.svg" />
+    <!-- JSON-LD -->
+    <script type="application/ld+json">
+    [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Language Lineage",
+        "url": "https://languagelineage.org",
+        "description": "Interactive graph of programming language implementation and influence relationships.",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://languagelineage.org/explore?lang={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "Dataset",
+        "name": "Programming Language Lineage Dataset",
+        "description": "Structured dataset of 112 programming languages and 347 documented implementation and influence relationships, with evidence sources and confidence scores.",
+        "url": "https://languagelineage.org/dataset",
+        "keywords": ["programming languages", "compiler implementation", "language history", "software engineering"],
+        "creator": { "@type": "Organization", "name": "Language Lineage" },
+        "license": "https://creativecommons.org/licenses/by/4.0/",
+        "temporalCoverage": "1949/2023",
+        "variableMeasured": [
+          "compiler_written_in",
+          "runtime_written_in",
+          "bootstrap_written_in",
+          "influenced",
+          "transpiled_to",
+          "rewritten_in"
+        ]
+      }
+    ]
+    </script>
   </head>
   <body>
     <div id="root"></div>
