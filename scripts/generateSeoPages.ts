@@ -440,7 +440,10 @@ ${faqs.map(f => `<div class="faq-item">
   <meta property="og:title" content="${escapeHtml(title)}" />
   <meta property="og:description" content="${escapeHtml(description)}" />
   <meta property="og:url" content="${url}" />
-  <meta property="og:image" content="${SITE}/og-image.svg" />
+  <meta property="og:image" content="${SITE}/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${escapeHtml(title)}" />
   <meta name="twitter:description" content="${escapeHtml(description)}" />
@@ -533,7 +536,10 @@ function buildDatasetPage(languages: Language[], rels: Relationship[]): string {
   <meta property="og:title" content="Programming Language Lineage Dataset" />
   <meta property="og:description" content="Open dataset of ${languages.length} programming languages with ${rels.length} relationships." />
   <meta property="og:url" content="${SITE}/dataset" />
-  <meta property="og:image" content="${SITE}/og-image.svg" />
+  <meta property="og:image" content="${SITE}/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
   <script type="application/ld+json">${datasetJsonLd}</script>
 </head>
 <body class="seo-page">
@@ -668,7 +674,10 @@ function buildRelationshipPage(type: string, rels: Relationship[], nodeMap: Map<
   <link rel="stylesheet" href="/seo.css" />
   <meta property="og:title" content="${escapeHtml(title)}" />
   <meta property="og:url" content="${url}" />
-  <meta property="og:image" content="${SITE}/og-image.svg" />
+  <meta property="og:image" content="${SITE}/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
 </head>
 <body class="seo-page">
 <nav class="seo-nav">
@@ -984,7 +993,10 @@ function buildGuidePage(guide: (typeof GUIDES)[0]): string {
   <meta property="og:title" content="${escapeHtml(guide.title)}" />
   <meta property="og:description" content="${escapeHtml(guide.description)}" />
   <meta property="og:url" content="${url}" />
-  <meta property="og:image" content="${SITE}/og-image.svg" />
+  <meta property="og:image" content="${SITE}/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
   <script type="application/ld+json">${JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -1057,7 +1069,10 @@ function buildLanguagesIndex(langs: Language[]): string {
   <link rel="stylesheet" href="/seo.css" />
   <meta property="og:title" content="Programming Languages Index | Language Lineage" />
   <meta property="og:url" content="${SITE}/languages" />
-  <meta property="og:image" content="${SITE}/og-image.svg" />
+  <meta property="og:image" content="${SITE}/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
 </head>
 <body class="seo-page">
 <nav class="seo-nav">
@@ -1118,7 +1133,10 @@ function buildToolsIndex(langs: Language[]): string {
   <link rel="stylesheet" href="/seo.css" />
   <meta property="og:title" content="Compilers, Runtimes, and Tools | Language Lineage" />
   <meta property="og:url" content="${SITE}/tools" />
-  <meta property="og:image" content="${SITE}/og-image.svg" />
+  <meta property="og:image" content="${SITE}/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
 </head>
 <body class="seo-page">
 <nav class="seo-nav">
@@ -1168,7 +1186,10 @@ function buildGuidesIndex(): string {
   <link rel="stylesheet" href="/seo.css" />
   <meta property="og:title" content="Programming Language Guides | Language Lineage" />
   <meta property="og:url" content="${SITE}/guides" />
-  <meta property="og:image" content="${SITE}/og-image.svg" />
+  <meta property="og:image" content="${SITE}/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
 </head>
 <body class="seo-page">
 <nav class="seo-nav">
@@ -1227,7 +1248,10 @@ function buildRelationshipsIndex(rels: Relationship[]): string {
   <link rel="stylesheet" href="/seo.css" />
   <meta property="og:title" content="Relationship Types | Language Lineage" />
   <meta property="og:url" content="${SITE}/relationships" />
-  <meta property="og:image" content="${SITE}/og-image.svg" />
+  <meta property="og:image" content="${SITE}/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
 </head>
 <body class="seo-page">
 <nav class="seo-nav">
