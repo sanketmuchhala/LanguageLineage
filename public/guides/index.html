@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Programming Language Guides | Language Lineage</title>
-  <meta name="description" content="Guides on how programming languages are implemented, bootstrapped, and related. Learn about compilers, interpreters, and language lineage." />
+  <meta name="description" content="In-depth guides on compiler bootstrapping, self-hosting, JavaScript engines, Python implementation, GCC vs LLVM, and more." />
   <link rel="canonical" href="https://languagelineage.org/guides" />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/seo.css" />
@@ -14,8 +14,11 @@
 </head>
 <body class="seo-page">
 <nav class="seo-nav">
-  <a href="/">Language Lineage</a>
-  <a href="/explore">Graph Explorer</a>
+  <a href="/" class="nav-brand">Language Lineage</a>
+  <a href="/explore">Explore</a>
+  <a href="/languages">Languages</a>
+  <a href="/tools">Tools</a>
+  <a href="/guides">Guides</a>
   <a href="/dataset">Dataset</a>
 </nav>
 <main class="seo-main">
@@ -23,17 +26,47 @@
     <a href="/">Home</a> &rsaquo; Guides
   </nav>
   <h1>Programming Language Guides</h1>
-  <p>In-depth guides on how programming languages are made, implemented, and related to each other.</p>
-  <ul class="source-list"><li><a href="/guides/what-is-compiler-bootstrapping">What is Compiler Bootstrapping?</a> &mdash; Compiler bootstrapping is the process of writing a compiler for a language in that same language. Le...</li>
-<li><a href="/guides/what-is-self-hosting">What is a Self-Hosting Compiler?</a> &mdash; A self-hosting compiler is a compiler that can compile its own source code. Learn which languages ar...</li>
-<li><a href="/guides/compiler-vs-interpreter-vs-runtime">Compiler vs Interpreter vs Runtime</a> &mdash; Understand the difference between a compiler, interpreter, and runtime, and how these determine what...</li>
-<li><a href="/guides/programming-language-family-tree">Programming Language Family Tree</a> &mdash; Explore the family tree of programming languages. See how Fortran, LISP, C, and Simula gave rise to ...</li>
-<li><a href="/guides/how-javascript-engines-work">How JavaScript Engines Work</a> &mdash; JavaScript engines like V8, SpiderMonkey, and JavaScriptCore are written in C++. Learn how they pars...</li>
-<li><a href="/guides/how-python-is-implemented">How Python is Implemented</a> &mdash; CPython is the reference Python implementation, written in C. PyPy uses RPython. Learn how Python in...</li>
-<li><a href="/guides/how-rust-is-bootstrapped">How Rust is Bootstrapped</a> &mdash; Rust is a self-hosting language. The Rust compiler (rustc) is written in Rust itself. Learn how the ...</li>
-<li><a href="/guides/gcc-vs-llvm">GCC vs LLVM: Compiler Infrastructure</a> &mdash; GCC and LLVM are the two dominant open-source compiler infrastructures. Both are written in C++. Lea...</li>
-<li><a href="/guides/how-programming-languages-are-made">How Are Programming Languages Made?</a> &mdash; Learn how programming languages are designed and implemented. Languages are built using other langua...</li>
-<li><a href="/guides/v8-vs-spidermonkey-vs-javascriptcore">V8 vs SpiderMonkey vs JavaScriptCore</a> &mdash; All three major JavaScript engines are written in C++. V8 powers Chrome and Node.js, SpiderMonkey po...</li></ul>
+  <p>In-depth guides on how programming languages are made, implemented, bootstrapped, and related to each other. 10 guides covering compilers, runtimes, and language history.</p>
+  <div class="guide-cards"><a href="/guides/what-is-compiler-bootstrapping" class="guide-card">
+  <div class="guide-card-title">What is Compiler Bootstrapping?</div>
+  <p class="guide-card-desc">Compiler bootstrapping is the process of writing a compiler for a language in that same language. Learn how it works and which languages use it.</p>
+</a>
+<a href="/guides/what-is-self-hosting" class="guide-card">
+  <div class="guide-card-title">What is a Self-Hosting Compiler?</div>
+  <p class="guide-card-desc">A self-hosting compiler is a compiler that can compile its own source code. Learn which languages are self-hosting and why it matters.</p>
+</a>
+<a href="/guides/compiler-vs-interpreter-vs-runtime" class="guide-card">
+  <div class="guide-card-title">Compiler vs Interpreter vs Runtime</div>
+  <p class="guide-card-desc">Understand the difference between a compiler, interpreter, and runtime, and how these determine what language an implementation is written in.</p>
+</a>
+<a href="/guides/programming-language-family-tree" class="guide-card">
+  <div class="guide-card-title">Programming Language Family Tree</div>
+  <p class="guide-card-desc">Explore the family tree of programming languages. See how Fortran, LISP, C, and Simula gave rise to modern languages through 75+ years of evolution.</p>
+</a>
+<a href="/guides/how-javascript-engines-work" class="guide-card">
+  <div class="guide-card-title">How JavaScript Engines Work</div>
+  <p class="guide-card-desc">JavaScript engines like V8, SpiderMonkey, and JavaScriptCore are written in C++. Learn how they parse, compile, and execute JavaScript code.</p>
+</a>
+<a href="/guides/how-python-is-implemented" class="guide-card">
+  <div class="guide-card-title">How Python is Implemented</div>
+  <p class="guide-card-desc">CPython is the reference Python implementation, written in C. PyPy uses RPython. Learn how Python interpreters work and what language each is written in.</p>
+</a>
+<a href="/guides/how-rust-is-bootstrapped" class="guide-card">
+  <div class="guide-card-title">How Rust is Bootstrapped</div>
+  <p class="guide-card-desc">Rust is a self-hosting language. The Rust compiler (rustc) is written in Rust itself. Learn how the Rust bootstrap process works.</p>
+</a>
+<a href="/guides/gcc-vs-llvm" class="guide-card">
+  <div class="guide-card-title">GCC vs LLVM: Compiler Infrastructure</div>
+  <p class="guide-card-desc">GCC and LLVM are the two dominant open-source compiler infrastructures. Both are written in C++. Learn how they differ and which languages use each.</p>
+</a>
+<a href="/guides/how-programming-languages-are-made" class="guide-card">
+  <div class="guide-card-title">How Are Programming Languages Made?</div>
+  <p class="guide-card-desc">Learn how programming languages are designed and implemented. Languages are built using other languages — compilers and interpreters are programs written in existing languages.</p>
+</a>
+<a href="/guides/v8-vs-spidermonkey-vs-javascriptcore" class="guide-card">
+  <div class="guide-card-title">V8 vs SpiderMonkey vs JavaScriptCore</div>
+  <p class="guide-card-desc">All three major JavaScript engines are written in C++. V8 powers Chrome and Node.js, SpiderMonkey powers Firefox, and JavaScriptCore powers Safari.</p>
+</a></div>
 </main>
 <footer class="seo-footer">
   <a href="/">Language Lineage</a>

@@ -31,28 +31,36 @@ a:hover { color: var(--accent-hover); text-decoration: underline; }
 .seo-nav {
   display: flex;
   align-items: center;
-  gap: 24px;
-  padding: 16px 40px;
+  gap: 4px;
+  padding: 0 40px;
   border-bottom: 1px solid var(--border);
   background: var(--bg-surface);
   position: sticky;
   top: 0;
   z-index: 10;
+  height: 52px;
+  overflow-x: auto;
 }
 
 .seo-nav a {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--text-secondary);
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: color 0.15s, background 0.15s;
 }
 
-.seo-nav a:first-child {
+.seo-nav a.nav-brand {
   font-weight: 700;
   color: var(--text);
-  font-size: 15px;
+  font-size: 14px;
+  margin-right: 8px;
+  padding-left: 0;
 }
 
-.seo-nav a:hover { color: var(--accent); text-decoration: none; }
+.seo-nav a:hover { color: var(--accent); text-decoration: none; background: rgba(201,168,124,0.07); }
 
 /* Main layout */
 .seo-main {
@@ -333,10 +341,182 @@ pre {
   margin-bottom: 16px;
 }
 
+/* Featured languages grid (languages index page) */
+.featured-langs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 10px;
+  margin-bottom: 40px;
+}
+
+.featured-lang-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 16px 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  text-decoration: none;
+  text-align: center;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+
+.featured-lang-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 4px 16px rgba(201, 168, 124, 0.1);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+.featured-lang-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.featured-lang-year {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Tool index cards */
+.tool-index-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.tool-index-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  text-decoration: none;
+  transition: border-color 0.15s;
+}
+
+.tool-index-card:hover {
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.tool-index-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.tool-index-note {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+/* Guide cards (guides index page) */
+.guide-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.guide-card {
+  display: block;
+  padding: 20px 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid transparent;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: border-color 0.15s, border-left-color 0.15s;
+}
+
+.guide-card:hover {
+  border-color: var(--border);
+  border-left-color: var(--accent);
+  text-decoration: none;
+}
+
+.guide-card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.guide-card-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* Relationship type cards */
+.rel-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 40px;
+}
+
+.rel-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  text-decoration: none;
+  transition: border-color 0.15s;
+}
+
+.rel-card:hover {
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.rel-card-body { flex: 1; }
+
+.rel-card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.rel-card-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.rel-card-count {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+  font-family: 'JetBrains Mono', monospace;
+  white-space: nowrap;
+}
+
 /* Responsive */
 @media (max-width: 640px) {
-  .seo-nav { padding: 14px 20px; gap: 16px; }
+  .seo-nav { padding: 0 16px; gap: 2px; }
+  .seo-nav a { font-size: 12px; padding: 5px 7px; }
+  .seo-nav a.nav-brand { margin-right: 4px; }
   .seo-main { padding: 32px 20px 60px; }
+  .featured-langs { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); }
+  .rel-card { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .tool-index-grid { grid-template-columns: 1fr; }
   h1 { font-size: 28px; }
   h2 { font-size: 18px; }
   .seo-footer { padding: 24px 20px; }

@@ -450,8 +450,11 @@ ${faqs.map(f => `<div class="faq-item">
 </head>
 <body class="seo-page">
 <nav class="seo-nav">
-  <a href="/">Language Lineage</a>
-  <a href="/explore">Graph Explorer</a>
+  <a href="/" class="nav-brand">Language Lineage</a>
+  <a href="/explore">Explore</a>
+  <a href="/languages">Languages</a>
+  <a href="/tools">Tools</a>
+  <a href="/guides">Guides</a>
   <a href="/dataset">Dataset</a>
 </nav>
 <main class="seo-main">
@@ -535,8 +538,11 @@ function buildDatasetPage(languages: Language[], rels: Relationship[]): string {
 </head>
 <body class="seo-page">
 <nav class="seo-nav">
-  <a href="/">Language Lineage</a>
-  <a href="/explore">Graph Explorer</a>
+  <a href="/" class="nav-brand">Language Lineage</a>
+  <a href="/explore">Explore</a>
+  <a href="/languages">Languages</a>
+  <a href="/tools">Tools</a>
+  <a href="/guides">Guides</a>
   <a href="/dataset">Dataset</a>
 </nav>
 <main class="seo-main">
@@ -666,8 +672,11 @@ function buildRelationshipPage(type: string, rels: Relationship[], nodeMap: Map<
 </head>
 <body class="seo-page">
 <nav class="seo-nav">
-  <a href="/">Language Lineage</a>
-  <a href="/explore">Graph Explorer</a>
+  <a href="/" class="nav-brand">Language Lineage</a>
+  <a href="/explore">Explore</a>
+  <a href="/languages">Languages</a>
+  <a href="/tools">Tools</a>
+  <a href="/guides">Guides</a>
   <a href="/dataset">Dataset</a>
 </nav>
 <main class="seo-main">
@@ -987,8 +996,11 @@ function buildGuidePage(guide: (typeof GUIDES)[0]): string {
 </head>
 <body class="seo-page">
 <nav class="seo-nav">
-  <a href="/">Language Lineage</a>
-  <a href="/explore">Graph Explorer</a>
+  <a href="/" class="nav-brand">Language Lineage</a>
+  <a href="/explore">Explore</a>
+  <a href="/languages">Languages</a>
+  <a href="/tools">Tools</a>
+  <a href="/guides">Guides</a>
   <a href="/dataset">Dataset</a>
 </nav>
 <main class="seo-main">
@@ -1013,12 +1025,26 @@ function buildGuidePage(guide: (typeof GUIDES)[0]): string {
 </html>`;
 }
 
+const FEATURED_LANG_SLUGS = ['c', 'python', 'javascript', 'typescript', 'rust', 'go', 'java', 'cxx', 'ruby', 'haskell', 'swift', 'kotlin'];
+
 function buildLanguagesIndex(langs: Language[]): string {
   const langNodes = langs.filter(l => l.id.startsWith('lang:')).sort((a, b) => a.name.localeCompare(b.name));
-  const cards = langNodes.map(l => {
+  const langBySlug = new Map(langNodes.map(l => [idToSlug(l.id), l]));
+
+  const featuredCards = FEATURED_LANG_SLUGS.map(slug => {
+    const l = langBySlug.get(slug);
+    if (!l) return '';
+    return `<a href="/languages/${slug}" class="featured-lang-card">
+  <span class="featured-lang-name">${escapeHtml(l.name)}</span>
+  ${l.first_release_year ? `<span class="featured-lang-year">${l.first_release_year}</span>` : ''}
+</a>`;
+  }).filter(Boolean).join('\n');
+
+  const allCards = langNodes.map(l => {
     const slug = idToSlug(l.id);
     return `<a href="/languages/${slug}" class="related-card">${escapeHtml(l.name)}</a>`;
   }).join('\n');
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1035,8 +1061,11 @@ function buildLanguagesIndex(langs: Language[]): string {
 </head>
 <body class="seo-page">
 <nav class="seo-nav">
-  <a href="/">Language Lineage</a>
-  <a href="/explore">Graph Explorer</a>
+  <a href="/" class="nav-brand">Language Lineage</a>
+  <a href="/explore">Explore</a>
+  <a href="/languages">Languages</a>
+  <a href="/tools">Tools</a>
+  <a href="/guides">Guides</a>
   <a href="/dataset">Dataset</a>
 </nav>
 <main class="seo-main">
@@ -1044,8 +1073,14 @@ function buildLanguagesIndex(langs: Language[]): string {
     <a href="/">Home</a> &rsaquo; Languages
   </nav>
   <h1>Programming Languages Index</h1>
-  <p>${langNodes.length} programming languages with documented implementation and influence relationships.</p>
-  <div class="related-grid">${cards}</div>
+  <p>${langNodes.length} programming languages spanning 1949 to 2023, each with documented compiler, runtime, and influence relationships.</p>
+
+  <h2>Popular Languages</h2>
+  <div class="featured-langs">${featuredCards}</div>
+
+  <h2>All Languages (A&ndash;Z)</h2>
+  <div class="related-grid">${allCards}</div>
+
   <a class="explore-btn" href="/explore">Explore All in Graph &rarr;</a>
 </main>
 <footer class="seo-footer">
@@ -1064,35 +1099,43 @@ function buildToolsIndex(langs: Language[]): string {
   const toolNodes = langs.filter(l => l.id.startsWith('tool:')).sort((a, b) => a.name.localeCompare(b.name));
   const cards = toolNodes.map(l => {
     const slug = idToSlug(l.id);
-    return `<a href="/tools/${slug}" class="related-card">${escapeHtml(l.name)}</a>`;
+    const intro = l.notes ? `<span class="tool-index-note">${escapeHtml(l.notes.split('.')[0])}.</span>` : '';
+    return `<a href="/tools/${slug}" class="tool-index-card">
+  <span class="tool-index-name">${escapeHtml(l.name)}</span>
+  ${intro}
+</a>`;
   }).join('\n');
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Compilers, Runtimes, and Tools Index | Language Lineage</title>
-  <meta name="description" content="Browse all ${toolNodes.length} compilers, runtimes, and tools in the Language Lineage dataset. Find what each tool is written in and its implementation lineage." />
+  <title>Compilers, Runtimes, and Tools | Language Lineage</title>
+  <meta name="description" content="Browse ${toolNodes.length} compilers, runtimes, and language tools: GCC, LLVM, V8, SpiderMonkey, GHC, HotSpot JVM, and more. Find what each is written in." />
   <link rel="canonical" href="${SITE}/tools" />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/seo.css" />
-  <meta property="og:title" content="Compilers, Runtimes, and Tools Index | Language Lineage" />
+  <meta property="og:title" content="Compilers, Runtimes, and Tools | Language Lineage" />
   <meta property="og:url" content="${SITE}/tools" />
   <meta property="og:image" content="${SITE}/og-image.svg" />
 </head>
 <body class="seo-page">
 <nav class="seo-nav">
-  <a href="/">Language Lineage</a>
-  <a href="/explore">Graph Explorer</a>
+  <a href="/" class="nav-brand">Language Lineage</a>
+  <a href="/explore">Explore</a>
+  <a href="/languages">Languages</a>
+  <a href="/tools">Tools</a>
+  <a href="/guides">Guides</a>
   <a href="/dataset">Dataset</a>
 </nav>
 <main class="seo-main">
   <nav class="breadcrumb" aria-label="breadcrumb">
     <a href="/">Home</a> &rsaquo; Tools
   </nav>
-  <h1>Compilers, Runtimes, and Tools Index</h1>
-  <p>${toolNodes.length} compilers, runtimes, and tools with documented implementation relationships.</p>
-  <div class="related-grid">${cards}</div>
+  <h1>Compilers, Runtimes, and Tools</h1>
+  <div class="answer-box">This section covers the ${toolNodes.length} major compiler and runtime tools in the Language Lineage dataset — including GCC, LLVM, V8, SpiderMonkey, GHC, and HotSpot JVM. Each entry documents what the tool is written in, its relationships to languages, and its implementation history.</div>
+  <div class="tool-index-grid">${cards}</div>
   <a class="explore-btn" href="/explore">Explore All in Graph &rarr;</a>
 </main>
 <footer class="seo-footer">
@@ -1108,14 +1151,18 @@ function buildToolsIndex(langs: Language[]): string {
 }
 
 function buildGuidesIndex(): string {
-  const items = GUIDES.map(g => `<li><a href="/guides/${g.slug}">${escapeHtml(g.h1)}</a> &mdash; ${escapeHtml(g.description.slice(0, 100))}...</li>`).join('\n');
+  const cards = GUIDES.map(g => `<a href="/guides/${g.slug}" class="guide-card">
+  <div class="guide-card-title">${escapeHtml(g.h1)}</div>
+  <p class="guide-card-desc">${escapeHtml(g.description)}</p>
+</a>`).join('\n');
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Programming Language Guides | Language Lineage</title>
-  <meta name="description" content="Guides on how programming languages are implemented, bootstrapped, and related. Learn about compilers, interpreters, and language lineage." />
+  <meta name="description" content="In-depth guides on compiler bootstrapping, self-hosting, JavaScript engines, Python implementation, GCC vs LLVM, and more." />
   <link rel="canonical" href="${SITE}/guides" />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/seo.css" />
@@ -1125,8 +1172,11 @@ function buildGuidesIndex(): string {
 </head>
 <body class="seo-page">
 <nav class="seo-nav">
-  <a href="/">Language Lineage</a>
-  <a href="/explore">Graph Explorer</a>
+  <a href="/" class="nav-brand">Language Lineage</a>
+  <a href="/explore">Explore</a>
+  <a href="/languages">Languages</a>
+  <a href="/tools">Tools</a>
+  <a href="/guides">Guides</a>
   <a href="/dataset">Dataset</a>
 </nav>
 <main class="seo-main">
@@ -1134,8 +1184,8 @@ function buildGuidesIndex(): string {
     <a href="/">Home</a> &rsaquo; Guides
   </nav>
   <h1>Programming Language Guides</h1>
-  <p>In-depth guides on how programming languages are made, implemented, and related to each other.</p>
-  <ul class="source-list">${items}</ul>
+  <p>In-depth guides on how programming languages are made, implemented, bootstrapped, and related to each other. ${GUIDES.length} guides covering compilers, runtimes, and language history.</p>
+  <div class="guide-cards">${cards}</div>
 </main>
 <footer class="seo-footer">
   <a href="/">Language Lineage</a>
@@ -1149,18 +1199,29 @@ function buildGuidesIndex(): string {
 </html>`;
 }
 
-function buildRelationshipsIndex(): string {
-  const items = Object.entries(RELATIONSHIP_DEFS).map(([type, def]) => {
+function buildRelationshipsIndex(rels: Relationship[]): string {
+  const counts: Record<string, number> = {};
+  rels.forEach(r => { counts[r.relationship] = (counts[r.relationship] || 0) + 1; });
+
+  const cards = Object.entries(RELATIONSHIP_DEFS).map(([type, def]) => {
     const slug = type.replace(/_/g, '-');
-    return `<li><a href="/relationships/${slug}">${escapeHtml(def.label)}</a> &mdash; ${escapeHtml(def.description.slice(0, 100))}...</li>`;
+    const count = counts[type] || 0;
+    return `<a href="/relationships/${slug}" class="rel-card">
+  <div class="rel-card-body">
+    <div class="rel-card-title">${escapeHtml(def.label)}</div>
+    <p class="rel-card-desc">${escapeHtml(def.description)}</p>
+  </div>
+  <span class="rel-card-count">${count}</span>
+</a>`;
   }).join('\n');
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Relationship Types | Language Lineage</title>
-  <meta name="description" content="Browse all relationship types in the Language Lineage dataset: compiler_written_in, runtime_written_in, bootstrap_written_in, influenced, transpiled_to, rewritten_in." />
+  <meta name="description" content="Browse all 6 relationship types in the Language Lineage dataset: compiler_written_in, runtime_written_in, bootstrap_written_in, influenced, transpiled_to, rewritten_in." />
   <link rel="canonical" href="${SITE}/relationships" />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/seo.css" />
@@ -1170,8 +1231,11 @@ function buildRelationshipsIndex(): string {
 </head>
 <body class="seo-page">
 <nav class="seo-nav">
-  <a href="/">Language Lineage</a>
-  <a href="/explore">Graph Explorer</a>
+  <a href="/" class="nav-brand">Language Lineage</a>
+  <a href="/explore">Explore</a>
+  <a href="/languages">Languages</a>
+  <a href="/tools">Tools</a>
+  <a href="/guides">Guides</a>
   <a href="/dataset">Dataset</a>
 </nav>
 <main class="seo-main">
@@ -1179,8 +1243,9 @@ function buildRelationshipsIndex(): string {
     <a href="/">Home</a> &rsaquo; Relationships
   </nav>
   <h1>Relationship Types</h1>
-  <p>The Language Lineage dataset tracks six types of relationships between programming languages and tools.</p>
-  <ul class="source-list">${items}</ul>
+  <p>The Language Lineage dataset tracks six types of relationships across ${rels.length} total edges. Each relationship type has its own evidence requirements and confidence scoring.</p>
+  <div class="rel-cards">${cards}</div>
+  <a class="explore-btn" href="/explore">Explore All Relationships in Graph &rarr;</a>
 </main>
 <footer class="seo-footer">
   <a href="/">Language Lineage</a>
@@ -1234,7 +1299,7 @@ console.log(`Generated ${GUIDES.length} guide pages`);
 writeFile(join(PUBLIC, 'languages', 'index.html'), buildLanguagesIndex(languages));
 writeFile(join(PUBLIC, 'tools', 'index.html'), buildToolsIndex(languages));
 writeFile(join(PUBLIC, 'guides', 'index.html'), buildGuidesIndex());
-writeFile(join(PUBLIC, 'relationships', 'index.html'), buildRelationshipsIndex());
+writeFile(join(PUBLIC, 'relationships', 'index.html'), buildRelationshipsIndex(rels));
 console.log('Generated 4 collection index pages');
 
 console.log('SEO page generation complete.');

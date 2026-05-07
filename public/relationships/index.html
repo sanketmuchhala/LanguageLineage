@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Relationship Types | Language Lineage</title>
-  <meta name="description" content="Browse all relationship types in the Language Lineage dataset: compiler_written_in, runtime_written_in, bootstrap_written_in, influenced, transpiled_to, rewritten_in." />
+  <meta name="description" content="Browse all 6 relationship types in the Language Lineage dataset: compiler_written_in, runtime_written_in, bootstrap_written_in, influenced, transpiled_to, rewritten_in." />
   <link rel="canonical" href="https://languagelineage.org/relationships" />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/seo.css" />
@@ -14,8 +14,11 @@
 </head>
 <body class="seo-page">
 <nav class="seo-nav">
-  <a href="/">Language Lineage</a>
-  <a href="/explore">Graph Explorer</a>
+  <a href="/" class="nav-brand">Language Lineage</a>
+  <a href="/explore">Explore</a>
+  <a href="/languages">Languages</a>
+  <a href="/tools">Tools</a>
+  <a href="/guides">Guides</a>
   <a href="/dataset">Dataset</a>
 </nav>
 <main class="seo-main">
@@ -23,13 +26,50 @@
     <a href="/">Home</a> &rsaquo; Relationships
   </nav>
   <h1>Relationship Types</h1>
-  <p>The Language Lineage dataset tracks six types of relationships between programming languages and tools.</p>
-  <ul class="source-list"><li><a href="/relationships/compiler-written-in">Compiler Written In</a> &mdash; These relationships document what programming language each compiler is written in. For example, GCC...</li>
-<li><a href="/relationships/runtime-written-in">Runtime Written In</a> &mdash; These relationships document what programming language each runtime or interpreter is written in. Fo...</li>
-<li><a href="/relationships/bootstrap-written-in">Bootstrap Chain</a> &mdash; Bootstrapping is the process of writing a compiler in the same language it compiles. These relations...</li>
-<li><a href="/relationships/influenced">Influenced</a> &mdash; Conceptual influence relationships document which design ideas, syntax features, or programming para...</li>
-<li><a href="/relationships/transpiled-to">Transpiled To</a> &mdash; Transpilation (source-to-source compilation) converts code from one high-level language to another. ...</li>
-<li><a href="/relationships/rewritten-in">Rewritten In</a> &mdash; These relationships document cases where a language runtime or compiler was substantially rewritten ...</li></ul>
+  <p>The Language Lineage dataset tracks six types of relationships across 347 total edges. Each relationship type has its own evidence requirements and confidence scoring.</p>
+  <div class="rel-cards"><a href="/relationships/compiler-written-in" class="rel-card">
+  <div class="rel-card-body">
+    <div class="rel-card-title">Compiler Written In</div>
+    <p class="rel-card-desc">These relationships document what programming language each compiler is written in. For example, GCC (the GNU Compiler Collection) is written in C.</p>
+  </div>
+  <span class="rel-card-count">78</span>
+</a>
+<a href="/relationships/runtime-written-in" class="rel-card">
+  <div class="rel-card-body">
+    <div class="rel-card-title">Runtime Written In</div>
+    <p class="rel-card-desc">These relationships document what programming language each runtime or interpreter is written in. For example, CPython (the reference Python interpreter) is written in C.</p>
+  </div>
+  <span class="rel-card-count">56</span>
+</a>
+<a href="/relationships/bootstrap-written-in" class="rel-card">
+  <div class="rel-card-body">
+    <div class="rel-card-title">Bootstrap Chain</div>
+    <p class="rel-card-desc">Bootstrapping is the process of writing a compiler in the same language it compiles. These relationships show the bootstrap chains — what language was used to write the initial compiler before self-hosting was achieved.</p>
+  </div>
+  <span class="rel-card-count">14</span>
+</a>
+<a href="/relationships/influenced" class="rel-card">
+  <div class="rel-card-body">
+    <div class="rel-card-title">Influenced</div>
+    <p class="rel-card-desc">Conceptual influence relationships document which design ideas, syntax features, or programming paradigms one language borrowed or adapted from another.</p>
+  </div>
+  <span class="rel-card-count">189</span>
+</a>
+<a href="/relationships/transpiled-to" class="rel-card">
+  <div class="rel-card-body">
+    <div class="rel-card-title">Transpiled To</div>
+    <p class="rel-card-desc">Transpilation (source-to-source compilation) converts code from one high-level language to another. For example, CoffeeScript transpiles to JavaScript.</p>
+  </div>
+  <span class="rel-card-count">8</span>
+</a>
+<a href="/relationships/rewritten-in" class="rel-card">
+  <div class="rel-card-body">
+    <div class="rel-card-title">Rewritten In</div>
+    <p class="rel-card-desc">These relationships document cases where a language runtime or compiler was substantially rewritten in a different implementation language.</p>
+  </div>
+  <span class="rel-card-count">2</span>
+</a></div>
+  <a class="explore-btn" href="/explore">Explore All Relationships in Graph &rarr;</a>
 </main>
 <footer class="seo-footer">
   <a href="/">Language Lineage</a>
