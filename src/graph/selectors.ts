@@ -13,18 +13,16 @@ export function activateFocusMode(cy: Core, nodeId: string): void {
   const neighbors = node.neighborhood('node');
   const connectedEdges = node.connectedEdges();
 
-  // Fade all elements
   cy.elements().addClass('faded');
 
-  // Highlight selected node, neighbors, and connecting edges
-  node.removeClass('faded').addClass('highlighted');
+  node.removeClass('faded').addClass('highlighted selected');
   neighbors.removeClass('faded').addClass('highlighted');
   connectedEdges.removeClass('faded').addClass('highlighted');
 }
 
 // Deactivate focus mode: Remove all highlighting and fading
 export function deactivateFocusMode(cy: Core): void {
-  cy.elements().removeClass('faded highlighted');
+  cy.elements().removeClass('faded highlighted selected');
 }
 
 // Timeline visibility: hide nodes/edges beyond the selected year
@@ -109,10 +107,10 @@ export function getDescendants(index: DatasetIndex, nodeId: string): Set<string>
 // Highlight selected node + related nodes, fade everything else
 export function activateExplorationMode(cy: Core, nodeId: string, relatedNodes: Set<string>): void {
   cy.batch(() => {
-    cy.elements().addClass('faded').removeClass('highlighted');
+    cy.elements().addClass('faded').removeClass('highlighted selected');
 
     const selectedNode = cy.getElementById(nodeId);
-    selectedNode.removeClass('faded').addClass('highlighted');
+    selectedNode.removeClass('faded').addClass('highlighted selected');
 
     relatedNodes.forEach((id) => {
       cy.getElementById(id).removeClass('faded').addClass('highlighted');
@@ -197,11 +195,9 @@ export function highlightEdge(cy: Core, edgeId: string): void {
   const sourceNode = edge.source();
   const targetNode = edge.target();
 
-  // Fade all elements
-  cy.elements().addClass('faded');
+  cy.elements().addClass('faded').removeClass('selected');
 
-  // Highlight edge and connected nodes
   edge.removeClass('faded').addClass('highlighted');
-  sourceNode.removeClass('faded').addClass('highlighted');
+  sourceNode.removeClass('faded').addClass('highlighted selected');
   targetNode.removeClass('faded').addClass('highlighted');
 }

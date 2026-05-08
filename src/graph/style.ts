@@ -180,15 +180,27 @@ export function getCytoscapeStyle(
       },
     },
 
-    // Selected/highlighted node - warm accent glow
+    // Highlighted nodes (ancestors / descendants / neighbors) — visible, no glow
     {
       selector: 'node.highlighted',
       style: {
-        'border-width': 3.5,
+        'border-width': 2.5,
         'border-color': '#c9a87c',
-        'border-opacity': 0.9,
+        'border-opacity': 0.6,
+        'z-index': 100,
+        'overlay-opacity': 0,
+      },
+    },
+
+    // The single selected/clicked node — glow treatment
+    {
+      selector: 'node.selected',
+      style: {
+        'border-width': 4,
+        'border-color': '#c9a87c',
+        'border-opacity': 1,
         'z-index': 1000,
-        'overlay-opacity': 0.1,
+        'overlay-opacity': 0.18,
         'overlay-color': '#c9a87c',
       },
     },
