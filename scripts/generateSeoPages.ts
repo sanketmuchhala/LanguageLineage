@@ -1316,59 +1316,118 @@ for (const node of languages) {
   writeFile(join(PUBLIC, prefix, slug, 'index.html'), html);
   count++;
 }
-function buildTimelinePage(languages: Language[]): string {
+function buildTimelinePage(languages: Language[], rels: Relationship[]): string {
+  const CANVAS_W = 7200, CANVAS_H = 840, YEAR_START = 1948, YEAR_END = 2026, X_L = 300, X_R = 200;
+  function yearToX(year: number): number {
+    return Math.round(X_L + (year - YEAR_START) / (YEAR_END - YEAR_START) * (CANVAS_W - X_L - X_R));
+  }
+
+  const LANE_Y: Record<string, number> = {
+    functional: 110, systems: 230, tools: 250, compilers: 240,
+    historical: 380, roots: 380, other: 380,
+    jvm: 510, clr: 510, dynamic: 630, scientific: 730,
+  };
+
+  const degree: Record<string, number> = {};
+  rels.forEach(r => {
+    degree[r.from_language] = (degree[r.from_language] ?? 0) + 1;
+    degree[r.to_language] = (degree[r.to_language] ?? 0) + 1;
+  });
+
+  const SELF_HOSTING = new Set<string>();
+  rels.forEach(r => {
+    if (r.relationship === 'bootstrap_written_in') SELF_HOSTING.add(r.to_language);
+  });
+  languages.forEach(l => { if (l.self_hosting) SELF_HOSTING.add(l.id); });
+
+  // Sort by year for jitter processing
   const sorted = languages
-    .filter(l => l.first_release_year && l.first_release_year >= 1949)
+    .filter(l => l.first_release_year && l.first_release_year >= 1948)
     .sort((a, b) => (a.first_release_year ?? 0) - (b.first_release_year ?? 0));
 
-  const decades = new Map<number, Language[]>();
-  sorted.forEach(lang => {
-    const d = Math.floor((lang.first_release_year ?? 0) / 10) * 10;
-    if (!decades.has(d)) decades.set(d, []);
-    decades.get(d)!.push(lang);
+  const nodePos: Record<string, { x: number; y: number; r: number }> = {};
+  const JITTER = [0, 55, -55, 110, -110, 165, -165];
+  const clusterOccupied: Map<string, { x: number; y: number }[]> = new Map();
+
+  for (const lang of sorted) {
+    const year = lang.first_release_year ?? 1980;
+    const cluster = lang.cluster_hint ?? 'other';
+    const baseY = LANE_Y[cluster] ?? 380;
+    const x = yearToX(year);
+    const deg = degree[lang.id] ?? 0;
+    const r = Math.min(28, Math.max(16, Math.round(12 + Math.sqrt(deg) * 2.0)));
+
+    if (!clusterOccupied.has(cluster)) clusterOccupied.set(cluster, []);
+    const occupied = clusterOccupied.get(cluster)!;
+
+    let finalY = baseY;
+    for (const jy of JITTER) {
+      const cy = baseY + jy;
+      const conflict = occupied.some(o => Math.abs(o.x - x) < 80 && Math.abs(o.y - cy) < 50);
+      if (!conflict) { finalY = cy; break; }
+    }
+    occupied.push({ x, y: finalY });
+    nodePos[lang.id] = { x, y: finalY, r };
+  }
+
+  // Build TL_DATA nodes array
+  const tlNodes = sorted.map(lang => {
+    const slug = idToSlug(lang.id);
+    const prefix = lang.id.startsWith('tool:') ? 'tools' : 'languages';
+    const pos = nodePos[lang.id] ?? { x: 300, y: 380, r: 16 };
+    const logoUrl = (LOGO_MAP as Record<string, string | null>)[lang.id] ?? null;
+    const color = (LOGO_COLORS as Record<string, string | null>)[lang.id] ?? '#c9a87c';
+    return {
+      id: lang.id,
+      name: lang.name,
+      year: lang.first_release_year ?? 1980,
+      slug,
+      prefix,
+      x: pos.x,
+      y: pos.y,
+      r: pos.r,
+      cluster: lang.cluster_hint ?? 'other',
+      logo: logoUrl,
+      color,
+      note: (lang.notes ?? '').split('.')[0].slice(0, 120) || null,
+      tags: (lang.paradigm ?? []).slice(0, 3),
+      selfHosting: SELF_HOSTING.has(lang.id),
+    };
   });
 
-  // Decade nav buttons
-  const decadeList = [...decades.keys()].sort((a, b) => a - b);
-  const decadeButtons = decadeList
-    .map(d => `<button data-decade="${d}" onclick="jumpToDecade(${d})">${d}s</button>`)
-    .join('');
+  const nodeIdSet = new Set(tlNodes.map(n => n.id));
+  const tlEdges = rels
+    .filter(r => nodeIdSet.has(r.from_language) && nodeIdSet.has(r.to_language))
+    .map(r => ({
+      from: r.from_language,
+      to: r.to_language,
+      type: r.relationship,
+      revealYear: Math.max(
+        sorted.find(l => l.id === r.from_language)?.first_release_year ?? 1980,
+        sorted.find(l => l.id === r.to_language)?.first_release_year ?? 1980,
+      ),
+    }));
 
-  let trackHtml = '';
-  let idx = 0;
+  const tlDataJson = JSON.stringify({ nodes: tlNodes, edges: tlEdges });
 
-  decades.forEach((langs, decade) => {
-    trackHtml += `<div class="tl-decade-mark" data-decade="${decade}"><div class="tl-decade-pill"><span>${decade}s</span></div></div>\n`;
+  // Decade nav
+  const decadeSet = new Set(sorted.map(l => Math.floor((l.first_release_year ?? 1980) / 10) * 10));
+  const decadeButtons = [...decadeSet].sort().map(d => `<button data-decade="${d}" onclick="jumpToDecade(${d})">${d}s</button>`).join('');
 
-    langs.forEach(lang => {
-      const side = idx % 2 === 0 ? 'tl-above' : 'tl-below';
-      const slug = idToSlug(lang.id);
-      const logoUrl = (LOGO_MAP as Record<string, string | null>)[lang.id] ?? null;
-      const logoColor = (LOGO_COLORS as Record<string, string | null>)[lang.id] ?? null;
-      const abbr = lang.name.slice(0, 2).toUpperCase();
-      const circleBg = logoColor ?? '#2a2a2e';
-      const logoInner = logoUrl
-        ? `<img src="${logoUrl}" alt="" loading="lazy" onerror="this.style.display='none';var s=this.parentNode.querySelector('.tl-abbr');if(s)s.style.display='flex'"><span class="tl-abbr" style="color:${circleBg};display:none">${abbr}</span>`
-        : `<span class="tl-abbr" style="color:${circleBg}">${abbr}</span>`;
-      const logoHtml = `<div class="tl-logo" style="background:${circleBg}20;border:2px solid ${circleBg}50">${logoInner}</div>`;
-      const tags = (lang.paradigm ?? []).slice(0, 2).map(p => `<span class="tl-tag">${escapeHtml(p)}</span>`).join('');
+  // Axis decade X positions for lane labels
+  const axisDecades = [1950,1960,1970,1980,1990,2000,2010,2020];
+  const axisTicks = axisDecades.map(yr => {
+    const x = yearToX(yr);
+    return `<line class="tl-axis-tick" x1="${x}" y1="0" x2="${x}" y2="${CANVAS_H}"/><text class="tl-axis-label" x="${x+5}" y="${CANVAS_H-12}">${yr}</text>`;
+  }).join('');
 
-      if (side === 'tl-above') {
-        trackHtml += `<div class="tl-item tl-above" data-decade="${decade}">
-  <div class="tl-card-wrap"><div class="tl-card">${logoHtml}<a class="tl-name" href="/languages/${slug}">${escapeHtml(lang.name)}</a>${tags ? `<div class="tl-paradigm">${tags}</div>` : ''}</div></div>
-  <div class="tl-dot-h"><span class="tl-dot-year">${lang.first_release_year}</span></div>
-  <div class="tl-empty"></div>
-</div>\n`;
-      } else {
-        trackHtml += `<div class="tl-item tl-below" data-decade="${decade}">
-  <div class="tl-empty"></div>
-  <div class="tl-dot-h"><span class="tl-dot-year">${lang.first_release_year}</span></div>
-  <div class="tl-card-wrap"><div class="tl-card">${logoHtml}<a class="tl-name" href="/languages/${slug}">${escapeHtml(lang.name)}</a>${tags ? `<div class="tl-paradigm">${tags}</div>` : ''}</div></div>
-</div>\n`;
-      }
-      idx++;
-    });
-  });
+  const laneLabels = Object.entries({
+    'Functional': 110, 'Systems': 230, 'JVM / CLR': 510, 'Dynamic': 630, 'Scientific': 730, 'Historical': 380,
+  }).map(([label, y]) => `<text class="tl-lane-label" x="8" y="${y - 8}">${label}</text>`).join('');
+
+  // Trunk snaking bezier
+  const t = yearToX.bind(null);
+  const trunkD = `M 60,380 C ${t(1951)},380 ${t(1954)},380 ${t(1957)},380 C ${t(1959)},380 ${t(1962)},230 ${t(1965)},230 C ${t(1968)},230 ${t(1971)},230 ${t(1972)},230 C ${t(1974)},230 ${t(1976)},380 ${t(1978)},380 C ${t(1981)},380 ${t(1984)},380 ${t(1986)},380 C ${t(1988)},380 ${t(1990)},510 ${t(1993)},510 C ${t(1995)},510 ${t(1998)},510 ${t(2000)},510 C ${t(2002)},510 ${t(2005)},380 ${t(2007)},380 C ${t(2009)},380 ${t(2011)},240 ${t(2014)},240 C ${t(2016)},240 ${t(2019)},240 ${t(2021)},240 C ${t(2022)},240 ${t(2024)},380 ${t(2026)},380`;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -1376,7 +1435,7 @@ function buildTimelinePage(languages: Language[]): string {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Programming Language Timeline | Language Lineage</title>
-  <meta name="description" content="75+ years of programming language history in one scrollable timeline. From Fortran (1957) to Rust, TypeScript, Zig, and Mojo. See how languages evolved decade by decade." />
+  <meta name="description" content="75+ years of programming language history as a cinematic atlas. Watch ${tlNodes.length} languages and tools materialize across time — from Fortran to Rust, with all implementation edges." />
   <link rel="canonical" href="${SITE}/timeline" />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/seo.css" />
@@ -1401,26 +1460,39 @@ function buildTimelinePage(languages: Language[]): string {
 <div class="tl-prog-track"><div class="tl-prog-fill" id="tlp"></div></div>
 <div class="tl-decade-nav" id="tldnav">${decadeButtons}</div>
 <div class="tl-outer" id="tl-outer">
-  <div class="tl-track" id="tl-track">
-    <div class="tl-spine-h"></div>
-    <div class="tl-intro">
-      <div class="tl-intro-inner">
-        <span class="tl-eyebrow">History</span>
-        <h1>Programming<br>Language<br>Timeline</h1>
-        <p class="tl-intro-sub">${sorted.length} languages &middot; 75+ years of innovation</p>
-        <span class="tl-hint">Scroll to explore &rarr;</span>
-      </div>
-    </div>
-${trackHtml}    <div class="tl-end">
-      <div class="tl-end-inner">
-        <p>You&rsquo;ve traced 75+ years of programming history.</p>
-        <a class="explore-btn" href="/explore">Explore in Graph &rarr;</a>
-      </div>
-    </div>
-  </div>
+  <svg id="tl-svg" viewBox="0 0 ${CANVAS_W} ${CANVAS_H}" width="${CANVAS_W}" height="${CANVAS_H}">
+    <defs>
+      <filter id="tl-glow-f" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="4" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+    <g id="tl-axis">${axisTicks}</g>
+    <g id="tl-lane-labels">${laneLabels}</g>
+    <g id="tl-trunk-g">
+      <path class="tl-trunk-bg" d="${trunkD}"/>
+      <path class="tl-trunk" id="tl-trunk-path" d="${trunkD}"/>
+      <path class="tl-trunk-pulse" id="tl-pulse-path" d="${trunkD}"/>
+    </g>
+    <g id="tl-edges-g"></g>
+    <g id="tl-nodes-g"></g>
+  </svg>
 </div>
 <div id="tl-spacer"></div>
-<footer class="seo-footer">
+<div class="tl-year-hud"><span class="tl-year-num" id="tl-year-hud">1948</span></div>
+<button class="tl-reset-btn" id="tl-reset">
+  <svg width="14" height="14" viewBox="0 0 16 16"><path d="M8 2L2 8h4v5h4V8h4L8 2z" fill="currentColor"/></svg>
+  Overview
+</button>
+<div class="tl-float-card" id="tl-card">
+  <div class="tl-fc-logo" id="tl-fc-logo"></div>
+  <div class="tl-fc-name" id="tl-fc-name"></div>
+  <div class="tl-fc-year" id="tl-fc-year"></div>
+  <div class="tl-fc-tags" id="tl-fc-tags"></div>
+  <div class="tl-fc-note" id="tl-fc-note"></div>
+  <a class="tl-fc-link" id="tl-fc-link" href="#">View details</a>
+</div>
+<footer class="seo-footer" style="position:relative;z-index:5">
   <a href="/">Language Lineage</a>
   <span>&middot;</span>
   <a href="/dataset">Dataset</a>
@@ -1428,65 +1500,225 @@ ${trackHtml}    <div class="tl-end">
   <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
   <span class="seo-footer-copy">&copy; 2026 Sanket Muchhala</span>
 </footer>
+<script>const TL_DATA=${tlDataJson};</script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
 <script>
 (function(){
-  var outer=document.getElementById('tl-outer');
-  var track=document.getElementById('tl-track');
-  var spacer=document.getElementById('tl-spacer');
-  var fill=document.getElementById('tlp');
-  var dnav=document.getElementById('tldnav');
-  var isMobile=window.innerWidth<=640;
-  var scrollDist=0;
-  var decadePositions={};
+var CANVAS_W=${CANVAS_W},CANVAS_H=${CANVAS_H},YEAR_START=${YEAR_START},YEAR_END=${YEAR_END},X_L=${X_L},X_R=${X_R};
+function yearToX(yr){return X_L+(yr-YEAR_START)/(YEAR_END-YEAR_START)*(CANVAS_W-X_L-X_R);}
 
-  function setup(){
-    if(isMobile)return;
-    scrollDist=track.scrollWidth-outer.offsetWidth;
-    if(scrollDist<1)return;
-    spacer.style.height=scrollDist+'px';
-    document.querySelectorAll('.tl-decade-mark').forEach(function(el){
-      decadePositions[el.dataset.decade]=el.offsetLeft;
-    });
-  }
+var nodeById=new Map(TL_DATA.nodes.map(function(n){return[n.id,n];}));
 
-  function onScroll(){
-    if(isMobile)return;
-    var progress=Math.max(0,Math.min(window.scrollY,scrollDist));
-    track.style.transform='translateX(-'+progress+'px)';
-    if(fill)fill.style.width=(scrollDist>0?progress/scrollDist*100:0)+'%';
-    if(dnav){
-      var active=null;
-      Object.keys(decadePositions).forEach(function(d){
-        if(progress>=decadePositions[d]-120)active=d;
-      });
-      dnav.querySelectorAll('button').forEach(function(b){
-        b.classList.toggle('active',b.dataset.decade===active);
-      });
-    }
-  }
+var svg=d3.select('#tl-svg');
+var nodesG=svg.select('#tl-nodes-g');
+var edgesG=svg.select('#tl-edges-g');
 
-  window.jumpToDecade=function(decade){
-    var pos=decadePositions[String(decade)];
-    if(pos==null)return;
-    window.scrollTo({top:Math.max(0,pos-120),behavior:'smooth'});
-  };
-
-  var obs=new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}
-    });
-  },{threshold:0.15,rootMargin:'0px 100px 0px 100px'});
-  document.querySelectorAll('.tl-item').forEach(function(el){obs.observe(el);});
-
-  window.addEventListener('load',function(){
-    setup();
-    window.addEventListener('scroll',onScroll,{passive:true});
-    window.addEventListener('resize',function(){
-      isMobile=window.innerWidth<=640;
-      setup();onScroll();
-    });
-    onScroll();
+// Edges
+var edgeLine=function(from,to){
+  var mx=(from.x+to.x)/2;
+  return 'M '+from.x+','+from.y+' C '+mx+','+from.y+' '+mx+','+to.y+' '+to.x+','+to.y;
+};
+var typeClass=function(t){return 'tl-edge tl-edge-'+t.replace(/_/g,'-');};
+edgesG.selectAll('.tl-edge')
+  .data(TL_DATA.edges.filter(function(e){return nodeById.has(e.from)&&nodeById.has(e.to);}))
+  .join('path')
+  .attr('class',function(d){return typeClass(d.type);})
+  .attr('data-from',function(d){return d.from;})
+  .attr('data-to',function(d){return d.to;})
+  .attr('data-reveal',function(d){return d.revealYear;})
+  .attr('d',function(d){return edgeLine(nodeById.get(d.from),nodeById.get(d.to));})
+  .each(function(){
+    var len=this.getTotalLength?Math.ceil(this.getTotalLength()):800;
+    d3.select(this).style('stroke-dasharray',len).style('stroke-dashoffset',len);
   });
+
+// Nodes
+var nodeEnter=nodesG.selectAll('.tl-node')
+  .data(TL_DATA.nodes)
+  .join('g')
+  .attr('class',function(d){return 'tl-node'+(d.selfHosting?' tl-sh':'');})
+  .attr('data-id',function(d){return d.id;})
+  .attr('data-year',function(d){return d.year;})
+  .attr('transform',function(d){return 'translate('+d.x+','+d.y+')';});
+
+nodeEnter.filter(function(d){return d.selfHosting;})
+  .append('circle').attr('class','tl-glow-ring').attr('r',function(d){return d.r+8;});
+
+nodeEnter.append('circle')
+  .attr('class','tl-node-circle')
+  .attr('r',function(d){return d.r;})
+  .attr('fill',function(d){return (d.color||'#2a2a2e')+'22';})
+  .attr('stroke',function(d){return d.color||'#c9a87c';})
+  .attr('stroke-width',1.5);
+
+nodeEnter.filter(function(d){return !!d.logo;})
+  .append('image')
+  .attr('class','tl-node-img')
+  .attr('href',function(d){return d.logo;})
+  .attr('x',function(d){return -d.r*0.58;}).attr('y',function(d){return -d.r*0.58;})
+  .attr('width',function(d){return d.r*1.16;}).attr('height',function(d){return d.r*1.16;});
+
+nodeEnter.filter(function(d){return !d.logo;})
+  .append('text').attr('class','tl-node-abbr')
+  .attr('y',1)
+  .attr('fill',function(d){return d.color||'#c9a87c';})
+  .text(function(d){return d.name.slice(0,2).toUpperCase();});
+
+nodeEnter.append('text').attr('class','tl-node-label')
+  .attr('y',function(d){return d.r+13;})
+  .text(function(d){return d.name;});
+
+var expandBtn=nodeEnter.append('g')
+  .attr('class','tl-expand-btn')
+  .attr('transform',function(d){return 'translate('+(d.r-2)+','+(-(d.r-2))+')';});
+expandBtn.append('circle').attr('r',9);
+expandBtn.append('text').attr('y',1).text('+');
+
+// Hover card
+var card=document.getElementById('tl-card');
+var cardVisible=false;
+var cardTimeout=null;
+function showCard(d,cx,cy){
+  document.getElementById('tl-fc-name').textContent=d.name;
+  document.getElementById('tl-fc-year').textContent=d.year;
+  var logoEl=document.getElementById('tl-fc-logo');
+  logoEl.innerHTML='';
+  if(d.logo){
+    var img=document.createElement('img');img.src=d.logo;img.style.cssText='width:60%;height:60%;object-fit:contain';
+    logoEl.style.background=(d.color||'#2a2a2e')+'22';logoEl.style.border='2px solid '+(d.color||'#c9a87c')+'50';
+    logoEl.appendChild(img);
+  } else {
+    logoEl.style.background=(d.color||'#2a2a2e')+'22';logoEl.style.border='2px solid '+(d.color||'#c9a87c')+'50';
+    logoEl.innerHTML='<span class="tl-fc-abbr" style="color:'+(d.color||'#c9a87c')+'">'+d.name.slice(0,2).toUpperCase()+'</span>';
+  }
+  var tagsEl=document.getElementById('tl-fc-tags');
+  tagsEl.innerHTML=(d.tags||[]).map(function(t){return '<span class="tl-fc-tag">'+t+'</span>';}).join('');
+  document.getElementById('tl-fc-note').textContent=d.note||'';
+  var lnk=document.getElementById('tl-fc-link');
+  lnk.href='/'+d.prefix+'/'+d.slug;lnk.textContent='View '+d.name;
+  moveCard(cx,cy);card.classList.add('show');cardVisible=true;
+}
+function moveCard(cx,cy){
+  var cw=card.offsetWidth||220,ch=card.offsetHeight||180;
+  var x=cx+16,y=cy-ch/2;
+  if(x+cw>window.innerWidth-20)x=cx-cw-16;
+  if(y<8)y=8;if(y+ch>window.innerHeight-8)y=window.innerHeight-ch-8;
+  card.style.left=x+'px';card.style.top=y+'px';
+}
+function hideCard(){if(cardTimeout)clearTimeout(cardTimeout);cardTimeout=setTimeout(function(){card.classList.remove('show');cardVisible=false;},120);}
+
+nodesG.selectAll('.tl-node')
+  .on('mouseover',function(event,d){if(!d)return;if(cardTimeout)clearTimeout(cardTimeout);showCard(d,event.clientX,event.clientY);})
+  .on('mousemove',function(event){if(cardVisible)moveCard(event.clientX,event.clientY);})
+  .on('mouseleave',function(){hideCard();})
+  .on('click',function(event,d){
+    var btn=event.target.closest('.tl-expand-btn');
+    if(!btn)return;
+    event.stopPropagation();
+    var connectedIds=new Set();
+    TL_DATA.edges.forEach(function(e){
+      if(e.from===d.id)connectedIds.add(e.to);
+      if(e.to===d.id)connectedIds.add(e.from);
+    });
+    var delay=0;
+    connectedIds.forEach(function(id){
+      var el=document.querySelector('.tl-node[data-id="'+id+'"]');
+      if(el&&!el.classList.contains('visible')){
+        setTimeout(function(){el.classList.add('visible','tl-expanded');},delay);delay+=60;
+      }
+    });
+    document.querySelectorAll('.tl-edge[data-from="'+d.id+'"],.tl-edge[data-to="'+d.id+'"]')
+      .forEach(function(e){e.classList.add('visible');});
+  });
+
+// Trunk + pulse animation
+var trunkEl=document.getElementById('tl-trunk-path');
+var pulseEl=document.getElementById('tl-pulse-path');
+var trunkLen=trunkEl.getTotalLength?Math.ceil(trunkEl.getTotalLength()):7200;
+d3.select(trunkEl).style('stroke-dasharray',trunkLen).style('stroke-dashoffset',trunkLen);
+var shortDash=90;
+pulseEl.style.strokeDasharray=shortDash+'px '+trunkLen+'px';
+pulseEl.style.strokeDashoffset='0';
+pulseEl.style.animation='tl-flow '+(trunkLen/200).toFixed(1)+'s linear infinite';
+
+// Scroll mechanic
+var outer=document.getElementById('tl-outer');
+var svgEl=document.getElementById('tl-svg');
+var spacer=document.getElementById('tl-spacer');
+var fill=document.getElementById('tlp');
+var dnav=document.getElementById('tldnav');
+var hudEl=document.getElementById('tl-year-hud');
+var isMobile=window.innerWidth<=768;
+var scrollDist=0;
+var decadeXMap={};
+
+function setup(){
+  if(isMobile)return;
+  scrollDist=CANVAS_W-outer.offsetWidth;
+  if(scrollDist<1)scrollDist=CANVAS_W;
+  spacer.style.height=scrollDist+'px';
+  [1950,1960,1970,1980,1990,2000,2010,2020].forEach(function(d){
+    decadeXMap[d]=yearToX(d);
+  });
+}
+
+function currentYearFromScroll(progress){
+  var frac=progress/scrollDist;
+  return Math.round(YEAR_START+frac*(YEAR_END-YEAR_START));
+}
+
+function onScroll(){
+  if(isMobile)return;
+  var progress=Math.max(0,Math.min(window.scrollY,scrollDist));
+  svgEl.style.transform='translateX(-'+progress+'px)';
+  if(fill)fill.style.width=(scrollDist>0?progress/scrollDist*100:0)+'%';
+  var currentYear=currentYearFromScroll(progress);
+  if(hudEl)hudEl.textContent=currentYear;
+
+  // Trunk reveal
+  var trunkProgress=Math.max(0,Math.min(1,progress/scrollDist));
+  d3.select(trunkEl).style('stroke-dashoffset',trunkLen*(1-trunkProgress));
+
+  // Decade nav active state
+  if(dnav){
+    var active=null;
+    Object.keys(decadeXMap).forEach(function(d){
+      if(progress>=decadeXMap[d]-outer.offsetWidth/2)active=d;
+    });
+    dnav.querySelectorAll('button').forEach(function(b){
+      b.classList.toggle('active',b.dataset.decade===String(active));
+    });
+  }
+
+  // Reveal nodes and edges by year
+  document.querySelectorAll('.tl-node[data-year]').forEach(function(el){
+    var yr=parseInt(el.getAttribute('data-year'),10);
+    if(yr<=currentYear)el.classList.add('visible');
+  });
+  document.querySelectorAll('.tl-edge[data-reveal]').forEach(function(el){
+    var yr=parseInt(el.getAttribute('data-reveal'),10);
+    if(yr<=currentYear)el.classList.add('visible');
+  });
+}
+
+window.jumpToDecade=function(decade){
+  var x=decadeXMap[decade];
+  if(x==null)return;
+  window.scrollTo({top:Math.max(0,x-outer.offsetWidth/3),behavior:'smooth'});
+};
+
+document.getElementById('tl-reset').addEventListener('click',function(){
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+window.addEventListener('load',function(){
+  setup();
+  window.addEventListener('scroll',onScroll,{passive:true});
+  window.addEventListener('resize',function(){
+    isMobile=window.innerWidth<=768;setup();onScroll();
+  });
+  onScroll();
+});
 })();
 </script>
 </body>
@@ -1521,7 +1753,7 @@ writeFile(join(PUBLIC, 'relationships', 'index.html'), buildRelationshipsIndex(r
 console.log('Generated 4 collection index pages');
 
 // Timeline page
-writeFile(join(PUBLIC, 'timeline', 'index.html'), buildTimelinePage(languages));
+writeFile(join(PUBLIC, 'timeline', 'index.html'), buildTimelinePage(languages, rels));
 console.log('Generated timeline page');
 
 console.log('SEO page generation complete.');
