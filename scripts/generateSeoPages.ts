@@ -459,6 +459,7 @@ ${faqs.map(f => `<div class="faq-item">
   <a href="/tools">Tools</a>
   <a href="/guides">Guides</a>
   <a href="/dataset">Dataset</a>
+  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
 </nav>
 <main class="seo-main">
   <nav class="breadcrumb" aria-label="breadcrumb">
@@ -550,6 +551,7 @@ function buildDatasetPage(languages: Language[], rels: Relationship[]): string {
   <a href="/tools">Tools</a>
   <a href="/guides">Guides</a>
   <a href="/dataset">Dataset</a>
+  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
 </nav>
 <main class="seo-main">
   <nav class="breadcrumb" aria-label="breadcrumb">
@@ -687,6 +689,7 @@ function buildRelationshipPage(type: string, rels: Relationship[], nodeMap: Map<
   <a href="/tools">Tools</a>
   <a href="/guides">Guides</a>
   <a href="/dataset">Dataset</a>
+  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
 </nav>
 <main class="seo-main">
   <nav class="breadcrumb" aria-label="breadcrumb">
@@ -1014,6 +1017,7 @@ function buildGuidePage(guide: (typeof GUIDES)[0]): string {
   <a href="/tools">Tools</a>
   <a href="/guides">Guides</a>
   <a href="/dataset">Dataset</a>
+  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
 </nav>
 <main class="seo-main">
   <nav class="breadcrumb" aria-label="breadcrumb">
@@ -1082,6 +1086,7 @@ function buildLanguagesIndex(langs: Language[]): string {
   <a href="/tools">Tools</a>
   <a href="/guides">Guides</a>
   <a href="/dataset">Dataset</a>
+  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
 </nav>
 <main class="seo-main">
   <nav class="breadcrumb" aria-label="breadcrumb">
@@ -1146,6 +1151,7 @@ function buildToolsIndex(langs: Language[]): string {
   <a href="/tools">Tools</a>
   <a href="/guides">Guides</a>
   <a href="/dataset">Dataset</a>
+  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
 </nav>
 <main class="seo-main">
   <nav class="breadcrumb" aria-label="breadcrumb">
@@ -1199,6 +1205,7 @@ function buildGuidesIndex(): string {
   <a href="/tools">Tools</a>
   <a href="/guides">Guides</a>
   <a href="/dataset">Dataset</a>
+  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
 </nav>
 <main class="seo-main">
   <nav class="breadcrumb" aria-label="breadcrumb">
@@ -1261,6 +1268,7 @@ function buildRelationshipsIndex(rels: Relationship[]): string {
   <a href="/tools">Tools</a>
   <a href="/guides">Guides</a>
   <a href="/dataset">Dataset</a>
+  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
 </nav>
 <main class="seo-main">
   <nav class="breadcrumb" aria-label="breadcrumb">
