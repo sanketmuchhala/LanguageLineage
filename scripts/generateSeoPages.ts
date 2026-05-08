@@ -458,6 +458,7 @@ ${faqs.map(f => `<div class="faq-item">
   <a href="/languages">Languages</a>
   <a href="/tools">Tools</a>
   <a href="/guides">Guides</a>
+  <a href="/timeline">Timeline</a>
   <a href="/dataset">Dataset</a>
   <a href="/explore" class="nav-enter-graph">Enter Graph</a>
 </nav>
@@ -550,6 +551,7 @@ function buildDatasetPage(languages: Language[], rels: Relationship[]): string {
   <a href="/languages">Languages</a>
   <a href="/tools">Tools</a>
   <a href="/guides">Guides</a>
+  <a href="/timeline">Timeline</a>
   <a href="/dataset">Dataset</a>
   <a href="/explore" class="nav-enter-graph">Enter Graph</a>
 </nav>
@@ -688,6 +690,7 @@ function buildRelationshipPage(type: string, rels: Relationship[], nodeMap: Map<
   <a href="/languages">Languages</a>
   <a href="/tools">Tools</a>
   <a href="/guides">Guides</a>
+  <a href="/timeline">Timeline</a>
   <a href="/dataset">Dataset</a>
   <a href="/explore" class="nav-enter-graph">Enter Graph</a>
 </nav>
@@ -1016,6 +1019,7 @@ function buildGuidePage(guide: (typeof GUIDES)[0]): string {
   <a href="/languages">Languages</a>
   <a href="/tools">Tools</a>
   <a href="/guides">Guides</a>
+  <a href="/timeline">Timeline</a>
   <a href="/dataset">Dataset</a>
   <a href="/explore" class="nav-enter-graph">Enter Graph</a>
 </nav>
@@ -1085,6 +1089,7 @@ function buildLanguagesIndex(langs: Language[]): string {
   <a href="/languages">Languages</a>
   <a href="/tools">Tools</a>
   <a href="/guides">Guides</a>
+  <a href="/timeline">Timeline</a>
   <a href="/dataset">Dataset</a>
   <a href="/explore" class="nav-enter-graph">Enter Graph</a>
 </nav>
@@ -1150,6 +1155,7 @@ function buildToolsIndex(langs: Language[]): string {
   <a href="/languages">Languages</a>
   <a href="/tools">Tools</a>
   <a href="/guides">Guides</a>
+  <a href="/timeline">Timeline</a>
   <a href="/dataset">Dataset</a>
   <a href="/explore" class="nav-enter-graph">Enter Graph</a>
 </nav>
@@ -1204,6 +1210,7 @@ function buildGuidesIndex(): string {
   <a href="/languages">Languages</a>
   <a href="/tools">Tools</a>
   <a href="/guides">Guides</a>
+  <a href="/timeline">Timeline</a>
   <a href="/dataset">Dataset</a>
   <a href="/explore" class="nav-enter-graph">Enter Graph</a>
 </nav>
@@ -1267,6 +1274,7 @@ function buildRelationshipsIndex(rels: Relationship[]): string {
   <a href="/languages">Languages</a>
   <a href="/tools">Tools</a>
   <a href="/guides">Guides</a>
+  <a href="/timeline">Timeline</a>
   <a href="/dataset">Dataset</a>
   <a href="/explore" class="nav-enter-graph">Enter Graph</a>
 </nav>
@@ -1307,6 +1315,101 @@ for (const node of languages) {
   writeFile(join(PUBLIC, prefix, slug, 'index.html'), html);
   count++;
 }
+function buildTimelinePage(languages: Language[]): string {
+  const sorted = languages
+    .filter(l => l.first_release_year && l.first_release_year >= 1949)
+    .sort((a, b) => (a.first_release_year ?? 0) - (b.first_release_year ?? 0));
+
+  const decades = new Map<number, Language[]>();
+  sorted.forEach(lang => {
+    const d = Math.floor((lang.first_release_year ?? 0) / 10) * 10;
+    if (!decades.has(d)) decades.set(d, []);
+    decades.get(d)!.push(lang);
+  });
+
+  let entriesHtml = '';
+  let idx = 0;
+
+  decades.forEach((langs, decade) => {
+    entriesHtml += `\n<div class="tl-decade"><div class="tl-decade-inner"><span class="tl-decade-label">${decade}s</span></div></div>\n`;
+    langs.forEach(lang => {
+      const side = idx % 2 === 0 ? 'tl-l' : 'tl-r';
+      const slug = idToSlug(lang.id);
+      const firstSentence = lang.notes ? lang.notes.split(/\.\s/)[0].replace(/\.$/, '') + '.' : '';
+      const tags = (lang.paradigm ?? []).slice(0, 3).map(p => `<span class="tl-tag">${escapeHtml(p)}</span>`).join('');
+      entriesHtml += `<div class="tl-item ${side} reveal">
+  <div class="tl-card">
+    <div class="tl-year">${lang.first_release_year}</div>
+    <a class="tl-name" href="/languages/${slug}">${escapeHtml(lang.name)}</a>
+    ${tags ? `<div class="tl-paradigm">${tags}</div>` : ''}
+    ${firstSentence ? `<p class="tl-note">${escapeHtml(firstSentence)}</p>` : ''}
+  </div>
+</div>\n`;
+      idx++;
+    });
+  });
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Programming Language Timeline | Language Lineage</title>
+  <meta name="description" content="75+ years of programming language history in one scrollable timeline. From Fortran (1957) to Rust, TypeScript, Zig, and Mojo. See how languages evolved decade by decade." />
+  <link rel="canonical" href="${SITE}/timeline" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/seo.css" />
+  <meta property="og:title" content="Programming Language Timeline | Language Lineage" />
+  <meta property="og:url" content="${SITE}/timeline" />
+  <meta property="og:image" content="${SITE}/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
+</head>
+<body class="seo-page">
+<nav class="seo-nav">
+  <a href="/" class="nav-brand">Language Lineage</a>
+  <a href="/relationships">Relationships</a>
+  <a href="/languages">Languages</a>
+  <a href="/tools">Tools</a>
+  <a href="/guides">Guides</a>
+  <a href="/timeline">Timeline</a>
+  <a href="/dataset">Dataset</a>
+  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
+</nav>
+<main class="seo-main tl-main">
+  <div class="tl-page-header">
+    <p class="tl-eyebrow">History</p>
+    <h1>Programming Language Timeline</h1>
+    <p class="tl-subtitle">${sorted.length} languages spanning 75+ years of innovation — from the first compilers to modern systems languages. Scroll to trace the evolution of code.</p>
+  </div>
+  <div class="tl-wrap">
+    <div class="tl-spine"></div>
+${entriesHtml}  </div>
+  <div style="text-align:center;padding:0 0 16px">
+    <a class="explore-btn" href="/explore">Explore All in Graph &rarr;</a>
+  </div>
+</main>
+<footer class="seo-footer">
+  <a href="/">Language Lineage</a>
+  <span>&middot;</span>
+  <a href="/dataset">Dataset</a>
+  <span>&middot;</span>
+  <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+  <span class="seo-footer-copy">&copy; 2026 Sanket Muchhala</span>
+</footer>
+<script>
+(function(){
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
+  document.querySelectorAll('.tl-item.reveal').forEach(function(el){ obs.observe(el); });
+})();
+</script>
+</body>
+</html>`;
+}
+
 console.log(`Generated ${count} language/tool pages`);
 
 // Dataset page
@@ -1333,5 +1436,9 @@ writeFile(join(PUBLIC, 'tools', 'index.html'), buildToolsIndex(languages));
 writeFile(join(PUBLIC, 'guides', 'index.html'), buildGuidesIndex());
 writeFile(join(PUBLIC, 'relationships', 'index.html'), buildRelationshipsIndex(rels));
 console.log('Generated 4 collection index pages');
+
+// Timeline page
+writeFile(join(PUBLIC, 'timeline', 'index.html'), buildTimelinePage(languages));
+console.log('Generated timeline page');
 
 console.log('SEO page generation complete.');

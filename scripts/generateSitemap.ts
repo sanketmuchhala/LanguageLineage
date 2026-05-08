@@ -44,6 +44,7 @@ const urls: Array<{ loc: string; changefreq: string; priority: string }> = [
   { loc: `${SITE}/tools`, changefreq: 'monthly', priority: '0.75' },
   { loc: `${SITE}/guides`, changefreq: 'monthly', priority: '0.75' },
   { loc: `${SITE}/relationships`, changefreq: 'monthly', priority: '0.75' },
+  { loc: `${SITE}/timeline`, changefreq: 'monthly', priority: '0.75' },
 ];
 
 for (const lang of languages) {
