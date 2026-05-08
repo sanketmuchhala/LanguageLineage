@@ -1396,19 +1396,39 @@ function buildTimelinePage(languages: Language[], rels: Relationship[]): string 
   });
 
   const nodeIdSet = new Set(tlNodes.map(n => n.id));
+  const yearById = new Map(sorted.map(l => [l.id, l.first_release_year ?? 1980]));
   const tlEdges = rels
     .filter(r => nodeIdSet.has(r.from_language) && nodeIdSet.has(r.to_language))
-    .map(r => ({
-      from: r.from_language,
-      to: r.to_language,
-      type: r.relationship,
-      revealYear: Math.max(
-        sorted.find(l => l.id === r.from_language)?.first_release_year ?? 1980,
-        sorted.find(l => l.id === r.to_language)?.first_release_year ?? 1980,
-      ),
-    }));
+    .map(r => ({ from: r.from_language, to: r.to_language, type: r.relationship, revealYear: Math.max(yearById.get(r.from_language) ?? 1980, yearById.get(r.to_language) ?? 1980) }));
 
-  const tlDataJson = JSON.stringify({ nodes: tlNodes, edges: tlEdges });
+  // Pre-render all SVG elements in TypeScript — eliminates D3 CDN dependency and runtime SVG creation
+  function edgePath(a: {x:number,y:number}, b: {x:number,y:number}): string {
+    const mx = (a.x + b.x) / 2;
+    return `M ${a.x},${a.y} C ${mx},${a.y} ${mx},${b.y} ${b.x},${b.y}`;
+  }
+
+  const edgesSvg = tlEdges.map(e => {
+    const from = nodePos[e.from], to = nodePos[e.to];
+    if (!from || !to) return '';
+    return `<path class="tl-edge tl-edge-${e.type.replace(/_/g, '-')}" data-from="${e.from}" data-to="${e.to}" data-reveal="${e.revealYear}" d="${edgePath(from, to)}"/>`;
+  }).join('');
+
+  const nodesSvg = tlNodes.map(d => {
+    const shCls = d.selfHosting ? ' tl-sh' : '';
+    const ring = d.selfHosting ? `<circle class="tl-glow-ring" r="${d.r + 8}"/>` : '';
+    const circ = `<circle class="tl-node-circle" r="${d.r}" fill="${d.color}22" stroke="${d.color}" stroke-width="1.5"/>`;
+    const media = d.logo
+      ? `<image class="tl-node-img" href="${d.logo}" x="${(-d.r * 0.58).toFixed(1)}" y="${(-d.r * 0.58).toFixed(1)}" width="${(d.r * 1.16).toFixed(1)}" height="${(d.r * 1.16).toFixed(1)}"/>`
+      : `<text class="tl-node-abbr" y="1" fill="${d.color}">${d.name.slice(0, 2).toUpperCase()}</text>`;
+    const label = `<text class="tl-node-label" y="${d.r + 13}">${escapeHtml(d.name)}</text>`;
+    const btn = `<g class="tl-expand-btn" transform="translate(${d.r - 2},${-(d.r - 2)})"><circle r="9"/><text y="1">+</text></g>`;
+    return `<g class="tl-node${shCls}" data-id="${d.id}" data-year="${d.year}" transform="translate(${d.x},${d.y})">${ring}${circ}${media}${label}${btn}</g>`;
+  }).join('');
+
+  // Minimal hover data for card UI (no x/y/r since those are baked into SVG)
+  type HoverEntry = {name:string,year:number,slug:string,prefix:string,logo:string|null,color:string,note:string|null,tags:string[]};
+  const hoverMap: Record<string, HoverEntry> = {};
+  tlNodes.forEach(n => { hoverMap[n.id] = { name: n.name, year: n.year, slug: n.slug, prefix: n.prefix, logo: n.logo, color: n.color, note: n.note, tags: n.tags }; });
 
   // Decade nav
   const decadeSet = new Set(sorted.map(l => Math.floor((l.first_release_year ?? 1980) / 10) * 10));
@@ -1474,8 +1494,8 @@ function buildTimelinePage(languages: Language[], rels: Relationship[]): string 
       <path class="tl-trunk" id="tl-trunk-path" d="${trunkD}"/>
       <path class="tl-trunk-pulse" id="tl-pulse-path" d="${trunkD}"/>
     </g>
-    <g id="tl-edges-g"></g>
-    <g id="tl-nodes-g"></g>
+    <g id="tl-edges-g">${edgesSvg}</g>
+    <g id="tl-nodes-g">${nodesSvg}</g>
   </svg>
 </div>
 <div id="tl-spacer"></div>
@@ -1500,226 +1520,169 @@ function buildTimelinePage(languages: Language[], rels: Relationship[]): string 
   <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
   <span class="seo-footer-copy">&copy; 2026 Sanket Muchhala</span>
 </footer>
-<script>const TL_DATA=${tlDataJson};</script>
-<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
 <script>
-(function(){
-var CANVAS_W=${CANVAS_W},CANVAS_H=${CANVAS_H},YEAR_START=${YEAR_START},YEAR_END=${YEAR_END},X_L=${X_L},X_R=${X_R};
+var TL_HOVER=${JSON.stringify(hoverMap)};
+var YEAR_START=${YEAR_START},YEAR_END=${YEAR_END},CANVAS_W=${CANVAS_W},X_L=${X_L},X_R=${X_R},TRUNK_LEN=7800;
 function yearToX(yr){return X_L+(yr-YEAR_START)/(YEAR_END-YEAR_START)*(CANVAS_W-X_L-X_R);}
 
-var nodeById=new Map(TL_DATA.nodes.map(function(n){return[n.id,n];}));
-
-var svg=d3.select('#tl-svg');
-var nodesG=svg.select('#tl-nodes-g');
-var edgesG=svg.select('#tl-edges-g');
-
-// Edges
-var edgeLine=function(from,to){
-  var mx=(from.x+to.x)/2;
-  return 'M '+from.x+','+from.y+' C '+mx+','+from.y+' '+mx+','+to.y+' '+to.x+','+to.y;
-};
-var typeClass=function(t){return 'tl-edge tl-edge-'+t.replace(/_/g,'-');};
-edgesG.selectAll('.tl-edge')
-  .data(TL_DATA.edges.filter(function(e){return nodeById.has(e.from)&&nodeById.has(e.to);}))
-  .join('path')
-  .attr('class',function(d){return typeClass(d.type);})
-  .attr('data-from',function(d){return d.from;})
-  .attr('data-to',function(d){return d.to;})
-  .attr('data-reveal',function(d){return d.revealYear;})
-  .attr('d',function(d){return edgeLine(nodeById.get(d.from),nodeById.get(d.to));})
-  .each(function(){
-    var len=this.getTotalLength?Math.ceil(this.getTotalLength()):800;
-    d3.select(this).style('stroke-dasharray',len).style('stroke-dashoffset',len);
-  });
-
-// Nodes
-var nodeEnter=nodesG.selectAll('.tl-node')
-  .data(TL_DATA.nodes)
-  .join('g')
-  .attr('class',function(d){return 'tl-node'+(d.selfHosting?' tl-sh':'');})
-  .attr('data-id',function(d){return d.id;})
-  .attr('data-year',function(d){return d.year;})
-  .attr('transform',function(d){return 'translate('+d.x+','+d.y+')';});
-
-nodeEnter.filter(function(d){return d.selfHosting;})
-  .append('circle').attr('class','tl-glow-ring').attr('r',function(d){return d.r+8;});
-
-nodeEnter.append('circle')
-  .attr('class','tl-node-circle')
-  .attr('r',function(d){return d.r;})
-  .attr('fill',function(d){return (d.color||'#2a2a2e')+'22';})
-  .attr('stroke',function(d){return d.color||'#c9a87c';})
-  .attr('stroke-width',1.5);
-
-nodeEnter.filter(function(d){return !!d.logo;})
-  .append('image')
-  .attr('class','tl-node-img')
-  .attr('href',function(d){return d.logo;})
-  .attr('x',function(d){return -d.r*0.58;}).attr('y',function(d){return -d.r*0.58;})
-  .attr('width',function(d){return d.r*1.16;}).attr('height',function(d){return d.r*1.16;});
-
-nodeEnter.filter(function(d){return !d.logo;})
-  .append('text').attr('class','tl-node-abbr')
-  .attr('y',1)
-  .attr('fill',function(d){return d.color||'#c9a87c';})
-  .text(function(d){return d.name.slice(0,2).toUpperCase();});
-
-nodeEnter.append('text').attr('class','tl-node-label')
-  .attr('y',function(d){return d.r+13;})
-  .text(function(d){return d.name;});
-
-var expandBtn=nodeEnter.append('g')
-  .attr('class','tl-expand-btn')
-  .attr('transform',function(d){return 'translate('+(d.r-2)+','+(-(d.r-2))+')';});
-expandBtn.append('circle').attr('r',9);
-expandBtn.append('text').attr('y',1).text('+');
-
-// Hover card
-var card=document.getElementById('tl-card');
-var cardVisible=false;
-var cardTimeout=null;
-function showCard(d,cx,cy){
-  document.getElementById('tl-fc-name').textContent=d.name;
-  document.getElementById('tl-fc-year').textContent=d.year;
-  var logoEl=document.getElementById('tl-fc-logo');
-  logoEl.innerHTML='';
-  if(d.logo){
-    var img=document.createElement('img');img.src=d.logo;img.style.cssText='width:60%;height:60%;object-fit:contain';
-    logoEl.style.background=(d.color||'#2a2a2e')+'22';logoEl.style.border='2px solid '+(d.color||'#c9a87c')+'50';
-    logoEl.appendChild(img);
-  } else {
-    logoEl.style.background=(d.color||'#2a2a2e')+'22';logoEl.style.border='2px solid '+(d.color||'#c9a87c')+'50';
-    logoEl.innerHTML='<span class="tl-fc-abbr" style="color:'+(d.color||'#c9a87c')+'">'+d.name.slice(0,2).toUpperCase()+'</span>';
-  }
-  var tagsEl=document.getElementById('tl-fc-tags');
-  tagsEl.innerHTML=(d.tags||[]).map(function(t){return '<span class="tl-fc-tag">'+t+'</span>';}).join('');
-  document.getElementById('tl-fc-note').textContent=d.note||'';
-  var lnk=document.getElementById('tl-fc-link');
-  lnk.href='/'+d.prefix+'/'+d.slug;lnk.textContent='View '+d.name;
-  moveCard(cx,cy);card.classList.add('show');cardVisible=true;
-}
-function moveCard(cx,cy){
-  var cw=card.offsetWidth||220,ch=card.offsetHeight||180;
-  var x=cx+16,y=cy-ch/2;
-  if(x+cw>window.innerWidth-20)x=cx-cw-16;
-  if(y<8)y=8;if(y+ch>window.innerHeight-8)y=window.innerHeight-ch-8;
-  card.style.left=x+'px';card.style.top=y+'px';
-}
-function hideCard(){if(cardTimeout)clearTimeout(cardTimeout);cardTimeout=setTimeout(function(){card.classList.remove('show');cardVisible=false;},120);}
-
-nodesG.selectAll('.tl-node')
-  .on('mouseover',function(event,d){if(!d)return;if(cardTimeout)clearTimeout(cardTimeout);showCard(d,event.clientX,event.clientY);})
-  .on('mousemove',function(event){if(cardVisible)moveCard(event.clientX,event.clientY);})
-  .on('mouseleave',function(){hideCard();})
-  .on('click',function(event,d){
-    var btn=event.target.closest('.tl-expand-btn');
-    if(!btn)return;
-    event.stopPropagation();
-    var connectedIds=new Set();
-    TL_DATA.edges.forEach(function(e){
-      if(e.from===d.id)connectedIds.add(e.to);
-      if(e.to===d.id)connectedIds.add(e.from);
-    });
-    var delay=0;
-    connectedIds.forEach(function(id){
-      var el=document.querySelector('.tl-node[data-id="'+id+'"]');
-      if(el&&!el.classList.contains('visible')){
-        setTimeout(function(){el.classList.add('visible','tl-expanded');},delay);delay+=60;
-      }
-    });
-    document.querySelectorAll('.tl-edge[data-from="'+d.id+'"],.tl-edge[data-to="'+d.id+'"]')
-      .forEach(function(e){e.classList.add('visible');});
-  });
-
-// Trunk + pulse animation
-var trunkEl=document.getElementById('tl-trunk-path');
-var pulseEl=document.getElementById('tl-pulse-path');
-var trunkLen=trunkEl.getTotalLength?Math.ceil(trunkEl.getTotalLength()):7200;
-d3.select(trunkEl).style('stroke-dasharray',trunkLen).style('stroke-dashoffset',trunkLen);
-var shortDash=90;
-pulseEl.style.strokeDasharray=shortDash+'px '+trunkLen+'px';
-pulseEl.style.strokeDashoffset='0';
-pulseEl.style.animation='tl-flow '+(trunkLen/200).toFixed(1)+'s linear infinite';
-
-// Scroll mechanic
-var outer=document.getElementById('tl-outer');
 var svgEl=document.getElementById('tl-svg');
+var outer=document.getElementById('tl-outer');
 var spacer=document.getElementById('tl-spacer');
 var fill=document.getElementById('tlp');
 var dnav=document.getElementById('tldnav');
 var hudEl=document.getElementById('tl-year-hud');
+var trunkEl=document.getElementById('tl-trunk-path');
+var pulseEl=document.getElementById('tl-pulse-path');
+var card=document.getElementById('tl-card');
+
+// Pre-cache sorted element arrays — querySelectorAll runs ONCE at init, never on scroll
+var nodeEls=Array.from(document.querySelectorAll('#tl-nodes-g .tl-node'))
+  .map(function(el){return{el:el,yr:+el.getAttribute('data-year')};})
+  .sort(function(a,b){return a.yr-b.yr;});
+var edgeEls=Array.from(document.querySelectorAll('#tl-edges-g .tl-edge'))
+  .map(function(el){return{el:el,yr:+el.getAttribute('data-reveal')};})
+  .sort(function(a,b){return a.yr-b.yr;});
+
+// O(1) node lookup by id
+var nodeElById={};
+nodeEls.forEach(function(n){nodeElById[n.el.getAttribute('data-id')]=n.el;});
+
+// Build edge adjacency from DOM data attributes
+var edgeAdj={};
+document.querySelectorAll('.tl-edge[data-from]').forEach(function(el){
+  var f=el.getAttribute('data-from'),t=el.getAttribute('data-to');
+  if(!edgeAdj[f])edgeAdj[f]=[];
+  if(!edgeAdj[t])edgeAdj[t]=[];
+  edgeAdj[f].push(t);edgeAdj[t].push(f);
+});
+
+// Forward-advancing reveal pointers — O(newly revealed per frame), not O(total)
+var nodePtr=0,edgePtr=0;
 var isMobile=window.innerWidth<=768;
 var scrollDist=0;
-var decadeXMap={};
+var curProgress=0;
+var rafId=null;
+
+var decadeXs={1950:yearToX(1950),1960:yearToX(1960),1970:yearToX(1970),1980:yearToX(1980),1990:yearToX(1990),2000:yearToX(2000),2010:yearToX(2010),2020:yearToX(2020)};
+var decadeKeys=['1950','1960','1970','1980','1990','2000','2010','2020'];
+var decadeBtns=dnav?Array.from(dnav.querySelectorAll('button')):[];
+
+// Trunk animation setup
+trunkEl.style.strokeDasharray=TRUNK_LEN;
+trunkEl.style.strokeDashoffset=TRUNK_LEN;
+pulseEl.style.strokeDasharray='90px '+TRUNK_LEN+'px';
+pulseEl.style.animation='tl-flow '+(TRUNK_LEN/180).toFixed(1)+'s linear infinite';
 
 function setup(){
   if(isMobile)return;
-  scrollDist=CANVAS_W-outer.offsetWidth;
-  if(scrollDist<1)scrollDist=CANVAS_W;
+  scrollDist=Math.max(CANVAS_W-outer.offsetWidth,1);
   spacer.style.height=scrollDist+'px';
-  [1950,1960,1970,1980,1990,2000,2010,2020].forEach(function(d){
-    decadeXMap[d]=yearToX(d);
-  });
 }
 
-function currentYearFromScroll(progress){
-  var frac=progress/scrollDist;
-  return Math.round(YEAR_START+frac*(YEAR_END-YEAR_START));
-}
-
-function onScroll(){
+// Scroll handler: ONLY saves progress + schedules RAF — zero DOM work here
+window.addEventListener('scroll',function(){
   if(isMobile)return;
-  var progress=Math.max(0,Math.min(window.scrollY,scrollDist));
-  svgEl.style.transform='translateX(-'+progress+'px)';
-  if(fill)fill.style.width=(scrollDist>0?progress/scrollDist*100:0)+'%';
-  var currentYear=currentYearFromScroll(progress);
-  if(hudEl)hudEl.textContent=currentYear;
+  var s=window.scrollY;
+  curProgress=s>scrollDist?scrollDist:s<0?0:s;
+  if(!rafId)rafId=requestAnimationFrame(doFrame);
+},{passive:true});
 
-  // Trunk reveal
-  var trunkProgress=Math.max(0,Math.min(1,progress/scrollDist));
-  d3.select(trunkEl).style('stroke-dashoffset',trunkLen*(1-trunkProgress));
+function doFrame(){
+  rafId=null;
+  var p=curProgress,frac=p/scrollDist;
+  var yr=Math.round(YEAR_START+frac*(YEAR_END-YEAR_START));
 
-  // Decade nav active state
-  if(dnav){
-    var active=null;
-    Object.keys(decadeXMap).forEach(function(d){
-      if(progress>=decadeXMap[d]-outer.offsetWidth/2)active=d;
-    });
-    dnav.querySelectorAll('button').forEach(function(b){
-      b.classList.toggle('active',b.dataset.decade===String(active));
-    });
+  // GPU-composited horizontal pan (translate3d triggers compositor layer)
+  svgEl.style.transform='translate3d(-'+p+'px,0,0)';
+
+  // Progress bar + year HUD
+  if(fill)fill.style.width=(frac*100).toFixed(1)+'%';
+  if(hudEl)hudEl.textContent=yr;
+
+  // Trunk reveal (one element update per frame — cheap)
+  trunkEl.style.strokeDashoffset=((1-frac)*TRUNK_LEN).toFixed(0);
+
+  // Advance reveal pointers forward only — never revisit revealed elements
+  while(nodePtr<nodeEls.length&&nodeEls[nodePtr].yr<=yr){
+    nodeEls[nodePtr].el.classList.add('visible');nodePtr++;
+  }
+  while(edgePtr<edgeEls.length&&edgeEls[edgePtr].yr<=yr){
+    edgeEls[edgePtr].el.classList.add('visible');edgePtr++;
   }
 
-  // Reveal nodes and edges by year
-  document.querySelectorAll('.tl-node[data-year]').forEach(function(el){
-    var yr=parseInt(el.getAttribute('data-year'),10);
-    if(yr<=currentYear)el.classList.add('visible');
-  });
-  document.querySelectorAll('.tl-edge[data-reveal]').forEach(function(el){
-    var yr=parseInt(el.getAttribute('data-reveal'),10);
-    if(yr<=currentYear)el.classList.add('visible');
-  });
+  // Decade nav highlight
+  var activeD=null;
+  for(var i=0;i<decadeKeys.length;i++){
+    if(p>=decadeXs[decadeKeys[i]]-outer.offsetWidth*0.4)activeD=decadeKeys[i];
+  }
+  for(var j=0;j<decadeBtns.length;j++){
+    decadeBtns[j].classList.toggle('active',decadeBtns[j].getAttribute('data-decade')===activeD);
+  }
 }
 
-window.jumpToDecade=function(decade){
-  var x=decadeXMap[decade];
-  if(x==null)return;
-  window.scrollTo({top:Math.max(0,x-outer.offsetWidth/3),behavior:'smooth'});
+window.jumpToDecade=function(d){
+  var x=decadeXs[d];if(x==null)return;
+  window.scrollTo({top:Math.max(0,x-outer.offsetWidth*0.3),behavior:'smooth'});
 };
 
 document.getElementById('tl-reset').addEventListener('click',function(){
+  nodePtr=0;edgePtr=0;
+  for(var i=0;i<nodeEls.length;i++)nodeEls[i].el.classList.remove('visible','tl-expanded');
+  for(var i=0;i<edgeEls.length;i++)edgeEls[i].el.classList.remove('visible');
   window.scrollTo({top:0,behavior:'smooth'});
 });
 
-window.addEventListener('load',function(){
-  setup();
-  window.addEventListener('scroll',onScroll,{passive:true});
-  window.addEventListener('resize',function(){
-    isMobile=window.innerWidth<=768;setup();onScroll();
-  });
-  onScroll();
+// Hover card — single delegated listener on group container
+var cardTimer=null;
+document.getElementById('tl-nodes-g').addEventListener('mouseover',function(ev){
+  var g=ev.target.closest('.tl-node');if(!g)return;
+  clearTimeout(cardTimer);
+  var d=TL_HOVER[g.getAttribute('data-id')];if(!d)return;
+  var col=d.color||'#c9a87c';
+  document.getElementById('tl-fc-name').textContent=d.name;
+  document.getElementById('tl-fc-year').textContent=d.year;
+  var logoEl=document.getElementById('tl-fc-logo');
+  logoEl.style.background=col+'22';logoEl.style.border='2px solid '+col+'50';
+  logoEl.innerHTML=d.logo?'<img src="'+d.logo+'" style="width:60%;height:60%;object-fit:contain">':'<span class="tl-fc-abbr" style="color:'+col+'">'+d.name.slice(0,2).toUpperCase()+'</span>';
+  document.getElementById('tl-fc-tags').innerHTML=(d.tags||[]).map(function(t){return'<span class="tl-fc-tag">'+t+'</span>';}).join('');
+  document.getElementById('tl-fc-note').textContent=d.note||'';
+  var lnk=document.getElementById('tl-fc-link');lnk.href='/'+d.prefix+'/'+d.slug;lnk.textContent='View '+d.name;
+  moveCard(ev.clientX,ev.clientY);card.classList.add('show');
 });
-})();
+document.getElementById('tl-nodes-g').addEventListener('mousemove',function(ev){
+  if(card.classList.contains('show'))moveCard(ev.clientX,ev.clientY);
+});
+document.getElementById('tl-nodes-g').addEventListener('mouseleave',function(){
+  cardTimer=setTimeout(function(){card.classList.remove('show');},100);
+});
+function moveCard(cx,cy){
+  var x=cx+16,y=cy-90;
+  if(x+230>window.innerWidth-8)x=cx-240;
+  if(y<4)y=4;if(y+200>window.innerHeight-4)y=window.innerHeight-204;
+  card.style.left=x+'px';card.style.top=y+'px';
+}
+
+// Expand button — single delegated listener
+document.getElementById('tl-nodes-g').addEventListener('click',function(ev){
+  var btn=ev.target.closest('.tl-expand-btn');if(!btn)return;
+  var g=btn.closest('.tl-node');if(!g)return;
+  ev.stopPropagation();
+  var id=g.getAttribute('data-id');
+  var conns=edgeAdj[id]||[];
+  var delay=0;
+  conns.forEach(function(cid){
+    var el=nodeElById[cid];
+    if(el&&!el.classList.contains('visible')){
+      setTimeout(function(){el.classList.add('visible','tl-expanded');},delay);delay+=50;
+    }
+  });
+  document.querySelectorAll('.tl-edge[data-from="'+id+'"],.tl-edge[data-to="'+id+'"]')
+    .forEach(function(e){e.classList.add('visible');});
+});
+
+setup();
+window.addEventListener('resize',function(){isMobile=window.innerWidth<=768;setup();},{passive:true});
+curProgress=0;doFrame();
 </script>
 </body>
 </html>`;
