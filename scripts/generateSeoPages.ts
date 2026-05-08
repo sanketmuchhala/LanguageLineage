@@ -1,6 +1,7 @@
 import { readFileSync, mkdirSync, writeFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { LOGO_MAP, LOGO_COLORS } from '../src/data/logoMap.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -1327,24 +1328,44 @@ function buildTimelinePage(languages: Language[]): string {
     decades.get(d)!.push(lang);
   });
 
-  let entriesHtml = '';
+  // Decade nav buttons
+  const decadeList = [...decades.keys()].sort((a, b) => a - b);
+  const decadeButtons = decadeList
+    .map(d => `<button data-decade="${d}" onclick="jumpToDecade(${d})">${d}s</button>`)
+    .join('');
+
+  let trackHtml = '';
   let idx = 0;
 
   decades.forEach((langs, decade) => {
-    entriesHtml += `\n<div class="tl-decade"><div class="tl-decade-inner"><span class="tl-decade-label">${decade}s</span></div></div>\n`;
+    trackHtml += `<div class="tl-decade-mark" data-decade="${decade}"><div class="tl-decade-pill"><span>${decade}s</span></div></div>\n`;
+
     langs.forEach(lang => {
-      const side = idx % 2 === 0 ? 'tl-l' : 'tl-r';
+      const side = idx % 2 === 0 ? 'tl-above' : 'tl-below';
       const slug = idToSlug(lang.id);
-      const firstSentence = lang.notes ? lang.notes.split(/\.\s/)[0].replace(/\.$/, '') + '.' : '';
-      const tags = (lang.paradigm ?? []).slice(0, 3).map(p => `<span class="tl-tag">${escapeHtml(p)}</span>`).join('');
-      entriesHtml += `<div class="tl-item ${side} reveal">
-  <div class="tl-card">
-    <div class="tl-year">${lang.first_release_year}</div>
-    <a class="tl-name" href="/languages/${slug}">${escapeHtml(lang.name)}</a>
-    ${tags ? `<div class="tl-paradigm">${tags}</div>` : ''}
-    ${firstSentence ? `<p class="tl-note">${escapeHtml(firstSentence)}</p>` : ''}
-  </div>
+      const logoUrl = (LOGO_MAP as Record<string, string | null>)[lang.id] ?? null;
+      const logoColor = (LOGO_COLORS as Record<string, string | null>)[lang.id] ?? null;
+      const abbr = lang.name.slice(0, 2).toUpperCase();
+      const circleBg = logoColor ?? '#2a2a2e';
+      const logoInner = logoUrl
+        ? `<img src="${logoUrl}" alt="" loading="lazy" onerror="this.style.display='none';var s=this.parentNode.querySelector('.tl-abbr');if(s)s.style.display='flex'"><span class="tl-abbr" style="color:${circleBg};display:none">${abbr}</span>`
+        : `<span class="tl-abbr" style="color:${circleBg}">${abbr}</span>`;
+      const logoHtml = `<div class="tl-logo" style="background:${circleBg}20;border:2px solid ${circleBg}50">${logoInner}</div>`;
+      const tags = (lang.paradigm ?? []).slice(0, 2).map(p => `<span class="tl-tag">${escapeHtml(p)}</span>`).join('');
+
+      if (side === 'tl-above') {
+        trackHtml += `<div class="tl-item tl-above" data-decade="${decade}">
+  <div class="tl-card-wrap"><div class="tl-card">${logoHtml}<a class="tl-name" href="/languages/${slug}">${escapeHtml(lang.name)}</a>${tags ? `<div class="tl-paradigm">${tags}</div>` : ''}</div></div>
+  <div class="tl-dot-h"><span class="tl-dot-year">${lang.first_release_year}</span></div>
+  <div class="tl-empty"></div>
 </div>\n`;
+      } else {
+        trackHtml += `<div class="tl-item tl-below" data-decade="${decade}">
+  <div class="tl-empty"></div>
+  <div class="tl-dot-h"><span class="tl-dot-year">${lang.first_release_year}</span></div>
+  <div class="tl-card-wrap"><div class="tl-card">${logoHtml}<a class="tl-name" href="/languages/${slug}">${escapeHtml(lang.name)}</a>${tags ? `<div class="tl-paradigm">${tags}</div>` : ''}</div></div>
+</div>\n`;
+      }
       idx++;
     });
   });
@@ -1366,7 +1387,7 @@ function buildTimelinePage(languages: Language[]): string {
   <meta property="og:image:height" content="630" />
   <meta property="og:image:type" content="image/png" />
 </head>
-<body class="seo-page">
+<body class="seo-page" style="overflow-x:hidden">
 <nav class="seo-nav">
   <a href="/" class="nav-brand">Language Lineage</a>
   <a href="/relationships">Relationships</a>
@@ -1377,19 +1398,28 @@ function buildTimelinePage(languages: Language[]): string {
   <a href="/dataset">Dataset</a>
   <a href="/explore" class="nav-enter-graph">Enter Graph</a>
 </nav>
-<main class="seo-main tl-main">
-  <div class="tl-page-header">
-    <p class="tl-eyebrow">History</p>
-    <h1>Programming Language Timeline</h1>
-    <p class="tl-subtitle">${sorted.length} languages spanning 75+ years of innovation — from the first compilers to modern systems languages. Scroll to trace the evolution of code.</p>
+<div class="tl-prog-track"><div class="tl-prog-fill" id="tlp"></div></div>
+<div class="tl-decade-nav" id="tldnav">${decadeButtons}</div>
+<div class="tl-outer" id="tl-outer">
+  <div class="tl-track" id="tl-track">
+    <div class="tl-spine-h"></div>
+    <div class="tl-intro">
+      <div class="tl-intro-inner">
+        <span class="tl-eyebrow">History</span>
+        <h1>Programming<br>Language<br>Timeline</h1>
+        <p class="tl-intro-sub">${sorted.length} languages &middot; 75+ years of innovation</p>
+        <span class="tl-hint">Scroll to explore &rarr;</span>
+      </div>
+    </div>
+${trackHtml}    <div class="tl-end">
+      <div class="tl-end-inner">
+        <p>You&rsquo;ve traced 75+ years of programming history.</p>
+        <a class="explore-btn" href="/explore">Explore in Graph &rarr;</a>
+      </div>
+    </div>
   </div>
-  <div class="tl-wrap">
-    <div class="tl-spine"></div>
-${entriesHtml}  </div>
-  <div style="text-align:center;padding:0 0 16px">
-    <a class="explore-btn" href="/explore">Explore All in Graph &rarr;</a>
-  </div>
-</main>
+</div>
+<div id="tl-spacer"></div>
 <footer class="seo-footer">
   <a href="/">Language Lineage</a>
   <span>&middot;</span>
@@ -1400,10 +1430,63 @@ ${entriesHtml}  </div>
 </footer>
 <script>
 (function(){
-  var obs = new IntersectionObserver(function(entries){
-    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); } });
-  }, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
-  document.querySelectorAll('.tl-item.reveal').forEach(function(el){ obs.observe(el); });
+  var outer=document.getElementById('tl-outer');
+  var track=document.getElementById('tl-track');
+  var spacer=document.getElementById('tl-spacer');
+  var fill=document.getElementById('tlp');
+  var dnav=document.getElementById('tldnav');
+  var isMobile=window.innerWidth<=640;
+  var scrollDist=0;
+  var decadePositions={};
+
+  function setup(){
+    if(isMobile)return;
+    scrollDist=track.scrollWidth-outer.offsetWidth;
+    if(scrollDist<1)return;
+    spacer.style.height=scrollDist+'px';
+    document.querySelectorAll('.tl-decade-mark').forEach(function(el){
+      decadePositions[el.dataset.decade]=el.offsetLeft;
+    });
+  }
+
+  function onScroll(){
+    if(isMobile)return;
+    var progress=Math.max(0,Math.min(window.scrollY,scrollDist));
+    track.style.transform='translateX(-'+progress+'px)';
+    if(fill)fill.style.width=(scrollDist>0?progress/scrollDist*100:0)+'%';
+    if(dnav){
+      var active=null;
+      Object.keys(decadePositions).forEach(function(d){
+        if(progress>=decadePositions[d]-120)active=d;
+      });
+      dnav.querySelectorAll('button').forEach(function(b){
+        b.classList.toggle('active',b.dataset.decade===active);
+      });
+    }
+  }
+
+  window.jumpToDecade=function(decade){
+    var pos=decadePositions[String(decade)];
+    if(pos==null)return;
+    window.scrollTo({top:Math.max(0,pos-120),behavior:'smooth'});
+  };
+
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}
+    });
+  },{threshold:0.15,rootMargin:'0px 100px 0px 100px'});
+  document.querySelectorAll('.tl-item').forEach(function(el){obs.observe(el);});
+
+  window.addEventListener('load',function(){
+    setup();
+    window.addEventListener('scroll',onScroll,{passive:true});
+    window.addEventListener('resize',function(){
+      isMobile=window.innerWidth<=640;
+      setup();onScroll();
+    });
+    onScroll();
+  });
 })();
 </script>
 </body>
