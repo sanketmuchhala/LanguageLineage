@@ -1168,16 +1168,15 @@
   }
 
   .nav-links a {
-    font-size: 12px;
-    padding: 5px 7px;
+    display: none;
   }
 
   .nav-cta {
-    padding: 7px 14px;
-    font-size: 12px;
-    min-height: 34px;
+    padding: 8px 18px;
+    font-size: 13px;
+    min-height: 36px;
     flex-shrink: 0;
-    margin-left: 4px;
+    margin-left: auto;
   }
 
   /* Hero */

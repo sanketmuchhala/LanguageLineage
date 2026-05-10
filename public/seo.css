@@ -556,17 +556,17 @@ pre {
   }
   .seo-page { padding-top: 55px; }
 
-  .seo-nav a {
-    font-size: 12px;
-    padding: 5px 8px;
-    min-height: 40px;
-    display: flex;
-    align-items: center;
+  .seo-nav a:not(.nav-brand):not(.nav-enter-graph) {
+    display: none;
   }
 
   .seo-nav a.nav-brand {
-    margin-right: 4px;
     font-size: 13px;
+    flex-grow: 1;
+  }
+
+  .nav-enter-graph {
+    margin-left: 0 !important;
   }
 
   /* Main content */
