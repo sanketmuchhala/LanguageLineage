@@ -1762,43 +1762,40 @@ window.addEventListener('load',function(){
     doScroll();
   },1400);
 
-  // Mobile: vertical S-curve bezier timeline
+  // Mobile: vertical sine-wave bezier timeline with scroll-driven reveal
   if(window.innerWidth<=768){
     var MW=outer.clientWidth||window.innerWidth;
-    var CARD_W=Math.min(128,Math.floor(MW*0.40));
-    var HALF=Math.floor(CARD_W/2);
-    var MARGIN=16;
-    var LX=HALF+MARGIN;
-    var RX=MW-HALF-MARGIN;
+    var CARD_W=Math.min(140,Math.floor(MW*0.44));
     var CX=Math.floor(MW/2);
-    var CARD_H=100,VGAP=18;
+    var AMP=Math.floor(MW*0.25);
+    var MFREQ=0.65;
+    var CARD_H=100,VGAP=22;
+    var TOP_PAD=50,BOT_PAD=60;
 
-    // Position cards left/right alternating on a vertical S-curve
+    // Position cards on a sine wave (smooth flowing oscillation)
     var mpts=[];
     cards.forEach(function(card,mi){
-      var cx=mi%2===0?LX:RX;
-      var cy=40+mi*(CARD_H+VGAP)+CARD_H/2;
+      var cx=Math.round(CX+Math.sin(mi*MFREQ)*AMP);
+      var cy=TOP_PAD+mi*(CARD_H+VGAP)+CARD_H/2;
       mpts.push({x:cx,y:cy,color:card.dataset.color||'#c9a87c'});
       card.style.left=cx+'px';
       card.style.top=cy+'px';
       card.style.width=CARD_W+'px';
-      card.style.opacity='1';
       card.style.transform='translate(-50%,-50%)';
-      card.classList.add('visible');
-      cardRevealed[mi]=true;
     });
 
-    var totalH=40+cards.length*(CARD_H+VGAP)+60;
+    var totalH=TOP_PAD+cards.length*(CARD_H+VGAP)+BOT_PAD;
+    var mCardRevealed=new Array(cards.length).fill(false);
+    mCardRevealed[0]=true;
 
-    // Build vertical bezier path weaving between left and right card centers
+    // Vertical bezier path — vertical tangents give smooth S-curve flow
     var mpd='M '+mpts[0].x+' '+mpts[0].y;
     for(var mi=1;mi<mpts.length;mi++){
       var mp=mpts[mi-1],mc=mpts[mi];
       var mdy=mc.y-mp.y;
-      mpd+=' C '+CX+' '+(mp.y+mdy*0.55)+' '+CX+' '+(mc.y-mdy*0.55)+' '+mc.x+' '+mc.y;
+      mpd+=' C '+mp.x+' '+(mp.y+mdy*0.6)+' '+mc.x+' '+(mc.y-mdy*0.6)+' '+mc.x+' '+mc.y;
     }
 
-    // Build SVG
     var mns='http://www.w3.org/2000/svg';
     var msvg=document.createElementNS(mns,'svg');
     msvg.setAttribute('width',String(MW));
@@ -1817,16 +1814,6 @@ window.addEventListener('load',function(){
     mpline.setAttribute('stroke-linecap','round');
     msvg.appendChild(mpline);
 
-    mpts.forEach(function(mpt){
-      var mdot=document.createElementNS(mns,'circle');
-      mdot.setAttribute('cx',String(mpt.x));mdot.setAttribute('cy',String(mpt.y));
-      mdot.setAttribute('r','3.5');
-      mdot.setAttribute('fill',mpt.color);
-      mdot.setAttribute('stroke','rgba(14,12,18,0.88)');mdot.setAttribute('stroke-width','1.5');
-      msvg.appendChild(mdot);
-    });
-
-    // Update scroll-content + cards-layer dimensions and insert SVG
     var msc=outer.querySelector('.tl-scroll-content');
     var mcl=document.getElementById('tl-cards-layer');
     if(msc){
@@ -1835,9 +1822,31 @@ window.addEventListener('load',function(){
     }
     if(mcl){mcl.style.width=MW+'px';mcl.style.height=totalH+'px';}
 
+    // Get path length after insertion into DOM
+    var mLen=mpline.getTotalLength()||totalH;
+    mpline.setAttribute('stroke-dasharray',String(mLen));
+    mpline.setAttribute('stroke-dashoffset',String(mLen));
+
     outer.style.overflowX='hidden';
     outer.style.overflowY='auto';
+
+    // Scroll-driven: line draws and cards reveal as user scrolls down
+    function mDoScroll(){
+      var sl=outer.scrollTop;
+      var drawnY=sl+outer.clientHeight*0.85;
+      var frac=Math.min(1,drawnY/totalH);
+      mpline.style.strokeDashoffset=String((mLen*(1-frac)).toFixed(1));
+      for(var j=1;j<mpts.length;j++){
+        if(!mCardRevealed[j]&&drawnY>=mpts[j].y){
+          mCardRevealed[j]=true;
+          cards[j].classList.add('visible');
+        }
+      }
+    }
+
     introComplete=true;
+    outer.addEventListener('scroll',mDoScroll,{passive:true});
+    mDoScroll();
   }
 });
 })();

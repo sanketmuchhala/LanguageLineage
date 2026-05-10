@@ -958,7 +958,6 @@ pre {
   .tl-outer { overflow-x: hidden !important; overflow-y: auto; height: calc(100svh - 55px); flex-direction: column; align-items: flex-start; cursor: default; }
   .tl-outer::before { display: none; }
   #tl-svg { display: none !important; }
-  .tl-card { opacity: 1 !important; }
   .tl-card-top, .tl-card-name, .tl-card-tags { opacity: 1 !important; transform: none !important; }
   .tl-card-name { white-space: normal; }
 }
