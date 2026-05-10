@@ -818,12 +818,14 @@ pre {
 .tl-outer { position: relative; height: calc(100vh - 98px); overflow-x: auto; overflow-y: hidden; width: 100%; scrollbar-width: none; display: flex; align-items: center; cursor: grab; }
 .tl-outer:active { cursor: grabbing; }
 .tl-outer::-webkit-scrollbar { display: none; }
+/* Parallax dot background (moves at 25% of scroll speed) */
+.tl-outer::before { content: ''; position: fixed; inset: 0; background-image: radial-gradient(rgba(201,168,124,0.035) 1px, transparent 1px); background-size: 28px 28px; background-position: var(--bg-x, 0px) center; pointer-events: none; z-index: 0; }
 .tl-scroll-content { position: relative; flex-shrink: 0; }
 #tl-svg { display: block; overflow: visible; }
 
-/* Per-segment bezier paths */
+/* Per-segment bezier paths — NO CSS transition; JS drives dashoffset per-frame */
 .tl-seg-bg { fill: none; stroke: rgba(245,240,232,0.07); stroke-width: 2.5; stroke-linecap: round; }
-.tl-seg { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round; opacity: 0.85; transition: stroke-width 0.2s ease, filter 0.2s ease, opacity 0.2s ease; }
+.tl-seg { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round; opacity: 0.85; }
 .tl-seg.lit { stroke-width: 4.5; filter: drop-shadow(0 0 6px var(--accent)); opacity: 1; animation: seg-pulse 1.8s ease-in-out infinite; }
 @keyframes seg-pulse { 0%,100%{stroke-width:4.5;} 50%{stroke-width:6;} }
 
@@ -843,8 +845,8 @@ pre {
   padding: 9px 10px 28px;
   cursor: pointer;
   opacity: 0;
-  transform: translate(-50%,-50%) translateY(26px);
-  transition: opacity 0.45s ease, transform 0.55s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease, border-color 0.2s ease, left 0.65s cubic-bezier(0.25,0.46,0.45,0.94), top 0.65s cubic-bezier(0.25,0.46,0.45,0.94);
+  transform: translate(-50%,-50%) scale(0.8) translateY(20px);
+  transition: opacity 0.42s ease, transform 0.55s cubic-bezier(0.34,1.8,0.64,1), box-shadow 0.25s ease, border-color 0.2s ease, left 0.65s cubic-bezier(0.25,0.46,0.45,0.94), top 0.65s cubic-bezier(0.25,0.46,0.45,0.94), width 0.5s cubic-bezier(0.25,0.46,0.45,0.94), height 0.5s cubic-bezier(0.25,0.46,0.45,0.94), border-radius 0.5s ease, padding 0.3s ease, background 0.3s ease;
   will-change: transform, opacity;
   user-select: none;
   -webkit-user-select: none;
@@ -906,8 +908,30 @@ pre {
 .tl-mode-toggle:hover { background: rgba(201,168,124,0.1); border-color: var(--accent); }
 
 /* Graph mode */
-.tl-outer.graph-mode #tl-svg { opacity: 0.08; transition: opacity 0.55s ease; }
-.tl-outer.graph-mode .tl-card { transition: opacity 0.45s ease, transform 0.3s ease, box-shadow 0.25s ease, border-color 0.2s ease, left 0.65s cubic-bezier(0.25,0.46,0.45,0.94), top 0.65s cubic-bezier(0.25,0.46,0.45,0.94); }
+.tl-outer.graph-mode #tl-svg { opacity: 0; transition: opacity 0.4s ease; }
+.tl-outer.graph-mode .tl-card { transition: opacity 0.45s ease, transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.25s ease, border-color 0.2s ease, left 0.65s cubic-bezier(0.25,0.46,0.45,0.94), top 0.65s cubic-bezier(0.25,0.46,0.45,0.94), width 0.5s cubic-bezier(0.25,0.46,0.45,0.94), height 0.5s cubic-bezier(0.25,0.46,0.45,0.94), border-radius 0.5s ease, padding 0.3s ease, background 0.3s ease; }
+/* Horizontal grid lines — chart feel */
+.tl-outer.graph-mode { background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(245,240,232,0.045) 39px, rgba(245,240,232,0.045) 40px); }
+/* Circle cards in graph mode */
+.tl-outer.graph-mode .tl-card { overflow: hidden; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+.tl-outer.graph-mode .tl-card .tl-card-top,
+.tl-outer.graph-mode .tl-card .tl-card-name,
+.tl-outer.graph-mode .tl-card .tl-card-tags,
+.tl-outer.graph-mode .tl-card .tl-expand-btn { display: none; }
+.tl-outer.graph-mode .tl-card .tl-graph-dot { display: flex; }
+.tl-outer.graph-mode .tl-card:hover { transform: translate(-50%,-50%) scale(1.4) !important; box-shadow: 0 0 0 2px rgba(255,255,255,0.45), 0 6px 22px rgba(201,168,124,0.55) !important; z-index: 10; cursor: pointer; }
+.tl-outer.graph-mode .tl-card:hover::after { content: attr(data-name); position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: rgba(14,12,18,0.95); color: var(--text); font-size: 10px; font-weight: 700; white-space: nowrap; padding: 3px 9px 4px; border-radius: 5px; border: 1px solid rgba(245,240,232,0.18); pointer-events: none; z-index: 20; letter-spacing: 0.04em; }
+/* Axis baseline */
+#tl-graph-axis { border-top: 1px solid rgba(245,240,232,0.18); }
+/* Graph dot — hidden by default, flex in graph mode */
+.tl-graph-dot { display: none; align-items: center; justify-content: center; width: 100%; height: 100%; }
+.tl-graph-dot img { width: 58%; height: 58%; object-fit: contain; }
+.tl-graph-dot span { font-size: 7px; font-weight: 900; }
+/* Keep content hidden during graph→timeline exit transition */
+.tl-card.tl-card-exiting .tl-card-top,
+.tl-card.tl-card-exiting .tl-card-name,
+.tl-card.tl-card-exiting .tl-card-tags,
+.tl-card.tl-card-exiting .tl-expand-btn { visibility: hidden; }
 
 /* Modal — springs from "+" click position */
 .tl-modal { position: fixed; z-index: 60; background: var(--bg-card); border: 1px solid rgba(201,168,124,0.3); border-radius: 16px; padding: 20px 22px; width: 300px; pointer-events: none; opacity: 0; transform: scale(0); transition: opacity 0.3s ease, transform 0.45s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 12px 48px rgba(0,0,0,0.55); }

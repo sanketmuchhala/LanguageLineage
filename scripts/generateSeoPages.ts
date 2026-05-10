@@ -1368,12 +1368,12 @@ function buildTimelinePage(languages: Language[], rels: Relationship[]): string 
 
   const CANVAS_W = Math.ceil((tlNodes[tlNodes.length - 1]?.x ?? 5000) + X_PAD * 2);
 
-  // Per-segment bezier paths (0.5 horizontal offset = longer horizontal tangent)
+  // Per-segment bezier paths (0.6 horizontal offset = "flat-then-steep" Google swoosh)
   const segmentsHtml = tlNodes.slice(1).map((c, i) => {
     const p = tlNodes[i];
     const dx = c.x - p.x;
-    const cp1x = Math.round(p.x + dx * 0.5);
-    const cp2x = Math.round(c.x - dx * 0.5);
+    const cp1x = Math.round(p.x + dx * 0.6);
+    const cp2x = Math.round(c.x - dx * 0.6);
     const d = `M ${p.x} ${p.spineY} C ${cp1x} ${p.spineY} ${cp2x} ${c.spineY} ${c.x} ${c.spineY}`;
     return `<path class="tl-seg-bg" d="${d}"/><path class="tl-seg" id="tl-seg-${i}" d="${d}" data-idx="${i}"/>`;
   }).join('\n    ');
@@ -1414,7 +1414,7 @@ function buildTimelinePage(languages: Language[], rels: Relationship[]): string 
     const tagsHtml = n.tags.map(t => `<span class="tl-card-tag">${t}</span>`).join('');
     const shClass = n.selfHosting ? ' tl-sh' : '';
     const safeNote = (n.note || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-    return `<div class="tl-card${shClass}" data-idx="${i}" data-x="${n.x}" data-y="${n.cardY}" data-bar-x="${n.barX}" data-bar-y="${n.barY}" data-seg="${i > 0 ? i - 1 : -1}" data-id="${n.id}" data-slug="${n.slug}" data-prefix="${n.prefix}" data-name="${n.name}" data-year="${n.year}" data-note="${safeNote}" data-color="${n.color}" data-logo="${n.logo || ''}" style="left:${n.x}px;top:${n.cardY}px;">
+    return `<div class="tl-card${shClass}" data-idx="${i}" data-x="${n.x}" data-y="${n.cardY}" data-bar-x="${n.barX}" data-bar-y="${n.barY}" data-seg="${i > 0 ? i - 1 : -1}" data-seg-next="${i < tlNodes.length - 1 ? i : -1}" data-id="${n.id}" data-slug="${n.slug}" data-prefix="${n.prefix}" data-name="${n.name}" data-year="${n.year}" data-note="${safeNote}" data-color="${n.color}" data-logo="${n.logo || ''}" style="left:${n.x}px;top:${n.cardY}px;">
       <div class="tl-card-top">
         <div class="tl-card-logo-icon" style="border-color:${n.color}55;">${logoHtml}</div>
         <span class="tl-card-year">${n.year}</span>
@@ -1422,6 +1422,7 @@ function buildTimelinePage(languages: Language[], rels: Relationship[]): string 
       <div class="tl-card-name">${n.name}</div>
       <div class="tl-card-tags">${tagsHtml}</div>
       <button class="tl-expand-btn" aria-label="Expand ${n.name}">+</button>
+      <div class="tl-graph-dot">${logoHtml}</div>
     </div>`;
   }).join('\n    ');
 
@@ -1471,6 +1472,7 @@ function buildTimelinePage(languages: Language[], rels: Relationship[]): string 
     </div>
   </div>
 </div>
+<div id="tl-graph-axis" style="display:none;position:fixed;bottom:16px;left:0;right:0;height:40px;z-index:25;pointer-events:none;"></div>
 <button class="tl-mode-toggle" id="tl-mode-toggle">Graph</button>
 <!-- Modal — springs from "+" click position -->
 <div class="tl-modal" id="tl-modal">
@@ -1499,6 +1501,7 @@ function buildTimelinePage(languages: Language[], rels: Relationship[]): string 
 var YEAR_START=${YEAR_START},YEAR_END=${YEAR_END};
 var DECADE_X=${decadeXJson};
 var CANVAS_W=${CANVAS_W};
+var CANVAS_H=${CANVAS_H};
 
 var outer=document.getElementById('tl-outer');
 var fill=document.getElementById('tlp');
@@ -1509,14 +1512,22 @@ var modeBtn=document.getElementById('tl-mode-toggle');
 var rafPending=false,scrollMax=1,dnavBtns=[];
 var decades=Object.keys(DECADE_X).map(Number).sort(function(a,b){return a-b;});
 var graphMode=false;
+var introComplete=false;
 
 // Cards & segments
 var cards=Array.prototype.slice.call(document.querySelectorAll('.tl-card'));
 var segments=Array.prototype.slice.call(document.querySelectorAll('.tl-seg'));
-var segRevealed=segments.map(function(){return false;});
+var cardRevealed=cards.map(function(){return false;});
+var segSrcXs=[],segTgtXs=[];
 cards.forEach(function(c){c.style.pointerEvents='auto';});
 
-// Init per-segment stroke-dasharray after layout
+// Populate segment source/target X arrays from card positions
+for(var _i=0;_i<cards.length-1;_i++){
+  segSrcXs.push(parseFloat(cards[_i].dataset.x));
+  segTgtXs.push(parseFloat(cards[_i+1].dataset.x));
+}
+
+// Init per-segment stroke-dasharray (all hidden)
 function initSegments(){
   segments.forEach(function(seg){
     var len=Math.ceil(seg.getTotalLength&&seg.getTotalLength()||200);
@@ -1526,40 +1537,17 @@ function initSegments(){
   });
 }
 
-// IntersectionObserver — reveal card + draw incoming segment
-var cardRevealed=cards.map(function(){return false;});
-var io=new IntersectionObserver(function(entries){
-  entries.forEach(function(entry){
-    if(!entry.isIntersecting)return;
-    var card=entry.target;
-    var idx=parseInt(card.dataset.idx,10);
-    if(cardRevealed[idx])return;
-    cardRevealed[idx]=true;
-    card.classList.add('visible');
-    var segIdx=parseInt(card.dataset.seg,10);
-    if(segIdx>=0&&!segRevealed[segIdx]){
-      segRevealed[segIdx]=true;
-      var seg=segments[segIdx];
-      if(seg){
-        setTimeout(function(){
-          seg.style.transition='stroke-dashoffset 0.65s cubic-bezier(0.25,0.46,0.45,0.94)';
-          seg.style.strokeDashoffset='0';
-        },40);
-      }
-    }
-  });
-},{root:outer,rootMargin:'0px 80px 0px 0px',threshold:0});
-cards.forEach(function(c){io.observe(c);});
-
-// Magnetic cursor effect + segment glow on hover
+// Magnetic cursor effect + dual-segment glow on hover
 cards.forEach(function(card){
-  var segIdx=parseInt(card.dataset.seg,10);
-  var seg=segIdx>=0?segments[segIdx]:null;
+  var segBefore=parseInt(card.dataset.seg,10);
+  var segAfter=parseInt(card.dataset.segNext,10);
   card.addEventListener('mouseenter',function(){
     card.style.transitionDuration='0.12s,0.12s,0.25s,0.2s,0.65s,0.65s';
-    if(seg)seg.classList.add('lit');
+    if(segBefore>=0&&segments[segBefore])segments[segBefore].classList.add('lit');
+    if(segAfter>=0&&segments[segAfter])segments[segAfter].classList.add('lit');
   });
   card.addEventListener('mousemove',function(e){
+    if(graphMode)return;
     var r=card.getBoundingClientRect();
     var dx=((e.clientX-r.left-r.width/2)*0.07).toFixed(2);
     var dy=((e.clientY-r.top-r.height/2)*0.07).toFixed(2);
@@ -1568,7 +1556,8 @@ cards.forEach(function(card){
   card.addEventListener('mouseleave',function(){
     card.style.transitionDuration='';
     card.style.transform='';
-    if(seg)seg.classList.remove('lit');
+    if(segBefore>=0&&segments[segBefore])segments[segBefore].classList.remove('lit');
+    if(segAfter>=0&&segments[segAfter])segments[segAfter].classList.remove('lit');
   });
 });
 
@@ -1611,33 +1600,124 @@ cards.forEach(function(card){
 document.getElementById('tl-modal-close').addEventListener('click',function(){modal.classList.remove('show');});
 document.addEventListener('click',function(e){if(modal.classList.contains('show')&&!modal.contains(e.target))modal.classList.remove('show');});
 
-// Graph mode toggle — cards morph to bar chart positions
+// Graph mode toggle — viewport-fitting decade-column logo circles
 function setGraphMode(on){
   graphMode=on;
   modeBtn.textContent=on?'Timeline':'Graph';
-  outer.classList.toggle('graph-mode',on);
-  cards.forEach(function(card){
-    card.style.transform='';
-    if(on){
-      card.style.left=card.dataset.barX+'px';
-      card.style.top=card.dataset.barY+'px';
-    } else {
+  var axis=document.getElementById('tl-graph-axis');
+  if(on){
+    modal.classList.remove('show');
+    outer.scrollLeft=0;
+    outer.style.overflowX='hidden';
+    outer.classList.add('graph-mode');
+    // Group by decade
+    var byDecade={};
+    cards.forEach(function(c){
+      var dec=Math.floor(parseInt(c.dataset.year,10)/10)*10;
+      if(!byDecade[dec])byDecade[dec]=[];
+      byDecade[dec].push(c);
+    });
+    var decKeys=Object.keys(byDecade).map(Number).sort(function(a,b){return a-b;});
+    var numCols=decKeys.length;
+    var W=outer.clientWidth,H=outer.clientHeight;
+    var LABEL_H=46,GAP=4;
+    var colW=Math.floor((W-GAP*(numCols+1))/numCols);
+    var maxRows=0;
+    decKeys.forEach(function(d){if(byDecade[d].length>maxRows)maxRows=byDecade[d].length;});
+    var DOT=Math.min(colW-GAP*2,Math.floor((H-LABEL_H-GAP*(maxRows+1))/maxRows));
+    DOT=Math.max(16,Math.min(DOT,48));
+    var layerOffY=(H-CANVAS_H)/2;
+    if(axis){axis.innerHTML='';axis.style.display='block';}
+    decKeys.forEach(function(dec,ci){
+      var cx=GAP+ci*(colW+GAP)+colW/2;
+      var items=byDecade[dec];
+      var startY=H-LABEL_H-GAP-DOT/2;
+      items.forEach(function(card,ri){
+        var targetY=startY-ri*(DOT+GAP);
+        var color=card.dataset.color;
+        // Stagger: columns left-to-right, rows bottom-to-top
+        var delay=(ci*0.035+ri*0.018).toFixed(3);
+        card.style.transitionDelay=delay+'s';
+        card.style.left=Math.round(cx)+'px';
+        card.style.top=Math.round(targetY-layerOffY)+'px';
+        card.style.width=DOT+'px';
+        card.style.height=DOT+'px';
+        card.style.borderRadius='50%';
+        card.style.borderColor=color+'bb';
+        card.style.background=color+'20';
+        card.style.boxShadow='0 0 0 1.5px '+color+'66, 0 3px 10px '+color+'28';
+        card.style.padding='0';
+        card.style.opacity='1';
+        card.style.transform='translate(-50%,-50%)';
+      });
+      if(axis){
+        var lbl=document.createElement('div');
+        lbl.style.cssText='position:absolute;left:'+Math.round(cx)+'px;transform:translateX(-50%);text-align:center;top:6px;';
+        lbl.innerHTML='<div style="font-size:10px;font-weight:800;font-family:JetBrains Mono,monospace;color:rgba(245,240,232,0.6);letter-spacing:0.06em;">'+dec+'s</div>'
+                      +'<div style="font-size:9px;font-weight:600;font-family:JetBrains Mono,monospace;color:rgba(245,240,232,0.28);margin-top:1px;">'+items.length+'</div>';
+        axis.appendChild(lbl);
+      }
+    });
+  } else {
+    // Keep content hidden during resize-back transition
+    cards.forEach(function(card){card.classList.add('tl-card-exiting');});
+    outer.classList.remove('graph-mode');
+    cards.forEach(function(card){
       card.style.left=card.dataset.x+'px';
       card.style.top=card.dataset.y+'px';
-    }
-  });
+      card.style.width='';
+      card.style.height='';
+      card.style.borderRadius='';
+      card.style.borderColor='';
+      card.style.background='';
+      card.style.boxShadow='';
+      card.style.padding='';
+      card.style.opacity='';
+      card.style.transform='';
+      card.style.transitionDelay='';
+    });
+    outer.style.overflowX='';
+    if(axis){axis.style.display='none';axis.innerHTML='';}
+    setTimeout(function(){
+      cards.forEach(function(card){card.classList.remove('tl-card-exiting');});
+      doScroll();
+    },650);
+  }
 }
 modeBtn.addEventListener('click',function(){setGraphMode(!graphMode);});
 
-// Scroll progress + HUD + decade nav
+// Scroll-driven: line leads viewport by 85%, segments draw in real-time
 function doScroll(){
   rafPending=false;
+  if(!introComplete)return;
   var sl=outer.scrollLeft;
   var frac=sl/scrollMax;
   if(fill)fill.style.width=(frac*100).toFixed(1)+'%';
   if(hudEl)hudEl.textContent=String(Math.round(YEAR_START+frac*(YEAR_END-YEAR_START)));
+  // Parallax dot background at 25% of scroll speed
+  outer.style.setProperty('--bg-x',(sl*-0.25).toFixed(1)+'px');
+  // drawnX: where the "pen" is (leads viewport by 85%)
+  var drawnX=sl+outer.clientWidth*0.85;
+  // Update every segment dashoffset directly (no CSS transition)
+  for(var i=0;i<segments.length;i++){
+    var srcX=segSrcXs[i],tgtX=segTgtXs[i];
+    var segLen=parseFloat(segments[i].dataset.len);
+    if(drawnX>=tgtX){
+      segments[i].style.strokeDashoffset='0';
+    } else if(drawnX>srcX){
+      segments[i].style.strokeDashoffset=((segLen*(1-(drawnX-srcX)/(tgtX-srcX))).toFixed(1));
+    }
+  }
+  // Reveal cards as line crosses their X (skip card[0], revealed by intro)
+  for(var j=1;j<cards.length;j++){
+    if(!cardRevealed[j]&&drawnX>=parseFloat(cards[j].dataset.x)){
+      cardRevealed[j]=true;
+      cards[j].classList.add('visible');
+    }
+  }
+  // Decade nav active state
   var active=null;
-  for(var j=0;j<decades.length;j++){if(sl+outer.clientWidth/2>=DECADE_X[decades[j]])active=decades[j];}
+  for(var k=0;k<decades.length;k++){if(sl+outer.clientWidth/2>=DECADE_X[decades[k]])active=decades[k];}
   for(var b=0;b<dnavBtns.length;b++){dnavBtns[b].classList.toggle('active',parseInt(dnavBtns[b].dataset.decade,10)===active);}
 }
 function onScroll(){if(!rafPending){rafPending=true;requestAnimationFrame(doScroll);}}
@@ -1660,8 +1740,9 @@ outer.addEventListener('scroll',function(){
   },200);
 },{passive:true});
 
-// Vertical wheel → horizontal scroll
+// Vertical wheel → horizontal scroll (locked during intro)
 outer.addEventListener('wheel',function(e){
+  if(!introComplete){e.preventDefault();return;}
   if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){
     e.preventDefault();
     outer.scrollLeft+=e.deltaY*1.2;
@@ -1677,10 +1758,22 @@ window.jumpToDecade=function(d){
 window.addEventListener('load',function(){
   scrollMax=Math.max(1,outer.scrollWidth-outer.clientWidth);
   if(dnav)dnavBtns=Array.prototype.slice.call(dnav.querySelectorAll('button'));
-  outer.addEventListener('scroll',onScroll,{passive:true});
-  window.addEventListener('resize',function(){scrollMax=Math.max(1,outer.scrollWidth-outer.clientWidth);doScroll();});
+  window.addEventListener('resize',function(){scrollMax=Math.max(1,outer.scrollWidth-outer.clientWidth);});
   initSegments();
-  doScroll();
+  // Intro: reveal card[0] immediately, draw segment[0] over 1.2s
+  if(cards[0]){cards[0].classList.add('visible');cardRevealed[0]=true;}
+  var seg0=segments[0];
+  if(seg0){
+    seg0.style.transition='stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1)';
+    setTimeout(function(){seg0.style.strokeDashoffset='0';},80);
+  }
+  // After intro: strip CSS transition, enable scroll-driven mode
+  setTimeout(function(){
+    introComplete=true;
+    if(seg0)seg0.style.transition='';
+    outer.addEventListener('scroll',onScroll,{passive:true});
+    doScroll();
+  },1400);
 });
 })();
 </script>
