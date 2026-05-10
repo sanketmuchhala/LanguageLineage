@@ -1320,7 +1320,6 @@ function buildTimelinePage(languages: Language[], rels: Relationship[]): string 
   const YEAR_START = 1948, YEAR_END = 2026;
   const CANVAS_H = 480, CENTER_Y = 240, WAVE_AMP = 35, WAVE_FREQ = 0.45;
   const X_PAD = 140, NODE_SPACING = 145, PX_PER_YEAR = 70;
-  const CARD_DIST = 78; // distance from spine dot to card center
 
   const degree: Record<string, number> = {};
   rels.forEach(r => {
@@ -1344,8 +1343,7 @@ function buildTimelinePage(languages: Language[], rels: Relationship[]): string 
     const x = Math.max(yearX, prevX + (idx === 0 ? 0 : NODE_SPACING));
     prevX = x;
     const spineY = Math.round(CENTER_Y + Math.sin(idx * WAVE_FREQ) * WAVE_AMP);
-    const above = idx % 2 === 0;
-    const cardY = above ? spineY - CARD_DIST : spineY + CARD_DIST;
+    const cardY = spineY;
     const slug = idToSlug(lang.id);
     const prefix = lang.id.startsWith('tool:') ? 'tools' : 'languages';
     const logoUrl = (LOGO_MAP as Record<string, string | null>)[lang.id] ?? null;
@@ -1362,7 +1360,7 @@ function buildTimelinePage(languages: Language[], rels: Relationship[]): string 
       logo: logoUrl, color, note,
       tags: (lang.paradigm ?? []).slice(0, 3),
       selfHosting: SELF_HOSTING.has(lang.id),
-      above, barX, barY,
+      barX, barY,
     };
   });
 
@@ -1378,15 +1376,6 @@ function buildTimelinePage(languages: Language[], rels: Relationship[]): string 
     return `<path class="tl-seg-bg" d="${d}"/><path class="tl-seg" id="tl-seg-${i}" d="${d}" data-idx="${i}"/>`;
   }).join('\n    ');
 
-  // Connector ticks from spine to card
-  const ticksHtml = tlNodes.map(n =>
-    `<line class="tl-tick" x1="${n.x}" y1="${n.spineY}" x2="${n.x}" y2="${n.cardY}"/>`
-  ).join('\n    ');
-
-  // Spine connector dots
-  const dotsHtml = tlNodes.map(n =>
-    `<circle class="tl-dot" cx="${n.x}" cy="${n.spineY}" r="3.5" stroke="${n.color}" fill="var(--bg,#0e0e12)"/>`
-  ).join('\n    ');
 
   // Decade tick marks in SVG
   const decadeSet = new Set(sorted.map(l => Math.floor((l.first_release_year ?? 1980) / 10) * 10));
@@ -1463,8 +1452,6 @@ function buildTimelinePage(languages: Language[], rels: Relationship[]): string 
   <div class="tl-scroll-content" style="width:${CANVAS_W}px;height:${CANVAS_H}px;">
     <svg id="tl-svg" width="${CANVAS_W}" height="${CANVAS_H}">
       ${segmentsHtml}
-      ${ticksHtml}
-      ${dotsHtml}
       ${decadeTicksHtml}
     </svg>
     <div id="tl-cards-layer" style="position:absolute;top:0;left:0;width:${CANVAS_W}px;height:${CANVAS_H}px;pointer-events:none;">
