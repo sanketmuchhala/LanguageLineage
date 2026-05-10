@@ -134,17 +134,17 @@ export function GraphView() {
 
       const zoom = instance.zoom();
       instance.batch(() => {
-        if (zoom < 0.3) {
+        if (zoom < 0.38) {
           instance.nodes().addClass('labels-hidden');
-        } else if (zoom < 0.5) {
-          instance.nodes().filter('[degree < 15]').addClass('labels-hidden');
-          instance.nodes().filter('[degree >= 15]').removeClass('labels-hidden');
-        } else if (zoom < 0.8) {
-          instance.nodes().filter('[degree < 8]').addClass('labels-hidden');
-          instance.nodes().filter('[degree >= 8]').removeClass('labels-hidden');
-        } else if (zoom <= 1.2) {
-          instance.nodes().filter('[degree < 4]').addClass('labels-hidden');
-          instance.nodes().filter('[degree >= 4]').removeClass('labels-hidden');
+        } else if (zoom < 0.58) {
+          instance.nodes().filter('[degree < 20]').addClass('labels-hidden');
+          instance.nodes().filter('[degree >= 20]').removeClass('labels-hidden');
+        } else if (zoom < 0.88) {
+          instance.nodes().filter('[degree < 10]').addClass('labels-hidden');
+          instance.nodes().filter('[degree >= 10]').removeClass('labels-hidden');
+        } else if (zoom <= 1.3) {
+          instance.nodes().filter('[degree < 5]').addClass('labels-hidden');
+          instance.nodes().filter('[degree >= 5]').removeClass('labels-hidden');
         } else {
           instance.nodes().removeClass('labels-hidden');
         }

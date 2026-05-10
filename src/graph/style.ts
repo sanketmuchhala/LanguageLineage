@@ -2,8 +2,8 @@ import type { StylesheetStyle } from 'cytoscape';
 import type { ClusterType, RelationshipType } from '../data/types';
 import { getAdaptiveLogoBackground, getLogoBorderColor } from '../utils/colorContrast';
 
-const MIN_NODE_SIZE = 50;
-const MAX_NODE_SIZE = 110;
+const MIN_NODE_SIZE = 38;
+const MAX_NODE_SIZE = 72;
 const DEFAULT_NODE_COLOR = '#42a5f5';
 
 // Museum-inspired muted color palette - matching landing page aesthetic
@@ -72,19 +72,19 @@ export function getCytoscapeStyle(
         'border-width': 2,
         'border-color': '#00000020',
         'border-opacity': 1,
-        'font-size': 'mapData(degree, 0, 30, 10, 16)' as any,
+        'font-size': 'mapData(degree, 0, 30, 9, 13)' as any,
         'font-weight': 600 as any,
         'color': labelColor,
         'text-valign': 'bottom',
         'text-halign': 'center',
-        'text-margin-y': 8,
+        'text-margin-y': 5,
         'text-outline-width': 2,
         'text-outline-color': labelOutlineColor,
-        'text-outline-opacity': 0.8,
+        'text-outline-opacity': 0.85,
         'min-zoomed-font-size': 8,
         label: 'data(label)',
         'text-wrap': 'wrap' as any,
-        'text-max-width': 'mapData(degree, 0, 30, 70, 130)' as any,
+        'text-max-width': 'mapData(degree, 0, 30, 60, 110)' as any,
       },
     },
 
@@ -227,8 +227,8 @@ export function getCytoscapeStyle(
       style: {
         width: ((ele: any) => {
           const relationship = ele.data('relationship') as RelationshipType;
-          if (relationship === 'influenced' || relationship === 'influenced_by') return 2.5;
-          return relationship === 'runtime_written_in' ? 1.5 : 2;
+          if (relationship === 'influenced' || relationship === 'influenced_by') return 1.2;
+          return relationship === 'runtime_written_in' ? 1.2 : 1.8;
         }) as any,
         'line-color': ((ele: any) => {
           const relationship = ele.data('relationship') as RelationshipType;
@@ -247,13 +247,13 @@ export function getCytoscapeStyle(
         'curve-style': 'bezier',
         opacity: ((ele: any) => {
           const relationship = ele.data('relationship') as RelationshipType;
-          if (relationship === 'influenced' || relationship === 'influenced_by') return 0.65;
+          if (relationship === 'influenced' || relationship === 'influenced_by') return 0.28;
           const confidence = ele.data('confidence') as number;
-          if (confidence >= 0.9) return 0.7;
-          if (confidence >= 0.7) return 0.5;
-          return 0.3;
+          if (confidence >= 0.9) return 0.6;
+          if (confidence >= 0.7) return 0.38;
+          return 0.18;
         }) as any,
-        'arrow-scale': 1.0,
+        'arrow-scale': 0.85,
       },
     },
 
