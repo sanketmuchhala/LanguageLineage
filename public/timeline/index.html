@@ -1577,6 +1577,84 @@ window.addEventListener('load',function(){
     outer.addEventListener('scroll',onScroll,{passive:true});
     doScroll();
   },1400);
+
+  // Mobile: vertical S-curve bezier timeline
+  if(window.innerWidth<=768){
+    var MW=outer.clientWidth||window.innerWidth;
+    var CARD_W=Math.min(128,Math.floor(MW*0.40));
+    var HALF=Math.floor(CARD_W/2);
+    var MARGIN=16;
+    var LX=HALF+MARGIN;
+    var RX=MW-HALF-MARGIN;
+    var CX=Math.floor(MW/2);
+    var CARD_H=100,VGAP=18;
+
+    // Position cards left/right alternating on a vertical S-curve
+    var mpts=[];
+    cards.forEach(function(card,mi){
+      var cx=mi%2===0?LX:RX;
+      var cy=40+mi*(CARD_H+VGAP)+CARD_H/2;
+      mpts.push({x:cx,y:cy,color:card.dataset.color||'#c9a87c'});
+      card.style.left=cx+'px';
+      card.style.top=cy+'px';
+      card.style.width=CARD_W+'px';
+      card.style.opacity='1';
+      card.style.transform='translate(-50%,-50%)';
+      card.classList.add('visible');
+      cardRevealed[mi]=true;
+    });
+
+    var totalH=40+cards.length*(CARD_H+VGAP)+60;
+
+    // Build vertical bezier path weaving between left and right card centers
+    var mpd='M '+mpts[0].x+' '+mpts[0].y;
+    for(var mi=1;mi<mpts.length;mi++){
+      var mp=mpts[mi-1],mc=mpts[mi];
+      var mdy=mc.y-mp.y;
+      mpd+=' C '+CX+' '+(mp.y+mdy*0.55)+' '+CX+' '+(mc.y-mdy*0.55)+' '+mc.x+' '+mc.y;
+    }
+
+    // Build SVG
+    var mns='http://www.w3.org/2000/svg';
+    var msvg=document.createElementNS(mns,'svg');
+    msvg.setAttribute('width',String(MW));
+    msvg.setAttribute('height',String(totalH));
+    msvg.style.cssText='position:absolute;top:0;left:0;pointer-events:none;z-index:0;overflow:visible;';
+
+    var mpbg=document.createElementNS(mns,'path');
+    mpbg.setAttribute('d',mpd);mpbg.setAttribute('fill','none');
+    mpbg.setAttribute('stroke','rgba(245,240,232,0.07)');mpbg.setAttribute('stroke-width','4');
+    mpbg.setAttribute('stroke-linecap','round');
+    msvg.appendChild(mpbg);
+
+    var mpline=document.createElementNS(mns,'path');
+    mpline.setAttribute('d',mpd);mpline.setAttribute('fill','none');
+    mpline.setAttribute('stroke','rgba(201,168,124,0.72)');mpline.setAttribute('stroke-width','2');
+    mpline.setAttribute('stroke-linecap','round');
+    msvg.appendChild(mpline);
+
+    mpts.forEach(function(mpt){
+      var mdot=document.createElementNS(mns,'circle');
+      mdot.setAttribute('cx',String(mpt.x));mdot.setAttribute('cy',String(mpt.y));
+      mdot.setAttribute('r','3.5');
+      mdot.setAttribute('fill',mpt.color);
+      mdot.setAttribute('stroke','rgba(14,12,18,0.88)');mdot.setAttribute('stroke-width','1.5');
+      msvg.appendChild(mdot);
+    });
+
+    // Update scroll-content + cards-layer dimensions and insert SVG
+    var msc=outer.querySelector('.tl-scroll-content');
+    var mcl=document.getElementById('tl-cards-layer');
+    if(msc){
+      msc.style.cssText='position:relative;flex-shrink:0;width:'+MW+'px;height:'+totalH+'px;';
+      msc.insertBefore(msvg,msc.firstChild);
+    }
+    if(mcl){mcl.style.width=MW+'px';mcl.style.height=totalH+'px';}
+
+    outer.style.overflowX='hidden';
+    outer.style.overflowY='auto';
+    introComplete=true;
+  }
 });
 })();
 </script>
