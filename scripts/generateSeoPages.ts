@@ -1318,8 +1318,8 @@ for (const node of languages) {
 }
 function buildTimelinePage(languages: Language[], rels: Relationship[]): string {
   const YEAR_START = 1948, YEAR_END = 2026;
-  const CANVAS_H = 480, CENTER_Y = 240, WAVE_AMP = 35, WAVE_FREQ = 0.45;
-  const X_PAD = 140, NODE_SPACING = 145, PX_PER_YEAR = 70;
+  const CANVAS_H = 520, CENTER_Y = 260, WAVE_AMP = 70, WAVE_FREQ = 0.38;
+  const X_PAD = 160, NODE_SPACING = 220, PX_PER_YEAR = 80;
 
   const degree: Record<string, number> = {};
   rels.forEach(r => {
