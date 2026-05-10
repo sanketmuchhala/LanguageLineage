@@ -1317,16 +1317,10 @@ for (const node of languages) {
   count++;
 }
 function buildTimelinePage(languages: Language[], rels: Relationship[]): string {
-  const CANVAS_W = 7200, CANVAS_H = 840, YEAR_START = 1948, YEAR_END = 2026, X_L = 300, X_R = 200;
-  function yearToX(year: number): number {
-    return Math.round(X_L + (year - YEAR_START) / (YEAR_END - YEAR_START) * (CANVAS_W - X_L - X_R));
-  }
-
-  const LANE_Y: Record<string, number> = {
-    functional: 110, systems: 230, tools: 250, compilers: 240,
-    historical: 380, roots: 380, other: 380,
-    jvm: 510, clr: 510, dynamic: 630, scientific: 730,
-  };
+  const YEAR_START = 1948, YEAR_END = 2026;
+  const CANVAS_H = 480, CENTER_Y = 240, WAVE_AMP = 35, WAVE_FREQ = 0.45;
+  const X_PAD = 140, NODE_SPACING = 145, PX_PER_YEAR = 70;
+  const CARD_DIST = 78; // distance from spine dot to card center
 
   const degree: Record<string, number> = {};
   rels.forEach(r => {
@@ -1335,119 +1329,103 @@ function buildTimelinePage(languages: Language[], rels: Relationship[]): string 
   });
 
   const SELF_HOSTING = new Set<string>();
-  rels.forEach(r => {
-    if (r.relationship === 'bootstrap_written_in') SELF_HOSTING.add(r.to_language);
-  });
+  rels.forEach(r => { if (r.relationship === 'bootstrap_written_in') SELF_HOSTING.add(r.to_language); });
   languages.forEach(l => { if (l.self_hosting) SELF_HOSTING.add(l.id); });
 
-  // Sort by year for jitter processing
   const sorted = languages
-    .filter(l => l.first_release_year && l.first_release_year >= 1948)
+    .filter(l => l.first_release_year && l.first_release_year >= YEAR_START)
     .sort((a, b) => (a.first_release_year ?? 0) - (b.first_release_year ?? 0));
 
-  const nodePos: Record<string, { x: number; y: number; r: number }> = {};
-  const JITTER = [0, 55, -55, 110, -110, 165, -165];
-  const clusterOccupied: Map<string, { x: number; y: number }[]> = new Map();
+  let prevX = X_PAD;
+  const yearRankCount: Record<number, number> = {};
 
-  for (const lang of sorted) {
-    const year = lang.first_release_year ?? 1980;
-    const cluster = lang.cluster_hint ?? 'other';
-    const baseY = LANE_Y[cluster] ?? 380;
-    const x = yearToX(year);
-    const deg = degree[lang.id] ?? 0;
-    const r = Math.min(28, Math.max(16, Math.round(12 + Math.sqrt(deg) * 2.0)));
-
-    if (!clusterOccupied.has(cluster)) clusterOccupied.set(cluster, []);
-    const occupied = clusterOccupied.get(cluster)!;
-
-    let finalY = baseY;
-    for (const jy of JITTER) {
-      const cy = baseY + jy;
-      const conflict = occupied.some(o => Math.abs(o.x - x) < 80 && Math.abs(o.y - cy) < 50);
-      if (!conflict) { finalY = cy; break; }
-    }
-    occupied.push({ x, y: finalY });
-    nodePos[lang.id] = { x, y: finalY, r };
-  }
-
-  // Build TL_DATA nodes array
-  const tlNodes = sorted.map(lang => {
+  const tlNodes = sorted.map((lang, idx) => {
+    const yearX = X_PAD + (lang.first_release_year! - YEAR_START) * PX_PER_YEAR;
+    const x = Math.max(yearX, prevX + (idx === 0 ? 0 : NODE_SPACING));
+    prevX = x;
+    const spineY = Math.round(CENTER_Y + Math.sin(idx * WAVE_FREQ) * WAVE_AMP);
+    const above = idx % 2 === 0;
+    const cardY = above ? spineY - CARD_DIST : spineY + CARD_DIST;
     const slug = idToSlug(lang.id);
     const prefix = lang.id.startsWith('tool:') ? 'tools' : 'languages';
-    const pos = nodePos[lang.id] ?? { x: 300, y: 380, r: 16 };
     const logoUrl = (LOGO_MAP as Record<string, string | null>)[lang.id] ?? null;
     const color = (LOGO_COLORS as Record<string, string | null>)[lang.id] ?? '#c9a87c';
+    const note = (lang.notes ?? '').split('.')[0].slice(0, 100) || null;
+    const yr = lang.first_release_year!;
+    const barRank = yearRankCount[yr] ?? 0;
+    yearRankCount[yr] = barRank + 1;
+    const barX = Math.round(X_PAD + (yr - YEAR_START) * PX_PER_YEAR);
+    const barY = Math.round(CANVAS_H - 20 - barRank * 38);
     return {
-      id: lang.id,
-      name: lang.name,
-      year: lang.first_release_year ?? 1980,
-      slug,
-      prefix,
-      x: pos.x,
-      y: pos.y,
-      r: pos.r,
-      cluster: lang.cluster_hint ?? 'other',
-      logo: logoUrl,
-      color,
-      note: (lang.notes ?? '').split('.')[0].slice(0, 120) || null,
+      id: lang.id, name: lang.name, year: yr,
+      x: Math.round(x), spineY, cardY, slug, prefix,
+      logo: logoUrl, color, note,
       tags: (lang.paradigm ?? []).slice(0, 3),
       selfHosting: SELF_HOSTING.has(lang.id),
+      above, barX, barY,
     };
   });
 
-  const nodeIdSet = new Set(tlNodes.map(n => n.id));
-  const yearById = new Map(sorted.map(l => [l.id, l.first_release_year ?? 1980]));
-  const tlEdges = rels
-    .filter(r => nodeIdSet.has(r.from_language) && nodeIdSet.has(r.to_language))
-    .map(r => ({ from: r.from_language, to: r.to_language, type: r.relationship, revealYear: Math.max(yearById.get(r.from_language) ?? 1980, yearById.get(r.to_language) ?? 1980) }));
+  const CANVAS_W = Math.ceil((tlNodes[tlNodes.length - 1]?.x ?? 5000) + X_PAD * 2);
 
-  // Pre-render all SVG elements in TypeScript — eliminates D3 CDN dependency and runtime SVG creation
-  function edgePath(a: {x:number,y:number}, b: {x:number,y:number}): string {
-    const mx = (a.x + b.x) / 2;
-    return `M ${a.x},${a.y} C ${mx},${a.y} ${mx},${b.y} ${b.x},${b.y}`;
-  }
+  // Per-segment bezier paths (0.5 horizontal offset = longer horizontal tangent)
+  const segmentsHtml = tlNodes.slice(1).map((c, i) => {
+    const p = tlNodes[i];
+    const dx = c.x - p.x;
+    const cp1x = Math.round(p.x + dx * 0.5);
+    const cp2x = Math.round(c.x - dx * 0.5);
+    const d = `M ${p.x} ${p.spineY} C ${cp1x} ${p.spineY} ${cp2x} ${c.spineY} ${c.x} ${c.spineY}`;
+    return `<path class="tl-seg-bg" d="${d}"/><path class="tl-seg" id="tl-seg-${i}" d="${d}" data-idx="${i}"/>`;
+  }).join('\n    ');
 
-  const edgesSvg = tlEdges.map(e => {
-    const from = nodePos[e.from], to = nodePos[e.to];
-    if (!from || !to) return '';
-    return `<path class="tl-edge tl-edge-${e.type.replace(/_/g, '-')}" data-from="${e.from}" data-to="${e.to}" data-reveal="${e.revealYear}" d="${edgePath(from, to)}"/>`;
-  }).join('');
+  // Connector ticks from spine to card
+  const ticksHtml = tlNodes.map(n =>
+    `<line class="tl-tick" x1="${n.x}" y1="${n.spineY}" x2="${n.x}" y2="${n.cardY}"/>`
+  ).join('\n    ');
 
-  const nodesSvg = tlNodes.map(d => {
-    const shCls = d.selfHosting ? ' tl-sh' : '';
-    const ring = d.selfHosting ? `<circle class="tl-glow-ring" r="${d.r + 8}"/>` : '';
-    const circ = `<circle class="tl-node-circle" r="${d.r}" fill="${d.color}22" stroke="${d.color}" stroke-width="1.5"/>`;
-    const media = d.logo
-      ? `<image class="tl-node-img" href="${d.logo}" x="${(-d.r * 0.58).toFixed(1)}" y="${(-d.r * 0.58).toFixed(1)}" width="${(d.r * 1.16).toFixed(1)}" height="${(d.r * 1.16).toFixed(1)}"/>`
-      : `<text class="tl-node-abbr" y="1" fill="${d.color}">${d.name.slice(0, 2).toUpperCase()}</text>`;
-    const label = `<text class="tl-node-label" y="${d.r + 13}">${escapeHtml(d.name)}</text>`;
-    const btn = `<g class="tl-expand-btn" transform="translate(${d.r - 2},${-(d.r - 2)})"><circle r="9"/><text y="1">+</text></g>`;
-    return `<g class="tl-node${shCls}" data-id="${d.id}" data-year="${d.year}" transform="translate(${d.x},${d.y})">${ring}${circ}${media}${label}${btn}</g>`;
-  }).join('');
+  // Spine connector dots
+  const dotsHtml = tlNodes.map(n =>
+    `<circle class="tl-dot" cx="${n.x}" cy="${n.spineY}" r="3.5" stroke="${n.color}" fill="var(--bg,#0e0e12)"/>`
+  ).join('\n    ');
 
-  // Minimal hover data for card UI (no x/y/r since those are baked into SVG)
-  type HoverEntry = {name:string,year:number,slug:string,prefix:string,logo:string|null,color:string,note:string|null,tags:string[]};
-  const hoverMap: Record<string, HoverEntry> = {};
-  tlNodes.forEach(n => { hoverMap[n.id] = { name: n.name, year: n.year, slug: n.slug, prefix: n.prefix, logo: n.logo, color: n.color, note: n.note, tags: n.tags }; });
-
-  // Decade nav
+  // Decade tick marks in SVG
   const decadeSet = new Set(sorted.map(l => Math.floor((l.first_release_year ?? 1980) / 10) * 10));
-  const decadeButtons = [...decadeSet].sort().map(d => `<button data-decade="${d}" onclick="jumpToDecade(${d})">${d}s</button>`).join('');
+  const decadeXMap: Record<number, number> = {};
+  [...decadeSet].sort((a, b) => a - b).forEach(decade => {
+    const first = tlNodes.find(n => n.year >= decade);
+    if (first) decadeXMap[decade] = first.x;
+  });
+  const decadeTicksHtml = Object.entries(decadeXMap).map(([d, x]) =>
+    `<line x1="${x}" y1="${CANVAS_H-20}" x2="${x}" y2="${CANVAS_H-8}" stroke="rgba(245,240,232,0.14)" stroke-width="1"/>
+    <text x="${x}" y="${CANVAS_H-2}" font-size="9" fill="rgba(245,240,232,0.22)" text-anchor="middle" font-family="'JetBrains Mono',monospace">${d}s</text>`
+  ).join('\n    ');
 
-  // Axis decade X positions for lane labels
-  const axisDecades = [1950,1960,1970,1980,1990,2000,2010,2020];
-  const axisTicks = axisDecades.map(yr => {
-    const x = yearToX(yr);
-    return `<line class="tl-axis-tick" x1="${x}" y1="0" x2="${x}" y2="${CANVAS_H}"/><text class="tl-axis-label" x="${x+5}" y="${CANVAS_H-12}">${yr}</text>`;
-  }).join('');
+  // Decade nav buttons
+  const decadeButtons = Object.keys(decadeXMap).sort((a, b) => +a - +b)
+    .map(d => `<button data-decade="${d}" onclick="jumpToDecade(${d})">${d}s</button>`)
+    .join('');
 
-  const laneLabels = Object.entries({
-    'Functional': 110, 'Systems': 230, 'JVM / CLR': 510, 'Dynamic': 630, 'Scientific': 730, 'Historical': 380,
-  }).map(([label, y]) => `<text class="tl-lane-label" x="8" y="${y - 8}">${label}</text>`).join('');
+  // Pre-rendered HTML glassmorphism cards
+  const cardsHtml = tlNodes.map((n, i) => {
+    const abbr = n.name.slice(0, 2).toUpperCase();
+    const logoHtml = n.logo
+      ? `<img src="${n.logo}" alt="${n.name}" loading="lazy"/>`
+      : `<span class="tl-card-logo-abbr" style="color:${n.color}">${abbr}</span>`;
+    const tagsHtml = n.tags.map(t => `<span class="tl-card-tag">${t}</span>`).join('');
+    const shClass = n.selfHosting ? ' tl-sh' : '';
+    const safeNote = (n.note || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    return `<div class="tl-card${shClass}" data-idx="${i}" data-x="${n.x}" data-y="${n.cardY}" data-bar-x="${n.barX}" data-bar-y="${n.barY}" data-seg="${i > 0 ? i - 1 : -1}" data-id="${n.id}" data-slug="${n.slug}" data-prefix="${n.prefix}" data-name="${n.name}" data-year="${n.year}" data-note="${safeNote}" data-color="${n.color}" data-logo="${n.logo || ''}" style="left:${n.x}px;top:${n.cardY}px;">
+      <div class="tl-card-top">
+        <div class="tl-card-logo-icon" style="border-color:${n.color}55;">${logoHtml}</div>
+        <span class="tl-card-year">${n.year}</span>
+      </div>
+      <div class="tl-card-name">${n.name}</div>
+      <div class="tl-card-tags">${tagsHtml}</div>
+      <button class="tl-expand-btn" aria-label="Expand ${n.name}">+</button>
+    </div>`;
+  }).join('\n    ');
 
-  // Trunk snaking bezier
-  const t = yearToX.bind(null);
-  const trunkD = `M 60,380 C ${t(1951)},380 ${t(1954)},380 ${t(1957)},380 C ${t(1959)},380 ${t(1962)},230 ${t(1965)},230 C ${t(1968)},230 ${t(1971)},230 ${t(1972)},230 C ${t(1974)},230 ${t(1976)},380 ${t(1978)},380 C ${t(1981)},380 ${t(1984)},380 ${t(1986)},380 C ${t(1988)},380 ${t(1990)},510 ${t(1993)},510 C ${t(1995)},510 ${t(1998)},510 ${t(2000)},510 C ${t(2002)},510 ${t(2005)},380 ${t(2007)},380 C ${t(2009)},380 ${t(2011)},240 ${t(2014)},240 C ${t(2016)},240 ${t(2019)},240 ${t(2021)},240 C ${t(2022)},240 ${t(2024)},380 ${t(2026)},380`;
+  const decadeXJson = JSON.stringify(decadeXMap);
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -1455,7 +1433,7 @@ function buildTimelinePage(languages: Language[], rels: Relationship[]): string 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Programming Language Timeline | Language Lineage</title>
-  <meta name="description" content="75+ years of programming language history as a cinematic atlas. Watch ${tlNodes.length} languages and tools materialize across time — from Fortran to Rust, with all implementation edges." />
+  <meta name="description" content="75+ years of programming language history. Watch ${sorted.length} languages emerge one by one on an interactive scrollable timeline from Fortran to Rust." />
   <link rel="canonical" href="${SITE}/timeline" />
   <link rel="icon" href="/favicon.svg" />
   <link rel="stylesheet" href="/seo.css" />
@@ -1466,7 +1444,7 @@ function buildTimelinePage(languages: Language[], rels: Relationship[]): string 
   <meta property="og:image:height" content="630" />
   <meta property="og:image:type" content="image/png" />
 </head>
-<body class="seo-page" style="overflow-x:hidden">
+<body class="seo-page">
 <nav class="seo-nav">
   <a href="/" class="nav-brand">Language Lineage</a>
   <a href="/relationships">Relationships</a>
@@ -1479,40 +1457,36 @@ function buildTimelinePage(languages: Language[], rels: Relationship[]): string 
 </nav>
 <div class="tl-prog-track"><div class="tl-prog-fill" id="tlp"></div></div>
 <div class="tl-decade-nav" id="tldnav">${decadeButtons}</div>
-<div class="tl-outer" id="tl-outer">
-  <svg id="tl-svg" viewBox="0 0 ${CANVAS_W} ${CANVAS_H}" width="${CANVAS_W}" height="${CANVAS_H}">
-    <defs>
-      <filter id="tl-glow-f" x="-50%" y="-50%" width="200%" height="200%">
-        <feGaussianBlur stdDeviation="4" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-    </defs>
-    <g id="tl-axis">${axisTicks}</g>
-    <g id="tl-lane-labels">${laneLabels}</g>
-    <g id="tl-trunk-g">
-      <path class="tl-trunk-bg" d="${trunkD}"/>
-      <path class="tl-trunk" id="tl-trunk-path" d="${trunkD}"/>
-      <path class="tl-trunk-pulse" id="tl-pulse-path" d="${trunkD}"/>
-    </g>
-    <g id="tl-edges-g">${edgesSvg}</g>
-    <g id="tl-nodes-g">${nodesSvg}</g>
-  </svg>
-</div>
-<div id="tl-spacer"></div>
 <div class="tl-year-hud"><span class="tl-year-num" id="tl-year-hud">1948</span></div>
-<button class="tl-reset-btn" id="tl-reset">
-  <svg width="14" height="14" viewBox="0 0 16 16"><path d="M8 2L2 8h4v5h4V8h4L8 2z" fill="currentColor"/></svg>
-  Overview
-</button>
-<div class="tl-float-card" id="tl-card">
-  <div class="tl-fc-logo" id="tl-fc-logo"></div>
-  <div class="tl-fc-name" id="tl-fc-name"></div>
-  <div class="tl-fc-year" id="tl-fc-year"></div>
-  <div class="tl-fc-tags" id="tl-fc-tags"></div>
-  <div class="tl-fc-note" id="tl-fc-note"></div>
-  <a class="tl-fc-link" id="tl-fc-link" href="#">View details</a>
+<div class="tl-outer" id="tl-outer">
+  <div class="tl-scroll-content" style="width:${CANVAS_W}px;height:${CANVAS_H}px;">
+    <svg id="tl-svg" width="${CANVAS_W}" height="${CANVAS_H}">
+      ${segmentsHtml}
+      ${ticksHtml}
+      ${dotsHtml}
+      ${decadeTicksHtml}
+    </svg>
+    <div id="tl-cards-layer" style="position:absolute;top:0;left:0;width:${CANVAS_W}px;height:${CANVAS_H}px;pointer-events:none;">
+      ${cardsHtml}
+    </div>
+  </div>
 </div>
-<footer class="seo-footer" style="position:relative;z-index:5">
+<button class="tl-mode-toggle" id="tl-mode-toggle">Graph</button>
+<!-- Modal — springs from "+" click position -->
+<div class="tl-modal" id="tl-modal">
+  <button class="tl-modal-close" id="tl-modal-close">&#x2715;</button>
+  <div class="tl-modal-header">
+    <div class="tl-modal-logo" id="tl-modal-logo"></div>
+    <div class="tl-modal-meta">
+      <div class="tl-modal-year" id="tl-modal-year"></div>
+      <div class="tl-modal-name" id="tl-modal-name"></div>
+      <div class="tl-modal-tags" id="tl-modal-tags"></div>
+    </div>
+  </div>
+  <div class="tl-modal-note" id="tl-modal-note"></div>
+  <a class="tl-modal-link" id="tl-modal-link" href="#">View full profile &#x2192;</a>
+</div>
+<footer class="seo-footer">
   <a href="/">Language Lineage</a>
   <span>&middot;</span>
   <a href="/dataset">Dataset</a>
@@ -1521,168 +1495,194 @@ function buildTimelinePage(languages: Language[], rels: Relationship[]): string 
   <span class="seo-footer-copy">&copy; 2026 Sanket Muchhala</span>
 </footer>
 <script>
-var TL_HOVER=${JSON.stringify(hoverMap)};
-var YEAR_START=${YEAR_START},YEAR_END=${YEAR_END},CANVAS_W=${CANVAS_W},X_L=${X_L},X_R=${X_R},TRUNK_LEN=7800;
-function yearToX(yr){return X_L+(yr-YEAR_START)/(YEAR_END-YEAR_START)*(CANVAS_W-X_L-X_R);}
+(function(){
+var YEAR_START=${YEAR_START},YEAR_END=${YEAR_END};
+var DECADE_X=${decadeXJson};
+var CANVAS_W=${CANVAS_W};
 
-var svgEl=document.getElementById('tl-svg');
 var outer=document.getElementById('tl-outer');
-var spacer=document.getElementById('tl-spacer');
 var fill=document.getElementById('tlp');
-var dnav=document.getElementById('tldnav');
 var hudEl=document.getElementById('tl-year-hud');
-var trunkEl=document.getElementById('tl-trunk-path');
-var pulseEl=document.getElementById('tl-pulse-path');
-var card=document.getElementById('tl-card');
+var dnav=document.getElementById('tldnav');
+var modal=document.getElementById('tl-modal');
+var modeBtn=document.getElementById('tl-mode-toggle');
+var rafPending=false,scrollMax=1,dnavBtns=[];
+var decades=Object.keys(DECADE_X).map(Number).sort(function(a,b){return a-b;});
+var graphMode=false;
 
-// Pre-cache sorted element arrays — querySelectorAll runs ONCE at init, never on scroll
-var nodeEls=Array.from(document.querySelectorAll('#tl-nodes-g .tl-node'))
-  .map(function(el){return{el:el,yr:+el.getAttribute('data-year')};})
-  .sort(function(a,b){return a.yr-b.yr;});
-var edgeEls=Array.from(document.querySelectorAll('#tl-edges-g .tl-edge'))
-  .map(function(el){return{el:el,yr:+el.getAttribute('data-reveal')};})
-  .sort(function(a,b){return a.yr-b.yr;});
+// Cards & segments
+var cards=Array.prototype.slice.call(document.querySelectorAll('.tl-card'));
+var segments=Array.prototype.slice.call(document.querySelectorAll('.tl-seg'));
+var segRevealed=segments.map(function(){return false;});
+cards.forEach(function(c){c.style.pointerEvents='auto';});
 
-// O(1) node lookup by id
-var nodeElById={};
-nodeEls.forEach(function(n){nodeElById[n.el.getAttribute('data-id')]=n.el;});
-
-// Build edge adjacency from DOM data attributes
-var edgeAdj={};
-document.querySelectorAll('.tl-edge[data-from]').forEach(function(el){
-  var f=el.getAttribute('data-from'),t=el.getAttribute('data-to');
-  if(!edgeAdj[f])edgeAdj[f]=[];
-  if(!edgeAdj[t])edgeAdj[t]=[];
-  edgeAdj[f].push(t);edgeAdj[t].push(f);
-});
-
-// Forward-advancing reveal pointers — O(newly revealed per frame), not O(total)
-var nodePtr=0,edgePtr=0;
-var isMobile=window.innerWidth<=768;
-var scrollDist=0;
-var curProgress=0;
-var rafId=null;
-
-var decadeXs={1950:yearToX(1950),1960:yearToX(1960),1970:yearToX(1970),1980:yearToX(1980),1990:yearToX(1990),2000:yearToX(2000),2010:yearToX(2010),2020:yearToX(2020)};
-var decadeKeys=['1950','1960','1970','1980','1990','2000','2010','2020'];
-var decadeBtns=dnav?Array.from(dnav.querySelectorAll('button')):[];
-
-// Trunk animation setup
-trunkEl.style.strokeDasharray=TRUNK_LEN;
-trunkEl.style.strokeDashoffset=TRUNK_LEN;
-pulseEl.style.strokeDasharray='90px '+TRUNK_LEN+'px';
-pulseEl.style.animation='tl-flow '+(TRUNK_LEN/180).toFixed(1)+'s linear infinite';
-
-function setup(){
-  if(isMobile)return;
-  scrollDist=Math.max(CANVAS_W-outer.offsetWidth,1);
-  spacer.style.height=scrollDist+'px';
+// Init per-segment stroke-dasharray after layout
+function initSegments(){
+  segments.forEach(function(seg){
+    var len=Math.ceil(seg.getTotalLength&&seg.getTotalLength()||200);
+    seg.dataset.len=String(len);
+    seg.style.strokeDasharray=String(len);
+    seg.style.strokeDashoffset=String(len);
+  });
 }
 
-// Scroll handler: ONLY saves progress + schedules RAF — zero DOM work here
-window.addEventListener('scroll',function(){
-  if(isMobile)return;
-  var s=window.scrollY;
-  curProgress=s>scrollDist?scrollDist:s<0?0:s;
-  if(!rafId)rafId=requestAnimationFrame(doFrame);
-},{passive:true});
-
-function doFrame(){
-  rafId=null;
-  var p=curProgress,frac=p/scrollDist;
-  var yr=Math.round(YEAR_START+frac*(YEAR_END-YEAR_START));
-
-  // GPU-composited horizontal pan (translate3d triggers compositor layer)
-  svgEl.style.transform='translate3d(-'+p+'px,0,0)';
-
-  // Progress bar + year HUD
-  if(fill)fill.style.width=(frac*100).toFixed(1)+'%';
-  if(hudEl)hudEl.textContent=yr;
-
-  // Trunk reveal (one element update per frame — cheap)
-  trunkEl.style.strokeDashoffset=((1-frac)*TRUNK_LEN).toFixed(0);
-
-  // Advance reveal pointers forward only — never revisit revealed elements
-  while(nodePtr<nodeEls.length&&nodeEls[nodePtr].yr<=yr){
-    nodeEls[nodePtr].el.classList.add('visible');nodePtr++;
-  }
-  while(edgePtr<edgeEls.length&&edgeEls[edgePtr].yr<=yr){
-    edgeEls[edgePtr].el.classList.add('visible');edgePtr++;
-  }
-
-  // Decade nav highlight
-  var activeD=null;
-  for(var i=0;i<decadeKeys.length;i++){
-    if(p>=decadeXs[decadeKeys[i]]-outer.offsetWidth*0.4)activeD=decadeKeys[i];
-  }
-  for(var j=0;j<decadeBtns.length;j++){
-    decadeBtns[j].classList.toggle('active',decadeBtns[j].getAttribute('data-decade')===activeD);
-  }
-}
-
-window.jumpToDecade=function(d){
-  var x=decadeXs[d];if(x==null)return;
-  window.scrollTo({top:Math.max(0,x-outer.offsetWidth*0.3),behavior:'smooth'});
-};
-
-document.getElementById('tl-reset').addEventListener('click',function(){
-  nodePtr=0;edgePtr=0;
-  for(var i=0;i<nodeEls.length;i++)nodeEls[i].el.classList.remove('visible','tl-expanded');
-  for(var i=0;i<edgeEls.length;i++)edgeEls[i].el.classList.remove('visible');
-  window.scrollTo({top:0,behavior:'smooth'});
-});
-
-// Hover card — single delegated listener on group container
-var cardTimer=null;
-document.getElementById('tl-nodes-g').addEventListener('mouseover',function(ev){
-  var g=ev.target.closest('.tl-node');if(!g)return;
-  clearTimeout(cardTimer);
-  var d=TL_HOVER[g.getAttribute('data-id')];if(!d)return;
-  var col=d.color||'#c9a87c';
-  document.getElementById('tl-fc-name').textContent=d.name;
-  document.getElementById('tl-fc-year').textContent=d.year;
-  var logoEl=document.getElementById('tl-fc-logo');
-  logoEl.style.background=col+'22';logoEl.style.border='2px solid '+col+'50';
-  logoEl.innerHTML=d.logo?'<img src="'+d.logo+'" style="width:60%;height:60%;object-fit:contain">':'<span class="tl-fc-abbr" style="color:'+col+'">'+d.name.slice(0,2).toUpperCase()+'</span>';
-  document.getElementById('tl-fc-tags').innerHTML=(d.tags||[]).map(function(t){return'<span class="tl-fc-tag">'+t+'</span>';}).join('');
-  document.getElementById('tl-fc-note').textContent=d.note||'';
-  var lnk=document.getElementById('tl-fc-link');lnk.href='/'+d.prefix+'/'+d.slug;lnk.textContent='View '+d.name;
-  moveCard(ev.clientX,ev.clientY);card.classList.add('show');
-});
-document.getElementById('tl-nodes-g').addEventListener('mousemove',function(ev){
-  if(card.classList.contains('show'))moveCard(ev.clientX,ev.clientY);
-});
-document.getElementById('tl-nodes-g').addEventListener('mouseleave',function(){
-  cardTimer=setTimeout(function(){card.classList.remove('show');},100);
-});
-function moveCard(cx,cy){
-  var x=cx+16,y=cy-90;
-  if(x+230>window.innerWidth-8)x=cx-240;
-  if(y<4)y=4;if(y+200>window.innerHeight-4)y=window.innerHeight-204;
-  card.style.left=x+'px';card.style.top=y+'px';
-}
-
-// Expand button — single delegated listener
-document.getElementById('tl-nodes-g').addEventListener('click',function(ev){
-  var btn=ev.target.closest('.tl-expand-btn');if(!btn)return;
-  var g=btn.closest('.tl-node');if(!g)return;
-  ev.stopPropagation();
-  var id=g.getAttribute('data-id');
-  var conns=edgeAdj[id]||[];
-  var delay=0;
-  conns.forEach(function(cid){
-    var el=nodeElById[cid];
-    if(el&&!el.classList.contains('visible')){
-      setTimeout(function(){el.classList.add('visible','tl-expanded');},delay);delay+=50;
+// IntersectionObserver — reveal card + draw incoming segment
+var cardRevealed=cards.map(function(){return false;});
+var io=new IntersectionObserver(function(entries){
+  entries.forEach(function(entry){
+    if(!entry.isIntersecting)return;
+    var card=entry.target;
+    var idx=parseInt(card.dataset.idx,10);
+    if(cardRevealed[idx])return;
+    cardRevealed[idx]=true;
+    card.classList.add('visible');
+    var segIdx=parseInt(card.dataset.seg,10);
+    if(segIdx>=0&&!segRevealed[segIdx]){
+      segRevealed[segIdx]=true;
+      var seg=segments[segIdx];
+      if(seg){
+        setTimeout(function(){
+          seg.style.transition='stroke-dashoffset 0.65s cubic-bezier(0.25,0.46,0.45,0.94)';
+          seg.style.strokeDashoffset='0';
+        },40);
+      }
     }
   });
-  document.querySelectorAll('.tl-edge[data-from="'+id+'"],.tl-edge[data-to="'+id+'"]')
-    .forEach(function(e){e.classList.add('visible');});
+},{root:outer,rootMargin:'0px 80px 0px 0px',threshold:0});
+cards.forEach(function(c){io.observe(c);});
+
+// Magnetic cursor effect + segment glow on hover
+cards.forEach(function(card){
+  var segIdx=parseInt(card.dataset.seg,10);
+  var seg=segIdx>=0?segments[segIdx]:null;
+  card.addEventListener('mouseenter',function(){
+    card.style.transitionDuration='0.12s,0.12s,0.25s,0.2s,0.65s,0.65s';
+    if(seg)seg.classList.add('lit');
+  });
+  card.addEventListener('mousemove',function(e){
+    var r=card.getBoundingClientRect();
+    var dx=((e.clientX-r.left-r.width/2)*0.07).toFixed(2);
+    var dy=((e.clientY-r.top-r.height/2)*0.07).toFixed(2);
+    card.style.transform='translate(calc(-50% + '+dx+'px),calc(-50% + '+dy+'px))';
+  });
+  card.addEventListener('mouseleave',function(){
+    card.style.transitionDuration='';
+    card.style.transform='';
+    if(seg)seg.classList.remove('lit');
+  });
 });
 
-setup();
-window.addEventListener('resize',function(){isMobile=window.innerWidth<=768;setup();},{passive:true});
-curProgress=0;doFrame();
+// "+" button — modal springs from click origin
+cards.forEach(function(card){
+  var btn=card.querySelector('.tl-expand-btn');
+  if(!btn)return;
+  btn.addEventListener('click',function(e){
+    e.stopPropagation();
+    var MODAL_W=300,MODAL_H=240;
+    var br=btn.getBoundingClientRect();
+    var btnCx=(br.left+br.right)/2,btnCy=(br.top+br.bottom)/2;
+    var mx=btnCx+14,my=btnCy-MODAL_H/2;
+    if(mx+MODAL_W>window.innerWidth-8)mx=btnCx-MODAL_W-14;
+    if(my<8)my=8;
+    if(my+MODAL_H>window.innerHeight-8)my=window.innerHeight-MODAL_H-8;
+    modal.style.left=mx+'px';modal.style.top=my+'px';
+    var ox=Math.min(98,Math.max(2,(btnCx-mx)/MODAL_W*100));
+    var oy=Math.min(98,Math.max(2,(btnCy-my)/MODAL_H*100));
+    modal.style.transformOrigin=ox.toFixed(1)+'% '+oy.toFixed(1)+'%';
+    var color=card.dataset.color;
+    var logoEl=document.getElementById('tl-modal-logo');
+    logoEl.style.borderColor=color;logoEl.style.background=color+'22';logoEl.innerHTML='';
+    if(card.dataset.logo){
+      var img=document.createElement('img');
+      img.src=card.dataset.logo;img.alt=card.dataset.name;
+      img.style.cssText='width:60%;height:60%;object-fit:contain';
+      logoEl.appendChild(img);
+    } else {
+      logoEl.innerHTML='<span class="tl-modal-abbr" style="color:'+color+'">'+card.dataset.name.slice(0,2).toUpperCase()+'</span>';
+    }
+    document.getElementById('tl-modal-year').textContent=card.dataset.year;
+    document.getElementById('tl-modal-name').textContent=card.dataset.name;
+    document.getElementById('tl-modal-tags').innerHTML=Array.prototype.slice.call(card.querySelectorAll('.tl-card-tag')).map(function(t){return '<span class="tl-modal-tag">'+t.textContent+'</span>';}).join('');
+    document.getElementById('tl-modal-note').textContent=card.dataset.note||'';
+    document.getElementById('tl-modal-link').href='/'+card.dataset.prefix+'/'+card.dataset.slug;
+    modal.classList.add('show');
+  });
+});
+document.getElementById('tl-modal-close').addEventListener('click',function(){modal.classList.remove('show');});
+document.addEventListener('click',function(e){if(modal.classList.contains('show')&&!modal.contains(e.target))modal.classList.remove('show');});
+
+// Graph mode toggle — cards morph to bar chart positions
+function setGraphMode(on){
+  graphMode=on;
+  modeBtn.textContent=on?'Timeline':'Graph';
+  outer.classList.toggle('graph-mode',on);
+  cards.forEach(function(card){
+    card.style.transform='';
+    if(on){
+      card.style.left=card.dataset.barX+'px';
+      card.style.top=card.dataset.barY+'px';
+    } else {
+      card.style.left=card.dataset.x+'px';
+      card.style.top=card.dataset.y+'px';
+    }
+  });
+}
+modeBtn.addEventListener('click',function(){setGraphMode(!graphMode);});
+
+// Scroll progress + HUD + decade nav
+function doScroll(){
+  rafPending=false;
+  var sl=outer.scrollLeft;
+  var frac=sl/scrollMax;
+  if(fill)fill.style.width=(frac*100).toFixed(1)+'%';
+  if(hudEl)hudEl.textContent=String(Math.round(YEAR_START+frac*(YEAR_END-YEAR_START)));
+  var active=null;
+  for(var j=0;j<decades.length;j++){if(sl+outer.clientWidth/2>=DECADE_X[decades[j]])active=decades[j];}
+  for(var b=0;b<dnavBtns.length;b++){dnavBtns[b].classList.toggle('active',parseInt(dnavBtns[b].dataset.decade,10)===active);}
+}
+function onScroll(){if(!rafPending){rafPending=true;requestAnimationFrame(doScroll);}}
+
+// Debounced scroll-snap to nearest card
+var snapTimer=null;
+outer.addEventListener('scroll',function(){
+  if(snapTimer)clearTimeout(snapTimer);
+  snapTimer=setTimeout(function(){
+    if(graphMode)return;
+    var viewCx=outer.scrollLeft+outer.clientWidth/2;
+    var nearest=null,nearestDist=Infinity;
+    cards.forEach(function(c){
+      var d=Math.abs(parseFloat(c.dataset.x)-viewCx);
+      if(d<nearestDist){nearestDist=d;nearest=c;}
+    });
+    if(nearest&&nearestDist>40){
+      outer.scrollTo({left:Math.max(0,parseFloat(nearest.dataset.x)-outer.clientWidth/2),behavior:'smooth'});
+    }
+  },200);
+},{passive:true});
+
+// Vertical wheel → horizontal scroll
+outer.addEventListener('wheel',function(e){
+  if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){
+    e.preventDefault();
+    outer.scrollLeft+=e.deltaY*1.2;
+    if(!rafPending){rafPending=true;requestAnimationFrame(doScroll);}
+  }
+},{passive:false});
+
+window.jumpToDecade=function(d){
+  var x=DECADE_X[d];if(x==null)return;
+  outer.scrollTo({left:Math.max(0,x-outer.clientWidth/4),behavior:'smooth'});
+};
+
+window.addEventListener('load',function(){
+  scrollMax=Math.max(1,outer.scrollWidth-outer.clientWidth);
+  if(dnav)dnavBtns=Array.prototype.slice.call(dnav.querySelectorAll('button'));
+  outer.addEventListener('scroll',onScroll,{passive:true});
+  window.addEventListener('resize',function(){scrollMax=Math.max(1,outer.scrollWidth-outer.clientWidth);doScroll();});
+  initSegments();
+  doScroll();
+});
+})();
 </script>
 </body>
 </html>`;
