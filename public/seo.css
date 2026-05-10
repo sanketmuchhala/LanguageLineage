@@ -950,14 +950,93 @@ pre {
 .tl-modal-link { font-size: 11px; font-weight: 600; color: var(--accent); }
 .tl-modal-link:hover { text-decoration: underline; }
 
-/* Mobile */
+/* Mobile — vertical timeline */
 @media (max-width: 768px) {
+  /* Hide horizontal chrome */
   .tl-year-hud, .tl-prog-track, .tl-decade-nav { display: none; }
-  .tl-outer { height: calc(100svh - 55px); }
-  .tl-card { opacity: 1; transform: translate(-50%,-50%); }
-  .tl-card-top, .tl-card-name, .tl-card-tags { opacity: 1; transform: none; }
   .tl-mode-toggle { display: none; }
   .tl-modal { width: calc(100vw - 24px); left: 12px !important; right: 12px; }
+
+  /* Outer: fixed height, vertical scroll */
+  .tl-outer {
+    overflow-x: hidden !important;
+    overflow-y: auto;
+    height: calc(100svh - 55px);
+    flex-direction: column;
+    align-items: stretch;
+    cursor: default;
+  }
+  /* No parallax dot pattern on mobile */
+  .tl-outer::before { display: none; }
+
+  /* Hide the horizontal bezier SVG */
+  #tl-svg { display: none; }
+
+  /* Scroll content stretches vertically */
+  .tl-scroll-content {
+    width: 100% !important;
+    height: auto !important;
+    flex-shrink: 1;
+    position: relative;
+  }
+
+  /* Vertical accent spine line on the left */
+  .tl-scroll-content::after {
+    content: '';
+    position: absolute;
+    left: 27px;
+    top: 20px;
+    bottom: 40px;
+    width: 2px;
+    background: linear-gradient(to bottom, transparent 0%, rgba(201,168,124,0.5) 4%, rgba(201,168,124,0.5) 96%, transparent 100%);
+    pointer-events: none;
+    border-radius: 1px;
+  }
+
+  /* Cards layer: vertical flex column */
+  #tl-cards-layer {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    pointer-events: auto !important;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px 14px 60px 54px;
+    box-sizing: border-box;
+  }
+
+  /* Cards: normal flow, full width, instant visible */
+  .tl-card {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+    width: 100% !important;
+    opacity: 1 !important;
+    padding: 10px 12px 10px !important;
+  }
+  /* Dot on the spine for each card */
+  .tl-card::before {
+    content: '';
+    position: absolute;
+    left: -30px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid rgba(14,12,18,0.9);
+    box-shadow: 0 0 0 2px rgba(201,168,124,0.3);
+  }
+
+  /* Card content always visible on mobile */
+  .tl-card-top, .tl-card-name, .tl-card-tags { opacity: 1 !important; transform: none !important; }
+  .tl-card-name { white-space: normal; }
+  .tl-expand-btn { position: static; display: inline-flex; margin-top: 8px; }
 }
 
 /* ============================================
