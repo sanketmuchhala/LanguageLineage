@@ -42,10 +42,10 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
           <a href="/guides">Guides</a>
           <a href="/timeline">Timeline</a>
           <a href="/dataset">Dataset</a>
-          <button className="nav-cta" onClick={onEnterGraph}>
-            Enter Graph
-          </button>
         </div>
+        <button className="nav-cta" onClick={onEnterGraph}>
+          Enter Graph
+        </button>
       </nav>
 
       {/* Hero Section */}

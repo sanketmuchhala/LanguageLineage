@@ -63,6 +63,24 @@ a:hover { color: var(--accent-hover); text-decoration: underline; }
   margin-right: auto;
   padding-left: 0;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.nav-logo-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: var(--accent);
+  color: #0a0a0b;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+  margin-right: 8px;
 }
 
 .seo-nav a:hover { color: var(--accent); text-decoration: none; background: rgba(201,168,124,0.07); }
@@ -548,26 +566,57 @@ pre {
    RESPONSIVE — Mobile (≤640px)
    ============================================ */
 @media (max-width: 640px) {
-  /* Nav */
+  /* Nav — two-row layout on mobile */
   .seo-nav {
-    padding: 0 14px;
+    flex-wrap: wrap;
+    height: auto;
+    padding: 0;
     gap: 0;
-    height: 55px;
   }
-  .seo-page { padding-top: 55px; }
-
-  .seo-nav a:not(.nav-brand):not(.nav-enter-graph) {
-    display: none;
+  /* Invisible flex row-break: forces links to row 2 */
+  .seo-nav::after {
+    content: '';
+    flex-basis: 100%;
+    height: 0;
+    order: 3;
   }
-
   .seo-nav a.nav-brand {
+    flex: 1;
+    order: 1;
+    margin-right: 0;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
     font-size: 13px;
-    flex-grow: 1;
   }
-
   .nav-enter-graph {
+    order: 2;
+    display: flex !important;
+    align-items: center;
+    height: 48px !important;
+    border-radius: 0 !important;
+    border: none !important;
+    border-left: 1px solid var(--border) !important;
+    padding: 0 16px !important;
     margin-left: 0 !important;
   }
+  .seo-nav a:not(.nav-brand):not(.nav-enter-graph) {
+    order: 4;
+    display: flex !important;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    height: 34px;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 0;
+    border-top: 1px solid var(--border);
+    white-space: nowrap;
+    min-width: 0;
+    overflow: hidden;
+  }
+  .seo-page { padding-top: 82px; }
 
   /* Main content */
   .seo-main {
@@ -851,7 +900,15 @@ pre {
   user-select: none;
   -webkit-user-select: none;
 }
+.tl-card::before {
+  content: ''; position: absolute; left: 0; top: 6px; bottom: 6px;
+  width: 2px; border-radius: 0 1px 1px 0;
+  background: var(--card-color, var(--accent)); opacity: 0.45;
+  transition: opacity 0.3s ease; pointer-events: none;
+}
 .tl-card.visible { opacity: 1; transform: translate(-50%,-50%); }
+.tl-card.visible::before { opacity: 0.7; }
+.tl-card.visible:hover::before { opacity: 1; }
 .tl-card.visible:hover { box-shadow: 0 6px 28px rgba(201,168,124,0.18); border-color: rgba(201,168,124,0.38); }
 .tl-card.tl-sh.visible { animation: card-glow 3s ease-in-out infinite alternate; }
 @keyframes card-glow { from { box-shadow: 0 0 6px rgba(201,168,124,0.08); } to { box-shadow: 0 0 22px rgba(201,168,124,0.3); } }
@@ -921,8 +978,8 @@ pre {
 .tl-outer.graph-mode .tl-card .tl-graph-dot { display: flex; }
 .tl-outer.graph-mode .tl-card:hover { transform: translate(-50%,-50%) scale(1.4) !important; box-shadow: 0 0 0 2px rgba(255,255,255,0.45), 0 6px 22px rgba(201,168,124,0.55) !important; z-index: 10; cursor: pointer; }
 .tl-outer.graph-mode .tl-card:hover::after { content: attr(data-name); position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: rgba(14,12,18,0.95); color: var(--text); font-size: 10px; font-weight: 700; white-space: nowrap; padding: 3px 9px 4px; border-radius: 5px; border: 1px solid rgba(245,240,232,0.18); pointer-events: none; z-index: 20; letter-spacing: 0.04em; }
-/* Axis baseline */
-#tl-graph-axis { border-top: 1px solid rgba(245,240,232,0.18); }
+/* Axis — full-viewport overlay in graph mode (position set by JS) */
+#tl-graph-axis { overflow: hidden; }
 /* Graph dot — hidden by default, flex in graph mode */
 .tl-graph-dot { display: none; align-items: center; justify-content: center; width: 100%; height: 100%; }
 .tl-graph-dot img { width: 58%; height: 58%; object-fit: contain; }

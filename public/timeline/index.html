@@ -17,7 +17,7 @@
 </head>
 <body class="seo-page">
 <nav class="seo-nav">
-  <a href="/" class="nav-brand">Language Lineage</a>
+  <a href="/" class="nav-brand"><span class="nav-logo-mark">LL</span>Language Lineage</a>
   <a href="/relationships">Relationships</a>
   <a href="/languages">Languages</a>
   <a href="/tools">Tools</a>
@@ -1275,7 +1275,7 @@
     </div>
   </div>
 </div>
-<div id="tl-graph-axis" style="display:none;position:fixed;bottom:16px;left:0;right:0;height:40px;z-index:25;pointer-events:none;"></div>
+<div id="tl-graph-axis" style="display:none;"></div>
 <button class="tl-mode-toggle" id="tl-mode-toggle">Graph</button>
 <!-- Modal — springs from "+" click position -->
 <div class="tl-modal" id="tl-modal">
@@ -1423,25 +1423,41 @@ function setGraphMode(on){
     var decKeys=Object.keys(byDecade).map(Number).sort(function(a,b){return a-b;});
     var numCols=decKeys.length;
     var W=outer.clientWidth,H=outer.clientHeight;
-    var LABEL_H=46,GAP=4;
+    var LABEL_H=52,GAP=6,SUB_COLS=2,SUB_GAP=4;
     var colW=Math.floor((W-GAP*(numCols+1))/numCols);
+    // Max rows using 2-wide sub-columns
     var maxRows=0;
-    decKeys.forEach(function(d){if(byDecade[d].length>maxRows)maxRows=byDecade[d].length;});
-    var DOT=Math.min(colW-GAP*2,Math.floor((H-LABEL_H-GAP*(maxRows+1))/maxRows));
-    DOT=Math.max(16,Math.min(DOT,48));
+    decKeys.forEach(function(d){
+      var r=Math.ceil(byDecade[d].length/SUB_COLS);
+      if(r>maxRows)maxRows=r;
+    });
+    var DOT=Math.min(
+      Math.floor((colW-SUB_GAP)/SUB_COLS)-2,
+      Math.floor((H-LABEL_H-GAP*(maxRows+1))/maxRows)
+    );
+    DOT=Math.max(18,Math.min(DOT,44));
     var layerOffY=(H-CANVAS_H)/2;
-    if(axis){axis.innerHTML='';axis.style.display='block';}
+    // Axis covers full viewport for column bars + labels
+    if(axis){
+      axis.innerHTML='';
+      axis.style.cssText='display:block;position:fixed;top:0;left:0;right:0;bottom:0;height:auto;pointer-events:none;z-index:5;';
+    }
     decKeys.forEach(function(dec,ci){
-      var cx=GAP+ci*(colW+GAP)+colW/2;
+      var colX=GAP+ci*(colW+GAP);
+      var cx=colX+colW/2;
       var items=byDecade[dec];
-      var startY=H-LABEL_H-GAP-DOT/2;
+      var numRows=Math.ceil(items.length/SUB_COLS);
       items.forEach(function(card,ri){
-        var targetY=startY-ri*(DOT+GAP);
+        var row=Math.floor(ri/SUB_COLS);
+        var sub=ri%SUB_COLS;
+        // Two sub-columns centered in column
+        var subOffset=(sub-(SUB_COLS-1)/2)*(DOT+SUB_GAP);
+        var targetX=cx+subOffset;
+        var targetY=H-LABEL_H-GAP-DOT/2-row*(DOT+GAP);
         var color=card.dataset.color;
-        // Stagger: columns left-to-right, rows bottom-to-top
-        var delay=(ci*0.035+ri*0.018).toFixed(3);
+        var delay=(ci*0.04+row*0.02+sub*0.005).toFixed(3);
         card.style.transitionDelay=delay+'s';
-        card.style.left=Math.round(cx)+'px';
+        card.style.left=Math.round(targetX)+'px';
         card.style.top=Math.round(targetY-layerOffY)+'px';
         card.style.width=DOT+'px';
         card.style.height=DOT+'px';
@@ -1454,13 +1470,26 @@ function setGraphMode(on){
         card.style.transform='translate(-50%,-50%)';
       });
       if(axis){
+        // Column background bar (height proportional to this decade's count)
+        var barH=numRows*(DOT+GAP)+GAP;
+        var bg=document.createElement('div');
+        bg.style.cssText='position:absolute;left:'+colX+'px;width:'+colW+'px;bottom:'+LABEL_H+'px;height:'+barH+'px;'
+          +'background:rgba(201,168,124,0.025);border:1px solid rgba(201,168,124,0.09);border-bottom:none;border-radius:4px 4px 0 0;';
+        axis.appendChild(bg);
+        // Decade label + count
         var lbl=document.createElement('div');
-        lbl.style.cssText='position:absolute;left:'+Math.round(cx)+'px;transform:translateX(-50%);text-align:center;top:6px;';
-        lbl.innerHTML='<div style="font-size:10px;font-weight:800;font-family:JetBrains Mono,monospace;color:rgba(245,240,232,0.6);letter-spacing:0.06em;">'+dec+'s</div>'
-                      +'<div style="font-size:9px;font-weight:600;font-family:JetBrains Mono,monospace;color:rgba(245,240,232,0.28);margin-top:1px;">'+items.length+'</div>';
+        lbl.style.cssText='position:absolute;left:'+Math.round(cx)+'px;transform:translateX(-50%);text-align:center;bottom:8px;';
+        lbl.innerHTML='<div style="font-size:11px;font-weight:800;font-family:JetBrains Mono,monospace;color:rgba(245,240,232,0.65);letter-spacing:0.06em;">'+dec+'s</div>'
+                      +'<div style="font-size:9px;font-weight:600;font-family:JetBrains Mono,monospace;color:rgba(245,240,232,0.3);margin-top:2px;">'+items.length+'</div>';
         axis.appendChild(lbl);
       }
     });
+    // Baseline separator
+    if(axis){
+      var baseline=document.createElement('div');
+      baseline.style.cssText='position:absolute;left:0;right:0;bottom:'+(LABEL_H-1)+'px;height:1px;background:rgba(245,240,232,0.18);';
+      axis.appendChild(baseline);
+    }
   } else {
     // Keep content hidden during resize-back transition
     cards.forEach(function(card){card.classList.add('tl-card-exiting');});
@@ -1562,6 +1591,8 @@ window.addEventListener('load',function(){
   scrollMax=Math.max(1,outer.scrollWidth-outer.clientWidth);
   if(dnav)dnavBtns=Array.prototype.slice.call(dnav.querySelectorAll('button'));
   window.addEventListener('resize',function(){scrollMax=Math.max(1,outer.scrollWidth-outer.clientWidth);});
+  // Set per-card CSS color variable for left-border accent
+  cards.forEach(function(card){var c=card.dataset.color;if(c)card.style.setProperty('--card-color',c);});
   initSegments();
   // Intro: reveal card[0] immediately, draw segment[0] over 1.2s
   if(cards[0]){cards[0].classList.add('visible');cardRevealed[0]=true;}
