@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
 const PUBLIC = join(ROOT, 'public');
-const SITE = 'https://languagelineage.org';
+const SITE = 'https://www.languagelineage.org';
 
 function idToSlug(id: string): string {
   return id.replace(/^(lang|tool):/, '').replace(/_/g, '-');
@@ -36,9 +36,36 @@ const GUIDE_SLUGS = [
   'v8-vs-spidermonkey-vs-javascriptcore',
 ];
 
+const QUESTION_SLUGS = [
+  'what-is-python-written-in',
+  'what-is-javascript-written-in',
+  'what-is-rust-written-in',
+  'what-is-go-written-in',
+  'what-is-java-written-in',
+  'what-is-c-written-in',
+  'what-is-cpp-written-in',
+  'what-is-typescript-written-in',
+  'what-is-ruby-written-in',
+  'what-is-v8-written-in',
+  'what-is-cpython-written-in',
+  'what-is-compiler-bootstrapping',
+  'what-is-a-self-hosting-compiler',
+];
+
 const urls: Array<{ loc: string; changefreq: string; priority: string }> = [
   { loc: `${SITE}/`, changefreq: 'monthly', priority: '1.0' },
   { loc: `${SITE}/explore`, changefreq: 'monthly', priority: '0.9' },
+  // New keyword landing pages
+  { loc: `${SITE}/programming-language-graph`, changefreq: 'monthly', priority: '0.9' },
+  { loc: `${SITE}/programming-language-family-tree`, changefreq: 'monthly', priority: '0.85' },
+  { loc: `${SITE}/programming-language-evolution`, changefreq: 'monthly', priority: '0.85' },
+  { loc: `${SITE}/what-are-programming-languages-written-in`, changefreq: 'monthly', priority: '0.85' },
+  { loc: `${SITE}/programming-language-genealogy`, changefreq: 'monthly', priority: '0.8' },
+  { loc: `${SITE}/compiler-runtime-bootstrap`, changefreq: 'monthly', priority: '0.8' },
+  // Questions
+  { loc: `${SITE}/questions`, changefreq: 'monthly', priority: '0.75' },
+  ...QUESTION_SLUGS.map(s => ({ loc: `${SITE}/questions/${s}`, changefreq: 'monthly', priority: '0.8' })),
+  // Core pages
   { loc: `${SITE}/dataset`, changefreq: 'monthly', priority: '0.8' },
   { loc: `${SITE}/languages`, changefreq: 'monthly', priority: '0.75' },
   { loc: `${SITE}/tools`, changefreq: 'monthly', priority: '0.75' },

@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
-const SITE = 'https://languagelineage.org';
+const SITE = 'https://www.languagelineage.org';
 
 interface Language { id: string; name: string }
 interface Relationship { relationship: string }
@@ -68,7 +68,34 @@ ${relTableRows}
 - Home: ${SITE}/
 - Graph Explorer: ${SITE}/explore
 - Dataset: ${SITE}/dataset
+- Timeline: ${SITE}/timeline
 - Sitemap: ${SITE}/sitemap.xml
+
+## Main Concept Pages
+
+- Programming Language Graph: ${SITE}/programming-language-graph
+- Programming Language Family Tree: ${SITE}/programming-language-family-tree
+- Programming Language Genealogy: ${SITE}/programming-language-genealogy
+- Programming Language Evolution Timeline: ${SITE}/programming-language-evolution
+- What Are Programming Languages Written In: ${SITE}/what-are-programming-languages-written-in
+- Compiler Runtime and Bootstrap Explained: ${SITE}/compiler-runtime-bootstrap
+
+## High-Value Question Pages
+
+- What is Python written in: ${SITE}/questions/what-is-python-written-in
+- What is JavaScript written in: ${SITE}/questions/what-is-javascript-written-in
+- What is Rust written in: ${SITE}/questions/what-is-rust-written-in
+- What is Go written in: ${SITE}/questions/what-is-go-written-in
+- What is Java written in: ${SITE}/questions/what-is-java-written-in
+- What is C written in: ${SITE}/questions/what-is-c-written-in
+- What is C++ written in: ${SITE}/questions/what-is-cpp-written-in
+- What is TypeScript written in: ${SITE}/questions/what-is-typescript-written-in
+- What is Ruby written in: ${SITE}/questions/what-is-ruby-written-in
+- What is V8 written in: ${SITE}/questions/what-is-v8-written-in
+- What is CPython written in: ${SITE}/questions/what-is-cpython-written-in
+- What is compiler bootstrapping: ${SITE}/questions/what-is-compiler-bootstrapping
+- What is a self-hosting compiler: ${SITE}/questions/what-is-a-self-hosting-compiler
+- All questions: ${SITE}/questions
 
 ### Popular Language Pages
 

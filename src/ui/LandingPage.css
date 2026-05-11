@@ -853,6 +853,67 @@
 }
 
 /* ============================================
+   MORE THAN SECTION — comparison table
+   ============================================ */
+.more-than-section .section-text.centered {
+  max-width: 680px;
+  margin: 0 auto 40px;
+  text-align: center;
+}
+
+.comparison-table {
+  max-width: 780px;
+  margin: 0 auto;
+  overflow-x: auto;
+}
+
+.comparison-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.comparison-table th,
+.comparison-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border: 1px solid var(--color-border);
+}
+
+.comparison-table th {
+  background: var(--color-bg-elevated);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.comparison-table th:nth-child(3),
+.comparison-table td:nth-child(3) {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.comparison-table tbody tr:hover {
+  background: var(--color-bg-elevated);
+}
+
+.comparison-table td:first-child {
+  color: var(--color-text);
+}
+
+.comparison-table td:nth-child(2) {
+  color: var(--color-text-subtle);
+}
+
+@media (max-width: 768px) {
+  .comparison-table { font-size: 13px; }
+  .comparison-table th, .comparison-table td { padding: 10px 12px; }
+}
+
+/* ============================================
    FOOTER
    ============================================ */
 .landing-footer {

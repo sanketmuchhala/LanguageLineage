@@ -27,7 +27,7 @@ function LandingPageWrapper() {
       <Seo
         title="Programming Language Lineage Graph | What Languages Are Written In"
         description="Explore what programming languages are written in, how compilers are bootstrapped, and how languages evolved. Interactive graph of 112 languages and 347 relationships."
-        canonical="https://languagelineage.org/"
+        canonical="https://www.languagelineage.org/"
         ogImage="https://languagelineage.org/og-image.svg"
       />
       <LandingPage onEnterGraph={() => navigate('/explore')} />

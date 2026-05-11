@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compiler, Runtime, and Bootstrap Relationships Explained | Language Lineage</title>
+  <meta name="description" content="Understand compiler, runtime, and bootstrap relationships in programming language implementation. Definitions, examples, and dataset evidence for all relationship types." />
+  <link rel="canonical" href="https://www.languagelineage.org/compiler-runtime-bootstrap" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/seo.css" />
+  <meta property="og:title" content="Compiler, Runtime, and Bootstrap Relationships Explained" />
+  <meta property="og:description" content="Compiler, runtime, bootstrap, transpilation — what they mean and how Language Lineage tracks them." />
+  <meta property="og:url" content="https://www.languagelineage.org/compiler-runtime-bootstrap" />
+  <meta property="og:image" content="https://www.languagelineage.org/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the difference between a compiler and a runtime?","acceptedAnswer":{"@type":"Answer","text":"A compiler translates source code to another form (machine code, bytecode, or another language). A runtime is the environment that executes the program — managing memory, concurrency, and standard library calls at execution time."}},{"@type":"Question","name":"What does runtime_written_in mean in the dataset?","acceptedAnswer":{"@type":"Answer","text":"runtime_written_in means the runtime or interpreter for language A is implemented in language B. For example, CPython (Python's runtime) is written in C, so there's a runtime_written_in relationship from C to Python."}},{"@type":"Question","name":"What is a bootstrap compiler?","acceptedAnswer":{"@type":"Answer","text":"A bootstrap compiler is an intermediate compiler used to bring a self-hosting compiler into existence. For example, Rust's first bootstrapper was written in OCaml; Go's first compiler was written in C."}},{"@type":"Question","name":"How does transpilation differ from compilation?","acceptedAnswer":{"@type":"Answer","text":"Transpilation (source-to-source compilation) transforms code from one high-level language to another, rather than to machine code or bytecode. TypeScript transpiles to JavaScript. CoffeeScript transpiles to JavaScript."}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"Compiler, Runtime, and Bootstrap","item":"https://www.languagelineage.org/compiler-runtime-bootstrap"}]}</script>
+</head>
+<body class="seo-page">
+<nav class="seo-nav">
+  <a href="/" class="nav-brand"><span class="nav-logo-mark">LL</span>Language Lineage</a>
+  <a href="/relationships">Relationships</a>
+  <a href="/languages">Languages</a>
+  <a href="/tools">Tools</a>
+  <a href="/guides">Guides</a>
+  <a href="/timeline">Timeline</a>
+  <a href="/dataset">Dataset</a>
+  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
+</nav>
+<main class="seo-main">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; Compiler, Runtime, and Bootstrap Relationships
+  </nav>
+
+  <h1>Compiler, Runtime, and Bootstrap Relationships Explained</h1>
+  <p>Language Lineage tracks six types of relationships between programming languages. This page explains what each means, with examples from the dataset.</p>
+
+  <h2>Relationship types</h2>
+  <table class="impl-table">
+    <thead><tr><th>Relationship</th><th>Meaning</th><th>Example</th><th>Count</th></tr></thead>
+    <tbody>
+      <tr><td><a href="/relationships/compiler-written-in">compiler_written_in</a></td><td>Language A's compiler is implemented in B</td><td>rustc is written in Rust</td><td>78</td></tr>
+      <tr><td><a href="/relationships/runtime-written-in">runtime_written_in</a></td><td>Language A's runtime/interpreter is implemented in B</td><td>CPython is written in C</td><td>56</td></tr>
+      <tr><td><a href="/relationships/bootstrap-written-in">bootstrap_written_in</a></td><td>Language A bootstraps from B (initial compiler was in B)</td><td>Rust bootstrapped from OCaml</td><td>14</td></tr>
+      <tr><td><a href="/relationships/influenced">influenced</a></td><td>Language A's design influenced language B</td><td>C influenced Go</td><td>189</td></tr>
+      <tr><td><a href="/relationships/transpiled-to">transpiled_to</a></td><td>Language A compiles to language B (source-to-source)</td><td>TypeScript transpiles to JavaScript</td><td>8</td></tr>
+      <tr><td><a href="/relationships/rewritten-in">rewritten_in</a></td><td>Language A's implementation was rewritten in B</td><td>Go compiler rewritten from C to Go</td><td>2</td></tr>
+    </tbody>
+  </table>
+
+  <h2>What is a compiler?</h2>
+  <p>A compiler translates source code from one language to another — typically from a high-level language to machine code, bytecode, or another high-level language. Examples: <a href="/tools/gcc">GCC</a> (C/C++ → machine code), <a href="/tools/ghc">GHC</a> (Haskell → machine code), tsc (TypeScript → JavaScript).</p>
+
+  <h2>What is a runtime?</h2>
+  <p>A runtime (or interpreter) is the environment that executes a program. It handles memory allocation, garbage collection, I/O, and standard library calls at execution time. Examples: <a href="/tools/v8">V8</a> (JavaScript), CPython (Python), <a href="/tools/hotspot">HotSpot JVM</a> (Java bytecode).</p>
+
+  <h2>What is compiler bootstrapping?</h2>
+  <p>Bootstrapping is the process of using a compiler to compile a new version of itself. The first compiler for a language must be written in another language; once functional, it can compile a self-hosted version written in the target language itself. See: <a href="/questions/what-is-compiler-bootstrapping">full bootstrapping explainer</a>.</p>
+
+  <h2>Frequently Asked Questions</h2>
+  <div class="faq-item">
+    <div class="faq-question">What is the difference between a compiler and a runtime?</div>
+    <div class="faq-answer">A compiler translates source code to another form (machine code, bytecode, or another language). A runtime is the environment that executes the program — managing memory, concurrency, and standard library calls at execution time.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question">What does runtime_written_in mean in the dataset?</div>
+    <div class="faq-answer">runtime_written_in means the runtime or interpreter for language A is implemented in language B. For example, CPython (Python's runtime) is written in C, so there's a runtime_written_in relationship from C to Python.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question">What is a bootstrap compiler?</div>
+    <div class="faq-answer">A bootstrap compiler is an intermediate compiler used to bring a self-hosting compiler into existence. For example, Rust's first bootstrapper was written in OCaml; Go's first compiler was written in C.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question">How does transpilation differ from compilation?</div>
+    <div class="faq-answer">Transpilation (source-to-source compilation) transforms code from one high-level language to another, rather than to machine code or bytecode. TypeScript transpiles to JavaScript. CoffeeScript transpiles to JavaScript.</div>
+  </div>
+
+  <a class="explore-btn" href="/explore">Explore Implementation Relationships &rarr;</a>
+
+  <section class="discover-more">
+    <h2>Related Pages</h2>
+    <div class="discover-links">
+      <a href="/guides/what-is-compiler-bootstrapping" class="discover-link">Guide: What is compiler bootstrapping?</a>
+      <a href="/guides/what-is-self-hosting" class="discover-link">Guide: What is a self-hosting compiler?</a>
+      <a href="/guides/compiler-vs-interpreter-vs-runtime" class="discover-link">Compiler vs interpreter vs runtime</a>
+      <a href="/what-are-programming-languages-written-in" class="discover-link">What are programming languages written in?</a>
+      <a href="/questions/what-is-compiler-bootstrapping" class="discover-link">What is compiler bootstrapping? (Q&amp;A)</a>
+      <a href="/dataset" class="discover-link">Browse the full dataset</a>
+    </div>
+  </section>
+</main>
+<footer class="seo-footer-rich">
+  <div class="footer-grid">
+    <div class="footer-col">
+      <span class="footer-col-head">Explore</span>
+      <a href="/programming-language-graph">Language Graph</a>
+      <a href="/programming-language-family-tree">Family Tree</a>
+      <a href="/programming-language-evolution">Evolution Timeline</a>
+      <a href="/what-are-programming-languages-written-in">What languages are written in</a>
+      <a href="/explore">Interactive Graph</a>
+      <a href="/dataset">Dataset</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Popular Languages</span>
+      <a href="/languages/python">Python</a>
+      <a href="/languages/javascript">JavaScript</a>
+      <a href="/languages/rust">Rust</a>
+      <a href="/languages/go">Go</a>
+      <a href="/languages/java">Java</a>
+      <a href="/languages/c">C</a>
+      <a href="/languages/cxx">C++</a>
+      <a href="/languages/typescript">TypeScript</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Questions</span>
+      <a href="/questions/what-is-python-written-in">What is Python written in?</a>
+      <a href="/questions/what-is-javascript-written-in">What is JavaScript written in?</a>
+      <a href="/questions/what-is-rust-written-in">What is Rust written in?</a>
+      <a href="/questions/what-is-go-written-in">What is Go written in?</a>
+      <a href="/questions/what-is-compiler-bootstrapping">What is compiler bootstrapping?</a>
+      <a href="/questions">All questions &rarr;</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Tools &amp; Guides</span>
+      <a href="/tools/v8">V8</a>
+      <a href="/tools/llvm">LLVM</a>
+      <a href="/tools/gcc">GCC</a>
+      <a href="/tools/ghc">GHC</a>
+      <a href="/guides">All guides</a>
+      <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </div>
+  <div class="footer-bottom">&copy; 2026 Sanket Muchhala &middot; <a href="/">Language Lineage</a></div>
+</footer>
+</body>
+</html>

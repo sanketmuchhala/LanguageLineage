@@ -57,12 +57,14 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
         <div className="hero-content">
           <p className="hero-eyebrow reveal">An Interactive Exploration</p>
           <h1 className="hero-title reveal">
-            <span className="title-line">The Family Tree</span>
-            <span className="title-line accent">of Programming</span>
+            <span className="title-line">Programming Language</span>
+            <span className="title-line accent">Lineage Graph</span>
           </h1>
           <p className="hero-subtitle reveal">
-            Trace 75+ years of innovation. Discover how languages inspired each other,
-            from FORTRAN to Rust, and understand the DNA of modern code.
+            Explore what programming languages are written in, how compilers bootstrap
+            themselves, and how languages like Python, JavaScript, Rust, Go, and C++
+            evolved from one another. Interactive programming language family tree with
+            112 languages and 347 relationships.
           </p>
           <div className="hero-actions reveal">
             <button className="btn-primary" onClick={onEnterGraph}>
@@ -305,6 +307,38 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
               Focus on functional languages, or trace the evolution of static typing.
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* More Than a Family Tree — comparison section */}
+      <section className="section more-than-section">
+        <div className="section-header">
+          <p className="section-eyebrow reveal">Beyond the Family Tree</p>
+          <h2 className="section-title centered reveal">
+            More than a<br /><em>Programming Language Family Tree</em>
+          </h2>
+          <p className="section-text centered reveal">
+            Most language family trees show only influence and ancestry. Language Lineage also
+            maps implementation relationships — what compilers, runtimes, and bootstrap chains
+            each language actually uses. 112 programming languages, 347 evidence-backed relationships.
+          </p>
+        </div>
+        <div className="comparison-table reveal">
+          <table>
+            <thead>
+              <tr><th>Feature</th><th>Traditional Family Tree</th><th>Language Lineage</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Influence &amp; ancestry</td><td>✓</td><td>✓</td></tr>
+              <tr><td>Compiler implementation</td><td>—</td><td>✓</td></tr>
+              <tr><td>Runtime / VM written in</td><td>—</td><td>✓</td></tr>
+              <tr><td>Bootstrap chain</td><td>—</td><td>✓</td></tr>
+              <tr><td>Transpilation relationships</td><td>—</td><td>✓</td></tr>
+              <tr><td>Confidence scores + sources</td><td>—</td><td>✓</td></tr>
+              <tr><td>Interactive graph explorer</td><td>—</td><td>✓</td></tr>
+              <tr><td>Programmatic pages per language</td><td>—</td><td>✓</td></tr>
+            </tbody>
+          </table>
         </div>
       </section>
 

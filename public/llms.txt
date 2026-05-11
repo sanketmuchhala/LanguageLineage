@@ -28,32 +28,59 @@ The dataset covers 112 programming languages and tools, 347 documented relations
 
 ## Key Pages
 
-- Home: https://languagelineage.org/
-- Graph Explorer: https://languagelineage.org/explore
-- Dataset: https://languagelineage.org/dataset
-- Sitemap: https://languagelineage.org/sitemap.xml
+- Home: https://www.languagelineage.org/
+- Graph Explorer: https://www.languagelineage.org/explore
+- Dataset: https://www.languagelineage.org/dataset
+- Timeline: https://www.languagelineage.org/timeline
+- Sitemap: https://www.languagelineage.org/sitemap.xml
+
+## Main Concept Pages
+
+- Programming Language Graph: https://www.languagelineage.org/programming-language-graph
+- Programming Language Family Tree: https://www.languagelineage.org/programming-language-family-tree
+- Programming Language Genealogy: https://www.languagelineage.org/programming-language-genealogy
+- Programming Language Evolution Timeline: https://www.languagelineage.org/programming-language-evolution
+- What Are Programming Languages Written In: https://www.languagelineage.org/what-are-programming-languages-written-in
+- Compiler Runtime and Bootstrap Explained: https://www.languagelineage.org/compiler-runtime-bootstrap
+
+## High-Value Question Pages
+
+- What is Python written in: https://www.languagelineage.org/questions/what-is-python-written-in
+- What is JavaScript written in: https://www.languagelineage.org/questions/what-is-javascript-written-in
+- What is Rust written in: https://www.languagelineage.org/questions/what-is-rust-written-in
+- What is Go written in: https://www.languagelineage.org/questions/what-is-go-written-in
+- What is Java written in: https://www.languagelineage.org/questions/what-is-java-written-in
+- What is C written in: https://www.languagelineage.org/questions/what-is-c-written-in
+- What is C++ written in: https://www.languagelineage.org/questions/what-is-cpp-written-in
+- What is TypeScript written in: https://www.languagelineage.org/questions/what-is-typescript-written-in
+- What is Ruby written in: https://www.languagelineage.org/questions/what-is-ruby-written-in
+- What is V8 written in: https://www.languagelineage.org/questions/what-is-v8-written-in
+- What is CPython written in: https://www.languagelineage.org/questions/what-is-cpython-written-in
+- What is compiler bootstrapping: https://www.languagelineage.org/questions/what-is-compiler-bootstrapping
+- What is a self-hosting compiler: https://www.languagelineage.org/questions/what-is-a-self-hosting-compiler
+- All questions: https://www.languagelineage.org/questions
 
 ### Popular Language Pages
 
-- Python: https://languagelineage.org/languages/python
-- JavaScript: https://languagelineage.org/languages/javascript
-- C: https://languagelineage.org/languages/c
-- Rust: https://languagelineage.org/languages/rust
-- Go: https://languagelineage.org/languages/go
-- Java: https://languagelineage.org/languages/java
-- C++: https://languagelineage.org/languages/cxx
-- Haskell: https://languagelineage.org/languages/haskell
+- Python: https://www.languagelineage.org/languages/python
+- JavaScript: https://www.languagelineage.org/languages/javascript
+- C: https://www.languagelineage.org/languages/c
+- Rust: https://www.languagelineage.org/languages/rust
+- Go: https://www.languagelineage.org/languages/go
+- Java: https://www.languagelineage.org/languages/java
+- C++: https://www.languagelineage.org/languages/cxx
+- Haskell: https://www.languagelineage.org/languages/haskell
 
 ### Relationship Guides
 
-- What is compiler bootstrapping: https://languagelineage.org/guides/what-is-compiler-bootstrapping
-- What is self-hosting: https://languagelineage.org/guides/what-is-self-hosting
-- Compiler vs interpreter vs runtime: https://languagelineage.org/guides/compiler-vs-interpreter-vs-runtime
-- Programming language family tree: https://languagelineage.org/guides/programming-language-family-tree
-- How Python is implemented: https://languagelineage.org/guides/how-python-is-implemented
-- How Rust is bootstrapped: https://languagelineage.org/guides/how-rust-is-bootstrapped
-- How JavaScript engines work: https://languagelineage.org/guides/how-javascript-engines-work
-- GCC vs LLVM: https://languagelineage.org/guides/gcc-vs-llvm
+- What is compiler bootstrapping: https://www.languagelineage.org/guides/what-is-compiler-bootstrapping
+- What is self-hosting: https://www.languagelineage.org/guides/what-is-self-hosting
+- Compiler vs interpreter vs runtime: https://www.languagelineage.org/guides/compiler-vs-interpreter-vs-runtime
+- Programming language family tree: https://www.languagelineage.org/guides/programming-language-family-tree
+- How Python is implemented: https://www.languagelineage.org/guides/how-python-is-implemented
+- How Rust is bootstrapped: https://www.languagelineage.org/guides/how-rust-is-bootstrapped
+- How JavaScript engines work: https://www.languagelineage.org/guides/how-javascript-engines-work
+- GCC vs LLVM: https://www.languagelineage.org/guides/gcc-vs-llvm
 
 ## Data Schema
 

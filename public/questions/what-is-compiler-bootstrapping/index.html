@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>What is compiler bootstrapping? | Language Lineage</title>
+  <meta name="description" content="Compiler bootstrapping is the process of writing a compiler for a programming language in that same language. The first version of the compiler must be wri" />
+  <link rel="canonical" href="https://www.languagelineage.org/questions/what-is-compiler-bootstrapping" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/seo.css" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="What is compiler bootstrapping? | Language Lineage" />
+  <meta property="og:description" content="Compiler bootstrapping is the process of writing a compiler for a programming language in that same language. The first version of the compiler must be wri" />
+  <meta property="og:url" content="https://www.languagelineage.org/questions/what-is-compiler-bootstrapping" />
+  <meta property="og:image" content="https://www.languagelineage.org/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="What is compiler bootstrapping?" />
+  <meta name="twitter:description" content="Compiler bootstrapping is the process of writing a compiler for a programming language in that same language. The first version of the compiler must be wri" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is compiler bootstrapping?","acceptedAnswer":{"@type":"Answer","text":"Compiler bootstrapping is the process of writing a compiler for a programming language in that same language. The first version of the compiler must be written in another language; subsequent versions are compiled by the self-hosted compiler. Examples: Rust's rustc, Go's gc, TypeScript's tsc, and GHC (Haskell)."}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"Questions","item":"https://www.languagelineage.org/questions"},{"@type":"ListItem","position":3,"name":"What is compiler bootstrapping?","item":"https://www.languagelineage.org/questions/what-is-compiler-bootstrapping"}]}</script>
+</head>
+<body class="seo-page">
+<nav class="seo-nav">
+  <a href="/" class="nav-brand"><span class="nav-logo-mark">LL</span>Language Lineage</a>
+  <a href="/relationships">Relationships</a>
+  <a href="/languages">Languages</a>
+  <a href="/tools">Tools</a>
+  <a href="/guides">Guides</a>
+  <a href="/timeline">Timeline</a>
+  <a href="/dataset">Dataset</a>
+  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
+</nav>
+<main class="seo-main">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; <a href="/questions">Questions</a> &rsaquo; What is compiler bootstrapping?
+  </nav>
+
+  <h1>What is compiler bootstrapping?</h1>
+
+  <div class="question-answer">Compiler bootstrapping is the process of writing a compiler for a programming language in that same language. The first version of the compiler must be written in another language; subsequent versions are compiled by the self-hosted compiler. Examples: Rust's rustc, Go's gc, TypeScript's tsc, and GHC (Haskell).</div>
+
+  <h2>Details</h2>
+  <p>Bootstrapping a compiler is a milestone in a language's maturity: it means the language is expressive enough to implement its own compiler.</p>
+<p>The bootstrap process typically works like this:</p>
+<ol>
+  <li>Write the first compiler in language X (another language)</li>
+  <li>Use that compiler to compile a new compiler written in the target language</li>
+  <li>The self-hosted compiler now compiles future versions of itself</li>
+</ol>
+<p>Bootstrapped compilers: Rust (originally OCaml, now Rust), Go (originally C, now Go since 1.5), TypeScript (TypeScript), Haskell/GHC (originally Haskell), Kotlin (originally Java, now Kotlin).</p>
+
+  <h2>Explore in the Graph</h2>
+  <p>See implementation and influence relationships interactively.</p>
+  <a class="explore-btn" href="/explore">Open Interactive Graph &rarr;</a>
+
+  <section class="discover-more">
+  <h2>Related Pages</h2>
+  <div class="discover-links">
+    <a href="/languages/rust" class="discover-link">Rust</a>
+    <a href="/languages/go" class="discover-link">Go</a>
+    <a href="/languages/typescript" class="discover-link">TypeScript</a>
+    <a href="/languages/haskell" class="discover-link">Haskell</a>
+    <a href="/programming-language-graph" class="discover-link">Programming language graph</a>
+    <a href="/what-are-programming-languages-written-in" class="discover-link">What are programming languages written in?</a>
+    <a href="/questions" class="discover-link">All questions</a>
+  </div>
+</section>
+
+</main>
+<footer class="seo-footer-rich">
+  <div class="footer-grid">
+    <div class="footer-col">
+      <span class="footer-col-head">Explore</span>
+      <a href="/programming-language-graph">Language Graph</a>
+      <a href="/programming-language-family-tree">Family Tree</a>
+      <a href="/programming-language-evolution">Evolution Timeline</a>
+      <a href="/what-are-programming-languages-written-in">What languages are written in</a>
+      <a href="/explore">Interactive Graph</a>
+      <a href="/dataset">Dataset</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Popular Languages</span>
+      <a href="/languages/python">Python</a>
+      <a href="/languages/javascript">JavaScript</a>
+      <a href="/languages/rust">Rust</a>
+      <a href="/languages/go">Go</a>
+      <a href="/languages/java">Java</a>
+      <a href="/languages/c">C</a>
+      <a href="/languages/cxx">C++</a>
+      <a href="/languages/typescript">TypeScript</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Questions</span>
+      <a href="/questions/what-is-python-written-in">What is Python written in?</a>
+      <a href="/questions/what-is-javascript-written-in">What is JavaScript written in?</a>
+      <a href="/questions/what-is-rust-written-in">What is Rust written in?</a>
+      <a href="/questions/what-is-go-written-in">What is Go written in?</a>
+      <a href="/questions/what-is-compiler-bootstrapping">What is compiler bootstrapping?</a>
+      <a href="/questions">All questions &rarr;</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Tools &amp; Guides</span>
+      <a href="/tools/v8">V8</a>
+      <a href="/tools/llvm">LLVM</a>
+      <a href="/tools/gcc">GCC</a>
+      <a href="/tools/ghc">GHC</a>
+      <a href="/guides">All guides</a>
+      <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </div>
+  <div class="footer-bottom">&copy; 2026 Sanket Muchhala &middot; <a href="/">Language Lineage</a></div>
+</footer>
+</body>
+</html>

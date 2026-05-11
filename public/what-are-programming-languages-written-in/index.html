@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>What Are Programming Languages Written In?</title>
+  <meta name="description" content="What are programming languages written in? Python is written in C, JavaScript engines in C++, Rust in Rust, Go in Go. Explore 134 implementation relationships with evidence." />
+  <link rel="canonical" href="https://www.languagelineage.org/what-are-programming-languages-written-in" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/seo.css" />
+  <meta property="og:title" content="What Are Programming Languages Written In?" />
+  <meta property="og:description" content="Python is in C, JavaScript engines in C++, Rust in Rust. Explore 134 compiler and runtime relationships." />
+  <meta property="og:url" content="https://www.languagelineage.org/what-are-programming-languages-written-in" />
+  <meta property="og:image" content="https://www.languagelineage.org/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What does \"what is a programming language written in\" mean?","acceptedAnswer":{"@type":"Answer","text":"It means what programming language was used to implement the compiler, interpreter, or runtime of another language. The implementation language is different from the language specification."}},{"@type":"Question","name":"Can a language be written in itself?","acceptedAnswer":{"@type":"Answer","text":"Yes — this is called a self-hosting compiler. Rust, Go, TypeScript, Haskell, and Java's javac are all self-hosting. The first version must be written in another language, then it bootstraps itself."}},{"@type":"Question","name":"Why does it matter what a language is written in?","acceptedAnswer":{"@type":"Answer","text":"The implementation language affects performance characteristics, portability, interoperability with native libraries, and how the language bootstraps itself. C and C++ are common choices for performance-critical runtimes."}},{"@type":"Question","name":"How many languages in the dataset have compiler or runtime implementation data?","acceptedAnswer":{"@type":"Answer","text":"The dataset includes 134 compiler and runtime relationships across 97 languages."}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"What Are Programming Languages Written In","item":"https://www.languagelineage.org/what-are-programming-languages-written-in"}]}</script>
+</head>
+<body class="seo-page">
+<nav class="seo-nav">
+  <a href="/" class="nav-brand"><span class="nav-logo-mark">LL</span>Language Lineage</a>
+  <a href="/relationships">Relationships</a>
+  <a href="/languages">Languages</a>
+  <a href="/tools">Tools</a>
+  <a href="/guides">Guides</a>
+  <a href="/timeline">Timeline</a>
+  <a href="/dataset">Dataset</a>
+  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
+</nav>
+<main class="seo-main">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; What Are Programming Languages Written In?
+  </nav>
+
+  <h1>What are programming languages written in?</h1>
+
+  <div class="answer-box">Programming languages are implemented using other programming languages. The implementation language (used to build the compiler or runtime) is separate from the language specification itself. C and C++ are the most common implementation languages for performance-critical runtimes.</div>
+
+  <h2>Language vs. implementation</h2>
+  <p>When we say "Python is written in C," we mean CPython — the reference implementation — is written in C. The Python <em>language specification</em> doesn't mandate any implementation language. You could write a Python interpreter in JavaScript, and some people have.</p>
+  <p>The key terms:</p>
+  <ul>
+    <li><strong>Language specification</strong> — defines the syntax and semantics (e.g., the Python Reference Manual)</li>
+    <li><strong>Compiler</strong> — translates source code to machine code or bytecode (e.g., javac, rustc, tsc)</li>
+    <li><strong>Interpreter / runtime</strong> — executes code (e.g., CPython, V8, HotSpot JVM)</li>
+    <li><strong>VM (virtual machine)</strong> — an abstract machine that runs bytecode (JVM, CLR, BEAM)</li>
+  </ul>
+
+  <h2>What popular languages are written in</h2>
+  <table class="impl-table">
+    <thead><tr><th>Language</th><th>Primary implementation</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><a href="/languages/python">Python</a></td>
+        <td><a href="/languages/c">C (CPython)</a></td>
+        <td>Reference implementation (CPython) is written in C</td>
+      </tr>
+      <tr>
+        <td><a href="/languages/javascript">JavaScript</a></td>
+        <td><a href="/languages/cxx">C++ (V8, SpiderMonkey)</a></td>
+        <td>Major engines (V8, SpiderMonkey, JavaScriptCore) are written in C++</td>
+      </tr>
+      <tr>
+        <td><a href="/languages/rust">Rust</a></td>
+        <td><a href="/languages/rust">Rust (self-hosting)</a></td>
+        <td>rustc is self-hosted; originally written in OCaml</td>
+      </tr>
+      <tr>
+        <td><a href="/languages/go">Go</a></td>
+        <td><a href="/languages/go">Go (self-hosting)</a></td>
+        <td>Self-hosting since Go 1.5; previously written in C</td>
+      </tr>
+      <tr>
+        <td><a href="/languages/java">Java</a></td>
+        <td><a href="/languages/c">C/C++ (HotSpot JVM)</a></td>
+        <td>HotSpot JVM is in C/C++; javac compiler is in Java</td>
+      </tr>
+      <tr>
+        <td><a href="/languages/typescript">TypeScript</a></td>
+        <td><a href="/languages/typescript">TypeScript (self-hosting)</a></td>
+        <td>tsc is self-hosted in TypeScript</td>
+      </tr>
+      <tr>
+        <td><a href="/languages/ruby">Ruby</a></td>
+        <td><a href="/languages/c">C (MRI/CRuby)</a></td>
+        <td>Reference implementation (MRI) is written in C</td>
+      </tr>
+      <tr>
+        <td><a href="/languages/haskell">Haskell</a></td>
+        <td><a href="/languages/haskell">Haskell (GHC)</a></td>
+        <td>GHC compiler is written in Haskell</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Why C and C++ are so common</h2>
+  <p>Most production programming language runtimes are implemented in C or C++ because:</p>
+  <ul>
+    <li>Direct memory control for garbage collectors and allocators</li>
+    <li>Predictable performance without a runtime of their own</li>
+    <li>Mature tooling and portability across architectures</li>
+    <li>Historical: C was the dominant systems language when most early runtimes were written</li>
+  </ul>
+
+  <h2>Self-hosting languages</h2>
+  <p>Some languages' compilers are written in the language itself — called self-hosting. This requires bootstrapping: an initial compiler written in another language, which is then used to compile the self-hosted version. Self-hosting languages: <a href="/languages/rust">Rust</a>, <a href="/languages/go">Go</a>, <a href="/languages/typescript">TypeScript</a>, <a href="/languages/haskell">Haskell</a>, <a href="/languages/java">Java (javac)</a>.</p>
+  <p>See: <a href="/questions/what-is-compiler-bootstrapping">What is compiler bootstrapping?</a> and <a href="/questions/what-is-a-self-hosting-compiler">What is a self-hosting compiler?</a></p>
+
+  <h2>Frequently Asked Questions</h2>
+  <div class="faq-item">
+    <div class="faq-question">What does &quot;what is a programming language written in&quot; mean?</div>
+    <div class="faq-answer">It means what programming language was used to implement the compiler, interpreter, or runtime of another language. The implementation language is different from the language specification.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question">Can a language be written in itself?</div>
+    <div class="faq-answer">Yes — this is called a self-hosting compiler. Rust, Go, TypeScript, Haskell, and Java's javac are all self-hosting. The first version must be written in another language, then it bootstraps itself.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question">Why does it matter what a language is written in?</div>
+    <div class="faq-answer">The implementation language affects performance characteristics, portability, interoperability with native libraries, and how the language bootstraps itself. C and C++ are common choices for performance-critical runtimes.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-question">How many languages in the dataset have compiler or runtime implementation data?</div>
+    <div class="faq-answer">The dataset includes 134 compiler and runtime relationships across 97 languages.</div>
+  </div>
+
+  <a class="explore-btn" href="/explore">Explore Implementation Relationships &rarr;</a>
+
+  <section class="discover-more">
+    <h2>Individual Language Questions</h2>
+    <div class="discover-links">
+      <a href="/questions/what-is-python-written-in" class="discover-link">What is Python written in?</a>
+      <a href="/questions/what-is-javascript-written-in" class="discover-link">What is JavaScript written in?</a>
+      <a href="/questions/what-is-rust-written-in" class="discover-link">What is Rust written in?</a>
+      <a href="/questions/what-is-go-written-in" class="discover-link">What is Go written in?</a>
+      <a href="/questions/what-is-java-written-in" class="discover-link">What is Java written in?</a>
+      <a href="/questions/what-is-c-written-in" class="discover-link">What is C written in?</a>
+      <a href="/questions/what-is-cpp-written-in" class="discover-link">What is C++ written in?</a>
+      <a href="/questions/what-is-typescript-written-in" class="discover-link">What is TypeScript written in?</a>
+      <a href="/questions/what-is-compiler-bootstrapping" class="discover-link">What is compiler bootstrapping?</a>
+      <a href="/relationships/compiler-written-in" class="discover-link">All compiler relationships</a>
+      <a href="/relationships/runtime-written-in" class="discover-link">All runtime relationships</a>
+    </div>
+  </section>
+</main>
+<footer class="seo-footer-rich">
+  <div class="footer-grid">
+    <div class="footer-col">
+      <span class="footer-col-head">Explore</span>
+      <a href="/programming-language-graph">Language Graph</a>
+      <a href="/programming-language-family-tree">Family Tree</a>
+      <a href="/programming-language-evolution">Evolution Timeline</a>
+      <a href="/what-are-programming-languages-written-in">What languages are written in</a>
+      <a href="/explore">Interactive Graph</a>
+      <a href="/dataset">Dataset</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Popular Languages</span>
+      <a href="/languages/python">Python</a>
+      <a href="/languages/javascript">JavaScript</a>
+      <a href="/languages/rust">Rust</a>
+      <a href="/languages/go">Go</a>
+      <a href="/languages/java">Java</a>
+      <a href="/languages/c">C</a>
+      <a href="/languages/cxx">C++</a>
+      <a href="/languages/typescript">TypeScript</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Questions</span>
+      <a href="/questions/what-is-python-written-in">What is Python written in?</a>
+      <a href="/questions/what-is-javascript-written-in">What is JavaScript written in?</a>
+      <a href="/questions/what-is-rust-written-in">What is Rust written in?</a>
+      <a href="/questions/what-is-go-written-in">What is Go written in?</a>
+      <a href="/questions/what-is-compiler-bootstrapping">What is compiler bootstrapping?</a>
+      <a href="/questions">All questions &rarr;</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Tools &amp; Guides</span>
+      <a href="/tools/v8">V8</a>
+      <a href="/tools/llvm">LLVM</a>
+      <a href="/tools/gcc">GCC</a>
+      <a href="/tools/ghc">GHC</a>
+      <a href="/guides">All guides</a>
+      <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </div>
+  <div class="footer-bottom">&copy; 2026 Sanket Muchhala &middot; <a href="/">Language Lineage</a></div>
+</footer>
+</body>
+</html>

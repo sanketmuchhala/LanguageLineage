@@ -307,6 +307,31 @@ td a { color: var(--accent); }
   text-decoration: none;
 }
 
+/* Discover More section */
+.discover-more { margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--border); }
+.discover-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.discover-link {
+  display: inline-block; padding: 6px 14px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 20px; font-size: 13px; color: var(--text-secondary);
+  text-decoration: none; transition: border-color 0.15s, color 0.15s;
+}
+.discover-link:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+
+/* Rich footer */
+.seo-footer-rich { border-top: 1px solid var(--border); padding: 48px 40px 28px; }
+.footer-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 32px; margin-bottom: 32px; }
+.footer-col { display: flex; flex-direction: column; gap: 9px; }
+.footer-col-head { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); margin-bottom: 4px; }
+.footer-col a { font-size: 13px; color: var(--text-tertiary); text-decoration: none; line-height: 1.4; }
+.footer-col a:hover { color: var(--accent); text-decoration: none; }
+.footer-bottom { font-size: 12px; color: var(--text-tertiary); border-top: 1px solid var(--border); padding-top: 20px; }
+.footer-bottom a { color: var(--text-tertiary); }
+.footer-bottom a:hover { color: var(--accent); }
+
+/* Question page answer box */
+.question-answer { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; padding: 18px 20px; margin: 20px 0 32px; font-size: 16px; line-height: 1.7; color: var(--text); }
+
 /* Source links */
 .source-list {
   list-style: none;
@@ -810,6 +835,10 @@ pre {
     width: 100%;
     margin-top: 4px;
   }
+
+  /* Rich footer mobile */
+  .seo-footer-rich { padding: 32px 16px 20px; }
+  .footer-grid { grid-template-columns: repeat(2,1fr); gap: 24px; }
 
   /* Code blocks */
   pre {

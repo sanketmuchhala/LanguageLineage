@@ -181,6 +181,62 @@ for (const [path, expectedSnippet] of prioritySpotChecks) {
   else if (content) ok(`${path}: custom title present`);
 }
 
+// New landing pages
+const NEW_LANDING_PAGES = [
+  'programming-language-graph/index.html',
+  'programming-language-family-tree/index.html',
+  'programming-language-genealogy/index.html',
+  'programming-language-evolution/index.html',
+  'what-are-programming-languages-written-in/index.html',
+  'compiler-runtime-bootstrap/index.html',
+];
+let landingErrors = 0;
+for (const p of NEW_LANDING_PAGES) {
+  const content = checkFile(p);
+  if (!content) { landingErrors++; continue; }
+  if (!content.includes('<h1>')) { fail(`${p}: missing h1`); landingErrors++; }
+  if (!content.includes('rel="canonical"')) { fail(`${p}: missing canonical`); landingErrors++; }
+  if (!content.includes('application/ld+json')) { fail(`${p}: missing JSON-LD`); landingErrors++; }
+}
+if (landingErrors === 0) ok(`${NEW_LANDING_PAGES.length} new landing pages valid`);
+
+// Question pages
+const QUESTION_SLUGS = [
+  'what-is-python-written-in',
+  'what-is-javascript-written-in',
+  'what-is-rust-written-in',
+  'what-is-go-written-in',
+  'what-is-java-written-in',
+  'what-is-c-written-in',
+  'what-is-cpp-written-in',
+  'what-is-typescript-written-in',
+  'what-is-ruby-written-in',
+  'what-is-v8-written-in',
+  'what-is-cpython-written-in',
+  'what-is-compiler-bootstrapping',
+  'what-is-a-self-hosting-compiler',
+];
+const questionsIndex = checkFile('questions/index.html');
+if (questionsIndex && !questionsIndex.includes('<h1>')) fail('questions/index.html missing h1');
+else if (questionsIndex) ok('questions/index.html valid');
+
+let questionErrors = 0;
+for (const slug of QUESTION_SLUGS) {
+  const content = checkFile(`questions/${slug}/index.html`);
+  if (!content) { questionErrors++; continue; }
+  if (!content.includes('<h1>')) { fail(`questions/${slug}: missing h1`); questionErrors++; }
+  if (!content.includes('question-answer')) { fail(`questions/${slug}: missing answer box`); questionErrors++; }
+}
+if (questionErrors === 0) ok(`${QUESTION_SLUGS.length} question pages valid`);
+
+// Check Discover More section on priority language pages
+const discoverMoreChecks = ['languages/python/index.html', 'languages/rust/index.html', 'languages/javascript/index.html'];
+for (const p of discoverMoreChecks) {
+  const content = checkFile(p);
+  if (content && !content.includes('discover-more')) fail(`${p}: missing Discover More section`);
+  else if (content) ok(`${p}: has Discover More section`);
+}
+
 // Summary
 console.log('');
 console.log(`Validation complete: ${errors} errors, ${warnings} warnings`);
