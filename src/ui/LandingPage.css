@@ -1,31 +1,10 @@
 /* ============================================
    LANGUAGE LINEAGE — Landing Page
-   Editorial / Museum Exhibition Aesthetic
+   Compiler Atlas: dark technical systems aesthetic
    ============================================ */
 
-/* CSS Variables */
-.landing {
-  --color-bg: #0a0a0b;
-  --color-bg-elevated: #141416;
-  --color-bg-card: #1a1a1d;
-  --color-text: #f5f0e8;
-  --color-text-muted: #9a958c;
-  --color-text-subtle: #5a564f;
-  --color-accent: #c9a87c;
-  --color-accent-hover: #dfc4a0;
-  --color-accent-subtle: rgba(201, 168, 124, 0.12);
-  --color-secondary: #8b9a7d;
-  --color-highlight: #e07a5f;
-  --color-border: rgba(245, 240, 232, 0.08);
-  --color-border-accent: rgba(201, 168, 124, 0.25);
-
-  --font-display: 'Cormorant Garamond', Georgia, serif;
-  --font-body: 'DM Sans', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
-}
+/* Color, type, and motion tokens come from src/styles/tokens.css (--color-bg,
+   --color-accent, --font-display, etc. are defined there on :root). */
 
 /* Base */
 .landing {
@@ -151,7 +130,7 @@
 
 .nav-links a:hover {
   color: var(--color-accent);
-  background: rgba(201, 168, 124, 0.07);
+  background: rgba(34,211,238, 0.07);
 }
 
 .nav-cta {
@@ -196,8 +175,8 @@
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(201, 168, 124, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(201, 168, 124, 0.03) 1px, transparent 1px);
+    linear-gradient(rgba(34,211,238, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34,211,238, 0.03) 1px, transparent 1px);
   background-size: 80px 80px;
   mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 20%, transparent 70%);
   -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 20%, transparent 70%);
@@ -209,7 +188,7 @@
   right: -20%;
   width: 80%;
   height: 150%;
-  background: radial-gradient(ellipse at center, rgba(201, 168, 124, 0.08) 0%, transparent 60%);
+  background: radial-gradient(ellipse at center, rgba(34,211,238, 0.08) 0%, transparent 60%);
 }
 
 .hero-content {
@@ -280,7 +259,7 @@
 .btn-primary:hover {
   background: var(--color-accent-hover);
   transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(201, 168, 124, 0.3);
+  box-shadow: 0 8px 32px rgba(34,211,238, 0.3);
 }
 
 .btn-primary.large {
@@ -820,15 +799,15 @@
 .cta-gradient {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at center, rgba(201, 168, 124, 0.1) 0%, transparent 60%);
+  background: radial-gradient(ellipse at center, rgba(34,211,238, 0.1) 0%, transparent 60%);
 }
 
 .cta-pattern {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(201, 168, 124, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(201, 168, 124, 0.02) 1px, transparent 1px);
+    linear-gradient(rgba(34,211,238, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34,211,238, 0.02) 1px, transparent 1px);
   background-size: 40px 40px;
 }
 
@@ -998,7 +977,7 @@
 
 .maker-card:hover {
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 1px rgba(201, 168, 124, 0.25), 0 8px 40px rgba(201, 168, 124, 0.14);
+  box-shadow: 0 0 0 1px rgba(34,211,238, 0.25), 0 8px 40px rgba(34,211,238, 0.14);
   color: var(--color-text);
   transform: translateY(-3px);
   text-decoration: none;
@@ -1555,7 +1534,7 @@
 @media (hover: none) and (pointer: coarse) {
   .btn-primary:active {
     transform: scale(0.97);
-    box-shadow: 0 4px 16px rgba(201, 168, 124, 0.2);
+    box-shadow: 0 4px 16px rgba(34,211,238, 0.2);
   }
 
   .nav-cta:active {

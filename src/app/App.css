@@ -1,61 +1,11 @@
 /* ============================================
    LANGUAGE LINEAGE — Graph Explorer Theme
-   Editorial / Museum Exhibition Aesthetic
-   Matching Landing Page Design System
+   Compiler Atlas: dark technical systems aesthetic
+   Tokens: src/styles/tokens.css
    ============================================ */
 
-/* Theme: Dark Mode (Default) - Matching Landing Page */
-:root {
-  --bg-canvas: #0a0a0b;
-  --bg-surface: #141416;
-  --bg-surface-hover: #1a1a1d;
-  --bg-elevated: #1a1a1d;
-  --bg-card: #1a1a1d;
-  --border-primary: rgba(245, 240, 232, 0.08);
-  --border-secondary: rgba(255, 255, 255, 0.04);
-  --border-accent: rgba(201, 168, 124, 0.25);
-  --text-primary: #f5f0e8;
-  --text-secondary: #9a958c;
-  --text-tertiary: #5a564f;
-  --accent: #c9a87c;
-  --accent-hover: #dfc4a0;
-  --accent-subtle: rgba(201, 168, 124, 0.12);
-  --accent-glow: rgba(201, 168, 124, 0.25);
-  --color-secondary: #8b9a7d;
-  --color-highlight: #e07a5f;
-  --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 20px rgba(0,0,0,0.2);
-  --shadow-lg: 0 8px 40px rgba(0,0,0,0.35);
-  --grain-opacity: 0.025;
-  --font-display: 'Cormorant Garamond', Georgia, serif;
-  --font-body: 'DM Sans', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-/* Theme: Light Mode */
-:root.light {
-  --bg-canvas: #f5f0e8;
-  --bg-surface: rgba(255, 255, 255, 0.95);
-  --bg-surface-hover: rgba(245, 240, 232, 0.95);
-  --bg-elevated: #ffffff;
-  --bg-card: #ffffff;
-  --border-primary: rgba(26, 26, 27, 0.1);
-  --border-secondary: rgba(26, 26, 27, 0.06);
-  --border-accent: rgba(201, 168, 124, 0.35);
-  --text-primary: #1a1a1b;
-  --text-secondary: #5a564f;
-  --text-tertiary: #9a958c;
-  --accent: #c9a87c;
-  --accent-hover: #b8956a;
-  --accent-subtle: rgba(201, 168, 124, 0.1);
-  --accent-glow: rgba(201, 168, 124, 0.25);
-  --color-secondary: #8b9a7d;
-  --color-highlight: #e07a5f;
-  --shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 20px rgba(0,0,0,0.03);
-  --shadow-lg: 0 4px 32px rgba(0,0,0,0.06);
-  --grain-opacity: 0.015;
-}
+/* Theme tokens live in src/styles/tokens.css (imported before this file in App.tsx).
+   App.css consumes --bg-canvas, --accent, --font-display, etc. from there. */
 
 * {
   margin: 0;
