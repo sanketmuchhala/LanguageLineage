@@ -17,7 +17,7 @@ export const CLUSTER_COLORS: Record<ClusterType, string> = {
   compilers: '#94a3b8',     // slate
   other: '#64748b',         // deep slate
   clr: '#818cf8',           // indigo
-  dynamic: '#22d3ee',       // cyan
+  dynamic: '#4ade80',       // cyan
   historical: '#a8a29e',    // warm gray
   jvm: '#60a5fa',           // blue
   roots: '#cbd5e1',         // light slate
@@ -127,11 +127,11 @@ export function getCytoscapeStyle(
       selector: 'node[logoUrl].hovered',
       style: {
         'border-width': 4,
-        'border-color': '#22d3ee',
+        'border-color': '#4ade80',
         'border-opacity': 1,
         'z-index': 1001,
         'overlay-opacity': 0.15,
-        'overlay-color': '#22d3ee',
+        'overlay-color': '#4ade80',
       },
     },
 
@@ -172,11 +172,11 @@ export function getCytoscapeStyle(
       style: {
         label: 'data(label)' as any,
         'border-width': 3.5,
-        'border-color': '#22d3ee',
+        'border-color': '#4ade80',
         'border-opacity': 0.9,
         'z-index': 1001,
         'overlay-opacity': 0.12,
-        'overlay-color': '#22d3ee',
+        'overlay-color': '#4ade80',
       },
     },
 
@@ -185,7 +185,7 @@ export function getCytoscapeStyle(
       selector: 'node.highlighted',
       style: {
         'border-width': 2.5,
-        'border-color': '#22d3ee',
+        'border-color': '#4ade80',
         'border-opacity': 0.6,
         'z-index': 100,
         'overlay-opacity': 0,
@@ -197,11 +197,11 @@ export function getCytoscapeStyle(
       selector: 'node.selected',
       style: {
         'border-width': 4,
-        'border-color': '#22d3ee',
+        'border-color': '#4ade80',
         'border-opacity': 1,
         'z-index': 1000,
         'overlay-opacity': 0.18,
-        'overlay-color': '#22d3ee',
+        'overlay-color': '#4ade80',
       },
     },
 
@@ -264,8 +264,8 @@ export function getCytoscapeStyle(
         width: 3.5,
         opacity: 0.95,
         'z-index': 999,
-        'line-color': '#22d3ee',
-        'target-arrow-color': '#22d3ee',
+        'line-color': '#4ade80',
+        'target-arrow-color': '#4ade80',
       },
     },
 

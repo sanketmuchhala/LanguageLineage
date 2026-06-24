@@ -21,7 +21,7 @@ const ConceptSourceArchive = lazy(() => import('../design-review/ConceptSourceAr
 
 function LoadingScreen() {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: '#000000', color: '#22d3ee', fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: '13px', letterSpacing: '0.04em' }}>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: '#000000', color: '#4ade80', fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: '13px', letterSpacing: '0.04em' }}>
       Loading graph...
     </div>
   );

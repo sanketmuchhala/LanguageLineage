@@ -9,7 +9,7 @@ const PUBLIC = join(ROOT, 'public');
 const DATASET_PATH = join(ROOT, 'dataset/v4/lineage_v4.json');
 const SITE = 'https://www.languagelineage.org';
 
-const BRAND_MARK = `<svg class="nav-logo-mark" viewBox="0 0 28 28" width="22" height="22" fill="none" aria-hidden="true"><path d="M8.6 13 L18.4 7.6" stroke="#22d3ee" stroke-width="1.6" stroke-linecap="round"/><path d="M8.6 15 L18.4 20.4" stroke="#22d3ee" stroke-width="1.6" stroke-linecap="round"/><circle cx="6" cy="14" r="3.6" fill="#22d3ee"/><circle cx="21" cy="6.5" r="3" fill="#e3a008"/><circle cx="21" cy="21.5" r="3" fill="#34d399"/></svg>`;
+const BRAND_MARK = `<svg class="nav-logo-mark" viewBox="0 0 28 28" width="22" height="22" fill="none" aria-hidden="true"><path d="M8.6 13 L18.4 7.6" stroke="#4ade80" stroke-width="1.6" stroke-linecap="round"/><path d="M8.6 15 L18.4 20.4" stroke="#4ade80" stroke-width="1.6" stroke-linecap="round"/><circle cx="6" cy="14" r="3.6" fill="#4ade80"/><circle cx="21" cy="6.5" r="3" fill="#e3a008"/><circle cx="21" cy="21.5" r="3" fill="#60a5fa"/></svg>`;
 
 const NAV_HTML = `<nav class="seo-nav">
   <a href="/" class="nav-brand">${BRAND_MARK}Language Lineage</a>
