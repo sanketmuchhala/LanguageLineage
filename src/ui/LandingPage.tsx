@@ -33,11 +33,11 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
       <nav className="landing-nav">
         <a href="/" className="nav-logo" aria-label="Language Lineage home">
           <svg className="brand-mark" viewBox="0 0 28 28" width="26" height="26" fill="none" aria-hidden="true">
-            <path d="M8.6 13 L18.4 7.6" stroke="#22d3ee" strokeWidth="1.6" strokeLinecap="round" />
-            <path d="M8.6 15 L18.4 20.4" stroke="#22d3ee" strokeWidth="1.6" strokeLinecap="round" />
-            <circle cx="6" cy="14" r="3.6" fill="#22d3ee" />
+            <path d="M8.6 13 L18.4 7.6" stroke="#4ade80" strokeWidth="1.6" strokeLinecap="round" />
+            <path d="M8.6 15 L18.4 20.4" stroke="#4ade80" strokeWidth="1.6" strokeLinecap="round" />
+            <circle cx="6" cy="14" r="3.6" fill="#4ade80" />
             <circle cx="21" cy="6.5" r="3" fill="#e3a008" />
-            <circle cx="21" cy="21.5" r="3" fill="#34d399" />
+            <circle cx="21" cy="21.5" r="3" fill="#60a5fa" />
           </svg>
           <span className="logo-text">Language Lineage</span>
         </a>
@@ -58,9 +58,9 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
       <section className="hero">
         <div className="hero-bg">
           <div className="hero-grid" />
-          <div className="hero-gradient" />
         </div>
-        <div className="hero-content">
+        <div className="hero-inner">
+          <div className="hero-content">
           <p className="hero-eyebrow reveal">Evidence-backed implementation atlas</p>
           <h1 className="hero-title reveal">
             <span className="title-line">Programming Language</span>
@@ -85,7 +85,9 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
           </div>
         </div>
         <div className="hero-visual reveal">
-          <div className="demo-graph">
+            <div className="hero-panel">
+              <div className="hero-panel-cap"><span className="hero-panel-dot" />implementation subgraph &middot; C</div>
+              <div className="demo-graph">
             <svg viewBox="0 0 400 400" className="demo-graph-svg">
               {/* Connection lines */}
               <g className="demo-edges">
@@ -148,14 +150,15 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
                 </g>
               </g>
             </svg>
-            <div className="demo-graph-label">
-              <span className="label-accent">C</span> — what influenced it, and what it influenced
+              </div>
+              <div className="hero-record">
+                <span className="rec-node">Python</span>
+                <span className="rec-edge"><span className="rec-rel">runtime_written_in</span></span>
+                <span className="rec-node rec-impl">C</span>
+                <span className="rec-conf"><span className="rec-check">✓</span> 0.98</span>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="scroll-indicator">
-          <span>Scroll to explore</span>
-          <div className="scroll-line" />
         </div>
       </section>
 
@@ -457,11 +460,11 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
         <div className="footer-content">
           <div className="footer-brand">
             <svg className="brand-mark" viewBox="0 0 28 28" width="24" height="24" fill="none" aria-hidden="true">
-              <path d="M8.6 13 L18.4 7.6" stroke="#22d3ee" strokeWidth="1.6" strokeLinecap="round" />
-              <path d="M8.6 15 L18.4 20.4" stroke="#22d3ee" strokeWidth="1.6" strokeLinecap="round" />
-              <circle cx="6" cy="14" r="3.6" fill="#22d3ee" />
+              <path d="M8.6 13 L18.4 7.6" stroke="#4ade80" strokeWidth="1.6" strokeLinecap="round" />
+              <path d="M8.6 15 L18.4 20.4" stroke="#4ade80" strokeWidth="1.6" strokeLinecap="round" />
+              <circle cx="6" cy="14" r="3.6" fill="#4ade80" />
               <circle cx="21" cy="6.5" r="3" fill="#e3a008" />
-              <circle cx="21" cy="21.5" r="3" fill="#34d399" />
+              <circle cx="21" cy="21.5" r="3" fill="#60a5fa" />
             </svg>
             <span className="logo-text">Language Lineage</span>
           </div>
