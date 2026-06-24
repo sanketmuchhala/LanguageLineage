@@ -210,26 +210,18 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
                 <span className="card-dot" />
                 <span className="card-dot" />
               </div>
-              <div className="card-content">
-                <div className="tree-line">
-                  <span className="tree-node root">ALGOL 60</span>
-                </div>
-                <div className="tree-line">
-                  <span className="tree-branch" />
-                  <span className="tree-node">Pascal</span>
-                  <span className="tree-branch" />
-                  <span className="tree-node">C</span>
-                </div>
-                <div className="tree-line">
-                  <span className="tree-branch deep" />
-                  <span className="tree-node">Delphi</span>
-                  <span className="tree-branch deep" />
-                  <span className="tree-node">C++</span>
-                </div>
-                <div className="tree-line">
-                  <span className="tree-spacer" />
-                  <span className="tree-branch deep" />
-                  <span className="tree-node active">Rust</span>
+              <div className="card-content impl-record">
+                <div className="impl-row"><span className="impl-k">language</span><span className="impl-v">Python</span></div>
+                <div className="impl-row"><span className="impl-k">first_release</span><span className="impl-v">1991</span></div>
+                <div className="impl-row impl-hl"><span className="impl-k">runtime_written_in</span><span className="impl-v">C <span className="impl-conf">0.98</span></span></div>
+                <div className="impl-row"><span className="impl-k">implementation</span><span className="impl-v">CPython</span></div>
+                <div className="impl-row"><span className="impl-k">self_hosting</span><span className="impl-v">false</span></div>
+                <div className="impl-chain">
+                  <span className="impl-chip">C</span>
+                  <span className="impl-link" aria-hidden="true" />
+                  <span className="impl-chip">CPython</span>
+                  <span className="impl-link" aria-hidden="true" />
+                  <span className="impl-chip impl-chip-active">Python</span>
                 </div>
               </div>
             </div>
