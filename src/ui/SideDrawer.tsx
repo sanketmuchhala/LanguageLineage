@@ -126,20 +126,23 @@ export function SideDrawer() {
               <button
                 className={`explore-btn ${explorationMode === 'ancestors' ? 'active' : ''}`}
                 onClick={() => setExplorationMode(explorationMode === 'ancestors' ? 'none' : 'ancestors')}
+                title="Upstream: what this is built on and influenced by"
               >
-                Ancestors
+                Upstream
               </button>
               <button
                 className={`explore-btn ${explorationMode === 'descendants' ? 'active' : ''}`}
                 onClick={() => setExplorationMode(explorationMode === 'descendants' ? 'none' : 'descendants')}
+                title="Downstream: what is built on or influenced by this"
               >
-                Descendants
+                Downstream
               </button>
               <button
                 className={`explore-btn ${explorationMode === 'focus' ? 'active' : ''}`}
                 onClick={() => setExplorationMode(explorationMode === 'focus' ? 'none' : 'focus')}
+                title="Full dependency and influence chain"
               >
-                Full Lineage
+                Full chain
               </button>
             </div>
           </section>
