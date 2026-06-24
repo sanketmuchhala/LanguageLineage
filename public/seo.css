@@ -1,11 +1,11 @@
 /* Language Lineage — Static SEO Pages */
 :root {
-  --bg: #08080a;
-  --bg-surface: #141416;
-  --bg-card: #1d1d20;
-  --text: #e6edf3;
-  --text-secondary: #8b98a8;
-  --text-tertiary: #5b6675;
+  --bg: #000000;
+  --bg-surface: #0e0e0e;
+  --bg-card: #161616;
+  --text: #fafafa;
+  --text-secondary: #9a9a9a;
+  --text-tertiary: #5a5a5a;
   --accent: #22d3ee;
   --accent-hover: #67e8f9;
   --border: rgba(255,255,255, 0.08);
@@ -74,7 +74,7 @@ a:hover { color: var(--accent-hover); text-decoration: underline; }
   width: 24px;
   height: 24px;
   background: var(--accent);
-  color: #08080a;
+  color: #000000;
   border-radius: 6px;
   font-size: 10px;
   font-weight: 800;
@@ -99,7 +99,7 @@ a:hover { color: var(--accent-hover); text-decoration: underline; }
 
 .nav-enter-graph:hover {
   background: var(--accent) !important;
-  color: #08080a !important;
+  color: #000000 !important;
 }
 
 /* Main layout */
@@ -293,7 +293,7 @@ td a { color: var(--accent); }
   margin-top: 48px;
   padding: 14px 28px;
   background: var(--accent);
-  color: #08080a;
+  color: #000000;
   border-radius: 8px;
   font-weight: 600;
   font-size: 15px;
@@ -303,7 +303,7 @@ td a { color: var(--accent); }
 
 .explore-btn:hover {
   background: var(--accent-hover);
-  color: #08080a;
+  color: #000000;
   text-decoration: none;
 }
 
@@ -915,7 +915,7 @@ pre {
 .tl-card {
   position: absolute;
   width: 128px;
-  background: rgba(13,17,23,0.72);
+  background: rgba(8,8,8,0.78);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border: 1px solid rgba(255,255,255,0.1);

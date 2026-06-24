@@ -7,17 +7,17 @@
 
 :root {
   /* --- Canonical surfaces (dark, default) --- */
-  /* Intense neutral black scale (no blue tint). */
-  --atlas-bg: #08080a;
-  --atlas-bg-2: #0c0c0e;
-  --atlas-surface: #141416;
-  --atlas-surface-hover: #1b1b1e;
-  --atlas-elevated: #1d1d20;
-  --atlas-border: rgba(255, 255, 255, 0.09);
-  --atlas-border-strong: rgba(255, 255, 255, 0.17);
-  --atlas-text: #f4f4f5;
-  --atlas-text-2: #a1a1aa;
-  --atlas-text-3: #5f5f68;
+  /* Pure neutral black scale (true #000 canvas, no tint). */
+  --atlas-bg: #000000;
+  --atlas-bg-2: #0a0a0a;
+  --atlas-surface: #0e0e0e;
+  --atlas-surface-hover: #161616;
+  --atlas-elevated: #161616;
+  --atlas-border: rgba(255, 255, 255, 0.10);
+  --atlas-border-strong: rgba(255, 255, 255, 0.18);
+  --atlas-text: #fafafa;
+  --atlas-text-2: #9a9a9a;
+  --atlas-text-3: #5a5a5a;
 
   /* --- Brand / interactive accent (cyan) --- */
   --atlas-accent: #22d3ee;

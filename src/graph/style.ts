@@ -4,7 +4,7 @@ import { getAdaptiveLogoBackground, getLogoBorderColor } from '../utils/colorCon
 
 const MIN_NODE_SIZE = 38;
 const MAX_NODE_SIZE = 72;
-const DEFAULT_NODE_COLOR = '#26262b';
+const DEFAULT_NODE_COLOR = '#1c1c1c';
 
 // Compiler Atlas: cool technical cluster palette (secondary, used when cluster coloring is on)
 export const CLUSTER_COLORS: Record<ClusterType, string> = {
@@ -51,10 +51,10 @@ export function getCytoscapeStyle(
   _showAllLabels: boolean,
   isDarkMode: boolean = false
 ): StylesheetStyle[] {
-  const labelColor = isDarkMode ? '#f4f4f5' : '#1a1b1e';
-  const labelOutlineColor = isDarkMode ? '#08080a' : '#ffffff';
-  const parentBorderColor = isDarkMode ? '#2b2b30' : '#e2e5e9';
-  const parentTextColor = isDarkMode ? '#a1a1aa' : '#5c6370';
+  const labelColor = isDarkMode ? '#fafafa' : '#1a1b1e';
+  const labelOutlineColor = isDarkMode ? '#000000' : '#ffffff';
+  const parentBorderColor = isDarkMode ? '#1f1f1f' : '#e2e5e9';
+  const parentTextColor = isDarkMode ? '#9a9a9a' : '#5c6370';
 
   return [
     // Base node style

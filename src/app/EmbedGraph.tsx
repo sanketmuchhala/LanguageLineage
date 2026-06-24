@@ -126,7 +126,7 @@ export function EmbedGraph() {
   }, [slug]);
 
   return (
-    <div style={{ width: '100%', height: '100vh', background: '#08080a', position: 'relative' }}>
+    <div style={{ width: '100%', height: '100vh', background: '#000000', position: 'relative' }}>
       {!ready && !error && (
         <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#a1a1aa', fontFamily: 'system-ui', fontSize: '13px' }}>
           Loading graph...
