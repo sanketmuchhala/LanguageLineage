@@ -4,36 +4,36 @@ import { getAdaptiveLogoBackground, getLogoBorderColor } from '../utils/colorCon
 
 const MIN_NODE_SIZE = 38;
 const MAX_NODE_SIZE = 72;
-const DEFAULT_NODE_COLOR = '#42a5f5';
+const DEFAULT_NODE_COLOR = '#26262b';
 
-// Museum-inspired muted color palette - matching landing page aesthetic
+// Compiler Atlas: cool technical cluster palette (secondary, used when cluster coloring is on)
 export const CLUSTER_COLORS: Record<ClusterType, string> = {
-  c_family: '#e07a5f',      // Warm coral (landing highlight)
-  jvm_dotnet: '#7a9e7e',    // Muted sage
-  js_engines: '#c9a87c',    // Warm tan (landing accent)
-  functional: '#9b7bb8',    // Muted lavender
-  systems: '#5a8a7d',       // Deep teal
-  scripting: '#8b9a7d',     // Sage green (landing secondary)
-  compilers: '#9a958c',     // Warm stone
-  other: '#8a857c',         // Darker stone
-  clr: '#7a8aa8',           // Muted slate blue
-  dynamic: '#7da88a',       // Soft sage
-  historical: '#b8a07a',    // Aged tan
-  jvm: '#6b8ba8',           // Muted blue
-  roots: '#9a958c',         // Warm stone
-  scientific: '#6a9aa8',    // Muted teal
-  tools: '#8a9598',         // Cool stone
+  c_family: '#f59e0b',      // amber
+  jvm_dotnet: '#34d399',    // emerald
+  js_engines: '#fbbf24',    // yellow
+  functional: '#a78bfa',    // violet
+  systems: '#38bdf8',       // sky
+  scripting: '#2dd4bf',     // teal
+  compilers: '#94a3b8',     // slate
+  other: '#64748b',         // deep slate
+  clr: '#818cf8',           // indigo
+  dynamic: '#22d3ee',       // cyan
+  historical: '#a8a29e',    // warm gray
+  jvm: '#60a5fa',           // blue
+  roots: '#cbd5e1',         // light slate
+  scientific: '#5eead4',    // light teal
+  tools: '#e2e8f0',         // near-white (tools read lighter)
 };
 
-// Cohesive edge colors matching museum palette
+// Semantic edge colors by data category (compiler/runtime/bootstrap/rewrite/influence/transpile)
 export const RELATIONSHIP_COLORS: Record<RelationshipType, string> = {
-  compiler_written_in: '#c9a87c',   // Warm tan accent
-  runtime_written_in: '#8b9a7d',    // Sage green
-  bootstrap_written_in: '#7da88a',  // Soft green
-  rewritten_in: '#b8a07a',          // Aged tan
-  influenced: '#c9a87c',            // Warm tan accent
-  influenced_by: '#c9a87c',         // Warm tan accent
-  transpiled_to: '#e07a5f',         // Coral highlight
+  compiler_written_in: '#e3a008',   // compiler implementation (amber)
+  runtime_written_in: '#34d399',    // runtime / VM (green)
+  bootstrap_written_in: '#a78bfa',  // bootstrap (violet)
+  rewritten_in: '#fb7185',          // rewritten in (rose)
+  influenced: '#60a5fa',            // influence (blue)
+  influenced_by: '#60a5fa',         // influence (blue)
+  transpiled_to: '#22d3ee',         // transpilation (cyan)
 };
 
 export const RELATIONSHIP_LINE_STYLES: Record<RelationshipType, string> = {
@@ -51,10 +51,10 @@ export function getCytoscapeStyle(
   _showAllLabels: boolean,
   isDarkMode: boolean = false
 ): StylesheetStyle[] {
-  const labelColor = isDarkMode ? '#e6edf3' : '#1a1b1e';
-  const labelOutlineColor = isDarkMode ? '#0d1117' : '#ffffff';
-  const parentBorderColor = isDarkMode ? '#30363d' : '#e2e5e9';
-  const parentTextColor = isDarkMode ? '#8b949e' : '#5c6370';
+  const labelColor = isDarkMode ? '#f4f4f5' : '#1a1b1e';
+  const labelOutlineColor = isDarkMode ? '#08080a' : '#ffffff';
+  const parentBorderColor = isDarkMode ? '#2b2b30' : '#e2e5e9';
+  const parentTextColor = isDarkMode ? '#a1a1aa' : '#5c6370';
 
   return [
     // Base node style
@@ -127,11 +127,11 @@ export function getCytoscapeStyle(
       selector: 'node[logoUrl].hovered',
       style: {
         'border-width': 4,
-        'border-color': '#c9a87c',
+        'border-color': '#22d3ee',
         'border-opacity': 1,
         'z-index': 1001,
         'overlay-opacity': 0.15,
-        'overlay-color': '#c9a87c',
+        'overlay-color': '#22d3ee',
       },
     },
 
@@ -172,11 +172,11 @@ export function getCytoscapeStyle(
       style: {
         label: 'data(label)' as any,
         'border-width': 3.5,
-        'border-color': '#c9a87c',
+        'border-color': '#22d3ee',
         'border-opacity': 0.9,
         'z-index': 1001,
         'overlay-opacity': 0.12,
-        'overlay-color': '#c9a87c',
+        'overlay-color': '#22d3ee',
       },
     },
 
@@ -185,7 +185,7 @@ export function getCytoscapeStyle(
       selector: 'node.highlighted',
       style: {
         'border-width': 2.5,
-        'border-color': '#c9a87c',
+        'border-color': '#22d3ee',
         'border-opacity': 0.6,
         'z-index': 100,
         'overlay-opacity': 0,
@@ -197,11 +197,11 @@ export function getCytoscapeStyle(
       selector: 'node.selected',
       style: {
         'border-width': 4,
-        'border-color': '#c9a87c',
+        'border-color': '#22d3ee',
         'border-opacity': 1,
         'z-index': 1000,
         'overlay-opacity': 0.18,
-        'overlay-color': '#c9a87c',
+        'overlay-color': '#22d3ee',
       },
     },
 
@@ -264,8 +264,8 @@ export function getCytoscapeStyle(
         width: 3.5,
         opacity: 0.95,
         'z-index': 999,
-        'line-color': '#c9a87c',
-        'target-arrow-color': '#c9a87c',
+        'line-color': '#22d3ee',
+        'target-arrow-color': '#22d3ee',
       },
     },
 
