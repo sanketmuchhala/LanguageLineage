@@ -35,7 +35,7 @@ export function getAdaptiveLogoBackground(
     return isDarkMode ? '#1a1a1d' : '#2a2a2d';
   } else {
     // Dark logo - use light background
-    return isDarkMode ? '#f5f0e8' : '#ffffff';
+    return isDarkMode ? '#f4f4f5' : '#ffffff';
   }
 }
 

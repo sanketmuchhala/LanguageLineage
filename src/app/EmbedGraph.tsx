@@ -105,7 +105,7 @@ export function EmbedGraph() {
           width: 80,
           height: 80,
           'border-width': 4,
-          'border-color': '#c9a87c',
+          'border-color': '#22d3ee',
           'border-opacity': 1,
         } as any);
 
@@ -126,14 +126,14 @@ export function EmbedGraph() {
   }, [slug]);
 
   return (
-    <div style={{ width: '100%', height: '100vh', background: '#0a0a0b', position: 'relative' }}>
+    <div style={{ width: '100%', height: '100vh', background: '#08080a', position: 'relative' }}>
       {!ready && !error && (
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9a958c', fontFamily: 'system-ui', fontSize: '13px' }}>
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#a1a1aa', fontFamily: 'system-ui', fontSize: '13px' }}>
           Loading graph...
         </div>
       )}
       {error && (
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#5a564f', fontFamily: 'system-ui', fontSize: '12px', padding: '16px', textAlign: 'center' }}>
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#5f5f68', fontFamily: 'system-ui', fontSize: '12px', padding: '16px', textAlign: 'center' }}>
           {error}
         </div>
       )}
