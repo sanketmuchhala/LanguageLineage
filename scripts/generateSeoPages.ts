@@ -1599,38 +1599,51 @@ function buildDatasetPage(languages: Language[], rels: Relationship[]): string {
 </html>`;
 }
 
-const RELATIONSHIP_DEFS: Record<string, { label: string; h1: string; description: string }> = {
+const RELATIONSHIP_DEFS: Record<string, { label: string; h1: string; description: string; color: string }> = {
   compiler_written_in: {
     label: 'Compiler Written In',
     h1: 'Compiler Implementation Relationships',
     description: 'These relationships document what programming language each compiler is written in. For example, GCC (the GNU Compiler Collection) is written in C.',
+    color: '#e3a008',
   },
   runtime_written_in: {
     label: 'Runtime Written In',
     h1: 'Runtime Implementation Relationships',
     description: 'These relationships document what programming language each runtime or interpreter is written in. For example, CPython (the reference Python interpreter) is written in C.',
+    color: '#34d399',
   },
   bootstrap_written_in: {
     label: 'Bootstrap Chain',
     h1: 'Bootstrap and Self-Hosting Chains',
     description: 'Bootstrapping is the process of writing a compiler in the same language it compiles. These relationships show the bootstrap chains — what language was used to write the initial compiler before self-hosting was achieved.',
+    color: '#a78bfa',
   },
   influenced: {
     label: 'Influenced',
     h1: 'Language Influence Relationships',
     description: 'Conceptual influence relationships document which design ideas, syntax features, or programming paradigms one language borrowed or adapted from another.',
+    color: '#60a5fa',
   },
   transpiled_to: {
     label: 'Transpiled To',
     h1: 'Transpilation Relationships',
     description: 'Transpilation (source-to-source compilation) converts code from one high-level language to another. For example, CoffeeScript transpiles to JavaScript.',
+    color: '#22d3ee',
   },
   rewritten_in: {
     label: 'Rewritten In',
     h1: 'Language Rewrites',
     description: 'These relationships document cases where a language runtime or compiler was substantially rewritten in a different implementation language.',
+    color: '#fb7185',
   },
 };
+
+// Semantic relationship badge for static pages (matches graph + token colors).
+function relBadge(type: string): string {
+  const def = RELATIONSHIP_DEFS[type];
+  if (!def) return '';
+  return `<span class="rel-badge" style="--rc:${def.color}">${escapeHtml(def.label)}</span>`;
+}
 
 function buildRelationshipPage(type: string, rels: Relationship[], nodeMap: Map<string, Language>): string {
   const def = RELATIONSHIP_DEFS[type] || { label: type, h1: type, description: '' };
@@ -1687,9 +1700,10 @@ function buildRelationshipPage(type: string, rels: Relationship[], nodeMap: Map<
     <a href="/">Home</a> &rsaquo; <a href="/relationships">Relationships</a> &rsaquo; ${escapeHtml(def.label)}
   </nav>
 
+  <div class="rel-page-head">${relBadge(type)}</div>
   <h1>${escapeHtml(def.h1)}</h1>
 
-  <div class="answer-box">${escapeHtml(def.description)}</div>
+  <div class="answer-box" style="border-left:3px solid ${def.color}">${escapeHtml(def.description)}</div>
 
   <h2>All ${typeRels.length} Relationships</h2>
   <table>
@@ -2194,9 +2208,9 @@ function buildRelationshipsIndex(rels: Relationship[]): string {
   const cards = Object.entries(RELATIONSHIP_DEFS).map(([type, def]) => {
     const slug = type.replace(/_/g, '-');
     const count = counts[type] || 0;
-    return `<a href="/relationships/${slug}" class="rel-card">
+    return `<a href="/relationships/${slug}" class="rel-card" style="--rc:${def.color}">
   <div class="rel-card-body">
-    <div class="rel-card-title">${escapeHtml(def.label)}</div>
+    <div class="rel-card-title"><span class="rel-dot" style="background:${def.color}"></span>${escapeHtml(def.label)}</div>
     <p class="rel-card-desc">${escapeHtml(def.description)}</p>
   </div>
   <span class="rel-card-count">${count}</span>

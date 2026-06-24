@@ -116,13 +116,13 @@ a:hover { color: var(--accent-hover); text-decoration: underline; }
 
 /* Headings */
 h1 {
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
   font-size: 40px;
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.15;
   color: var(--text);
   margin-bottom: 24px;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.03em;
 }
 
 h2 {
@@ -530,6 +530,7 @@ pre {
   padding: 18px 24px;
   background: var(--bg-card);
   border: 1px solid var(--border);
+  border-left: 3px solid var(--rc, var(--border));
   border-radius: 10px;
   text-decoration: none;
   transition: border-color 0.15s;
@@ -537,7 +538,31 @@ pre {
 
 .rel-card:hover {
   border-color: var(--accent);
+  border-left-color: var(--rc, var(--accent));
   text-decoration: none;
+}
+
+/* Semantic relationship badge + accents (matches graph colors) */
+.rel-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  color: var(--rc);
+  border: 1px solid color-mix(in srgb, var(--rc) 45%, transparent);
+  background: color-mix(in srgb, var(--rc) 12%, transparent);
+}
+.rel-page-head { margin-bottom: 14px; }
+.rel-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
 }
 
 .rel-card-body { flex: 1; }
