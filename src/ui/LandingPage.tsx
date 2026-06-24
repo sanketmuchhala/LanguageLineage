@@ -61,26 +61,26 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
           <div className="hero-gradient" />
         </div>
         <div className="hero-content">
-          <p className="hero-eyebrow reveal">An Interactive Exploration</p>
+          <p className="hero-eyebrow reveal">Evidence-backed implementation atlas</p>
           <h1 className="hero-title reveal">
             <span className="title-line">Programming Language</span>
             <span className="title-line accent">Lineage Graph</span>
           </h1>
           <p className="hero-subtitle reveal">
-            Explore what programming languages are written in, how compilers bootstrap
-            themselves, and how languages like Python, JavaScript, Rust, Go, and C++
-            evolved from one another. Interactive programming language family tree with
-            112 languages and 347 relationships.
+            Trace what programming languages are <em>written in</em>: their compilers,
+            runtimes, virtual machines, and bootstrap chains. An interactive programming
+            language family tree of 112 languages and toolchains and 347 sourced
+            relationships, each with a confidence score and citation.
           </p>
           <div className="hero-actions reveal">
             <button className="btn-primary" onClick={onEnterGraph}>
-              <span>Explore the Graph</span>
+              <span>Open the graph</span>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
             </button>
-            <a href="#about" className="btn-secondary">
-              Learn More
+            <a href="/dataset" className="btn-secondary">
+              Methodology &amp; dataset
             </a>
           </div>
         </div>
@@ -149,7 +149,7 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
               </g>
             </svg>
             <div className="demo-graph-label">
-              <span className="label-accent">C</span> and its lineage
+              <span className="label-accent">C</span> — what influenced it, and what it influenced
             </div>
           </div>
         </div>
@@ -163,7 +163,7 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
       <section className="stats-bar">
         <div className="stat reveal">
           <span className="stat-number">112</span>
-          <span className="stat-label">Languages Mapped</span>
+          <span className="stat-label">Languages &amp; tools</span>
         </div>
         <div className="stat-divider" />
         <div className="stat reveal">
@@ -186,20 +186,21 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
       <section id="about" className="section about-section">
         <div className="section-grid">
           <div className="about-content">
-            <p className="section-eyebrow reveal">What We Do</p>
+            <p className="section-eyebrow reveal">What this maps</p>
             <h2 className="section-title reveal">
-              Mapping the<br />
-              <em>Invisible Connections</em>
+              How languages are<br />
+              <em>actually built</em>
             </h2>
             <p className="section-text reveal">
-              Every programming language stands on the shoulders of giants. Language Lineage
-              visualizes the hidden web of influence, implementation, and inspiration that
-              connects every language ever created.
+              Every programming language runs on an implementation: a compiler, an interpreter,
+              a runtime, or a virtual machine, almost always written in another language.
+              Language Lineage maps those implementation relationships alongside influence and
+              bootstrap chains.
             </p>
             <p className="section-text reveal">
-              From the mathematical foundations of LISP to the systems programming revolution
-              of Rust, we trace the threads that weave through computing history—revealing
-              patterns that explain why languages work the way they do.
+              From CPython written in C to a self-hosting rustc first bootstrapped through OCaml,
+              every edge carries a source and a confidence score. The graph is a documented
+              record of computing infrastructure, not folklore.
             </p>
           </div>
           <div className="about-visual reveal">
@@ -259,8 +260,8 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
             </div>
             <h3 className="feature-title">Interactive Graph</h3>
             <p className="feature-text">
-              Navigate a dynamic network of languages. Click any node to reveal its
-              ancestors, descendants, and the stories of how they're connected.
+              Navigate a directed network of languages and toolchains. Select any node to
+              see what it is written in, what it influenced, and the source behind each link.
             </p>
           </div>
           <div className="feature reveal">
@@ -319,20 +320,21 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
       {/* More Than a Family Tree — comparison section */}
       <section className="section more-than-section">
         <div className="section-header">
-          <p className="section-eyebrow reveal">Beyond the Family Tree</p>
+          <p className="section-eyebrow reveal">Beyond influence</p>
           <h2 className="section-title centered reveal">
-            More than a<br /><em>Programming Language Family Tree</em>
+            More than a<br /><em>programming language family tree</em>
           </h2>
           <p className="section-text centered reveal">
             Most language family trees show only influence and ancestry. Language Lineage also
-            maps implementation relationships — what compilers, runtimes, and bootstrap chains
-            each language actually uses. 112 programming languages, 347 evidence-backed relationships.
+            maps implementation relationships: what compilers, runtimes, virtual machines, and
+            bootstrap chains each language actually uses. 112 languages and toolchains, 347
+            evidence-backed relationships.
           </p>
         </div>
         <div className="comparison-table reveal">
           <table>
             <thead>
-              <tr><th>Feature</th><th>Traditional Family Tree</th><th>Language Lineage</th></tr>
+              <tr><th>Feature</th><th>Influence-only family tree</th><th>Language Lineage</th></tr>
             </thead>
             <tbody>
               <tr><td>Influence &amp; ancestry</td><td>✓</td><td>✓</td></tr>
@@ -385,8 +387,8 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
                 <div className="point-content">
                   <h4>Choose Wisely</h4>
                   <p>
-                    Knowing a language's DNA—its influences and philosophy—helps you
-                    pick the right tool for your project.
+                    Knowing a language's heritage, its influences and implementation
+                    foundations, helps you pick the right tool for your project.
                   </p>
                 </div>
               </div>
@@ -413,14 +415,14 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
         </div>
         <div className="cta-content">
           <h2 className="cta-title reveal">
-            Ready to Explore?
+            Open the graph
           </h2>
           <p className="cta-text reveal">
-            Dive into the interactive graph and discover the hidden connections
-            between your favorite programming languages.
+            Explore the implementation, runtime, bootstrap, and influence relationships
+            between 112 programming languages and toolchains, every edge sourced.
           </p>
           <button className="btn-primary large reveal" onClick={onEnterGraph}>
-            <span>Launch the Graph</span>
+            <span>Launch the graph</span>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
