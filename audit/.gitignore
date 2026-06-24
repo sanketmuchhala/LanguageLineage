@@ -1,0 +1,5 @@
+# Screenshot binaries are review artifacts, not source. Keep tooling + docs, ignore images.
+before/
+after/
+concepts/
+*.png
