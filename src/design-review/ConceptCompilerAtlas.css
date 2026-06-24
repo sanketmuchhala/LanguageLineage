@@ -1,14 +1,14 @@
 /* Concept A: Compiler Atlas. Scoped to .ca-root. Dev-only. */
 .ca-root {
-  --bg: #0a0e14;
-  --bg2: #0d1117;
-  --surface: #131a23;
-  --elevated: #1b2530;
-  --border: rgba(120, 140, 170, 0.16);
-  --border-strong: rgba(120, 140, 170, 0.32);
-  --text: #e6edf3;
-  --muted: #8b98a8;
-  --faint: #5b6675;
+  --bg: #08080a;
+  --bg2: #0c0c0e;
+  --surface: #141416;
+  --elevated: #1d1d20;
+  --border: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.17);
+  --text: #f4f4f5;
+  --muted: #a1a1aa;
+  --faint: #5f5f68;
   --cyan: #22d3ee;
   --amber: #e3a008;
   --green: #34d399;
@@ -106,7 +106,7 @@
 /* detail */
 .ca-detail { padding: 36px; }
 .ca-detail-head { display: flex; gap: 18px; align-items: center; }
-.ca-detail-logo { width: 60px; height: 60px; border-radius: 14px; background: linear-gradient(135deg, #2b3a4d, #131a23); border: 1px solid var(--border-strong); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 22px; color: var(--cyan); }
+.ca-detail-logo { width: 60px; height: 60px; border-radius: 14px; background: linear-gradient(135deg, #2a2a2e, #141416); border: 1px solid var(--border-strong); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 22px; color: var(--cyan); }
 .ca-detail-logo.sm { width: 40px; height: 40px; font-size: 15px; border-radius: 10px; }
 .ca-detail-kicker { font-family: 'JetBrains Mono', monospace; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--faint); }
 .ca-detail-head h1 { font-size: 38px; letter-spacing: -0.02em; margin: 2px 0 6px; }

@@ -57,7 +57,7 @@ export default function ConceptCompilerAtlas() {
             </div>
             <div className="ca-hero-graph">
               <div className="ca-hero-graph-inner">
-                <ConceptGraph nodeFill="#1b2530" nodeStroke="rgba(120,140,170,0.5)" labelColor="#cdd6e0" toolFill="#243042" showGrid gridColor="rgba(120,140,170,0.08)" />
+                <ConceptGraph nodeFill="#26262b" nodeStroke="rgba(255,255,255,0.4)" labelColor="#e4e4e7" toolFill="#2d2d33" showGrid gridColor="rgba(255,255,255,0.06)" />
               </div>
               <div className="ca-legend">
                 {RELATIONSHIPS.map((r) => (
@@ -99,7 +99,7 @@ export default function ConceptCompilerAtlas() {
                 <div className="ca-rail-sub">show edges at or above 0.70</div>
               </aside>
               <div className="ca-canvas">
-                <ConceptGraph nodeFill="#1b2530" nodeStroke="rgba(120,140,170,0.5)" labelColor="#cdd6e0" toolFill="#243042" highlight="py" showGrid gridColor="rgba(120,140,170,0.06)" />
+                <ConceptGraph nodeFill="#26262b" nodeStroke="rgba(255,255,255,0.4)" labelColor="#e4e4e7" toolFill="#2d2d33" highlight="py" showGrid gridColor="rgba(255,255,255,0.05)" />
                 <div className="ca-canvas-controls"><button>＋</button><button>－</button><button>⤢</button></div>
               </div>
               <aside className="ca-inspector">
