@@ -1,14 +1,14 @@
 /* Concept A: Compiler Atlas. Scoped to .ca-root. Dev-only. */
 .ca-root {
-  --bg: #08080a;
-  --bg2: #0c0c0e;
-  --surface: #141416;
-  --elevated: #1d1d20;
+  --bg: #000000;
+  --bg2: #0a0a0a;
+  --surface: #0e0e0e;
+  --elevated: #161616;
   --border: rgba(255, 255, 255, 0.09);
   --border-strong: rgba(255, 255, 255, 0.17);
-  --text: #f4f4f5;
-  --muted: #a1a1aa;
-  --faint: #5f5f68;
+  --text: #fafafa;
+  --muted: #9a9a9a;
+  --faint: #5a5a5a;
   --cyan: #22d3ee;
   --amber: #e3a008;
   --green: #34d399;
@@ -29,7 +29,7 @@
 .ca-mobile-row { display: flex; gap: 24px; padding: 26px; justify-content: center; background: transparent; border: none; }
 
 /* nav */
-.ca-nav { display: flex; align-items: center; gap: 22px; padding: 14px 22px; border-bottom: 1px solid var(--border); background: rgba(13, 17, 23, 0.7); }
+.ca-nav { display: flex; align-items: center; gap: 22px; padding: 14px 22px; border-bottom: 1px solid var(--border); background: rgba(14, 14, 14, 0.7); }
 .ca-brand { display: flex; align-items: center; gap: 9px; font-weight: 700; letter-spacing: -0.01em; }
 .ca-nav-links { display: flex; gap: 18px; flex: 1; font-size: 14px; }
 .ca-nav-links a { color: var(--muted); cursor: pointer; }
@@ -52,7 +52,7 @@
 .ca-stats b { display: block; font-size: 24px; font-family: 'JetBrains Mono', monospace; letter-spacing: -0.02em; }
 .ca-stats span { font-size: 12px; color: var(--faint); text-transform: uppercase; letter-spacing: 0.08em; }
 .ca-hero-graph { position: relative; }
-.ca-hero-graph-inner { aspect-ratio: 1 / 1; background: radial-gradient(60% 60% at 50% 45%, rgba(34, 211, 238, 0.07), transparent); border: 1px solid var(--border); border-radius: 14px; }
+.ca-hero-graph-inner { aspect-ratio: 1 / 1; background: transparent; border: 1px solid var(--border); border-radius: 14px; }
 .ca-legend { display: flex; flex-wrap: wrap; gap: 8px 14px; margin-top: 14px; justify-content: center; }
 .ca-legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-family: 'JetBrains Mono', monospace; color: var(--muted); }
 .ca-legend-item i { width: 10px; height: 10px; border-radius: 3px; }
@@ -86,7 +86,7 @@
 .ca-filter small { margin-left: auto; font-family: 'JetBrains Mono', monospace; color: var(--faint); }
 .ca-range { width: 100%; accent-color: var(--cyan); margin: 4px 0; }
 .ca-rail-sub { font-size: 11px; color: var(--faint); font-family: 'JetBrains Mono', monospace; }
-.ca-canvas { position: relative; background: radial-gradient(60% 60% at 50% 50%, rgba(34, 211, 238, 0.05), transparent); }
+.ca-canvas { position: relative; background: transparent; }
 .ca-canvas-controls { position: absolute; right: 14px; bottom: 14px; display: flex; flex-direction: column; gap: 6px; }
 .ca-canvas-controls button { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; }
 .ca-inspector { border-left: 1px solid var(--border); padding: 16px; overflow-y: auto; background: var(--bg2); }
@@ -106,7 +106,7 @@
 /* detail */
 .ca-detail { padding: 36px; }
 .ca-detail-head { display: flex; gap: 18px; align-items: center; }
-.ca-detail-logo { width: 60px; height: 60px; border-radius: 14px; background: linear-gradient(135deg, #2a2a2e, #141416); border: 1px solid var(--border-strong); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 22px; color: var(--cyan); }
+.ca-detail-logo { width: 60px; height: 60px; border-radius: 14px; background: linear-gradient(135deg, #2a2a2e, #0e0e0e); border: 1px solid var(--border-strong); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 22px; color: var(--cyan); }
 .ca-detail-logo.sm { width: 40px; height: 40px; font-size: 15px; border-radius: 10px; }
 .ca-detail-kicker { font-family: 'JetBrains Mono', monospace; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--faint); }
 .ca-detail-head h1 { font-size: 38px; letter-spacing: -0.02em; margin: 2px 0 6px; }
