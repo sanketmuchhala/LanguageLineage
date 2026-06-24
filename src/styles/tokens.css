@@ -1,0 +1,161 @@
+/* ============================================
+   LANGUAGE LINEAGE — Design Tokens
+   Compiler Atlas: dark graphite technical map.
+   Single source of truth for the SPA. Static pages
+   mirror these values in public/seo.css.
+   ============================================ */
+
+:root {
+  /* --- Canonical surfaces (dark, default) --- */
+  /* Intense neutral black scale (no blue tint). */
+  --atlas-bg: #08080a;
+  --atlas-bg-2: #0c0c0e;
+  --atlas-surface: #141416;
+  --atlas-surface-hover: #1b1b1e;
+  --atlas-elevated: #1d1d20;
+  --atlas-border: rgba(255, 255, 255, 0.09);
+  --atlas-border-strong: rgba(255, 255, 255, 0.17);
+  --atlas-text: #f4f4f5;
+  --atlas-text-2: #a1a1aa;
+  --atlas-text-3: #5f5f68;
+
+  /* --- Brand / interactive accent (cyan) --- */
+  --atlas-accent: #22d3ee;
+  --atlas-accent-hover: #67e8f9;
+  --atlas-accent-subtle: rgba(34, 211, 238, 0.12);
+  --atlas-accent-glow: rgba(34, 211, 238, 0.25);
+  --atlas-accent-ink: #03212a; /* text on accent fills */
+
+  /* --- Semantic relationship colors (data categories) --- */
+  --rel-compiler: #e3a008;   /* compiler implementation */
+  --rel-runtime: #34d399;    /* runtime / VM implementation */
+  --rel-bootstrap: #a78bfa;  /* bootstrap */
+  --rel-rewrite: #fb7185;    /* rewritten in */
+  --rel-influence: #60a5fa;  /* influence */
+  --rel-transpile: #22d3ee;  /* transpilation */
+
+  /* --- Confidence bands --- */
+  --conf-high: #34d399;
+  --conf-med: #e3a008;
+  --conf-low: #9aa0a6;
+
+  /* --- Focus ring --- */
+  --focus-ring: 0 0 0 2px var(--atlas-bg), 0 0 0 4px var(--atlas-accent);
+
+  /* --- Type --- */
+  --font-display: 'DM Sans', system-ui, sans-serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* --- Radii --- */
+  --radius-sm: 6px;
+  --radius-md: 9px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+
+  /* --- Spacing scale --- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  /* --- Shadows --- */
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 4px 20px rgba(0, 0, 0, 0.28);
+  --shadow-lg: 0 12px 48px rgba(0, 0, 0, 0.5);
+
+  /* --- Motion --- */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --grain-opacity: 0.02;
+
+  /* ===========================================================
+     Aliases: existing variable names across the codebase point
+     at the canonical tokens above, so component CSS keeps working
+     while the palette is centralised here.
+     =========================================================== */
+
+  /* App.css names */
+  --bg-canvas: var(--atlas-bg);
+  --bg-surface: var(--atlas-surface);
+  --bg-surface-hover: var(--atlas-surface-hover);
+  --bg-elevated: var(--atlas-elevated);
+  --bg-card: var(--atlas-elevated);
+  --border-primary: var(--atlas-border);
+  --border-secondary: rgba(255, 255, 255, 0.05);
+  --border-accent: rgba(34, 211, 238, 0.30);
+  --text-primary: var(--atlas-text);
+  --text-secondary: var(--atlas-text-2);
+  --text-tertiary: var(--atlas-text-3);
+  --accent: var(--atlas-accent);
+  --accent-hover: var(--atlas-accent-hover);
+  --accent-subtle: var(--atlas-accent-subtle);
+  --accent-glow: var(--atlas-accent-glow);
+  --color-secondary: var(--rel-runtime);
+  --color-highlight: var(--rel-compiler);
+
+  /* LandingPage.css names */
+  --color-bg: var(--atlas-bg);
+  --color-bg-elevated: var(--atlas-surface);
+  --color-bg-card: var(--atlas-elevated);
+  --color-text: var(--atlas-text);
+  --color-text-muted: var(--atlas-text-2);
+  --color-text-subtle: var(--atlas-text-3);
+  --color-accent: var(--atlas-accent);
+  --color-accent-hover: var(--atlas-accent-hover);
+  --color-accent-subtle: var(--atlas-accent-subtle);
+  --color-border: var(--atlas-border);
+  --color-border-accent: var(--border-accent);
+}
+
+/* ============================================
+   Light theme (toggled via :root.light)
+   ============================================ */
+:root.light {
+  --atlas-bg: #f4f6f8;
+  --atlas-bg-2: #ffffff;
+  --atlas-surface: #ffffff;
+  --atlas-surface-hover: #eef1f5;
+  --atlas-elevated: #ffffff;
+  --atlas-border: rgba(15, 30, 50, 0.12);
+  --atlas-border-strong: rgba(15, 30, 50, 0.22);
+  --atlas-text: #16202c;
+  --atlas-text-2: #44505e;
+  --atlas-text-3: #8a94a1;
+
+  --atlas-accent: #0e7490;
+  --atlas-accent-hover: #0891b2;
+  --atlas-accent-subtle: rgba(14, 116, 144, 0.10);
+  --atlas-accent-glow: rgba(14, 116, 144, 0.20);
+  --atlas-accent-ink: #ffffff;
+
+  --rel-compiler: #b45309;
+  --rel-runtime: #047857;
+  --rel-bootstrap: #6d28d9;
+  --rel-rewrite: #be123c;
+  --rel-influence: #1d4ed8;
+  --rel-transpile: #0e7490;
+
+  --conf-high: #047857;
+  --conf-med: #b45309;
+  --conf-low: #6b7280;
+
+  --shadow: 0 1px 3px rgba(20, 30, 45, 0.06), 0 4px 20px rgba(20, 30, 45, 0.05);
+  --shadow-lg: 0 12px 48px rgba(20, 30, 45, 0.12);
+  --grain-opacity: 0.012;
+
+  --border-secondary: rgba(15, 30, 50, 0.06);
+  --border-accent: rgba(14, 116, 144, 0.30);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
