@@ -31,8 +31,14 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
     <div className="landing">
       {/* Navigation */}
       <nav className="landing-nav">
-        <a href="/" className="nav-logo">
-          <span className="logo-mark">LL</span>
+        <a href="/" className="nav-logo" aria-label="Language Lineage home">
+          <svg className="brand-mark" viewBox="0 0 28 28" width="26" height="26" fill="none" aria-hidden="true">
+            <path d="M8.6 13 L18.4 7.6" stroke="#22d3ee" strokeWidth="1.6" strokeLinecap="round" />
+            <path d="M8.6 15 L18.4 20.4" stroke="#22d3ee" strokeWidth="1.6" strokeLinecap="round" />
+            <circle cx="6" cy="14" r="3.6" fill="#22d3ee" />
+            <circle cx="21" cy="6.5" r="3" fill="#e3a008" />
+            <circle cx="21" cy="21.5" r="3" fill="#34d399" />
+          </svg>
           <span className="logo-text">Language Lineage</span>
         </a>
         <div className="nav-links">
@@ -456,11 +462,17 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
       <footer className="landing-footer">
         <div className="footer-content">
           <div className="footer-brand">
-            <span className="logo-mark">LL</span>
+            <svg className="brand-mark" viewBox="0 0 28 28" width="24" height="24" fill="none" aria-hidden="true">
+              <path d="M8.6 13 L18.4 7.6" stroke="#22d3ee" strokeWidth="1.6" strokeLinecap="round" />
+              <path d="M8.6 15 L18.4 20.4" stroke="#22d3ee" strokeWidth="1.6" strokeLinecap="round" />
+              <circle cx="6" cy="14" r="3.6" fill="#22d3ee" />
+              <circle cx="21" cy="6.5" r="3" fill="#e3a008" />
+              <circle cx="21" cy="21.5" r="3" fill="#34d399" />
+            </svg>
             <span className="logo-text">Language Lineage</span>
           </div>
           <p className="footer-tagline">
-            Mapping the evolution of code, one lineage at a time.
+            Mapping how programming languages, compilers, and runtimes are built.
           </p>
           <div className="footer-maker">
             <span className="maker-label">Made by</span>

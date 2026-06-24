@@ -68,17 +68,9 @@ a:hover { color: var(--accent-hover); text-decoration: underline; }
 }
 
 .nav-logo-mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  background: var(--accent);
-  color: #000000;
-  border-radius: 6px;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.5px;
+  display: block;
+  width: 22px;
+  height: 22px;
   flex-shrink: 0;
   margin-right: 8px;
 }

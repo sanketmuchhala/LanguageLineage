@@ -94,6 +94,11 @@
   letter-spacing: -0.02em;
 }
 
+.brand-mark {
+  display: block;
+  flex-shrink: 0;
+}
+
 .logo-text {
   font-family: var(--font-display);
   font-size: 18px;

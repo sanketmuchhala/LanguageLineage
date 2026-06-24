@@ -9,8 +9,10 @@ const PUBLIC = join(ROOT, 'public');
 const DATASET_PATH = join(ROOT, 'dataset/v4/lineage_v4.json');
 const SITE = 'https://www.languagelineage.org';
 
+const BRAND_MARK = `<svg class="nav-logo-mark" viewBox="0 0 28 28" width="22" height="22" fill="none" aria-hidden="true"><path d="M8.6 13 L18.4 7.6" stroke="#22d3ee" stroke-width="1.6" stroke-linecap="round"/><path d="M8.6 15 L18.4 20.4" stroke="#22d3ee" stroke-width="1.6" stroke-linecap="round"/><circle cx="6" cy="14" r="3.6" fill="#22d3ee"/><circle cx="21" cy="6.5" r="3" fill="#e3a008"/><circle cx="21" cy="21.5" r="3" fill="#34d399"/></svg>`;
+
 const NAV_HTML = `<nav class="seo-nav">
-  <a href="/" class="nav-brand"><span class="nav-logo-mark">LL</span>Language Lineage</a>
+  <a href="/" class="nav-brand">${BRAND_MARK}Language Lineage</a>
   <a href="/relationships">Relationships</a>
   <a href="/languages">Languages</a>
   <a href="/tools">Tools</a>
@@ -24,9 +26,9 @@ const FOOTER_HTML = `<footer class="seo-footer-rich">
   <div class="footer-grid">
     <div class="footer-col">
       <span class="footer-col-head">Explore</span>
-      <a href="/programming-language-graph">Language Graph</a>
-      <a href="/programming-language-family-tree">Family Tree</a>
-      <a href="/programming-language-evolution">Evolution Timeline</a>
+      <a href="/programming-language-graph">Programming language graph</a>
+      <a href="/programming-language-family-tree">Language family tree</a>
+      <a href="/programming-language-evolution">Evolution timeline</a>
       <a href="/what-are-programming-languages-written-in">What languages are written in</a>
       <a href="/explore">Interactive Graph</a>
       <a href="/dataset">Dataset</a>
@@ -554,7 +556,7 @@ ${faqs.map(f => `<div class="faq-item">
 </head>
 <body class="seo-page">
 <nav class="seo-nav">
-  <a href="/" class="nav-brand"><span class="nav-logo-mark">LL</span>Language Lineage</a>
+  <a href="/" class="nav-brand">${BRAND_MARK}Language Lineage</a>
   <a href="/relationships">Relationships</a>
   <a href="/languages">Languages</a>
   <a href="/tools">Tools</a>
@@ -1532,7 +1534,7 @@ function buildDatasetPage(languages: Language[], rels: Relationship[]): string {
 </head>
 <body class="seo-page">
 <nav class="seo-nav">
-  <a href="/" class="nav-brand"><span class="nav-logo-mark">LL</span>Language Lineage</a>
+  <a href="/" class="nav-brand">${BRAND_MARK}Language Lineage</a>
   <a href="/relationships">Relationships</a>
   <a href="/languages">Languages</a>
   <a href="/tools">Tools</a>
@@ -1671,7 +1673,7 @@ function buildRelationshipPage(type: string, rels: Relationship[], nodeMap: Map<
 </head>
 <body class="seo-page">
 <nav class="seo-nav">
-  <a href="/" class="nav-brand"><span class="nav-logo-mark">LL</span>Language Lineage</a>
+  <a href="/" class="nav-brand">${BRAND_MARK}Language Lineage</a>
   <a href="/relationships">Relationships</a>
   <a href="/languages">Languages</a>
   <a href="/tools">Tools</a>
@@ -1993,7 +1995,7 @@ function buildGuidePage(guide: (typeof GUIDES)[0]): string {
 </head>
 <body class="seo-page">
 <nav class="seo-nav">
-  <a href="/" class="nav-brand"><span class="nav-logo-mark">LL</span>Language Lineage</a>
+  <a href="/" class="nav-brand">${BRAND_MARK}Language Lineage</a>
   <a href="/relationships">Relationships</a>
   <a href="/languages">Languages</a>
   <a href="/tools">Tools</a>
@@ -2056,7 +2058,7 @@ function buildLanguagesIndex(langs: Language[]): string {
 </head>
 <body class="seo-page">
 <nav class="seo-nav">
-  <a href="/" class="nav-brand"><span class="nav-logo-mark">LL</span>Language Lineage</a>
+  <a href="/" class="nav-brand">${BRAND_MARK}Language Lineage</a>
   <a href="/relationships">Relationships</a>
   <a href="/languages">Languages</a>
   <a href="/tools">Tools</a>
@@ -2115,7 +2117,7 @@ function buildToolsIndex(langs: Language[]): string {
 </head>
 <body class="seo-page">
 <nav class="seo-nav">
-  <a href="/" class="nav-brand"><span class="nav-logo-mark">LL</span>Language Lineage</a>
+  <a href="/" class="nav-brand">${BRAND_MARK}Language Lineage</a>
   <a href="/relationships">Relationships</a>
   <a href="/languages">Languages</a>
   <a href="/tools">Tools</a>
@@ -2163,7 +2165,7 @@ function buildGuidesIndex(): string {
 </head>
 <body class="seo-page">
 <nav class="seo-nav">
-  <a href="/" class="nav-brand"><span class="nav-logo-mark">LL</span>Language Lineage</a>
+  <a href="/" class="nav-brand">${BRAND_MARK}Language Lineage</a>
   <a href="/relationships">Relationships</a>
   <a href="/languages">Languages</a>
   <a href="/tools">Tools</a>
@@ -2220,7 +2222,7 @@ function buildRelationshipsIndex(rels: Relationship[]): string {
 </head>
 <body class="seo-page">
 <nav class="seo-nav">
-  <a href="/" class="nav-brand"><span class="nav-logo-mark">LL</span>Language Lineage</a>
+  <a href="/" class="nav-brand">${BRAND_MARK}Language Lineage</a>
   <a href="/relationships">Relationships</a>
   <a href="/languages">Languages</a>
   <a href="/tools">Tools</a>
@@ -2379,7 +2381,7 @@ function buildTimelinePage(languages: Language[], rels: Relationship[]): string 
 </head>
 <body class="seo-page">
 <nav class="seo-nav">
-  <a href="/" class="nav-brand"><span class="nav-logo-mark">LL</span>Language Lineage</a>
+  <a href="/" class="nav-brand">${BRAND_MARK}Language Lineage</a>
   <a href="/relationships">Relationships</a>
   <a href="/languages">Languages</a>
   <a href="/tools">Tools</a>
