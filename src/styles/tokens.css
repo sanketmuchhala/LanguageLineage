@@ -42,8 +42,8 @@
   /* --- Focus ring --- */
   --focus-ring: 0 0 0 2px var(--atlas-bg), 0 0 0 4px var(--atlas-accent);
 
-  /* --- Type: Geist (display + body, developer-tool grade), JetBrains Mono (data) --- */
-  --font-display: 'Geist', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  /* --- Type: Bricolage Grotesque (characterful display) + Geist (clean body) + JetBrains Mono (data) --- */
+  --font-display: 'Bricolage Grotesque', 'Geist', system-ui, sans-serif;
   --font-body: 'Geist', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
 
