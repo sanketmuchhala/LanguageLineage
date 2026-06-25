@@ -100,10 +100,10 @@
 }
 
 .logo-text {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 18px;
-  font-weight: 500;
-  letter-spacing: 0.02em;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   color: var(--color-text);
 }
 

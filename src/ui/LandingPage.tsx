@@ -33,12 +33,12 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
       {/* Navigation */}
       <nav className="landing-nav">
         <a href="/" className="nav-logo" aria-label="Language Lineage home">
-          <svg className="brand-mark" viewBox="0 0 28 28" width="26" height="26" fill="none" aria-hidden="true">
-            <path d="M8.6 13 L18.4 7.6" stroke="#4ade80" strokeWidth="1.6" strokeLinecap="round" />
-            <path d="M8.6 15 L18.4 20.4" stroke="#4ade80" strokeWidth="1.6" strokeLinecap="round" />
-            <circle cx="6" cy="14" r="3.6" fill="#4ade80" />
-            <circle cx="21" cy="6.5" r="3" fill="#e3a008" />
-            <circle cx="21" cy="21.5" r="3" fill="#60a5fa" />
+          <svg className="brand-mark" viewBox="0 0 32 32" width="26" height="26" fill="none" aria-hidden="true">
+            <path d="M9 16 L22 8.5" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" />
+            <path d="M9 16 L22 23.5" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" />
+            <circle cx="8.5" cy="16" r="4.2" fill="#4ade80" />
+            <circle cx="23.5" cy="8" r="3" fill="#fafafa" />
+            <circle cx="23.5" cy="24" r="3" fill="#fafafa" />
           </svg>
           <span className="logo-text">Language Lineage</span>
         </a>
@@ -443,12 +443,12 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
       <footer className="landing-footer">
         <div className="footer-content">
           <div className="footer-brand">
-            <svg className="brand-mark" viewBox="0 0 28 28" width="24" height="24" fill="none" aria-hidden="true">
-              <path d="M8.6 13 L18.4 7.6" stroke="#4ade80" strokeWidth="1.6" strokeLinecap="round" />
-              <path d="M8.6 15 L18.4 20.4" stroke="#4ade80" strokeWidth="1.6" strokeLinecap="round" />
-              <circle cx="6" cy="14" r="3.6" fill="#4ade80" />
-              <circle cx="21" cy="6.5" r="3" fill="#e3a008" />
-              <circle cx="21" cy="21.5" r="3" fill="#60a5fa" />
+            <svg className="brand-mark" viewBox="0 0 32 32" width="24" height="24" fill="none" aria-hidden="true">
+              <path d="M9 16 L22 8.5" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" />
+              <path d="M9 16 L22 23.5" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" />
+              <circle cx="8.5" cy="16" r="4.2" fill="#4ade80" />
+              <circle cx="23.5" cy="8" r="3" fill="#fafafa" />
+              <circle cx="23.5" cy="24" r="3" fill="#fafafa" />
             </svg>
             <span className="logo-text">Language Lineage</span>
           </div>

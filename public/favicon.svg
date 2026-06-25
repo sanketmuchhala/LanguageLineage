@@ -1,4 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
-  <rect width="32" height="32" rx="6" fill="#0d1117"/>
-  <text x="16" y="22" font-family="Georgia, serif" font-size="15" font-weight="700" fill="#c9a87c" text-anchor="middle" letter-spacing="0.5">LL</text>
+  <rect width="32" height="32" rx="7" fill="#0a0a0a"/>
+  <path d="M11 16 L21.5 10.5 M11 16 L21.5 21.5" stroke="#4ade80" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+  <circle cx="10.5" cy="16" r="3.6" fill="#4ade80"/>
+  <circle cx="22" cy="10" r="2.6" fill="#fafafa"/>
+  <circle cx="22" cy="22" r="2.6" fill="#fafafa"/>
 </svg>
