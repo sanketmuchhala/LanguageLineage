@@ -9,7 +9,7 @@ const PUBLIC = join(ROOT, 'public');
 const DATASET_PATH = join(ROOT, 'dataset/v4/lineage_v4.json');
 const SITE = 'https://www.languagelineage.org';
 
-const FONTS_HEAD = `<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">`;
+const FONTS_HEAD = `<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">`;
 
 const BRAND_MARK = `<svg class="nav-logo-mark" viewBox="0 0 28 28" width="22" height="22" fill="none" aria-hidden="true"><path d="M8.6 13 L18.4 7.6" stroke="#4ade80" stroke-width="1.6" stroke-linecap="round"/><path d="M8.6 15 L18.4 20.4" stroke="#4ade80" stroke-width="1.6" stroke-linecap="round"/><circle cx="6" cy="14" r="3.6" fill="#4ade80"/><circle cx="21" cy="6.5" r="3" fill="#e3a008"/><circle cx="21" cy="21.5" r="3" fill="#60a5fa"/></svg>`;
 
