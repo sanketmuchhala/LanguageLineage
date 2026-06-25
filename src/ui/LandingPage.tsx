@@ -87,69 +87,47 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
         <div className="hero-visual reveal">
             <div className="hero-panel">
               <div className="hero-panel-cap"><span className="hero-panel-dot" />implementation subgraph &middot; C</div>
-              <div className="demo-graph">
-            <svg viewBox="0 0 400 400" className="demo-graph-svg">
-              {/* Connection lines */}
-              <g className="demo-edges">
-                {/* ALGOL to C */}
-                <line x1="120" y1="80" x2="200" y2="200" className="demo-edge" />
-                {/* B to C */}
-                <line x1="80" y1="180" x2="200" y2="200" className="demo-edge" />
-                {/* Assembly to C */}
-                <line x1="60" y1="280" x2="200" y2="200" className="demo-edge" />
-                {/* C to C++ */}
-                <line x1="200" y1="200" x2="320" y2="120" className="demo-edge influenced" />
-                {/* C to Java */}
-                <line x1="200" y1="200" x2="340" y2="200" className="demo-edge influenced" />
-                {/* C to Python */}
-                <line x1="200" y1="200" x2="300" y2="280" className="demo-edge influenced" />
-                {/* C to Rust */}
-                <line x1="200" y1="200" x2="340" y2="320" className="demo-edge influenced" />
-                {/* C to Go */}
-                <line x1="200" y1="200" x2="280" y2="360" className="demo-edge influenced" />
-              </g>
-              {/* Ancestor nodes */}
-              <g className="demo-nodes">
-                <g className="demo-node ancestor">
-                  <circle cx="120" cy="80" r="28" />
-                  <text x="120" y="85">ALGOL</text>
-                </g>
-                <g className="demo-node ancestor">
-                  <circle cx="80" cy="180" r="24" />
-                  <text x="80" y="185">B</text>
-                </g>
-                <g className="demo-node ancestor">
-                  <circle cx="60" cy="280" r="22" />
-                  <text x="60" y="285">ASM</text>
-                </g>
-                {/* Central C node */}
-                <g className="demo-node central">
-                  <circle cx="200" cy="200" r="40" />
-                  <text x="200" y="208">C</text>
-                </g>
-                {/* Descendant nodes */}
-                <g className="demo-node descendant">
-                  <circle cx="320" cy="120" r="30" />
-                  <text x="320" y="125">C++</text>
-                </g>
-                <g className="demo-node descendant">
-                  <circle cx="340" cy="200" r="28" />
-                  <text x="340" y="205">Java</text>
-                </g>
-                <g className="demo-node descendant">
-                  <circle cx="300" cy="280" r="30" />
-                  <text x="300" y="285">Python</text>
-                </g>
-                <g className="demo-node descendant">
-                  <circle cx="340" cy="320" r="26" />
-                  <text x="340" y="325">Rust</text>
-                </g>
-                <g className="demo-node descendant">
-                  <circle cx="280" cy="360" r="24" />
-                  <text x="280" y="365">Go</text>
-                </g>
-              </g>
-            </svg>
+              <div className="hero-graph">
+                <svg viewBox="0 0 440 312" className="hero-graph-svg" role="img" aria-label="Directed subgraph centered on C. ALGOL and B influenced C; C is the implementation language of the Python and Ruby runtimes and the original Go compiler.">
+                  <defs>
+                    <marker id="hg-arrow-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#4ade80" /></marker>
+                    <marker id="hg-arrow-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e3a008" /></marker>
+                    <marker id="hg-arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#60a5fa" /></marker>
+                    <radialGradient id="hg-focal-fill" cx="50%" cy="40%" r="62%"><stop offset="0%" stopColor="#13402a" /><stop offset="100%" stopColor="#0a1d13" /></radialGradient>
+                  </defs>
+                  <g>
+                    <line className="hg-edge hg-influence" x1="133" y1="68" x2="192" y2="123" markerEnd="url(#hg-arrow-blue)" />
+                    <line className="hg-edge hg-influence" x1="307" y1="68" x2="248" y2="123" markerEnd="url(#hg-arrow-blue)" />
+                    <line className="hg-edge hg-runtime" x1="194" y1="172" x2="131" y2="226" markerEnd="url(#hg-arrow-green)" />
+                    <line className="hg-edge hg-runtime" x1="220" y1="184" x2="220" y2="223" markerEnd="url(#hg-arrow-green)" />
+                    <line className="hg-edge hg-compiler" x1="246" y1="172" x2="309" y2="226" markerEnd="url(#hg-arrow-amber)" />
+                  </g>
+                  <circle className="hg-focal-glow" cx="220" cy="150" r="52" />
+                  <g className="hg-up">
+                    <circle cx="120" cy="56" r="18" />
+                    <text className="hg-label" x="120" y="27" textAnchor="middle">ALGOL</text>
+                  </g>
+                  <g className="hg-up">
+                    <circle cx="320" cy="56" r="18" />
+                    <text className="hg-label" x="320" y="27" textAnchor="middle">B</text>
+                  </g>
+                  <g className="hg-impl-runtime">
+                    <circle cx="110" cy="244" r="22" />
+                    <text className="hg-label" x="110" y="285" textAnchor="middle">Python</text>
+                  </g>
+                  <g className="hg-impl-runtime">
+                    <circle cx="220" cy="250" r="22" />
+                    <text className="hg-label" x="220" y="291" textAnchor="middle">Ruby</text>
+                  </g>
+                  <g className="hg-impl-compiler">
+                    <circle cx="330" cy="244" r="22" />
+                    <text className="hg-label" x="330" y="285" textAnchor="middle">Go</text>
+                  </g>
+                  <g className="hg-focal-node">
+                    <circle cx="220" cy="150" r="34" fill="url(#hg-focal-fill)" />
+                    <text className="hg-label-focal" x="220" y="157" textAnchor="middle">C</text>
+                  </g>
+                </svg>
               </div>
               <div className="hero-record">
                 <span className="rec-node">Python</span>

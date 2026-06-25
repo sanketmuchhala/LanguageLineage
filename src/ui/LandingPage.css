@@ -204,16 +204,17 @@
   z-index: 2;
 }
 
-/* Hero graph specimen panel */
+/* Hero graph specimen plate: caption (top), graph (middle), record (bottom) */
 .hero-panel {
   position: relative;
+  display: flex;
+  flex-direction: column;
   border: 1px solid var(--color-border);
   border-radius: 18px;
   background:
-    radial-gradient(120% 90% at 72% 12%, rgba(74, 222, 128, 0.07), transparent 58%),
+    radial-gradient(120% 90% at 72% 10%, rgba(74, 222, 128, 0.07), transparent 56%),
     linear-gradient(180deg, #0b0b0b, #050505);
-  padding: 16px;
-  aspect-ratio: 1 / 0.88;
+  aspect-ratio: 1 / 0.9;
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
   overflow: hidden;
 }
@@ -222,22 +223,23 @@
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.022) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.022) 1px, transparent 1px);
-  background-size: 34px 34px;
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 36px 36px;
+  -webkit-mask-image: radial-gradient(120% 80% at 50% 35%, #000 35%, transparent 80%);
+  mask-image: radial-gradient(120% 80% at 50% 35%, #000 35%, transparent 80%);
   pointer-events: none;
 }
 .hero-panel-cap {
-  position: absolute;
-  top: 15px;
-  left: 17px;
-  z-index: 3;
+  position: relative;
+  z-index: 2;
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  padding: 15px 17px 0;
   font-family: var(--font-mono);
   font-size: 11px;
-  letter-spacing: 0.09em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--color-text-subtle);
 }
@@ -249,31 +251,60 @@
   box-shadow: 0 0 10px var(--color-accent);
 }
 
-/* Signature: a sourced implementation record straddling the panel seam */
+/* Graph plate */
+.hero-graph {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  min-height: 0;
+  padding: 2px 12px 0;
+}
+.hero-graph-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+.hg-edge { fill: none; stroke-width: 1.6; stroke-linecap: round; }
+.hg-influence { stroke: var(--rel-influence); stroke-dasharray: 1 5.5; opacity: 0.6; }
+.hg-runtime { stroke: var(--rel-runtime); opacity: 0.85; }
+.hg-compiler { stroke: var(--rel-compiler); opacity: 0.85; }
+.hg-up circle { fill: #161616; stroke: rgba(255, 255, 255, 0.18); stroke-width: 1.5; }
+.hg-impl-runtime circle { fill: #111; stroke: rgba(74, 222, 128, 0.55); stroke-width: 1.5; }
+.hg-impl-compiler circle { fill: #111; stroke: rgba(227, 160, 8, 0.55); stroke-width: 1.5; }
+.hg-focal-node circle { stroke: var(--color-accent); stroke-width: 2; filter: drop-shadow(0 0 9px rgba(74, 222, 128, 0.45)); }
+.hg-focal-glow { fill: rgba(74, 222, 128, 0.14); animation: hg-pulse 3.6s ease-in-out infinite; }
+@keyframes hg-pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.85; } }
+.hg-label { fill: var(--color-text-muted); font-family: var(--font-mono); font-size: 12px; font-weight: 500; }
+.hg-label-focal { fill: #d6fbe4; font-family: var(--font-mono); font-size: 18px; font-weight: 700; }
+
+/* Signature: a sourced implementation record, as the plate's caption */
 .hero-record {
-  position: absolute;
-  left: -28px;
-  bottom: 28px;
-  z-index: 4;
-  display: inline-flex;
+  position: relative;
+  z-index: 2;
+  display: flex;
   align-items: center;
   gap: 9px;
-  padding: 9px 13px;
+  margin: 4px 14px 14px;
+  padding: 9px 12px;
   border-radius: 10px;
-  background: #0d0d0d;
+  background: rgba(12, 12, 12, 0.92);
   border: 1px solid var(--color-border);
   border-left: 2px solid var(--color-accent);
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.7);
   font-family: var(--font-mono);
   font-size: 12px;
   white-space: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
+.hero-record::-webkit-scrollbar { display: none; }
 .rec-node {
   padding: 3px 8px;
   border-radius: 6px;
   background: #181818;
   border: 1px solid var(--color-border);
   color: var(--color-text);
+  flex-shrink: 0;
 }
 .rec-impl {
   color: var(--color-accent);
@@ -283,6 +314,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  flex-shrink: 0;
 }
 .rec-rel {
   font-size: 10px;
@@ -299,6 +331,8 @@
   align-items: center;
   gap: 5px;
   color: var(--color-text-muted);
+  flex-shrink: 0;
+  margin-left: auto;
 }
 .rec-check {
   color: var(--color-accent);
