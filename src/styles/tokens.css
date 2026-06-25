@@ -42,10 +42,10 @@
   /* --- Focus ring --- */
   --focus-ring: 0 0 0 2px var(--atlas-bg), 0 0 0 4px var(--atlas-accent);
 
-  /* --- Type --- */
-  --font-display: 'DM Sans', system-ui, sans-serif;
-  --font-body: 'DM Sans', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  /* --- Type: Space Grotesk (display, code-heritage) / IBM Plex Sans (body) / JetBrains Mono (data) --- */
+  --font-display: 'Space Grotesk', 'IBM Plex Sans', system-ui, sans-serif;
+  --font-body: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
 
   /* --- Radii --- */
   --radius-sm: 6px;

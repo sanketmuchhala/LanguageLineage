@@ -17,7 +17,7 @@
 html { font-size: 16px; }
 
 body {
-  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
   background: var(--bg);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
@@ -117,7 +117,7 @@ a:hover { color: var(--accent-hover); text-decoration: underline; }
 
 /* Headings */
 h1 {
-  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
   font-size: 40px;
   font-weight: 700;
   line-height: 1.15;

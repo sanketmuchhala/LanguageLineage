@@ -1,6 +1,6 @@
 export function NotFound() {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', gap: '16px', fontFamily: "'DM Sans', system-ui, sans-serif", color: 'var(--text-primary)', background: 'var(--bg-canvas)' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', gap: '16px', fontFamily: 'var(--font-body)', color: 'var(--text-primary)', background: 'var(--bg-canvas)' }}>
       <h1 style={{ fontSize: '72px', fontWeight: 700, color: 'var(--accent)', margin: 0, fontFamily: "'JetBrains Mono', ui-monospace, monospace" }}>404</h1>
       <p style={{ fontSize: '18px', color: 'var(--text-secondary)' }}>Page not found</p>
       <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
