@@ -351,12 +351,14 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
           <div className="why-visual reveal">
             <div className="quote-card">
               <blockquote>
-                "Those who cannot remember the past are condemned to repeat it."
+                rustc was first written in OCaml, then rewritten in Rust once it
+                could compile itself.
               </blockquote>
-              <cite>— George Santayana</cite>
+              <cite>bootstrap_written_in &middot; rustc</cite>
               <p className="quote-note">
-                Understanding why languages evolved the way they did helps us
-                make better choices about the tools we use—and build—today.
+                Knowing how a toolchain bootstrapped explains the constraints it
+                carries today. Every chain in the graph is sourced and
+                confidence-scored.
               </p>
             </div>
           </div>
