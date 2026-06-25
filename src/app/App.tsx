@@ -13,12 +13,6 @@ import './App.css';
 const GraphExplorer = lazy(() => import('./GraphExplorer'));
 const EmbedGraph = lazy(() => import('./EmbedGraph'));
 
-// Design-review prototypes: dev-only, noindex, not in sitemap. Removed in Phase 11.
-const DesignReview = lazy(() => import('../design-review/DesignReview'));
-const ConceptCompilerAtlas = lazy(() => import('../design-review/ConceptCompilerAtlas'));
-const ConceptRuntimeObservatory = lazy(() => import('../design-review/ConceptRuntimeObservatory'));
-const ConceptSourceArchive = lazy(() => import('../design-review/ConceptSourceArchive'));
-
 function LoadingScreen() {
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: '#000000', color: '#4ade80', fontFamily: "'JetBrains Mono', ui-monospace, monospace", fontSize: '13px', letterSpacing: '0.04em' }}>
@@ -66,10 +60,6 @@ function App() {
           <Route path="/" element={<LandingPageWrapper />} />
           <Route path="/explore" element={<GraphExplorerWrapper />} />
           <Route path="/embed" element={<Suspense fallback={null}><EmbedGraph /></Suspense>} />
-          <Route path="/design-review" element={<Suspense fallback={null}><DesignReview /></Suspense>} />
-          <Route path="/design-review/compiler-atlas" element={<Suspense fallback={null}><ConceptCompilerAtlas /></Suspense>} />
-          <Route path="/design-review/runtime-observatory" element={<Suspense fallback={null}><ConceptRuntimeObservatory /></Suspense>} />
-          <Route path="/design-review/source-archive" element={<Suspense fallback={null}><ConceptSourceArchive /></Suspense>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Analytics />
