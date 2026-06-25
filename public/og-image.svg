@@ -1,62 +1,52 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <rect width="1200" height="630" fill="#0a0a0b"/>
+  <rect width="1200" height="630" fill="#000000"/>
 
-  <!-- Subtle grid lines -->
-  <line x1="0" y1="210" x2="1200" y2="210" stroke="#ffffff" stroke-opacity="0.03" stroke-width="1"/>
-  <line x1="0" y1="420" x2="1200" y2="420" stroke="#ffffff" stroke-opacity="0.03" stroke-width="1"/>
-  <line x1="400" y1="0" x2="400" y2="630" stroke="#ffffff" stroke-opacity="0.03" stroke-width="1"/>
-  <line x1="800" y1="0" x2="800" y2="630" stroke="#ffffff" stroke-opacity="0.03" stroke-width="1"/>
-
-  <!-- Node-link graph motif (right side) -->
-  <g opacity="0.18">
-    <!-- Nodes -->
-    <circle cx="900" cy="200" r="22" fill="#c9a87c"/>
-    <circle cx="1020" cy="150" r="16" fill="#8b9a7d"/>
-    <circle cx="1080" cy="260" r="18" fill="#e07a5f"/>
-    <circle cx="960" cy="320" r="14" fill="#9b7bb8"/>
-    <circle cx="840" cy="310" r="20" fill="#5a8a7d"/>
-    <circle cx="1100" cy="180" r="12" fill="#c9a87c"/>
-    <circle cx="870" cy="150" r="14" fill="#7a9e7e"/>
-    <circle cx="1050" cy="360" r="12" fill="#8b9a7d"/>
-
-    <!-- Edges -->
-    <line x1="900" y1="200" x2="1020" y2="150" stroke="#c9a87c" stroke-width="2"/>
-    <line x1="900" y1="200" x2="1080" y2="260" stroke="#c9a87c" stroke-width="1.5"/>
-    <line x1="900" y1="200" x2="960" y2="320" stroke="#c9a87c" stroke-width="1.5"/>
-    <line x1="900" y1="200" x2="840" y2="310" stroke="#c9a87c" stroke-width="2"/>
-    <line x1="1020" y1="150" x2="1100" y2="180" stroke="#8b9a7d" stroke-width="1.5"/>
-    <line x1="1080" y1="260" x2="1050" y2="360" stroke="#e07a5f" stroke-width="1.5"/>
-    <line x1="960" y1="320" x2="1050" y2="360" stroke="#9b7bb8" stroke-width="1.5"/>
-    <line x1="900" y1="200" x2="870" y2="150" stroke="#7a9e7e" stroke-width="1.5"/>
-    <line x1="840" y1="310" x2="960" y2="320" stroke="#5a8a7d" stroke-width="1.5"/>
+  <!-- faint grid -->
+  <g stroke="#ffffff" stroke-opacity="0.04" stroke-width="1">
+    <line x1="0" y1="210" x2="1200" y2="210"/>
+    <line x1="0" y1="420" x2="1200" y2="420"/>
+    <line x1="820" y1="0" x2="820" y2="630"/>
   </g>
 
-  <!-- Gold accent bar -->
-  <rect x="80" y="220" width="4" height="100" fill="#c9a87c" rx="2"/>
-
-  <!-- Main title -->
-  <text x="110" y="280" font-family="Georgia, serif" font-size="64" font-weight="700" fill="#f5f0e8" letter-spacing="-1">Language Lineage</text>
-
-  <!-- Subtitle -->
-  <text x="110" y="336" font-family="system-ui, sans-serif" font-size="24" font-weight="400" fill="#9a958c" letter-spacing="0.5">What programming languages are written in</text>
-
-  <!-- Stats row -->
-  <g transform="translate(110, 400)">
-    <rect width="130" height="52" rx="8" fill="#1a1a1d"/>
-    <text x="65" y="22" font-family="system-ui, sans-serif" font-size="28" font-weight="700" fill="#c9a87c" text-anchor="middle">112</text>
-    <text x="65" y="42" font-family="system-ui, sans-serif" font-size="12" fill="#5a564f" text-anchor="middle">Languages</text>
-  </g>
-  <g transform="translate(256, 400)">
-    <rect width="130" height="52" rx="8" fill="#1a1a1d"/>
-    <text x="65" y="22" font-family="system-ui, sans-serif" font-size="28" font-weight="700" fill="#c9a87c" text-anchor="middle">347</text>
-    <text x="65" y="42" font-family="system-ui, sans-serif" font-size="12" fill="#5a564f" text-anchor="middle">Relationships</text>
-  </g>
-  <g transform="translate(402, 400)">
-    <rect width="130" height="52" rx="8" fill="#1a1a1d"/>
-    <text x="65" y="22" font-family="system-ui, sans-serif" font-size="28" font-weight="700" fill="#c9a87c" text-anchor="middle">75+</text>
-    <text x="65" y="42" font-family="system-ui, sans-serif" font-size="12" fill="#5a564f" text-anchor="middle">Years of history</text>
+  <!-- directed implementation subgraph motif (right), semantic relationship colours -->
+  <g>
+    <line x1="965" y1="270" x2="1065" y2="185" stroke="#e3a008" stroke-width="2.5" opacity="0.55"/>
+    <line x1="965" y1="270" x2="1100" y2="320" stroke="#34d399" stroke-width="2.5" opacity="0.55"/>
+    <line x1="965" y1="270" x2="985" y2="405" stroke="#a78bfa" stroke-width="2.5" opacity="0.5"/>
+    <line x1="965" y1="270" x2="855" y2="345" stroke="#60a5fa" stroke-width="2.5" opacity="0.5"/>
+    <line x1="1065" y1="185" x2="1135" y2="235" stroke="#60a5fa" stroke-width="2" opacity="0.4"/>
+    <circle cx="965" cy="270" r="28" fill="#0e0e0e" stroke="#4ade80" stroke-width="3"/>
+    <text x="965" y="279" font-family="Helvetica, Arial, sans-serif" font-size="24" font-weight="700" fill="#4ade80" text-anchor="middle">C</text>
+    <circle cx="1065" cy="185" r="17" fill="#161616" stroke="#e3a008" stroke-width="2.5"/>
+    <circle cx="1100" cy="320" r="17" fill="#161616" stroke="#34d399" stroke-width="2.5"/>
+    <circle cx="985" cy="405" r="15" fill="#161616" stroke="#a78bfa" stroke-width="2.5"/>
+    <circle cx="855" cy="345" r="16" fill="#161616" stroke="#60a5fa" stroke-width="2.5"/>
+    <circle cx="1135" cy="235" r="11" fill="#161616" stroke="#ffffff" stroke-opacity="0.45" stroke-width="2"/>
   </g>
 
-  <!-- Domain watermark -->
-  <text x="110" y="580" font-family="system-ui, sans-serif" font-size="16" fill="#5a564f" letter-spacing="1">languagelineage.org</text>
+  <!-- logo lockup -->
+  <g transform="translate(96 86) scale(1.7)">
+    <path d="M9 16 L22 8.5 M9 16 L22 23.5" stroke="#4ade80" stroke-width="2" stroke-linecap="round" fill="none"/>
+    <circle cx="8.5" cy="16" r="4.2" fill="#4ade80"/>
+    <circle cx="23.5" cy="8" r="3" fill="#fafafa"/>
+    <circle cx="23.5" cy="24" r="3" fill="#fafafa"/>
+  </g>
+  <text x="158" y="117" font-family="Helvetica, Arial, sans-serif" font-size="26" font-weight="700" fill="#fafafa">Language Lineage</text>
+
+  <!-- headline -->
+  <text x="94" y="312" font-family="Helvetica, Arial, sans-serif" font-size="62" font-weight="700" fill="#fafafa" letter-spacing="-1.5">What programming</text>
+  <text x="94" y="384" font-family="Helvetica, Arial, sans-serif" font-size="62" font-weight="700" letter-spacing="-1.5"><tspan fill="#fafafa">languages are </tspan><tspan fill="#4ade80">written in</tspan></text>
+
+  <!-- subtitle -->
+  <text x="96" y="440" font-family="Helvetica, Arial, sans-serif" font-size="22" fill="#9a9a9a">An evidence-backed atlas of compilers, runtimes, and bootstrap chains</text>
+
+  <!-- stats -->
+  <g font-family="Helvetica, Arial, sans-serif">
+    <g transform="translate(96 496)"><rect width="172" height="60" rx="10" fill="#0e0e0e" stroke="#ffffff" stroke-opacity="0.1"/><text x="22" y="34" font-size="30" font-weight="700" fill="#4ade80">112</text><text x="22" y="52" font-size="12" fill="#7a7a7a">languages &amp; tools</text></g>
+    <g transform="translate(284 496)"><rect width="172" height="60" rx="10" fill="#0e0e0e" stroke="#ffffff" stroke-opacity="0.1"/><text x="22" y="34" font-size="30" font-weight="700" fill="#4ade80">347</text><text x="22" y="52" font-size="12" fill="#7a7a7a">sourced relationships</text></g>
+    <g transform="translate(472 496)"><rect width="150" height="60" rx="10" fill="#0e0e0e" stroke="#ffffff" stroke-opacity="0.1"/><text x="22" y="34" font-size="30" font-weight="700" fill="#4ade80">6</text><text x="22" y="52" font-size="12" fill="#7a7a7a">relation types</text></g>
+  </g>
+
+  <!-- watermark -->
+  <text x="96" y="598" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="16" fill="#5a5a5a" letter-spacing="1">languagelineage.org</text>
 </svg>

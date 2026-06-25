@@ -1,3 +1,17 @@
+<p align="center">
+  <img src="public/logo-banner.svg" alt="Language Lineage — evidence-backed implementation atlas" width="560">
+</p>
+
+<p align="center">
+  <a href="https://languagelineage.org"><strong>languagelineage.org</strong></a>
+  &nbsp;·&nbsp;
+  <a href="https://languagelineage.org/explore">Explore the graph</a>
+  &nbsp;·&nbsp;
+  <a href="https://languagelineage.org/dataset">Dataset</a>
+  &nbsp;·&nbsp;
+  <a href="https://languagelineage.org/guides">Guides</a>
+</p>
+
 # Programming Language Lineage Graph
 
 An interactive graph visualization mapping the lineage, influence, and implementation relationships between 112 programming languages, from Machine Code (year 0) to Zig (2023).

@@ -30,7 +30,7 @@ function checkFile(rel: string): string | null {
 }
 
 // Static files
-const staticFiles = ['robots.txt', 'sitemap.xml', 'manifest.json', 'og-image.svg', 'seo.css', 'llms.txt', 'favicon.svg'];
+const staticFiles = ['robots.txt', 'sitemap.xml', 'manifest.json', 'og-image.svg', 'seo.css', 'llms.txt', 'favicon.svg', 'logo-mark.svg', 'logo-banner.svg'];
 for (const f of staticFiles) {
   const content = checkFile(f);
   if (content) ok(`public/${f} exists (${content.length} bytes)`);

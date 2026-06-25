@@ -33,13 +33,7 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
       {/* Navigation */}
       <nav className="landing-nav">
         <a href="/" className="nav-logo" aria-label="Language Lineage home">
-          <svg className="brand-mark" viewBox="0 0 32 32" width="26" height="26" fill="none" aria-hidden="true">
-            <path d="M9 16 L22 8.5" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" />
-            <path d="M9 16 L22 23.5" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" />
-            <circle cx="8.5" cy="16" r="4.2" fill="#4ade80" />
-            <circle cx="23.5" cy="8" r="3" fill="#fafafa" />
-            <circle cx="23.5" cy="24" r="3" fill="#fafafa" />
-          </svg>
+          <img className="brand-mark" src="/logo-mark.svg" width="26" height="26" alt="" aria-hidden="true" />
           <span className="logo-text">Language Lineage</span>
         </a>
         <div className="nav-links">
@@ -443,13 +437,7 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
       <footer className="landing-footer">
         <div className="footer-content">
           <div className="footer-brand">
-            <svg className="brand-mark" viewBox="0 0 32 32" width="24" height="24" fill="none" aria-hidden="true">
-              <path d="M9 16 L22 8.5" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" />
-              <path d="M9 16 L22 23.5" stroke="#4ade80" strokeWidth="2" strokeLinecap="round" />
-              <circle cx="8.5" cy="16" r="4.2" fill="#4ade80" />
-              <circle cx="23.5" cy="8" r="3" fill="#fafafa" />
-              <circle cx="23.5" cy="24" r="3" fill="#fafafa" />
-            </svg>
+            <img className="brand-mark" src="/logo-mark.svg" width="24" height="24" alt="" aria-hidden="true" />
             <span className="logo-text">Language Lineage</span>
           </div>
           <p className="footer-tagline">
