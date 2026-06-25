@@ -17,6 +17,26 @@ html {
   font-size: 16px;
 }
 
+/* Visible focus for keyboard users across all interactive elements. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* Visually hidden but available to screen readers and the accessibility tree. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 body {
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;

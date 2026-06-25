@@ -15,9 +15,19 @@ import { NavigationControls } from '../ui/NavigationControls';
 import { deactivateFocusMode } from '../graph/selectors';
 import { DAG_LAYOUT, FORCE_LAYOUT, CLUSTER_LAYOUT, buildTimelineLayout } from '../graph/layouts';
 
+const REL_LABELS: Record<string, string> = {
+  compiler_written_in: 'Compiler implementation',
+  runtime_written_in: 'Runtime or VM implementation',
+  bootstrap_written_in: 'Bootstrap',
+  rewritten_in: 'Rewritten in',
+  influenced: 'Influence',
+  transpiled_to: 'Transpilation',
+};
+
 export function GraphExplorer() {
   const navigate = useNavigate();
   const { setDataset, setDatasetIndex, setValidationReport } = useGraphStore();
+  const dataset = useGraphStore((s) => s.dataset);
 
   // Load dataset when graph explorer mounts (not on landing page)
   useEffect(() => {
@@ -93,7 +103,44 @@ export function GraphExplorer() {
 
   return (
     <div className="app">
-      <div className="graph-container">
+      {dataset && (
+        <section className="sr-only" aria-label="Programming language graph, accessible summary">
+          <h2>Programming language implementation graph</h2>
+          <p>
+            An interactive graph of {dataset.languageMap.size} programming languages and
+            toolchains connected by {dataset.edges.length} sourced, confidence-scored
+            relationships. The graph is drawn on a canvas below; the same data is available
+            as accessible tables on the pages linked here.
+          </p>
+          <h3>Relationships by type</h3>
+          <ul>
+            {Object.entries(
+              dataset.edges.reduce<Record<string, number>>((acc, e) => {
+                acc[e.relationship] = (acc[e.relationship] || 0) + 1;
+                return acc;
+              }, {})
+            )
+              .sort((a, b) => b[1] - a[1])
+              .map(([type, count]) => (
+                <li key={type}>
+                  <a href={`/relationships/${type.replace(/_/g, '-')}`}>
+                    {REL_LABELS[type] || type}: {count} relationships (view as a table)
+                  </a>
+                </li>
+              ))}
+          </ul>
+          <p>
+            <a href="/languages">Browse all languages</a>,{' '}
+            <a href="/tools">browse all toolchains</a>, or{' '}
+            <a href="/dataset">open the dataset</a>.
+          </p>
+        </section>
+      )}
+      <div
+        className="graph-container"
+        role="application"
+        aria-label="Interactive programming language graph. An accessible text summary of the same data precedes this canvas."
+      >
         <GraphView />
         <MinimalPanel onBackToLanding={handleBackToLanding} />
         <Legend />
