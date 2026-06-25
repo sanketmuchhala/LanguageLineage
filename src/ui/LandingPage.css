@@ -1381,7 +1381,7 @@
     height: 55px;
   }
 
-  /* Row 2: all nav links in scrollable strip */
+  /* Row 2: all nav links in scrollable strip, faded right edge to signal scroll */
   .nav-links {
     width: 100%;
     height: 36px;
@@ -1391,6 +1391,8 @@
     padding: 0;
     gap: 0;
     justify-content: flex-start;
+    -webkit-mask-image: linear-gradient(90deg, #000 86%, transparent);
+    mask-image: linear-gradient(90deg, #000 86%, transparent);
   }
 
   .nav-links::-webkit-scrollbar { display: none; }
