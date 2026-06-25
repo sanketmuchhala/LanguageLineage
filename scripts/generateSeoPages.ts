@@ -245,14 +245,16 @@ function buildAnswerBox(node: Language, rels: Relationship[], nodeMap: Map<strin
 }
 
 function buildMetaTags(node: Language): string {
+  const isTool = node.id.startsWith('tool:');
   const tags: string[] = [];
+  tags.push(`<span class="meta-tag meta-kind${isTool ? ' meta-kind-tool' : ''}">${isTool ? 'Toolchain' : 'Programming language'}</span>`);
   if (node.first_release_year) {
     tags.push(`<span class="meta-tag"><span class="meta-tag-label">Year</span> ${node.first_release_year}</span>`);
   }
-  if (node.paradigm && node.paradigm.length > 0) {
+  if (!isTool && node.paradigm && node.paradigm.length > 0) {
     tags.push(`<span class="meta-tag"><span class="meta-tag-label">Paradigm</span> ${escapeHtml(node.paradigm.join(', '))}</span>`);
   }
-  if (node.typing) {
+  if (!isTool && node.typing && node.typing !== 'unspecified') {
     tags.push(`<span class="meta-tag"><span class="meta-tag-label">Typing</span> ${escapeHtml(node.typing)}</span>`);
   }
   if (node.self_hosting) {

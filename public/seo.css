@@ -193,6 +193,23 @@ p {
   letter-spacing: 0.06em;
 }
 
+/* Node kind chip: distinguishes a programming language from a toolchain */
+.meta-kind {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 11px;
+  color: var(--accent);
+  border-color: var(--border-accent);
+  background: rgba(74, 222, 128, 0.08);
+}
+.meta-kind-tool {
+  color: #e3a008;
+  border-color: rgba(227, 160, 8, 0.4);
+  background: rgba(227, 160, 8, 0.08);
+}
+
 /* Tables */
 table {
   width: 100%;
