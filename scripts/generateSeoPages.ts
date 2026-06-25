@@ -1790,8 +1790,8 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
     slug: 'programming-language-family-tree',
     title: 'Programming Language Family Tree | Language Lineage',
     h1: 'Programming Language Family Tree',
-    description: 'Explore the family tree of programming languages. See how Fortran, LISP, C, and Simula gave rise to modern languages through 75+ years of evolution.',
-    content: `<div class="answer-box">The programming language family tree traces how languages descended from and influenced each other over 75+ years, from Fortran (1957) and LISP (1958) to Rust (2015) and beyond.</div>
+    description: 'The programming language family tree: how Fortran, LISP, and C influenced and implemented the languages that followed, across 75+ years of compiler and runtime history.',
+    content: `<div class="answer-box">The programming language family tree traces how languages influenced, implemented, and descended from each other over 75+ years, from Fortran (1957) and LISP (1958) to Rust (2015) and beyond. It maps not just who influenced whom, but what each language is actually written in.</div>
 
 <h2>The Roots (1950s)</h2>
 <p>The first high-level languages established the major paradigms. <a href="/languages/fortran">Fortran</a> pioneered imperative scientific computing. <a href="/languages/lisp">LISP</a> established functional programming and dynamic typing. COBOL targeted business computing. These three defined the landscape for decades.</p>
