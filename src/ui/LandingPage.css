@@ -437,126 +437,6 @@
   z-index: 1;
 }
 
-.demo-graph {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.demo-graph-svg {
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-
-/* Edges */
-.demo-edge {
-  stroke: var(--color-border);
-  stroke-width: 1.5;
-  fill: none;
-  opacity: 0.5;
-  transition: all 0.4s ease;
-}
-
-.demo-edge.influenced {
-  stroke: var(--color-accent);
-  opacity: 0.4;
-}
-
-.demo-graph:hover .demo-edge {
-  opacity: 0.7;
-}
-
-.demo-graph:hover .demo-edge.influenced {
-  opacity: 0.6;
-  stroke-width: 2;
-}
-
-/* Nodes */
-.demo-node circle {
-  fill: var(--color-bg-card);
-  stroke: var(--color-border);
-  stroke-width: 1.5;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.demo-node text {
-  fill: var(--color-text-muted);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 600;
-  text-anchor: middle;
-  pointer-events: none;
-  transition: fill 0.3s ease;
-}
-
-/* Ancestor nodes */
-.demo-node.ancestor circle {
-  fill: var(--color-bg-elevated);
-  stroke: var(--color-text-subtle);
-}
-
-.demo-node.ancestor text {
-  fill: var(--color-text-subtle);
-  font-size: 10px;
-}
-
-/* Central C node */
-.demo-node.central circle {
-  fill: var(--color-accent);
-  stroke: var(--color-accent-hover);
-  stroke-width: 3;
-  filter: drop-shadow(0 0 20px var(--color-accent-subtle));
-}
-
-.demo-node.central text {
-  fill: var(--color-bg);
-  font-size: 18px;
-  font-weight: 700;
-}
-
-/* Descendant nodes */
-.demo-node.descendant circle {
-  fill: var(--color-bg-card);
-  stroke: var(--color-accent);
-  stroke-width: 1.5;
-}
-
-.demo-node.descendant text {
-  fill: var(--color-text);
-  font-size: 11px;
-}
-
-/* Hover effects */
-.demo-graph:hover .demo-node.central circle {
-  filter: drop-shadow(0 0 30px var(--color-accent));
-}
-
-.demo-node.descendant:hover circle {
-  fill: var(--color-accent-subtle);
-  stroke-width: 2;
-  transform-origin: center;
-}
-
-/* Graph label */
-.demo-graph-label {
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-text-subtle);
-  white-space: nowrap;
-}
-
-.demo-graph-label .label-accent {
-  color: var(--color-accent);
-  font-weight: 700;
-}
-
 /* About-section implementation record card */
 .impl-record {
   font-family: var(--font-mono);
@@ -626,46 +506,6 @@
   }
 }
 
-.demo-node.central circle {
-  animation: pulse 3s ease-in-out infinite;
-}
-
-/* Scroll Indicator */
-.scroll-indicator {
-  position: absolute;
-  bottom: 40px;
-  left: 48px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.scroll-indicator span {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-text-subtle);
-}
-
-.scroll-line {
-  width: 48px;
-  height: 1px;
-  background: var(--color-text-subtle);
-  position: relative;
-  overflow: hidden;
-}
-
-.scroll-line::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: var(--color-accent);
-  animation: scrollPulse 2s ease-in-out infinite;
-}
 
 @keyframes scrollPulse {
   0%, 100% { transform: translateX(0); }
@@ -1272,11 +1112,7 @@
 /* ============================================
    RESPONSIVE — Large desktop (1200px+)
    ============================================ */
-@media (max-width: 1200px) {
-  .demo-node.central text {
-    font-size: 16px;
-  }
-}
+/* (1200px breakpoint reserved) */
 
 /* ============================================
    RESPONSIVE — iPad Landscape (769–1024px)
@@ -1608,10 +1444,6 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 8px 12px;
-  }
-
-  .scroll-indicator {
-    display: none;
   }
 
   /* Visual card */
