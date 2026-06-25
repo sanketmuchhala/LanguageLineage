@@ -105,7 +105,7 @@ export function EmbedGraph() {
           width: 80,
           height: 80,
           'border-width': 4,
-          'border-color': '#22d3ee',
+          'border-color': '#4ade80',
           'border-opacity': 1,
         } as any);
 

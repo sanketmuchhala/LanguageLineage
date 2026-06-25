@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { LandingGraphGlimpse } from './LandingGraphGlimpse';
 import './LandingPage.css';
 
 interface LandingPageProps {
@@ -209,6 +210,9 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
           </div>
         </div>
       </section>
+
+      {/* The atlas: a live glimpse of the real graph */}
+      <LandingGraphGlimpse onOpen={onEnterGraph} />
 
       {/* How Section */}
       <section id="explore" className="section how-section">
