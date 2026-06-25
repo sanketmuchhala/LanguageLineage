@@ -96,12 +96,12 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
                     <marker id="hg-arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#60a5fa" /></marker>
                     <radialGradient id="hg-focal-fill" cx="50%" cy="40%" r="62%"><stop offset="0%" stopColor="#13402a" /><stop offset="100%" stopColor="#0a1d13" /></radialGradient>
                   </defs>
-                  <g>
-                    <line className="hg-edge hg-influence" x1="133" y1="68" x2="192" y2="123" markerEnd="url(#hg-arrow-blue)" />
-                    <line className="hg-edge hg-influence" x1="307" y1="68" x2="248" y2="123" markerEnd="url(#hg-arrow-blue)" />
-                    <line className="hg-edge hg-runtime" x1="194" y1="172" x2="131" y2="226" markerEnd="url(#hg-arrow-green)" />
-                    <line className="hg-edge hg-runtime" x1="220" y1="184" x2="220" y2="223" markerEnd="url(#hg-arrow-green)" />
-                    <line className="hg-edge hg-compiler" x1="246" y1="172" x2="309" y2="226" markerEnd="url(#hg-arrow-amber)" />
+                  <g className="hg-edges">
+                    <line className="hg-edge hg-influence" pathLength={1} x1="133" y1="68" x2="192" y2="123" markerEnd="url(#hg-arrow-blue)" />
+                    <line className="hg-edge hg-influence" pathLength={1} x1="307" y1="68" x2="248" y2="123" markerEnd="url(#hg-arrow-blue)" />
+                    <line className="hg-edge hg-runtime" pathLength={1} x1="194" y1="172" x2="131" y2="226" markerEnd="url(#hg-arrow-green)" />
+                    <line className="hg-edge hg-runtime" pathLength={1} x1="220" y1="184" x2="220" y2="223" markerEnd="url(#hg-arrow-green)" />
+                    <line className="hg-edge hg-compiler" pathLength={1} x1="246" y1="172" x2="309" y2="226" markerEnd="url(#hg-arrow-amber)" />
                   </g>
                   <circle className="hg-focal-glow" cx="220" cy="150" r="52" />
                   <g className="hg-up">

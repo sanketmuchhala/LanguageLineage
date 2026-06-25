@@ -131,7 +131,7 @@ export function LandingGraphGlimpse({ onOpen }: Props) {
           full workspace to filter, search, and follow a bootstrap chain end to end.
         </p>
       </div>
-      <div className="atlas-frame reveal">
+      <div className={`atlas-frame reveal${phase === 'ready' ? ' is-ready' : ''}`}>
         <div className="atlas-canvas" ref={containerRef} aria-hidden="true" />
         {phase !== 'ready' && (
           <div className="atlas-status">

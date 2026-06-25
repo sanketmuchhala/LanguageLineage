@@ -1115,3 +1115,16 @@ pre {
     background: var(--accent-hover);
   }
 }
+
+/* Motion & polish */
+.rel-card, .guide-card, .related-card, .discover-link, .explore-btn, .nav-enter-graph {
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+.rel-card:hover, .guide-card:hover, .related-card:hover { transform: translateY(-3px); }
+.explore-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(74, 222, 128, 0.22); }
+.discover-link:hover { transform: translateY(-1px); }
+.explore-btn svg { transition: transform 0.2s ease; }
+.explore-btn:hover svg { transform: translateX(4px); }
+@media (prefers-reduced-motion: reduce) {
+  .rel-card, .guide-card, .related-card, .discover-link, .explore-btn, .explore-btn svg, .nav-enter-graph { transition: none; }
+}

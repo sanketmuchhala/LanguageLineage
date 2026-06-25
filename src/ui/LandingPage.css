@@ -1705,3 +1705,56 @@
     justify-content: center;
   }
 }
+
+/* ============================================
+   MOTION & POLISH  (reduced-motion handled globally in tokens.css)
+   ============================================ */
+
+/* Hero graph materialises on load — the one orchestrated moment. */
+.hero-graph-svg { animation: hg-enter 1.1s var(--ease-out-quart, ease) both; }
+@keyframes hg-enter {
+  from { opacity: 0; transform: scale(0.94); }
+  to { opacity: 1; transform: scale(1); }
+}
+/* Solid implementation edges draw themselves in. */
+.hg-runtime, .hg-compiler {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: hg-draw 0.9s var(--ease-out-quart, ease) 0.55s forwards;
+}
+@keyframes hg-draw { to { stroke-dashoffset: 0; } }
+
+/* Buttons: nudge the arrow forward on hover. */
+.btn-primary svg, .atlas-open svg {
+  transition: transform 0.22s var(--ease-out-quart, ease);
+}
+.btn-primary:hover svg, .atlas-open:hover svg { transform: translateX(4px); }
+
+/* Nav links: an underline grows from the left. */
+.nav-links a { position: relative; }
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 3px;
+  height: 1.5px;
+  background: var(--color-accent);
+  border-radius: 2px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.26s var(--ease-out-quart, ease);
+}
+.nav-links a:hover::after { transform: scaleX(1); }
+
+/* Feature cards and language chips: lift and brighten. */
+.feature {
+  transition: transform 0.25s var(--ease-out-quart, ease), border-color 0.25s ease;
+}
+.feature:hover { transform: translateY(-4px); border-color: var(--color-border-accent); }
+.lang-index-link { transition: transform 0.18s ease, border-color 0.18s ease, color 0.18s ease; }
+.lang-index-link:hover { transform: translateY(-2px); }
+
+/* Live atlas: fade the graph in once it has laid out. */
+.atlas-canvas { opacity: 0; transition: opacity 0.9s ease; }
+.atlas-frame.is-ready .atlas-canvas { opacity: 1; }
