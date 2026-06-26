@@ -23,7 +23,7 @@
   <meta name="twitter:title" content="What is Swift written in? | Language Lineage" />
   <meta name="twitter:description" content="Swift is implemented in C and C++. Explore its compiler, runtime, and influence relationships." />
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What is Swift written in?","description":"Swift is implemented in C and C++. Explore its compiler, runtime, and influence relationships.","url":"https://www.languagelineage.org/languages/swift","datePublished":"2014-01-01","dateModified":"2026-06-26","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":{"@type":"SoftwareApplication","name":"Swift","dateCreated":"2014"}}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is Swift written in?","acceptedAnswer":{"@type":"Answer","text":"Swift is primarily implemented in C and C++ and Swift and Machine Code and LLVM. See the implementation section above for details and source references."}},{"@type":"Question","name":"What languages influenced Swift?","acceptedAnswer":{"@type":"Answer","text":"Swift was influenced by Objective-C, Rust, Haskell among others. See the influence section above for the full list."}},{"@type":"Question","name":"Which languages did Swift influence?","acceptedAnswer":{"@type":"Answer","text":"Swift influenced Rust among others."}},{"@type":"Question","name":"Is Swift self-hosting?","acceptedAnswer":{"@type":"Answer","text":"Yes, Swift is self-hosting — its compiler can compile itself."}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is Swift written in?","acceptedAnswer":{"@type":"Answer","text":"The Swift compiler is written mainly in C++ and uses LLVM as its backend, while the Swift standard library is written in Swift. Apple open-sourced the toolchain in 2015."}},{"@type":"Question","name":"What languages influenced Swift?","acceptedAnswer":{"@type":"Answer","text":"Swift was influenced by Objective-C, Rust, Haskell among others. See the influence section above for the full list."}},{"@type":"Question","name":"Which languages did Swift influence?","acceptedAnswer":{"@type":"Answer","text":"Swift influenced Rust among others."}},{"@type":"Question","name":"Is Swift self-hosting?","acceptedAnswer":{"@type":"Answer","text":"Yes, Swift is self-hosting — its compiler can compile itself."}}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"Languages","item":"https://www.languagelineage.org/languages"},{"@type":"ListItem","position":3,"name":"Swift","item":"https://www.languagelineage.org/languages/swift"}]}</script>
 </head>
 <body class="seo-page">
@@ -52,8 +52,32 @@
 
   
 
-  <div class="answer-box">The <strong>Swift</strong> compiler is written in <strong>C, C++, Swift, and LLVM</strong> (documented). Swift uses a bootstrap chain from <strong>Machine Code</strong> (reported). Swift is self-hosting.</div>
+  <div class="answer-box">The <strong>Swift</strong> compiler is written in <strong>C++</strong>, with a growing amount of Swift, and uses the <strong>LLVM</strong> backend. The Swift standard library is written in Swift.</div>
 
+
+  <section class="quick-facts-section">
+  <h2>Quick Facts</h2>
+  <dl class="quick-facts"><div class="quick-fact">
+    <dt>Short answer</dt>
+    <dd>Swift compiler is C++ on LLVM</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Standard library</dt>
+    <dd>Written in Swift</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Created by</dt>
+    <dd>Chris Lattner, Apple, 2014</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Backend</dt>
+    <dd>LLVM</dd>
+  </div></dl>
+</section>
+<section class="intent-section">
+  <h2>Swift compiler and LLVM</h2>
+  <p>Swift was created by Chris Lattner, who also started LLVM, so the language is built tightly on the LLVM backend that compiles its intermediate representation (SIL) to machine code. The compiler front end is largely C++; the standard library and much newer tooling are written in Swift itself.</p>
+</section>
   <h2>Relationship Graph</h2>
 <p style="font-size:13px;color:var(--text-tertiary);margin-bottom:12px">All directly connected languages. Click any node to navigate to its page.</p>
 <iframe
@@ -114,7 +138,7 @@
 <h2>Frequently Asked Questions</h2>
 <div class="faq-item">
   <div class="faq-question">What language is Swift written in?</div>
-  <div class="faq-answer">Swift is primarily implemented in C and C++ and Swift and Machine Code and LLVM. See the implementation section above for details and source references.</div>
+  <div class="faq-answer">The Swift compiler is written mainly in C++ and uses LLVM as its backend, while the Swift standard library is written in Swift. Apple open-sourced the toolchain in 2015.</div>
 </div>
 <div class="faq-item">
   <div class="faq-question">What languages influenced Swift?</div>
@@ -133,7 +157,8 @@
 <li><a href="https://forums.swift.org/t/self-hosting-swift/" rel="noopener noreferrer" target="_blank">https://forums.swift.org/t/self-hosting-swift/</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Swift_(programming_language)" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/Swift_(programming_language)</a></li>
 <li><a href="https://github.com/apple/swift/blob/main/SwiftCompilerSources/README.md" rel="noopener noreferrer" target="_blank">https://github.com/apple/swift/blob/main/SwiftCompilerSources/README.md</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Rust_(programming_language)" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/Rust_(programming_language)</a></li></ul>
+<li><a href="https://en.wikipedia.org/wiki/Rust_(programming_language)" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/Rust_(programming_language)</a></li>
+<li><a href="https://www.wikidata.org/wiki/Q17118377" rel="noopener noreferrer" target="_blank">Swift on Wikidata (Q17118377)</a></li></ul>
 
   <aside class="related-section" data-nosnippet>
   <h2>Related Languages</h2>

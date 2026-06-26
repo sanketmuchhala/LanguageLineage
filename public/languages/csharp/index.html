@@ -23,7 +23,7 @@
   <meta name="twitter:title" content="What is C# written in? | Language Lineage" />
   <meta name="twitter:description" content="C# is implemented in C#. Explore its compiler, runtime, and influence relationships." />
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What is C# written in?","description":"C# is implemented in C#. Explore its compiler, runtime, and influence relationships.","url":"https://www.languagelineage.org/languages/csharp","datePublished":"2000-01-01","dateModified":"2026-06-26","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":{"@type":"SoftwareApplication","name":"C#","dateCreated":"2000"}}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is C# written in?","acceptedAnswer":{"@type":"Answer","text":"C# is primarily implemented in C#. See the implementation section above for details and source references."}},{"@type":"Question","name":"What languages influenced C#?","acceptedAnswer":{"@type":"Answer","text":"C# was influenced by Java, C++, Delphi among others. See the influence section above for the full list."}},{"@type":"Question","name":"Which languages did C# influence?","acceptedAnswer":{"@type":"Answer","text":"C# influenced TypeScript, Dart among others."}},{"@type":"Question","name":"Is C# self-hosting?","acceptedAnswer":{"@type":"Answer","text":"Yes, C# is self-hosting — its compiler can compile itself."}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is C# written in?","acceptedAnswer":{"@type":"Answer","text":"C#'s compiler, Roslyn, is written in C# and is self-hosting. C# compiles to .NET intermediate language, which runs on the Common Language Runtime (CLR), written mainly in C++."}},{"@type":"Question","name":"What languages influenced C#?","acceptedAnswer":{"@type":"Answer","text":"C# was influenced by Java, C++, Delphi among others. See the influence section above for the full list."}},{"@type":"Question","name":"Which languages did C# influence?","acceptedAnswer":{"@type":"Answer","text":"C# influenced TypeScript, Dart among others."}},{"@type":"Question","name":"Is C# self-hosting?","acceptedAnswer":{"@type":"Answer","text":"Yes, C# is self-hosting — its compiler can compile itself."}}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"Languages","item":"https://www.languagelineage.org/languages"},{"@type":"ListItem","position":3,"name":"C#","item":"https://www.languagelineage.org/languages/csharp"}]}</script>
 </head>
 <body class="seo-page">
@@ -52,8 +52,39 @@
 
   
 
-  <div class="answer-box">The <strong>C#</strong> compiler is written in <strong>C#</strong> (well-documented). C# is self-hosting.</div>
+  <div class="answer-box">The <strong>C#</strong> compiler, <strong>Roslyn</strong>, is written in <strong>C#</strong>. Compiled C# runs on the .NET runtime (the CLR), which is written mainly in <strong>C++</strong>. The standard library is largely C#.</div>
 
+
+  <section class="quick-facts-section">
+  <h2>Quick Facts</h2>
+  <dl class="quick-facts"><div class="quick-fact">
+    <dt>Compiler</dt>
+    <dd>Roslyn is written in C#</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Runtime</dt>
+    <dd>CLR / CoreCLR is written in C++</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Created by</dt>
+    <dd>Anders Hejlsberg, Microsoft, 2000</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Output</dt>
+    <dd>Common Intermediate Language (CIL)</dd>
+  </div></dl>
+</section>
+<section class="intent-section">
+  <h2>C# implementation layers</h2>
+  <table class="impl-table">
+  <thead><tr><th>Layer</th><th>Written in</th><th>What it does</th></tr></thead>
+  <tbody>
+    <tr><td>Roslyn compiler</td><td>C#</td><td>Compiles C# to CIL bytecode</td></tr>
+    <tr><td>CoreCLR runtime</td><td>C++</td><td>JIT-compiles CIL, manages memory</td></tr>
+    <tr><td>Base Class Library</td><td>C#</td><td>Core .NET APIs</td></tr>
+  </tbody>
+</table>
+</section>
   <h2>Relationship Graph</h2>
 <p style="font-size:13px;color:var(--text-tertiary);margin-bottom:12px">All directly connected languages. Click any node to navigate to its page.</p>
 <iframe
@@ -86,7 +117,7 @@
 <h2>Frequently Asked Questions</h2>
 <div class="faq-item">
   <div class="faq-question">What language is C# written in?</div>
-  <div class="faq-answer">C# is primarily implemented in C#. See the implementation section above for details and source references.</div>
+  <div class="faq-answer">C#'s compiler, Roslyn, is written in C# and is self-hosting. C# compiles to .NET intermediate language, which runs on the Common Language Runtime (CLR), written mainly in C++.</div>
 </div>
 <div class="faq-item">
   <div class="faq-question">What languages influenced C#?</div>
@@ -105,7 +136,8 @@
 <li><a href="https://github.com/dotnet/roslyn" rel="noopener noreferrer" target="_blank">https://github.com/dotnet/roslyn</a></li>
 <li><a href="https://github.com/dotnet/runtime" rel="noopener noreferrer" target="_blank">https://github.com/dotnet/runtime</a></li>
 <li><a href="https://en.wikipedia.org/wiki/TypeScript" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/TypeScript</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Dart_(programming_language)" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/Dart_(programming_language)</a></li></ul>
+<li><a href="https://en.wikipedia.org/wiki/Dart_(programming_language)" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/Dart_(programming_language)</a></li>
+<li><a href="https://www.wikidata.org/wiki/Q2370" rel="noopener noreferrer" target="_blank">C# on Wikidata (Q2370)</a></li></ul>
 
   <aside class="related-section" data-nosnippet>
   <h2>Related Languages</h2>

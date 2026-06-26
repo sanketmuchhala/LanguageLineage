@@ -23,7 +23,7 @@
   <meta name="twitter:title" content="What is C++ written in? Cfront, GCC, LLVM, and Clang | Language Lineage" />
   <meta name="twitter:description" content="C++ was originally translated to C via Cfront. GCC and Clang/LLVM are the primary modern implementations, written in C++." />
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What is C++ written in?","description":"C++ was originally translated to C via Cfront. GCC and Clang/LLVM are the primary modern implementations, written in C++.","url":"https://www.languagelineage.org/languages/cxx","datePublished":"1983-01-01","dateModified":"2026-06-26","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":{"@type":"SoftwareApplication","name":"C++","dateCreated":"1983"}}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is C++ written in?","acceptedAnswer":{"@type":"Answer","text":"C++ is primarily implemented in C++. See the implementation section above for details and source references."}},{"@type":"Question","name":"What languages influenced C++?","acceptedAnswer":{"@type":"Answer","text":"C++ was influenced by Simula, C, Objective-C among others. See the influence section above for the full list."}},{"@type":"Question","name":"Which languages did C++ influence?","acceptedAnswer":{"@type":"Answer","text":"C++ influenced Java, D, Rust among others."}},{"@type":"Question","name":"Is C++ self-hosting?","acceptedAnswer":{"@type":"Answer","text":"Yes, C++ is self-hosting — its compiler can compile itself."}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is C++ written in?","acceptedAnswer":{"@type":"Answer","text":"C++ is compiled by GCC (g++), Clang, and MSVC. Those compilers are written largely in C++ themselves, so C++ is self-hosting. C++ compiles to native machine code."}},{"@type":"Question","name":"What languages influenced C++?","acceptedAnswer":{"@type":"Answer","text":"C++ was influenced by Simula, C, Objective-C among others. See the influence section above for the full list."}},{"@type":"Question","name":"Which languages did C++ influence?","acceptedAnswer":{"@type":"Answer","text":"C++ influenced Java, D, Rust among others."}},{"@type":"Question","name":"Is C++ self-hosting?","acceptedAnswer":{"@type":"Answer","text":"Yes, C++ is self-hosting — its compiler can compile itself."}}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"Languages","item":"https://www.languagelineage.org/languages"},{"@type":"ListItem","position":3,"name":"C++","item":"https://www.languagelineage.org/languages/cxx"}]}</script>
 </head>
 <body class="seo-page">
@@ -52,8 +52,44 @@
 
   
 
-  <div class="answer-box">The <strong>C++</strong> compiler is written in <strong>C++</strong> (well-documented). C++ is self-hosting.</div>
+  <div class="answer-box"><strong>C++</strong> is compiled by <strong>GCC (g++)</strong>, <strong>Clang</strong>, and <strong>MSVC</strong>. These compilers are themselves written mostly in C++, so C++ is self-hosting. The Clang/LLVM toolchain is written in C++.</div>
 
+
+  <section class="quick-facts-section">
+  <h2>Quick Facts</h2>
+  <dl class="quick-facts"><div class="quick-fact">
+    <dt>Short answer</dt>
+    <dd>Compiled by g++, Clang, and MSVC (all C++)</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Created by</dt>
+    <dd>Bjarne Stroustrup, 1985</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Backend</dt>
+    <dd>LLVM (Clang) or GCC</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Self-hosting</dt>
+    <dd>Yes — C++ compilers are written in C++</dd>
+  </div></dl>
+</section>
+<section class="intent-section">
+  <h2>C++ compilers and the LLVM backend</h2>
+  <p>C++ has no single reference compiler. The three dominant toolchains — GCC's g++, Clang, and Microsoft's MSVC — each parse C++ and emit native code. Clang is a C++ front end for LLVM, and LLVM's optimizer and code generator are also written in C++. That same LLVM backend is used by Rust, Swift, and Julia.</p>
+<p>Because every major C++ compiler is itself a C++ program, building a compiler requires an existing C++ toolchain, the classic self-hosting arrangement.</p>
+</section>
+<section class="intent-section">
+  <h2>C++ toolchains compared</h2>
+  <table class="impl-table">
+  <thead><tr><th>Toolchain</th><th>Written in</th><th>Backend</th></tr></thead>
+  <tbody>
+    <tr><td>GCC (g++)</td><td>C and C++</td><td>GCC backend</td></tr>
+    <tr><td>Clang</td><td>C++</td><td>LLVM</td></tr>
+    <tr><td>MSVC</td><td>C++</td><td>Microsoft backend</td></tr>
+  </tbody>
+</table>
+</section>
   <h2>Relationship Graph</h2>
 <p style="font-size:13px;color:var(--text-tertiary);margin-bottom:12px">All directly connected languages. Click any node to navigate to its page.</p>
 <iframe
@@ -89,7 +125,7 @@
 <h2>Frequently Asked Questions</h2>
 <div class="faq-item">
   <div class="faq-question">What language is C++ written in?</div>
-  <div class="faq-answer">C++ is primarily implemented in C++. See the implementation section above for details and source references.</div>
+  <div class="faq-answer">C++ is compiled by GCC (g++), Clang, and MSVC. Those compilers are written largely in C++ themselves, so C++ is self-hosting. C++ compiles to native machine code.</div>
 </div>
 <div class="faq-item">
   <div class="faq-question">What languages influenced C++?</div>
@@ -125,7 +161,8 @@
 <li><a href="https://en.wikipedia.org/wiki/C_Sharp_(programming_language)" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/C_Sharp_(programming_language)</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Julia_(programming_language)" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/Julia_(programming_language)</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Clang" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/Clang</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Self_(programming_language)" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/Self_(programming_language)</a></li></ul>
+<li><a href="https://en.wikipedia.org/wiki/Self_(programming_language)" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/Self_(programming_language)</a></li>
+<li><a href="https://www.wikidata.org/wiki/Q2407" rel="noopener noreferrer" target="_blank">C++ on Wikidata (Q2407)</a></li></ul>
 
   <aside class="related-section" data-nosnippet>
   <h2>Related Languages</h2>

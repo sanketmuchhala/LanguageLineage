@@ -23,7 +23,7 @@
   <meta name="twitter:title" content="What is V8 written in? Google's JavaScript engine explained | Language Lineage" />
   <meta name="twitter:description" content="Google's V8 JavaScript engine is written in C++. It powers Chrome, Node.js, and Deno. Explore its implementation." />
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What is V8 written in?","description":"Google's V8 JavaScript engine is written in C++. It powers Chrome, Node.js, and Deno. Explore its implementation.","url":"https://www.languagelineage.org/tools/v8","datePublished":"2008-01-01","dateModified":"2026-06-26","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":{"@type":"SoftwareApplication","name":"V8","dateCreated":"2008"}}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is V8 written in?","acceptedAnswer":{"@type":"Answer","text":"V8 is primarily implemented in C++. See the implementation section above for details and source references."}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is V8 written in?","acceptedAnswer":{"@type":"Answer","text":"V8, the JavaScript and WebAssembly engine from Google, is written in C++. It compiles JavaScript to machine code with a tiered JIT and powers Chrome, Node.js, Deno, and Electron."}}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://www.languagelineage.org/tools"},{"@type":"ListItem","position":3,"name":"V8","item":"https://www.languagelineage.org/tools/v8"}]}</script>
 </head>
 <body class="seo-page">
@@ -49,8 +49,32 @@
 
   <p class="tool-intro">Google JavaScript engine.</p>
 
-  <div class="answer-box">Its runtime is implemented in <strong>C++</strong> (well-documented).</div>
+  <div class="answer-box"><strong>V8</strong>, Google's JavaScript and WebAssembly engine, is written in <strong>C++</strong>. It JIT-compiles JavaScript directly to machine code and powers Chrome, Node.js, and Deno.</div>
 
+
+  <section class="quick-facts-section">
+  <h2>Quick Facts</h2>
+  <dl class="quick-facts"><div class="quick-fact">
+    <dt>Short answer</dt>
+    <dd>V8 is written in C++</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Developer</dt>
+    <dd>Google</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Technique</dt>
+    <dd>Tiered JIT to machine code</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Used by</dt>
+    <dd>Chrome, Node.js, Deno, Electron</dd>
+  </div></dl>
+</section>
+<section class="intent-section">
+  <h2>Why a JavaScript engine is written in C++</h2>
+  <p>JavaScript is a high-level, dynamically typed language, but the engine that runs it needs direct memory control, manual layout of objects, and tight machine-code generation. C++ provides that. V8 parses JavaScript, generates bytecode for its Ignition interpreter, and hot paths are optimized to native code by the TurboFan and Maglev compilers — all implemented in C++.</p>
+</section>
   <h2>Relationship Graph</h2>
 <p style="font-size:13px;color:var(--text-tertiary);margin-bottom:12px">All directly connected languages. Click any node to navigate to its page.</p>
 <iframe
@@ -79,10 +103,12 @@
 <h2>Frequently Asked Questions</h2>
 <div class="faq-item">
   <div class="faq-question">What language is V8 written in?</div>
-  <div class="faq-answer">V8 is primarily implemented in C++. See the implementation section above for details and source references.</div>
+  <div class="faq-answer">V8, the JavaScript and WebAssembly engine from Google, is written in C++. It compiles JavaScript to machine code with a tiered JIT and powers Chrome, Node.js, Deno, and Electron.</div>
 </div>
 
-  <h2>Evidence Sources</h2><ul class="source-list"><li><a href="https://github.com/v8/v8" rel="noopener noreferrer" target="_blank">https://github.com/v8/v8</a></li></ul>
+  <h2>Evidence Sources</h2><ul class="source-list"><li><a href="https://github.com/v8/v8" rel="noopener noreferrer" target="_blank">https://github.com/v8/v8</a></li>
+<li><a href="https://en.wikipedia.org/wiki/V8_(JavaScript_engine)" rel="noopener noreferrer" target="_blank">V8 on Wikipedia</a></li>
+<li><a href="https://www.wikidata.org/wiki/Q574992" rel="noopener noreferrer" target="_blank">V8 on Wikidata (Q574992)</a></li></ul>
 
   <aside class="related-section" data-nosnippet>
   <h2>Related Languages</h2>

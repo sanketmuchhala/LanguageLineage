@@ -23,7 +23,7 @@
   <meta name="twitter:title" content="What is Haskell written in? | Language Lineage" />
   <meta name="twitter:description" content="Haskell is implemented in Haskell and C. Explore its compiler, runtime, and influence relationships." />
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What is Haskell written in?","description":"Haskell is implemented in Haskell and C. Explore its compiler, runtime, and influence relationships.","url":"https://www.languagelineage.org/languages/haskell","datePublished":"1990-01-01","dateModified":"2026-06-26","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":{"@type":"SoftwareApplication","name":"Haskell","dateCreated":"1990"}}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is Haskell written in?","acceptedAnswer":{"@type":"Answer","text":"Haskell is primarily implemented in Haskell and C. See the implementation section above for details and source references."}},{"@type":"Question","name":"What languages influenced Haskell?","acceptedAnswer":{"@type":"Answer","text":"Haskell was influenced by ML, Miranda, Lisp among others. See the influence section above for the full list."}},{"@type":"Question","name":"Which languages did Haskell influence?","acceptedAnswer":{"@type":"Answer","text":"Haskell influenced Elm, PureScript, CoffeeScript among others."}},{"@type":"Question","name":"Is Haskell self-hosting?","acceptedAnswer":{"@type":"Answer","text":"Yes, Haskell is self-hosting — its compiler can compile itself."}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is Haskell written in?","acceptedAnswer":{"@type":"Answer","text":"The main Haskell compiler, GHC, is written in Haskell and is self-hosting. The GHC runtime system (RTS), which manages lazy evaluation, threads, and garbage collection, is written in C."}},{"@type":"Question","name":"What languages influenced Haskell?","acceptedAnswer":{"@type":"Answer","text":"Haskell was influenced by ML, Miranda, Lisp among others. See the influence section above for the full list."}},{"@type":"Question","name":"Which languages did Haskell influence?","acceptedAnswer":{"@type":"Answer","text":"Haskell influenced Elm, PureScript, CoffeeScript among others."}},{"@type":"Question","name":"Is Haskell self-hosting?","acceptedAnswer":{"@type":"Answer","text":"Yes, Haskell is self-hosting — its compiler can compile itself."}}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"Languages","item":"https://www.languagelineage.org/languages"},{"@type":"ListItem","position":3,"name":"Haskell","item":"https://www.languagelineage.org/languages/haskell"}]}</script>
 </head>
 <body class="seo-page">
@@ -52,8 +52,32 @@
 
   
 
-  <div class="answer-box">The <strong>Haskell</strong> compiler is written in <strong>Haskell</strong> (well-documented). Its runtime is implemented in <strong>C</strong> (documented). Haskell is self-hosting.</div>
+  <div class="answer-box">The <strong>Glasgow Haskell Compiler (GHC)</strong> is written in <strong>Haskell</strong> and is self-hosting. Its runtime system, which handles lazy evaluation and garbage collection, is written in <strong>C</strong>.</div>
 
+
+  <section class="quick-facts-section">
+  <h2>Quick Facts</h2>
+  <dl class="quick-facts"><div class="quick-fact">
+    <dt>Short answer</dt>
+    <dd>GHC is written in Haskell</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Runtime system</dt>
+    <dd>Written in C</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Self-hosting</dt>
+    <dd>Yes</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Backend</dt>
+    <dd>Native code generator or LLVM</dd>
+  </div></dl>
+</section>
+<section class="intent-section">
+  <h2>GHC and its C runtime</h2>
+  <p>GHC compiles Haskell to native code, optionally through an LLVM backend. The compiler is a large Haskell program and is bootstrapped from a previous GHC. Underneath sits the runtime system (RTS), written in C, which implements Haskell's lazy evaluation, lightweight threads, and generational garbage collector.</p>
+</section>
   <h2>Relationship Graph</h2>
 <p style="font-size:13px;color:var(--text-tertiary);margin-bottom:12px">All directly connected languages. Click any node to navigate to its page.</p>
 <iframe
@@ -106,7 +130,7 @@
 <h2>Frequently Asked Questions</h2>
 <div class="faq-item">
   <div class="faq-question">What language is Haskell written in?</div>
-  <div class="faq-answer">Haskell is primarily implemented in Haskell and C. See the implementation section above for details and source references.</div>
+  <div class="faq-answer">The main Haskell compiler, GHC, is written in Haskell and is self-hosting. The GHC runtime system (RTS), which manages lazy evaluation, threads, and garbage collection, is written in C.</div>
 </div>
 <div class="faq-item">
   <div class="faq-question">What languages influenced Haskell?</div>
@@ -138,7 +162,8 @@
 <li><a href="https://en.wikipedia.org/wiki/Idris_(programming_language)" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/Idris_(programming_language)</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Agda_(programming_language)" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/Agda_(programming_language)</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Kotlin_(programming_language)" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/Kotlin_(programming_language)</a></li>
-<li><a href="https://en.wikipedia.org/wiki/TypeScript" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/TypeScript</a></li></ul>
+<li><a href="https://en.wikipedia.org/wiki/TypeScript" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/TypeScript</a></li>
+<li><a href="https://www.wikidata.org/wiki/Q34010" rel="noopener noreferrer" target="_blank">Haskell on Wikidata (Q34010)</a></li></ul>
 
   <aside class="related-section" data-nosnippet>
   <h2>Related Languages</h2>

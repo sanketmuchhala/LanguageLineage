@@ -23,7 +23,7 @@
   <meta name="twitter:title" content="What was C written in? C compiler lineage explained | Language Lineage" />
   <meta name="twitter:description" content="C bootstrapped from B in the early 1970s and became self-hosting within its first year. Explore its compiler history." />
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What is C written in?","description":"C bootstrapped from B in the early 1970s and became self-hosting within its first year. Explore its compiler history.","url":"https://www.languagelineage.org/languages/c","datePublished":"1972-01-01","dateModified":"2026-06-26","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":{"@type":"SoftwareApplication","name":"C","dateCreated":"1972"}}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is C written in?","acceptedAnswer":{"@type":"Answer","text":"C is primarily implemented in B. See the implementation section above for details and source references."}},{"@type":"Question","name":"What languages influenced C?","acceptedAnswer":{"@type":"Answer","text":"C was influenced by B, ALGOL, Fortran among others. See the influence section above for the full list."}},{"@type":"Question","name":"Which languages did C influence?","acceptedAnswer":{"@type":"Answer","text":"C influenced C++, Objective-C, Ada among others."}},{"@type":"Question","name":"Is C self-hosting?","acceptedAnswer":{"@type":"Answer","text":"Yes, C is self-hosting — its compiler can compile itself."}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is C written in?","acceptedAnswer":{"@type":"Answer","text":"C is compiled by toolchains such as GCC and Clang. GCC is written primarily in C, and Clang is written in C++, so C compilers are largely written in C and C++. C itself compiles down to machine code."}},{"@type":"Question","name":"What languages influenced C?","acceptedAnswer":{"@type":"Answer","text":"C was influenced by B, ALGOL, Fortran among others. See the influence section above for the full list."}},{"@type":"Question","name":"Which languages did C influence?","acceptedAnswer":{"@type":"Answer","text":"C influenced C++, Objective-C, Ada among others."}},{"@type":"Question","name":"Is C self-hosting?","acceptedAnswer":{"@type":"Answer","text":"Yes, C is self-hosting — its compiler can compile itself."}}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"Languages","item":"https://www.languagelineage.org/languages"},{"@type":"ListItem","position":3,"name":"C","item":"https://www.languagelineage.org/languages/c"}]}</script>
 </head>
 <body class="seo-page">
@@ -52,8 +52,44 @@
 
   
 
-  <div class="answer-box">C uses a bootstrap chain from <strong>B</strong> (documented). C is self-hosting.</div>
+  <div class="answer-box"><strong>C</strong> is compiled by toolchains such as <strong>GCC</strong> and <strong>Clang</strong>. Those compilers are themselves written in C and C++, so in practice C is self-hosting: a C compiler is built using an existing C/C++ compiler.</div>
 
+
+  <section class="quick-facts-section">
+  <h2>Quick Facts</h2>
+  <dl class="quick-facts"><div class="quick-fact">
+    <dt>Short answer</dt>
+    <dd>Compiled by GCC (C) and Clang (C++)</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Created by</dt>
+    <dd>Dennis Ritchie at Bell Labs, 1972</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Standard</dt>
+    <dd>ANSI C (1989), then ISO C</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Role</dt>
+    <dd>Implementation language for most OS kernels and runtimes</dd>
+  </div></dl>
+</section>
+<section class="intent-section">
+  <h2>Why C is the substrate of computing</h2>
+  <p>C compiles directly to machine code, with no managed runtime of its own. That makes it the implementation language for operating-system kernels, language runtimes, and the compilers themselves. Many interpreters on this site — including CPython, the reference Ruby (MRI), and PHP — have runtimes written in C.</p>
+<p>C is effectively self-hosting. A new build of GCC is produced by an existing C/C++ compiler in a multi-stage bootstrap, the same pattern used by self-hosting languages like Rust and Go.</p>
+</section>
+<section class="intent-section">
+  <h2>C compilers compared</h2>
+  <table class="impl-table">
+  <thead><tr><th>Compiler</th><th>Written in</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>GCC</td><td>C and C++</td><td>GNU Compiler Collection; bootstrapped in multiple stages</td></tr>
+    <tr><td>Clang</td><td>C++</td><td>LLVM-based C/C++/Objective-C front end</td></tr>
+    <tr><td>TCC</td><td>C</td><td>Tiny C Compiler; small, fast, used in bootstrap discussions</td></tr>
+  </tbody>
+</table>
+</section>
   <h2>Relationship Graph</h2>
 <p style="font-size:13px;color:var(--text-tertiary);margin-bottom:12px">All directly connected languages. Click any node to navigate to its page.</p>
 <iframe
@@ -114,7 +150,7 @@
 <h2>Frequently Asked Questions</h2>
 <div class="faq-item">
   <div class="faq-question">What language is C written in?</div>
-  <div class="faq-answer">C is primarily implemented in B. See the implementation section above for details and source references.</div>
+  <div class="faq-answer">C is compiled by toolchains such as GCC and Clang. GCC is written primarily in C, and Clang is written in C++, so C compilers are largely written in C and C++. C itself compiles down to machine code.</div>
 </div>
 <div class="faq-item">
   <div class="faq-question">What languages influenced C?</div>
@@ -185,7 +221,8 @@
 <li><a href="https://en.wikipedia.org/wiki/GNU_Fortran" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/GNU_Fortran</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Cyclone_(programming_language)" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/Cyclone_(programming_language)</a></li>
 <li><a href="https://luajit.org/" rel="noopener noreferrer" target="_blank">https://luajit.org/</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Pharo" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/Pharo</a></li></ul>
+<li><a href="https://en.wikipedia.org/wiki/Pharo" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/Pharo</a></li>
+<li><a href="https://www.wikidata.org/wiki/Q15777" rel="noopener noreferrer" target="_blank">C on Wikidata (Q15777)</a></li></ul>
 
   <aside class="related-section" data-nosnippet>
   <h2>Related Languages</h2>

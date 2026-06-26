@@ -23,7 +23,7 @@
   <meta name="twitter:title" content="What is BEAM VM written in? | Language Lineage" />
   <meta name="twitter:description" content="BEAM VM is implemented in C and Erlang. Explore its compiler, runtime, and influence relationships." />
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What is BEAM VM written in?","description":"BEAM VM is implemented in C and Erlang. Explore its compiler, runtime, and influence relationships.","url":"https://www.languagelineage.org/tools/beam","datePublished":"1986-01-01","dateModified":"2026-06-26","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":{"@type":"SoftwareApplication","name":"BEAM VM","dateCreated":"1986"}}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is BEAM VM written in?","acceptedAnswer":{"@type":"Answer","text":"BEAM VM is primarily implemented in C and Erlang. See the implementation section above for details and source references."}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is BEAM VM written in?","acceptedAnswer":{"@type":"Answer","text":"BEAM, the Erlang virtual machine, is written in C. It runs bytecode compiled from Erlang and Elixir and implements the lightweight-process concurrency model of Erlang/OTP."}}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://www.languagelineage.org/tools"},{"@type":"ListItem","position":3,"name":"BEAM VM","item":"https://www.languagelineage.org/tools/beam"}]}</script>
 </head>
 <body class="seo-page">
@@ -49,8 +49,32 @@
 
   <p class="tool-intro">Bogdan/Björn's Erlang Abstract Machine.</p>
 
-  <div class="answer-box">Its runtime is implemented in <strong>C and Erlang</strong> (well-documented).</div>
+  <div class="answer-box">The <strong>BEAM</strong>, the Erlang virtual machine, is written in <strong>C</strong>. It executes bytecode compiled from Erlang and Elixir and provides the Erlang/OTP concurrency runtime.</div>
 
+
+  <section class="quick-facts-section">
+  <h2>Quick Facts</h2>
+  <dl class="quick-facts"><div class="quick-fact">
+    <dt>Short answer</dt>
+    <dd>BEAM is written in C</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Runs</dt>
+    <dd>Erlang and Elixir bytecode</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Model</dt>
+    <dd>Lightweight processes, message passing</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Part of</dt>
+    <dd>Erlang/OTP</dd>
+  </div></dl>
+</section>
+<section class="intent-section">
+  <h2>The Erlang virtual machine</h2>
+  <p>BEAM is the bytecode interpreter at the heart of the Erlang/OTP system. Written in C, it schedules millions of lightweight processes, isolates their memory, and passes messages between them. Elixir compiles to the same BEAM bytecode, so it inherits the entire Erlang runtime.</p>
+</section>
   <h2>Relationship Graph</h2>
 <p style="font-size:13px;color:var(--text-tertiary);margin-bottom:12px">All directly connected languages. Click any node to navigate to its page.</p>
 <iframe
@@ -85,11 +109,13 @@
 <h2>Frequently Asked Questions</h2>
 <div class="faq-item">
   <div class="faq-question">What language is BEAM VM written in?</div>
-  <div class="faq-answer">BEAM VM is primarily implemented in C and Erlang. See the implementation section above for details and source references.</div>
+  <div class="faq-answer">BEAM, the Erlang virtual machine, is written in C. It runs bytecode compiled from Erlang and Elixir and implements the lightweight-process concurrency model of Erlang/OTP.</div>
 </div>
 
   <h2>Evidence Sources</h2><ul class="source-list"><li><a href="https://github.com/erlang/otp" rel="noopener noreferrer" target="_blank">https://github.com/erlang/otp</a></li>
-<li><a href="https://elixir-lang.org/" rel="noopener noreferrer" target="_blank">https://elixir-lang.org/</a></li></ul>
+<li><a href="https://elixir-lang.org/" rel="noopener noreferrer" target="_blank">https://elixir-lang.org/</a></li>
+<li><a href="https://en.wikipedia.org/wiki/BEAM_(Erlang_virtual_machine)" rel="noopener noreferrer" target="_blank">BEAM VM on Wikipedia</a></li>
+<li><a href="https://www.wikidata.org/wiki/Q17382855" rel="noopener noreferrer" target="_blank">BEAM VM on Wikidata (Q17382855)</a></li></ul>
 
   <aside class="related-section" data-nosnippet>
   <h2>Related Languages</h2>
