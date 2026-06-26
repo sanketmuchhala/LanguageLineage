@@ -20,7 +20,7 @@
   <meta name="twitter:title" content="What is Python written in? CPython implementation explained | Language Lineage" />
   <meta name="twitter:description" content="Python's reference implementation, CPython, is written in C. Explore its runtime, bootstrap history, and language lineage." />
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What is Python written in?","description":"Python's reference implementation, CPython, is written in C. Explore its runtime, bootstrap history, and language lineage.","url":"https://www.languagelineage.org/languages/python","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":{"@type":"SoftwareApplication","name":"Python","dateCreated":"1991"}}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is Python written in?","acceptedAnswer":{"@type":"Answer","text":"Python is primarily implemented in C. See the implementation section above for details and source references."}},{"@type":"Question","name":"What languages influenced Python?","acceptedAnswer":{"@type":"Answer","text":"Python was influenced by Smalltalk, ABC, Modula-3 among others. See the influence section above for the full list."}},{"@type":"Question","name":"Which languages did Python influence?","acceptedAnswer":{"@type":"Answer","text":"Python influenced Ruby, CoffeeScript, Groovy among others."}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is Python written in?","acceptedAnswer":{"@type":"Answer","text":"Python's reference implementation, CPython, is written primarily in C. The language specification is implementation-independent, and other implementations include PyPy, Jython, and IronPython."}},{"@type":"Question","name":"What languages influenced Python?","acceptedAnswer":{"@type":"Answer","text":"Python was influenced by Smalltalk, ABC, Modula-3 among others. See the influence section above for the full list."}},{"@type":"Question","name":"Which languages did Python influence?","acceptedAnswer":{"@type":"Answer","text":"Python influenced Ruby, CoffeeScript, Groovy among others."}}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"Languages","item":"https://www.languagelineage.org/languages"},{"@type":"ListItem","position":3,"name":"Python","item":"https://www.languagelineage.org/languages/python"}]}</script>
 </head>
 <body class="seo-page">
@@ -48,8 +48,45 @@
 
   
 
-  <div class="answer-box">Its runtime is implemented in <strong>C</strong> (well-documented).</div>
+  <div class="answer-box"><strong>Python</strong> usually means <strong>CPython</strong>, the reference implementation, and CPython is written primarily in <strong>C</strong>. The Python language specification is implementation-independent, so other Python runtimes can be written in other languages.</div>
 
+
+  <section class="quick-facts-section">
+  <h2>Quick Facts</h2>
+  <dl class="quick-facts"><div class="quick-fact">
+    <dt>Short answer</dt>
+    <dd>CPython is written primarily in C</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Language spec</dt>
+    <dd>Implementation-independent</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Main runtime</dt>
+    <dd>CPython</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Other implementations</dt>
+    <dd>PyPy, Jython, IronPython</dd>
+  </div></dl>
+</section>
+<section class="intent-section">
+  <h2>Python language vs CPython</h2>
+  <p>When people ask what Python is written in, they usually mean CPython, the reference implementation maintained by the Python Software Foundation. CPython includes the bytecode interpreter, object model, memory management, and C API, and those core pieces are implemented primarily in C.</p>
+<p>The Python language itself is a specification. That specification does not require C. A compatible Python implementation can be written in another language as long as it follows the same language behavior.</p>
+</section>
+<section class="intent-section">
+  <h2>Python implementations compared</h2>
+  <table class="impl-table">
+  <thead><tr><th>Implementation</th><th>Written in</th><th>Role</th></tr></thead>
+  <tbody>
+    <tr><td>CPython</td><td>C and Python</td><td>Reference implementation and most common runtime</td></tr>
+    <tr><td>PyPy</td><td>RPython and Python</td><td>Alternative runtime with JIT compilation</td></tr>
+    <tr><td>Jython</td><td>Java</td><td>Python implementation for the JVM</td></tr>
+    <tr><td>IronPython</td><td>C#</td><td>Python implementation for .NET</td></tr>
+  </tbody>
+</table>
+</section>
   <h2>Relationship Graph</h2>
 <p style="font-size:13px;color:var(--text-tertiary);margin-bottom:12px">All directly connected languages. Click any node to navigate to its page.</p>
 <iframe
@@ -103,7 +140,7 @@
 <h2>Frequently Asked Questions</h2>
 <div class="faq-item">
   <div class="faq-question">What language is Python written in?</div>
-  <div class="faq-answer">Python is primarily implemented in C. See the implementation section above for details and source references.</div>
+  <div class="faq-answer">Python's reference implementation, CPython, is written primarily in C. The language specification is implementation-independent, and other implementations include PyPy, Jython, and IronPython.</div>
 </div>
 <div class="faq-item">
   <div class="faq-question">What languages influenced Python?</div>

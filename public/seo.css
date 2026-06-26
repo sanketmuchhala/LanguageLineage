@@ -167,6 +167,40 @@ p {
 
 .answer-box strong { color: var(--accent); }
 
+/* Quick facts */
+.quick-facts-section {
+  margin: 0 0 36px;
+}
+
+.quick-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.quick-fact {
+  min-width: 0;
+  padding: 14px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.quick-fact dt {
+  margin-bottom: 4px;
+  color: var(--text-tertiary);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.quick-fact dd {
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
 /* Meta row (year, paradigm, typing) */
 .node-meta {
   display: flex;
@@ -704,6 +738,10 @@ pre {
     padding: 16px 18px;
     font-size: 15px;
     margin-bottom: 28px;
+  }
+
+  .quick-facts {
+    grid-template-columns: 1fr;
   }
 
   /* Tables — scrollable on mobile */
