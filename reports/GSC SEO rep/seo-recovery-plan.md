@@ -123,7 +123,38 @@ Validation:
 - Live `https://languagelineage.org/` redirects once to `https://www.languagelineage.org/`.
 - Live `https://www.languagelineage.org/` and `/sitemap.xml` return 200.
 
-## Phase 5: Measurement Loop
+## Phase 5: SEO Signal Enrichment
+
+Goal: improve content freshness signals, rich result eligibility, and search equity consolidation.
+
+Tasks:
+- Add `datePublished` and `dateModified` to TechArticle JSON-LD on all language/tool pages.
+- Add `datePublished` and `dateModified` to TechArticle JSON-LD on all guide pages.
+- Add Article JSON-LD with `datePublished`, `dateModified`, and `speakable` to all question pages.
+- Add `article:published_time` and `article:modified_time` OG meta tags to language, question, and guide pages.
+- Add `<meta name="robots">` with `max-snippet:-1` and `max-image-preview:large` to SPA shell.
+- Add `<link rel="alternate">` cross-linking between question pages and matching language pages.
+- Add explicit non-www → www 308 redirect in `vercel.json`.
+- Expand `npm run seo:validate` to cover all Phase 5 additions.
+
+Status: complete.
+
+Implemented:
+- All 112 language/tool pages now emit `datePublished` (based on language release year) and `dateModified` (build date) in TechArticle JSON-LD.
+- All 10 guide pages now emit `datePublished` and `dateModified` in TechArticle JSON-LD plus `og:type=article` and OG article timestamps.
+- All 13 question pages now emit Article JSON-LD with `datePublished`, `dateModified`, and `SpeakableSpecification` targeting the `.question-answer` selector.
+- All language, question, and guide pages include `article:published_time` and `article:modified_time` OG meta tags.
+- SPA shell `index.html` includes `<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">`.
+- Language pages with matching question pages include `<link rel="alternate">` pointing to the question page, and vice versa.
+- `vercel.json` now includes a 308 redirect from `languagelineage.org` to `www.languagelineage.org`.
+- `npm run seo:validate` expanded with checks for dateModified, datePublished, robots meta, OG article timestamps, speakable JSON-LD, and vercel.json redirects.
+
+Validation:
+- `npm run seo:validate` passes with 0 errors and 0 warnings.
+- `npm run type-check` passes.
+- `npm run build` passes; the only warning is the existing Cytoscape chunk-size warning.
+
+## Phase 6: Measurement Loop
 
 Goal: turn GSC data into weekly iteration.
 

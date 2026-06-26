@@ -8,6 +8,7 @@ const ROOT = join(__dirname, '..');
 const PUBLIC = join(ROOT, 'public');
 const DATASET_PATH = join(ROOT, 'dataset/v5/lineage_v5.json');
 const SITE = 'https://www.languagelineage.org';
+const BUILD_DATE = new Date().toISOString().slice(0, 10);
 
 const FONTS_HEAD = `<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Geist:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">`;
 
@@ -712,13 +713,17 @@ function buildNodePage(node: Language, rels: Relationship[], nodeMap: Map<string
     })),
   }) : null;
 
+  const publishDate = node.first_release_year ? `${node.first_release_year}-01-01` : '2024-01-01';
   const articleJsonLd = JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'TechArticle',
     headline: `What is ${node.name} written in?`,
     description,
     url,
+    datePublished: publishDate,
+    dateModified: BUILD_DATE,
     author: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
+    publisher: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
     about: {
       '@type': 'SoftwareApplication',
       name: node.name,
@@ -753,6 +758,7 @@ ${faqs.map(f => `<div class="faq-item">
   <link rel="canonical" href="${url}" />
   <link rel="icon" href="/favicon.svg" />
   ${FONTS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  ${QUESTION_PAGE_LANGS.has(slug) ? `<link rel="alternate" href="${SITE}/questions/what-is-${slug}-written-in" />` : ''}
   <meta property="og:type" content="article" />
   <meta property="og:title" content="${escapeHtml(title)}" />
   <meta property="og:description" content="${escapeHtml(description)}" />
@@ -761,6 +767,8 @@ ${faqs.map(f => `<div class="faq-item">
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:type" content="image/png" />
+  <meta property="article:published_time" content="${publishDate}" />
+  <meta property="article:modified_time" content="${BUILD_DATE}" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${escapeHtml(title)}" />
   <meta name="twitter:description" content="${escapeHtml(description)}" />
@@ -1033,6 +1041,21 @@ function buildQuestionPage(q: QuestionDef, nodeMap: Map<string, Language>): stri
       acceptedAnswer: { '@type': 'Answer', text: q.answer },
     }],
   });
+  const articleJsonLd = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: q.title,
+    description: metaDescription,
+    url,
+    datePublished: '2024-01-01',
+    dateModified: BUILD_DATE,
+    author: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
+    publisher: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
+    speakable: {
+      '@type': 'SpeakableSpecification',
+      cssSelector: ['.question-answer'],
+    },
+  });
   const breadcrumbJsonLd = JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -1042,6 +1065,7 @@ function buildQuestionPage(q: QuestionDef, nodeMap: Map<string, Language>): stri
       { '@type': 'ListItem', position: 3, name: q.title, item: url },
     ],
   });
+  const matchingLangSlug = q.slug.match(/^what-is-(.+)-written-in$/)?.[1];
 
   const relatedLinks = [
     ...q.relatedLangs.map(slug => {
@@ -1064,15 +1088,19 @@ function buildQuestionPage(q: QuestionDef, nodeMap: Map<string, Language>): stri
   <link rel="canonical" href="${url}" />
   <link rel="icon" href="/favicon.svg" />
   ${FONTS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  ${matchingLangSlug && QUESTION_PAGE_LANGS.has(matchingLangSlug) ? `<link rel="alternate" href="${SITE}/languages/${matchingLangSlug}" />` : ''}
   <meta property="og:type" content="article" />
   <meta property="og:title" content="${escapeHtml(q.title)} | Language Lineage" />
   <meta property="og:description" content="${escapeHtml(metaDescription)}" />
   <meta property="og:url" content="${url}" />
   <meta property="og:image" content="${SITE}/og-image.png" />
+  <meta property="article:published_time" content="2024-01-01" />
+  <meta property="article:modified_time" content="${BUILD_DATE}" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${escapeHtml(q.title)}" />
   <meta name="twitter:description" content="${escapeHtml(metaDescription)}" />
   <script type="application/ld+json">${faqJsonLd}</script>
+  <script type="application/ld+json">${articleJsonLd}</script>
   <script type="application/ld+json">${breadcrumbJsonLd}</script>
 </head>
 <body class="seo-page">
@@ -2256,6 +2284,8 @@ function buildGuidePage(guide: (typeof GUIDES)[0]): string {
     headline: guide.h1,
     description: guide.description,
     url,
+    datePublished: '2024-01-01',
+    dateModified: BUILD_DATE,
     author: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
     publisher: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
     about: ['programming languages', 'compiler implementation', 'runtime implementation'],
@@ -2281,6 +2311,7 @@ function buildGuidePage(guide: (typeof GUIDES)[0]): string {
   <link rel="canonical" href="${url}" />
   <link rel="icon" href="/favicon.svg" />
   ${FONTS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  <meta property="og:type" content="article" />
   <meta property="og:title" content="${escapeHtml(guide.title)}" />
   <meta property="og:description" content="${escapeHtml(guide.description)}" />
   <meta property="og:url" content="${url}" />
@@ -2288,6 +2319,8 @@ function buildGuidePage(guide: (typeof GUIDES)[0]): string {
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:type" content="image/png" />
+  <meta property="article:published_time" content="2024-01-01" />
+  <meta property="article:modified_time" content="${BUILD_DATE}" />
   <script type="application/ld+json">${articleJsonLd}</script>
   <script type="application/ld+json">${breadcrumbJsonLd}</script>
 </head>
