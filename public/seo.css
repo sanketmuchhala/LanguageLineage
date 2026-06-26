@@ -127,6 +127,65 @@ h1 {
   letter-spacing: -0.01em;
 }
 
+/* Language/tool page header: logo tile + title + tagline */
+.lang-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.lang-logo-tile {
+  flex-shrink: 0;
+  width: 76px;
+  height: 76px;
+  border-radius: 18px;
+  background: #fafafa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 13px;
+  border: 1px solid var(--border);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+}
+
+.lang-logo-tile img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.lang-header-text {
+  min-width: 0;
+}
+
+.lang-header h1 {
+  margin-bottom: 6px;
+}
+
+.lang-tagline {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 17px;
+  line-height: 1.4;
+}
+
+@media (max-width: 600px) {
+  .lang-header {
+    gap: 14px;
+  }
+  .lang-logo-tile {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    padding: 9px;
+  }
+  .lang-tagline {
+    font-size: 15px;
+  }
+}
+
 h2 {
   font-size: 20px;
   font-weight: 600;
