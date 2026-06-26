@@ -242,6 +242,48 @@ for (const p of discoverMoreChecks) {
   else if (content) ok(`${p}: has Discover More section`);
 }
 
+// Phase 5: dateModified in JSON-LD on language pages
+const dateModifiedChecks = ['languages/python/index.html', 'languages/rust/index.html', 'languages/javascript/index.html', 'languages/go/index.html', 'languages/java/index.html'];
+let dateErrors = 0;
+for (const p of dateModifiedChecks) {
+  const content = checkFile(p);
+  if (content && !content.includes('dateModified')) { fail(`${p}: missing dateModified in JSON-LD`); dateErrors++; }
+  if (content && !content.includes('datePublished')) { fail(`${p}: missing datePublished in JSON-LD`); dateErrors++; }
+}
+if (dateErrors === 0) ok(`${dateModifiedChecks.length} priority pages have date fields in JSON-LD`);
+
+// Phase 5: robots meta tag in SPA shell
+if (!indexHtml.includes('name="robots"')) fail('index.html missing robots meta tag');
+else ok('index.html has robots meta tag');
+
+// Phase 5: OG article timestamps on priority pages
+let ogDateErrors = 0;
+for (const p of dateModifiedChecks) {
+  const content = checkFile(p);
+  if (content && !content.includes('article:published_time')) { fail(`${p}: missing article:published_time OG tag`); ogDateErrors++; }
+  if (content && !content.includes('article:modified_time')) { fail(`${p}: missing article:modified_time OG tag`); ogDateErrors++; }
+}
+if (ogDateErrors === 0) ok(`${dateModifiedChecks.length} priority pages have OG article timestamps`);
+
+// Phase 5: speakable on question pages
+const speakableChecks = ['questions/what-is-rust-written-in/index.html', 'questions/what-is-python-written-in/index.html'];
+let speakableErrors = 0;
+for (const p of speakableChecks) {
+  const content = checkFile(p);
+  if (content && !content.includes('SpeakableSpecification')) { fail(`${p}: missing speakable JSON-LD`); speakableErrors++; }
+}
+if (speakableErrors === 0) ok(`${speakableChecks.length} question pages have speakable JSON-LD`);
+
+// Phase 5: vercel.json redirect
+const vercelJson = readFileSync(join(ROOT, 'vercel.json'), 'utf8');
+try {
+  const vercel = JSON.parse(vercelJson);
+  if (!vercel.redirects || vercel.redirects.length === 0) fail('vercel.json missing redirect rules');
+  else ok('vercel.json has redirect rules');
+} catch {
+  fail('vercel.json is invalid JSON');
+}
+
 // Summary
 console.log('');
 console.log(`Validation complete: ${errors} errors, ${warnings} warnings`);
