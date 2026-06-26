@@ -6,6 +6,14 @@ const MIN_NODE_SIZE = 38;
 const MAX_NODE_SIZE = 72;
 const DEFAULT_NODE_COLOR = '#1c1c1c';
 
+function getLogoRenderSize(ele: any): string {
+  const rawSize = String(ele.data('logoSize') || '64%');
+  const scale = Number.parseFloat(rawSize) / 100;
+  const nodeSize = Number(ele.width()) || 48;
+  const boundedScale = Number.isFinite(scale) && scale > 0 ? scale : 0.64;
+  return `${Math.max(18, Math.round(nodeSize * boundedScale))}px`;
+}
+
 // Compiler Atlas: cool technical cluster palette (secondary, used when cluster coloring is on)
 export const CLUSTER_COLORS: Record<ClusterType, string> = {
   c_family: '#f59e0b',      // amber
@@ -94,15 +102,17 @@ export function getCytoscapeStyle(
       style: {
         'background-color': ((ele: any) => {
           const logoColor = ele.data('logoColor');
-          return getAdaptiveLogoBackground(logoColor, isDarkMode);
+          const logoSurface = ele.data('logoSurface') || 'dark';
+          return getAdaptiveLogoBackground(logoColor, isDarkMode, logoSurface);
         }) as any,
 
         // Display logo, carefully sized to fit within the circular node
         'background-image': 'data(logoUrl)' as any,
-        'background-width': '65%' as any,
-        'background-height': '65%' as any,
+        'background-fit': 'none' as any,
+        'background-width': getLogoRenderSize as any,
+        'background-height': getLogoRenderSize as any,
         'background-position-x': '50%' as any,
-        'background-position-y': '50%' as any,
+        'background-position-y': ((ele: any) => ele.data('logoOffsetY') || '50%') as any,
         'background-repeat': 'no-repeat' as any,
         'background-image-opacity': 1,
         'background-clip': 'node' as any,
@@ -111,7 +121,8 @@ export function getCytoscapeStyle(
         'border-width': 2.5,
         'border-color': ((ele: any) => {
           const logoColor = ele.data('logoColor');
-          return getLogoBorderColor(logoColor, isDarkMode);
+          const logoSurface = ele.data('logoSurface') || 'dark';
+          return getLogoBorderColor(logoColor, isDarkMode, logoSurface);
         }) as any,
         'border-opacity': 1,
 

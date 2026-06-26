@@ -5,7 +5,8 @@ import coseBilkent from 'cytoscape-cose-bilkent';
 import { loadDataset } from '../data/loadDataset';
 import { normalizeDataset } from '../data/normalizeDataset';
 import { getCytoscapeStyle } from '../graph/style';
-import { LOGO_MAP, LOGO_COLORS, getLetterAbbreviation } from '../data/logoMap';
+import { LOGO_MAP, LOGO_COLORS, getLetterAbbreviation, getLogoPresentation } from '../data/logoMap';
+import { getGraphLogoUrl } from '../data/graphLogoAssets';
 
 // Guard against double-registration when shared bundle loads this module twice
 try { cytoscape.use(coseBilkent); } catch { /* already registered */ }
@@ -57,7 +58,10 @@ export function EmbedGraph() {
         nodeIds.forEach(id => {
           const lang = dataset.languageMap.get(id);
           if (!lang) return;
-          const logoUrl = lang.logo_url ?? LOGO_MAP[id] ?? null;
+          const canonicalLogoUrl = lang.logo_url ?? LOGO_MAP[id] ?? null;
+          const logoUrl = getGraphLogoUrl(id, canonicalLogoUrl);
+          const logoKind = lang.logo_kind ?? (LOGO_MAP[id] ? 'devicon' : 'none');
+          const logoPresentation = getLogoPresentation(id, logoKind);
           elements.push({
             group: 'nodes',
             data: {
@@ -67,7 +71,11 @@ export function EmbedGraph() {
               degree: lang.degree,
               logoUrl,
               logoColor: LOGO_COLORS[id] ?? null,
-              abbr: logoUrl ? '' : getLetterAbbreviation(lang.name),
+              logoKind,
+              logoSize: logoPresentation.size,
+              logoOffsetY: logoPresentation.offsetY,
+              logoSurface: logoPresentation.surface,
+              abbr: canonicalLogoUrl ? '' : getLetterAbbreviation(lang.name),
             },
           });
         });

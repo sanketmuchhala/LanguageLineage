@@ -25,6 +25,7 @@ const NAV_HTML = `<nav class="seo-nav">
 </nav>`;
 
 const FOOTER_HTML = `<footer class="seo-footer-rich">
+  <div data-nosnippet>
   <div class="footer-grid">
     <div class="footer-col">
       <span class="footer-col-head">Explore</span>
@@ -66,6 +67,7 @@ const FOOTER_HTML = `<footer class="seo-footer-rich">
     </div>
   </div>
   <div class="footer-bottom">&copy; 2026 Sanket Muchhala &middot; <a href="/">Language Lineage</a></div>
+  </div>
 </footer>`;
 
 interface Language {
@@ -124,6 +126,23 @@ function escapeHtml(str: string): string {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
+}
+
+function truncateMetaDescription(text: string, maxLength = 155): string {
+  const normalized = text.replace(/\s+/g, ' ').trim();
+  if (normalized.length <= maxLength) return normalized;
+
+  const clipped = normalized.slice(0, maxLength - 3);
+  const sentenceEnd = Math.max(clipped.lastIndexOf('.'), clipped.lastIndexOf('?'), clipped.lastIndexOf('!'));
+  if (sentenceEnd >= 80) return `${clipped.slice(0, sentenceEnd + 1)}`;
+
+  const lastSpace = clipped.lastIndexOf(' ');
+  const trimmed = clipped
+    .slice(0, lastSpace >= 80 ? lastSpace : clipped.length)
+    .replace(/[,:;–-]\s*$/, '')
+    .trim();
+
+  return `${trimmed}...`;
 }
 
 function writeFile(filePath: string, content: string) {
@@ -395,7 +414,10 @@ function buildRelatedSection(node: Language, rels: Relationship[], nodeMap: Map<
     return `<a href="/${prefix}/${slug}" class="related-card">${escapeHtml(name)}</a>`;
   }).join('\n');
 
-  return `<h2>Related Languages</h2><div class="related-grid">${cards}</div>`;
+  return `<aside class="related-section" data-nosnippet>
+  <h2>Related Languages</h2>
+  <div class="related-grid">${cards}</div>
+</aside>`;
 }
 
 function buildGraphSection(node: Language): string {
@@ -473,7 +495,7 @@ function buildDiscoverMore(node: Language, rels: Relationship[], nodeMap: Map<st
   }
 
   if (links.length === 0) return '';
-  return `<section class="discover-more">
+  return `<section class="discover-more" data-nosnippet>
   <h2>Discover More</h2>
   <div class="discover-links">${links.join('\n  ')}</div>
 </section>`;
@@ -490,7 +512,7 @@ function buildNodePage(node: Language, rels: Relationship[], nodeMap: Map<string
   const descriptionBase = implLangs.length > 0
     ? `${node.name} is implemented in ${implLangs.slice(0, 2).join(' and ')}. Explore its compiler, runtime, and influence relationships.`
     : `Explore ${node.name}'s relationships, influences, and history in the Language Lineage graph.`;
-  const description = (priorityOverride ? priorityOverride.description : descriptionBase).slice(0, 160);
+  const description = truncateMetaDescription(priorityOverride ? priorityOverride.description : descriptionBase, 160);
 
   const faqs = buildFaqs(node, rels, nodeMap);
   const faqJsonLd = faqs.length > 0 ? JSON.stringify({
@@ -763,6 +785,7 @@ const QUESTIONS: QuestionDef[] = [
 
 function buildQuestionPage(q: QuestionDef, nodeMap: Map<string, Language>): string {
   const url = `${SITE}/questions/${q.slug}`;
+  const metaDescription = truncateMetaDescription(q.answer);
   const faqJsonLd = JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
@@ -799,18 +822,18 @@ function buildQuestionPage(q: QuestionDef, nodeMap: Map<string, Language>): stri
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${escapeHtml(q.title)} | Language Lineage</title>
-  <meta name="description" content="${escapeHtml(q.answer.slice(0, 155))}" />
+  <meta name="description" content="${escapeHtml(metaDescription)}" />
   <link rel="canonical" href="${url}" />
   <link rel="icon" href="/favicon.svg" />
   ${FONTS_HEAD}<link rel="stylesheet" href="/seo.css" />
   <meta property="og:type" content="article" />
   <meta property="og:title" content="${escapeHtml(q.title)} | Language Lineage" />
-  <meta property="og:description" content="${escapeHtml(q.answer.slice(0, 155))}" />
+  <meta property="og:description" content="${escapeHtml(metaDescription)}" />
   <meta property="og:url" content="${url}" />
   <meta property="og:image" content="${SITE}/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${escapeHtml(q.title)}" />
-  <meta name="twitter:description" content="${escapeHtml(q.answer.slice(0, 155))}" />
+  <meta name="twitter:description" content="${escapeHtml(metaDescription)}" />
   <script type="application/ld+json">${faqJsonLd}</script>
   <script type="application/ld+json">${breadcrumbJsonLd}</script>
 </head>
@@ -832,7 +855,7 @@ ${NAV_HTML}
   <p>See implementation and influence relationships interactively.</p>
   <a class="explore-btn" href="/explore">Open Interactive Graph &rarr;</a>
 
-  ${relatedLinks.length > 0 ? `<section class="discover-more">
+  ${relatedLinks.length > 0 ? `<section class="discover-more" data-nosnippet>
   <h2>Related Pages</h2>
   <div class="discover-links">
     ${relatedLinks.join('\n    ')}
@@ -1017,7 +1040,7 @@ ${NAV_HTML}
 
   <a class="explore-btn" href="/explore">Open Interactive Graph &rarr;</a>
 
-  <section class="discover-more">
+  <section class="discover-more" data-nosnippet>
     <h2>Related Pages</h2>
     <div class="discover-links">
       <a href="/programming-language-family-tree" class="discover-link">Programming language family tree</a>
@@ -1110,7 +1133,7 @@ ${NAV_HTML}
 
   <a class="explore-btn" href="/explore">Explore the Family Tree Interactively &rarr;</a>
 
-  <section class="discover-more">
+  <section class="discover-more" data-nosnippet>
     <h2>Related Pages</h2>
     <div class="discover-links">
       <a href="/programming-language-graph" class="discover-link">Programming language graph</a>
@@ -1193,7 +1216,7 @@ ${NAV_HTML}
 
   <a class="explore-btn" href="/explore">Explore Genealogy Interactively &rarr;</a>
 
-  <section class="discover-more">
+  <section class="discover-more" data-nosnippet>
     <h2>Related Pages</h2>
     <div class="discover-links">
       <a href="/programming-language-graph" class="discover-link">Programming language graph</a>
@@ -1275,7 +1298,7 @@ ${NAV_HTML}
 
   <a class="explore-btn" href="/timeline">View Interactive Timeline &rarr;</a>
 
-  <section class="discover-more">
+  <section class="discover-more" data-nosnippet>
     <h2>Related Pages</h2>
     <div class="discover-links">
       <a href="/programming-language-graph" class="discover-link">Interactive programming language graph</a>
@@ -1384,7 +1407,7 @@ ${NAV_HTML}
 
   <a class="explore-btn" href="/explore">Explore Implementation Relationships &rarr;</a>
 
-  <section class="discover-more">
+  <section class="discover-more" data-nosnippet>
     <h2>Individual Language Questions</h2>
     <div class="discover-links">
       <a href="/questions/what-is-python-written-in" class="discover-link">What is Python written in?</a>
@@ -1477,7 +1500,7 @@ ${NAV_HTML}
 
   <a class="explore-btn" href="/explore">Explore Implementation Relationships &rarr;</a>
 
-  <section class="discover-more">
+  <section class="discover-more" data-nosnippet>
     <h2>Related Pages</h2>
     <div class="discover-links">
       <a href="/guides/what-is-compiler-bootstrapping" class="discover-link">Guide: What is compiler bootstrapping?</a>
@@ -1588,7 +1611,7 @@ function buildDatasetPage(languages: Language[], rels: Relationship[]): string {
 
   <h2>Download</h2>
   <p>The raw dataset JSON is available at:</p>
-  <pre>https://languagelineage.org/dataset/v5/lineage_v5.json</pre>
+  <pre>https://www.languagelineage.org/dataset/v5/lineage_v5.json</pre>
 
   <h2>Citation</h2>
   <pre>Language Lineage dataset (languagelineage.org). Accessed ${new Date().getFullYear()}.</pre>
@@ -1986,6 +2009,27 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
 
 function buildGuidePage(guide: (typeof GUIDES)[0]): string {
   const url = `${SITE}/guides/${guide.slug}`;
+  const articleJsonLd = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    headline: guide.h1,
+    description: guide.description,
+    url,
+    author: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
+    publisher: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
+    about: ['programming languages', 'compiler implementation', 'runtime implementation'],
+    inLanguage: 'en',
+  });
+  const breadcrumbJsonLd = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'Guides', item: `${SITE}/guides` },
+      { '@type': 'ListItem', position: 3, name: guide.h1, item: url },
+    ],
+  });
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -2003,14 +2047,8 @@ function buildGuidePage(guide: (typeof GUIDES)[0]): string {
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:type" content="image/png" />
-  <script type="application/ld+json">${JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: guide.h1,
-    description: guide.description,
-    url,
-    author: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
-  })}</script>
+  <script type="application/ld+json">${articleJsonLd}</script>
+  <script type="application/ld+json">${breadcrumbJsonLd}</script>
 </head>
 <body class="seo-page">
 <nav class="seo-nav">

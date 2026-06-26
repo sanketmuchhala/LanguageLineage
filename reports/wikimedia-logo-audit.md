@@ -4,9 +4,10 @@ Policy: deterministic curated title/QID mapping, Wikidata P154 only, Commons URL
 
 ## Summary
 
-- Accepted: 21
+- Accepted: 22
 - Unresolved: 41
-- Replacement policy: fill missing logos and replace proxy logos only; preserve direct Devicon logos.
+- Replacement policy: fill missing logos and replace proxy logos; preserve direct Devicon logos except targeted verified replacements where the Devicon asset is unsuitable in graph nodes.
+- Graph rendering assets: 77 local PNGs generated in `public/logos/graph/` from canonical v5 logo URLs to avoid Cytoscape canvas SVG rendering bugs and reduce remote graph image fetches.
 
 ## Accepted Logos
 
@@ -25,6 +26,7 @@ Policy: deterministic curated title/QID mapping, Wikidata P154 only, Commons URL
 | `lang:oberon2` | Oberon-2 | filled | [Oberon programming language logo.svg](https://commons.wikimedia.org/wiki/File:Oberon_programming_language_logo.svg) | Public domain |
 | `lang:pharo` | Pharo | filled | [Pharo Logo v3.0.svg](https://commons.wikimedia.org/wiki/File:Pharo_Logo_v3.0.svg) | MIT |
 | `lang:reasonml` | ReasonML | filled | [Reason-logo.svg](https://commons.wikimedia.org/wiki/File:Reason-logo.svg) | MIT |
+| `lang:rust` | Rust | replaced_devicon | [Rust programming language black logo.svg](https://commons.wikimedia.org/wiki/File:Rust_programming_language_black_logo.svg) | CC BY 4.0; trademark retained by Rust Foundation |
 | `lang:scheme` | Scheme | filled | [Lambda lc.svg](https://commons.wikimedia.org/wiki/File:Lambda_lc.svg) | Public domain |
 | `lang:self` | Self | filled | [Self-logo.svg](https://commons.wikimedia.org/wiki/File:Self-logo.svg) | CC BY-SA 3.0 |
 | `lang:simula` | Simula | filled | [Simula - logo.svg](https://commons.wikimedia.org/wiki/File:Simula_-_logo.svg) | Public domain |

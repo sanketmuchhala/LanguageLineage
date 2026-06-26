@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
 const PUBLIC = join(ROOT, 'public');
+const SITE = 'https://www.languagelineage.org';
 
 let errors = 0;
 let warnings = 0;
@@ -41,6 +42,8 @@ const robots = checkFile('robots.txt');
 if (robots) {
   if (!robots.includes('Sitemap:')) fail('robots.txt missing Sitemap directive');
   else ok('robots.txt has Sitemap directive');
+  if (!robots.includes(`Sitemap: ${SITE}/sitemap.xml`)) fail('robots.txt Sitemap does not use canonical www host');
+  else ok('robots.txt Sitemap uses canonical www host');
 }
 
 // sitemap.xml
@@ -49,6 +52,8 @@ if (sitemap) {
   const urlCount = (sitemap.match(/<url>/g) || []).length;
   ok(`sitemap.xml has ${urlCount} URLs`);
   if (urlCount < 100) warn(`sitemap.xml has only ${urlCount} URLs — expected ~140+`);
+  if (sitemap.includes('https://languagelineage.org')) fail('sitemap.xml contains non-www URLs');
+  else ok('sitemap.xml uses canonical www host');
 }
 
 // manifest.json
