@@ -86,12 +86,12 @@
       "cluster_hint": "functional",
       "company": null,
       "garbage_collected": true,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/4/48/Lisp_logo.svg",
       "peak_year": null,
       "current_users_estimate": null,
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Lisp_logo.svg",
+      "logo_license": "CC BY-SA 4.0",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:cobol",
@@ -132,12 +132,12 @@
       "cluster_hint": "historical",
       "company": null,
       "garbage_collected": null,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/c/cd/1965_ALGOL_Logotype.jpg",
       "peak_year": null,
       "current_users_estimate": null,
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:1965_ALGOL_Logotype.jpg",
+      "logo_license": "CC BY-SA 3.0",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:simula",
@@ -155,12 +155,12 @@
       "cluster_hint": "historical",
       "company": null,
       "garbage_collected": null,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/d/d9/Simula_-_logo.svg",
       "peak_year": null,
       "current_users_estimate": null,
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Simula_-_logo.svg",
+      "logo_license": "Public domain",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:bcpl",
@@ -246,12 +246,12 @@
       "cluster_hint": "historical",
       "company": "Xerox PARC",
       "garbage_collected": true,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/b/bf/Smalltalk_Balloon.svg",
       "peak_year": null,
       "current_users_estimate": null,
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Smalltalk_Balloon.svg",
+      "logo_license": "CC BY-SA 4.0",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:c",
@@ -315,12 +315,12 @@
       "cluster_hint": "functional",
       "company": null,
       "garbage_collected": true,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/3/39/Lambda_lc.svg",
       "peak_year": null,
       "current_users_estimate": "niche",
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Lambda_lc.svg",
+      "logo_license": "Public domain",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:prolog",
@@ -361,12 +361,12 @@
       "cluster_hint": "systems",
       "company": "U.S. Department of Defense",
       "garbage_collected": null,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/3/31/Ada_horizon_green_logo_with_slogan.svg",
       "peak_year": null,
       "current_users_estimate": null,
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Ada_horizon_green_logo_with_slogan.svg",
+      "logo_license": "Public domain",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:cxx",
@@ -781,12 +781,12 @@
       "cluster_hint": "systems",
       "company": null,
       "garbage_collected": true,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/2/24/D_Programming_Language_logo.svg",
       "peak_year": null,
       "current_users_estimate": null,
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:D_Programming_Language_logo.svg",
+      "logo_license": "Public domain",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:scala",
@@ -1177,12 +1177,12 @@
       "cluster_hint": "functional",
       "company": null,
       "garbage_collected": null,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/a/af/Reason-logo.svg",
       "peak_year": null,
       "current_users_estimate": null,
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Reason-logo.svg",
+      "logo_license": "MIT",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:zig",
@@ -1223,12 +1223,12 @@
       "cluster_hint": "systems",
       "company": null,
       "garbage_collected": null,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/e/e8/V_Logo_SVG.svg",
       "peak_year": null,
       "current_users_estimate": "niche",
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:V_Logo_SVG.svg",
+      "logo_license": "MIT",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:carbon",
@@ -1448,12 +1448,12 @@
       "cluster_hint": "tools",
       "company": null,
       "garbage_collected": null,
-      "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/dotnetcore/dotnetcore-original.svg",
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/2/2a/Roslyn.png",
       "peak_year": null,
       "current_users_estimate": null,
-      "logo_source": "https://github.com/devicons/devicon/tree/master/icons/dotnetcore",
-      "logo_license": "Devicon MIT; trademarks retained by owners",
-      "logo_kind": "proxy"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Roslyn.png",
+      "logo_license": "MIT",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "tool:v8",
@@ -1492,12 +1492,12 @@
       "cluster_hint": "tools",
       "company": null,
       "garbage_collected": null,
-      "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firefox/firefox-original.svg",
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/a/ae/SpiderMonkey_Logo.png",
       "peak_year": null,
       "current_users_estimate": null,
-      "logo_source": "https://github.com/devicons/devicon/tree/master/icons/firefox",
-      "logo_license": "Devicon MIT; trademarks retained by owners",
-      "logo_kind": "proxy"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:SpiderMonkey_Logo.png",
+      "logo_license": "MPL 2",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "tool:javascriptcore",
@@ -1536,12 +1536,12 @@
       "cluster_hint": "tools",
       "company": null,
       "garbage_collected": null,
-      "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/haskell/haskell-original.svg",
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/2/2b/Haskell-logo.png",
       "peak_year": null,
       "current_users_estimate": null,
-      "logo_source": "https://github.com/devicons/devicon/tree/master/icons/haskell",
-      "logo_license": "Devicon MIT; trademarks retained by owners",
-      "logo_kind": "proxy"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Haskell-logo.png",
+      "logo_license": "Public domain",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "tool:mrustc",
@@ -1776,7 +1776,7 @@
       "typing": "static",
       "company": null,
       "garbage_collected": null,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/9/97/Oberon_programming_language_logo.svg",
       "peak_year": null,
       "current_users_estimate": null,
       "first_release_year": 1991,
@@ -1785,9 +1785,9 @@
       "self_hosting": false,
       "notes": "Extension of Oberon with type-bound procedures, influenced Go",
       "cluster_hint": "other",
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Oberon_programming_language_logo.svg",
+      "logo_license": "Public domain",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:alef",
@@ -1890,7 +1890,7 @@
       "typing": "static",
       "company": null,
       "garbage_collected": null,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/9/97/Oberon_programming_language_logo.svg",
       "peak_year": null,
       "current_users_estimate": null,
       "first_release_year": 1987,
@@ -1899,9 +1899,9 @@
       "self_hosting": false,
       "notes": "Successor to Modula-2 by Niklaus Wirth, influenced Go",
       "cluster_hint": "other",
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Oberon_programming_language_logo.svg",
+      "logo_license": "Public domain",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:abc",
@@ -1937,7 +1937,7 @@
       "typing": "static",
       "company": null,
       "garbage_collected": null,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/e/ed/M3Logo.gif",
       "peak_year": null,
       "current_users_estimate": null,
       "first_release_year": 1988,
@@ -1946,9 +1946,9 @@
       "self_hosting": false,
       "notes": "Systems programming language, influenced Python's module and exception system",
       "cluster_hint": "other",
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:M3Logo.gif",
+      "logo_license": "Public domain",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:icon",
@@ -2029,7 +2029,7 @@
       "typing": "dynamic",
       "company": null,
       "garbage_collected": null,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/8/88/Self-logo.svg",
       "peak_year": null,
       "current_users_estimate": null,
       "first_release_year": 1987,
@@ -2038,9 +2038,9 @@
       "self_hosting": false,
       "notes": "Prototype-based OOP language, directly influenced JavaScript's object model",
       "cluster_hint": "other",
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Self-logo.svg",
+      "logo_license": "CC BY-SA 3.0",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:miranda",
@@ -2142,7 +2142,7 @@
       "typing": "static",
       "company": null,
       "garbage_collected": null,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/5/58/Cython_logo.svg",
       "peak_year": null,
       "current_users_estimate": null,
       "first_release_year": 2007,
@@ -2151,9 +2151,9 @@
       "self_hosting": false,
       "notes": "Superset of Python that compiles to C for performance",
       "cluster_hint": "other",
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Cython_logo.svg",
+      "logo_license": "Apache License 2.0",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:apl",
@@ -2461,7 +2461,7 @@
       "typing": "dynamic",
       "company": null,
       "garbage_collected": null,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/6/6c/Pharo_Logo_v3.0.svg",
       "peak_year": null,
       "current_users_estimate": null,
       "first_release_year": 2008,
@@ -2470,9 +2470,9 @@
       "self_hosting": false,
       "notes": "Modern Smalltalk dialect focused on live programming",
       "cluster_hint": "other",
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Pharo_Logo_v3.0.svg",
+      "logo_license": "MIT",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:guile",
@@ -2484,7 +2484,7 @@
       "typing": "dynamic",
       "company": null,
       "garbage_collected": null,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/b/b3/GNU-Guile-logo.svg",
       "peak_year": null,
       "current_users_estimate": null,
       "first_release_year": 1993,
@@ -2493,9 +2493,9 @@
       "self_hosting": false,
       "notes": "GNU's official scripting language, a Scheme dialect",
       "cluster_hint": "other",
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:GNU-Guile-logo.svg",
+      "logo_license": "CC BY-SA 4.0",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:mypy",
@@ -2529,7 +2529,7 @@
       "typing": "static",
       "company": null,
       "garbage_collected": null,
-      "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/delphi/delphi-original.svg",
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/8/8f/FPClogogif.gif",
       "peak_year": null,
       "current_users_estimate": null,
       "first_release_year": 1993,
@@ -2538,9 +2538,9 @@
       "self_hosting": false,
       "notes": "Open-source Pascal and Object Pascal compiler",
       "cluster_hint": "other",
-      "logo_source": "https://github.com/devicons/devicon/tree/master/icons/delphi",
-      "logo_license": "Devicon MIT; trademarks retained by owners",
-      "logo_kind": "proxy"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:FPClogogif.gif",
+      "logo_license": "GPL",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:fortran95",
@@ -2552,7 +2552,7 @@
       "typing": "static",
       "company": null,
       "garbage_collected": null,
-      "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/fortran/fortran-original.svg",
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/b/b8/Fortran_logo.svg",
       "peak_year": null,
       "current_users_estimate": null,
       "first_release_year": 1997,
@@ -2561,9 +2561,9 @@
       "self_hosting": false,
       "notes": "Revised Fortran standard with improved features",
       "cluster_hint": "other",
-      "logo_source": "https://github.com/devicons/devicon/tree/master/icons/fortran",
-      "logo_license": "Devicon MIT; trademarks retained by owners",
-      "logo_kind": "proxy"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Fortran_logo.svg",
+      "logo_license": "Public domain",
+      "logo_kind": "wikimedia"
     }
   ],
   "relationships": [

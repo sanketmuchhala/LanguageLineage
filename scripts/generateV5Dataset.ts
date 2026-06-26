@@ -1,4 +1,4 @@
-import { mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { LOGO_MAP } from '../src/data/logoMap.js';
@@ -8,6 +8,7 @@ const ROOT = join(__dirname, '..');
 const INPUT = join(ROOT, 'dataset/v4/lineage_v4.json');
 const OUTPUT_DIR = join(ROOT, 'dataset/v5');
 const OUTPUT = join(OUTPUT_DIR, 'lineage_v5.json');
+const WIKIMEDIA_OVERRIDES_PATH = join(OUTPUT_DIR, 'wikimedia_logo_overrides.json');
 
 const DEVICON_BASE = 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons';
 const DEVICON_SOURCE = 'https://github.com/devicons/devicon';
@@ -15,6 +16,17 @@ const DEVICON_LICENSE = 'Devicon MIT; trademarks retained by owners';
 
 function devicon(slug: string, variant = 'original'): string {
   return `${DEVICON_BASE}/${slug}/${slug}-${variant}.svg`;
+}
+
+type LogoKind = 'devicon' | 'wikimedia' | 'proxy' | 'none';
+
+interface WikimediaLogoOverride {
+  url: string;
+  source: string;
+  license: string;
+  kind: 'wikimedia';
+  wikidata_item: string;
+  commons_file: string;
 }
 
 const EXTRA_LOGOS: Record<string, { url: string; kind: 'devicon' | 'proxy'; source?: string }> = {
@@ -67,30 +79,45 @@ function sourceForLogo(url: string): string {
   return match ? `${DEVICON_SOURCE}/tree/master/icons/${match[1]}` : DEVICON_SOURCE;
 }
 
+function readWikimediaLogoOverrides(): Record<string, WikimediaLogoOverride> {
+  if (!existsSync(WIKIMEDIA_OVERRIDES_PATH)) return {};
+
+  const parsed = JSON.parse(readFileSync(WIKIMEDIA_OVERRIDES_PATH, 'utf8')) as {
+    logos?: Record<string, WikimediaLogoOverride>;
+  };
+  return parsed.logos ?? {};
+}
+
 const dataset = JSON.parse(readFileSync(INPUT, 'utf8'));
 dataset.version = 'v5';
 dataset.description = 'Programming language lineage dataset v5 with logo metadata for graph and SEO rendering';
 
-let direct = 0;
-let proxy = 0;
-let missing = 0;
+const wikimediaLogoOverrides = readWikimediaLogoOverrides();
+const logoCounts: Record<LogoKind, number> = {
+  devicon: 0,
+  wikimedia: 0,
+  proxy: 0,
+  none: 0,
+};
 
 dataset.languages = dataset.languages.map((lang: Record<string, unknown>) => {
   const id = String(lang.id);
   const languageOverride = LANGUAGE_OVERRIDES[id] ?? {};
   const extra = EXTRA_LOGOS[id];
-  const url = extra?.url ?? (LOGO_MAP as Record<string, string | null>)[id] ?? null;
-  const kind = url ? (PROXY_LOGOS.has(id) ? 'proxy' : 'devicon') : 'none';
-  if (kind === 'devicon') direct++;
-  else if (kind === 'proxy') proxy++;
-  else missing++;
+  const baseUrl = extra?.url ?? (LOGO_MAP as Record<string, string | null>)[id] ?? null;
+  const baseKind: LogoKind = baseUrl ? (PROXY_LOGOS.has(id) ? 'proxy' : 'devicon') : 'none';
+  const wikimediaOverride = wikimediaLogoOverrides[id];
+  const useWikimedia = Boolean(wikimediaOverride && (baseKind === 'none' || baseKind === 'proxy'));
+  const url = useWikimedia ? wikimediaOverride.url : baseUrl;
+  const kind: LogoKind = useWikimedia ? 'wikimedia' : baseKind;
+  logoCounts[kind]++;
 
   return {
     ...lang,
     ...languageOverride,
     logo_url: url,
-    logo_source: url ? (extra?.source ?? sourceForLogo(url)) : null,
-    logo_license: url ? DEVICON_LICENSE : null,
+    logo_source: useWikimedia ? wikimediaOverride.source : (url ? (extra?.source ?? sourceForLogo(url)) : null),
+    logo_license: useWikimedia ? wikimediaOverride.license : (url ? DEVICON_LICENSE : null),
     logo_kind: kind,
   };
 });
@@ -108,4 +135,7 @@ mkdirSync(OUTPUT_DIR, { recursive: true });
 writeFileSync(OUTPUT, `${JSON.stringify(dataset, null, 2)}\n`);
 
 console.log(`Wrote ${OUTPUT}`);
-console.log(`Logo coverage: ${direct + proxy}/${dataset.languages.length} (${direct} direct, ${proxy} proxy, ${missing} missing)`);
+console.log(
+  `Logo coverage: ${dataset.languages.length - logoCounts.none}/${dataset.languages.length} ` +
+    `(${logoCounts.devicon} devicon, ${logoCounts.wikimedia} wikimedia, ${logoCounts.proxy} proxy, ${logoCounts.none} missing)`
+);

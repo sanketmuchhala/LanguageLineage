@@ -27,7 +27,7 @@ An interactive graph visualization mapping the lineage, influence, and implement
 
 ## Overview
 
-This project visualizes how programming languages are connected through compiler chains, runtime dependencies, influence relationships, and bootstrapping paths. The dataset (v5) covers 112 nodes (98 languages, 14 tools), 347 relationships, and 61 sourced logo URLs for graph rendering.
+This project visualizes how programming languages are connected through compiler chains, runtime dependencies, influence relationships, and bootstrapping paths. The dataset (v5) covers 112 nodes (98 languages, 14 tools), 347 relationships, and 77 sourced logo URLs for graph rendering.
 
 ### What You Can Explore
 
@@ -111,7 +111,7 @@ ProgrammingLanguageGraph/
 - 112 nodes: 98 languages + 14 tools (compilers, runtimes, engines)
 - 347 relationships, each with confidence score and evidence source URL
 - 100% evidence coverage — every relationship has at least one source
-- 61 logo URLs: 50 direct Devicon assets + 11 explicitly marked proxy logos
+- 77 logo URLs: 50 Devicon assets + 21 Wikimedia P154 logos + 6 explicitly marked proxy logos
 - 18 fields per language (10 core + 5 enriched metadata fields + 3 logo metadata fields)
 
 ### Language Fields
@@ -133,7 +133,7 @@ ProgrammingLanguageGraph/
 | `logo_url` | string or null | Sourced logo URL used by graph and SEO rendering |
 | `logo_source` | string or null | Source repository/directory for the logo asset |
 | `logo_license` | string or null | Logo source license note |
-| `logo_kind` | enum or null | `devicon`, `proxy`, or `none` |
+| `logo_kind` | enum or null | `devicon`, `wikimedia`, `proxy`, or `none` |
 | `peak_year` | int or null | Year of historically documented peak popularity |
 | `current_users_estimate` | enum or null | `niche` / `moderate` / `large` / `dominant` |
 
@@ -303,7 +303,7 @@ Language Lineage (languagelineage.org). Programming Language Lineage Dataset, v5
 | v2 | 67 | 128 | Extended with more languages, implementations array |
 | v3 | 71 | 169 | Added influence relationships |
 | v4 | 112 | 347 | Full enrichment: 5 new metadata fields, influence edges, 41 data fixes |
-| v5 | 112 | 347 | Adds sourced logo URLs, logo source metadata, and dataset-driven graph logo rendering |
+| v5 | 112 | 347 | Adds sourced Devicon and Wikimedia logo URLs, logo source metadata, and dataset-driven graph logo rendering |
 
 The app loads v5 by default. Previous versions remain available in `dataset/`.
 
@@ -319,6 +319,7 @@ The app loads v5 by default. Previous versions remain available in `dataset/`.
 | `analyze:v4` | `npm run analyze:v4` | Run analyzer on v4 dataset |
 | `analyze:v5` | `npm run analyze:v5` | Run analyzer on v5 dataset |
 | `dataset:v5` | `npm run dataset:v5` | Regenerate v5 from v4 plus logo metadata |
+| `logos:wikimedia` | `npm run logos:wikimedia` | Refresh Wikidata P154 logo overrides and audit report |
 
 ### Helper Scripts
 

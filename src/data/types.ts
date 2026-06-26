@@ -46,7 +46,7 @@ export interface RawLanguageNode {
   logo_url?: string | null;
   logo_source?: string | null;
   logo_license?: string | null;
-  logo_kind?: 'devicon' | 'proxy' | 'none' | null;
+  logo_kind?: 'devicon' | 'wikimedia' | 'proxy' | 'none' | null;
   peak_year?: number | null;
   current_users_estimate?: 'niche' | 'moderate' | 'large' | 'dominant' | null;
 }
