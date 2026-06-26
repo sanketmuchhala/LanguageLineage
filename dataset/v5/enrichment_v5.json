@@ -1720,10 +1720,7 @@
         ],
         "website": "https://www.lua.org/",
         "file_extensions": [
-          ".lua",
-          ".luna",
-          ".lunaire",
-          ".anair"
+          ".lua"
         ]
       },
       "sources": {

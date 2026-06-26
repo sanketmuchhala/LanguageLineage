@@ -258,6 +258,7 @@ const PRIORITY_TITLES: Record<string, { title: string; description: string }> = 
 interface QuickFact {
   label: string;
   value: string;
+  href?: string;
 }
 
 interface PriorityContent {
@@ -629,10 +630,15 @@ const PRIORITY_CONTENT: Record<string, PriorityContent> = {
 
 function renderQuickFacts(facts: QuickFact[]): string {
   if (facts.length === 0) return '';
-  const items = facts.map(f => `<div class="quick-fact">
+  const items = facts.map(f => {
+    const value = f.href
+      ? `<a href="${escapeHtml(f.href)}" rel="noopener noreferrer" target="_blank">${escapeHtml(f.value)}</a>`
+      : escapeHtml(f.value);
+    return `<div class="quick-fact">
     <dt>${escapeHtml(f.label)}</dt>
-    <dd>${escapeHtml(f.value)}</dd>
-  </div>`).join('\n');
+    <dd>${value}</dd>
+  </div>`;
+  }).join('\n');
   return `<section class="quick-facts-section">
   <h2>Quick Facts</h2>
   <dl class="quick-facts">${items}</dl>
@@ -744,9 +750,28 @@ function buildEnrichedFacts(node: Language): string {
   if (e.facts.designers.length) facts.push({ label: isTool ? 'Created by' : 'Designed by', value: joinNames(e.facts.designers) });
   if (developers.length) facts.push({ label: 'Developer', value: joinNames(developers) });
   if (node.first_release_year && node.first_release_year > 0) facts.push({ label: 'First released', value: String(node.first_release_year) });
+  if (!isTool && node.typing && node.typing !== 'unspecified') facts.push({ label: 'Typing', value: node.typing });
   if (e.facts.license.length) facts.push({ label: 'License', value: joinNames(e.facts.license) });
   if (e.facts.file_extensions.length) facts.push({ label: 'Filename extension', value: e.facts.file_extensions.join(', ') });
+  if (e.facts.website) facts.push({ label: 'Website', value: e.facts.website.replace(/^https?:\/\//, '').replace(/\/$/, ''), href: e.facts.website });
   return renderQuickFacts(facts);
+}
+
+// Page header: language/tool logo tile + the H1 question + a one-line tagline.
+function buildPageHeader(node: Language): string {
+  const e = ENRICHMENT[node.id];
+  const tagline = e?.tagline ? e.tagline.replace(/\.$/, '') : '';
+  const taglineText = tagline ? `${tagline.charAt(0).toUpperCase()}${tagline.slice(1)}.` : '';
+  const logo = node.logo_url
+    ? `<div class="lang-logo-tile"><img src="${escapeHtml(node.logo_url)}" alt="${escapeHtml(node.name)} logo" width="56" height="56" loading="eager" decoding="async" /></div>`
+    : '';
+  return `<div class="lang-header">
+  ${logo}
+  <div class="lang-header-text">
+    <h1>What is ${escapeHtml(node.name)} written in?</h1>
+    ${taglineText ? `<p class="lang-tagline">${escapeHtml(taglineText)}</p>` : ''}
+  </div>
+</div>`;
 }
 
 // Full enriched block (facts + overview) for nodes without a hand-authored PRIORITY_CONTENT entry.
@@ -1172,7 +1197,7 @@ ${faqs.map(f => `<div class="faq-item">
     <a href="/">Home</a> &rsaquo; <a href="/${prefix}">${prefix === 'tools' ? 'Tools' : 'Languages'}</a> &rsaquo; ${escapeHtml(node.name)}
   </nav>
 
-  <h1>What is ${escapeHtml(node.name)} written in?</h1>
+  ${buildPageHeader(node)}
 
   ${buildMetaTags(node)}
 
