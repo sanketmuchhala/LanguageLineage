@@ -39,22 +39,35 @@
 
   <h1>What is Compiler Bootstrapping?</h1>
 
-  <div class="answer-box">Compiler bootstrapping is the process of writing a compiler for a programming language <strong>in that same language</strong>. A language whose compiler can compile itself is called <em>self-hosting</em>.</div>
+  <div class="answer-box">Compiler bootstrapping is the process of building a compiler for a programming language that is <strong>written in that same language</strong>. Because you cannot compile the compiler without already having a compiler, the first version is written in a different, already-working language, and each later version is compiled by the version before it. A language whose compiler can compile its own source code is called <em>self-hosting</em>.</div>
 
-<h2>How Bootstrapping Works</h2>
-<p>To bootstrap a compiler, you first write a simple initial compiler (called a "stage 0" or "seed" compiler) in an existing language. This compiler may not support all language features. Then you use it to compile a richer compiler written in the new language itself.</p>
-<p>The process typically follows these stages:</p>
+<h2>The chicken-and-egg problem</h2>
+<p>A compiler is just a program, and like any program in a compiled language it has to be compiled before it can run. So how do you compile the very first compiler for a brand-new language, when no compiler for that language exists yet? This is the bootstrapping problem, and every self-hosting language has had to solve it.</p>
+<p>The answer is to break the circular dependency once, at the beginning, using a language that already works. The first compiler — the <strong>stage 0</strong> or "seed" compiler — is written in an existing language such as C, OCaml, or assembly. It only needs to be good enough to compile the second compiler, which is written in the new language itself. From then on, the language can compile itself and the seed can be retired.</p>
+
+<h2>The three bootstrap stages</h2>
+<p>A typical self-hosting build runs in three stages, and the last two are the proof that bootstrapping succeeded:</p>
 <ul>
-<li><strong>Stage 0:</strong> Write a minimal compiler in C or another existing language</li>
-<li><strong>Stage 1:</strong> Use Stage 0 to compile the full compiler written in the new language</li>
-<li><strong>Stage 2:</strong> Use Stage 1 to compile itself — if the output matches Stage 1, bootstrapping succeeded</li>
+<li><strong>Stage 0 (seed):</strong> An existing compiler, often a previous release of the same compiler downloaded as a binary, or a one-time compiler written in another language.</li>
+<li><strong>Stage 1:</strong> Use stage 0 to compile the current compiler source (written in the new language). The result is a working compiler, but it was produced by the older stage-0 compiler, so it may not yet contain the newest optimizations.</li>
+<li><strong>Stage 2:</strong> Use the stage-1 compiler to compile the same source again. Now the compiler has compiled itself. Building a <strong>stage 3</strong> and checking that it is byte-for-byte identical to stage 2 is a common correctness test: if a compiler compiled by itself produces the same compiler again, the toolchain is internally consistent.</li>
 </ul>
 
-<h2>Why Bootstrap?</h2>
-<p>Self-hosting is a meaningful milestone because it proves the language is expressive enough to implement a real-world systems program. It also means the compiler can be improved using the language's own features.</p>
+<h2>Why languages bootstrap</h2>
+<p>Self-hosting is a milestone of maturity. It proves the language is expressive and complete enough to build a large, performance-sensitive systems program — a compiler. It also lets the compiler team write the compiler in the language they are designing, so every improvement to the language immediately benefits the tool that builds it. Finally, it removes the long-term dependency on a foreign implementation language.</p>
 
-<h2>Examples from the Dataset</h2>
-<p>Languages in the Language Lineage dataset with documented bootstrap chains include Rust, Go, Haskell, OCaml, and many others. See <a href="/relationships/bootstrap-written-in">all bootstrap relationships</a> for the complete list.</p>
+<h2>Real bootstrap chains</h2>
+<p>The Language Lineage dataset records the historical implementation language for each toolchain. A few well-documented chains:</p>
+<ul>
+<li><a href="/languages/rust">Rust</a>: the first compiler (rustboot) was written in <a href="/languages/ocaml">OCaml</a>; once the language was capable enough, rustc was rewritten in Rust and has been self-hosting since 2011. Each release is built by the previous release, and the <a href="/tools/mrustc">mrustc</a> project (written in C++) can compile an early rustc to break the dependency on prior binaries.</li>
+<li><a href="/languages/go">Go</a>: the original compiler was written in <a href="/languages/c">C</a>; in Go 1.5 (2015) the toolchain was translated to Go, making it self-hosting.</li>
+<li><a href="/languages/haskell">Haskell</a>: <a href="/tools/ghc">GHC</a> is written in Haskell, with a runtime system in C.</li>
+<li><a href="/languages/c">C</a> and <a href="/languages/cxx">C++</a>: <a href="/tools/gcc">GCC</a> is bootstrapped from an earlier C/C++ compiler through exactly the stage 0/1/2 process described above.</li>
+</ul>
+<p>See <a href="/relationships/bootstrap-written-in">every bootstrap relationship in the dataset</a> for the full list, each with a source and confidence score.</p>
+
+<h2>Trust, reproducibility, and breaking the binary chain</h2>
+<p>Because each compiler is built by an earlier compiler, you are ultimately trusting a long chain of binaries you did not build yourself. Ken Thompson's classic lecture "Reflections on Trusting Trust" showed that a malicious compiler could inject code into programs — including into future copies of itself — invisibly. Modern projects respond with reproducible builds and "diverse double-compilation," and with seed compilers like <a href="/tools/mrustc">mrustc</a> that let you rebuild a toolchain from source in a different language rather than from a pre-built binary.</p>
 
 <a class="explore-btn" href="/explore">Explore Bootstrap Chains in Graph &rarr;</a>
 

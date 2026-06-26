@@ -102,6 +102,15 @@
     <li>Historical: C was the dominant systems language when most early runtimes were written</li>
   </ul>
 
+  <h2>Four ways a language gets implemented</h2>
+  <p>Across the dataset, almost every language falls into one of four implementation patterns:</p>
+  <ul>
+    <li><strong>Interpreted, runtime written in C:</strong> the classic dynamic-language pattern. <a href="/languages/python">Python</a> (CPython), <a href="/languages/ruby">Ruby</a> (MRI), <a href="/languages/php">PHP</a>, and <a href="/languages/lua">Lua</a> all run on interpreters written in <a href="/languages/c">C</a>.</li>
+    <li><strong>Self-hosting and compiled to native code:</strong> the compiler is written in the language itself and emits machine code, often through the <a href="/tools/llvm">LLVM</a> backend. <a href="/languages/rust">Rust</a>, <a href="/languages/go">Go</a>, and <a href="/languages/haskell">Haskell</a> work this way.</li>
+    <li><strong>Compiled to a virtual machine:</strong> source compiles to bytecode that runs on a VM written in C/C++. <a href="/languages/java">Java</a> and <a href="/languages/kotlin">Kotlin</a> target the JVM; <a href="/languages/csharp">C#</a> and <a href="/languages/fsharp">F#</a> target the .NET CLR.</li>
+    <li><strong>Transpiled to another language:</strong> the "compiler" emits source in a second language rather than machine code. <a href="/languages/typescript">TypeScript</a> and <a href="/languages/coffeescript">CoffeeScript</a> transpile to JavaScript, then run on a JavaScript engine.</li>
+  </ul>
+
   <h2>Self-hosting languages</h2>
   <p>Some languages' compilers are written in the language itself — called self-hosting. This requires bootstrapping: an initial compiler written in another language, which is then used to compile the self-hosted version. Self-hosting languages: <a href="/languages/rust">Rust</a>, <a href="/languages/go">Go</a>, <a href="/languages/typescript">TypeScript</a>, <a href="/languages/haskell">Haskell</a>, <a href="/languages/java">Java (javac)</a>.</p>
   <p>See: <a href="/questions/what-is-compiler-bootstrapping">What is compiler bootstrapping?</a> and <a href="/questions/what-is-a-self-hosting-compiler">What is a self-hosting compiler?</a></p>

@@ -94,6 +94,36 @@ interface Relationship {
   notes?: string;
 }
 
+// Wikipedia / Wikidata enrichment (scraped non-copyrightable facts).
+// Produced offline by scripts/harvestWikipediaContent.ts into dataset/v5/enrichment_v5.json.
+// On-page prose is synthesized from these facts and cited; Wikipedia text is never pasted.
+interface EnrichedNode {
+  name: string;
+  wikidata_id: string;
+  wikipedia_title: string;
+  wikipedia_url: string;
+  tagline: string | null;
+  facts: {
+    designers: string[];
+    developers: string[];
+    license: string[];
+    influenced_by: string[];
+    implemented_in: string[];
+    website: string | null;
+    file_extensions: string[];
+  };
+  sources: { wikidata: string; wikipedia: string };
+}
+
+const ENRICHMENT: Record<string, EnrichedNode> = (() => {
+  try {
+    const parsed = JSON.parse(readFileSync(join(ROOT, 'dataset/v5/enrichment_v5.json'), 'utf8'));
+    return parsed.enrichment ?? {};
+  } catch {
+    return {};
+  }
+})();
+
 function idToSlug(id: string): string {
   return id.replace(/^(lang|tool):/, '').replace(/_/g, '-');
 }
@@ -376,6 +406,221 @@ const PRIORITY_CONTENT: Record<string, PriorityContent> = {
       },
     ],
   },
+  c: {
+    answerHtml: '<strong>C</strong> is compiled by toolchains such as <strong>GCC</strong> and <strong>Clang</strong>. Those compilers are themselves written in C and C++, so in practice C is self-hosting: a C compiler is built using an existing C/C++ compiler.',
+    faqAnswer: 'C is compiled by toolchains such as GCC and Clang. GCC is written primarily in C, and Clang is written in C++, so C compilers are largely written in C and C++. C itself compiles down to machine code.',
+    facts: [
+      { label: 'Short answer', value: 'Compiled by GCC (C) and Clang (C++)' },
+      { label: 'Created by', value: 'Dennis Ritchie at Bell Labs, 1972' },
+      { label: 'Standard', value: 'ANSI C (1989), then ISO C' },
+      { label: 'Role', value: 'Implementation language for most OS kernels and runtimes' },
+    ],
+    sections: [
+      {
+        heading: 'Why C is the substrate of computing',
+        body: `<p>C compiles directly to machine code, with no managed runtime of its own. That makes it the implementation language for operating-system kernels, language runtimes, and the compilers themselves. Many interpreters on this site — including CPython, the reference Ruby (MRI), and PHP — have runtimes written in C.</p>
+<p>C is effectively self-hosting. A new build of GCC is produced by an existing C/C++ compiler in a multi-stage bootstrap, the same pattern used by self-hosting languages like Rust and Go.</p>`,
+      },
+      {
+        heading: 'C compilers compared',
+        body: `<table class="impl-table">
+  <thead><tr><th>Compiler</th><th>Written in</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>GCC</td><td>C and C++</td><td>GNU Compiler Collection; bootstrapped in multiple stages</td></tr>
+    <tr><td>Clang</td><td>C++</td><td>LLVM-based C/C++/Objective-C front end</td></tr>
+    <tr><td>TCC</td><td>C</td><td>Tiny C Compiler; small, fast, used in bootstrap discussions</td></tr>
+  </tbody>
+</table>`,
+      },
+    ],
+  },
+  cxx: {
+    answerHtml: '<strong>C++</strong> is compiled by <strong>GCC (g++)</strong>, <strong>Clang</strong>, and <strong>MSVC</strong>. These compilers are themselves written mostly in C++, so C++ is self-hosting. The Clang/LLVM toolchain is written in C++.',
+    faqAnswer: 'C++ is compiled by GCC (g++), Clang, and MSVC. Those compilers are written largely in C++ themselves, so C++ is self-hosting. C++ compiles to native machine code.',
+    facts: [
+      { label: 'Short answer', value: 'Compiled by g++, Clang, and MSVC (all C++)' },
+      { label: 'Created by', value: 'Bjarne Stroustrup, 1985' },
+      { label: 'Backend', value: 'LLVM (Clang) or GCC' },
+      { label: 'Self-hosting', value: 'Yes — C++ compilers are written in C++' },
+    ],
+    sections: [
+      {
+        heading: 'C++ compilers and the LLVM backend',
+        body: `<p>C++ has no single reference compiler. The three dominant toolchains — GCC's g++, Clang, and Microsoft's MSVC — each parse C++ and emit native code. Clang is a C++ front end for LLVM, and LLVM's optimizer and code generator are also written in C++. That same LLVM backend is used by Rust, Swift, and Julia.</p>
+<p>Because every major C++ compiler is itself a C++ program, building a compiler requires an existing C++ toolchain, the classic self-hosting arrangement.</p>`,
+      },
+      {
+        heading: 'C++ toolchains compared',
+        body: `<table class="impl-table">
+  <thead><tr><th>Toolchain</th><th>Written in</th><th>Backend</th></tr></thead>
+  <tbody>
+    <tr><td>GCC (g++)</td><td>C and C++</td><td>GCC backend</td></tr>
+    <tr><td>Clang</td><td>C++</td><td>LLVM</td></tr>
+    <tr><td>MSVC</td><td>C++</td><td>Microsoft backend</td></tr>
+  </tbody>
+</table>`,
+      },
+    ],
+  },
+  typescript: {
+    answerHtml: '<strong>TypeScript</strong> is self-hosting: the TypeScript compiler (<strong>tsc</strong>) is written in <strong>TypeScript</strong>. It does not have its own runtime — it transpiles to JavaScript, which then runs on engines such as V8.',
+    faqAnswer: 'The TypeScript compiler, tsc, is written in TypeScript itself, so TypeScript is self-hosting. TypeScript has no separate runtime; it compiles (transpiles) to JavaScript, which runs on JavaScript engines like V8.',
+    facts: [
+      { label: 'Short answer', value: 'tsc is written in TypeScript' },
+      { label: 'Created by', value: 'Anders Hejlsberg, Microsoft, 2012' },
+      { label: 'Output', value: 'Transpiles to JavaScript' },
+      { label: 'Runtime', value: 'None of its own — runs on JS engines' },
+    ],
+    sections: [
+      {
+        heading: 'TypeScript transpiles, it does not run',
+        body: `<p>TypeScript is a typed superset of JavaScript. The compiler checks types and then strips them away, emitting plain JavaScript. There is no TypeScript virtual machine: the generated JavaScript executes on whatever engine the target uses — V8 in Node.js and Chrome, JavaScriptCore in Safari.</p>
+<p>tsc is itself written in TypeScript and compiled with a previous version of tsc, making TypeScript self-hosting in the same sense as Rust or Go.</p>`,
+      },
+    ],
+  },
+  ruby: {
+    answerHtml: 'The reference implementation of <strong>Ruby</strong>, called <strong>MRI</strong> or CRuby, is written in <strong>C</strong>. Alternative implementations include JRuby (Java) and TruffleRuby (Java/GraalVM).',
+    faqAnswer: "Ruby's reference implementation, MRI (also called CRuby), is written in C. Alternative implementations include JRuby, written in Java, and TruffleRuby, built on the GraalVM in Java.",
+    facts: [
+      { label: 'Short answer', value: 'CRuby/MRI is written in C' },
+      { label: 'Created by', value: 'Yukihiro Matsumoto, 1995' },
+      { label: 'Other implementations', value: 'JRuby (Java), TruffleRuby (GraalVM)' },
+      { label: 'Execution', value: 'Bytecode on the YARV virtual machine' },
+    ],
+    sections: [
+      {
+        heading: 'Ruby implementations',
+        body: `<table class="impl-table">
+  <thead><tr><th>Implementation</th><th>Written in</th><th>Role</th></tr></thead>
+  <tbody>
+    <tr><td>CRuby / MRI</td><td>C</td><td>Reference implementation; runs YARV bytecode</td></tr>
+    <tr><td>JRuby</td><td>Java</td><td>Ruby on the JVM</td></tr>
+    <tr><td>TruffleRuby</td><td>Java</td><td>High-performance Ruby on GraalVM</td></tr>
+  </tbody>
+</table>`,
+      },
+    ],
+  },
+  haskell: {
+    answerHtml: 'The <strong>Glasgow Haskell Compiler (GHC)</strong> is written in <strong>Haskell</strong> and is self-hosting. Its runtime system, which handles lazy evaluation and garbage collection, is written in <strong>C</strong>.',
+    faqAnswer: 'The main Haskell compiler, GHC, is written in Haskell and is self-hosting. The GHC runtime system (RTS), which manages lazy evaluation, threads, and garbage collection, is written in C.',
+    facts: [
+      { label: 'Short answer', value: 'GHC is written in Haskell' },
+      { label: 'Runtime system', value: 'Written in C' },
+      { label: 'Self-hosting', value: 'Yes' },
+      { label: 'Backend', value: 'Native code generator or LLVM' },
+    ],
+    sections: [
+      {
+        heading: 'GHC and its C runtime',
+        body: `<p>GHC compiles Haskell to native code, optionally through an LLVM backend. The compiler is a large Haskell program and is bootstrapped from a previous GHC. Underneath sits the runtime system (RTS), written in C, which implements Haskell's lazy evaluation, lightweight threads, and generational garbage collector.</p>`,
+      },
+    ],
+  },
+  csharp: {
+    answerHtml: 'The <strong>C#</strong> compiler, <strong>Roslyn</strong>, is written in <strong>C#</strong>. Compiled C# runs on the .NET runtime (the CLR), which is written mainly in <strong>C++</strong>. The standard library is largely C#.',
+    faqAnswer: "C#'s compiler, Roslyn, is written in C# and is self-hosting. C# compiles to .NET intermediate language, which runs on the Common Language Runtime (CLR), written mainly in C++.",
+    facts: [
+      { label: 'Compiler', value: 'Roslyn is written in C#' },
+      { label: 'Runtime', value: 'CLR / CoreCLR is written in C++' },
+      { label: 'Created by', value: 'Anders Hejlsberg, Microsoft, 2000' },
+      { label: 'Output', value: 'Common Intermediate Language (CIL)' },
+    ],
+    sections: [
+      {
+        heading: 'C# implementation layers',
+        body: `<table class="impl-table">
+  <thead><tr><th>Layer</th><th>Written in</th><th>What it does</th></tr></thead>
+  <tbody>
+    <tr><td>Roslyn compiler</td><td>C#</td><td>Compiles C# to CIL bytecode</td></tr>
+    <tr><td>CoreCLR runtime</td><td>C++</td><td>JIT-compiles CIL, manages memory</td></tr>
+    <tr><td>Base Class Library</td><td>C#</td><td>Core .NET APIs</td></tr>
+  </tbody>
+</table>`,
+      },
+    ],
+  },
+  swift: {
+    answerHtml: 'The <strong>Swift</strong> compiler is written in <strong>C++</strong>, with a growing amount of Swift, and uses the <strong>LLVM</strong> backend. The Swift standard library is written in Swift.',
+    faqAnswer: 'The Swift compiler is written mainly in C++ and uses LLVM as its backend, while the Swift standard library is written in Swift. Apple open-sourced the toolchain in 2015.',
+    facts: [
+      { label: 'Short answer', value: 'Swift compiler is C++ on LLVM' },
+      { label: 'Standard library', value: 'Written in Swift' },
+      { label: 'Created by', value: 'Chris Lattner, Apple, 2014' },
+      { label: 'Backend', value: 'LLVM' },
+    ],
+    sections: [
+      {
+        heading: 'Swift compiler and LLVM',
+        body: `<p>Swift was created by Chris Lattner, who also started LLVM, so the language is built tightly on the LLVM backend that compiles its intermediate representation (SIL) to machine code. The compiler front end is largely C++; the standard library and much newer tooling are written in Swift itself.</p>`,
+      },
+    ],
+  },
+  kotlin: {
+    answerHtml: 'The <strong>Kotlin</strong> compiler is written in <strong>Kotlin and Java</strong>. It targets JVM bytecode, JavaScript, and native code (through <strong>LLVM</strong>). The original compiler was written in Java.',
+    faqAnswer: 'The Kotlin compiler is written in Kotlin and Java and is largely self-hosting. It compiles to JVM bytecode, to JavaScript, and to native binaries via LLVM (Kotlin/Native).',
+    facts: [
+      { label: 'Short answer', value: 'Kotlin compiler is written in Kotlin and Java' },
+      { label: 'Created by', value: 'JetBrains, 2011' },
+      { label: 'Targets', value: 'JVM bytecode, JavaScript, native (LLVM)' },
+      { label: 'Original compiler', value: 'Written in Java' },
+    ],
+    sections: [
+      {
+        heading: 'Kotlin targets three backends',
+        body: `<p>Kotlin began as a Java program at JetBrains and has progressively moved to being written in Kotlin. The default target is JVM bytecode, so Kotlin interoperates directly with Java. Kotlin/JS emits JavaScript, and Kotlin/Native compiles through LLVM to standalone native binaries with no JVM.</p>`,
+      },
+    ],
+  },
+  v8: {
+    answerHtml: '<strong>V8</strong>, Google\'s JavaScript and WebAssembly engine, is written in <strong>C++</strong>. It JIT-compiles JavaScript directly to machine code and powers Chrome, Node.js, and Deno.',
+    faqAnswer: 'V8, the JavaScript and WebAssembly engine from Google, is written in C++. It compiles JavaScript to machine code with a tiered JIT and powers Chrome, Node.js, Deno, and Electron.',
+    facts: [
+      { label: 'Short answer', value: 'V8 is written in C++' },
+      { label: 'Developer', value: 'Google' },
+      { label: 'Technique', value: 'Tiered JIT to machine code' },
+      { label: 'Used by', value: 'Chrome, Node.js, Deno, Electron' },
+    ],
+    sections: [
+      {
+        heading: 'Why a JavaScript engine is written in C++',
+        body: `<p>JavaScript is a high-level, dynamically typed language, but the engine that runs it needs direct memory control, manual layout of objects, and tight machine-code generation. C++ provides that. V8 parses JavaScript, generates bytecode for its Ignition interpreter, and hot paths are optimized to native code by the TurboFan and Maglev compilers — all implemented in C++.</p>`,
+      },
+    ],
+  },
+  spidermonkey: {
+    answerHtml: '<strong>SpiderMonkey</strong>, Mozilla\'s JavaScript engine, is written in <strong>C++ and Rust</strong>. It was the first JavaScript engine, created in 1995, and powers Firefox.',
+    faqAnswer: "SpiderMonkey, Mozilla's JavaScript engine, is written in C++ and Rust. It was the original JavaScript engine, written by Brendan Eich in 1995, and powers Firefox.",
+    facts: [
+      { label: 'Short answer', value: 'SpiderMonkey is C++ and Rust' },
+      { label: 'Developer', value: 'Mozilla' },
+      { label: 'History', value: 'First JavaScript engine, 1995' },
+      { label: 'Used by', value: 'Firefox' },
+    ],
+    sections: [
+      {
+        heading: 'The original JavaScript engine',
+        body: `<p>SpiderMonkey was written by Brendan Eich at Netscape alongside JavaScript itself in 1995. Today it is maintained by Mozilla, written primarily in C++ with an increasing amount of Rust for memory safety, and uses a multi-tier JIT to execute JavaScript in Firefox.</p>`,
+      },
+    ],
+  },
+  beam: {
+    answerHtml: 'The <strong>BEAM</strong>, the Erlang virtual machine, is written in <strong>C</strong>. It executes bytecode compiled from Erlang and Elixir and provides the Erlang/OTP concurrency runtime.',
+    faqAnswer: 'BEAM, the Erlang virtual machine, is written in C. It runs bytecode compiled from Erlang and Elixir and implements the lightweight-process concurrency model of Erlang/OTP.',
+    facts: [
+      { label: 'Short answer', value: 'BEAM is written in C' },
+      { label: 'Runs', value: 'Erlang and Elixir bytecode' },
+      { label: 'Model', value: 'Lightweight processes, message passing' },
+      { label: 'Part of', value: 'Erlang/OTP' },
+    ],
+    sections: [
+      {
+        heading: 'The Erlang virtual machine',
+        body: `<p>BEAM is the bytecode interpreter at the heart of the Erlang/OTP system. Written in C, it schedules millions of lightweight processes, isolates their memory, and passes messages between them. Elixir compiles to the same BEAM bytecode, so it inherits the entire Erlang runtime.</p>`,
+      },
+    ],
+  },
 };
 
 function renderQuickFacts(facts: QuickFact[]): string {
@@ -399,6 +644,99 @@ function buildPriorityContent(node: Language): string {
 </section>`).join('\n');
   return `${renderQuickFacts(content.facts)}
 ${sections}`;
+}
+
+// Linked impl-language names for a given relationship type (deduped).
+function implLinks(rels: Relationship[], id: string, type: string, nodeMap: Map<string, Language>): string[] {
+  return [...new Set(rels.filter(r => r.to_language === id && r.relationship === type).map(r => r.from_language))]
+    .map(fid => linkNode(fid, nodeMap));
+}
+
+// Prose paragraph describing what the node is implemented in (the "written in" payload).
+function buildImplementationNarrative(node: Language, rels: Relationship[], nodeMap: Map<string, Language>): string {
+  const id = node.id;
+  const name = escapeHtml(node.name);
+  const compiler = implLinks(rels, id, 'compiler_written_in', nodeMap);
+  const runtime = implLinks(rels, id, 'runtime_written_in', nodeMap);
+  const bootstrap = implLinks(rels, id, 'bootstrap_written_in', nodeMap);
+  const rewritten = implLinks(rels, id, 'rewritten_in', nodeMap);
+
+  const clauses: string[] = [];
+  if (node.self_hosting) {
+    clauses.push(`${name} is <strong>self-hosting</strong>, so its own compiler is written in ${name} itself`);
+  } else if (compiler.length) {
+    clauses.push(`its compiler is written in ${joinNames(compiler)}`);
+  }
+  if (runtime.length) clauses.push(`its runtime is implemented in ${joinNames(runtime)}`);
+  if (bootstrap.length) clauses.push(`its toolchain was bootstrapped from ${joinNames(bootstrap)}`);
+  if (rewritten.length) clauses.push(`it was later rewritten in ${joinNames(rewritten)}`);
+  if (clauses.length === 0) return '';
+  return `In the Language Lineage dataset, ${joinNames(clauses)}.`;
+}
+
+// Prose paragraph placing the node in its lineage (influences in and out).
+function buildLineageNarrative(node: Language, rels: Relationship[], nodeMap: Map<string, Language>, e: EnrichedNode): string {
+  const id = node.id;
+  const name = escapeHtml(node.name);
+  const influencedBy = [...new Set(rels.filter(r => r.to_language === id && r.relationship === 'influenced').map(r => r.from_language))]
+    .map(fid => linkNode(fid, nodeMap));
+  const influenced = [...new Set(rels.filter(r => r.from_language === id && r.relationship === 'influenced').map(r => r.to_language))]
+    .map(tid => linkNode(tid, nodeMap));
+
+  const clauses: string[] = [];
+  if (influencedBy.length) clauses.push(`drew on ideas from ${joinNames(influencedBy.slice(0, 5))}`);
+  else if (e.facts.influenced_by.length) clauses.push(`drew on ideas from ${escapeHtml(joinNames(e.facts.influenced_by.slice(0, 5)))}`);
+  if (influenced.length) clauses.push(`went on to influence ${joinNames(influenced.slice(0, 6))}`);
+  if (clauses.length === 0) return '';
+  return `${name} ${joinNames(clauses)}.`;
+}
+
+// Sourced overview (Quick Facts + synthesized narrative) for nodes without a
+// hand-authored PRIORITY_CONTENT entry. Plugs into the priorityContentHtml slot.
+function buildEnrichedContent(node: Language, rels: Relationship[], nodeMap: Map<string, Language>): string {
+  const e = ENRICHMENT[node.id];
+  if (!e) return '';
+  const isTool = node.id.startsWith('tool:');
+  const name = escapeHtml(node.name);
+
+  // Quick Facts: scraped fields not already shown in the meta-tag row.
+  const developers = e.facts.developers.filter(d => !e.facts.designers.includes(d));
+  const facts: QuickFact[] = [];
+  if (e.facts.designers.length) facts.push({ label: isTool ? 'Created by' : 'Designed by', value: joinNames(e.facts.designers) });
+  if (developers.length) facts.push({ label: 'Developer', value: joinNames(developers) });
+  if (node.first_release_year) facts.push({ label: 'First appeared', value: String(node.first_release_year) });
+  if (e.facts.license.length) facts.push({ label: 'License', value: joinNames(e.facts.license) });
+  if (e.facts.file_extensions.length) facts.push({ label: 'Filename extension', value: e.facts.file_extensions.join(', ') });
+
+  // Overview narrative, synthesized from facts + dataset relationships.
+  const tagline = e.tagline ? e.tagline.replace(/\.$/, '') : '';
+  const aOrAn = (word: string) => (/^[aeiou]/i.test(word.trim()) ? 'an' : 'a');
+  const paras: string[] = [];
+  let p1 = tagline
+    ? `<strong>${name}</strong> is ${aOrAn(tagline)} ${escapeHtml(tagline)}.`
+    : `<strong>${name}</strong> is a ${isTool ? 'toolchain' : 'programming language'}.`;
+  const originBits: string[] = [];
+  if (node.first_release_year) originBits.push(`first appeared in ${node.first_release_year}`);
+  if (e.facts.designers.length) originBits.push(`was ${isTool ? 'created' : 'designed'} by ${escapeHtml(joinNames(e.facts.designers))}`);
+  if (originBits.length) p1 += ` It ${joinNames(originBits)}.`;
+  if (developers.length) p1 += ` Development is led by ${escapeHtml(joinNames(developers))}.`;
+  paras.push(`<p>${p1}</p>`);
+
+  const implPara = buildImplementationNarrative(node, rels, nodeMap);
+  if (implPara) paras.push(`<p>${implPara}</p>`);
+  const lineagePara = buildLineageNarrative(node, rels, nodeMap, e);
+  if (lineagePara) paras.push(`<p>${lineagePara}</p>`);
+
+  const cite = `<p class="enrich-cite" style="font-size:13px;color:var(--text-tertiary);margin-top:14px">Sources: <a href="${escapeHtml(e.sources.wikipedia)}" rel="noopener noreferrer" target="_blank">Wikipedia</a> &middot; <a href="${escapeHtml(e.sources.wikidata)}" rel="noopener noreferrer" target="_blank">Wikidata</a>${e.facts.website ? ` &middot; <a href="${escapeHtml(e.facts.website)}" rel="noopener noreferrer" target="_blank">Official site</a>` : ''}</p>`;
+
+  const overview = `<section class="intent-section">
+  <h2>${name} overview</h2>
+  ${paras.join('\n  ')}
+  ${cite}
+</section>`;
+
+  return `${renderQuickFacts(facts)}
+${overview}`;
 }
 
 function buildAnswerBox(node: Language, rels: Relationship[], nodeMap: Map<string, Language>): string {
@@ -630,10 +968,18 @@ function buildSources(node: Language, rels: Relationship[]): string {
       .filter((s): s is string => !!s)
   )];
 
-  if (sources.length === 0) return '';
+  const items = sources.map(s => `<li><a href="${escapeHtml(s)}" rel="noopener noreferrer" target="_blank">${escapeHtml(s)}</a></li>`);
 
-  const items = sources.map(s => `<li><a href="${escapeHtml(s)}" rel="noopener noreferrer" target="_blank">${escapeHtml(s)}</a></li>`).join('\n');
-  return `<h2>Evidence Sources</h2><ul class="source-list">${items}</ul>`;
+  const e = ENRICHMENT[id];
+  if (e) {
+    if (!sources.includes(e.sources.wikipedia)) {
+      items.push(`<li><a href="${escapeHtml(e.sources.wikipedia)}" rel="noopener noreferrer" target="_blank">${escapeHtml(node.name)} on Wikipedia</a></li>`);
+    }
+    items.push(`<li><a href="${escapeHtml(e.sources.wikidata)}" rel="noopener noreferrer" target="_blank">${escapeHtml(node.name)} on Wikidata (${escapeHtml(e.wikidata_id)})</a></li>`);
+  }
+
+  if (items.length === 0) return '';
+  return `<h2>Evidence Sources</h2><ul class="source-list">${items.join('\n')}</ul>`;
 }
 
 function buildToolIntro(node: Language): string {
@@ -700,7 +1046,7 @@ function buildNodePage(node: Language, rels: Relationship[], nodeMap: Map<string
     ? `${node.name} is implemented in ${implLangs.slice(0, 2).join(' and ')}. Explore its compiler, runtime, and influence relationships.`
     : `Explore ${node.name}'s relationships, influences, and history in the Language Lineage graph.`;
   const description = truncateMetaDescription(priorityOverride ? priorityOverride.description : descriptionBase, 160);
-  const priorityContentHtml = buildPriorityContent(node);
+  const priorityContentHtml = buildPriorityContent(node) || buildEnrichedContent(node, rels, nodeMap);
 
   const faqs = buildFaqs(node, rels, nodeMap);
   const faqJsonLd = faqs.length > 0 ? JSON.stringify({
@@ -1691,6 +2037,15 @@ ${NAV_HTML}
     <li>Historical: C was the dominant systems language when most early runtimes were written</li>
   </ul>
 
+  <h2>Four ways a language gets implemented</h2>
+  <p>Across the dataset, almost every language falls into one of four implementation patterns:</p>
+  <ul>
+    <li><strong>Interpreted, runtime written in C:</strong> the classic dynamic-language pattern. <a href="/languages/python">Python</a> (CPython), <a href="/languages/ruby">Ruby</a> (MRI), <a href="/languages/php">PHP</a>, and <a href="/languages/lua">Lua</a> all run on interpreters written in <a href="/languages/c">C</a>.</li>
+    <li><strong>Self-hosting and compiled to native code:</strong> the compiler is written in the language itself and emits machine code, often through the <a href="/tools/llvm">LLVM</a> backend. <a href="/languages/rust">Rust</a>, <a href="/languages/go">Go</a>, and <a href="/languages/haskell">Haskell</a> work this way.</li>
+    <li><strong>Compiled to a virtual machine:</strong> source compiles to bytecode that runs on a VM written in C/C++. <a href="/languages/java">Java</a> and <a href="/languages/kotlin">Kotlin</a> target the JVM; <a href="/languages/csharp">C#</a> and <a href="/languages/fsharp">F#</a> target the .NET CLR.</li>
+    <li><strong>Transpiled to another language:</strong> the "compiler" emits source in a second language rather than machine code. <a href="/languages/typescript">TypeScript</a> and <a href="/languages/coffeescript">CoffeeScript</a> transpile to JavaScript, then run on a JavaScript engine.</li>
+  </ul>
+
   <h2>Self-hosting languages</h2>
   <p>Some languages' compilers are written in the language itself — called self-hosting. This requires bootstrapping: an initial compiler written in another language, which is then used to compile the self-hosted version. Self-hosting languages: <a href="/languages/rust">Rust</a>, <a href="/languages/go">Go</a>, <a href="/languages/typescript">TypeScript</a>, <a href="/languages/haskell">Haskell</a>, <a href="/languages/java">Java (javac)</a>.</p>
   <p>See: <a href="/questions/what-is-compiler-bootstrapping">What is compiler bootstrapping?</a> and <a href="/questions/what-is-a-self-hosting-compiler">What is a self-hosting compiler?</a></p>
@@ -2048,22 +2403,35 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
     title: 'What is Compiler Bootstrapping? | Language Lineage',
     h1: 'What is Compiler Bootstrapping?',
     description: 'Compiler bootstrapping is the process of writing a compiler for a language in that same language. Learn how it works and which languages use it.',
-    content: `<div class="answer-box">Compiler bootstrapping is the process of writing a compiler for a programming language <strong>in that same language</strong>. A language whose compiler can compile itself is called <em>self-hosting</em>.</div>
+    content: `<div class="answer-box">Compiler bootstrapping is the process of building a compiler for a programming language that is <strong>written in that same language</strong>. Because you cannot compile the compiler without already having a compiler, the first version is written in a different, already-working language, and each later version is compiled by the version before it. A language whose compiler can compile its own source code is called <em>self-hosting</em>.</div>
 
-<h2>How Bootstrapping Works</h2>
-<p>To bootstrap a compiler, you first write a simple initial compiler (called a "stage 0" or "seed" compiler) in an existing language. This compiler may not support all language features. Then you use it to compile a richer compiler written in the new language itself.</p>
-<p>The process typically follows these stages:</p>
+<h2>The chicken-and-egg problem</h2>
+<p>A compiler is just a program, and like any program in a compiled language it has to be compiled before it can run. So how do you compile the very first compiler for a brand-new language, when no compiler for that language exists yet? This is the bootstrapping problem, and every self-hosting language has had to solve it.</p>
+<p>The answer is to break the circular dependency once, at the beginning, using a language that already works. The first compiler — the <strong>stage 0</strong> or "seed" compiler — is written in an existing language such as C, OCaml, or assembly. It only needs to be good enough to compile the second compiler, which is written in the new language itself. From then on, the language can compile itself and the seed can be retired.</p>
+
+<h2>The three bootstrap stages</h2>
+<p>A typical self-hosting build runs in three stages, and the last two are the proof that bootstrapping succeeded:</p>
 <ul>
-<li><strong>Stage 0:</strong> Write a minimal compiler in C or another existing language</li>
-<li><strong>Stage 1:</strong> Use Stage 0 to compile the full compiler written in the new language</li>
-<li><strong>Stage 2:</strong> Use Stage 1 to compile itself — if the output matches Stage 1, bootstrapping succeeded</li>
+<li><strong>Stage 0 (seed):</strong> An existing compiler, often a previous release of the same compiler downloaded as a binary, or a one-time compiler written in another language.</li>
+<li><strong>Stage 1:</strong> Use stage 0 to compile the current compiler source (written in the new language). The result is a working compiler, but it was produced by the older stage-0 compiler, so it may not yet contain the newest optimizations.</li>
+<li><strong>Stage 2:</strong> Use the stage-1 compiler to compile the same source again. Now the compiler has compiled itself. Building a <strong>stage 3</strong> and checking that it is byte-for-byte identical to stage 2 is a common correctness test: if a compiler compiled by itself produces the same compiler again, the toolchain is internally consistent.</li>
 </ul>
 
-<h2>Why Bootstrap?</h2>
-<p>Self-hosting is a meaningful milestone because it proves the language is expressive enough to implement a real-world systems program. It also means the compiler can be improved using the language's own features.</p>
+<h2>Why languages bootstrap</h2>
+<p>Self-hosting is a milestone of maturity. It proves the language is expressive and complete enough to build a large, performance-sensitive systems program — a compiler. It also lets the compiler team write the compiler in the language they are designing, so every improvement to the language immediately benefits the tool that builds it. Finally, it removes the long-term dependency on a foreign implementation language.</p>
 
-<h2>Examples from the Dataset</h2>
-<p>Languages in the Language Lineage dataset with documented bootstrap chains include Rust, Go, Haskell, OCaml, and many others. See <a href="/relationships/bootstrap-written-in">all bootstrap relationships</a> for the complete list.</p>
+<h2>Real bootstrap chains</h2>
+<p>The Language Lineage dataset records the historical implementation language for each toolchain. A few well-documented chains:</p>
+<ul>
+<li><a href="/languages/rust">Rust</a>: the first compiler (rustboot) was written in <a href="/languages/ocaml">OCaml</a>; once the language was capable enough, rustc was rewritten in Rust and has been self-hosting since 2011. Each release is built by the previous release, and the <a href="/tools/mrustc">mrustc</a> project (written in C++) can compile an early rustc to break the dependency on prior binaries.</li>
+<li><a href="/languages/go">Go</a>: the original compiler was written in <a href="/languages/c">C</a>; in Go 1.5 (2015) the toolchain was translated to Go, making it self-hosting.</li>
+<li><a href="/languages/haskell">Haskell</a>: <a href="/tools/ghc">GHC</a> is written in Haskell, with a runtime system in C.</li>
+<li><a href="/languages/c">C</a> and <a href="/languages/cxx">C++</a>: <a href="/tools/gcc">GCC</a> is bootstrapped from an earlier C/C++ compiler through exactly the stage 0/1/2 process described above.</li>
+</ul>
+<p>See <a href="/relationships/bootstrap-written-in">every bootstrap relationship in the dataset</a> for the full list, each with a source and confidence score.</p>
+
+<h2>Trust, reproducibility, and breaking the binary chain</h2>
+<p>Because each compiler is built by an earlier compiler, you are ultimately trusting a long chain of binaries you did not build yourself. Ken Thompson's classic lecture "Reflections on Trusting Trust" showed that a malicious compiler could inject code into programs — including into future copies of itself — invisibly. Modern projects respond with reproducible builds and "diverse double-compilation," and with seed compilers like <a href="/tools/mrustc">mrustc</a> that let you rebuild a toolchain from source in a different language rather than from a pre-built binary.</p>
 
 <a class="explore-btn" href="/explore">Explore Bootstrap Chains in Graph &rarr;</a>`,
   },
@@ -2134,19 +2502,29 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
     title: 'How JavaScript Engines Work | Language Lineage',
     h1: 'How JavaScript Engines Work',
     description: 'JavaScript engines like V8, SpiderMonkey, and JavaScriptCore are written in C++. Learn how they parse, compile, and execute JavaScript code.',
-    content: `<div class="answer-box">JavaScript engines parse JavaScript source code, compile it to bytecode or machine code, and execute it. The major engines — V8, SpiderMonkey, and JavaScriptCore — are all written in <strong>C++</strong>.</div>
+    content: `<div class="answer-box">A JavaScript engine parses JavaScript source, compiles it to bytecode and then to machine code, and executes it. The three major engines — <strong>V8</strong>, <strong>SpiderMonkey</strong>, and <strong>JavaScriptCore</strong> — are written mainly in <strong>C++</strong> (SpiderMonkey also uses Rust). JavaScript the <em>language</em> is defined by the ECMAScript standard; the engines are the implementations.</div>
 
-<h2>V8 (Google / Node.js / Chrome)</h2>
-<p>V8 is an open-source JavaScript and WebAssembly engine written in C++. It compiles JavaScript directly to machine code before executing it (JIT compilation). V8 powers Google Chrome, Node.js, and Deno.</p>
+<h2>The language vs the engine</h2>
+<p>"What is JavaScript written in?" is really two questions. <a href="/languages/javascript">JavaScript</a> itself is a specification — ECMAScript, standardized by TC39 — so the language is not "written in" anything. What is written in a concrete language is the <em>engine</em> that runs JavaScript, and the performance-critical parts of every major engine are written in C++.</p>
+
+<h2>The execution pipeline</h2>
+<p>Modern engines do not simply interpret source line by line. They run a multi-stage pipeline:</p>
+<ul>
+<li><strong>Parser:</strong> turns source text into an abstract syntax tree (AST).</li>
+<li><strong>Bytecode compiler + interpreter:</strong> lowers the AST to bytecode and starts executing it immediately, so code runs without waiting for full optimization. In V8 this interpreter is called Ignition.</li>
+<li><strong>Optimizing JIT:</strong> the engine watches which functions run often ("hot" code) and recompiles them to optimized machine code, speculating on the types it has observed. V8 uses TurboFan and Maglev; if a type assumption turns out wrong, the engine "deoptimizes" back to bytecode.</li>
+<li><strong>Garbage collector:</strong> reclaims unused memory in the background.</li>
+</ul>
+<p>All of this needs precise control over memory layout and machine code, which is why these engines are written in C++ rather than in a managed language.</p>
+
+<h2>V8 (Chrome, Node.js, Deno)</h2>
+<p>V8 is Google's open-source JavaScript and WebAssembly engine, written in C++. It powers Chrome, <a href="/languages/javascript">Node.js</a>, Electron, and Deno. Note that the runtimes built on top differ in language: Node.js wraps V8 in C++ and JavaScript, while Deno wraps the same V8 engine in <a href="/languages/rust">Rust</a>.</p>
 
 <h2>SpiderMonkey (Firefox)</h2>
-<p>SpiderMonkey is Mozilla's JavaScript engine, written in C++ and Rust. It was the first JavaScript engine ever created (1995) and powers Firefox. It uses a tiered JIT compilation approach.</p>
+<p>SpiderMonkey is Mozilla's engine and the first JavaScript engine ever built, written by Brendan Eich in 1995 alongside the language itself. It is written in C++ with a growing amount of Rust, and powers Firefox.</p>
 
-<h2>JavaScriptCore (Safari / WebKit)</h2>
-<p>JavaScriptCore (also called Nitro) powers Safari and all iOS browsers. It is written in C++ and uses a four-tier JIT architecture.</p>
-
-<h2>Why C++?</h2>
-<p>JavaScript engines are written in C++ for performance: direct memory management, fine-grained control over compilation, and low-level platform access. <a href="/languages/javascript">JavaScript</a> itself is a high-level dynamic language — only its <em>engine</em> is in C++.</p>
+<h2>JavaScriptCore (Safari, Bun)</h2>
+<p>JavaScriptCore (also called Nitro) is Apple's engine, written in C++, with a four-tier JIT. It powers Safari and every browser on iOS, and it is also the engine inside Bun, a runtime whose own code is written in <a href="/languages/zig">Zig</a>.</p>
 
 <a class="explore-btn" href="/explore">Explore JavaScript Relationships in Graph &rarr;</a>`,
   },
@@ -2155,19 +2533,31 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
     title: 'How Python is Implemented | Language Lineage',
     h1: 'How Python is Implemented',
     description: 'CPython is the reference Python implementation, written in C. PyPy uses RPython. Learn how Python interpreters work and what language each is written in.',
-    content: `<div class="answer-box"><strong>CPython</strong>, the reference Python implementation, is written in <strong>C</strong>. It interprets Python bytecode via a virtual machine. Alternative implementations include PyPy (written in RPython) and Jython (written in Java).</div>
+    content: `<div class="answer-box"><strong>CPython</strong>, the reference Python implementation, is written in <strong>C</strong>. It compiles Python source to bytecode and runs that bytecode on a virtual machine implemented in C. Python the <em>language</em> is a specification, so other implementations exist: PyPy (in RPython), Jython (in Java), IronPython (in C#), and MicroPython (in C).</div>
 
-<h2>CPython</h2>
-<p>CPython is the canonical Python interpreter, maintained by the Python Software Foundation. It compiles Python source to bytecode (.pyc files) and executes that bytecode in a C-implemented virtual machine. CPython is available on GitHub at <a href="https://github.com/python/cpython" rel="noopener noreferrer" target="_blank">github.com/python/cpython</a>.</p>
+<h2>The language vs the implementation</h2>
+<p>The Python language is defined by a specification and a reference implementation, not by a single source language. When people ask what Python is "written in," they almost always mean CPython, because it is the interpreter nearly everyone runs. CPython's bytecode interpreter, object model, memory manager, and C API are written in <a href="/languages/c">C</a>. The C standard library underneath gives Python its low-level system access, threading, and file I/O.</p>
 
-<h2>PyPy</h2>
-<p>PyPy is a high-performance Python interpreter written in RPython (a restricted subset of Python). It uses JIT compilation to achieve speeds often 5–10x faster than CPython. PyPy is ideal for long-running CPU-intensive programs.</p>
+<h2>How CPython runs your code</h2>
+<p>CPython does not execute Python text directly. It first compiles each module to bytecode (cached as <code>.pyc</code> files) and then runs that bytecode in a loop written in C, the CPython virtual machine. A detail that comes from this design is the Global Interpreter Lock (GIL), a mechanism in the C interpreter that lets only one thread execute Python bytecode at a time; recent CPython releases have begun offering an experimental "free-threaded" build that removes it. The reference source lives at <a href="https://github.com/python/cpython" rel="noopener noreferrer" target="_blank">github.com/python/cpython</a>.</p>
 
-<h2>Is Python Self-Hosting?</h2>
-<p>No, Python is not self-hosting in its standard distribution. CPython is written in C, not Python. PyPy is written in RPython (a Python subset), which is close but not standard Python.</p>
+<h2>Alternative Python implementations</h2>
+<table class="impl-table">
+  <thead><tr><th>Implementation</th><th>Written in</th><th>Why use it</th></tr></thead>
+  <tbody>
+    <tr><td>CPython</td><td>C</td><td>The reference interpreter and default runtime</td></tr>
+    <tr><td>PyPy</td><td>RPython</td><td>JIT compilation, often several times faster on long-running code</td></tr>
+    <tr><td>Jython</td><td>Java</td><td>Runs Python on the JVM with Java interop</td></tr>
+    <tr><td>IronPython</td><td>C#</td><td>Runs Python on the .NET runtime</td></tr>
+    <tr><td>MicroPython</td><td>C</td><td>A tiny Python for microcontrollers</td></tr>
+  </tbody>
+</table>
 
-<h2>Python's Influences</h2>
-<p>Python was influenced by ABC, C, Modula-3, Smalltalk, and Haskell. It in turn influenced Ruby, CoffeeScript, and many others. See the <a href="/languages/python">Python page</a> for the full relationship map.</p>
+<h2>Is Python self-hosting?</h2>
+<p>No. The standard interpreter, CPython, is written in C, not Python, so Python is not self-hosting the way <a href="/languages/rust">Rust</a> or <a href="/languages/go">Go</a> are. PyPy comes closest: it is written in RPython, a restricted subset of Python designed to be analyzable and compilable to C.</p>
+
+<h2>History and influences</h2>
+<p>Python was created by Guido van Rossum, who began it at CWI in the Netherlands in 1989 and released it in 1991. Its readability and design come directly from the <a href="/languages/abc">ABC</a> language, where van Rossum had previously worked, with further influence from <a href="/languages/modula3">Modula-3</a>, C, and Lisp. Python in turn influenced <a href="/languages/ruby">Ruby</a>, CoffeeScript, Swift, and many others. See the <a href="/languages/python">Python page</a> for the full, sourced relationship map.</p>
 
 <a class="explore-btn" href="/languages/python">View Python in Graph &rarr;</a>`,
   },

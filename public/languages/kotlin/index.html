@@ -23,7 +23,7 @@
   <meta name="twitter:title" content="What is Kotlin written in? | Language Lineage" />
   <meta name="twitter:description" content="Kotlin is implemented in Java and Kotlin. Explore its compiler, runtime, and influence relationships." />
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What is Kotlin written in?","description":"Kotlin is implemented in Java and Kotlin. Explore its compiler, runtime, and influence relationships.","url":"https://www.languagelineage.org/languages/kotlin","datePublished":"2016-01-01","dateModified":"2026-06-26","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":{"@type":"SoftwareApplication","name":"Kotlin","dateCreated":"2016"}}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is Kotlin written in?","acceptedAnswer":{"@type":"Answer","text":"Kotlin is primarily implemented in Java and Kotlin. See the implementation section above for details and source references."}},{"@type":"Question","name":"What languages influenced Kotlin?","acceptedAnswer":{"@type":"Answer","text":"Kotlin was influenced by Java, Scala, Groovy among others. See the influence section above for the full list."}},{"@type":"Question","name":"Is Kotlin self-hosting?","acceptedAnswer":{"@type":"Answer","text":"Yes, Kotlin is self-hosting — its compiler can compile itself."}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is Kotlin written in?","acceptedAnswer":{"@type":"Answer","text":"The Kotlin compiler is written in Kotlin and Java and is largely self-hosting. It compiles to JVM bytecode, to JavaScript, and to native binaries via LLVM (Kotlin/Native)."}},{"@type":"Question","name":"What languages influenced Kotlin?","acceptedAnswer":{"@type":"Answer","text":"Kotlin was influenced by Java, Scala, Groovy among others. See the influence section above for the full list."}},{"@type":"Question","name":"Is Kotlin self-hosting?","acceptedAnswer":{"@type":"Answer","text":"Yes, Kotlin is self-hosting — its compiler can compile itself."}}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"Languages","item":"https://www.languagelineage.org/languages"},{"@type":"ListItem","position":3,"name":"Kotlin","item":"https://www.languagelineage.org/languages/kotlin"}]}</script>
 </head>
 <body class="seo-page">
@@ -52,8 +52,32 @@
 
   
 
-  <div class="answer-box">The <strong>Kotlin</strong> compiler is written in <strong>Java and Kotlin</strong> (documented). Its runtime is implemented in <strong>Java</strong> (well-documented). Kotlin is self-hosting.</div>
+  <div class="answer-box">The <strong>Kotlin</strong> compiler is written in <strong>Kotlin and Java</strong>. It targets JVM bytecode, JavaScript, and native code (through <strong>LLVM</strong>). The original compiler was written in Java.</div>
 
+
+  <section class="quick-facts-section">
+  <h2>Quick Facts</h2>
+  <dl class="quick-facts"><div class="quick-fact">
+    <dt>Short answer</dt>
+    <dd>Kotlin compiler is written in Kotlin and Java</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Created by</dt>
+    <dd>JetBrains, 2011</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Targets</dt>
+    <dd>JVM bytecode, JavaScript, native (LLVM)</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Original compiler</dt>
+    <dd>Written in Java</dd>
+  </div></dl>
+</section>
+<section class="intent-section">
+  <h2>Kotlin targets three backends</h2>
+  <p>Kotlin began as a Java program at JetBrains and has progressively moved to being written in Kotlin. The default target is JVM bytecode, so Kotlin interoperates directly with Java. Kotlin/JS emits JavaScript, and Kotlin/Native compiles through LLVM to standalone native binaries with no JVM.</p>
+</section>
   <h2>Relationship Graph</h2>
 <p style="font-size:13px;color:var(--text-tertiary);margin-bottom:12px">All directly connected languages. Click any node to navigate to its page.</p>
 <iframe
@@ -101,7 +125,7 @@
 <h2>Frequently Asked Questions</h2>
 <div class="faq-item">
   <div class="faq-question">What language is Kotlin written in?</div>
-  <div class="faq-answer">Kotlin is primarily implemented in Java and Kotlin. See the implementation section above for details and source references.</div>
+  <div class="faq-answer">The Kotlin compiler is written in Kotlin and Java and is largely self-hosting. It compiles to JVM bytecode, to JavaScript, and to native binaries via LLVM (Kotlin/Native).</div>
 </div>
 <div class="faq-item">
   <div class="faq-question">What languages influenced Kotlin?</div>
@@ -114,7 +138,9 @@
 
   <h2>Evidence Sources</h2><ul class="source-list"><li><a href="https://kotlinlang.org/docs/faq.html" rel="noopener noreferrer" target="_blank">https://kotlinlang.org/docs/faq.html</a></li>
 <li><a href="https://github.com/JetBrains/kotlin" rel="noopener noreferrer" target="_blank">https://github.com/JetBrains/kotlin</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Kotlin_(programming_language)" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/Kotlin_(programming_language)</a></li></ul>
+<li><a href="https://en.wikipedia.org/wiki/Kotlin_(programming_language)" rel="noopener noreferrer" target="_blank">https://en.wikipedia.org/wiki/Kotlin_(programming_language)</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Kotlin" rel="noopener noreferrer" target="_blank">Kotlin on Wikipedia</a></li>
+<li><a href="https://www.wikidata.org/wiki/Q3816639" rel="noopener noreferrer" target="_blank">Kotlin on Wikidata (Q3816639)</a></li></ul>
 
   <aside class="related-section" data-nosnippet>
   <h2>Related Languages</h2>
