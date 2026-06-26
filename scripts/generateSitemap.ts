@@ -50,6 +50,9 @@ const QUESTION_SLUGS = [
   'what-is-cpython-written-in',
   'what-is-compiler-bootstrapping',
   'what-is-a-self-hosting-compiler',
+  'is-javascript-written-in-c',
+  'is-rustc-written-in-rust',
+  'is-rust-compiled',
 ];
 
 const urls: Array<{ loc: string; changefreq: string; priority: string }> = [

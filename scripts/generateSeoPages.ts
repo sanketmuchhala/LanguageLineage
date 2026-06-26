@@ -842,8 +842,8 @@ const QUESTIONS: QuestionDef[] = [
     slug: 'what-is-python-written-in',
     title: 'What is Python written in?',
     answer: "Python's reference implementation, CPython, is written primarily in C. The language specification itself is implementation-independent, but CPython is the dominant runtime and is implemented in C for performance and portability. Other implementations include Jython (Java), PyPy (Python/RPython), and IronPython (.NET).",
-    details: `<p>When people ask "what is Python written in?" they usually mean CPython, the reference implementation maintained by the Python Software Foundation. CPython's interpreter core, object model, memory allocator, and C API are implemented primarily in C, with many higher-level library modules written in Python.</p>
-<p>Python as a <em>language specification</em> is separate from any particular implementation. The specification does not require C. CPython is simply the dominant runtime and the behavior most people mean when they say "Python."</p>
+    details: `<p>When people ask "what is Python written in?" they usually mean the <strong>CPython implementation language</strong>. CPython is the reference implementation maintained by the Python Software Foundation. Its interpreter core, object model, memory allocator, and C API are implemented primarily in C, with many higher-level library modules written in Python.</p>
+<p>Because its core is written in C, Python is often said to be "built on C". However, Python as a <em>language specification</em> is separate from any particular implementation. The specification does not require C. CPython is simply the dominant runtime and the behavior most people mean when they say "Python."</p>
 <h2>Python implementation layers</h2>
 <table class="impl-table">
   <thead><tr><th>Layer</th><th>Written in</th><th>Role</th></tr></thead>
@@ -862,7 +862,7 @@ const QUESTIONS: QuestionDef[] = [
     title: 'What is JavaScript written in?',
     answer: "The major JavaScript engines are written in C++. Google's V8 (used in Chrome and Node.js), Mozilla's SpiderMonkey, and Apple's JavaScriptCore are all implemented in C++. The JavaScript language specification is defined by ECMAScript and doesn't mandate any particular implementation language.",
     details: `<p>JavaScript itself is a language standard, defined by ECMAScript. The useful implementation question is about JavaScript engines: the programs that parse, compile, optimize, and execute JavaScript code.</p>
-<p>Most major engines use C++ for performance-critical compiler and runtime code. V8 powers Chrome and Node.js, SpiderMonkey powers Firefox, and JavaScriptCore powers Safari and WebKit-based environments.</p>
+<p>While the very first JavaScript engine was written in C, most modern major engines use C++ for performance-critical compiler and runtime code. V8 powers Chrome and Node.js, SpiderMonkey powers Firefox, and JavaScriptCore powers Safari and WebKit-based environments.</p>
 <h2>Major JavaScript engines</h2>
 <table class="impl-table">
   <thead><tr><th>Engine</th><th>Written in</th><th>Where it runs</th></tr></thead>
@@ -1025,6 +1025,33 @@ const QUESTIONS: QuestionDef[] = [
     relatedLangs: ['rust', 'go', 'typescript', 'haskell', 'java'],
     relatedTools: ['ghc'],
   },
+  {
+    slug: 'is-javascript-written-in-c',
+    title: 'Is JavaScript written in C?',
+    answer: "No, modern JavaScript engines like V8 and JavaScriptCore are written in C++, not C. Historically, the very first engine (SpiderMonkey) was written in C, but it has since been rewritten in C++, Rust, and JavaScript.",
+    details: `<p>A common misconception is that JavaScript is written in C. While C heavily influenced JavaScript's syntax, the engines that actually execute JavaScript code are almost universally written in C++ today.</p>
+<p>Google's V8 (used in Chrome and Node.js) and Apple's JavaScriptCore (used in Safari) are both implemented in C++. Mozilla's SpiderMonkey, the original JavaScript engine, was initially written in C by Brendan Eich, but has evolved into a complex codebase of C++, Rust, and JavaScript itself.</p>`,
+    relatedLangs: ['javascript', 'cxx', 'c'],
+    relatedTools: ['v8', 'javascriptcore', 'spidermonkey'],
+  },
+  {
+    slug: 'is-rustc-written-in-rust',
+    title: 'Is rustc written in Rust?',
+    answer: "Yes, rustc (the official Rust compiler) is written entirely in Rust. It is a self-hosting compiler, meaning it compiles its own source code.",
+    details: `<p>The Rust compiler, <code>rustc</code>, is a classic example of a self-hosting compiler. The source code for <code>rustc</code> is written in Rust, and it uses an older version of itself (a bootstrap compiler) to compile the newest version.</p>
+<p>However, <code>rustc</code> relies on LLVM as its backend to generate optimized machine code. LLVM itself is written in C++.</p>`,
+    relatedLangs: ['rust', 'cxx'],
+    relatedTools: ['llvm', 'mrustc'],
+  },
+  {
+    slug: 'is-rust-compiled',
+    title: 'Is Rust a compiled language?',
+    answer: "Yes, Rust is a compiled language. The Rust compiler (rustc) translates Rust source code ahead-of-time (AOT) directly into native machine code using the LLVM backend.",
+    details: `<p>Unlike interpreted languages (like Python or JavaScript) or bytecode-compiled languages (like Java or C#), Rust is an ahead-of-time (AOT) compiled language.</p>
+<p>When you run <code>cargo build</code> or <code>rustc</code>, the compiler parses your Rust code and passes it to the LLVM infrastructure, which generates highly optimized, native machine code for your specific target architecture (e.g., x86_64, ARM). This results in a standalone binary executable that does not require a runtime or interpreter to run.</p>`,
+    relatedLangs: ['rust'],
+    relatedTools: ['llvm'],
+  }
 ];
 
 function buildQuestionPage(q: QuestionDef, nodeMap: Map<string, Language>): string {

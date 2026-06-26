@@ -220,6 +220,9 @@ const QUESTION_SLUGS = [
   'what-is-cpython-written-in',
   'what-is-compiler-bootstrapping',
   'what-is-a-self-hosting-compiler',
+  'is-javascript-written-in-c',
+  'is-rustc-written-in-rust',
+  'is-rust-compiled',
 ];
 const questionsIndex = checkFile('questions/index.html');
 if (questionsIndex && !questionsIndex.includes('<h1>')) fail('questions/index.html missing h1');

@@ -154,12 +154,37 @@ Validation:
 - `npm run type-check` passes.
 - `npm run build` passes; the only warning is the existing Cytoscape chunk-size warning.
 
-## Phase 6: Measurement Loop
+## Phase 6: Measurement Loop (Iter 1 - Content Expansion)
 
-Goal: turn GSC data into weekly iteration.
+Goal: turn GSC data into actionable content expansion to capture long-tail search demand.
 
 Tasks:
 - Track CTR and average position for the top 20 query/page pairs.
-- Compare `www` vs non-`www` page impressions after redirects/canonicals settle.
 - Expand pages that reach positions 5-15 but remain below expected CTR.
 - Add new question pages only when GSC shows repeated query demand.
+
+Status: complete.
+
+Implemented:
+- Analyzed GSC data (`languagelineage.org-Performance-on-Search-2026-06-25`) to identify high-potential queries in positions 5-15 and new long-tail demand.
+- Expanded the `what-is-python-written-in` page to directly target "CPython implementation language" (5 imp, pos 5) and "Python built on C" (6 imp, pos 34).
+- Expanded the `what-is-javascript-written-in` page to explicitly address the relationship between JavaScript and C/C++.
+- Added 3 new dedicated question pages based on distinct query demand:
+  - `/questions/is-javascript-written-in-c` (31 imp, pos 9.45)
+  - `/questions/is-rustc-written-in-rust` (8 imp, pos 9.25)
+  - `/questions/is-rust-compiled` (7 imp, pos 22.86)
+- Updated `generateSitemap.ts` and `validateSeo.ts` to include the new URLs.
+
+Validation:
+- `npm run seo:validate` passes with 0 errors and 0 warnings (16 question pages verified).
+- `sitemap.xml` includes all 159 URLs.
+
+## Phase 7: Measurement Loop (Iter 2)
+
+Goal: continue monitoring GSC to assess the impact of Phase 5 and Phase 6 improvements.
+
+Tasks:
+- Monitor Search Appearance for the emergence of FAQ or Article rich results.
+- Verify if non-www impression splitting has ceased due to the `vercel.json` 308 redirect.
+- Evaluate CTR changes for the newly added and expanded question pages.
+- Identify new guide or question opportunities based on the next batch of GSC data.
