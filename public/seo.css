@@ -127,11 +127,12 @@ h1 {
   letter-spacing: -0.01em;
 }
 
-/* Language/tool page header: logo tile + title + tagline */
+/* Language/tool page header: title + tagline (left), logo badge (right) */
 .lang-header {
   display: flex;
   align-items: center;
-  gap: 20px;
+  justify-content: space-between;
+  gap: 24px;
   margin-bottom: 28px;
 }
 
@@ -140,7 +141,7 @@ h1 {
   width: 76px;
   height: 76px;
   border-radius: 18px;
-  background: #fafafa;
+  background: #111820;
   display: flex;
   align-items: center;
   justify-content: center;
