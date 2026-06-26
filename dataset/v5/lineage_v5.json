@@ -922,12 +922,12 @@
       "cluster_hint": "systems",
       "company": "Mozilla",
       "garbage_collected": false,
-      "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/rust/rust-original.svg",
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/d/d5/Rust_programming_language_black_logo.svg",
       "peak_year": null,
       "current_users_estimate": "large",
-      "logo_source": "https://github.com/devicons/devicon/tree/master/icons/rust",
-      "logo_license": "Devicon MIT; trademarks retained by owners",
-      "logo_kind": "devicon"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Rust_programming_language_black_logo.svg",
+      "logo_license": "CC BY 4.0; trademark retained by Rust Foundation",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:kotlin",

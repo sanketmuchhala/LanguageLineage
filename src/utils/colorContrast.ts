@@ -1,4 +1,5 @@
 // WCAG 2.1 compliant color contrast utilities for logo backgrounds
+import type { LogoSurface } from '../data/logoMap';
 
 // Calculate relative luminance per WCAG 2.1 specification
 // https://www.w3.org/TR/WCAG21/#dfn-relative-luminance
@@ -19,35 +20,46 @@ export function calculateLuminance(hexColor: string): number {
 // Uses luminance of logo color to decide light vs dark background
 export function getAdaptiveLogoBackground(
   logoColor: string | null,
-  isDarkMode: boolean
+  isDarkMode: boolean,
+  logoSurface: LogoSurface = 'dark'
 ): string {
+  if (logoSurface === 'soft-light') {
+    return isDarkMode ? '#e8edf3' : '#ffffff';
+  }
+
   if (!logoColor) {
     // No logo color defined - use theme-appropriate background
-    return isDarkMode ? '#1c2128' : '#ffffff';
+    return isDarkMode ? '#111820' : '#ffffff';
   }
 
   const luminance = calculateLuminance(logoColor);
 
-  // Light logos (high luminance) need dark backgrounds
-  // Dark logos (low luminance) need light backgrounds
-  if (luminance > 0.5) {
-    // Light logo - use dark background
-    return isDarkMode ? '#1a1a1d' : '#2a2a2d';
-  } else {
-    // Dark logo - use light background
-    return isDarkMode ? '#f4f4f5' : '#ffffff';
+  if (isDarkMode) {
+    return luminance > 0.5 ? '#0d1117' : '#111820';
   }
+
+  // In light mode, only light logos need a dark stage for contrast.
+  if (luminance > 0.5) {
+    return '#2a2a2d';
+  }
+
+  return '#ffffff';
 }
 
 // Get border color that creates subtle contrast with logo background
 // Uses logo color as the border for a cohesive look
 export function getLogoBorderColor(
   logoColor: string | null,
-  isDarkMode: boolean
+  isDarkMode: boolean,
+  logoSurface: LogoSurface = 'dark'
 ): string {
+  if (logoSurface === 'soft-light') {
+    return isDarkMode ? '#c7d0dd' : '#d8dee8';
+  }
+
   if (!logoColor) {
     // Match theme border colors
-    return isDarkMode ? '#30363d' : '#e2e5e9';
+    return isDarkMode ? '#2b3440' : '#e2e5e9';
   }
 
   // Use the logo's dominant color as the border for cohesive branding

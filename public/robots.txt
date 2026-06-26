@@ -10,4 +10,4 @@ Allow: /
 User-agent: PerplexityBot
 Allow: /
 
-Sitemap: https://languagelineage.org/sitemap.xml
+Sitemap: https://www.languagelineage.org/sitemap.xml

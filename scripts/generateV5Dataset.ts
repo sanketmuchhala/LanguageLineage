@@ -52,6 +52,10 @@ const PROXY_LOGOS = new Set([
   ...Object.entries(EXTRA_LOGOS).filter(([, v]) => v.kind === 'proxy').map(([id]) => id),
 ]);
 
+const PREFERRED_WIKIMEDIA_LOGOS = new Set([
+  'lang:rust',
+]);
+
 const LANGUAGE_OVERRIDES: Record<string, Record<string, unknown>> = {
   'lang:rust': {
     first_release_year: 2010,
@@ -107,7 +111,10 @@ dataset.languages = dataset.languages.map((lang: Record<string, unknown>) => {
   const baseUrl = extra?.url ?? (LOGO_MAP as Record<string, string | null>)[id] ?? null;
   const baseKind: LogoKind = baseUrl ? (PROXY_LOGOS.has(id) ? 'proxy' : 'devicon') : 'none';
   const wikimediaOverride = wikimediaLogoOverrides[id];
-  const useWikimedia = Boolean(wikimediaOverride && (baseKind === 'none' || baseKind === 'proxy'));
+  const useWikimedia = Boolean(
+    wikimediaOverride &&
+    (baseKind === 'none' || baseKind === 'proxy' || PREFERRED_WIKIMEDIA_LOGOS.has(id))
+  );
   const url = useWikimedia ? wikimediaOverride.url : baseUrl;
   const kind: LogoKind = useWikimedia ? 'wikimedia' : baseKind;
   logoCounts[kind]++;

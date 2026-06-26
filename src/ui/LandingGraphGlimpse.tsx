@@ -49,13 +49,14 @@ export function LandingGraphGlimpse({ onOpen }: Props) {
 
     (async () => {
       try {
-        const [cytoscapeMod, coseMod, loadMod, normMod, styleMod, logoMod] = await Promise.all([
+        const [cytoscapeMod, coseMod, loadMod, normMod, styleMod, logoMod, graphLogoMod] = await Promise.all([
           import('cytoscape'),
           import('cytoscape-cose-bilkent'),
           import('../data/loadDataset'),
           import('../data/normalizeDataset'),
           import('../graph/style'),
           import('../data/logoMap'),
+          import('../data/graphLogoAssets'),
         ]);
         const cytoscape = cytoscapeMod.default;
         try { cytoscape.use(coseMod.default); } catch { /* already registered */ }
@@ -66,7 +67,10 @@ export function LandingGraphGlimpse({ onOpen }: Props) {
 
         const elements: Array<Record<string, unknown>> = [];
         dataset.languageMap.forEach((lang, id) => {
-          const logoUrl = lang.logo_url ?? logoMod.LOGO_MAP[id] ?? null;
+          const canonicalLogoUrl = lang.logo_url ?? logoMod.LOGO_MAP[id] ?? null;
+          const logoUrl = graphLogoMod.getGraphLogoUrl(id, canonicalLogoUrl);
+          const logoKind = lang.logo_kind ?? (logoMod.LOGO_MAP[id] ? 'devicon' : 'none');
+          const logoPresentation = logoMod.getLogoPresentation(id, logoKind);
           elements.push({
             group: 'nodes',
             data: {
@@ -76,7 +80,11 @@ export function LandingGraphGlimpse({ onOpen }: Props) {
               degree: lang.degree,
               logoUrl,
               logoColor: logoMod.LOGO_COLORS[id] ?? null,
-              abbr: logoUrl ? '' : logoMod.getLetterAbbreviation(lang.name),
+              logoKind,
+              logoSize: logoPresentation.size,
+              logoOffsetY: logoPresentation.offsetY,
+              logoSurface: logoPresentation.surface,
+              abbr: canonicalLogoUrl ? '' : logoMod.getLetterAbbreviation(lang.name),
             },
           });
         });

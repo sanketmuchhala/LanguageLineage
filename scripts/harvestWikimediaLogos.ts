@@ -8,7 +8,7 @@ const DATASET_PATH = join(ROOT, 'dataset/v5/lineage_v5.json');
 const OVERRIDES_PATH = join(ROOT, 'dataset/v5/wikimedia_logo_overrides.json');
 const REPORT_PATH = join(ROOT, 'reports/wikimedia-logo-audit.md');
 
-const USER_AGENT = 'LanguageLineageLogoAudit/0.1 (https://languagelineage.org)';
+const USER_AGENT = 'LanguageLineageLogoAudit/0.1 (https://www.languagelineage.org)';
 
 interface LanguageNode {
   id: string;

@@ -1,5 +1,5 @@
 import { useGraphStore } from '../store/useGraphStore';
-import { LOGO_MAP, LOGO_COLORS } from '../data/logoMap';
+import { LOGO_MAP, LOGO_COLORS, getLogoPresentation } from '../data/logoMap';
 import { getAdaptiveLogoBackground, getLogoBorderColor } from '../utils/colorContrast';
 import './SideDrawer.css';
 
@@ -29,6 +29,12 @@ export function SideDrawer() {
     const prefix = selectedNodeId.startsWith('tool:') ? 'tools' : 'languages';
     const slug = selectedNodeId.replace(/^(lang|tool):/, '').replace(/_/g, '-');
     const detailsUrl = `/${prefix}/${slug}`;
+    const logoUrl = node.logo_url ?? LOGO_MAP[selectedNodeId] ?? null;
+    const logoKind = node.logo_kind ?? (LOGO_MAP[selectedNodeId] ? 'devicon' : 'none');
+    const logoPresentation = getLogoPresentation(selectedNodeId, logoKind);
+    const logoColor = LOGO_COLORS[selectedNodeId] || null;
+    const logoBg = getAdaptiveLogoBackground(logoColor, isDarkMode, logoPresentation.surface);
+    const logoBorder = getLogoBorderColor(logoColor, isDarkMode, logoPresentation.surface);
 
     return (
       <>
@@ -42,12 +48,7 @@ export function SideDrawer() {
         </div>
 
         <div className="drawer-content">
-          {LOGO_MAP[selectedNodeId] && (() => {
-            const logoColor = LOGO_COLORS[selectedNodeId] || null;
-            const logoBg = getAdaptiveLogoBackground(logoColor, isDarkMode);
-            const logoBorder = getLogoBorderColor(logoColor, isDarkMode);
-
-            return (
+          {logoUrl && (
               <div
                 className="language-logo"
                 style={{
@@ -55,10 +56,17 @@ export function SideDrawer() {
                   borderColor: logoBorder
                 }}
               >
-                <img src={LOGO_MAP[selectedNodeId]!} alt={`${node.name} logo`} />
+                <img
+                  src={logoUrl}
+                  alt={`${node.name} logo`}
+                  style={{
+                    width: logoPresentation.size,
+                    maxWidth: logoKind === 'wikimedia' ? '136px' : '116px',
+                    transform: logoPresentation.offsetY === '50%' ? undefined : `translateY(${logoPresentation.offsetY === '49%' ? '-2px' : '2px'})`,
+                  }}
+                />
               </div>
-            );
-          })()}
+          )}
 
           <section className="drawer-section">
             <a href={detailsUrl} className="drawer-details-link">

@@ -3,9 +3,19 @@
 // For languages without devicon icons, value is null (fallback to letter abbreviation)
 
 const DEVICON_BASE = 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons';
+const WIKIMEDIA_RUST_LOGO = 'https://upload.wikimedia.org/wikipedia/commons/d/d5/Rust_programming_language_black_logo.svg';
 
 function devicon(slug: string, variant = 'original'): string {
   return `${DEVICON_BASE}/${slug}/${slug}-${variant}.svg`;
+}
+
+export type LogoKind = 'devicon' | 'wikimedia' | 'proxy' | 'none' | null | undefined;
+export type LogoSurface = 'dark' | 'soft-light';
+
+export interface LogoPresentation {
+  size: string;
+  offsetY: string;
+  surface: LogoSurface;
 }
 
 // Logo background colors (dominant color from each logo for cohesive look)
@@ -55,6 +65,24 @@ export const LOGO_COLORS: Record<string, string | null> = {
   'lang:carbon': null,
   'lang:gleam': '#ffaff3',
   'lang:angular': '#dd0031',
+  'lang:lisp': '#111827',
+  'lang:algol': '#52525b',
+  'lang:simula': '#1f2937',
+  'lang:smalltalk': '#4aa3df',
+  'lang:scheme': '#111827',
+  'lang:ada': '#5f8f3a',
+  'lang:d': '#ba3327',
+  'lang:reasonml': '#dd4b39',
+  'lang:v': '#5d87bf',
+  'lang:oberon2': '#2459a8',
+  'lang:oberon': '#2459a8',
+  'lang:modula3': '#b91c1c',
+  'lang:self': '#111827',
+  'lang:cython': '#3776ab',
+  'lang:pharo': '#1594d2',
+  'lang:guile': '#a61c2e',
+  'lang:freepascal': '#b91c1c',
+  'lang:fortran95': '#734f96',
   'tool:gcc': '#d75c37',
   'tool:llvm': '#262d3a',
   'tool:clang': '#262d3a',
@@ -62,6 +90,8 @@ export const LOGO_COLORS: Record<string, string | null> = {
   'tool:spidermonkey': '#ff7139',
   'tool:javascriptcore': '#111111',
   'tool:dotnet_runtime': '#512bd4',
+  'tool:roslyn': '#512bd4',
+  'tool:ghc': '#5d4f85',
 };
 
 export const LOGO_MAP: Record<string, string | null> = {
@@ -92,7 +122,7 @@ export const LOGO_MAP: Record<string, string | null> = {
   'lang:clojure': devicon('clojure', 'original'),
   'lang:go': devicon('go', 'original'),
   'lang:coffeescript': devicon('coffeescript', 'original'),
-  'lang:rust': devicon('rust', 'original'),
+  'lang:rust': WIKIMEDIA_RUST_LOGO,
   'lang:kotlin': devicon('kotlin', 'original'),
   'lang:typescript': devicon('typescript', 'original'),
   'lang:dart': devicon('dart', 'original'),
@@ -185,6 +215,72 @@ export const LOGO_MAP: Record<string, string | null> = {
   'tool:chez_scheme': null,
   'tool:femtolisp': null,
 };
+
+const LOGO_SIZES: Record<string, string> = {
+  // Wide marks and wordmarks need more breathing room inside circular nodes.
+  'lang:ada': '46%',
+  'lang:algol': '54%',
+  'lang:simula': '54%',
+  'lang:lisp': '56%',
+  'lang:scheme': '56%',
+  'lang:reasonml': '54%',
+  'lang:rust': '64%',
+  'lang:smalltalk': '60%',
+  'lang:freepascal': '50%',
+  'lang:fortran95': '58%',
+  'lang:oberon': '52%',
+  'lang:oberon2': '52%',
+  'lang:modula3': '50%',
+  'lang:self': '56%',
+  'lang:cython': '56%',
+  'lang:pharo': '58%',
+  'lang:guile': '54%',
+  'tool:roslyn': '54%',
+  'tool:spidermonkey': '56%',
+  'tool:ghc': '58%',
+
+  // Devicon marks that read as wider than they are tall.
+  'lang:go': '58%',
+  'lang:coffeescript': '58%',
+  'lang:vb_net': '58%',
+  'tool:dotnet_runtime': '58%',
+  'tool:gcc': '60%',
+  'tool:llvm': '58%',
+  'tool:clang': '58%',
+  'tool:javascriptcore': '58%',
+};
+
+const LOGO_OFFSETS_Y: Record<string, string> = {
+  'lang:ada': '51%',
+  'lang:freepascal': '51%',
+  'tool:spidermonkey': '49%',
+};
+
+const SOFT_LIGHT_SURFACE_LOGOS = new Set<string>([
+  // These assets are mostly black/dark on transparency, so a restrained light
+  // plate is intentional. Everything else stays on the dark graph badge.
+  'lang:rust',
+  'lang:crystal',
+  'lang:purescript',
+  'lang:scheme',
+  'lang:lisp',
+  'lang:simula',
+  'lang:self',
+  'lang:guile',
+  'tool:llvm',
+  'tool:clang',
+  'tool:javascriptcore',
+]);
+
+export function getLogoPresentation(id: string, logoKind: LogoKind): LogoPresentation {
+  const defaultSize = logoKind === 'wikimedia' ? '58%' : logoKind === 'proxy' ? '62%' : '64%';
+
+  return {
+    size: LOGO_SIZES[id] ?? defaultSize,
+    offsetY: LOGO_OFFSETS_Y[id] ?? '50%',
+    surface: SOFT_LIGHT_SURFACE_LOGOS.has(id) ? 'soft-light' : 'dark',
+  };
+}
 
 // Generate a 1-2 letter abbreviation for languages without logos
 export function getLetterAbbreviation(name: string): string {

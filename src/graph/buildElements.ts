@@ -5,7 +5,8 @@ import type {
   CytoscapeNode,
   CytoscapeEdge,
 } from '../data/types';
-import { LOGO_MAP, LOGO_COLORS, getLetterAbbreviation } from '../data/logoMap';
+import { LOGO_MAP, LOGO_COLORS, getLetterAbbreviation, getLogoPresentation } from '../data/logoMap';
+import { getGraphLogoUrl } from '../data/graphLogoAssets';
 
 export function buildCytoscapeElements(
   dataset: NormalizedDataset,
@@ -88,9 +89,12 @@ export function buildCytoscapeElements(
   for (const lang of dataset.languages) {
     // Include node if it matches search OR has visible edges
     if (visibleNodes.has(lang.id) || nodesWithEdges.has(lang.id)) {
-      const logoUrl = lang.logo_url ?? LOGO_MAP[lang.id] ?? null;
+      const canonicalLogoUrl = lang.logo_url ?? LOGO_MAP[lang.id] ?? null;
+      const logoUrl = getGraphLogoUrl(lang.id, canonicalLogoUrl);
+      const logoKind = lang.logo_kind ?? (LOGO_MAP[lang.id] ? 'devicon' : 'none');
+      const logoPresentation = getLogoPresentation(lang.id, logoKind);
       const logoColor = LOGO_COLORS[lang.id] ?? null;
-      const abbr = logoUrl ? '' : getLetterAbbreviation(lang.name);
+      const abbr = canonicalLogoUrl ? '' : getLetterAbbreviation(lang.name);
       const node: CytoscapeNode = {
         data: {
           id: lang.id,
@@ -104,6 +108,10 @@ export function buildCytoscapeElements(
           parent: isClusterLayout ? `cluster:${lang.cluster}` : undefined,
           logoUrl,
           logoColor,
+          logoKind,
+          logoSize: logoPresentation.size,
+          logoOffsetY: logoPresentation.offsetY,
+          logoSurface: logoPresentation.surface,
           abbr,
         },
         group: 'nodes',

@@ -109,6 +109,14 @@
       "wikidata_item": "Q63565848",
       "commons_file": "Reason-logo.svg"
     },
+    "lang:rust": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/d/d5/Rust_programming_language_black_logo.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:Rust_programming_language_black_logo.svg",
+      "license": "CC BY 4.0; trademark retained by Rust Foundation",
+      "kind": "wikimedia",
+      "wikidata_item": "Q575650",
+      "commons_file": "Rust programming language black logo.svg"
+    },
     "lang:scheme": {
       "url": "https://upload.wikimedia.org/wikipedia/commons/3/39/Lambda_lc.svg",
       "source": "https://commons.wikimedia.org/wiki/File:Lambda_lc.svg",

@@ -129,6 +129,10 @@ export interface CytoscapeNodeData {
   parent?: string;
   logoUrl?: string | null;
   logoColor?: string | null;
+  logoKind?: RawLanguageNode['logo_kind'];
+  logoSize?: string;
+  logoOffsetY?: string;
+  logoSurface?: string;
   abbr?: string;
 }
 
