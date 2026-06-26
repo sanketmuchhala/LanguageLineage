@@ -145,6 +145,10 @@ function joinNames(names: string[]): string {
   return `${names.slice(0, -1).join(', ')}, and ${names[names.length - 1]}`;
 }
 
+function aOrAn(word: string): string {
+  return /^[aeiou]/i.test(word.trim()) ? 'an' : 'a';
+}
+
 function confidenceClass(c: number): string {
   if (c >= 0.9) return 'confidence-high';
   if (c >= 0.75) return 'confidence-mid';
@@ -693,50 +697,63 @@ function buildLineageNarrative(node: Language, rels: Relationship[], nodeMap: Ma
 
 // Sourced overview (Quick Facts + synthesized narrative) for nodes without a
 // hand-authored PRIORITY_CONTENT entry. Plugs into the priorityContentHtml slot.
-function buildEnrichedContent(node: Language, rels: Relationship[], nodeMap: Map<string, Language>): string {
+// Sourced identity/history/lineage narrative. includeImpl adds the "written in"
+// paragraph (omitted on priority pages, which already cover implementation in depth).
+function buildEnrichedOverview(node: Language, rels: Relationship[], nodeMap: Map<string, Language>, includeImpl: boolean): string {
   const e = ENRICHMENT[node.id];
   if (!e) return '';
   const isTool = node.id.startsWith('tool:');
   const name = escapeHtml(node.name);
-
-  // Quick Facts: scraped fields not already shown in the meta-tag row.
   const developers = e.facts.developers.filter(d => !e.facts.designers.includes(d));
-  const facts: QuickFact[] = [];
-  if (e.facts.designers.length) facts.push({ label: isTool ? 'Created by' : 'Designed by', value: joinNames(e.facts.designers) });
-  if (developers.length) facts.push({ label: 'Developer', value: joinNames(developers) });
-  if (node.first_release_year) facts.push({ label: 'First appeared', value: String(node.first_release_year) });
-  if (e.facts.license.length) facts.push({ label: 'License', value: joinNames(e.facts.license) });
-  if (e.facts.file_extensions.length) facts.push({ label: 'Filename extension', value: e.facts.file_extensions.join(', ') });
 
-  // Overview narrative, synthesized from facts + dataset relationships.
   const tagline = e.tagline ? e.tagline.replace(/\.$/, '') : '';
-  const aOrAn = (word: string) => (/^[aeiou]/i.test(word.trim()) ? 'an' : 'a');
   const paras: string[] = [];
   let p1 = tagline
     ? `<strong>${name}</strong> is ${aOrAn(tagline)} ${escapeHtml(tagline)}.`
     : `<strong>${name}</strong> is a ${isTool ? 'toolchain' : 'programming language'}.`;
   const originBits: string[] = [];
-  if (node.first_release_year) originBits.push(`first appeared in ${node.first_release_year}`);
+  if (node.first_release_year && node.first_release_year > 0) originBits.push(`was first released in ${node.first_release_year}`);
   if (e.facts.designers.length) originBits.push(`was ${isTool ? 'created' : 'designed'} by ${escapeHtml(joinNames(e.facts.designers))}`);
   if (originBits.length) p1 += ` It ${joinNames(originBits)}.`;
   if (developers.length) p1 += ` Development is led by ${escapeHtml(joinNames(developers))}.`;
   paras.push(`<p>${p1}</p>`);
 
-  const implPara = buildImplementationNarrative(node, rels, nodeMap);
-  if (implPara) paras.push(`<p>${implPara}</p>`);
+  if (includeImpl) {
+    const implPara = buildImplementationNarrative(node, rels, nodeMap);
+    if (implPara) paras.push(`<p>${implPara}</p>`);
+  }
   const lineagePara = buildLineageNarrative(node, rels, nodeMap, e);
   if (lineagePara) paras.push(`<p>${lineagePara}</p>`);
 
   const cite = `<p class="enrich-cite" style="font-size:13px;color:var(--text-tertiary);margin-top:14px">Sources: <a href="${escapeHtml(e.sources.wikipedia)}" rel="noopener noreferrer" target="_blank">Wikipedia</a> &middot; <a href="${escapeHtml(e.sources.wikidata)}" rel="noopener noreferrer" target="_blank">Wikidata</a>${e.facts.website ? ` &middot; <a href="${escapeHtml(e.facts.website)}" rel="noopener noreferrer" target="_blank">Official site</a>` : ''}</p>`;
 
-  const overview = `<section class="intent-section">
-  <h2>${name} overview</h2>
+  return `<section class="intent-section">
+  <h2>About ${name}</h2>
   ${paras.join('\n  ')}
   ${cite}
 </section>`;
+}
 
-  return `${renderQuickFacts(facts)}
-${overview}`;
+// Quick Facts panel from scraped fields (designers, release year, license, etc.).
+function buildEnrichedFacts(node: Language): string {
+  const e = ENRICHMENT[node.id];
+  if (!e) return '';
+  const isTool = node.id.startsWith('tool:');
+  const developers = e.facts.developers.filter(d => !e.facts.designers.includes(d));
+  const facts: QuickFact[] = [];
+  if (e.facts.designers.length) facts.push({ label: isTool ? 'Created by' : 'Designed by', value: joinNames(e.facts.designers) });
+  if (developers.length) facts.push({ label: 'Developer', value: joinNames(developers) });
+  if (node.first_release_year && node.first_release_year > 0) facts.push({ label: 'First released', value: String(node.first_release_year) });
+  if (e.facts.license.length) facts.push({ label: 'License', value: joinNames(e.facts.license) });
+  if (e.facts.file_extensions.length) facts.push({ label: 'Filename extension', value: e.facts.file_extensions.join(', ') });
+  return renderQuickFacts(facts);
+}
+
+// Full enriched block (facts + overview) for nodes without a hand-authored PRIORITY_CONTENT entry.
+function buildEnrichedContent(node: Language, rels: Relationship[], nodeMap: Map<string, Language>): string {
+  if (!ENRICHMENT[node.id]) return '';
+  return `${buildEnrichedFacts(node)}
+${buildEnrichedOverview(node, rels, nodeMap, true)}`;
 }
 
 function buildAnswerBox(node: Language, rels: Relationship[], nodeMap: Map<string, Language>): string {
@@ -914,6 +931,18 @@ function buildFaqs(node: Language, rels: Relationship[], nodeMap: Map<string, La
     });
   }
 
+  if (node.first_release_year && node.first_release_year > 0) {
+    const e = ENRICHMENT[id];
+    const verb = id.startsWith('tool:') ? 'created' : 'designed';
+    const designerNote = e && e.facts.designers.length > 0
+      ? ` It was ${verb} by ${joinNames(e.facts.designers)}.`
+      : '';
+    faqs.push({
+      q: `When was ${node.name} first released?`,
+      a: `${node.name} was first released in ${node.first_release_year}.${designerNote}`,
+    });
+  }
+
   return faqs;
 }
 
@@ -1042,11 +1071,16 @@ function buildNodePage(node: Language, rels: Relationship[], nodeMap: Map<string
   const title = priorityOverride ? priorityOverride.title : `What is ${node.name} written in? | Language Lineage`;
   const implRels = rels.filter(r => r.to_language === node.id && ['compiler_written_in', 'runtime_written_in', 'bootstrap_written_in'].includes(r.relationship));
   const implLangs = [...new Set(implRels.map(r => nameFromId(r.from_language, nodeMap)))];
-  const descriptionBase = implLangs.length > 0
-    ? `${node.name} is implemented in ${implLangs.slice(0, 2).join(' and ')}. Explore its compiler, runtime, and influence relationships.`
-    : `Explore ${node.name}'s relationships, influences, and history in the Language Lineage graph.`;
+  const enrich = ENRICHMENT[node.id];
+  const descParts: string[] = [enrich?.tagline ? `${node.name} is ${aOrAn(enrich.tagline)} ${enrich.tagline}` : node.name];
+  if (implLangs.length > 0) descParts.push(`implemented in ${implLangs.slice(0, 2).join(' and ')}`);
+  if (node.first_release_year && node.first_release_year > 0) descParts.push(`first released in ${node.first_release_year}`);
+  const descriptionBase = `${descParts.join(', ')}.`;
   const description = truncateMetaDescription(priorityOverride ? priorityOverride.description : descriptionBase, 160);
-  const priorityContentHtml = buildPriorityContent(node) || buildEnrichedContent(node, rels, nodeMap);
+  const priorityHtml = buildPriorityContent(node);
+  const priorityContentHtml = priorityHtml
+    ? `${buildEnrichedOverview(node, rels, nodeMap, false)}\n${priorityHtml}`
+    : buildEnrichedContent(node, rels, nodeMap);
 
   const faqs = buildFaqs(node, rels, nodeMap);
   const faqJsonLd = faqs.length > 0 ? JSON.stringify({

@@ -188,3 +188,32 @@ Tasks:
 - Verify if non-www impression splitting has ceased due to the `vercel.json` 308 redirect.
 - Evaluate CTR changes for the newly added and expanded question pages.
 - Identify new guide or question opportunities based on the next batch of GSC data.
+
+## Phase 8: Content Depth (Wikipedia/Wikidata enrichment)
+
+Goal: fix the thin-content half of the CTR problem across all 112 pages, not just the top 5.
+
+Implemented:
+- `scripts/harvestWikipediaContent.ts` (`npm run content:wikipedia`) scrapes non-copyrightable Wikidata facts (designers, developers, license, website, file extensions, influenced-by) + CC0 description taglines for all nodes into `dataset/v5/enrichment_v5.json` (111/112; mrustc has no Wikipedia page). Audit: `reports/wikipedia-enrichment-audit.md`.
+- Every language/tool page now renders a cited Quick Facts panel + a synthesized, original Overview/History narrative (no Wikipedia prose pasted; Wikidata is CC0), with visible Wikipedia + Wikidata source links.
+- Hand-authored deep content added for 12 more high-GSC pages (c, cxx, typescript, ruby, haskell, csharp, swift, kotlin + tools v8, spidermonkey, beam).
+- Guides expanded: what-is-compiler-bootstrapping, how-javascript-engines-work, how-python-is-implemented; landing what-are-programming-languages-written-in.
+- Shipped via PR #9.
+
+## Phase 9: Intent Broadening (brand + release-date queries)
+
+Goal: capture the large unconverted impression pile on broad/brand and release-date queries
+where pages rank poorly (e.g. "rust language" 122 imp pos 56; "rust language release date" 50 imp pos 53),
+without disturbing the implementation-query titles that already rank ~pos 9.
+
+Implemented:
+- Added a "When was X first released?" FAQ to every node page (FAQPage rich-result eligible), with the designer credited from enrichment.
+- Priority pages (python/javascript/rust/go/java + the 12 tier-2) now also render the sourced "About X" identity/lineage block (tagline, release year, creators), so the highest-traffic pages target "X language" / "who created X" / "X release date" — previously these skipped the enriched overview.
+- Broadened non-priority meta descriptions to lead with the tagline + release year (richer snippets, better CTR).
+
+Validation: type-check, seo:validate (0/0), and build all pass.
+
+## Phase 10: Measurement (open)
+
+- Watch Search Appearance for FAQ/Article rich results (currently empty).
+- Re-pull GSC after 2-4 weeks; check CTR/position movement on rust/python/js brand + release queries and the bootstrapping guide.
