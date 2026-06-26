@@ -49,23 +49,36 @@ export function LandingGraphGlimpse({ onOpen }: Props) {
 
     (async () => {
       try {
-        const [cytoscapeMod, coseMod, loadMod, normMod, styleMod] = await Promise.all([
+        const [cytoscapeMod, coseMod, loadMod, normMod, styleMod, logoMod] = await Promise.all([
           import('cytoscape'),
           import('cytoscape-cose-bilkent'),
           import('../data/loadDataset'),
           import('../data/normalizeDataset'),
           import('../graph/style'),
+          import('../data/logoMap'),
         ]);
         const cytoscape = cytoscapeMod.default;
         try { cytoscape.use(coseMod.default); } catch { /* already registered */ }
         if (cancelled || !containerRef.current) return;
 
-        const dataset = normMod.normalizeDataset(await loadMod.loadDataset('v4'));
+        const dataset = normMod.normalizeDataset(await loadMod.loadDataset('v5'));
         if (cancelled || !containerRef.current) return;
 
         const elements: Array<Record<string, unknown>> = [];
         dataset.languageMap.forEach((lang, id) => {
-          elements.push({ group: 'nodes', data: { id, label: lang.name, cluster: lang.cluster, degree: lang.degree } });
+          const logoUrl = lang.logo_url ?? logoMod.LOGO_MAP[id] ?? null;
+          elements.push({
+            group: 'nodes',
+            data: {
+              id,
+              label: lang.name,
+              cluster: lang.cluster,
+              degree: lang.degree,
+              logoUrl,
+              logoColor: logoMod.LOGO_COLORS[id] ?? null,
+              abbr: logoUrl ? '' : logoMod.getLetterAbbreviation(lang.name),
+            },
+          });
         });
         dataset.edges.forEach((e) => {
           // Keep every implementation edge; trim weaker influence edges to reduce clutter.

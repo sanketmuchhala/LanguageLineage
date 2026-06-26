@@ -3,7 +3,7 @@ import { DatasetSchema, type Dataset, type Language, type Relationship } from '.
 
 function main() {
   // Get dataset path from command line args
-  const datasetPath = process.argv[2] || 'dataset/v4/lineage_v4.json';
+  const datasetPath = process.argv[2] || 'dataset/v5/lineage_v5.json';
 
   console.log('='.repeat(80));
   console.log('DATASET ANALYSIS REPORT');

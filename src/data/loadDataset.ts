@@ -4,9 +4,10 @@ export const DATASET_VERSIONS: DatasetVersion[] = [
   { version: 'v1', path: 'dataset/v1/lineage.json', label: 'Version 1.0 (Initial)' },
   { version: 'v2', path: 'dataset/v2/lineage.json', label: 'Version 2.0 (Extended)' },
   { version: 'v4', path: 'dataset/v4/lineage_v4.json', label: 'Version 4.0 (Enriched - 112 languages)' },
+  { version: 'v5', path: 'dataset/v5/lineage_v5.json', label: 'Version 5.0 (Logo metadata)' },
 ];
 
-export async function loadDataset(version: string = 'v1'): Promise<RawDataset> {
+export async function loadDataset(version: string = 'v5'): Promise<RawDataset> {
   const versionConfig = DATASET_VERSIONS.find((v) => v.version === version);
 
   if (!versionConfig) {

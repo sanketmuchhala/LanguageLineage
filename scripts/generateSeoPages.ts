@@ -6,7 +6,7 @@ import { LOGO_MAP, LOGO_COLORS } from '../src/data/logoMap.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
 const PUBLIC = join(ROOT, 'public');
-const DATASET_PATH = join(ROOT, 'dataset/v4/lineage_v4.json');
+const DATASET_PATH = join(ROOT, 'dataset/v5/lineage_v5.json');
 const SITE = 'https://www.languagelineage.org';
 
 const FONTS_HEAD = `<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Geist:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">`;
@@ -77,6 +77,7 @@ interface Language {
   cluster_hint?: string;
   notes?: string;
   self_hosting?: boolean;
+  logo_url?: string | null;
 }
 
 interface Relationship {
@@ -1587,7 +1588,7 @@ function buildDatasetPage(languages: Language[], rels: Relationship[]): string {
 
   <h2>Download</h2>
   <p>The raw dataset JSON is available at:</p>
-  <pre>https://languagelineage.org/dataset/v4/lineage_v4.json</pre>
+  <pre>https://languagelineage.org/dataset/v5/lineage_v5.json</pre>
 
   <h2>Citation</h2>
   <pre>Language Lineage dataset (languagelineage.org). Accessed ${new Date().getFullYear()}.</pre>
@@ -2309,7 +2310,7 @@ function buildTimelinePage(languages: Language[], rels: Relationship[]): string 
     const cardY = spineY;
     const slug = idToSlug(lang.id);
     const prefix = lang.id.startsWith('tool:') ? 'tools' : 'languages';
-    const logoUrl = (LOGO_MAP as Record<string, string | null>)[lang.id] ?? null;
+    const logoUrl = lang.logo_url ?? (LOGO_MAP as Record<string, string | null>)[lang.id] ?? null;
     const color = (LOGO_COLORS as Record<string, string | null>)[lang.id] ?? '#c9a87c';
     const note = (lang.notes ?? '').split('.')[0].slice(0, 100) || null;
     const yr = lang.first_release_year!;

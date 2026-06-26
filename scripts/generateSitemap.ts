@@ -18,7 +18,7 @@ function idToPrefix(id: string): string {
 interface Language { id: string }
 interface Relationship { relationship: string }
 
-const raw = JSON.parse(readFileSync(join(ROOT, 'dataset/v4/lineage_v4.json'), 'utf8'));
+const raw = JSON.parse(readFileSync(join(ROOT, 'dataset/v5/lineage_v5.json'), 'utf8'));
 const languages: Language[] = raw.languages ?? [];
 const rels: Relationship[] = raw.relationships ?? [];
 const relTypes = [...new Set(rels.map((r) => r.relationship))];

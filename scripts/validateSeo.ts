@@ -83,7 +83,7 @@ for (const [label, needle] of indexChecks) {
 
 // Language/tool pages
 interface LangNode { id: string; name: string }
-const raw = JSON.parse(readFileSync(join(ROOT, 'dataset/v4/lineage_v4.json'), 'utf8'));
+const raw = JSON.parse(readFileSync(join(ROOT, 'dataset/v5/lineage_v5.json'), 'utf8'));
 const languages: LangNode[] = raw.languages ?? [];
 
 function idToSlug(id: string): string {
