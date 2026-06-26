@@ -79,6 +79,23 @@ Content requirements:
 - Explain compiler, runtime, bootstrap, and self-hosting terms when relevant.
 - Link only to contextually relevant language/tool pages.
 
+Status: complete.
+
+Implemented:
+- Added reusable priority answer overrides for Python, JavaScript, Rust, Go, and Java language pages.
+- Added Quick Facts sections to those five language pages and their matching question pages.
+- Expanded `/questions/what-is-python-written-in` with CPython vs language-spec nuance and an implementation-layer table.
+- Expanded `/questions/what-is-javascript-written-in` with ECMAScript vs engine nuance and a V8/SpiderMonkey/JavaScriptCore table.
+- Expanded `/questions/what-is-rust-written-in` with rustc, OCaml history, LLVM backend, and bootstrap-chain details.
+- Expanded `/questions/what-is-go-written-in` with Go 1.5 self-hosting history and compiler/runtime layers.
+- Expanded `/questions/what-is-java-written-in` with javac, HotSpot JVM, standard library, and bytecode layers.
+- Corrected priority FAQ JSON-LD answers so JavaScript no longer reduces the modern answer to the historical C SpiderMonkey edge.
+
+Validation:
+- `npm run seo:validate` passes with 0 errors and 0 warnings.
+- `npm run type-check` passes.
+- `npm run build` passes; the only warning is the existing Cytoscape chunk-size warning.
+
 ## Phase 4: Crawl And Mobile Rendering Verification
 
 Goal: make sure generated HTML is complete and fast before hydration.

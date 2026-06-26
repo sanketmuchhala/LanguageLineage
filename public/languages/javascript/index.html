@@ -20,7 +20,7 @@
   <meta name="twitter:title" content="What is JavaScript written in? V8, SpiderMonkey, and JSC | Language Lineage" />
   <meta name="twitter:description" content="JavaScript engines V8, SpiderMonkey, and JavaScriptCore are primarily written in C++. Explore their implementations and lineage." />
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What is JavaScript written in?","description":"JavaScript engines V8, SpiderMonkey, and JavaScriptCore are primarily written in C++. Explore their implementations and lineage.","url":"https://www.languagelineage.org/languages/javascript","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":{"@type":"SoftwareApplication","name":"JavaScript","dateCreated":"1995"}}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is JavaScript written in?","acceptedAnswer":{"@type":"Answer","text":"JavaScript is primarily implemented in C. See the implementation section above for details and source references."}},{"@type":"Question","name":"What languages influenced JavaScript?","acceptedAnswer":{"@type":"Answer","text":"JavaScript was influenced by Smalltalk, Java, Scheme among others. See the influence section above for the full list."}},{"@type":"Question","name":"Which languages did JavaScript influence?","acceptedAnswer":{"@type":"Answer","text":"JavaScript influenced TypeScript, CoffeeScript, Dart among others."}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is JavaScript written in?","acceptedAnswer":{"@type":"Answer","text":"JavaScript itself is a language standard. Modern JavaScript engines such as V8, SpiderMonkey, and JavaScriptCore are mostly written in C++, although the earliest SpiderMonkey implementation was written in C."}},{"@type":"Question","name":"What languages influenced JavaScript?","acceptedAnswer":{"@type":"Answer","text":"JavaScript was influenced by Smalltalk, Java, Scheme among others. See the influence section above for the full list."}},{"@type":"Question","name":"Which languages did JavaScript influence?","acceptedAnswer":{"@type":"Answer","text":"JavaScript influenced TypeScript, CoffeeScript, Dart among others."}}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"Languages","item":"https://www.languagelineage.org/languages"},{"@type":"ListItem","position":3,"name":"JavaScript","item":"https://www.languagelineage.org/languages/javascript"}]}</script>
 </head>
 <body class="seo-page">
@@ -48,8 +48,44 @@
 
   
 
-  <div class="answer-box">Its runtime is implemented in <strong>C</strong> (documented).</div>
+  <div class="answer-box"><strong>JavaScript</strong> is a language standard, so the language itself is not "written in" one language. Modern JavaScript engines are mostly written in <strong>C++</strong>: V8, SpiderMonkey, and JavaScriptCore all use C++ for performance-critical compiler and runtime code.</div>
 
+
+  <section class="quick-facts-section">
+  <h2>Quick Facts</h2>
+  <dl class="quick-facts"><div class="quick-fact">
+    <dt>Short answer</dt>
+    <dd>Modern JavaScript engines are mostly C++</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Specification</dt>
+    <dd>ECMAScript</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Major engines</dt>
+    <dd>V8, SpiderMonkey, JavaScriptCore</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Historical note</dt>
+    <dd>Original SpiderMonkey began in C</dd>
+  </div></dl>
+</section>
+<section class="intent-section">
+  <h2>JavaScript language vs JavaScript engines</h2>
+  <p>JavaScript source code runs inside an engine. The ECMAScript specification defines the language, but engines such as V8, SpiderMonkey, and JavaScriptCore implement parsing, bytecode generation, JIT compilation, garbage collection, and runtime behavior.</p>
+<p>That is why the most useful answer is about engines: V8 powers Chrome and Node.js, SpiderMonkey powers Firefox, and JavaScriptCore powers Safari. Their performance-sensitive implementation code is primarily C++.</p>
+</section>
+<section class="intent-section">
+  <h2>Major JavaScript engines</h2>
+  <table class="impl-table">
+  <thead><tr><th>Engine</th><th>Written in</th><th>Used by</th></tr></thead>
+  <tbody>
+    <tr><td>V8</td><td>C++</td><td>Chrome, Node.js, Deno, Electron</td></tr>
+    <tr><td>SpiderMonkey</td><td>C++, Rust, JavaScript</td><td>Firefox</td></tr>
+    <tr><td>JavaScriptCore</td><td>C++</td><td>Safari and WebKit</td></tr>
+  </tbody>
+</table>
+</section>
   <h2>Relationship Graph</h2>
 <p style="font-size:13px;color:var(--text-tertiary);margin-bottom:12px">All directly connected languages. Click any node to navigate to its page.</p>
 <iframe
@@ -126,7 +162,7 @@
 <h2>Frequently Asked Questions</h2>
 <div class="faq-item">
   <div class="faq-question">What language is JavaScript written in?</div>
-  <div class="faq-answer">JavaScript is primarily implemented in C. See the implementation section above for details and source references.</div>
+  <div class="faq-answer">JavaScript itself is a language standard. Modern JavaScript engines such as V8, SpiderMonkey, and JavaScriptCore are mostly written in C++, although the earliest SpiderMonkey implementation was written in C.</div>
 </div>
 <div class="faq-item">
   <div class="faq-question">What languages influenced JavaScript?</div>

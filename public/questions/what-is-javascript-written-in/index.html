@@ -39,10 +39,39 @@
 
   <div class="question-answer">The major JavaScript engines are written in C++. Google's V8 (used in Chrome and Node.js), Mozilla's SpiderMonkey, and Apple's JavaScriptCore are all implemented in C++. The JavaScript language specification is defined by ECMAScript and doesn't mandate any particular implementation language.</div>
 
+
+  <section class="quick-facts-section">
+  <h2>Quick Facts</h2>
+  <dl class="quick-facts"><div class="quick-fact">
+    <dt>Short answer</dt>
+    <dd>Modern JavaScript engines are mostly C++</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Specification</dt>
+    <dd>ECMAScript</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Major engines</dt>
+    <dd>V8, SpiderMonkey, JavaScriptCore</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Historical note</dt>
+    <dd>Original SpiderMonkey began in C</dd>
+  </div></dl>
+</section>
   <h2>Details</h2>
-  <p>JavaScript engines perform lexing, parsing, compilation, and execution of JavaScript code. The performance-critical work of JIT compilation and garbage collection is done in C++ for most major engines.</p>
-<p>V8, SpiderMonkey, and JavaScriptCore each compile JavaScript to native machine code using JIT techniques — a task that benefits from C++'s low-level memory control.</p>
-<p>The dataset records <code>compiler_written_in</code> and <code>runtime_written_in</code> relationships from C++ to the major JavaScript engines.</p>
+  <p>JavaScript itself is a language standard, defined by ECMAScript. The useful implementation question is about JavaScript engines: the programs that parse, compile, optimize, and execute JavaScript code.</p>
+<p>Most major engines use C++ for performance-critical compiler and runtime code. V8 powers Chrome and Node.js, SpiderMonkey powers Firefox, and JavaScriptCore powers Safari and WebKit-based environments.</p>
+<h2>Major JavaScript engines</h2>
+<table class="impl-table">
+  <thead><tr><th>Engine</th><th>Written in</th><th>Where it runs</th></tr></thead>
+  <tbody>
+    <tr><td>V8</td><td>C++</td><td>Chrome, Node.js, Deno, Electron</td></tr>
+    <tr><td>SpiderMonkey</td><td>C++, Rust, JavaScript</td><td>Firefox</td></tr>
+    <tr><td>JavaScriptCore</td><td>C++</td><td>Safari and WebKit</td></tr>
+  </tbody>
+</table>
+<p>The dataset keeps the historical C relationship for the original SpiderMonkey implementation, while the modern engine pages document C++-based implementations such as V8 and JavaScriptCore.</p>
 
   <h2>Explore in the Graph</h2>
   <p>See implementation and influence relationships interactively.</p>

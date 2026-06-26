@@ -39,10 +39,40 @@
 
   <div class="question-answer">Rust is self-hosting: the Rust compiler (rustc) is written in Rust. The first version of rustc was written in OCaml; Rust became self-hosting in 2011. mrustc is an alternative Rust compiler written in C++ that can bootstrap rustc from source.</div>
 
+
+  <section class="quick-facts-section">
+  <h2>Quick Facts</h2>
+  <dl class="quick-facts"><div class="quick-fact">
+    <dt>Short answer</dt>
+    <dd>rustc is written in Rust</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Original compiler</dt>
+    <dd>OCaml</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Backend</dt>
+    <dd>LLVM</dd>
+  </div>
+<div class="quick-fact">
+    <dt>Bootstrap status</dt>
+    <dd>Self-hosting since 2011</dd>
+  </div></dl>
+</section>
   <h2>Details</h2>
-  <p>Rustc, the official Rust compiler, is written in Rust — making it a self-hosting compiler. Self-hosting means the compiler can compile its own source code.</p>
-<p>The bootstrap chain works roughly as follows: a previous version of rustc (or mrustc) compiles the current rustc source. This allows Rust to evolve without depending on another language for its compiler.</p>
-<p>The dataset records a <code>bootstrap_written_in</code> relationship showing Rust's self-hosting bootstrap chain, and a historical <code>compiler_written_in</code> relationship from OCaml representing the original implementation.</p>
+  <p>Rustc, the official Rust compiler, is written in Rust, making Rust self-hosting. Self-hosting means the compiler can compile the source code of its own compiler.</p>
+<p>Rust was not self-hosting from day one. Early Rust used a compiler written in OCaml, then moved to rustc written in Rust once the language and compiler were mature enough.</p>
+<h2>Rust implementation layers</h2>
+<table class="impl-table">
+  <thead><tr><th>Layer</th><th>Written in</th><th>Role</th></tr></thead>
+  <tbody>
+    <tr><td>rustc frontend and compiler driver</td><td>Rust</td><td>Parses, type-checks, and drives compilation</td></tr>
+    <tr><td>Historical compiler</td><td>OCaml</td><td>Original Rust compiler before self-hosting</td></tr>
+    <tr><td>LLVM backend</td><td>C++</td><td>Optimization and machine-code generation</td></tr>
+    <tr><td>mrustc</td><td>C++</td><td>Alternative compiler relevant to bootstrap chains</td></tr>
+  </tbody>
+</table>
+<p>The bootstrap chain normally uses a previous rustc snapshot to build the next compiler version. The dataset records both Rust's self-hosting chain and the historical OCaml origin.</p>
 
   <h2>Explore in the Graph</h2>
   <p>See implementation and influence relationships interactively.</p>

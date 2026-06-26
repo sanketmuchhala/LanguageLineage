@@ -220,8 +220,193 @@ const PRIORITY_TITLES: Record<string, { title: string; description: string }> = 
   },
 };
 
+interface QuickFact {
+  label: string;
+  value: string;
+}
+
+interface PriorityContent {
+  answerHtml: string;
+  faqAnswer: string;
+  facts: QuickFact[];
+  sections: { heading: string; body: string }[];
+}
+
+const PRIORITY_CONTENT: Record<string, PriorityContent> = {
+  python: {
+    answerHtml: '<strong>Python</strong> usually means <strong>CPython</strong>, the reference implementation, and CPython is written primarily in <strong>C</strong>. The Python language specification is implementation-independent, so other Python runtimes can be written in other languages.',
+    faqAnswer: "Python's reference implementation, CPython, is written primarily in C. The language specification is implementation-independent, and other implementations include PyPy, Jython, and IronPython.",
+    facts: [
+      { label: 'Short answer', value: 'CPython is written primarily in C' },
+      { label: 'Language spec', value: 'Implementation-independent' },
+      { label: 'Main runtime', value: 'CPython' },
+      { label: 'Other implementations', value: 'PyPy, Jython, IronPython' },
+    ],
+    sections: [
+      {
+        heading: 'Python language vs CPython',
+        body: `<p>When people ask what Python is written in, they usually mean CPython, the reference implementation maintained by the Python Software Foundation. CPython includes the bytecode interpreter, object model, memory management, and C API, and those core pieces are implemented primarily in C.</p>
+<p>The Python language itself is a specification. That specification does not require C. A compatible Python implementation can be written in another language as long as it follows the same language behavior.</p>`,
+      },
+      {
+        heading: 'Python implementations compared',
+        body: `<table class="impl-table">
+  <thead><tr><th>Implementation</th><th>Written in</th><th>Role</th></tr></thead>
+  <tbody>
+    <tr><td>CPython</td><td>C and Python</td><td>Reference implementation and most common runtime</td></tr>
+    <tr><td>PyPy</td><td>RPython and Python</td><td>Alternative runtime with JIT compilation</td></tr>
+    <tr><td>Jython</td><td>Java</td><td>Python implementation for the JVM</td></tr>
+    <tr><td>IronPython</td><td>C#</td><td>Python implementation for .NET</td></tr>
+  </tbody>
+</table>`,
+      },
+    ],
+  },
+  javascript: {
+    answerHtml: '<strong>JavaScript</strong> is a language standard, so the language itself is not "written in" one language. Modern JavaScript engines are mostly written in <strong>C++</strong>: V8, SpiderMonkey, and JavaScriptCore all use C++ for performance-critical compiler and runtime code.',
+    faqAnswer: 'JavaScript itself is a language standard. Modern JavaScript engines such as V8, SpiderMonkey, and JavaScriptCore are mostly written in C++, although the earliest SpiderMonkey implementation was written in C.',
+    facts: [
+      { label: 'Short answer', value: 'Modern JavaScript engines are mostly C++' },
+      { label: 'Specification', value: 'ECMAScript' },
+      { label: 'Major engines', value: 'V8, SpiderMonkey, JavaScriptCore' },
+      { label: 'Historical note', value: 'Original SpiderMonkey began in C' },
+    ],
+    sections: [
+      {
+        heading: 'JavaScript language vs JavaScript engines',
+        body: `<p>JavaScript source code runs inside an engine. The ECMAScript specification defines the language, but engines such as V8, SpiderMonkey, and JavaScriptCore implement parsing, bytecode generation, JIT compilation, garbage collection, and runtime behavior.</p>
+<p>That is why the most useful answer is about engines: V8 powers Chrome and Node.js, SpiderMonkey powers Firefox, and JavaScriptCore powers Safari. Their performance-sensitive implementation code is primarily C++.</p>`,
+      },
+      {
+        heading: 'Major JavaScript engines',
+        body: `<table class="impl-table">
+  <thead><tr><th>Engine</th><th>Written in</th><th>Used by</th></tr></thead>
+  <tbody>
+    <tr><td>V8</td><td>C++</td><td>Chrome, Node.js, Deno, Electron</td></tr>
+    <tr><td>SpiderMonkey</td><td>C++, Rust, JavaScript</td><td>Firefox</td></tr>
+    <tr><td>JavaScriptCore</td><td>C++</td><td>Safari and WebKit</td></tr>
+  </tbody>
+</table>`,
+      },
+    ],
+  },
+  rust: {
+    answerHtml: '<strong>Rust</strong> is self-hosting: the official compiler, <strong>rustc</strong>, is written in <strong>Rust</strong>. Early Rust used an OCaml compiler, and modern rustc uses LLVM as its backend.',
+    faqAnswer: 'Rust is self-hosting. The official Rust compiler, rustc, is written in Rust. The first Rust compiler was written in OCaml, and modern rustc uses LLVM as its backend.',
+    facts: [
+      { label: 'Short answer', value: 'rustc is written in Rust' },
+      { label: 'Original compiler', value: 'OCaml' },
+      { label: 'Backend', value: 'LLVM' },
+      { label: 'Bootstrap status', value: 'Self-hosting since 2011' },
+    ],
+    sections: [
+      {
+        heading: 'How Rust bootstraps itself',
+        body: `<p>Rustc is written in Rust, so building a new rustc needs an existing compiler. The normal bootstrap chain uses a previous rustc snapshot to compile the current compiler source. This is the standard self-hosting pattern for mature compiled languages.</p>
+<p>The historical path matters: Rust did not start self-hosted. The early compiler was written in OCaml, then the project moved to a Rust-in-Rust compiler once the language was capable enough to compile itself.</p>`,
+      },
+      {
+        heading: 'Rust implementation layers',
+        body: `<table class="impl-table">
+  <thead><tr><th>Layer</th><th>Written in</th><th>What it does</th></tr></thead>
+  <tbody>
+    <tr><td>rustc frontend and compiler driver</td><td>Rust</td><td>Parses, analyzes, type-checks, and drives compilation</td></tr>
+    <tr><td>Historical rustboot compiler</td><td>OCaml</td><td>Original compiler before Rust became self-hosting</td></tr>
+    <tr><td>LLVM backend</td><td>C++</td><td>Optimization and machine-code generation backend used by rustc</td></tr>
+    <tr><td>mrustc</td><td>C++</td><td>Alternative compiler useful in bootstrap discussions</td></tr>
+  </tbody>
+</table>`,
+      },
+    ],
+  },
+  go: {
+    answerHtml: '<strong>Go</strong> is self-hosting: since Go 1.5, the Go compiler and most of the runtime have been written in <strong>Go</strong>. Before that rewrite, the original Go compiler was written in <strong>C</strong>.',
+    faqAnswer: 'Go is self-hosting. Since Go 1.5 in 2015, the Go compiler and most of the runtime have been written in Go. The earlier Go compiler was written in C.',
+    facts: [
+      { label: 'Short answer', value: 'Go compiler and runtime are written in Go' },
+      { label: 'Self-hosting since', value: 'Go 1.5 in 2015' },
+      { label: 'Before Go 1.5', value: 'Compiler written in C' },
+      { label: 'Low-level pieces', value: 'Some assembly remains' },
+    ],
+    sections: [
+      {
+        heading: 'Go before and after Go 1.5',
+        body: `<p>The original Go toolchain was written in C. In Go 1.5, the project completed the move to a self-hosted compiler written in Go. That transition made the compiler easier for Go contributors to maintain and aligned the toolchain with the language it compiles.</p>
+<p>The Go runtime is also mostly Go, including scheduler and garbage collector code, with architecture-specific assembly where direct machine-level control is needed.</p>`,
+      },
+      {
+        heading: 'Go implementation layers',
+        body: `<table class="impl-table">
+  <thead><tr><th>Layer</th><th>Written in</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>Modern compiler</td><td>Go</td><td>Self-hosted since Go 1.5</td></tr>
+    <tr><td>Historical compiler</td><td>C</td><td>Used before the Go 1.5 rewrite</td></tr>
+    <tr><td>Runtime</td><td>Go and assembly</td><td>Scheduler, garbage collector, low-level architecture support</td></tr>
+  </tbody>
+</table>`,
+      },
+    ],
+  },
+  java: {
+    answerHtml: '<strong>Java</strong> has several layers. The <strong>javac</strong> compiler is written in <strong>Java</strong>, while the HotSpot JVM runtime is written mainly in <strong>C and C++</strong>. The Java standard library is largely written in Java.',
+    faqAnswer: 'The Java compiler javac is written in Java. The HotSpot JVM runtime is written mainly in C and C++, and the Java standard library is largely written in Java.',
+    facts: [
+      { label: 'Compiler', value: 'javac is written in Java' },
+      { label: 'Runtime', value: 'HotSpot JVM is written in C and C++' },
+      { label: 'Standard library', value: 'Mostly Java' },
+      { label: 'Compiled output', value: 'JVM bytecode' },
+    ],
+    sections: [
+      {
+        heading: 'Java compiler vs JVM runtime',
+        body: `<p>Java source code is compiled by javac into JVM bytecode. Javac itself is written in Java, so the Java compiler is self-hosting in the practical sense: new compiler versions are built using an existing Java toolchain.</p>
+<p>Running Java bytecode is a different job. The HotSpot JVM includes an interpreter, JIT compiler, garbage collectors, class loading, and platform integration. Those runtime layers are implemented mainly in C and C++.</p>`,
+      },
+      {
+        heading: 'Java implementation layers',
+        body: `<table class="impl-table">
+  <thead><tr><th>Layer</th><th>Written in</th><th>What it does</th></tr></thead>
+  <tbody>
+    <tr><td>javac</td><td>Java</td><td>Compiles Java source to JVM bytecode</td></tr>
+    <tr><td>HotSpot JVM</td><td>C and C++</td><td>Runs bytecode, JIT-compiles hot code, manages memory</td></tr>
+    <tr><td>Java standard library</td><td>Java</td><td>Core APIs such as java.lang and java.util</td></tr>
+  </tbody>
+</table>`,
+      },
+    ],
+  },
+};
+
+function renderQuickFacts(facts: QuickFact[]): string {
+  if (facts.length === 0) return '';
+  const items = facts.map(f => `<div class="quick-fact">
+    <dt>${escapeHtml(f.label)}</dt>
+    <dd>${escapeHtml(f.value)}</dd>
+  </div>`).join('\n');
+  return `<section class="quick-facts-section">
+  <h2>Quick Facts</h2>
+  <dl class="quick-facts">${items}</dl>
+</section>`;
+}
+
+function buildPriorityContent(node: Language): string {
+  const content = PRIORITY_CONTENT[idToSlug(node.id)];
+  if (!content) return '';
+  const sections = content.sections.map(section => `<section class="intent-section">
+  <h2>${escapeHtml(section.heading)}</h2>
+  ${section.body}
+</section>`).join('\n');
+  return `${renderQuickFacts(content.facts)}
+${sections}`;
+}
+
 function buildAnswerBox(node: Language, rels: Relationship[], nodeMap: Map<string, Language>): string {
   const id = node.id;
+  const priority = PRIORITY_CONTENT[idToSlug(id)];
+  if (priority) {
+    return `<div class="answer-box">${priority.answerHtml}</div>`;
+  }
+
   const implTypes = new Set(['compiler_written_in', 'runtime_written_in', 'bootstrap_written_in', 'rewritten_in']);
   const implRels = rels.filter(r => r.to_language === id && implTypes.has(r.relationship));
 
@@ -352,6 +537,7 @@ function buildInfluenceSection(node: Language, rels: Relationship[], nodeMap: Ma
 
 function buildFaqs(node: Language, rels: Relationship[], nodeMap: Map<string, Language>): { q: string; a: string }[] {
   const id = node.id;
+  const priority = PRIORITY_CONTENT[idToSlug(id)];
   const faqs: { q: string; a: string }[] = [];
   const implTypes = new Set(['compiler_written_in', 'runtime_written_in', 'bootstrap_written_in']);
   const implRels = rels.filter(r => r.to_language === id && implTypes.has(r.relationship));
@@ -360,7 +546,7 @@ function buildFaqs(node: Language, rels: Relationship[], nodeMap: Map<string, La
     const names = [...new Set(implRels.map(r => nameFromId(r.from_language, nodeMap)))];
     faqs.push({
       q: `What language is ${node.name} written in?`,
-      a: `${node.name} is primarily implemented in ${names.join(' and ')}. See the implementation section above for details and source references.`,
+      a: priority?.faqAnswer ?? `${node.name} is primarily implemented in ${names.join(' and ')}. See the implementation section above for details and source references.`,
     });
   }
 
@@ -513,6 +699,7 @@ function buildNodePage(node: Language, rels: Relationship[], nodeMap: Map<string
     ? `${node.name} is implemented in ${implLangs.slice(0, 2).join(' and ')}. Explore its compiler, runtime, and influence relationships.`
     : `Explore ${node.name}'s relationships, influences, and history in the Language Lineage graph.`;
   const description = truncateMetaDescription(priorityOverride ? priorityOverride.description : descriptionBase, 160);
+  const priorityContentHtml = buildPriorityContent(node);
 
   const faqs = buildFaqs(node, rels, nodeMap);
   const faqJsonLd = faqs.length > 0 ? JSON.stringify({
@@ -604,8 +791,11 @@ ${faqs.map(f => `<div class="faq-item">
   ${buildToolIntro(node)}
 
   ${buildAnswerBox(node, rels, nodeMap)}
+${priorityContentHtml ? `
 
-  ${buildGraphSection(node)}
+  ${priorityContentHtml}
+` : `
+`}  ${buildGraphSection(node)}
 
   ${buildImplSection(node, rels, nodeMap)}
 
@@ -644,9 +834,18 @@ const QUESTIONS: QuestionDef[] = [
     slug: 'what-is-python-written-in',
     title: 'What is Python written in?',
     answer: "Python's reference implementation, CPython, is written primarily in C. The language specification itself is implementation-independent, but CPython is the dominant runtime and is implemented in C for performance and portability. Other implementations include Jython (Java), PyPy (Python/RPython), and IronPython (.NET).",
-    details: `<p>When people ask "what is Python written in?" they usually mean CPython, the reference implementation maintained by the Python Software Foundation. CPython's interpreter core and standard library are written in C, with some modules written in Python itself.</p>
-<p>Python as a <em>language specification</em> is separate from any particular implementation. The specification doesn't mandate that Python must be implemented in C — but CPython happens to be the most widely deployed runtime.</p>
-<p>The dataset records a <code>runtime_written_in</code> relationship from C to Python, indicating that Python's primary runtime is implemented in C.</p>`,
+    details: `<p>When people ask "what is Python written in?" they usually mean CPython, the reference implementation maintained by the Python Software Foundation. CPython's interpreter core, object model, memory allocator, and C API are implemented primarily in C, with many higher-level library modules written in Python.</p>
+<p>Python as a <em>language specification</em> is separate from any particular implementation. The specification does not require C. CPython is simply the dominant runtime and the behavior most people mean when they say "Python."</p>
+<h2>Python implementation layers</h2>
+<table class="impl-table">
+  <thead><tr><th>Layer</th><th>Written in</th><th>Role</th></tr></thead>
+  <tbody>
+    <tr><td>CPython core</td><td>C</td><td>Interpreter, object model, memory management, C API</td></tr>
+    <tr><td>Standard library</td><td>Python and C</td><td>Built-in modules, libraries, extension modules</td></tr>
+    <tr><td>Alternative runtimes</td><td>RPython, Java, C#</td><td>PyPy, Jython, IronPython</td></tr>
+  </tbody>
+</table>
+<p>The dataset records a <code>runtime_written_in</code> relationship from C to Python because CPython is the reference and most widely deployed Python runtime.</p>`,
     relatedLangs: ['python', 'c'],
     relatedTools: [],
   },
@@ -654,9 +853,18 @@ const QUESTIONS: QuestionDef[] = [
     slug: 'what-is-javascript-written-in',
     title: 'What is JavaScript written in?',
     answer: "The major JavaScript engines are written in C++. Google's V8 (used in Chrome and Node.js), Mozilla's SpiderMonkey, and Apple's JavaScriptCore are all implemented in C++. The JavaScript language specification is defined by ECMAScript and doesn't mandate any particular implementation language.",
-    details: `<p>JavaScript engines perform lexing, parsing, compilation, and execution of JavaScript code. The performance-critical work of JIT compilation and garbage collection is done in C++ for most major engines.</p>
-<p>V8, SpiderMonkey, and JavaScriptCore each compile JavaScript to native machine code using JIT techniques — a task that benefits from C++'s low-level memory control.</p>
-<p>The dataset records <code>compiler_written_in</code> and <code>runtime_written_in</code> relationships from C++ to the major JavaScript engines.</p>`,
+    details: `<p>JavaScript itself is a language standard, defined by ECMAScript. The useful implementation question is about JavaScript engines: the programs that parse, compile, optimize, and execute JavaScript code.</p>
+<p>Most major engines use C++ for performance-critical compiler and runtime code. V8 powers Chrome and Node.js, SpiderMonkey powers Firefox, and JavaScriptCore powers Safari and WebKit-based environments.</p>
+<h2>Major JavaScript engines</h2>
+<table class="impl-table">
+  <thead><tr><th>Engine</th><th>Written in</th><th>Where it runs</th></tr></thead>
+  <tbody>
+    <tr><td>V8</td><td>C++</td><td>Chrome, Node.js, Deno, Electron</td></tr>
+    <tr><td>SpiderMonkey</td><td>C++, Rust, JavaScript</td><td>Firefox</td></tr>
+    <tr><td>JavaScriptCore</td><td>C++</td><td>Safari and WebKit</td></tr>
+  </tbody>
+</table>
+<p>The dataset keeps the historical C relationship for the original SpiderMonkey implementation, while the modern engine pages document C++-based implementations such as V8 and JavaScriptCore.</p>`,
     relatedLangs: ['javascript', 'cxx'],
     relatedTools: ['v8', 'spidermonkey', 'javascriptcore'],
   },
@@ -664,9 +872,19 @@ const QUESTIONS: QuestionDef[] = [
     slug: 'what-is-rust-written-in',
     title: 'What is Rust written in?',
     answer: "Rust is self-hosting: the Rust compiler (rustc) is written in Rust. The first version of rustc was written in OCaml; Rust became self-hosting in 2011. mrustc is an alternative Rust compiler written in C++ that can bootstrap rustc from source.",
-    details: `<p>Rustc, the official Rust compiler, is written in Rust — making it a self-hosting compiler. Self-hosting means the compiler can compile its own source code.</p>
-<p>The bootstrap chain works roughly as follows: a previous version of rustc (or mrustc) compiles the current rustc source. This allows Rust to evolve without depending on another language for its compiler.</p>
-<p>The dataset records a <code>bootstrap_written_in</code> relationship showing Rust's self-hosting bootstrap chain, and a historical <code>compiler_written_in</code> relationship from OCaml representing the original implementation.</p>`,
+    details: `<p>Rustc, the official Rust compiler, is written in Rust, making Rust self-hosting. Self-hosting means the compiler can compile the source code of its own compiler.</p>
+<p>Rust was not self-hosting from day one. Early Rust used a compiler written in OCaml, then moved to rustc written in Rust once the language and compiler were mature enough.</p>
+<h2>Rust implementation layers</h2>
+<table class="impl-table">
+  <thead><tr><th>Layer</th><th>Written in</th><th>Role</th></tr></thead>
+  <tbody>
+    <tr><td>rustc frontend and compiler driver</td><td>Rust</td><td>Parses, type-checks, and drives compilation</td></tr>
+    <tr><td>Historical compiler</td><td>OCaml</td><td>Original Rust compiler before self-hosting</td></tr>
+    <tr><td>LLVM backend</td><td>C++</td><td>Optimization and machine-code generation</td></tr>
+    <tr><td>mrustc</td><td>C++</td><td>Alternative compiler relevant to bootstrap chains</td></tr>
+  </tbody>
+</table>
+<p>The bootstrap chain normally uses a previous rustc snapshot to build the next compiler version. The dataset records both Rust's self-hosting chain and the historical OCaml origin.</p>`,
     relatedLangs: ['rust', 'ocaml', 'cxx'],
     relatedTools: ['mrustc'],
   },
@@ -674,9 +892,18 @@ const QUESTIONS: QuestionDef[] = [
     slug: 'what-is-go-written-in',
     title: 'What is Go written in?',
     answer: "Go is self-hosting since version 1.5 (2015). The Go compiler and runtime are written in Go itself. Before Go 1.5, the gc compiler was written in C. The transition to a self-hosted compiler was completed as part of the Go 1.5 release.",
-    details: `<p>The Go compiler toolchain (gc) is written entirely in Go. The Go runtime — which handles goroutines, garbage collection, and the scheduler — is also written in Go, with some assembly for low-level operations.</p>
-<p>Before Go 1.5, the compiler was written in C, and the runtime was a mix of C and Go. The Go team rewrote the compiler in Go as part of their language stability goals.</p>
-<p>The dataset records a <code>bootstrap_written_in</code> relationship reflecting Go's self-hosted compiler, and a historical <code>compiler_written_in</code> from C.</p>`,
+    details: `<p>The Go compiler toolchain is written in Go. The Go runtime, including the scheduler and garbage collector, is also mostly written in Go, with assembly where the runtime needs architecture-specific machine-level behavior.</p>
+<p>Before Go 1.5, the compiler was written in C. Go 1.5 completed the move to a self-hosted compiler, which means modern Go is built using Go itself.</p>
+<h2>Go implementation layers</h2>
+<table class="impl-table">
+  <thead><tr><th>Layer</th><th>Written in</th><th>Role</th></tr></thead>
+  <tbody>
+    <tr><td>Modern compiler</td><td>Go</td><td>Compiles Go source; self-hosted since Go 1.5</td></tr>
+    <tr><td>Historical compiler</td><td>C</td><td>Used before the Go 1.5 rewrite</td></tr>
+    <tr><td>Runtime</td><td>Go and assembly</td><td>Goroutines, scheduler, garbage collector, low-level runtime support</td></tr>
+  </tbody>
+</table>
+<p>The dataset records Go's self-hosted compiler and runtime relationships as well as the historical compiler relationship from C.</p>`,
     relatedLangs: ['go', 'c'],
     relatedTools: [],
   },
@@ -684,9 +911,18 @@ const QUESTIONS: QuestionDef[] = [
     slug: 'what-is-java-written-in',
     title: 'What is Java written in?',
     answer: "The Java compiler (javac) is written in Java — making it partially self-hosting. The HotSpot JVM, the primary Java runtime, is written in C and C++. The Java standard library (java.lang, java.util, etc.) is written in Java itself.",
-    details: `<p>Java has two distinct implementations to consider: the compiler and the runtime.</p>
-<p>The <strong>javac compiler</strong> is written in Java. It compiles Java source files to JVM bytecode. Because javac is itself written in Java, it must be bootstrapped using a previous version of the compiler.</p>
-<p>The <strong>HotSpot JVM</strong> — the virtual machine that interprets or JIT-compiles bytecode at runtime — is written in C and C++. HotSpot includes the garbage collector, JIT compiler, class loader, and interpreter, all implemented in C/C++.</p>`,
+    details: `<p>Java has multiple implementation layers: the compiler, the virtual machine, and the standard library. A complete answer depends on which layer you mean.</p>
+<p>The <strong>javac compiler</strong> is written in Java. It compiles Java source files to JVM bytecode. Because javac is itself written in Java, new versions are bootstrapped using an existing Java toolchain.</p>
+<p>The <strong>HotSpot JVM</strong>, the primary Java runtime, is written mainly in C and C++. HotSpot includes the bytecode interpreter, JIT compiler, garbage collectors, class loader, and native platform integration.</p>
+<h2>Java implementation layers</h2>
+<table class="impl-table">
+  <thead><tr><th>Layer</th><th>Written in</th><th>Role</th></tr></thead>
+  <tbody>
+    <tr><td>javac</td><td>Java</td><td>Compiles Java source to JVM bytecode</td></tr>
+    <tr><td>HotSpot JVM</td><td>C and C++</td><td>Executes bytecode, JIT-compiles hot code, manages memory</td></tr>
+    <tr><td>Standard library</td><td>Java</td><td>Core APIs such as java.lang and java.util</td></tr>
+  </tbody>
+</table>`,
     relatedLangs: ['java', 'c', 'cxx'],
     relatedTools: ['hotspot'],
   },
@@ -786,6 +1022,8 @@ const QUESTIONS: QuestionDef[] = [
 function buildQuestionPage(q: QuestionDef, nodeMap: Map<string, Language>): string {
   const url = `${SITE}/questions/${q.slug}`;
   const metaDescription = truncateMetaDescription(q.answer);
+  const prioritySlug = q.slug.match(/^what-is-(.+)-written-in$/)?.[1];
+  const priorityContent = prioritySlug ? PRIORITY_CONTENT[prioritySlug] : null;
   const faqJsonLd = JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
@@ -847,8 +1085,11 @@ ${NAV_HTML}
   <h1>${escapeHtml(q.title)}</h1>
 
   <div class="question-answer">${escapeHtml(q.answer)}</div>
+${priorityContent ? `
 
-  <h2>Details</h2>
+  ${renderQuickFacts(priorityContent.facts)}
+` : `
+`}  <h2>Details</h2>
   ${q.details}
 
   <h2>Explore in the Graph</h2>
