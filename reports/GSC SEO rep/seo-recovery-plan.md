@@ -106,6 +106,23 @@ Tasks:
 - Confirm sitemap uses only `https://www.languagelineage.org`.
 - Check deployment-level redirects for non-www to www.
 
+Status: complete for the first crawl/mobile verification pass.
+
+Implemented:
+- Fixed the landing-page mobile navbar so `Enter Graph` stays in the top-right row instead of wrapping below the nav links.
+- Increased mobile hero top spacing so fixed navigation does not overlap the hero copy.
+- Changed the tablet/mobile hero grid track to `minmax(0, 1fr)` so content can shrink cleanly on narrow screens.
+- Tightened the small-phone hero padding and text constraints to prevent right-edge clipping at 320px.
+
+Validation:
+- Playwright mobile landing checks pass at 320px, 390px, and 768px: no horizontal overflow, `Enter Graph` is in the top navbar row, and hero title/subtitle fit within the viewport.
+- Playwright no-JS mobile check on `/languages/rust/` confirms H1, canonical, primary text, and 3 JSON-LD blocks are present in static HTML before hydration.
+- `npm run seo:validate` passes with 0 errors and 0 warnings.
+- `npm run type-check` passes.
+- `npm run build` passes; the only warning is the existing Cytoscape chunk-size warning.
+- Live `https://languagelineage.org/` redirects once to `https://www.languagelineage.org/`.
+- Live `https://www.languagelineage.org/` and `/sitemap.xml` return 200.
+
 ## Phase 5: Measurement Loop
 
 Goal: turn GSC data into weekly iteration.
