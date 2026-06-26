@@ -27,7 +27,7 @@ An interactive graph visualization mapping the lineage, influence, and implement
 
 ## Overview
 
-This project visualizes how programming languages are connected through compiler chains, runtime dependencies, influence relationships, and bootstrapping paths. The dataset (v4) covers 112 nodes (98 languages, 14 tools) and 347 relationships, each backed by evidence sources and confidence scores.
+This project visualizes how programming languages are connected through compiler chains, runtime dependencies, influence relationships, and bootstrapping paths. The dataset (v5) covers 112 nodes (98 languages, 14 tools), 347 relationships, and 77 sourced logo URLs for graph rendering.
 
 ### What You Can Explore
 
@@ -48,7 +48,7 @@ ProgrammingLanguageGraph/
 │   │   └── App.css
 │   ├── data/                       Data pipeline
 │   │   ├── types.ts                TypeScript types (languages, edges, filters, Cytoscape elements)
-│   │   ├── loadDataset.ts          Fetch dataset JSON by version (v1/v2/v4)
+│   │   ├── loadDataset.ts          Fetch dataset JSON by version (v1/v2/v4/v5)
 │   │   ├── validateDataset.ts      Integrity checks (duplicates, dangling refs, confidence)
 │   │   ├── normalizeDataset.ts     Compute degrees, assign clusters, build lookup maps
 │   │   └── indexDataset.ts         Build search index for fast lookups
@@ -75,10 +75,11 @@ ProgrammingLanguageGraph/
 │   ├── v1/                         28 languages, initial dataset
 │   ├── v2/                         67 languages, 128 edges
 │   ├── v3/                         71 languages, 169 edges
-│   └── v4/                         112 languages, 300 edges (current)
-│       └── lineage_v4.json
+│   ├── v4/                         112 nodes, 347 relationships
+│   └── v5/                         112 nodes, 347 relationships + logo metadata (current)
+│       └── lineage_v5.json
 ├── scripts/                        Dataset tooling
-│   ├── schema.ts                   Zod validation schemas (15 language fields, 8 edge fields)
+│   ├── schema.ts                   Zod validation schemas (18 language fields, 8 edge fields)
 │   ├── analyzeDataset.ts           CLI analyzer (schema, integrity, metrics)
 │   ├── addNewFields.ts             Helper: add null defaults for new fields
 │   ├── enrichData.ts               Helper: populate high-confidence metadata
@@ -103,14 +104,15 @@ ProgrammingLanguageGraph/
 | Validation | Zod 3.23 | Runtime schema validation for dataset tooling |
 | Scripts | tsx 4.7 | TypeScript execution for scripts (no compilation step) |
 
-## Dataset (v4)
+## Dataset (v5)
 
 ### Scale
 
 - 112 nodes: 98 languages + 14 tools (compilers, runtimes, engines)
 - 347 relationships, each with confidence score and evidence source URL
 - 100% evidence coverage — every relationship has at least one source
-- 15 fields per language (10 core + 5 enriched metadata fields)
+- 77 logo URLs: 50 Devicon assets + 21 Wikimedia P154 logos + 6 explicitly marked proxy logos
+- 18 fields per language (10 core + 5 enriched metadata fields + 3 logo metadata fields)
 
 ### Language Fields
 
@@ -128,7 +130,10 @@ ProgrammingLanguageGraph/
 | `cluster_hint` | string | Visual grouping hint for graph layout |
 | `company` | string or null | Creating company/org if unambiguous |
 | `garbage_collected` | boolean or null | Automatic memory management |
-| `logo_url` | null | Reserved for future use |
+| `logo_url` | string or null | Sourced logo URL used by graph and SEO rendering |
+| `logo_source` | string or null | Source repository/directory for the logo asset |
+| `logo_license` | string or null | Logo source license note |
+| `logo_kind` | enum or null | `devicon`, `wikimedia`, `proxy`, or `none` |
 | `peak_year` | int or null | Year of historically documented peak popularity |
 | `current_users_estimate` | enum or null | `niche` / `moderate` / `large` / `dominant` |
 
@@ -197,13 +202,13 @@ GraphView            Render with Cytoscape.js
 
 The `scripts/analyzeDataset.ts` tool runs comprehensive validation:
 
-- Zod schema validation (all 15 language fields, all 8 edge fields)
+- Zod schema validation (all 18 language fields, all 8 edge fields)
 - Integrity: duplicates, unresolved refs, duplicate edges, circular bootstrap chains
 - Historical logic: start_year must be >= release year, end_year must be >= start_year
 - Graph metrics: degree distribution, connected components, top 10 nodes
 
 ```bash
-npm run analyze:v4
+npm run analyze:v5
 ```
 
 ## Quick Start
@@ -230,7 +235,7 @@ npm run seo:validate
 npm run type-check
 
 # Run dataset analyzer
-npm run analyze:v4
+npm run analyze:v5
 ```
 
 ## Route Structure
@@ -248,13 +253,13 @@ npm run analyze:v4
 | `/guides/{slug}` | Static HTML | Individual guide (10 guides) |
 | `/relationships` | Static HTML | Index of all relationship types |
 | `/relationships/{slug}` | Static HTML | Individual relationship type page |
-| `/sitemap.xml` | XML | Sitemap (135 URLs) |
+| `/sitemap.xml` | XML | Sitemap (156 URLs) |
 | `/robots.txt` | Text | Crawler directives |
 | `/llms.txt` | Text | LLM-readable dataset summary |
 
 ## Adding a New Language
 
-1. Edit `dataset/v4/lineage_v4.json` — add the language node and relationships
+1. Edit `dataset/v5/lineage_v5.json` — add the language node and relationships
 2. Run `npm run seo:generate` — regenerates all 112+ static pages
 3. Run `npm run seo:validate` — confirms 0 errors
 4. Deploy (Vercel picks up changes automatically on push)
@@ -262,7 +267,7 @@ npm run analyze:v4
 ## Citation
 
 ```
-Language Lineage (languagelineage.org). Programming Language Lineage Dataset, v4.
+Language Lineage (languagelineage.org). Programming Language Lineage Dataset, v5.
 112 nodes, 347 relationships. Accessed 2026. https://languagelineage.org/dataset
 ```
 
@@ -297,9 +302,10 @@ Language Lineage (languagelineage.org). Programming Language Lineage Dataset, v4
 | v1 | 28 | ~50 | Initial dataset, compilers and runtimes only |
 | v2 | 67 | 128 | Extended with more languages, implementations array |
 | v3 | 71 | 169 | Added influence relationships |
-| v4 | 112 | 300 | Full enrichment: 5 new metadata fields, influence edges, 41 data fixes |
+| v4 | 112 | 347 | Full enrichment: 5 new metadata fields, influence edges, 41 data fixes |
+| v5 | 112 | 347 | Adds sourced Devicon and Wikimedia logo URLs, logo source metadata, and dataset-driven graph logo rendering |
 
-The app loads v4 by default. Previous versions remain available in `dataset/`.
+The app loads v5 by default. Previous versions remain available in `dataset/`.
 
 ## Scripts
 
@@ -311,6 +317,9 @@ The app loads v4 by default. Previous versions remain available in `dataset/`.
 | `seo:validate` | `npm run seo:validate` | Validate all generated pages (0 errors expected) |
 | `analyze` | `npm run analyze` | Run dataset analyzer on default path |
 | `analyze:v4` | `npm run analyze:v4` | Run analyzer on v4 dataset |
+| `analyze:v5` | `npm run analyze:v5` | Run analyzer on v5 dataset |
+| `dataset:v5` | `npm run dataset:v5` | Regenerate v5 from v4 plus logo metadata |
+| `logos:wikimedia` | `npm run logos:wikimedia` | Refresh Wikidata P154 logo overrides and audit report |
 
 ### Helper Scripts
 
@@ -337,7 +346,7 @@ These were used during the v4 enrichment process and are kept for reference:
 1. Fork the repository
 2. Create a feature branch
 3. Make changes with evidence sources
-4. Run `npm run analyze:v4` to validate
+4. Run `npm run analyze:v5` to validate
 5. Submit a pull request
 
 ### Data Contributions

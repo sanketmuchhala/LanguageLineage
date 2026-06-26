@@ -40,10 +40,13 @@ export interface RawLanguageNode {
   self_hosting?: boolean;
   notes: string | null;
   cluster_hint?: string | null;
-  // v4 enriched fields
+  // v4+ enriched fields
   company?: string | null;
   garbage_collected?: boolean | null;
   logo_url?: string | null;
+  logo_source?: string | null;
+  logo_license?: string | null;
+  logo_kind?: 'devicon' | 'wikimedia' | 'proxy' | 'none' | null;
   peak_year?: number | null;
   current_users_estimate?: 'niche' | 'moderate' | 'large' | 'dominant' | null;
 }
@@ -72,7 +75,7 @@ export interface RawDataset {
   languages: RawLanguageNode[];
   implementations?: RawImplementation[];
   edges?: RawEdge[];
-  relationships?: RawEdge[]; // v4 uses "relationships" instead of "edges"
+  relationships?: RawEdge[]; // v4+ uses "relationships" instead of "edges"
 }
 
 // Normalized types (after processing)

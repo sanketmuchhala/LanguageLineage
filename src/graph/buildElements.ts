@@ -88,7 +88,7 @@ export function buildCytoscapeElements(
   for (const lang of dataset.languages) {
     // Include node if it matches search OR has visible edges
     if (visibleNodes.has(lang.id) || nodesWithEdges.has(lang.id)) {
-      const logoUrl = LOGO_MAP[lang.id] ?? null;
+      const logoUrl = lang.logo_url ?? LOGO_MAP[lang.id] ?? null;
       const logoColor = LOGO_COLORS[lang.id] ?? null;
       const abbr = logoUrl ? '' : getLetterAbbreviation(lang.name);
       const node: CytoscapeNode = {

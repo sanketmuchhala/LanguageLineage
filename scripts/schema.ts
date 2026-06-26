@@ -67,6 +67,12 @@ export const CurrentUsersEstimateEnum = z.enum(['niche', 'moderate', 'large', 'd
 
 export type CurrentUsersEstimate = z.infer<typeof CurrentUsersEstimateEnum>;
 
+// Logo source classification. "proxy" means a related project or owner logo is
+// used because a dedicated language/tool icon is not available.
+export const LogoKindEnum = z.enum(['devicon', 'wikimedia', 'proxy', 'none']);
+
+export type LogoKind = z.infer<typeof LogoKindEnum>;
+
 // Relationship type enum
 export const RelationshipTypeEnum = z.enum([
   'influenced',
@@ -80,7 +86,7 @@ export const RelationshipTypeEnum = z.enum([
 
 export type RelationshipType = z.infer<typeof RelationshipTypeEnum>;
 
-// Language schema (15 fields: 10 existing + 5 new)
+// Language schema (18 fields: 10 existing + 5 enriched metadata + 3 logo metadata)
 export const LanguageSchema = z.object({
   // Existing fields (10)
   id: z.string(),
@@ -93,10 +99,13 @@ export const LanguageSchema = z.object({
   self_hosting: z.boolean(),
   notes: z.string().nullable(),
   cluster_hint: z.string().nullable(),
-  // New fields (5)
+  // Enriched metadata + logo metadata
   company: z.string().nullable(),
   garbage_collected: z.boolean().nullable(),
-  logo_url: z.null(),
+  logo_url: z.string().nullable(),
+  logo_source: z.string().nullable().optional(),
+  logo_license: z.string().nullable().optional(),
+  logo_kind: LogoKindEnum.nullable().optional(),
   peak_year: z.number().int().nullable(),
   current_users_estimate: CurrentUsersEstimateEnum.nullable(),
 });

@@ -10,6 +10,9 @@
     "type-check": "tsc --noEmit",
     "analyze": "tsx scripts/analyzeDataset.ts",
     "analyze:v4": "tsx scripts/analyzeDataset.ts dataset/v4/lineage_v4.json",
+    "analyze:v5": "tsx scripts/analyzeDataset.ts dataset/v5/lineage_v5.json",
+    "dataset:v5": "tsx scripts/generateV5Dataset.ts",
+    "logos:wikimedia": "tsx scripts/harvestWikimediaLogos.ts",
     "seo:generate": "tsx scripts/generateSeoPages.ts && tsx scripts/generateSitemap.ts && tsx scripts/generateLlmsTxt.ts",
     "seo:validate": "tsx scripts/validateSeo.ts"
   },

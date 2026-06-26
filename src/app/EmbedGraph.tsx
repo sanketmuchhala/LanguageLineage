@@ -5,6 +5,7 @@ import coseBilkent from 'cytoscape-cose-bilkent';
 import { loadDataset } from '../data/loadDataset';
 import { normalizeDataset } from '../data/normalizeDataset';
 import { getCytoscapeStyle } from '../graph/style';
+import { LOGO_MAP, LOGO_COLORS, getLetterAbbreviation } from '../data/logoMap';
 
 // Guard against double-registration when shared bundle loads this module twice
 try { cytoscape.use(coseBilkent); } catch { /* already registered */ }
@@ -33,7 +34,7 @@ export function EmbedGraph() {
 
     (async () => {
       try {
-        const raw = await loadDataset('v4');
+        const raw = await loadDataset('v5');
         if (cancelled) return;
 
         const dataset = normalizeDataset(raw);
@@ -56,6 +57,7 @@ export function EmbedGraph() {
         nodeIds.forEach(id => {
           const lang = dataset.languageMap.get(id);
           if (!lang) return;
+          const logoUrl = lang.logo_url ?? LOGO_MAP[id] ?? null;
           elements.push({
             group: 'nodes',
             data: {
@@ -63,6 +65,9 @@ export function EmbedGraph() {
               label: lang.name,
               cluster: lang.cluster,
               degree: lang.degree,
+              logoUrl,
+              logoColor: LOGO_COLORS[id] ?? null,
+              abbr: logoUrl ? '' : getLetterAbbreviation(lang.name),
             },
           });
         });

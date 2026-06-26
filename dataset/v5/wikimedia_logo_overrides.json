@@ -1,0 +1,177 @@
+{
+  "policy": {
+    "source": "Wikidata P154 logo image only",
+    "storage": "Wikimedia Commons original file URLs",
+    "replacement": "fill missing logos and replace proxy logos only"
+  },
+  "logos": {
+    "lang:ada": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/3/31/Ada_horizon_green_logo_with_slogan.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:Ada_horizon_green_logo_with_slogan.svg",
+      "license": "Public domain",
+      "kind": "wikimedia",
+      "wikidata_item": "Q154755",
+      "commons_file": "Ada horizon green logo with slogan.svg"
+    },
+    "lang:algol": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/c/cd/1965_ALGOL_Logotype.jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:1965_ALGOL_Logotype.jpg",
+      "license": "CC BY-SA 3.0",
+      "kind": "wikimedia",
+      "wikidata_item": "Q188436",
+      "commons_file": "1965 ALGOL Logotype.jpg"
+    },
+    "lang:cython": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/5/58/Cython_logo.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:Cython_logo.svg",
+      "license": "Apache License 2.0",
+      "kind": "wikimedia",
+      "wikidata_item": "Q975594",
+      "commons_file": "Cython logo.svg"
+    },
+    "lang:d": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/2/24/D_Programming_Language_logo.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:D_Programming_Language_logo.svg",
+      "license": "Public domain",
+      "kind": "wikimedia",
+      "wikidata_item": "Q319268",
+      "commons_file": "D Programming Language logo.svg"
+    },
+    "lang:fortran95": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/b/b8/Fortran_logo.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:Fortran_logo.svg",
+      "license": "Public domain",
+      "kind": "wikimedia",
+      "wikidata_item": "Q83303",
+      "commons_file": "Fortran logo.svg"
+    },
+    "lang:freepascal": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/8/8f/FPClogogif.gif",
+      "source": "https://commons.wikimedia.org/wiki/File:FPClogogif.gif",
+      "license": "GPL",
+      "kind": "wikimedia",
+      "wikidata_item": "Q210295",
+      "commons_file": "FPClogogif.gif"
+    },
+    "lang:guile": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/b/b3/GNU-Guile-logo.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:GNU-Guile-logo.svg",
+      "license": "CC BY-SA 4.0",
+      "kind": "wikimedia",
+      "wikidata_item": "Q1486208",
+      "commons_file": "GNU-Guile-logo.svg"
+    },
+    "lang:lisp": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/4/48/Lisp_logo.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:Lisp_logo.svg",
+      "license": "CC BY-SA 4.0",
+      "kind": "wikimedia",
+      "wikidata_item": "Q132874",
+      "commons_file": "Lisp logo.svg"
+    },
+    "lang:modula3": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/e/ed/M3Logo.gif",
+      "source": "https://commons.wikimedia.org/wiki/File:M3Logo.gif",
+      "license": "Public domain",
+      "kind": "wikimedia",
+      "wikidata_item": "Q1928222",
+      "commons_file": "M3Logo.gif"
+    },
+    "lang:oberon": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/9/97/Oberon_programming_language_logo.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:Oberon_programming_language_logo.svg",
+      "license": "Public domain",
+      "kind": "wikimedia",
+      "wikidata_item": "Q1323362",
+      "commons_file": "Oberon programming language logo.svg"
+    },
+    "lang:oberon2": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/9/97/Oberon_programming_language_logo.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:Oberon_programming_language_logo.svg",
+      "license": "Public domain",
+      "kind": "wikimedia",
+      "wikidata_item": "Q3251260",
+      "commons_file": "Oberon programming language logo.svg"
+    },
+    "lang:pharo": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/6/6c/Pharo_Logo_v3.0.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:Pharo_Logo_v3.0.svg",
+      "license": "MIT",
+      "kind": "wikimedia",
+      "wikidata_item": "Q369096",
+      "commons_file": "Pharo Logo v3.0.svg"
+    },
+    "lang:reasonml": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/a/af/Reason-logo.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:Reason-logo.svg",
+      "license": "MIT",
+      "kind": "wikimedia",
+      "wikidata_item": "Q63565848",
+      "commons_file": "Reason-logo.svg"
+    },
+    "lang:scheme": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/3/39/Lambda_lc.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:Lambda_lc.svg",
+      "license": "Public domain",
+      "kind": "wikimedia",
+      "wikidata_item": "Q187560",
+      "commons_file": "Lambda lc.svg"
+    },
+    "lang:self": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/8/88/Self-logo.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:Self-logo.svg",
+      "license": "CC BY-SA 3.0",
+      "kind": "wikimedia",
+      "wikidata_item": "Q1864529",
+      "commons_file": "Self-logo.svg"
+    },
+    "lang:simula": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/d/d9/Simula_-_logo.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:Simula_-_logo.svg",
+      "license": "Public domain",
+      "kind": "wikimedia",
+      "wikidata_item": "Q212569",
+      "commons_file": "Simula - logo.svg"
+    },
+    "lang:smalltalk": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/b/bf/Smalltalk_Balloon.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:Smalltalk_Balloon.svg",
+      "license": "CC BY-SA 4.0",
+      "kind": "wikimedia",
+      "wikidata_item": "Q235086",
+      "commons_file": "Smalltalk Balloon.svg"
+    },
+    "lang:v": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/e/e8/V_Logo_SVG.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:V_Logo_SVG.svg",
+      "license": "MIT",
+      "kind": "wikimedia",
+      "wikidata_item": "Q61632937",
+      "commons_file": "V Logo SVG.svg"
+    },
+    "tool:ghc": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/2/2b/Haskell-logo.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Haskell-logo.png",
+      "license": "Public domain",
+      "kind": "wikimedia",
+      "wikidata_item": "Q2318908",
+      "commons_file": "Haskell-logo.png"
+    },
+    "tool:roslyn": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/2/2a/Roslyn.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Roslyn.png",
+      "license": "MIT",
+      "kind": "wikimedia",
+      "wikidata_item": "Q6840207",
+      "commons_file": "Roslyn.png"
+    },
+    "tool:spidermonkey": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/a/ae/SpiderMonkey_Logo.png",
+      "source": "https://commons.wikimedia.org/wiki/File:SpiderMonkey_Logo.png",
+      "license": "MPL 2",
+      "kind": "wikimedia",
+      "wikidata_item": "Q1848400",
+      "commons_file": "SpiderMonkey Logo.png"
+    }
+  }
+}

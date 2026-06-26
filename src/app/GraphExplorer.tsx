@@ -33,7 +33,7 @@ export function GraphExplorer() {
   useEffect(() => {
     async function initializeDataset() {
       try {
-        const rawDataset = await loadDataset('v4');
+        const rawDataset = await loadDataset('v5');
         const validationReport = validateDataset(rawDataset);
         setValidationReport(validationReport);
         const normalizedDataset = normalizeDataset(rawDataset);

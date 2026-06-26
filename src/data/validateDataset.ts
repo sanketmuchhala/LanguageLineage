@@ -1,7 +1,7 @@
 import type { RawDataset, ValidationReport } from './types';
 
 export function validateDataset(dataset: RawDataset): ValidationReport {
-  // Support both v2 (edges) and v4 (relationships)
+  // Support both v2 (edges) and v4+ (relationships)
   const edges = dataset.relationships || dataset.edges || [];
 
   const report: ValidationReport = {
