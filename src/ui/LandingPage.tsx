@@ -108,19 +108,22 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
                   </g>
                   <g className="hg-impl-runtime">
                     <circle cx="110" cy="244" r="22" />
+                    <image className="hg-logo" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" x="95" y="229" width="30" height="30" />
                     <text className="hg-label" x="110" y="285" textAnchor="middle">Python</text>
                   </g>
                   <g className="hg-impl-runtime">
                     <circle cx="220" cy="250" r="22" />
+                    <image className="hg-logo" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/ruby/ruby-original.svg" x="205" y="235" width="30" height="30" />
                     <text className="hg-label" x="220" y="291" textAnchor="middle">Ruby</text>
                   </g>
                   <g className="hg-impl-compiler">
                     <circle cx="330" cy="244" r="22" />
+                    <image className="hg-logo" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/go/go-original.svg" x="315" y="229" width="30" height="30" />
                     <text className="hg-label" x="330" y="285" textAnchor="middle">Go</text>
                   </g>
                   <g className="hg-focal-node">
                     <circle cx="220" cy="150" r="34" fill="url(#hg-focal-fill)" />
-                    <text className="hg-label-focal" x="220" y="157" textAnchor="middle">C</text>
+                    <image className="hg-logo" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/c/c-original.svg" x="197" y="127" width="46" height="46" />
                   </g>
                 </svg>
               </div>
