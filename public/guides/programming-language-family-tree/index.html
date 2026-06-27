@@ -39,19 +39,30 @@
 
   <h1>Programming Language Family Tree</h1>
 
-  <div class="answer-box">The programming language family tree traces how languages influenced, implemented, and descended from each other over 75+ years, from Fortran (1957) and LISP (1958) to Rust (2015) and beyond. It maps not just who influenced whom, but what each language is actually written in.</div>
+  <div class="answer-box">The programming language family tree traces how languages influenced, implemented, and descended from each other over 75+ years, from <a href="/languages/fortran">Fortran</a> (1957) and <a href="/languages/lisp">Lisp</a> (1958) to <a href="/languages/rust">Rust</a> and beyond. It maps two different kinds of ancestry: <strong>influence</strong> (where a language borrowed ideas) and <strong>implementation</strong> (what a language is actually written in).</div>
 
-<h2>The Roots (1950s)</h2>
-<p>The first high-level languages established the major paradigms. <a href="/languages/fortran">Fortran</a> pioneered imperative scientific computing. <a href="/languages/lisp">LISP</a> established functional programming and dynamic typing. COBOL targeted business computing. These three defined the landscape for decades.</p>
+<h2>Two kinds of family ties</h2>
+<p>Languages are related in two distinct ways, and it helps to keep them separate:</p>
+<ul>
+<li><strong>Influence</strong> — a design lineage. <a href="/languages/python">Python</a> borrowed readability from <a href="/languages/abc">ABC</a> and list handling from Lisp, but no Python code came from them.</li>
+<li><strong>Implementation</strong> — what a language is built in. Python's reference interpreter, CPython, is written in <a href="/languages/c">C</a>. That is a concrete dependency, not just inspiration.</li>
+</ul>
+<p>Most "family tree" diagrams only show influence. This atlas tracks both, which is why C sits at the center of so much of the graph: dozens of languages were <em>inspired</em> by others but are <em>implemented</em> in C.</p>
 
-<h2>The C Revolution (1970s)</h2>
-<p><a href="/languages/c">C</a> became the implementation language of choice for operating systems and runtimes. Its descendants — <a href="/languages/cxx">C++</a>, Objective-C — extended it with object-oriented features. C also became the runtime implementation language for Python, Ruby, PHP, and many others.</p>
+<h2>The roots (1950s)</h2>
+<p>The first high-level languages established the paradigms everything else descends from. <a href="/languages/fortran">Fortran</a> (1957, John Backus at IBM) pioneered imperative scientific computing and proved a compiler could match hand-written assembly. <a href="/languages/lisp">Lisp</a> (1958, John McCarthy) introduced functional programming, garbage collection, the REPL, and the radical idea of treating code as data. <a href="/languages/cobol">COBOL</a> (1959, Grace Hopper and CODASYL) brought English-like syntax to business computing — and still runs much of the world's banking.</p>
 
-<h2>The OOP Era (1980s–90s)</h2>
-<p><a href="/languages/smalltalk">Smalltalk</a> pioneered pure object-oriented design and influenced Python, Ruby, and Objective-C. <a href="/languages/java">Java</a> brought managed runtimes and garbage collection to the mainstream. <a href="/languages/javascript">JavaScript</a> brought dynamic typing to the web.</p>
+<h2>The ALGOL line and the birth of C (1960s–70s)</h2>
+<p><a href="/languages/algol">ALGOL</a> introduced block structure and lexical scoping, the grammar of nearly every modern language. That line ran through <a href="/languages/bcpl">BCPL</a> to <a href="/languages/b">B</a> and then to <a href="/languages/c">C</a> (1972, Dennis Ritchie at Bell Labs). C became the implementation language of choice for operating systems and runtimes — it is what Unix, and later Linux, are written in. Its descendant <a href="/languages/cxx">C++</a> added object orientation and templates, and C became the runtime language for Python, Ruby, PHP, Lua, and many more.</p>
 
-<h2>The Modern Era (2000s–2020s)</h2>
-<p><a href="/languages/rust">Rust</a> revisited systems programming with memory safety. <a href="/languages/go">Go</a> brought simplicity and built-in concurrency. Swift and Kotlin modernized mobile development. Each new language synthesizes ideas from its predecessors.</p>
+<h2>The functional and object-oriented branches (1970s–90s)</h2>
+<p>Two influential branches grew in parallel. On the functional side, <a href="/languages/ml">ML</a> introduced powerful static type inference, leading to <a href="/languages/haskell">Haskell</a>, <a href="/languages/ocaml">OCaml</a>, and later <a href="/languages/fsharp">F#</a> — and OCaml is where the first <a href="/languages/rust">Rust</a> compiler was written. On the object-oriented side, <a href="/languages/smalltalk">Smalltalk</a> defined pure OOP and the modern IDE, shaping Python, Ruby, and Objective-C. <a href="/languages/java">Java</a> (1995) then took managed runtimes and garbage collection mainstream with the JVM, and <a href="/languages/javascript">JavaScript</a> (1995) brought dynamic scripting to the web.</p>
+
+<h2>The modern era (2000s–2020s)</h2>
+<p>Today's languages synthesize all of these threads. <a href="/languages/go">Go</a> (2009) revived the simplicity of C with built-in concurrency. <a href="/languages/rust">Rust</a> (2010) combined ML-style types with systems-level control and memory safety without a garbage collector. <a href="/languages/swift">Swift</a> and <a href="/languages/kotlin">Kotlin</a> modernized mobile development, and <a href="/languages/typescript">TypeScript</a> added a type system on top of JavaScript. Each one is a remix of decisions made decades earlier.</p>
+
+<h2>Follow the threads yourself</h2>
+<p>Pick any language and trace it both ways: what it borrowed, and what it is built from. See the <a href="/relationships/influenced">full influence map</a>, the <a href="/relationships/compiler-written-in">compiler implementation relationships</a>, or read <a href="/guides/what-is-compiler-bootstrapping">how a language comes to compile itself</a>.</p>
 
 <a class="explore-btn" href="/explore">Explore the Family Tree in Graph &rarr;</a>
 

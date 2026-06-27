@@ -60,6 +60,12 @@
 
   <div class="answer-box">The <strong>Racket</strong> compiler is written in <strong>Racket</strong> (documented). Its runtime is implemented in <strong>Chez Scheme</strong> (well-documented). Racket is self-hosting.</div>
 
+  <section class="intent-section">
+  <h2>What Racket is used for</h2>
+  <p>Racket is a descendant of Scheme built for creating new programming languages, plus teaching and scripting. It ships with the DrRacket environment and powerful macro system.</p>
+<p>Notable software: the "How to Design Programs" curriculum and many domain-specific languages built on Racket.</p>
+</section>
+
 
   <section class="quick-facts-section">
   <h2>Quick Facts</h2>
@@ -90,8 +96,15 @@
 </section>
 <section class="intent-section">
   <h2>About Racket</h2>
-  <p><strong>Racket</strong> is a functional and contractual programming language, with strong, dynamic and reflective typing, derived from Scheme. It was first released in 1994. Development is led by Matthias Felleisen.</p>
-  <p>In the Language Lineage dataset, Racket is <strong>self-hosting</strong>, so its own compiler is written in Racket itself and its runtime is implemented in <a href="/tools/chez-scheme">Chez Scheme</a>.</p>
+  <p><strong>Racket</strong> is a functional and contractual programming language, with strong, dynamic and reflective typing, derived from Scheme. It is a dynamically typed and garbage-collected language that compiles to bytecode that runs on a virtual machine. It supports functional and multi-paradigm programming. Compiling to bytecode for a virtual machine is the same model the JVM and .NET use: the VM, not the CPU, interprets or JIT-compiles the bytecode.</p>
+  <p>Racket first appeared in 1994. Development is led by Matthias Felleisen. Racket is now used mainly in specialized niches and by dedicated communities.</p>
+</section>
+<section class="intent-section">
+  <h2>How Racket is implemented</h2>
+  <p>In the Language Lineage dataset, Racket is <strong>self-hosting</strong>, so its own compiler is written in Racket itself and its runtime is implemented in <a href="/tools/chez-scheme">Chez Scheme</a>. Reaching self-hosting — where a language is mature enough to compile itself — is a milestone that proves the language can handle a large, real-world program.</p>
+</section>
+<section class="intent-section">
+  <h2>Racket in the language family tree</h2>
   <p>Racket drew on ideas from <a href="/languages/scheme">Scheme</a> and <a href="/languages/common-lisp">Common Lisp</a> and went on to influence <a href="/languages/julia">Julia</a>.</p>
   <p class="enrich-cite" style="font-size:13px;color:var(--text-tertiary);margin-top:14px">Sources: <a href="https://en.wikipedia.org/wiki/Racket_(programming_language)" rel="noopener noreferrer" target="_blank">Wikipedia</a> &middot; <a href="https://www.wikidata.org/wiki/Q1254148" rel="noopener noreferrer" target="_blank">Wikidata</a> &middot; <a href="https://racket-lang.org/" rel="noopener noreferrer" target="_blank">Official site</a></p>
 </section>
