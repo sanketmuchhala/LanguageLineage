@@ -83,6 +83,12 @@ interface Language {
   self_hosting?: boolean;
   logo_url?: string | null;
   logo_kind?: 'devicon' | 'wikimedia' | 'proxy' | 'none' | null;
+  runtime_model?: string;
+  garbage_collected?: boolean | null;
+  current_primary_implementation_language?: string;
+  company?: string | null;
+  peak_year?: number | null;
+  current_users_estimate?: string | null;
 }
 
 interface Relationship {
@@ -682,8 +688,20 @@ function buildImplementationNarrative(node: Language, rels: Relationship[], node
   if (runtime.length) clauses.push(`its runtime is implemented in ${joinNames(runtime)}`);
   if (bootstrap.length) clauses.push(`its toolchain was bootstrapped from ${joinNames(bootstrap)}`);
   if (rewritten.length) clauses.push(`it was later rewritten in ${joinNames(rewritten)}`);
-  if (clauses.length === 0) return '';
-  return `In the Language Lineage dataset, ${joinNames(clauses)}.`;
+
+  let out = '';
+  if (clauses.length > 0) {
+    out = `In the Language Lineage dataset, ${joinNames(clauses)}.`;
+  } else if (node.current_primary_implementation_language && node.current_primary_implementation_language !== 'unspecified') {
+    out = `${name} is primarily implemented in ${escapeHtml(node.current_primary_implementation_language)}.`;
+  } else {
+    return '';
+  }
+  // Teach the self-hosting concept the first time it comes up.
+  if (node.self_hosting) {
+    out += ` Reaching self-hosting — where a language is mature enough to compile itself — is a milestone that proves the language can handle a large, real-world program.`;
+  }
+  return out;
 }
 
 // Prose paragraph placing the node in its lineage (influences in and out).
@@ -703,43 +721,130 @@ function buildLineageNarrative(node: Language, rels: Relationship[], nodeMap: Ma
   return `${name} ${joinNames(clauses)}.`;
 }
 
-// Sourced overview (Quick Facts + synthesized narrative) for nodes without a
-// hand-authored PRIORITY_CONTENT entry. Plugs into the priorityContentHtml slot.
-// Sourced identity/history/lineage narrative. includeImpl adds the "written in"
-// paragraph (omitted on priority pages, which already cover implementation in depth).
+// --- teaching helpers: turn dataset enums into plain-English, educational phrasing ---
+function runtimeModelClause(model?: string): string {
+  switch (model) {
+    case 'compiled':
+    case 'native': return 'compiles ahead of time to native machine code';
+    case 'vm': return 'compiles to bytecode that runs on a virtual machine';
+    case 'interpreted': return 'is executed directly by an interpreter';
+    case 'jit': return 'is just-in-time compiled to machine code as it runs';
+    case 'transpiled': return 'compiles (transpiles) into another language to run';
+    default: return '';
+  }
+}
+
+function runtimeModelTeaching(model?: string): string {
+  switch (model) {
+    case 'vm': return ' Compiling to bytecode for a virtual machine is the same model the JVM and .NET use: the VM, not the CPU, interprets or JIT-compiles the bytecode.';
+    case 'jit': return ' A just-in-time (JIT) compiler translates hot code paths to native machine code while the program runs, trading a slower start for faster steady-state speed.';
+    case 'transpiled': return ' Transpiling means the compiler emits source in another high-level language rather than machine code, so the output then runs on that language\'s runtime.';
+    default: return '';
+  }
+}
+
+function typingWord(typing?: string): string {
+  if (typing === 'static') return 'statically typed';
+  if (typing === 'dynamic') return 'dynamically typed';
+  if (typing === 'untyped') return 'untyped';
+  return '';
+}
+
+function usersSentence(name: string, est?: string | null): string {
+  switch (est) {
+    case 'dominant': return `Today ${name} is one of the most widely used programming languages in the world.`;
+    case 'large': return `${name} has a large, active user base today.`;
+    case 'moderate': return `${name} keeps a steady, moderate following today.`;
+    case 'niche': return `${name} is now used mainly in specialized niches and by dedicated communities.`;
+    default: return '';
+  }
+}
+
+// Multi-section, sourced, educational article synthesized from the dataset + scraped facts.
+// includeImpl adds the "How it is implemented" section (omitted on priority pages, which
+// already cover implementation in depth via hand-authored content).
 function buildEnrichedOverview(node: Language, rels: Relationship[], nodeMap: Map<string, Language>, includeImpl: boolean): string {
   const e = ENRICHMENT[node.id];
   if (!e) return '';
   const isTool = node.id.startsWith('tool:');
   const name = escapeHtml(node.name);
   const developers = e.facts.developers.filter(d => !e.facts.designers.includes(d));
+  const sections: string[] = [];
 
+  // ---- About: identity, nature, history ----
+  const aboutParas: string[] = [];
   const tagline = e.tagline ? e.tagline.replace(/\.$/, '') : '';
-  const paras: string[] = [];
+
+  // Sentence 1: identity + technical nature.
   let p1 = tagline
     ? `<strong>${name}</strong> is ${aOrAn(tagline)} ${escapeHtml(tagline)}.`
     : `<strong>${name}</strong> is a ${isTool ? 'toolchain' : 'programming language'}.`;
-  const originBits: string[] = [];
-  if (node.first_release_year && node.first_release_year > 0) originBits.push(`was first released in ${node.first_release_year}`);
-  if (e.facts.designers.length) originBits.push(`was ${isTool ? 'created' : 'designed'} by ${escapeHtml(joinNames(e.facts.designers))}`);
-  if (originBits.length) p1 += ` It ${joinNames(originBits)}.`;
-  if (developers.length) p1 += ` Development is led by ${escapeHtml(joinNames(developers))}.`;
-  paras.push(`<p>${p1}</p>`);
+  if (!isTool) {
+    const nature: string[] = [];
+    const tw = typingWord(node.typing);
+    if (tw) nature.push(tw);
+    if (node.garbage_collected === true) nature.push('garbage-collected');
+    const rm = runtimeModelClause(node.runtime_model);
+    if (nature.length) {
+      p1 += ` It is ${aOrAn(nature[0])} ${joinNames(nature)} language${rm ? ` that ${rm}` : ''}.`;
+    } else if (rm) {
+      p1 += ` ${name} ${rm}.`;
+    }
+    if (node.paradigm && node.paradigm.length) p1 += ` It supports ${joinNames(node.paradigm)} programming.`;
+    p1 += runtimeModelTeaching(node.runtime_model);
+  }
+  aboutParas.push(`<p>${p1}</p>`);
 
+  // Sentence 2+: history, makers, popularity.
+  const histBits: string[] = [];
+  if (node.first_release_year && node.first_release_year > 0) histBits.push(`first appeared in ${node.first_release_year}`);
+  let companyNamed = false;
+  if (e.facts.designers.length) {
+    let d = `was ${isTool ? 'created' : 'designed'} by ${escapeHtml(joinNames(e.facts.designers))}`;
+    if (node.company) { d += ` at ${escapeHtml(node.company)}`; companyNamed = true; }
+    histBits.push(d);
+  } else if (node.company) {
+    histBits.push(`was developed at ${escapeHtml(node.company)}`);
+    companyNamed = true;
+  }
+  let p2 = histBits.length ? `${name} ${joinNames(histBits)}.` : '';
+  // Only credit the maintaining org when a company was not already named (avoids INRIA-style double mentions).
+  if (developers.length && !companyNamed) p2 += ` ${p2 ? '' : `${name} `}Development is led by ${escapeHtml(joinNames(developers))}.`;
+  if (node.peak_year) p2 += ` Its popularity peaked around ${node.peak_year}.`;
+  const users = usersSentence(name, node.current_users_estimate);
+  if (users) p2 += ` ${users}`;
+  if (p2.trim()) aboutParas.push(`<p>${p2.trim()}</p>`);
+
+  sections.push(`<section class="intent-section">
+  <h2>About ${name}</h2>
+  ${aboutParas.join('\n  ')}
+</section>`);
+
+  // ---- How it is implemented (full pages only) ----
   if (includeImpl) {
     const implPara = buildImplementationNarrative(node, rels, nodeMap);
-    if (implPara) paras.push(`<p>${implPara}</p>`);
+    if (implPara) {
+      sections.push(`<section class="intent-section">
+  <h2>How ${name} is implemented</h2>
+  <p>${implPara}</p>
+</section>`);
+    }
   }
+
+  // ---- Lineage ----
   const lineagePara = buildLineageNarrative(node, rels, nodeMap, e);
-  if (lineagePara) paras.push(`<p>${lineagePara}</p>`);
-
   const cite = `<p class="enrich-cite" style="font-size:13px;color:var(--text-tertiary);margin-top:14px">Sources: <a href="${escapeHtml(e.sources.wikipedia)}" rel="noopener noreferrer" target="_blank">Wikipedia</a> &middot; <a href="${escapeHtml(e.sources.wikidata)}" rel="noopener noreferrer" target="_blank">Wikidata</a>${e.facts.website ? ` &middot; <a href="${escapeHtml(e.facts.website)}" rel="noopener noreferrer" target="_blank">Official site</a>` : ''}</p>`;
-
-  return `<section class="intent-section">
-  <h2>About ${name}</h2>
-  ${paras.join('\n  ')}
+  if (lineagePara) {
+    sections.push(`<section class="intent-section">
+  <h2>${name} in the language family tree</h2>
+  <p>${lineagePara}</p>
   ${cite}
-</section>`;
+</section>`);
+  } else {
+    sections.push(`<section class="intent-section">${cite}</section>`);
+  }
+
+  return sections.join('\n');
 }
 
 // Quick Facts panel from scraped fields (designers, release year, license, etc.).
@@ -757,6 +862,77 @@ function buildEnrichedFacts(node: Language): string {
   if (e.facts.file_extensions.length) facts.push({ label: 'Filename extension', value: e.facts.file_extensions.join(', ') });
   if (e.facts.website) facts.push({ label: 'Website', value: e.facts.website.replace(/^https?:\/\//, '').replace(/\/$/, ''), href: e.facts.website });
   return renderQuickFacts(facts);
+}
+
+// Hand-written "what it's actually used for" + notable real-world software. This is
+// the most useful thing a reader wants and the dataset does not carry it, so it is
+// curated here for the highest-interest languages and tools.
+const USE_CASES: Record<string, string> = {
+  python: `<p>Python is the default language of data science, machine learning, and AI, and a mainstay for scripting, automation, and back-end web development. Libraries like NumPy, pandas, PyTorch, and TensorFlow made it the lingua franca of analytics and deep learning, while Django and Flask power web apps.</p>
+<p>Notable software written in or built on Python includes Instagram's backend, Dropbox, much of YouTube's early code, and tooling at Google and Netflix.</p>`,
+  javascript: `<p>JavaScript runs in every web browser, so it is the language of interactive front-end development; with Node.js it also runs servers, build tools, and desktop apps. Frameworks like React, Vue, and Angular are built in it, and it powers everything from single-page apps to serverless functions.</p>
+<p>Notable software: virtually every modern website's interactivity, plus desktop apps built on Electron such as VS Code, Slack, and Discord.</p>`,
+  typescript: `<p>TypeScript is JavaScript with static types, used to build large, maintainable front-end and back-end applications where the type checker catches bugs before runtime. It is now the default choice for most serious React, Angular, and Node.js projects.</p>
+<p>Notable software: VS Code, Angular, and large parts of the tooling at Microsoft, Slack, and Airbnb are written in TypeScript.</p>`,
+  java: `<p>Java is a workhorse of enterprise back-end systems, Android apps, and big-data tooling. Its "write once, run anywhere" JVM, strong tooling, and vast ecosystem (Spring, Hibernate) make it a staple of banks, large web services, and Android development.</p>
+<p>Notable software: Android apps, Minecraft (Java Edition), and big-data systems like Apache Hadoop, Kafka, and Elasticsearch.</p>`,
+  c: `<p>C is the language of operating systems, embedded devices, and the low-level machinery that everything else runs on. Its direct memory access and minimal runtime make it the default for kernels, device drivers, and language runtimes.</p>
+<p>Notable software: the Linux and Windows kernels, SQLite, Redis, and the CPython, Ruby, and PHP interpreters are all written in C.</p>`,
+  cxx: `<p>C++ is used where you need both high performance and large-scale structure: game engines, browsers, databases, trading systems, and high-end desktop software. It adds object orientation, templates, and the standard library on top of C's speed.</p>
+<p>Notable software: Unreal Engine, Google Chrome, Adobe Photoshop, MySQL, and most AAA video games.</p>`,
+  csharp: `<p>C# is the primary language of the Microsoft .NET ecosystem, used for Windows desktop apps, enterprise back-ends (ASP.NET), and games. The Unity engine makes it one of the most popular languages for game development.</p>
+<p>Notable software: countless Unity games, Windows business applications, and Microsoft services built on ASP.NET.</p>`,
+  go: `<p>Go is built for cloud infrastructure and networked services: its fast compilation, simple concurrency (goroutines), and single static binaries make it ideal for servers, CLIs, and DevOps tooling.</p>
+<p>Notable software: Docker, Kubernetes, Terraform, and much of the modern cloud-native stack are written in Go.</p>`,
+  rust: `<p>Rust targets systems programming where safety and speed both matter: operating systems, browsers, command-line tools, WebAssembly, and performance-critical services. Its ownership model prevents whole classes of memory bugs without a garbage collector.</p>
+<p>Notable software: parts of Firefox, the Deno runtime, the ripgrep and fd CLI tools, and components inside Windows, Android, and the Linux kernel.</p>`,
+  ruby: `<p>Ruby is best known for web development through Ruby on Rails, which popularized convention-over-configuration and rapid prototyping. It is also widely used for scripting, automation, and DevOps tooling.</p>
+<p>Notable software: GitHub, Shopify, Airbnb's early platform, and the Homebrew package manager are built with Ruby.</p>`,
+  php: `<p>PHP powers a large share of the web's back-ends, especially content management and e-commerce. It is designed to be embedded in HTML and deployed easily on shared hosting.</p>
+<p>Notable software: WordPress (which runs a major fraction of all websites), Wikipedia (MediaWiki), Facebook's original codebase, and Slack's backend.</p>`,
+  swift: `<p>Swift is Apple's language for building iOS, macOS, watchOS, and tvOS apps, replacing Objective-C with a safer, more modern syntax. It is increasingly used for server-side Swift as well.</p>
+<p>Notable software: a large share of modern iPhone and Mac apps, including many of Apple's own.</p>`,
+  kotlin: `<p>Kotlin is Google's preferred language for Android development, a concise and safer alternative to Java that interoperates fully with it. It is also used for back-end services and cross-platform mobile.</p>
+<p>Notable software: Android apps at Google, Pinterest, and Netflix, plus back-ends using the Ktor and Spring frameworks.</p>`,
+  scala: `<p>Scala blends object-oriented and functional programming on the JVM and is popular for large-scale data processing and back-end systems where type safety and concurrency matter.</p>
+<p>Notable software: Apache Spark, Apache Kafka tooling, and the back-ends of Twitter and many data platforms.</p>`,
+  haskell: `<p>Haskell is a purely functional language used in academia, research, and industries that prize correctness — finance, compilers, and formal verification. Its strong type system and laziness make it a laboratory for language ideas later adopted elsewhere.</p>
+<p>Notable software: the Cardano blockchain, parts of financial trading systems, and the pandoc document converter.</p>`,
+  lua: `<p>Lua is a tiny, fast, embeddable scripting language designed to be dropped into larger programs — especially games and configuration. Its small footprint makes it ideal for extending C/C++ applications.</p>
+<p>Notable software: scripting in World of Warcraft and Roblox, the Redis and Nginx (OpenResty) scripting layers, and many game engines.</p>`,
+  perl: `<p>Perl is a text-processing and system-administration powerhouse, famous for its regular expressions and "glue" scripting. It dominated early web CGI and bioinformatics, and still handles log processing and automation.</p>
+<p>Notable software: large amounts of legacy web and sysadmin tooling, and bioinformatics pipelines built on BioPerl.</p>`,
+  r: `<p>R is a language built for statistics, data analysis, and visualization, used heavily in academia, bioinformatics, and quantitative research. The tidyverse and ggplot2 make it a favorite for exploratory analysis and publication-quality charts.</p>
+<p>Notable software: statistical analyses across science and finance, and reproducible reports built with R Markdown and Shiny dashboards.</p>`,
+  julia: `<p>Julia targets scientific and numerical computing, aiming for the readability of Python with the speed of C. It is used in research, data science, and high-performance simulation.</p>
+<p>Notable software: climate models, pharmaceutical simulations, and the Pumas pharmacometrics platform.</p>`,
+  elixir: `<p>Elixir brings a modern, productive syntax to the battle-tested Erlang VM, making it a strong choice for highly concurrent, fault-tolerant web and real-time systems. The Phoenix framework is its flagship.</p>
+<p>Notable software: Discord's real-time messaging infrastructure and many chat, IoT, and streaming back-ends.</p>`,
+  erlang: `<p>Erlang was built at Ericsson for telecom switches that must never go down, so it excels at massively concurrent, fault-tolerant, distributed systems with hot code swapping.</p>
+<p>Notable software: WhatsApp's messaging backend, RabbitMQ, and telecom infrastructure worldwide.</p>`,
+  clojure: `<p>Clojure is a modern Lisp on the JVM, used for data-heavy back-end systems where immutability and functional style help manage complexity and concurrency.</p>
+<p>Notable software: data platforms and back-ends at Nubank, Walmart, and many fintech companies.</p>`,
+  ocaml: `<p>OCaml is a fast, statically typed functional language used in compilers, formal verification, and finance, where its expressive type system catches errors early.</p>
+<p>Notable software: the first Rust compiler, Jane Street's trading systems, the Coq proof assistant, and the Flow type checker for JavaScript.</p>`,
+  fortran: `<p>Fortran remains the language of high-performance numerical and scientific computing — weather prediction, computational physics, and engineering simulations — where decades of optimized math libraries still run.</p>
+<p>Notable software: climate and weather models, and core linear-algebra libraries (BLAS, LAPACK) that underpin much of modern scientific computing.</p>`,
+  cobol: `<p>COBOL still runs a huge share of the world's banking, insurance, and government batch systems, prized for stable, readable business data processing on mainframes.</p>
+<p>Notable software: core transaction systems at banks and government agencies — an estimated majority of daily business transactions still touch COBOL.</p>`,
+  lisp: `<p>Lisp pioneered ideas — the REPL, garbage collection, macros, treating code as data — that shaped every language after it. It was historically central to artificial-intelligence research and remains influential in language design.</p>
+<p>Notable software: classic AI systems, Emacs (via Emacs Lisp), and AutoCAD's scripting (AutoLISP).</p>`,
+  dart: `<p>Dart is Google's language for the Flutter framework, used to build cross-platform mobile, web, and desktop apps from a single codebase.</p>
+<p>Notable software: Flutter apps including Google Pay, and many cross-platform mobile applications.</p>`,
+  zig: `<p>Zig is a modern systems language positioned as a simpler, safer alternative to C, with manual memory control, no hidden allocations, and excellent C interop and cross-compilation.</p>
+<p>Notable software: the Bun JavaScript runtime is written in Zig, and it is increasingly used for low-level tooling and game development.</p>`,
+};
+
+function buildUseCases(node: Language): string {
+  const body = USE_CASES[idToSlug(node.id)];
+  if (!body) return '';
+  return `<section class="intent-section">
+  <h2>What ${escapeHtml(node.name)} is used for</h2>
+  ${body}
+</section>`;
 }
 
 // Page header: H1 question + one-line tagline (left), with the language/tool logo
@@ -1214,6 +1390,8 @@ ${faqs.map(f => `<div class="faq-item">
   ${buildToolIntro(node)}
 
   ${buildAnswerBox(node, rels, nodeMap)}
+
+  ${buildUseCases(node)}
 ${priorityContentHtml ? `
 
   ${priorityContentHtml}
