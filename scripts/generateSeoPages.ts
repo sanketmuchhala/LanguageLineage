@@ -924,6 +924,50 @@ const USE_CASES: Record<string, string> = {
 <p>Notable software: Flutter apps including Google Pay, and many cross-platform mobile applications.</p>`,
   zig: `<p>Zig is a modern systems language positioned as a simpler, safer alternative to C, with manual memory control, no hidden allocations, and excellent C interop and cross-compilation.</p>
 <p>Notable software: the Bun JavaScript runtime is written in Zig, and it is increasingly used for low-level tooling and game development.</p>`,
+  'objective-c': `<p>Objective-C was the primary language for Apple's iOS and macOS apps before Swift, adding Smalltalk-style messaging to C. It is still widely seen in older codebases and Apple's frameworks.</p>
+<p>Notable software: a generation of iPhone and Mac apps, and large parts of Apple's Cocoa frameworks.</p>`,
+  assembly: `<p>Assembly is the human-readable form of a CPU's own machine instructions, used where you need absolute control or maximum speed: bootloaders, device drivers, operating-system cores, and hand-optimized inner loops. It is also essential for reverse engineering and security research.</p>
+<p>Notable use: boot code and performance-critical routines inside virtually every operating system and game console.</p>`,
+  smalltalk: `<p>Smalltalk pioneered pure object-oriented programming, the integrated development environment, and the graphical UI. It is still used in some finance and industrial systems, and its ideas shaped Python, Ruby, and Objective-C.</p>
+<p>Notable software: trading and logistics systems, and the modern Pharo and Squeak environments.</p>`,
+  prolog: `<p>Prolog is the leading logic-programming language, used for artificial intelligence, expert systems, natural-language processing, and theorem proving — you state facts and rules and let the engine search for answers.</p>
+<p>Notable use: parts of IBM Watson, scheduling and constraint systems, and academic AI research (often via SWI-Prolog).</p>`,
+  ada: `<p>Ada is built for safety-critical, real-time systems where failure is not an option: avionics, defense, rail signaling, and spacecraft. Its strong typing and runtime checks catch errors early.</p>
+<p>Notable use: aircraft flight software (Boeing, Airbus), air-traffic control, and rail and defense systems.</p>`,
+  pascal: `<p>Pascal was designed for teaching structured programming and dominated computer-science education for years; its Object Pascal descendant (Delphi) became a popular tool for Windows desktop apps.</p>
+<p>Notable software: early Apple Macintosh system software, and the original Skype client (built in Delphi).</p>`,
+  groovy: `<p>Groovy is a dynamic scripting language for the JVM, used heavily for build automation and writing concise glue code alongside Java.</p>
+<p>Notable software: the Gradle build system and Jenkins pipeline scripts are written in Groovy.</p>`,
+  matlab: `<p>MATLAB is a numerical-computing environment used across engineering and science for matrix math, signal and image processing, control systems, and simulation. Its toolboxes and Simulink make it standard in many labs and industries.</p>
+<p>Notable use: control-system and signal-processing design in automotive, aerospace, and academic research.</p>`,
+  delphi: `<p>Delphi (Object Pascal) is a rapid application development tool for native Windows — and now cross-platform — desktop software, known for fast compilation and visual form design.</p>
+<p>Notable software: the original Skype client and many long-lived business and point-of-sale applications.</p>`,
+  fsharp: `<p>F# is a functional-first language on .NET, used for data processing, finance, and analytics where its concise syntax and strong types reduce bugs.</p>
+<p>Notable use: quantitative finance, data pipelines, and analytics teams on the .NET platform.</p>`,
+  elm: `<p>Elm is a pure functional language for building reliable web front-ends; its compiler is famous for friendly errors and for eliminating runtime exceptions in production.</p>
+<p>Notable software: front-end applications at companies like NoRedInk that value crash-free UIs.</p>`,
+  crystal: `<p>Crystal offers Ruby-like syntax with static typing and native compilation, aimed at developers who want Ruby's productivity with much higher performance.</p>
+<p>Notable use: web APIs and tools where teams want Ruby ergonomics without the runtime cost.</p>`,
+  nim: `<p>Nim is a general-purpose language with Python-like readability that compiles to C, C++, or JavaScript, giving native speed with a small runtime — handy for systems tools, games, and embedded work.</p>
+<p>Notable software: the Status messaging client and a range of community tools and games.</p>`,
+  tcl: `<p>Tcl ("Tool Command Language") is a compact scripting and embedding language, long used to add scripting to applications and for test automation, networking, and electronic-design tools.</p>
+<p>Notable use: scripting in Cisco network gear, EDA chip-design tools, and the Expect automation tool.</p>`,
+  bash: `<p>Bash is the default shell on most Linux and macOS systems, and the everyday language of automation: install scripts, build and deploy pipelines, and gluing command-line tools together.</p>
+<p>Notable use: the startup, build, and CI scripts behind a huge share of servers and developer machines.</p>`,
+  'vb-net': `<p>Visual Basic .NET is an approachable language for business applications on the .NET platform, common in enterprise line-of-business and internal Windows software.</p>
+<p>Notable use: corporate Windows applications and Office-adjacent automation.</p>`,
+  racket: `<p>Racket is a descendant of Scheme built for creating new programming languages, plus teaching and scripting. It ships with the DrRacket environment and powerful macro system.</p>
+<p>Notable software: the "How to Design Programs" curriculum and many domain-specific languages built on Racket.</p>`,
+  scheme: `<p>Scheme is a minimalist, elegant dialect of Lisp, central to computer-science education and language research, and embedded as a scripting layer in some applications.</p>
+<p>Notable use: the classic SICP curriculum, and GNU Guile as an extension language (e.g. in GNU tools).</p>`,
+  llvm: `<p>LLVM is the compiler backend that turns an intermediate representation into optimized machine code; many modern languages plug into it instead of writing their own code generator.</p>
+<p>Used by: Clang (C/C++), Rust, Swift, Julia, and Kotlin/Native all rely on the LLVM backend.</p>`,
+  gcc: `<p>GCC, the GNU Compiler Collection, is the default compiler on most Linux systems and supports C, C++, Fortran, and more. It compiles a huge share of the open-source world.</p>
+<p>Used by: the Linux kernel and most Linux distributions are built with GCC.</p>`,
+  ghc: `<p>GHC is the standard Haskell compiler, used to build essentially all production Haskell, with an advanced optimizer and a C-based runtime for lazy evaluation and concurrency.</p>
+<p>Used by: the Cardano blockchain, the pandoc converter, and most Haskell software.</p>`,
+  hotspot: `<p>HotSpot is the standard Java Virtual Machine, the runtime that executes JVM bytecode with a tiered just-in-time compiler and advanced garbage collectors.</p>
+<p>Used by: every standard Java, Kotlin, Scala, and Clojure program running on the JVM.</p>`,
 };
 
 function buildUseCases(node: Language): string {
@@ -2728,19 +2772,30 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
     title: 'Programming Language Family Tree | Language Lineage',
     h1: 'Programming Language Family Tree',
     description: 'The programming language family tree: how Fortran, LISP, and C influenced and implemented the languages that followed, across 75+ years of compiler and runtime history.',
-    content: `<div class="answer-box">The programming language family tree traces how languages influenced, implemented, and descended from each other over 75+ years, from Fortran (1957) and LISP (1958) to Rust (2015) and beyond. It maps not just who influenced whom, but what each language is actually written in.</div>
+    content: `<div class="answer-box">The programming language family tree traces how languages influenced, implemented, and descended from each other over 75+ years, from <a href="/languages/fortran">Fortran</a> (1957) and <a href="/languages/lisp">Lisp</a> (1958) to <a href="/languages/rust">Rust</a> and beyond. It maps two different kinds of ancestry: <strong>influence</strong> (where a language borrowed ideas) and <strong>implementation</strong> (what a language is actually written in).</div>
 
-<h2>The Roots (1950s)</h2>
-<p>The first high-level languages established the major paradigms. <a href="/languages/fortran">Fortran</a> pioneered imperative scientific computing. <a href="/languages/lisp">LISP</a> established functional programming and dynamic typing. COBOL targeted business computing. These three defined the landscape for decades.</p>
+<h2>Two kinds of family ties</h2>
+<p>Languages are related in two distinct ways, and it helps to keep them separate:</p>
+<ul>
+<li><strong>Influence</strong> — a design lineage. <a href="/languages/python">Python</a> borrowed readability from <a href="/languages/abc">ABC</a> and list handling from Lisp, but no Python code came from them.</li>
+<li><strong>Implementation</strong> — what a language is built in. Python's reference interpreter, CPython, is written in <a href="/languages/c">C</a>. That is a concrete dependency, not just inspiration.</li>
+</ul>
+<p>Most "family tree" diagrams only show influence. This atlas tracks both, which is why C sits at the center of so much of the graph: dozens of languages were <em>inspired</em> by others but are <em>implemented</em> in C.</p>
 
-<h2>The C Revolution (1970s)</h2>
-<p><a href="/languages/c">C</a> became the implementation language of choice for operating systems and runtimes. Its descendants — <a href="/languages/cxx">C++</a>, Objective-C — extended it with object-oriented features. C also became the runtime implementation language for Python, Ruby, PHP, and many others.</p>
+<h2>The roots (1950s)</h2>
+<p>The first high-level languages established the paradigms everything else descends from. <a href="/languages/fortran">Fortran</a> (1957, John Backus at IBM) pioneered imperative scientific computing and proved a compiler could match hand-written assembly. <a href="/languages/lisp">Lisp</a> (1958, John McCarthy) introduced functional programming, garbage collection, the REPL, and the radical idea of treating code as data. <a href="/languages/cobol">COBOL</a> (1959, Grace Hopper and CODASYL) brought English-like syntax to business computing — and still runs much of the world's banking.</p>
 
-<h2>The OOP Era (1980s–90s)</h2>
-<p><a href="/languages/smalltalk">Smalltalk</a> pioneered pure object-oriented design and influenced Python, Ruby, and Objective-C. <a href="/languages/java">Java</a> brought managed runtimes and garbage collection to the mainstream. <a href="/languages/javascript">JavaScript</a> brought dynamic typing to the web.</p>
+<h2>The ALGOL line and the birth of C (1960s–70s)</h2>
+<p><a href="/languages/algol">ALGOL</a> introduced block structure and lexical scoping, the grammar of nearly every modern language. That line ran through <a href="/languages/bcpl">BCPL</a> to <a href="/languages/b">B</a> and then to <a href="/languages/c">C</a> (1972, Dennis Ritchie at Bell Labs). C became the implementation language of choice for operating systems and runtimes — it is what Unix, and later Linux, are written in. Its descendant <a href="/languages/cxx">C++</a> added object orientation and templates, and C became the runtime language for Python, Ruby, PHP, Lua, and many more.</p>
 
-<h2>The Modern Era (2000s–2020s)</h2>
-<p><a href="/languages/rust">Rust</a> revisited systems programming with memory safety. <a href="/languages/go">Go</a> brought simplicity and built-in concurrency. Swift and Kotlin modernized mobile development. Each new language synthesizes ideas from its predecessors.</p>
+<h2>The functional and object-oriented branches (1970s–90s)</h2>
+<p>Two influential branches grew in parallel. On the functional side, <a href="/languages/ml">ML</a> introduced powerful static type inference, leading to <a href="/languages/haskell">Haskell</a>, <a href="/languages/ocaml">OCaml</a>, and later <a href="/languages/fsharp">F#</a> — and OCaml is where the first <a href="/languages/rust">Rust</a> compiler was written. On the object-oriented side, <a href="/languages/smalltalk">Smalltalk</a> defined pure OOP and the modern IDE, shaping Python, Ruby, and Objective-C. <a href="/languages/java">Java</a> (1995) then took managed runtimes and garbage collection mainstream with the JVM, and <a href="/languages/javascript">JavaScript</a> (1995) brought dynamic scripting to the web.</p>
+
+<h2>The modern era (2000s–2020s)</h2>
+<p>Today's languages synthesize all of these threads. <a href="/languages/go">Go</a> (2009) revived the simplicity of C with built-in concurrency. <a href="/languages/rust">Rust</a> (2010) combined ML-style types with systems-level control and memory safety without a garbage collector. <a href="/languages/swift">Swift</a> and <a href="/languages/kotlin">Kotlin</a> modernized mobile development, and <a href="/languages/typescript">TypeScript</a> added a type system on top of JavaScript. Each one is a remix of decisions made decades earlier.</p>
+
+<h2>Follow the threads yourself</h2>
+<p>Pick any language and trace it both ways: what it borrowed, and what it is built from. See the <a href="/relationships/influenced">full influence map</a>, the <a href="/relationships/compiler-written-in">compiler implementation relationships</a>, or read <a href="/guides/what-is-compiler-bootstrapping">how a language comes to compile itself</a>.</p>
 
 <a class="explore-btn" href="/explore">Explore the Family Tree in Graph &rarr;</a>`,
   },
