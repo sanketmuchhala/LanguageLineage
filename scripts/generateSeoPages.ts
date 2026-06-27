@@ -1,7 +1,8 @@
 import { readFileSync, mkdirSync, writeFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { LOGO_MAP, LOGO_COLORS } from '../src/data/logoMap.js';
+import { LOGO_MAP, LOGO_COLORS, getLogoPresentation } from '../src/data/logoMap.js';
+import { getAdaptiveLogoBackground, getLogoBorderColor } from '../src/utils/colorContrast.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -67,7 +68,7 @@ const FOOTER_HTML = `<footer class="seo-footer-rich">
       <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
     </div>
   </div>
-  <div class="footer-bottom">&copy; 2026 Sanket Muchhala &middot; <a href="/">Language Lineage</a></div>
+  <div class="footer-bottom">Made with <span style="color:#fb7185">❤️</span> by <a href="https://github.com/sanketmuchhala" rel="noopener noreferrer">Sanket Muchhala</a> &middot; <a href="/">Language Lineage</a></div>
   </div>
 </footer>`;
 
@@ -81,6 +82,7 @@ interface Language {
   notes?: string;
   self_hosting?: boolean;
   logo_url?: string | null;
+  logo_kind?: 'devicon' | 'wikimedia' | 'proxy' | 'none' | null;
 }
 
 interface Relationship {
@@ -757,20 +759,28 @@ function buildEnrichedFacts(node: Language): string {
   return renderQuickFacts(facts);
 }
 
-// Page header: language/tool logo tile + the H1 question + a one-line tagline.
+// Page header: H1 question + one-line tagline (left), with the language/tool logo
+// on the right in the same adaptive dark badge the graph uses.
 function buildPageHeader(node: Language): string {
   const e = ENRICHMENT[node.id];
   const tagline = e?.tagline ? e.tagline.replace(/\.$/, '') : '';
   const taglineText = tagline ? `${tagline.charAt(0).toUpperCase()}${tagline.slice(1)}.` : '';
-  const logo = node.logo_url
-    ? `<div class="lang-logo-tile"><img src="${escapeHtml(node.logo_url)}" alt="${escapeHtml(node.name)} logo" width="56" height="56" loading="eager" decoding="async" /></div>`
-    : '';
+
+  let logo = '';
+  if (node.logo_url) {
+    const logoColor = LOGO_COLORS[node.id] ?? null;
+    const surface = getLogoPresentation(node.id, node.logo_kind).surface;
+    const bg = getAdaptiveLogoBackground(logoColor, true, surface);
+    const border = getLogoBorderColor(logoColor, true, surface);
+    logo = `<div class="lang-logo-tile" style="background:${bg};border-color:${border}"><img src="${escapeHtml(node.logo_url)}" alt="${escapeHtml(node.name)} logo" width="56" height="56" loading="eager" decoding="async" /></div>`;
+  }
+
   return `<div class="lang-header">
-  ${logo}
   <div class="lang-header-text">
     <h1>What is ${escapeHtml(node.name)} written in?</h1>
     ${taglineText ? `<p class="lang-tagline">${escapeHtml(taglineText)}</p>` : ''}
   </div>
+  ${logo}
 </div>`;
 }
 
