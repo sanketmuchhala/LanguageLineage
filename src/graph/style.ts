@@ -2,8 +2,8 @@ import type { StylesheetStyle } from 'cytoscape';
 import type { ClusterType, RelationshipType } from '../data/types';
 import { getAdaptiveLogoBackground, getLogoBorderColor } from '../utils/colorContrast';
 
-const MIN_NODE_SIZE = 38;
-const MAX_NODE_SIZE = 72;
+const MIN_NODE_SIZE = 58;
+const MAX_NODE_SIZE = 132;
 const DEFAULT_NODE_COLOR = '#1c1c1c';
 
 function getLogoRenderSize(ele: any): string {
@@ -80,19 +80,19 @@ export function getCytoscapeStyle(
         'border-width': 2,
         'border-color': '#00000020',
         'border-opacity': 1,
-        'font-size': 'mapData(degree, 0, 30, 9, 13)' as any,
+        'font-size': 'mapData(degree, 0, 30, 13, 19)' as any,
         'font-weight': 600 as any,
         'color': labelColor,
         'text-valign': 'bottom',
         'text-halign': 'center',
-        'text-margin-y': 5,
-        'text-outline-width': 2,
+        'text-margin-y': 8,
+        'text-outline-width': 3,
         'text-outline-color': labelOutlineColor,
-        'text-outline-opacity': 0.85,
-        'min-zoomed-font-size': 8,
+        'text-outline-opacity': 0.9,
+        'min-zoomed-font-size': 7,
         label: 'data(label)',
         'text-wrap': 'wrap' as any,
-        'text-max-width': 'mapData(degree, 0, 30, 60, 110)' as any,
+        'text-max-width': 'mapData(degree, 0, 30, 90, 150)' as any,
       },
     },
 

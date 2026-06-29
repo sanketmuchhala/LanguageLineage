@@ -31,8 +31,8 @@ export const FORCE_LAYOUT: any = {
   animationEasing: 'ease-in-out',
   quality: 'proof',
   nodeDimensionsIncludeLabels: true,
-  nodeRepulsion: 95000,
-  idealEdgeLength: 280,
+  nodeRepulsion: 150000,
+  idealEdgeLength: 360,
   edgeElasticity: 0.2,
   nestingFactor: 0.1,
   gravity: 0.08,
@@ -40,10 +40,10 @@ export const FORCE_LAYOUT: any = {
   numIter: 6000,
   randomizationSeed: RANDOM_SEED,
   tile: true,
-  tilingPaddingVertical: 100,
-  tilingPaddingHorizontal: 100,
+  tilingPaddingVertical: 120,
+  tilingPaddingHorizontal: 120,
   fit: true,
-  padding: 80,
+  padding: 110,
 };
 
 // Cluster layout - group nodes by cluster_hint using compound parents
