@@ -95,6 +95,76 @@ export function initScrollProgress(container: HTMLElement | Window = window): ()
   };
 }
 
+// Magnetic buttons: gently pull toward the cursor when it is near, spring back on
+// leave. Relies on a CSS transition for the spring.
+export function initMagnetic(selector: string, strength = 0.32): () => void {
+  if (reduced()) return () => {};
+  const els = Array.from(document.querySelectorAll<HTMLElement>(selector));
+  if (!els.length) return () => {};
+  const cleanups = els.map((el) => {
+    let raf = 0;
+    let tx = 0, ty = 0;
+    const apply = () => { raf = 0; el.style.transform = `translate(${tx.toFixed(1)}px, ${ty.toFixed(1)}px)`; };
+    const onMove = (e: PointerEvent) => {
+      const r = el.getBoundingClientRect();
+      const dx = e.clientX - (r.left + r.width / 2);
+      const dy = e.clientY - (r.top + r.height / 2);
+      const radius = Math.max(r.width, r.height) * 0.8 + 48;
+      if (Math.hypot(dx, dy) < radius) { tx = dx * strength; ty = dy * strength; }
+      else { tx = 0; ty = 0; }
+      if (!raf) raf = requestAnimationFrame(apply);
+    };
+    const onLeave = () => { tx = 0; ty = 0; el.style.transform = ''; };
+    el.classList.add('fx-magnetic');
+    window.addEventListener('pointermove', onMove, { passive: true });
+    el.addEventListener('pointerleave', onLeave);
+    return () => {
+      window.removeEventListener('pointermove', onMove);
+      el.removeEventListener('pointerleave', onLeave);
+      if (raf) cancelAnimationFrame(raf);
+      el.style.transform = '';
+      el.classList.remove('fx-magnetic');
+    };
+  });
+  return () => cleanups.forEach((c) => c());
+}
+
+// Cursor-tracked spotlight on cards: exposes --mx / --my and toggles .fx-spot-on,
+// CSS paints a soft radial highlight that follows the pointer.
+export function initSpotlight(selector: string): () => void {
+  const els = Array.from(document.querySelectorAll<HTMLElement>(selector));
+  if (!els.length) return () => {};
+  const cleanups = els.map((el) => {
+    let raf = 0;
+    let px = 50, py = 50;
+    const apply = () => {
+      raf = 0;
+      el.style.setProperty('--mx', `${px.toFixed(1)}%`);
+      el.style.setProperty('--my', `${py.toFixed(1)}%`);
+    };
+    const onMove = (e: PointerEvent) => {
+      const r = el.getBoundingClientRect();
+      px = ((e.clientX - r.left) / r.width) * 100;
+      py = ((e.clientY - r.top) / r.height) * 100;
+      if (!raf) raf = requestAnimationFrame(apply);
+    };
+    const onEnter = () => el.classList.add('fx-spot-on');
+    const onLeave = () => el.classList.remove('fx-spot-on');
+    el.classList.add('fx-spot');
+    el.addEventListener('pointerenter', onEnter);
+    el.addEventListener('pointermove', onMove, { passive: true });
+    el.addEventListener('pointerleave', onLeave);
+    return () => {
+      el.removeEventListener('pointerenter', onEnter);
+      el.removeEventListener('pointermove', onMove);
+      el.removeEventListener('pointerleave', onLeave);
+      if (raf) cancelAnimationFrame(raf);
+      el.classList.remove('fx-spot', 'fx-spot-on');
+    };
+  });
+  return () => cleanups.forEach((c) => c());
+}
+
 // Subtle depth: background layers drift slower than the page as the hero scrolls away.
 export function initHeroParallax(container: HTMLElement): () => void {
   if (reduced()) return () => {};

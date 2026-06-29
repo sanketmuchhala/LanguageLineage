@@ -3,7 +3,7 @@ import { LandingGraphGlimpse } from './LandingGraphGlimpse';
 import { HeroFx } from './HeroFx';
 import { initDataFlow } from '../fx/dataFlow';
 import { initDecode } from '../fx/decode';
-import { initCountUps, initScrollProgress, initHeroParallax } from '../fx/interactions';
+import { initCountUps, initScrollProgress, initHeroParallax, initMagnetic, initSpotlight } from '../fx/interactions';
 import './LandingPage.css';
 
 interface LandingPageProps {
@@ -50,6 +50,10 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
       teardown.push(initScrollProgress(scroller));
       teardown.push(initHeroParallax(scroller));
     }
+
+    // Tactile micro-interactions.
+    teardown.push(initMagnetic('.btn-primary, .nav-cta, .atlas-open'));
+    teardown.push(initSpotlight('.feature, .lang-index-link'));
     return () => teardown.forEach((fn) => fn());
   }, []);
 

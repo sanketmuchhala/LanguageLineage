@@ -57,6 +57,23 @@
   filter: blur(0);
 }
 
+/* Magnetic buttons spring toward the cursor */
+.fx-magnetic { transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+
+/* Cursor-tracked spotlight on cards */
+.fx-spot { position: relative; }
+.fx-spot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 50%), rgba(74, 222, 128, 0.13), transparent 62%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.fx-spot.fx-spot-on::after { opacity: 1; }
+
 /* Scroll-progress hairline pinned to the top */
 .scroll-progress {
   position: fixed;
