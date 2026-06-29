@@ -40,54 +40,16 @@
   background: var(--color-accent);
 }
 
-/* Reveal Animation — a focus-in: rise, settle, and sharpen */
+/* Reveal Animation — a clean, restrained fade-up */
 .reveal {
   opacity: 0;
-  transform: translateY(30px) scale(0.985);
-  filter: blur(6px);
-  transition:
-    opacity 0.8s var(--ease-out-expo),
-    transform 0.8s var(--ease-out-expo),
-    filter 0.8s var(--ease-out-expo);
+  transform: translateY(22px);
+  transition: opacity 0.7s var(--ease-out-expo), transform 0.7s var(--ease-out-expo);
 }
 
 .reveal.visible {
   opacity: 1;
   transform: none;
-  filter: blur(0);
-}
-
-/* Magnetic buttons spring toward the cursor */
-.fx-magnetic { transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
-
-/* Cursor-tracked spotlight on cards */
-.fx-spot { position: relative; }
-.fx-spot::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 50%), rgba(74, 222, 128, 0.13), transparent 62%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-.fx-spot.fx-spot-on::after { opacity: 1; }
-
-/* Scroll-progress hairline pinned to the top */
-.scroll-progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  z-index: 2000;
-  transform: scaleX(0);
-  transform-origin: 0 50%;
-  background: linear-gradient(90deg, var(--color-accent), var(--color-accent-hover, #86efac));
-  box-shadow: 0 0 10px rgba(74, 222, 128, 0.6);
-  pointer-events: none;
-  will-change: transform;
 }
 
 /* Staggered reveals */
@@ -225,13 +187,11 @@
   pointer-events: none;
 }
 
-/* Ambient hero VFX: living constellation canvas + cursor spotlight (Phase 1) */
+/* Ambient hero constellation canvas (faint, behind the grid) */
 .hero-fx {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  --fx-mx: 50%;
-  --fx-my: 35%;
 }
 
 .hero-fx-canvas {
@@ -240,23 +200,6 @@
   width: 100%;
   height: 100%;
   display: block;
-}
-
-.hero-fx-glow {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity 0.5s var(--ease-out-quart, ease);
-  background: radial-gradient(
-    520px circle at var(--fx-mx) var(--fx-my),
-    rgba(74, 222, 128, 0.16),
-    rgba(74, 222, 128, 0.06) 36%,
-    transparent 64%
-  );
-}
-
-.hero-fx.fx-cursor-on .hero-fx-glow {
-  opacity: 1;
 }
 
 .hero-grid {
@@ -347,7 +290,7 @@
 .hg-focal-node circle { stroke: var(--color-accent); stroke-width: 2; filter: drop-shadow(0 0 9px rgba(74, 222, 128, 0.45)); }
 .hg-focal-glow { fill: rgba(74, 222, 128, 0.14); animation: hg-pulse 3.6s ease-in-out infinite; }
 @keyframes hg-pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.85; } }
-.hg-packet { filter: drop-shadow(0 0 6px var(--c)) drop-shadow(0 0 2px var(--c)); }
+.hg-packet { filter: drop-shadow(0 0 3px var(--c)); opacity: 0.85; }
 .hg-label { fill: var(--color-text-muted); font-family: var(--font-mono); font-size: 12px; font-weight: 500; }
 .hg-label-focal { fill: #d6fbe4; font-family: var(--font-mono); font-size: 18px; font-weight: 700; }
 

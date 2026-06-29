@@ -2,8 +2,7 @@ import { useEffect, useRef } from 'react';
 import { LandingGraphGlimpse } from './LandingGraphGlimpse';
 import { HeroFx } from './HeroFx';
 import { initDataFlow } from '../fx/dataFlow';
-import { initDecode } from '../fx/decode';
-import { initCountUps, initScrollProgress, initHeroParallax, initMagnetic, initSpotlight } from '../fx/interactions';
+import { initCountUps, initHeroParallax } from '../fx/interactions';
 import './LandingPage.css';
 
 interface LandingPageProps {
@@ -32,28 +31,15 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
     return () => observerRef.current?.disconnect();
   }, []);
 
-  // Hero cinematics: data packets flowing along the specimen graph + a one-time
-  // decode of the eyebrow and headline (the "compiler boot" moment).
+  // Quiet, purposeful motion only: a slow data pulse along the specimen graph,
+  // stat count-up, and a subtle hero parallax.
   useEffect(() => {
     const teardown: Array<() => void> = [];
     const svg = document.querySelector('.hero-graph-svg') as SVGSVGElement | null;
     if (svg) teardown.push(initDataFlow(svg));
-    const eyebrow = document.querySelector('.hero-eyebrow') as HTMLElement | null;
-    if (eyebrow) teardown.push(initDecode(eyebrow, { duration: 520 }));
-    const title = document.querySelector('.hero-title') as HTMLElement | null;
-    if (title) teardown.push(initDecode(title, { duration: 760 }));
-
-    // Scroll cinematics (the landing scrolls inside .landing, not the window).
     teardown.push(initCountUps());
     const scroller = document.querySelector('.landing') as HTMLElement | null;
-    if (scroller) {
-      teardown.push(initScrollProgress(scroller));
-      teardown.push(initHeroParallax(scroller));
-    }
-
-    // Tactile micro-interactions.
-    teardown.push(initMagnetic('.btn-primary, .nav-cta, .atlas-open'));
-    teardown.push(initSpotlight('.feature, .lang-index-link'));
+    if (scroller) teardown.push(initHeroParallax(scroller));
     return () => teardown.forEach((fn) => fn());
   }, []);
 

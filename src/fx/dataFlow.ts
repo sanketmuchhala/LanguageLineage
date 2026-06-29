@@ -38,7 +38,7 @@ export function initDataFlow(svg: SVGSVGElement): () => void {
       : line.classList.contains('hg-runtime') ? 'hg-runtime' : 'hg-compiler';
     const color = EDGE_COLOR[cls];
     const el = document.createElementNS(SVGNS, 'circle');
-    el.setAttribute('r', '3.2');
+    el.setAttribute('r', '2.4');
     el.setAttribute('class', 'hg-packet');
     el.setAttribute('fill', color);
     el.style.setProperty('--c', color);
@@ -48,8 +48,8 @@ export function initDataFlow(svg: SVGSVGElement): () => void {
       x1: line.x1.baseVal.value, y1: line.y1.baseVal.value,
       x2: line.x2.baseVal.value, y2: line.y2.baseVal.value,
       el,
-      t: -(i * 0.55) - 0.2, // stagger starts
-      speed: 0.42 + Math.random() * 0.12,
+      t: -(i * 0.7) - 0.3, // stagger starts
+      speed: 0.2 + Math.random() * 0.05,
     };
   });
 
