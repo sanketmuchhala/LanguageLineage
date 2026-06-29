@@ -64,28 +64,12 @@ export function GraphView() {
     instance.pan({ x: cx, y: cy });
     instance.zoom(0.5);
 
-    // Animate nodes bursting outward from center
+    // Lay out and fit the whole graph so every node is visible on load.
     instance.layout({
       ...getLayout(filters.layoutMode),
       randomize: false,
-      animationDuration: 1800,
+      animationDuration: 1200,
     }).run();
-
-    // Several layouts can run while the page mounts; once the entrance settles,
-    // ease into the dense core (around C) at a readable zoom rather than fitting
-    // all 112 nodes — so nodes read big and the rest is there to pan to. We listen
-    // through the whole entrance window so the final settle wins; after that,
-    // user-triggered relayouts fit normally.
-    const entranceStart = Date.now();
-    instance.on('layoutstop', () => {
-      if (Date.now() - entranceStart > 3800) return;
-      const focal = instance.getElementById('lang:c');
-      const target = focal.nonempty() ? focal : instance.nodes();
-      instance.animate(
-        { center: { eles: target }, zoom: 0.82 },
-        { duration: 480, easing: 'ease-in-out-cubic' }
-      );
-    });
 
     setCytoscape(instance);
 
