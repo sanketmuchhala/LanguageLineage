@@ -19,8 +19,12 @@
 .sidebar-inner {
   width: 300px;
   height: 100%;
-  background-color: var(--bg-surface);
-  border-right: 1px solid var(--border-primary);
+  /* Frosted glass floating over the atlas */
+  background: rgba(9, 9, 11, 0.82);
+  backdrop-filter: blur(22px) saturate(1.1);
+  -webkit-backdrop-filter: blur(22px) saturate(1.1);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 1px 0 30px rgba(0, 0, 0, 0.5);
   overflow-y: auto;
   overflow-x: hidden;
   display: flex;

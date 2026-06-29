@@ -24,7 +24,6 @@ function getLayout(mode: string, cy?: cytoscape.Core): any {
 
 export function GraphView() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const prevLayoutMode = useRef<string | null>(null);
   const {
     dataset,
     cy,
@@ -72,15 +71,19 @@ export function GraphView() {
       animationDuration: 1800,
     }).run();
 
-    // After the initial layout, settle into the dense core (around C) at a readable
-    // zoom rather than fitting all 112 nodes — so nodes read big and the rest is
-    // there to pan to. Only the first layout; relayouts keep their own fit.
-    instance.one('layoutstop', () => {
+    // Several layouts can run while the page mounts; once the entrance settles,
+    // ease into the dense core (around C) at a readable zoom rather than fitting
+    // all 112 nodes — so nodes read big and the rest is there to pan to. We listen
+    // through the whole entrance window so the final settle wins; after that,
+    // user-triggered relayouts fit normally.
+    const entranceStart = Date.now();
+    instance.on('layoutstop', () => {
+      if (Date.now() - entranceStart > 3800) return;
       const focal = instance.getElementById('lang:c');
       const target = focal.nonempty() ? focal : instance.nodes();
       instance.animate(
         { center: { eles: target }, zoom: 0.82 },
-        { duration: 700, easing: 'ease-in-out-cubic' }
+        { duration: 480, easing: 'ease-in-out-cubic' }
       );
     });
 
@@ -200,15 +203,14 @@ export function GraphView() {
     deactivateFocusMode(cy);
   }, [cy, dataset, filters, isDarkMode]);
 
-  // Re-run the layout only when the mode actually changes — not on initial mount,
-  // where the setup effect already lays out and zooms into the core.
+  // Update layout when layout mode changes
   useEffect(() => {
-    if (!cy) return;
-    if (prevLayoutMode.current === filters.layoutMode) return;
-    const isFirst = prevLayoutMode.current === null;
-    prevLayoutMode.current = filters.layoutMode;
-    if (isFirst) return;
-    cy.layout(getLayout(filters.layoutMode, cy)).run();
+    if (!cy) {
+      return;
+    }
+
+    const layout = getLayout(filters.layoutMode, cy);
+    cy.layout(layout).run();
   }, [cy, filters.layoutMode]);
 
   // Timeline year visibility (lightweight class toggling, no relayout)
