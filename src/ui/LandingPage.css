@@ -187,6 +187,40 @@
   pointer-events: none;
 }
 
+/* Ambient hero VFX: living constellation canvas + cursor spotlight (Phase 1) */
+.hero-fx {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  --fx-mx: 50%;
+  --fx-my: 35%;
+}
+
+.hero-fx-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.hero-fx-glow {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-out-quart, ease);
+  background: radial-gradient(
+    520px circle at var(--fx-mx) var(--fx-my),
+    rgba(74, 222, 128, 0.16),
+    rgba(74, 222, 128, 0.06) 36%,
+    transparent 64%
+  );
+}
+
+.hero-fx.fx-cursor-on .hero-fx-glow {
+  opacity: 1;
+}
+
 .hero-grid {
   position: absolute;
   inset: 0;

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { LandingGraphGlimpse } from './LandingGraphGlimpse';
+import { HeroFx } from './HeroFx';
 import './LandingPage.css';
 
 interface LandingPageProps {
@@ -52,6 +53,7 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-bg">
+          <HeroFx />
           <div className="hero-grid" />
         </div>
         <div className="hero-inner">
