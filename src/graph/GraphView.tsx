@@ -73,11 +73,15 @@ export function GraphView() {
 
     setCytoscape(instance);
 
-    // Node tap: lock selection
+    // Node tap: lock selection, then smoothly bring it to centre.
     instance.on('tap', 'node', (evt) => {
-      const nodeId = evt.target.id();
-      setSelectedNode(nodeId);
-      activateFocusMode(instance, nodeId);
+      const node = evt.target;
+      setSelectedNode(node.id());
+      activateFocusMode(instance, node.id());
+      const calm = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!calm) {
+        instance.animate({ center: { eles: node } }, { duration: 430, easing: 'ease-in-out-cubic' });
+      }
     });
 
     // Edge tap

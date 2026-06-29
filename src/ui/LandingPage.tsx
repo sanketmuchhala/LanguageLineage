@@ -1,5 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { LandingGraphGlimpse } from './LandingGraphGlimpse';
+import { HeroFx } from './HeroFx';
+import { initDataFlow } from '../fx/dataFlow';
+import { initCountUps, initHeroParallax } from '../fx/interactions';
 import './LandingPage.css';
 
 interface LandingPageProps {
@@ -28,6 +31,18 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
     return () => observerRef.current?.disconnect();
   }, []);
 
+  // Quiet, purposeful motion only: a slow data pulse along the specimen graph,
+  // stat count-up, and a subtle hero parallax.
+  useEffect(() => {
+    const teardown: Array<() => void> = [];
+    const svg = document.querySelector('.hero-graph-svg') as SVGSVGElement | null;
+    if (svg) teardown.push(initDataFlow(svg));
+    teardown.push(initCountUps());
+    const scroller = document.querySelector('.landing') as HTMLElement | null;
+    if (scroller) teardown.push(initHeroParallax(scroller));
+    return () => teardown.forEach((fn) => fn());
+  }, []);
+
   return (
     <div className="landing">
       {/* Navigation */}
@@ -52,6 +67,7 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-bg">
+          <HeroFx />
           <div className="hero-grid" />
         </div>
         <div className="hero-inner">
@@ -81,7 +97,6 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
         </div>
         <div className="hero-visual reveal">
             <div className="hero-panel">
-              <div className="hero-panel-cap"><span className="hero-panel-dot" />implementation subgraph &middot; C</div>
               <div className="hero-graph">
                 <svg viewBox="0 0 440 312" className="hero-graph-svg" role="img" aria-label="Directed subgraph centered on C. ALGOL and B influenced C; C is the implementation language of the Python and Ruby runtimes and the original Go compiler.">
                   <defs>
@@ -89,6 +104,8 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
                     <marker id="hg-arrow-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e3a008" /></marker>
                     <marker id="hg-arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#60a5fa" /></marker>
                     <radialGradient id="hg-focal-fill" cx="50%" cy="40%" r="62%"><stop offset="0%" stopColor="#13402a" /><stop offset="100%" stopColor="#0a1d13" /></radialGradient>
+                    <radialGradient id="hg-orb" cx="38%" cy="30%" r="82%"><stop offset="0%" stopColor="#2e2e2e" /><stop offset="55%" stopColor="#161616" /><stop offset="100%" stopColor="#0b0b0b" /></radialGradient>
+                    <radialGradient id="hg-focal-halo" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="rgba(74,222,128,0.30)" /><stop offset="55%" stopColor="rgba(74,222,128,0.08)" /><stop offset="100%" stopColor="rgba(74,222,128,0)" /></radialGradient>
                   </defs>
                   <g className="hg-edges">
                     <line className="hg-edge hg-influence" pathLength={1} x1="133" y1="68" x2="192" y2="123" markerEnd="url(#hg-arrow-blue)" />
@@ -126,12 +143,6 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
                     <image className="hg-logo" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/c/c-original.svg" x="197" y="127" width="46" height="46" />
                   </g>
                 </svg>
-              </div>
-              <div className="hero-record">
-                <span className="rec-node">Python</span>
-                <span className="rec-edge"><span className="rec-rel">runtime_written_in</span></span>
-                <span className="rec-node rec-impl">C</span>
-                <span className="rec-conf"><span className="rec-check">✓</span> 0.98</span>
               </div>
             </div>
           </div>
