@@ -97,7 +97,6 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
         </div>
         <div className="hero-visual reveal">
             <div className="hero-panel">
-              <div className="hero-panel-cap"><span className="hero-panel-dot" />implementation subgraph &middot; C</div>
               <div className="hero-graph">
                 <svg viewBox="0 0 440 312" className="hero-graph-svg" role="img" aria-label="Directed subgraph centered on C. ALGOL and B influenced C; C is the implementation language of the Python and Ruby runtimes and the original Go compiler.">
                   <defs>
@@ -142,12 +141,6 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
                     <image className="hg-logo" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/c/c-original.svg" x="197" y="127" width="46" height="46" />
                   </g>
                 </svg>
-              </div>
-              <div className="hero-record">
-                <span className="rec-node">Python</span>
-                <span className="rec-edge"><span className="rec-rel">runtime_written_in</span></span>
-                <span className="rec-node rec-impl">C</span>
-                <span className="rec-conf"><span className="rec-check">✓</span> 0.98</span>
               </div>
             </div>
           </div>
