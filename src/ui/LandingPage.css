@@ -270,16 +270,25 @@
   display: block;
   overflow: visible;
 }
-.hg-edge { fill: none; stroke-width: 1.6; stroke-linecap: round; }
-.hg-influence { stroke: var(--rel-influence); stroke-dasharray: 1 5.5; opacity: 0.6; }
-.hg-runtime { stroke: var(--rel-runtime); opacity: 0.85; }
-.hg-compiler { stroke: var(--rel-compiler); opacity: 0.85; }
-.hg-up circle { fill: #161616; stroke: rgba(255, 255, 255, 0.18); stroke-width: 1.5; }
-.hg-impl-runtime circle { fill: #111; stroke: rgba(74, 222, 128, 0.55); stroke-width: 1.5; }
-.hg-impl-compiler circle { fill: #111; stroke: rgba(227, 160, 8, 0.55); stroke-width: 1.5; }
-.hg-focal-node circle { stroke: var(--color-accent); stroke-width: 2; filter: drop-shadow(0 0 9px rgba(74, 222, 128, 0.45)); }
-.hg-focal-glow { fill: rgba(74, 222, 128, 0.14); animation: hg-pulse 3.6s ease-in-out infinite; }
-@keyframes hg-pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.85; } }
+.hg-edge { fill: none; stroke-width: 2; stroke-linecap: round; }
+.hg-influence { stroke: var(--rel-influence); stroke-dasharray: 1 6; opacity: 0.72; filter: drop-shadow(0 0 3px var(--rel-influence)); }
+.hg-runtime { stroke: var(--rel-runtime); opacity: 0.95; filter: drop-shadow(0 0 4px rgba(52, 211, 153, 0.7)); }
+.hg-compiler { stroke: var(--rel-compiler); opacity: 0.95; filter: drop-shadow(0 0 4px rgba(227, 160, 8, 0.7)); }
+.hg-up circle { fill: url(#hg-orb); stroke: rgba(255, 255, 255, 0.3); stroke-width: 1.4; filter: drop-shadow(0 3px 7px rgba(0, 0, 0, 0.7)); }
+.hg-impl-runtime circle { fill: #0c0c0c; stroke: var(--rel-runtime); stroke-width: 1.8; filter: drop-shadow(0 0 6px rgba(52, 211, 153, 0.5)); }
+.hg-impl-compiler circle { fill: #0c0c0c; stroke: var(--rel-compiler); stroke-width: 1.8; filter: drop-shadow(0 0 6px rgba(227, 160, 8, 0.5)); }
+.hg-focal-node circle { stroke: var(--color-accent); stroke-width: 2.5; filter: drop-shadow(0 0 14px rgba(74, 222, 128, 0.6)) drop-shadow(0 0 5px rgba(74, 222, 128, 0.9)); }
+.hg-focal-glow {
+  fill: url(#hg-focal-halo);
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hg-pulse 3.8s ease-in-out infinite;
+}
+.hg-logo { filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.55)); }
+@keyframes hg-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
 .hg-packet { filter: drop-shadow(0 0 3px var(--c)); opacity: 0.85; }
 .hg-label { fill: var(--color-text-muted); font-family: var(--font-mono); font-size: 12px; font-weight: 500; }
 .hg-label-focal { fill: #d6fbe4; font-family: var(--font-mono); font-size: 18px; font-weight: 700; }

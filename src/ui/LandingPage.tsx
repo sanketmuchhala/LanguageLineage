@@ -104,6 +104,8 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
                     <marker id="hg-arrow-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e3a008" /></marker>
                     <marker id="hg-arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#60a5fa" /></marker>
                     <radialGradient id="hg-focal-fill" cx="50%" cy="40%" r="62%"><stop offset="0%" stopColor="#13402a" /><stop offset="100%" stopColor="#0a1d13" /></radialGradient>
+                    <radialGradient id="hg-orb" cx="38%" cy="30%" r="82%"><stop offset="0%" stopColor="#2e2e2e" /><stop offset="55%" stopColor="#161616" /><stop offset="100%" stopColor="#0b0b0b" /></radialGradient>
+                    <radialGradient id="hg-focal-halo" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="rgba(74,222,128,0.30)" /><stop offset="55%" stopColor="rgba(74,222,128,0.08)" /><stop offset="100%" stopColor="rgba(74,222,128,0)" /></radialGradient>
                   </defs>
                   <g className="hg-edges">
                     <line className="hg-edge hg-influence" pathLength={1} x1="133" y1="68" x2="192" y2="123" markerEnd="url(#hg-arrow-blue)" />
