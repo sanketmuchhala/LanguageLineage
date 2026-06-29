@@ -219,31 +219,21 @@
   z-index: 2;
 }
 
-/* Hero graph specimen plate: caption (top), graph (middle), record (bottom) */
+/* Hero graph specimen: caption (top), graph (middle), record (bottom) — floats
+   seamlessly on the hero, no box. A soft radial halo gives it gentle presence. */
 .hero-panel {
   position: relative;
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--color-border);
-  border-radius: 18px;
-  background:
-    radial-gradient(120% 90% at 72% 10%, rgba(74, 222, 128, 0.07), transparent 56%),
-    linear-gradient(180deg, #0b0b0b, #050505);
   aspect-ratio: 1 / 0.9;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
-  overflow: hidden;
 }
 .hero-panel::before {
   content: '';
   position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: 36px 36px;
-  -webkit-mask-image: radial-gradient(120% 80% at 50% 35%, #000 35%, transparent 80%);
-  mask-image: radial-gradient(120% 80% at 50% 35%, #000 35%, transparent 80%);
+  inset: -8% -6% 0;
+  background: radial-gradient(60% 52% at 56% 46%, rgba(74, 222, 128, 0.06), transparent 70%);
   pointer-events: none;
+  z-index: 0;
 }
 .hero-panel-cap {
   position: relative;
@@ -301,11 +291,8 @@
   display: flex;
   align-items: center;
   gap: 9px;
-  margin: 4px 14px 14px;
-  padding: 9px 12px;
-  border-radius: 10px;
-  background: rgba(12, 12, 12, 0.92);
-  border: 1px solid var(--color-border);
+  margin: 6px 4px 0 13px;
+  padding: 8px 0 8px 12px;
   border-left: 2px solid var(--color-accent);
   font-family: var(--font-mono);
   font-size: 12px;
