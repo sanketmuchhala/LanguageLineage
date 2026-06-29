@@ -309,6 +309,7 @@
 .hg-focal-node circle { stroke: var(--color-accent); stroke-width: 2; filter: drop-shadow(0 0 9px rgba(74, 222, 128, 0.45)); }
 .hg-focal-glow { fill: rgba(74, 222, 128, 0.14); animation: hg-pulse 3.6s ease-in-out infinite; }
 @keyframes hg-pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.85; } }
+.hg-packet { filter: drop-shadow(0 0 6px var(--c)) drop-shadow(0 0 2px var(--c)); }
 .hg-label { fill: var(--color-text-muted); font-family: var(--font-mono); font-size: 12px; font-weight: 500; }
 .hg-label-focal { fill: #d6fbe4; font-family: var(--font-mono); font-size: 18px; font-weight: 700; }
 
