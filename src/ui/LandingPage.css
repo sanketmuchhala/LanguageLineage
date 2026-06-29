@@ -40,16 +40,37 @@
   background: var(--color-accent);
 }
 
-/* Reveal Animation */
+/* Reveal Animation — a focus-in: rise, settle, and sharpen */
 .reveal {
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+  transform: translateY(30px) scale(0.985);
+  filter: blur(6px);
+  transition:
+    opacity 0.8s var(--ease-out-expo),
+    transform 0.8s var(--ease-out-expo),
+    filter 0.8s var(--ease-out-expo);
 }
 
 .reveal.visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: none;
+  filter: blur(0);
+}
+
+/* Scroll-progress hairline pinned to the top */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 2000;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg, var(--color-accent), var(--color-accent-hover, #86efac));
+  box-shadow: 0 0 10px rgba(74, 222, 128, 0.6);
+  pointer-events: none;
+  will-change: transform;
 }
 
 /* Staggered reveals */

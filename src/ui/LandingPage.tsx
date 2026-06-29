@@ -3,6 +3,7 @@ import { LandingGraphGlimpse } from './LandingGraphGlimpse';
 import { HeroFx } from './HeroFx';
 import { initDataFlow } from '../fx/dataFlow';
 import { initDecode } from '../fx/decode';
+import { initCountUps, initScrollProgress, initHeroParallax } from '../fx/interactions';
 import './LandingPage.css';
 
 interface LandingPageProps {
@@ -41,6 +42,14 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
     if (eyebrow) teardown.push(initDecode(eyebrow, { duration: 520 }));
     const title = document.querySelector('.hero-title') as HTMLElement | null;
     if (title) teardown.push(initDecode(title, { duration: 760 }));
+
+    // Scroll cinematics (the landing scrolls inside .landing, not the window).
+    teardown.push(initCountUps());
+    const scroller = document.querySelector('.landing') as HTMLElement | null;
+    if (scroller) {
+      teardown.push(initScrollProgress(scroller));
+      teardown.push(initHeroParallax(scroller));
+    }
     return () => teardown.forEach((fn) => fn());
   }, []);
 
