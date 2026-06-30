@@ -66,7 +66,17 @@ export function LandingGraphGlimpse({ onOpen }: Props) {
         if (cancelled || !containerRef.current) return;
 
         const elements: Array<Record<string, unknown>> = [];
+
+        // Build the visible edges first (trim weaker influence edges to reduce clutter),
+        // then only render nodes that still have a connection — so the teaser never shows
+        // stranded, disconnected nodes.
+        const keptEdges = dataset.edges.filter((e) =>
+          !((e.relationship === 'influenced' || e.relationship === 'influenced_by') && e.confidence < 0.88));
+        const connected = new Set<string>();
+        keptEdges.forEach((e) => { connected.add(e.from_language); connected.add(e.to_language); });
+
         dataset.languageMap.forEach((lang, id) => {
+          if (!connected.has(id)) return;
           const canonicalLogoUrl = lang.logo_url ?? logoMod.LOGO_MAP[id] ?? null;
           const logoUrl = graphLogoMod.getGraphLogoUrl(id, canonicalLogoUrl);
           const logoKind = lang.logo_kind ?? (logoMod.LOGO_MAP[id] ? 'devicon' : 'none');
@@ -88,9 +98,7 @@ export function LandingGraphGlimpse({ onOpen }: Props) {
             },
           });
         });
-        dataset.edges.forEach((e) => {
-          // Keep every implementation edge; trim weaker influence edges to reduce clutter.
-          if ((e.relationship === 'influenced' || e.relationship === 'influenced_by') && e.confidence < 0.88) return;
+        keptEdges.forEach((e) => {
           elements.push({ group: 'edges', data: { id: e.id, source: e.from_language, target: e.to_language, relationship: e.relationship, confidence: e.confidence } });
         });
 
@@ -98,7 +106,7 @@ export function LandingGraphGlimpse({ onOpen }: Props) {
           container: containerRef.current,
           elements: elements as never,
           style: styleMod.getCytoscapeStyle(true, false, true),
-          layout: { name: 'cose-bilkent', animate: false, randomize: true, nodeRepulsion: 7000, idealEdgeLength: 95, gravity: 0.35, numIter: 600, padding: 36, fit: true } as never,
+          layout: { name: 'cose-bilkent', animate: false, randomize: true, nodeDimensionsIncludeLabels: true, nodeRepulsion: 24000, idealEdgeLength: 150, gravity: 0.22, gravityRange: 3, numIter: 2000, padding: 28, fit: true } as never,
           minZoom: 0.12,
           maxZoom: 3,
           userZoomingEnabled: false,
