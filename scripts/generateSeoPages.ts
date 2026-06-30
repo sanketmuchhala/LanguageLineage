@@ -1004,6 +1004,106 @@ function buildPageHeader(node: Language): string {
 </div>`;
 }
 
+// Curated, plain-language succession notes for well-known languages: what each one
+// displaced, and what (if anything) is taking its place. Languages without an entry
+// fall back to the graph-derived "Built on / Influenced" lineage only.
+const SUCCESSION: Record<string, { replaced?: string; replacedBy?: string }> = {
+  python: { replaced: 'Perl for scripting, and much of what R and Java did for data work', replacedBy: 'Not really being replaced; teams reach for Rust, Go, or Julia for raw speed, usually called from Python' },
+  javascript: { replaced: 'Java applets and Adobe Flash for in-browser interactivity', replacedBy: 'Most new front-end code is written in TypeScript, which compiles back to JavaScript' },
+  typescript: { replaced: 'plain JavaScript for large, long-lived codebases', replacedBy: 'Still ascending; no successor in sight' },
+  java: { replaced: 'C++ for portable enterprise and server software', replacedBy: 'Kotlin on Android, and Go or Rust for many new back-end services' },
+  c: { replaced: 'assembly language for most systems programming', replacedBy: 'Rust and Zig for new memory-safe systems work, though C is still everywhere' },
+  cxx: { replaced: 'C for large, performance-critical applications', replacedBy: 'Rust for many new safety-critical and systems projects' },
+  csharp: { replaced: 'Visual Basic and C++ for Windows and .NET development', replacedBy: 'Still current; no successor' },
+  rust: { replaced: 'C and C++ where memory safety matters', replacedBy: 'Still ascending; no clear successor' },
+  go: { replaced: 'C, Python, and Java for many cloud and network services', replacedBy: 'Still growing; Rust competes for the most performance-sensitive parts' },
+  ruby: { replaced: 'Perl and PHP for fast web development, through Rails', replacedBy: 'JavaScript/TypeScript and Python for many new web back-ends' },
+  php: { replaced: 'Perl CGI scripts for server-side web pages', replacedBy: 'Node.js and Python for many new back-ends, though PHP still runs much of the web' },
+  perl: { replaced: 'shell scripts and C for text processing and early CGI', replacedBy: 'Python and Ruby took over most of its scripting and web roles' },
+  swift: { replaced: 'Objective-C for Apple platform apps', replacedBy: 'Still current; the language Apple recommends' },
+  objective_c: { replaced: 'C and C++ for NeXT and early Apple app development', replacedBy: 'Swift, recommended by Apple since 2014' },
+  kotlin: { replaced: 'Java for Android app development', replacedBy: 'Still current; the language Google prefers for Android' },
+  cobol: { replaced: 'assembly for business data processing on mainframes', replacedBy: 'Java and C# for new systems, though COBOL still runs core banking and government batch jobs' },
+  fortran: { replaced: 'assembly for scientific and numerical computing', replacedBy: 'C++, Python, and Julia for new work, though Fortran math libraries remain in use' },
+  pascal: { replaced: 'assembly and BASIC for teaching structured programming', replacedBy: 'C, C++, and Java in education and industry' },
+  basic: { replaced: 'assembly for beginners on early microcomputers', replacedBy: 'Python as the common first language; Visual Basic for Windows apps' },
+  actionscript: { replaced: 'plain JavaScript for rich, animated Flash content', replacedBy: 'HTML5 and JavaScript, after Adobe Flash was discontinued in 2020' },
+  vb_net: { replaced: 'classic Visual Basic for Windows business apps', replacedBy: 'C# for most new .NET development' },
+  delphi: { replaced: 'C and C++ for rapid Windows desktop development', replacedBy: 'C#, web stacks, and cross-platform frameworks for new desktop apps' },
+  lisp: { replaced: 'assembly for early AI and symbolic computing', replacedBy: 'Python and statistical methods for most modern AI work' },
+  smalltalk: { replaced: 'procedural languages for pure object-oriented design', replacedBy: 'Its ideas live on in Python, Ruby, and Objective-C rather than a single successor' },
+  coffeescript: { replaced: 'verbose early-2010s JavaScript syntax', replacedBy: 'ES6 JavaScript and TypeScript, which absorbed most of its ideas' },
+  elm: { replaced: 'unsafe JavaScript for crash-free front-ends', replacedBy: 'TypeScript with React for most teams' },
+  hack: { replaced: 'untyped PHP at Facebook scale' },
+  reasonml: { replacedBy: 'ReScript, its renamed and refocused successor' },
+};
+
+// The integrated page header: logo, name, tagline, a horizontal spec rail of key data
+// (written in, released, developer, typing, license), and the curated succession notes —
+// woven into the top of the article rather than boxed into a card.
+function buildLanguageHeader(node: Language, rels: Relationship[], nodeMap: Map<string, Language>): string {
+  const e = ENRICHMENT[node.id];
+  const isTool = node.id.startsWith('tool:');
+  const slug = idToSlug(node.id);
+  const rawTag = e?.tagline ? e.tagline.replace(/\.$/, '') : '';
+  const tagline = rawTag ? `${rawTag.charAt(0).toUpperCase()}${rawTag.slice(1)}.` : '';
+
+  let logo = `<div class="lang-logo-tile lang-logo-tile--mark" aria-hidden="true">${escapeHtml(node.name.charAt(0))}</div>`;
+  if (node.logo_url) {
+    const logoColor = LOGO_COLORS[node.id] ?? null;
+    const surface = getLogoPresentation(node.id, node.logo_kind).surface;
+    const bg = getAdaptiveLogoBackground(logoColor, true, surface);
+    const border = getLogoBorderColor(logoColor, true, surface);
+    logo = `<div class="lang-logo-tile" style="background:${bg};border-color:${border}"><img src="${escapeHtml(node.logo_url)}" alt="${escapeHtml(node.name)} logo" width="56" height="56" loading="eager" decoding="async" /></div>`;
+  }
+
+  const implTypes = ['compiler_written_in', 'runtime_written_in', 'bootstrap_written_in'];
+  const writtenInIds = [...new Set(rels.filter(r => r.to_language === node.id && implTypes.includes(r.relationship)).map(r => r.from_language))];
+  const writtenIn = writtenInIds.length
+    ? writtenInIds.map(id => linkNode(id, nodeMap)).join(', ')
+    : (node.self_hosting ? `${escapeHtml(node.name)} (self-hosting)` : '');
+
+  const developer = node.company || joinNames(e?.facts.designers ?? []) || joinNames(e?.facts.developers ?? []) || '';
+  const license = joinNames(e?.facts.license ?? []) || '';
+  const website = e?.facts.website || '';
+  const typing = (!isTool && node.typing && !['unspecified', 'none'].includes(node.typing)) ? node.typing : '';
+
+  // Horizontal spec rail — the page's key data, read like an instrument readout rather
+  // than boxed into a card. Each cell is a value over a small monospace label.
+  const cells: Array<[string, string]> = [];
+  if (writtenIn) cells.push([writtenIn, 'Written in']);
+  if (node.first_release_year && node.first_release_year > 0) cells.push([String(node.first_release_year), 'First released']);
+  if (developer) cells.push([escapeHtml(developer), isTool ? 'Built by' : 'Developer']);
+  if (typing) cells.push([escapeHtml(typing), 'Typing']);
+  if (license) cells.push([escapeHtml(license), 'License']);
+  const rail = cells.length
+    ? `<div class="spec-rail">${cells.map(([v, l]) => `<div class="spec-cell"><span class="spec-val">${v}</span><span class="spec-lab">${l}</span></div>`).join('')}</div>`
+    : '';
+
+  const succ = SUCCESSION[slug];
+  const succHtml = (succ?.replaced || succ?.replacedBy)
+    ? `<div class="succession">
+    ${succ.replaced ? `<div class="succ-row"><span class="succ-k">Replaced</span><span>${escapeHtml(succ.replaced)}</span></div>` : ''}
+    ${succ.replacedBy ? `<div class="succ-row"><span class="succ-k">Being replaced by</span><span>${escapeHtml(succ.replacedBy)}</span></div>` : ''}
+  </div>`
+    : '';
+
+  const kind = isTool ? 'Toolchain' : 'Programming language';
+  const year = (node.first_release_year && node.first_release_year > 0) ? ` &middot; ${node.first_release_year}` : '';
+
+  return `<header class="lang-head">
+  ${logo}
+  <div class="lang-head-main">
+    <p class="lang-head-eyebrow">${kind}${year}</p>
+    <h1>${escapeHtml(node.name)}</h1>
+    ${tagline ? `<p class="lang-head-tagline">${escapeHtml(tagline)}</p>` : ''}
+  </div>
+  ${website ? `<a class="lang-head-site" href="${escapeHtml(website)}" rel="nofollow noopener noreferrer" target="_blank">Official site &rsaquo;</a>` : ''}
+</header>
+${rail}
+${succHtml}`;
+}
+
 // Full enriched block (facts + overview) for nodes without a hand-authored PRIORITY_CONTENT entry.
 function buildEnrichedContent(node: Language, rels: Relationship[], nodeMap: Map<string, Language>): string {
   if (!ENRICHMENT[node.id]) return '';
@@ -1427,12 +1527,11 @@ ${faqs.map(f => `<div class="faq-item">
     <a href="/">Home</a> &rsaquo; <a href="/${prefix}">${prefix === 'tools' ? 'Tools' : 'Languages'}</a> &rsaquo; ${escapeHtml(node.name)}
   </nav>
 
-  ${buildPageHeader(node)}
-
-  ${buildMetaTags(node)}
+  ${buildLanguageHeader(node, rels, nodeMap)}
 
   ${buildToolIntro(node)}
 
+  <h2 class="lang-written-q">What is ${escapeHtml(node.name)} written in?</h2>
   ${buildAnswerBox(node, rels, nodeMap)}
 
   ${buildUseCases(node)}
