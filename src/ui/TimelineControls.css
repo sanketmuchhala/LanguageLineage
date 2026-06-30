@@ -146,11 +146,14 @@
 @media (max-width: 768px) {
   .timeline-controls {
     min-width: auto;
+    max-width: none;
     width: calc(100% - 24px);
     left: 12px;
     transform: none;
     padding: 18px;
-    bottom: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    max-height: calc(100dvh - 24px - env(safe-area-inset-bottom));
+    overflow-y: auto;
   }
 
   .timeline-year-row {
@@ -166,11 +169,13 @@
   .timeline-decade-btn {
     font-size: 11px;
     padding: 6px 10px;
+    min-height: 40px;
   }
 
   .timeline-btn {
     padding: 10px 16px;
     font-size: 12px;
+    min-height: 44px;
   }
 
   .timeline-playback-row {

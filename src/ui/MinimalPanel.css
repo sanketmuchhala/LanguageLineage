@@ -6,6 +6,7 @@
   top: 0;
   left: 0;
   height: 100vh;
+  height: 100dvh;
   width: 300px;
   z-index: 200;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -13,11 +14,11 @@
 }
 
 .sidebar.collapsed {
-  transform: translateX(-300px);
+  transform: translateX(-100%);
 }
 
 .sidebar-inner {
-  width: 300px;
+  width: 100%;
   height: 100%;
   /* Frosted glass floating over the atlas */
   background: rgba(9, 9, 11, 0.82);
@@ -484,10 +485,30 @@
 }
 
 /* ============================================
-   BACKDROP (mobile only, hidden on desktop)
+   BACKDROP (tablet and mobile only)
    ============================================ */
 .sidebar-backdrop {
   display: none;
+}
+
+@media (max-width: 1024px) {
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 199;
+    animation: backdropFadeIn 0.22s ease;
+  }
+
+  .sidebar-inner {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  @keyframes backdropFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
 }
 
 /* ============================================
@@ -499,11 +520,14 @@
   }
 
   .sidebar.collapsed {
-    transform: translateX(-260px);
+    transform: translateX(-100%);
   }
 
   .sidebar-toggle-tab {
     left: 260px;
+    width: 32px;
+    height: 64px;
+    border-radius: 0 10px 10px 0;
   }
 
   .sidebar-toggle-tab.collapsed {
@@ -542,21 +566,6 @@
     left: 0;
     width: 32px;
     height: 72px;
-  }
-
-  /* Backdrop overlay */
-  .sidebar-backdrop {
-    display: block;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.55);
-    z-index: 199;
-    animation: backdropFadeIn 0.22s ease;
-  }
-
-  @keyframes backdropFadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
   }
 
   /* Panel sections: more touch-friendly */

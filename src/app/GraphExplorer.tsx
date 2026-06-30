@@ -28,6 +28,7 @@ export function GraphExplorer() {
   const navigate = useNavigate();
   const { setDataset, setDatasetIndex, setValidationReport } = useGraphStore();
   const dataset = useGraphStore((s) => s.dataset);
+  const layoutMode = useGraphStore((s) => s.filters.layoutMode);
 
   // Load dataset when graph explorer mounts (not on landing page)
   useEffect(() => {
@@ -137,7 +138,7 @@ export function GraphExplorer() {
         </section>
       )}
       <div
-        className="graph-container"
+        className={`graph-container${layoutMode === 'timeline' ? ' timeline-active' : ''}`}
         role="application"
         aria-label="Interactive programming language graph. An accessible text summary of the same data precedes this canvas."
       >
