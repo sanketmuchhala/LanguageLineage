@@ -250,6 +250,52 @@ h1 {
 }
 .lang-head-site:hover { background: rgba(74, 222, 128, 0.12); border-color: var(--accent); }
 
+/* Relationship map — inline-SVG lineage graph at the top of the page. */
+.rel-map {
+  margin: 30px 0 10px;
+  padding: 18px 0 6px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.rel-map svg { width: 100%; height: auto; display: block; }
+.rel-col-head {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  fill: var(--text-tertiary);
+}
+.rel-node { cursor: pointer; }
+.rel-node-label { font-size: 13px; fill: var(--text-secondary); }
+.rel-node circle { transition: stroke-width 0.15s; }
+.rel-node:hover .rel-node-label { fill: var(--accent); }
+.rel-node:hover circle { stroke-width: 3; }
+.rel-focal-mark { font-family: 'Fraunces', Georgia, serif; font-size: 26px; font-weight: 600; fill: var(--text); }
+.rel-focal-label { font-size: 15px; font-weight: 600; fill: var(--text); }
+.rel-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 10px;
+}
+.rel-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+.rel-legend-item i { width: 8px; height: 8px; border-radius: 50%; }
+@media (max-width: 600px) {
+  .rel-node-label { font-size: 16px; }
+  .rel-focal-label { font-size: 18px; }
+  .rel-col-head { font-size: 13px; }
+}
+
 /* Horizontal spec rail — key data as an instrument-style readout. */
 .spec-rail {
   display: flex;

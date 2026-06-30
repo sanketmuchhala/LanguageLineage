@@ -1038,10 +1038,99 @@ const SUCCESSION: Record<string, { replaced?: string; replacedBy?: string }> = {
   reasonml: { replacedBy: 'ReScript, its renamed and refocused successor' },
 };
 
+const REL_MAP_LEGEND: Record<string, { label: string; color: string }> = {
+  compiler_written_in: { label: 'Compiler', color: '#e3a008' },
+  runtime_written_in: { label: 'Runtime', color: '#34d399' },
+  bootstrap_written_in: { label: 'Bootstrap', color: '#a78bfa' },
+  rewritten_in: { label: 'Rewrite', color: '#fb7185' },
+  influenced: { label: 'Influence', color: '#60a5fa' },
+  transpiled_to: { label: 'Transpile', color: '#22d3ee' },
+};
+
+// A lightweight inline-SVG relationship map for the top of each page: the focal node at
+// center, what it is built from on the left (written-in + influences), what it influenced
+// on the right, with edges colored by the same semantic palette the live graph uses.
+function buildRelationshipMap(node: Language, rels: Relationship[], nodeMap: Map<string, Language>): string {
+  const implTypes = new Set(['compiler_written_in', 'runtime_written_in', 'bootstrap_written_in', 'rewritten_in']);
+  type Conn = { id: string; rel: string };
+
+  const inSeen = new Set<string>();
+  const inputs: Conn[] = [];
+  rels.filter(r => r.to_language === node.id && implTypes.has(r.relationship))
+    .forEach(r => { if (!inSeen.has(r.from_language)) { inSeen.add(r.from_language); inputs.push({ id: r.from_language, rel: r.relationship }); } });
+  rels.filter(r => r.to_language === node.id && r.relationship === 'influenced')
+    .sort((a, b) => b.confidence - a.confidence)
+    .forEach(r => { if (!inSeen.has(r.from_language)) { inSeen.add(r.from_language); inputs.push({ id: r.from_language, rel: 'influenced' }); } });
+  const left = inputs.slice(0, 5);
+
+  const outSeen = new Set<string>();
+  const outputs: Conn[] = [];
+  rels.filter(r => r.from_language === node.id && r.relationship === 'influenced')
+    .sort((a, b) => b.confidence - a.confidence)
+    .forEach(r => { if (!outSeen.has(r.to_language)) { outSeen.add(r.to_language); outputs.push({ id: r.to_language, rel: 'influenced' }); } });
+  rels.filter(r => r.from_language === node.id && r.relationship === 'transpiled_to')
+    .forEach(r => { if (!outSeen.has(r.to_language)) { outSeen.add(r.to_language); outputs.push({ id: r.to_language, rel: 'transpiled_to' }); } });
+  const right = outputs.slice(0, 5);
+
+  if (!left.length && !right.length) return '';
+
+  const W = 760;
+  const rowH = 56;
+  const rows = Math.max(left.length, right.length, 1);
+  const H = Math.max(rows * rowH + 56, 184);
+  const cx = W / 2, cy = H / 2;
+  const leftX = 150, rightX = W - 150, focalR = 32, nodeR = 6;
+  const midL = (leftX + cx) / 2, midR = (rightX + cx) / 2;
+  const yFor = (i: number, count: number) => cy - ((count - 1) * rowH) / 2 + i * rowH;
+  const colorOf = (rel: string) => REL_MAP_LEGEND[rel]?.color ?? '#60a5fa';
+
+  const edgeEls: string[] = [];
+  const nodeEls: string[] = [];
+
+  left.forEach((c, i) => {
+    const y = yFor(i, left.length);
+    const col = colorOf(c.rel);
+    edgeEls.push(`<path d="M ${leftX + nodeR} ${y} C ${midL} ${y}, ${midL} ${cy}, ${cx - focalR - 2} ${cy}" fill="none" stroke="${col}" stroke-width="1.6" stroke-opacity="0.5" />`);
+    const name = escapeHtml(nameFromId(c.id, nodeMap));
+    nodeEls.push(`<a href="/${idToPrefix(c.id)}/${idToSlug(c.id)}" class="rel-node"><circle cx="${leftX}" cy="${y}" r="${nodeR}" fill="#0e0e0e" stroke="${col}" stroke-width="2" /><text x="${leftX - nodeR - 9}" y="${y}" text-anchor="end" dominant-baseline="middle" class="rel-node-label">${name}</text></a>`);
+  });
+  right.forEach((c, i) => {
+    const y = yFor(i, right.length);
+    const col = colorOf(c.rel);
+    edgeEls.push(`<path d="M ${cx + focalR + 2} ${cy} C ${midR} ${cy}, ${midR} ${y}, ${rightX - nodeR} ${y}" fill="none" stroke="${col}" stroke-width="1.6" stroke-opacity="0.5" />`);
+    const name = escapeHtml(nameFromId(c.id, nodeMap));
+    nodeEls.push(`<a href="/${idToPrefix(c.id)}/${idToSlug(c.id)}" class="rel-node"><circle cx="${rightX}" cy="${y}" r="${nodeR}" fill="#0e0e0e" stroke="${col}" stroke-width="2" /><text x="${rightX + nodeR + 9}" y="${y}" text-anchor="start" dominant-baseline="middle" class="rel-node-label">${name}</text></a>`);
+  });
+
+  let focal: string;
+  if (node.logo_url) {
+    focal = `<defs><clipPath id="relfocal"><circle cx="${cx}" cy="${cy}" r="${focalR - 3}" /></clipPath></defs><circle cx="${cx}" cy="${cy}" r="${focalR}" fill="#161616" stroke="#4ade80" stroke-width="2" /><image href="${escapeHtml(node.logo_url)}" x="${cx - focalR + 9}" y="${cy - focalR + 9}" width="${(focalR - 9) * 2}" height="${(focalR - 9) * 2}" clip-path="url(#relfocal)" preserveAspectRatio="xMidYMid meet" />`;
+  } else {
+    focal = `<circle cx="${cx}" cy="${cy}" r="${focalR}" fill="#161616" stroke="#4ade80" stroke-width="2" /><text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="central" class="rel-focal-mark">${escapeHtml(node.name.charAt(0))}</text>`;
+  }
+  const glow = `<circle cx="${cx}" cy="${cy}" r="${focalR + 13}" fill="#4ade80" opacity="0.08" />`;
+  const focalLabel = `<text x="${cx}" y="${cy + focalR + 21}" text-anchor="middle" class="rel-focal-label">${escapeHtml(node.name)}</text>`;
+  const headLeft = left.length ? `<text x="${leftX}" y="20" text-anchor="middle" class="rel-col-head">Built from</text>` : '';
+  const headRight = right.length ? `<text x="${rightX}" y="20" text-anchor="middle" class="rel-col-head">Influenced</text>` : '';
+
+  const presentRels = [...new Set([...left, ...right].map(c => c.rel))];
+  const legend = presentRels.map(rel => `<span class="rel-legend-item"><i style="background:${REL_MAP_LEGEND[rel].color}"></i>${REL_MAP_LEGEND[rel].label}</span>`).join('');
+
+  return `<figure class="rel-map">
+  <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${escapeHtml(node.name)} relationship map" preserveAspectRatio="xMidYMid meet">
+    ${headLeft}${headRight}
+    ${edgeEls.join('')}
+    ${glow}${focal}${focalLabel}
+    ${nodeEls.join('')}
+  </svg>
+  <figcaption class="rel-legend">${legend}</figcaption>
+</figure>`;
+}
+
 // The integrated page header: logo, name, tagline, a horizontal spec rail of key data
 // (written in, released, developer, typing, license), and the curated succession notes —
 // woven into the top of the article rather than boxed into a card.
-function buildLanguageHeader(node: Language, rels: Relationship[], nodeMap: Map<string, Language>): string {
+function buildLanguageHeader(node: Language, rels: Relationship[], nodeMap: Map<string, Language>, mapHtml = ''): string {
   const e = ENRICHMENT[node.id];
   const isTool = node.id.startsWith('tool:');
   const slug = idToSlug(node.id);
@@ -1100,6 +1189,7 @@ function buildLanguageHeader(node: Language, rels: Relationship[], nodeMap: Map<
   </div>
   ${website ? `<a class="lang-head-site" href="${escapeHtml(website)}" rel="nofollow noopener noreferrer" target="_blank">Official site &rsaquo;</a>` : ''}
 </header>
+${mapHtml}
 ${rail}
 ${succHtml}`;
 }
@@ -1527,7 +1617,7 @@ ${faqs.map(f => `<div class="faq-item">
     <a href="/">Home</a> &rsaquo; <a href="/${prefix}">${prefix === 'tools' ? 'Tools' : 'Languages'}</a> &rsaquo; ${escapeHtml(node.name)}
   </nav>
 
-  ${buildLanguageHeader(node, rels, nodeMap)}
+  ${buildLanguageHeader(node, rels, nodeMap, buildRelationshipMap(node, rels, nodeMap))}
 
   ${buildToolIntro(node)}
 
