@@ -65,6 +65,7 @@ body::before {
 
 .app {
   height: 100vh;
+  height: 100dvh;
   width: 100vw;
   overflow: hidden;
 }
@@ -73,6 +74,7 @@ body::before {
   position: relative;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   overflow: hidden;
 }
 
@@ -224,6 +226,10 @@ body::before {
 
   .legend-content {
     max-height: 280px;
+  }
+
+  .timeline-active .legend {
+    display: none;
   }
 }
 

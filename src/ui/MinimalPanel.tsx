@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useGraphStore } from '../store/useGraphStore';
 import { SearchBox } from './SearchBox';
 import { Slider } from './Slider';
@@ -14,8 +14,18 @@ interface MinimalPanelProps {
 }
 
 export function MinimalPanel({ onBackToLanding }: MinimalPanelProps) {
-  const [collapsed, setCollapsed] = useState(() => window.innerWidth < 640);
+  const [collapsed, setCollapsed] = useState(() => window.matchMedia('(max-width: 1024px)').matches);
   const { dataset, filters, updateFilters, attributeFilters, setAttributeFilters, resetAttributeFilters, isDarkMode, toggleDarkMode } = useGraphStore();
+
+  useEffect(() => {
+    const compactViewport = window.matchMedia('(max-width: 1024px)');
+    const handleViewportChange = (event: MediaQueryListEvent) => {
+      if (event.matches) setCollapsed(true);
+    };
+
+    compactViewport.addEventListener('change', handleViewportChange);
+    return () => compactViewport.removeEventListener('change', handleViewportChange);
+  }, []);
 
   const handleLayoutChange = (mode: 'dag' | 'force' | 'cluster' | 'timeline') => {
     updateFilters({ layoutMode: mode });

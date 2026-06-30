@@ -64,7 +64,17 @@ export function GraphView() {
     instance.pan({ x: cx, y: cy });
     instance.zoom(0.5);
 
-    // Lay out and fit the whole graph so every node is visible on load.
+    instance.on('layoutstop', () => {
+      if (!window.matchMedia('(max-width: 640px)').matches || instance.zoom() >= 0.4) return;
+
+      const center = {
+        x: containerRef.current!.offsetWidth / 2,
+        y: containerRef.current!.offsetHeight / 2,
+      };
+      instance.zoom({ level: 0.4, renderedPosition: center });
+    });
+
+    // Fit the whole graph first; phones then apply the readable zoom floor above.
     instance.layout({
       ...getLayout(filters.layoutMode),
       randomize: false,
@@ -169,6 +179,14 @@ export function GraphView() {
       setCytoscape(null);
     };
   }, [dataset, setCytoscape, setSelectedNode, setSelectedEdge]);
+
+  useEffect(() => {
+    if (!cy || !containerRef.current) return;
+
+    const observer = new ResizeObserver(() => cy.resize());
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, [cy]);
 
   // Update graph when filters or theme change
   const isDarkMode = useGraphStore((s) => s.isDarkMode);

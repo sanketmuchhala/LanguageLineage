@@ -315,6 +315,17 @@
 /* ============================================
    MOBILE RESPONSIVE
    ============================================ */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .side-drawer {
+    width: min(420px, 88vw);
+  }
+
+  .drawer-header,
+  .drawer-content {
+    padding: 24px;
+  }
+}
+
 @media (max-width: 767px) {
   .side-drawer {
     width: 92%;
@@ -332,6 +343,7 @@
 
   .drawer-content {
     padding: 20px;
+    padding-bottom: calc(20px + env(safe-area-inset-bottom));
   }
 
   .drawer-section {
@@ -367,7 +379,7 @@
 }
 
 /* Desktop-only: backdrop hidden */
-@media (min-width: 768px) {
+@media (min-width: 1025px) {
   .side-drawer-backdrop {
     display: none !important;
   }
