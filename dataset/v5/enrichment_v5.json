@@ -31,6 +31,34 @@
         "wikipedia": "https://en.wikipedia.org/wiki/ABC_(programming_language)"
       }
     },
+    "lang:actionscript": {
+      "name": "ActionScript",
+      "wikidata_id": "Q234657",
+      "wikipedia_title": "ActionScript",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/ActionScript",
+      "tagline": "object-oriented programming language",
+      "facts": {
+        "designers": [
+          "Gary Grossman"
+        ],
+        "developers": [
+          "Macromedia"
+        ],
+        "license": [],
+        "influenced_by": [
+          "JavaScript",
+          "ECMAScript",
+          "Java"
+        ],
+        "implemented_in": [],
+        "website": "http://www.adobe.com/devnet/actionscript.html",
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q234657",
+        "wikipedia": "https://en.wikipedia.org/wiki/ActionScript"
+      }
+    },
     "lang:ada": {
       "name": "Ada",
       "wikidata_id": "Q154755",
@@ -255,6 +283,35 @@
         "wikipedia": "https://en.wikipedia.org/wiki/Assembly_language"
       }
     },
+    "lang:ats": {
+      "name": "ATS",
+      "wikidata_id": "Q621618",
+      "wikipedia_title": "ATS (programming language)",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/ATS_(programming_language)",
+      "tagline": "programming language",
+      "facts": {
+        "designers": [],
+        "developers": [
+          "Boston University"
+        ],
+        "license": [
+          "GNU General Public License, version 3.0"
+        ],
+        "influenced_by": [
+          "Dependent ML",
+          "ML",
+          "OCaml",
+          "C++"
+        ],
+        "implemented_in": [],
+        "website": "http://www.ats-lang.org/",
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q621618",
+        "wikipedia": "https://en.wikipedia.org/wiki/ATS_(programming_language)"
+      }
+    },
     "lang:awk": {
       "name": "AWK",
       "wikidata_id": "Q213970",
@@ -344,6 +401,39 @@
       "sources": {
         "wikidata": "https://www.wikidata.org/wiki/Q189248",
         "wikipedia": "https://en.wikipedia.org/wiki/Bash_(Unix_shell)"
+      }
+    },
+    "lang:basic": {
+      "name": "BASIC",
+      "wikidata_id": "Q42979",
+      "wikipedia_title": "BASIC",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/BASIC",
+      "tagline": "programming language for beginners, mainly using familiar English words or abbreviations of them",
+      "facts": {
+        "designers": [
+          "John George Kemeny"
+        ],
+        "developers": [
+          "Thomas E. Kurtz",
+          "John George Kemeny",
+          "Mary Kenneth Keller"
+        ],
+        "license": [],
+        "influenced_by": [
+          "Fortran",
+          "FORTRAN II",
+          "JOSS",
+          "ALGOL"
+        ],
+        "implemented_in": [],
+        "website": null,
+        "file_extensions": [
+          ".bas"
+        ]
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q42979",
+        "wikipedia": "https://en.wikipedia.org/wiki/BASIC"
       }
     },
     "lang:bcpl": {
@@ -439,6 +529,64 @@
       "sources": {
         "wikidata": "https://www.wikidata.org/wiki/Q113157814",
         "wikipedia": "https://en.wikipedia.org/wiki/Carbon_(programming_language)"
+      }
+    },
+    "lang:chapel": {
+      "name": "Chapel",
+      "wikidata_id": "Q4036051",
+      "wikipedia_title": "Chapel (programming language)",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Chapel_(programming_language)",
+      "tagline": "programming language",
+      "facts": {
+        "designers": [
+          "David Callahan"
+        ],
+        "developers": [
+          "Brad Chamberlain",
+          "Cray"
+        ],
+        "license": [
+          "Apache Software License 2.0"
+        ],
+        "influenced_by": [
+          "Java",
+          "Ada",
+          "C",
+          "C Sharp",
+          "ZPL",
+          "High Performance Fortran"
+        ],
+        "implemented_in": [],
+        "website": "https://chapel-lang.org",
+        "file_extensions": [
+          ".chpl"
+        ]
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q4036051",
+        "wikipedia": "https://en.wikipedia.org/wiki/Chapel_(programming_language)"
+      }
+    },
+    "lang:clean": {
+      "name": "Clean",
+      "wikidata_id": "Q377986",
+      "wikipedia_title": "Clean (programming language)",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Clean_(programming_language)",
+      "tagline": "programming language",
+      "facts": {
+        "designers": [],
+        "developers": [],
+        "license": [
+          "GNU Lesser General Public License"
+        ],
+        "influenced_by": [],
+        "implemented_in": [],
+        "website": "http://clean.cs.ru.nl",
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q377986",
+        "wikipedia": "https://en.wikipedia.org/wiki/Clean_(programming_language)"
       }
     },
     "lang:clojure": {
@@ -633,6 +781,33 @@
       "sources": {
         "wikidata": "https://www.wikidata.org/wiki/Q5013384",
         "wikipedia": "https://en.wikipedia.org/wiki/COMTRAN"
+      }
+    },
+    "lang:coq": {
+      "name": "Coq",
+      "wikidata_id": "Q1131652",
+      "wikipedia_title": "Rocq",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Rocq",
+      "tagline": "proof assistant",
+      "facts": {
+        "designers": [],
+        "developers": [
+          "Institut National de Recherche en Informatique et en Automatique"
+        ],
+        "license": [
+          "GNU Lesser General Public License, version 2.1"
+        ],
+        "influenced_by": [],
+        "implemented_in": [
+          "OCaml",
+          "C"
+        ],
+        "website": "https://coq.inria.fr/",
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q1131652",
+        "wikipedia": "https://en.wikipedia.org/wiki/Rocq"
       }
     },
     "lang:crystal": {
@@ -927,6 +1102,35 @@
         "wikipedia": "https://en.wikipedia.org/wiki/Dylan_(programming_language)"
       }
     },
+    "lang:eiffel": {
+      "name": "Eiffel",
+      "wikidata_id": "Q732089",
+      "wikipedia_title": "Eiffel (programming language)",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Eiffel_(programming_language)",
+      "tagline": "programming language",
+      "facts": {
+        "designers": [
+          "Bertrand Meyer"
+        ],
+        "developers": [
+          "Bertrand Meyer"
+        ],
+        "license": [],
+        "influenced_by": [
+          "Ada",
+          "Simula",
+          "Z notation",
+          "Simula 67"
+        ],
+        "implemented_in": [],
+        "website": null,
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q732089",
+        "wikipedia": "https://en.wikipedia.org/wiki/Eiffel_(programming_language)"
+      }
+    },
     "lang:elixir": {
       "name": "Elixir",
       "wikidata_id": "Q5362035",
@@ -1037,6 +1241,39 @@
         "wikipedia": "https://en.wikipedia.org/wiki/Erlang_(programming_language)"
       }
     },
+    "lang:factor": {
+      "name": "Factor",
+      "wikidata_id": "Q1391724",
+      "wikipedia_title": "Factor (programming language)",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Factor_(programming_language)",
+      "tagline": "programming language",
+      "facts": {
+        "designers": [
+          "Slava Pestov"
+        ],
+        "developers": [
+          "Slava Pestov"
+        ],
+        "license": [
+          "BSD licenses"
+        ],
+        "influenced_by": [
+          "Joy",
+          "Forth",
+          "Lisp",
+          "Self"
+        ],
+        "implemented_in": [
+          "Factor"
+        ],
+        "website": "https://factorcode.org",
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q1391724",
+        "wikipedia": "https://en.wikipedia.org/wiki/Factor_(programming_language)"
+      }
+    },
     "lang:flow_matic": {
       "name": "FLOW-MATIC",
       "wikidata_id": "Q1389173",
@@ -1057,6 +1294,41 @@
       "sources": {
         "wikidata": "https://www.wikidata.org/wiki/Q1389173",
         "wikipedia": "https://en.wikipedia.org/wiki/FLOW-MATIC"
+      }
+    },
+    "lang:forth": {
+      "name": "Forth",
+      "wikidata_id": "Q275472",
+      "wikipedia_title": "Forth (programming language)",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Forth_(programming_language)",
+      "tagline": "programming language",
+      "facts": {
+        "designers": [
+          "Charles H. Moore"
+        ],
+        "developers": [
+          "Charles H. Moore"
+        ],
+        "license": [],
+        "influenced_by": [
+          "Lisp",
+          "APL",
+          "Burroughs large systems"
+        ],
+        "implemented_in": [],
+        "website": "https://forth-standard.org/",
+        "file_extensions": [
+          ".fth",
+          ".fs",
+          ".4th",
+          ".fb",
+          ".f",
+          ".forth"
+        ]
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q275472",
+        "wikipedia": "https://en.wikipedia.org/wiki/Forth_(programming_language)"
       }
     },
     "lang:fortran": {
@@ -1333,6 +1605,40 @@
         "wikipedia": "https://en.wikipedia.org/wiki/GNU_Guile"
       }
     },
+    "lang:hack": {
+      "name": "Hack",
+      "wikidata_id": "Q15971618",
+      "wikipedia_title": "Hack (programming language)",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Hack_(programming_language)",
+      "tagline": "programming language",
+      "facts": {
+        "designers": [],
+        "developers": [
+          "Meta",
+          "Facebook"
+        ],
+        "license": [
+          "MIT License"
+        ],
+        "influenced_by": [
+          "PHP",
+          "Java",
+          "C Sharp",
+          "OCaml",
+          "Scala",
+          "Haskell"
+        ],
+        "implemented_in": [
+          "OCaml"
+        ],
+        "website": "https://hacklang.org",
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q15971618",
+        "wikipedia": "https://en.wikipedia.org/wiki/Hack_(programming_language)"
+      }
+    },
     "lang:haskell": {
       "name": "Haskell",
       "wikidata_id": "Q34010",
@@ -1370,6 +1676,66 @@
       "sources": {
         "wikidata": "https://www.wikidata.org/wiki/Q34010",
         "wikipedia": "https://en.wikipedia.org/wiki/Haskell"
+      }
+    },
+    "lang:haxe": {
+      "name": "Haxe",
+      "wikidata_id": "Q285886",
+      "wikipedia_title": "Haxe",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Haxe",
+      "tagline": "cross-platform open-source programming language",
+      "facts": {
+        "designers": [],
+        "developers": [
+          "Simon Krajewski",
+          "Nicolas Cannasse",
+          "Cauê Waneck"
+        ],
+        "license": [
+          "GNU General Public License, version 2.0 or later",
+          "MIT License"
+        ],
+        "influenced_by": [
+          "Java",
+          "OCaml",
+          "ActionScript",
+          "MTASC",
+          "JavaScript",
+          "C++"
+        ],
+        "implemented_in": [
+          "OCaml"
+        ],
+        "website": "https://haxe.org",
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q285886",
+        "wikipedia": "https://en.wikipedia.org/wiki/Haxe"
+      }
+    },
+    "lang:hope": {
+      "name": "Hope",
+      "wikidata_id": "Q4040754",
+      "wikipedia_title": "Hope (programming language)",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Hope_(programming_language)",
+      "tagline": "functional programming language",
+      "facts": {
+        "designers": [],
+        "developers": [
+          "University of Edinburgh"
+        ],
+        "license": [
+          "GNU General Public License, version 2.0"
+        ],
+        "influenced_by": [],
+        "implemented_in": [],
+        "website": null,
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q4040754",
+        "wikipedia": "https://en.wikipedia.org/wiki/Hope_(programming_language)"
       }
     },
     "lang:icon": {
@@ -1428,6 +1794,38 @@
       "sources": {
         "wikidata": "https://www.wikidata.org/wiki/Q15408477",
         "wikipedia": "https://en.wikipedia.org/wiki/Idris_(programming_language)"
+      }
+    },
+    "lang:io": {
+      "name": "Io",
+      "wikidata_id": "Q756175",
+      "wikipedia_title": "Io (programming language)",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Io_(programming_language)",
+      "tagline": "programming language",
+      "facts": {
+        "designers": [],
+        "developers": [
+          "Steve Dekorte"
+        ],
+        "license": [
+          "3-clause BSD License"
+        ],
+        "influenced_by": [
+          "NewtonScript",
+          "Smalltalk",
+          "Self",
+          "Lua",
+          "Lisp",
+          "Python",
+          "actor model middle history"
+        ],
+        "implemented_in": [],
+        "website": "https://iolanguage.org/",
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q756175",
+        "wikipedia": "https://en.wikipedia.org/wiki/Io_(programming_language)"
       }
     },
     "lang:j": {
@@ -1638,6 +2036,40 @@
         "wikipedia": "https://en.wikipedia.org/wiki/Lennart_Augustsson"
       }
     },
+    "lang:lean": {
+      "name": "Lean",
+      "wikidata_id": "Q6509476",
+      "wikipedia_title": "Lean (proof assistant)",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Lean_(proof_assistant)",
+      "tagline": "software for interactive and automated theorem proving",
+      "facts": {
+        "designers": [
+          "Leonardo de Moura"
+        ],
+        "developers": [
+          "Microsoft Research",
+          "Leonardo de Moura"
+        ],
+        "license": [
+          "Apache Software License 2.0"
+        ],
+        "influenced_by": [
+          "Rocq prover",
+          "Isabelle"
+        ],
+        "implemented_in": [
+          "C",
+          "C++",
+          "Lean"
+        ],
+        "website": "https://lean-lang.org/",
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q6509476",
+        "wikipedia": "https://en.wikipedia.org/wiki/Lean_(proof_assistant)"
+      }
+    },
     "lang:limbo": {
       "name": "Limbo",
       "wikidata_id": "Q544927",
@@ -1687,6 +2119,36 @@
       "sources": {
         "wikidata": "https://www.wikidata.org/wiki/Q132874",
         "wikipedia": "https://en.wikipedia.org/wiki/Lisp_(programming_language)"
+      }
+    },
+    "lang:logo": {
+      "name": "Logo",
+      "wikidata_id": "Q201436",
+      "wikipedia_title": "Logo (programming language)",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Logo_(programming_language)",
+      "tagline": "computer programming language",
+      "facts": {
+        "designers": [
+          "Wally Feurzeig",
+          "Seymour Papert",
+          "Cynthia Solomon"
+        ],
+        "developers": [
+          "Seymour Papert",
+          "Idit Harel Caperton",
+          "Cynthia Solomon"
+        ],
+        "license": [],
+        "influenced_by": [
+          "Lisp"
+        ],
+        "implemented_in": [],
+        "website": null,
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q201436",
+        "wikipedia": "https://en.wikipedia.org/wiki/Logo_(programming_language)"
       }
     },
     "lang:lua": {
@@ -1839,6 +2301,30 @@
       "sources": {
         "wikidata": "https://www.wikidata.org/wiki/Q206040",
         "wikipedia": "https://en.wikipedia.org/wiki/Mercury_(programming_language)"
+      }
+    },
+    "lang:mesa": {
+      "name": "Mesa",
+      "wikidata_id": "Q1042397",
+      "wikipedia_title": "Mesa (programming language)",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Mesa_(programming_language)",
+      "tagline": "programming language",
+      "facts": {
+        "designers": [],
+        "developers": [
+          "PARC"
+        ],
+        "license": [],
+        "influenced_by": [
+          "ALGOL"
+        ],
+        "implemented_in": [],
+        "website": null,
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q1042397",
+        "wikipedia": "https://en.wikipedia.org/wiki/Mesa_(programming_language)"
       }
     },
     "lang:miranda": {
@@ -2092,6 +2578,33 @@
         "wikipedia": "https://en.wikipedia.org/wiki/Nim_(programming_language)"
       }
     },
+    "lang:nix": {
+      "name": "Nix",
+      "wikidata_id": "Q7041957",
+      "wikipedia_title": "Nix (package manager)",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Nix_(package_manager)",
+      "tagline": "cross-platform package manager",
+      "facts": {
+        "designers": [],
+        "developers": [
+          "Eelco Dolstra"
+        ],
+        "license": [
+          "GNU Lesser General Public License, version 2.1"
+        ],
+        "influenced_by": [],
+        "implemented_in": [
+          "C++",
+          "Nix"
+        ],
+        "website": "https://nixos.org/nix/",
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q7041957",
+        "wikipedia": "https://en.wikipedia.org/wiki/Nix_(package_manager)"
+      }
+    },
     "lang:oberon": {
       "name": "Oberon",
       "wikidata_id": "Q1323362",
@@ -2210,6 +2723,32 @@
       "sources": {
         "wikidata": "https://www.wikidata.org/wiki/Q212587",
         "wikipedia": "https://en.wikipedia.org/wiki/OCaml"
+      }
+    },
+    "lang:occam": {
+      "name": "occam",
+      "wikidata_id": "Q838062",
+      "wikipedia_title": "Occam (programming language)",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Occam_(programming_language)",
+      "tagline": "concurrent programming language",
+      "facts": {
+        "designers": [
+          "David May"
+        ],
+        "developers": [
+          "Inmos"
+        ],
+        "license": [],
+        "influenced_by": [
+          "communicating sequential processes"
+        ],
+        "implemented_in": [],
+        "website": null,
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q838062",
+        "wikipedia": "https://en.wikipedia.org/wiki/Occam_(programming_language)"
       }
     },
     "lang:pascal": {
@@ -2408,6 +2947,67 @@
         "wikipedia": "https://en.wikipedia.org/wiki/Planner_(programming_language)"
       }
     },
+    "lang:pony": {
+      "name": "Pony",
+      "wikidata_id": "Q51160093",
+      "wikipedia_title": "Pony (programming language)",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Pony_(programming_language)",
+      "tagline": "programming language",
+      "facts": {
+        "designers": [],
+        "developers": [],
+        "license": [
+          "2-clause BSD License"
+        ],
+        "influenced_by": [],
+        "implemented_in": [],
+        "website": "https://www.ponylang.io/",
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q51160093",
+        "wikipedia": "https://en.wikipedia.org/wiki/Pony_(programming_language)"
+      }
+    },
+    "lang:powershell": {
+      "name": "PowerShell",
+      "wikidata_id": "Q840410",
+      "wikipedia_title": "PowerShell",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/PowerShell",
+      "tagline": "cross-platform command-line interface and scripting language for system and network administration",
+      "facts": {
+        "designers": [
+          "Jeffrey Snover"
+        ],
+        "developers": [
+          "Microsoft"
+        ],
+        "license": [
+          "MIT License",
+          "proprietary license"
+        ],
+        "influenced_by": [
+          "Perl",
+          "Control Language",
+          "Python",
+          "KornShell",
+          "C Sharp",
+          "DIGITAL Command Language",
+          "SQL",
+          "Tcl"
+        ],
+        "implemented_in": [
+          "C Sharp",
+          "PowerShell"
+        ],
+        "website": "https://microsoft.com/powershell",
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q840410",
+        "wikipedia": "https://en.wikipedia.org/wiki/PowerShell"
+      }
+    },
     "lang:prolog": {
       "name": "Prolog",
       "wikidata_id": "Q163468",
@@ -2508,6 +3108,38 @@
         "wikipedia": "https://en.wikipedia.org/wiki/Python_(programming_language)"
       }
     },
+    "lang:qsharp": {
+      "name": "Q#",
+      "wikidata_id": "Q45322975",
+      "wikipedia_title": "Q Sharp",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Q_Sharp",
+      "tagline": "programming language",
+      "facts": {
+        "designers": [
+          "Microsoft Research"
+        ],
+        "developers": [
+          "Microsoft Quantum Architectures and Computation group",
+          "Microsoft"
+        ],
+        "license": [
+          "MIT License"
+        ],
+        "influenced_by": [
+          "C Sharp",
+          "F#"
+        ],
+        "implemented_in": [],
+        "website": "https://docs.microsoft.com/en-us/quantum/quantum-qr-intro",
+        "file_extensions": [
+          ".qs"
+        ]
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q45322975",
+        "wikipedia": "https://en.wikipedia.org/wiki/Q_Sharp"
+      }
+    },
     "lang:r": {
       "name": "R",
       "wikidata_id": "Q206904",
@@ -2574,6 +3206,52 @@
         "wikipedia": "https://en.wikipedia.org/wiki/Racket_(programming_language)"
       }
     },
+    "lang:raku": {
+      "name": "Raku",
+      "wikidata_id": "Q2052676",
+      "wikipedia_title": "Raku (programming language)",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Raku_(programming_language)",
+      "tagline": "member of the Perl family of programming languages",
+      "facts": {
+        "designers": [
+          "Larry Wall",
+          "Damian Conway",
+          "Audrey Tang"
+        ],
+        "developers": [
+          "Larry Wall",
+          "Audrey Tang"
+        ],
+        "license": [
+          "Artistic License 2.0"
+        ],
+        "influenced_by": [
+          "Haskell",
+          "Perl",
+          "Common Lisp",
+          "Ada",
+          "META II",
+          "APL",
+          "Ruby",
+          "Python"
+        ],
+        "implemented_in": [
+          "Raku"
+        ],
+        "website": "https://raku.org/",
+        "file_extensions": [
+          ".raku",
+          ".rakumod",
+          ".rakudoc",
+          ".rakutest",
+          ".t"
+        ]
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q2052676",
+        "wikipedia": "https://en.wikipedia.org/wiki/Raku_(programming_language)"
+      }
+    },
     "lang:reasonml": {
       "name": "ReasonML",
       "wikidata_id": "Q63565848",
@@ -2603,6 +3281,42 @@
       "sources": {
         "wikidata": "https://www.wikidata.org/wiki/Q63565848",
         "wikipedia": "https://en.wikipedia.org/wiki/Reason_(programming_language)"
+      }
+    },
+    "lang:rescript": {
+      "name": "ReScript",
+      "wikidata_id": "Q116885321",
+      "wikipedia_title": "ReScript",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/ReScript",
+      "tagline": "Programming language that compiles to JavaScript",
+      "facts": {
+        "designers": [],
+        "developers": [
+          "Bloomberg L.P."
+        ],
+        "license": [
+          "GNU Lesser General Public License, version 3.0 or later",
+          "MIT License"
+        ],
+        "influenced_by": [
+          "Reason",
+          "OCaml",
+          "JavaScript"
+        ],
+        "implemented_in": [
+          "OCaml",
+          "JavaScript",
+          "ReScript"
+        ],
+        "website": "https://rescript-lang.org/",
+        "file_extensions": [
+          ".res",
+          ".resi"
+        ]
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q116885321",
+        "wikipedia": "https://en.wikipedia.org/wiki/ReScript"
       }
     },
     "lang:ruby": {
@@ -2926,6 +3640,84 @@
         "wikipedia": "https://en.wikipedia.org/wiki/Standard_ML"
       }
     },
+    "lang:snobol": {
+      "name": "SNOBOL",
+      "wikidata_id": "Q522041",
+      "wikipedia_title": "SNOBOL",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/SNOBOL",
+      "tagline": "text-oriented programming language developed between 1962 and 1967 at AT&T Bell Laboratories by David J. Farber, Ralph Griswold and Ivan P. Polonsky",
+      "facts": {
+        "designers": [
+          "David J. Farber"
+        ],
+        "developers": [
+          "Bell Labs"
+        ],
+        "license": [],
+        "influenced_by": [
+          "FORTRAN II",
+          "COMIT"
+        ],
+        "implemented_in": [
+          "assembly language"
+        ],
+        "website": "http://www.snobol4.org",
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q522041",
+        "wikipedia": "https://en.wikipedia.org/wiki/SNOBOL"
+      }
+    },
+    "lang:solidity": {
+      "name": "Solidity",
+      "wikidata_id": "Q24909565",
+      "wikipedia_title": "Solidity",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Solidity",
+      "tagline": "object-oriented programming language for writing smart contracts.",
+      "facts": {
+        "designers": [],
+        "developers": [],
+        "license": [
+          "GNU General Public License, version 3.0"
+        ],
+        "influenced_by": [],
+        "implemented_in": [],
+        "website": "https://soliditylang.org/",
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q24909565",
+        "wikipedia": "https://en.wikipedia.org/wiki/Solidity"
+      }
+    },
+    "lang:speedcoding": {
+      "name": "Speedcoding",
+      "wikidata_id": "Q7475416",
+      "wikipedia_title": "Speedcoding",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Speedcoding",
+      "tagline": "programming language",
+      "facts": {
+        "designers": [
+          "John Backus"
+        ],
+        "developers": [
+          "IBM",
+          "John Backus"
+        ],
+        "license": [],
+        "influenced_by": [
+          "assembly language"
+        ],
+        "implemented_in": [],
+        "website": null,
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q7475416",
+        "wikipedia": "https://en.wikipedia.org/wiki/Speedcoding"
+      }
+    },
     "lang:swift": {
       "name": "Swift",
       "wikidata_id": "Q17118377",
@@ -3028,6 +3820,26 @@
         "wikipedia": "https://en.wikipedia.org/wiki/TypeScript"
       }
     },
+    "lang:unison": {
+      "name": "Unison",
+      "wikidata_id": "Q176224",
+      "wikipedia_title": "Unison",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Unison",
+      "tagline": "two or more musical parts sounding the same pitch; an interval of zero size (a frequency ratio of 1:1)",
+      "facts": {
+        "designers": [],
+        "developers": [],
+        "license": [],
+        "influenced_by": [],
+        "implemented_in": [],
+        "website": null,
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q176224",
+        "wikipedia": "https://en.wikipedia.org/wiki/Unison"
+      }
+    },
     "lang:v": {
       "name": "V",
       "wikidata_id": "Q61632937",
@@ -3055,6 +3867,43 @@
       "sources": {
         "wikidata": "https://www.wikidata.org/wiki/Q61632937",
         "wikipedia": "https://en.wikipedia.org/wiki/V_(programming_language)"
+      }
+    },
+    "lang:vala": {
+      "name": "Vala",
+      "wikidata_id": "Q1138939",
+      "wikipedia_title": "Vala (programming language)",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Vala_(programming_language)",
+      "tagline": "programming language",
+      "facts": {
+        "designers": [],
+        "developers": [
+          "Jürg Billeter"
+        ],
+        "license": [
+          "GNU Lesser General Public License",
+          "GNU Lesser General Public License, version 2.1 or later"
+        ],
+        "influenced_by": [
+          "C",
+          "C++",
+          "Java",
+          "C Sharp",
+          "D",
+          "Boo"
+        ],
+        "implemented_in": [
+          "Vala"
+        ],
+        "website": "https://vala.dev",
+        "file_extensions": [
+          ".vala",
+          ".vapi"
+        ]
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q1138939",
+        "wikipedia": "https://en.wikipedia.org/wiki/Vala_(programming_language)"
       }
     },
     "lang:vb_net": {
@@ -3118,6 +3967,33 @@
       "sources": {
         "wikidata": "https://www.wikidata.org/wiki/Q51885456",
         "wikipedia": "https://en.wikipedia.org/wiki/Zig_(programming_language)"
+      }
+    },
+    "tool:babel": {
+      "name": "Babel",
+      "wikidata_id": "Q55604651",
+      "wikipedia_title": "Babel (transcompiler)",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Babel_(transcompiler)",
+      "tagline": "JavaScript compiler that compiles ES2015+ code into backwards compatible JavaScript for older versions of browsers",
+      "facts": {
+        "designers": [],
+        "developers": [
+          "Sebastian McKenzie",
+          "Marijn Haverbeke"
+        ],
+        "license": [
+          "MIT License"
+        ],
+        "influenced_by": [],
+        "implemented_in": [
+          "JavaScript"
+        ],
+        "website": "https://babeljs.io/",
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q55604651",
+        "wikipedia": "https://en.wikipedia.org/wiki/Babel_(transcompiler)"
       }
     },
     "tool:beam": {
@@ -3222,6 +4098,32 @@
         "wikipedia": "https://en.wikipedia.org/wiki/.NET"
       }
     },
+    "tool:esbuild": {
+      "name": "esbuild",
+      "wikidata_id": "Q113365550",
+      "wikipedia_title": "Esbuild",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Esbuild",
+      "tagline": "JavaScript bundler",
+      "facts": {
+        "designers": [],
+        "developers": [
+          "Evan Wallace"
+        ],
+        "license": [
+          "MIT License"
+        ],
+        "influenced_by": [],
+        "implemented_in": [
+          "Go"
+        ],
+        "website": "https://esbuild.github.io/",
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q113365550",
+        "wikipedia": "https://en.wikipedia.org/wiki/Esbuild"
+      }
+    },
     "tool:femtolisp": {
       "name": "FemtoLisp",
       "wikidata_id": "Q105840370",
@@ -3295,6 +4197,64 @@
       "sources": {
         "wikidata": "https://www.wikidata.org/wiki/Q2318908",
         "wikipedia": "https://en.wikipedia.org/wiki/Glasgow_Haskell_Compiler"
+      }
+    },
+    "tool:graalvm": {
+      "name": "GraalVM",
+      "wikidata_id": "Q16928072",
+      "wikipedia_title": "GraalVM",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/GraalVM",
+      "tagline": "virtual machine software",
+      "facts": {
+        "designers": [],
+        "developers": [
+          "Oracle Corporation"
+        ],
+        "license": [
+          "GNU General Public License, version 2.0",
+          "GPL linking exception"
+        ],
+        "influenced_by": [],
+        "implemented_in": [
+          "Java"
+        ],
+        "website": "http://openjdk.java.net/projects/graal/",
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q16928072",
+        "wikipedia": "https://en.wikipedia.org/wiki/GraalVM"
+      }
+    },
+    "tool:hhvm": {
+      "name": "HHVM",
+      "wikidata_id": "Q18150679",
+      "wikipedia_title": "HHVM",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/HHVM",
+      "tagline": "process virtual machine developed by Facebook",
+      "facts": {
+        "designers": [],
+        "developers": [
+          "Edwin Smith",
+          "Mark Williams"
+        ],
+        "license": [
+          "PHP License",
+          "Zend license"
+        ],
+        "influenced_by": [],
+        "implemented_in": [
+          "C++",
+          "C",
+          "OCaml",
+          "Rust"
+        ],
+        "website": "https://hhvm.com",
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q18150679",
+        "wikipedia": "https://en.wikipedia.org/wiki/HHVM"
       }
     },
     "tool:hotspot": {
@@ -3385,6 +4345,31 @@
       "sources": {
         "wikidata": "https://www.wikidata.org/wiki/Q223490",
         "wikipedia": "https://en.wikipedia.org/wiki/LLVM"
+      }
+    },
+    "tool:moarvm": {
+      "name": "MoarVM",
+      "wikidata_id": "Q16948420",
+      "wikipedia_title": "MoarVM",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/MoarVM",
+      "tagline": "Virtual machine for Raku (Perl 6)",
+      "facts": {
+        "designers": [],
+        "developers": [],
+        "license": [
+          "Artistic License",
+          "Artistic License 2.0"
+        ],
+        "influenced_by": [],
+        "implemented_in": [
+          "C"
+        ],
+        "website": "https://moarvm.org/",
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q16948420",
+        "wikipedia": "https://en.wikipedia.org/wiki/MoarVM"
       }
     },
     "tool:roslyn": {
