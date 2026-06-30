@@ -1004,6 +1004,138 @@ function buildPageHeader(node: Language): string {
 </div>`;
 }
 
+function adoptionLabel(u: string | null | undefined): string | null {
+  switch (u) {
+    case 'dominant': return 'Industry-dominant';
+    case 'large': return 'Widely used';
+    case 'moderate': return 'Moderate adoption';
+    case 'niche': return 'Niche / specialized';
+    default: return null;
+  }
+}
+
+// Curated, plain-language succession notes for well-known languages: what each one
+// displaced, and what (if anything) is taking its place. Languages without an entry
+// fall back to the graph-derived "Built on / Influenced" lineage only.
+const SUCCESSION: Record<string, { replaced?: string; replacedBy?: string }> = {
+  python: { replaced: 'Perl for scripting, and much of what R and Java did for data work', replacedBy: 'Not really being replaced; teams reach for Rust, Go, or Julia for raw speed, usually called from Python' },
+  javascript: { replaced: 'Java applets and Adobe Flash for in-browser interactivity', replacedBy: 'Most new front-end code is written in TypeScript, which compiles back to JavaScript' },
+  typescript: { replaced: 'plain JavaScript for large, long-lived codebases', replacedBy: 'Still ascending; no successor in sight' },
+  java: { replaced: 'C++ for portable enterprise and server software', replacedBy: 'Kotlin on Android, and Go or Rust for many new back-end services' },
+  c: { replaced: 'assembly language for most systems programming', replacedBy: 'Rust and Zig for new memory-safe systems work, though C is still everywhere' },
+  cxx: { replaced: 'C for large, performance-critical applications', replacedBy: 'Rust for many new safety-critical and systems projects' },
+  csharp: { replaced: 'Visual Basic and C++ for Windows and .NET development', replacedBy: 'Still current; no successor' },
+  rust: { replaced: 'C and C++ where memory safety matters', replacedBy: 'Still ascending; no clear successor' },
+  go: { replaced: 'C, Python, and Java for many cloud and network services', replacedBy: 'Still growing; Rust competes for the most performance-sensitive parts' },
+  ruby: { replaced: 'Perl and PHP for fast web development, through Rails', replacedBy: 'JavaScript/TypeScript and Python for many new web back-ends' },
+  php: { replaced: 'Perl CGI scripts for server-side web pages', replacedBy: 'Node.js and Python for many new back-ends, though PHP still runs much of the web' },
+  perl: { replaced: 'shell scripts and C for text processing and early CGI', replacedBy: 'Python and Ruby took over most of its scripting and web roles' },
+  swift: { replaced: 'Objective-C for Apple platform apps', replacedBy: 'Still current; the language Apple recommends' },
+  objective_c: { replaced: 'C and C++ for NeXT and early Apple app development', replacedBy: 'Swift, recommended by Apple since 2014' },
+  kotlin: { replaced: 'Java for Android app development', replacedBy: 'Still current; the language Google prefers for Android' },
+  cobol: { replaced: 'assembly for business data processing on mainframes', replacedBy: 'Java and C# for new systems, though COBOL still runs core banking and government batch jobs' },
+  fortran: { replaced: 'assembly for scientific and numerical computing', replacedBy: 'C++, Python, and Julia for new work, though Fortran math libraries remain in use' },
+  pascal: { replaced: 'assembly and BASIC for teaching structured programming', replacedBy: 'C, C++, and Java in education and industry' },
+  basic: { replaced: 'assembly for beginners on early microcomputers', replacedBy: 'Python as the common first language; Visual Basic for Windows apps' },
+  actionscript: { replaced: 'plain JavaScript for rich, animated Flash content', replacedBy: 'HTML5 and JavaScript, after Adobe Flash was discontinued in 2020' },
+  vb_net: { replaced: 'classic Visual Basic for Windows business apps', replacedBy: 'C# for most new .NET development' },
+  delphi: { replaced: 'C and C++ for rapid Windows desktop development', replacedBy: 'C#, web stacks, and cross-platform frameworks for new desktop apps' },
+  lisp: { replaced: 'assembly for early AI and symbolic computing', replacedBy: 'Python and statistical methods for most modern AI work' },
+  smalltalk: { replaced: 'procedural languages for pure object-oriented design', replacedBy: 'Its ideas live on in Python, Ruby, and Objective-C rather than a single successor' },
+  coffeescript: { replaced: 'verbose early-2010s JavaScript syntax', replacedBy: 'ES6 JavaScript and TypeScript, which absorbed most of its ideas' },
+  elm: { replaced: 'unsafe JavaScript for crash-free front-ends', replacedBy: 'TypeScript with React for most teams' },
+  hack: { replaced: 'untyped PHP at Facebook scale' },
+  reasonml: { replacedBy: 'ReScript, its renamed and refocused successor' },
+};
+
+// The "language record card" that leads each page: logo, developer, website, what it
+// is written in and used for, and where it sits in the lineage (what it built on, what
+// it influenced, what it replaced and what is replacing it).
+function buildInfoCard(node: Language, rels: Relationship[], nodeMap: Map<string, Language>): string {
+  const e = ENRICHMENT[node.id];
+  const isTool = node.id.startsWith('tool:');
+  const slug = idToSlug(node.id);
+  const rawTag = e?.tagline ? e.tagline.replace(/\.$/, '') : '';
+  const tagline = rawTag ? `${rawTag.charAt(0).toUpperCase()}${rawTag.slice(1)}.` : '';
+
+  let logo = `<div class="lang-logo-tile lang-logo-tile--mark" aria-hidden="true">${escapeHtml(node.name.charAt(0))}</div>`;
+  if (node.logo_url) {
+    const logoColor = LOGO_COLORS[node.id] ?? null;
+    const surface = getLogoPresentation(node.id, node.logo_kind).surface;
+    const bg = getAdaptiveLogoBackground(logoColor, true, surface);
+    const border = getLogoBorderColor(logoColor, true, surface);
+    logo = `<div class="lang-logo-tile" style="background:${bg};border-color:${border}"><img src="${escapeHtml(node.logo_url)}" alt="${escapeHtml(node.name)} logo" width="56" height="56" loading="eager" decoding="async" /></div>`;
+  }
+
+  const implTypes = ['compiler_written_in', 'runtime_written_in', 'bootstrap_written_in'];
+  const writtenInIds = [...new Set(rels.filter(r => r.to_language === node.id && implTypes.includes(r.relationship)).map(r => r.from_language))];
+  const writtenIn = writtenInIds.length
+    ? writtenInIds.map(id => linkNode(id, nodeMap)).join(', ')
+    : (node.self_hosting ? `${escapeHtml(node.name)} itself (self-hosting)` : '');
+
+  const useRaw = USE_CASES[slug];
+  let usedFor = '';
+  if (useRaw) {
+    const text = useRaw.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    const first = text.split(/\.\s/)[0];
+    usedFor = first ? `${first}.` : '';
+  }
+
+  const predIds = [...new Set(rels.filter(r => r.to_language === node.id && r.relationship === 'influenced').map(r => r.from_language))].slice(0, 7);
+  const succIds = [...new Set(rels.filter(r => r.from_language === node.id && r.relationship === 'influenced').map(r => r.to_language))].slice(0, 7);
+  const chip = (id: string) => `<a class="lc-chip" href="/${idToPrefix(id)}/${idToSlug(id)}">${escapeHtml(nameFromId(id, nodeMap))}</a>`;
+
+  const developer = node.company || joinNames(e?.facts.designers ?? []) || joinNames(e?.facts.developers ?? []) || '';
+  const license = joinNames(e?.facts.license ?? []) || '';
+  const exts = (e?.facts.file_extensions ?? []).slice(0, 4).join(' ');
+  const website = e?.facts.website || '';
+  const adoption = adoptionLabel(node.current_users_estimate);
+  const paradigm = (!isTool && node.paradigm?.length) ? node.paradigm.join(', ') : '';
+  const typing = (!isTool && node.typing && !['unspecified', 'none'].includes(node.typing)) ? node.typing : '';
+
+  const facts: string[] = [];
+  const fact = (label: string, value: string) => `<div class="lc-fact"><dt>${label}</dt><dd>${value}</dd></div>`;
+  if (developer) facts.push(fact(isTool ? 'Built by' : 'Developer', escapeHtml(developer)));
+  if (node.first_release_year && node.first_release_year > 0) facts.push(fact('First released', String(node.first_release_year)));
+  if (node.peak_year) facts.push(fact('Peak', String(node.peak_year)));
+  if (paradigm) facts.push(fact('Paradigm', escapeHtml(paradigm)));
+  if (typing) facts.push(fact('Typing', escapeHtml(typing)));
+  if (license) facts.push(fact('License', escapeHtml(license)));
+  if (exts) facts.push(fact('File extension', `<code>${escapeHtml(exts)}</code>`));
+  if (adoption) facts.push(fact('Adoption', adoption));
+
+  const succ = SUCCESSION[slug];
+  const succRows: string[] = [];
+  if (succ?.replaced) succRows.push(`<div class="lc-succ"><span class="lc-succ-k">Replaced</span><span>${escapeHtml(succ.replaced)}</span></div>`);
+  if (succ?.replacedBy) succRows.push(`<div class="lc-succ"><span class="lc-succ-k">Being replaced by</span><span>${escapeHtml(succ.replacedBy)}</span></div>`);
+
+  const kindLabel = isTool ? 'Toolchain' : 'Programming language';
+  const since = (node.first_release_year && node.first_release_year > 0) ? ` &middot; since ${node.first_release_year}` : '';
+
+  return `<article class="lang-card">
+  <header class="lang-card-top">
+    ${logo}
+    <div class="lang-card-id">
+      <p class="lang-card-kind">${kindLabel}${since}</p>
+      <h1>${escapeHtml(node.name)}</h1>
+      ${tagline ? `<p class="lang-card-tagline">${escapeHtml(tagline)}</p>` : ''}
+    </div>
+    ${website ? `<a class="lang-card-site" href="${escapeHtml(website)}" rel="nofollow noopener noreferrer" target="_blank">Official site &rsaquo;</a>` : ''}
+  </header>
+
+  ${writtenIn ? `<div class="lc-key"><span class="lc-key-label">Written in</span><span class="lc-key-value">${writtenIn}</span></div>` : ''}
+  ${usedFor ? `<div class="lc-key"><span class="lc-key-label">Used for</span><span class="lc-key-value">${escapeHtml(usedFor)}</span></div>` : ''}
+
+  ${facts.length ? `<dl class="lang-card-facts">${facts.join('')}</dl>` : ''}
+
+  ${(predIds.length || succIds.length || succRows.length) ? `<div class="lang-card-lineage">
+    ${predIds.length ? `<div class="lc-line"><span class="lc-line-k">Built on</span><span class="lc-chips">${predIds.map(chip).join('')}</span></div>` : ''}
+    ${succIds.length ? `<div class="lc-line"><span class="lc-line-k">Influenced</span><span class="lc-chips">${succIds.map(chip).join('')}</span></div>` : ''}
+    ${succRows.join('')}
+  </div>` : ''}
+</article>`;
+}
+
 // Full enriched block (facts + overview) for nodes without a hand-authored PRIORITY_CONTENT entry.
 function buildEnrichedContent(node: Language, rels: Relationship[], nodeMap: Map<string, Language>): string {
   if (!ENRICHMENT[node.id]) return '';
@@ -1427,12 +1559,11 @@ ${faqs.map(f => `<div class="faq-item">
     <a href="/">Home</a> &rsaquo; <a href="/${prefix}">${prefix === 'tools' ? 'Tools' : 'Languages'}</a> &rsaquo; ${escapeHtml(node.name)}
   </nav>
 
-  ${buildPageHeader(node)}
-
-  ${buildMetaTags(node)}
+  ${buildInfoCard(node, rels, nodeMap)}
 
   ${buildToolIntro(node)}
 
+  <h2 class="lang-written-q">What is ${escapeHtml(node.name)} written in?</h2>
   ${buildAnswerBox(node, rels, nodeMap)}
 
   ${buildUseCases(node)}
