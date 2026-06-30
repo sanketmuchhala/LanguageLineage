@@ -6,12 +6,12 @@
 
 Language Lineage is a structured knowledge base of programming language implementation and influence relationships. It answers questions like "What is Python written in?", "How is Rust bootstrapped?", and "Which languages influenced JavaScript?".
 
-The dataset covers 112 programming languages and tools, 347 documented relationships, and spans from 1949 (Fortran) to 2023.
+The dataset covers 152 programming languages and tools, 443 documented relationships, and spans from 1949 (Fortran) to 2023.
 
 ## Dataset Facts
 
-- **Total nodes:** 112 (98 language nodes, 14 tool nodes)
-- **Total relationships:** 347
+- **Total nodes:** 152 (131 language nodes, 21 tool nodes)
+- **Total relationships:** 443
 - **Date range:** 1949–2023
 - **Evidence coverage:** 100% (all relationships have at least one evidence source)
 
@@ -19,11 +19,11 @@ The dataset covers 112 programming languages and tools, 347 documented relations
 
 | Type | Count |
 |---|---|
-| influenced | 189 |
-| compiler written in | 78 |
-| runtime written in | 56 |
-| bootstrap written in | 14 |
-| transpiled to | 8 |
+| influenced | 252 |
+| compiler written in | 96 |
+| runtime written in | 67 |
+| bootstrap written in | 15 |
+| transpiled to | 11 |
 | rewritten in | 2 |
 
 ## Key Pages

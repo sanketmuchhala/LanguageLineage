@@ -14,7 +14,7 @@
 
 # Programming Language Lineage Graph
 
-An interactive graph visualization mapping the lineage, influence, and implementation relationships between 112 programming languages, from Machine Code (year 0) to Zig (2023).
+An interactive graph visualization mapping the lineage, influence, and implementation relationships between 152 programming languages, from Machine Code (year 0) to Zig (2023).
 
 ## Live Site
 
@@ -27,7 +27,7 @@ An interactive graph visualization mapping the lineage, influence, and implement
 
 ## Overview
 
-This project visualizes how programming languages are connected through compiler chains, runtime dependencies, influence relationships, and bootstrapping paths. The dataset (v5) covers 112 nodes (98 languages, 14 tools), 347 relationships, and 77 sourced logo URLs for graph rendering.
+This project visualizes how programming languages are connected through compiler chains, runtime dependencies, influence relationships, and bootstrapping paths. The dataset (v5) covers 152 nodes (131 languages, 21 tools), 443 relationships, and 77 sourced logo URLs for graph rendering.
 
 ### What You Can Explore
 
@@ -76,7 +76,7 @@ ProgrammingLanguageGraph/
 │   ├── v2/                         67 languages, 128 edges
 │   ├── v3/                         71 languages, 169 edges
 │   ├── v4/                         112 nodes, 347 relationships
-│   └── v5/                         112 nodes, 347 relationships + logo metadata (current)
+│   └── v5/                         152 nodes, 443 relationships + logo metadata (current)
 │       └── lineage_v5.json
 ├── scripts/                        Dataset tooling
 │   ├── schema.ts                   Zod validation schemas (18 language fields, 8 edge fields)
@@ -108,8 +108,8 @@ ProgrammingLanguageGraph/
 
 ### Scale
 
-- 112 nodes: 98 languages + 14 tools (compilers, runtimes, engines)
-- 347 relationships, each with confidence score and evidence source URL
+- 152 nodes: 131 languages + 21 tools (compilers, runtimes, engines)
+- 443 relationships, each with confidence score and evidence source URL
 - 100% evidence coverage — every relationship has at least one source
 - 77 logo URLs: 50 Devicon assets + 21 Wikimedia P154 logos + 6 explicitly marked proxy logos
 - 18 fields per language (10 core + 5 enriched metadata fields + 3 logo metadata fields)
@@ -268,7 +268,7 @@ npm run analyze:v5
 
 ```
 Language Lineage (languagelineage.org). Programming Language Lineage Dataset, v5.
-112 nodes, 347 relationships. Accessed 2026. https://languagelineage.org/dataset
+152 nodes, 443 relationships. Accessed 2026. https://languagelineage.org/dataset
 ```
 
 ## Controls
@@ -303,7 +303,7 @@ Language Lineage (languagelineage.org). Programming Language Lineage Dataset, v5
 | v2 | 67 | 128 | Extended with more languages, implementations array |
 | v3 | 71 | 169 | Added influence relationships |
 | v4 | 112 | 347 | Full enrichment: 5 new metadata fields, influence edges, 41 data fixes |
-| v5 | 112 | 347 | Adds sourced Devicon and Wikimedia logo URLs, logo source metadata, and dataset-driven graph logo rendering |
+| v5 | 152 | 443 | Adds sourced Devicon and Wikimedia logo URLs, logo source metadata, and dataset-driven graph logo rendering |
 
 The app loads v5 by default. Previous versions remain available in `dataset/`.
 

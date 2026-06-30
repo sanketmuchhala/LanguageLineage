@@ -25,6 +25,45 @@ interface LanguageNode {
 // cleanly by itself (disambiguation, single letters, tools). Extends the curated
 // map proven by scripts/harvestWikimediaLogos.ts.
 const CURATED: Record<string, { title?: string; qid?: string }> = {
+  // Ambiguous names that otherwise hit disambiguation pages / unrelated items.
+  'lang:raku': { title: 'Raku (programming language)' },
+  'lang:hack': { title: 'Hack (programming language)' },
+  'lang:vala': { title: 'Vala (programming language)' },
+  'lang:eiffel': { title: 'Eiffel (programming language)' },
+  'lang:forth': { title: 'Forth (programming language)' },
+  'lang:io': { title: 'Io (programming language)' },
+  'lang:clean': { title: 'Clean (programming language)' },
+  'lang:occam': { title: 'Occam (programming language)' },
+  'lang:ats': { title: 'ATS (programming language)' },
+  'lang:roc': { title: 'Roc (programming language)' },
+  'lang:lean': { title: 'Lean (proof assistant)' },
+  'lang:coq': { title: 'Coq (software)' },
+  'lang:qsharp': { title: 'Q Sharp' },
+  'lang:factor': { title: 'Factor (programming language)' },
+  'lang:nix': { title: 'Nix (package manager)' },
+  'lang:move': { title: 'Move (programming language)' },
+  'lang:solidity': { title: 'Solidity' },
+  'lang:logo': { title: 'Logo (programming language)' },
+  'lang:hope': { title: 'Hope (programming language)' },
+  'lang:mesa': { title: 'Mesa (programming language)' },
+  'lang:snobol': { title: 'SNOBOL' },
+  'lang:speedcoding': { title: 'Speedcoding' },
+  'lang:basic': { title: 'BASIC' },
+  'lang:wren': { title: 'Wren (programming language)' },
+  'lang:pony': { title: 'Pony (programming language)' },
+  'lang:odin': { title: 'Odin (programming language)' },
+  'lang:hare': { title: 'Hare (programming language)' },
+  'lang:chapel': { title: 'Chapel (programming language)' },
+  'lang:haxe': { title: 'Haxe' },
+  'lang:actionscript': { title: 'ActionScript' },
+  'lang:powershell': { title: 'PowerShell' },
+  'tool:quickjs': { title: 'QuickJS' },
+  'tool:swc': { title: 'SWC (software)' },
+  'tool:babel': { title: 'Babel (transcompiler)' },
+  'tool:hhvm': { title: 'HHVM' },
+  'tool:moarvm': { title: 'MoarVM' },
+  'tool:graalvm': { title: 'GraalVM' },
+  'tool:esbuild': { title: 'Esbuild' },
   'lang:machine_code': { title: 'Machine code' },
   'lang:assembly': { title: 'Assembly language' },
   'lang:lisp': { title: 'Lisp (programming language)' },
@@ -300,11 +339,20 @@ async function main() {
   const dataset = JSON.parse(readFileSync(DATASET_PATH, 'utf8')) as { languages: LanguageNode[] };
   const nodes = dataset.languages;
 
+  // Incremental: preserve already-curated entries, only fetch nodes not yet enriched.
+  let existingEnrichment: Record<string, Enriched> = {};
+  try {
+    const prev = JSON.parse(readFileSync(OUTPUT_PATH, 'utf8')) as { enrichment?: Record<string, Enriched> };
+    existingEnrichment = prev.enrichment ?? {};
+  } catch { /* no prior enrichment file */ }
+  const toProcess = nodes.filter((n) => !existingEnrichment[n.id]);
+  console.log(`Enriching ${toProcess.length} new node(s); preserving ${Object.keys(existingEnrichment).length} existing.`);
+
   const resolved: Array<{ node: LanguageNode; r: Resolved; facts?: RawFacts }> = [];
   const unresolved: Array<{ id: string; name: string; reason: string }> = [];
   const allQids = new Set<string>();
 
-  for (const node of nodes) {
+  for (const node of toProcess) {
     try {
       await sleep(140);
       const r = await resolveNode(node);
@@ -327,7 +375,7 @@ async function main() {
   console.log(`Resolving ${allQids.size} referenced entity labels...`);
   const labels = await resolveLabels([...allQids]);
 
-  const enrichment: Record<string, Enriched> = {};
+  const enrichment: Record<string, Enriched> = { ...existingEnrichment };
   for (const { node, r, facts } of resolved) {
     if (!r.qid || !r.title || !facts) continue;
     const wikipedia_url = `https://en.wikipedia.org/wiki/${encodeURIComponent(r.title.replace(/ /g, '_'))}`;
