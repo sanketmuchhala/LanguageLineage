@@ -64,11 +64,11 @@ export function GraphView() {
     instance.pan({ x: cx, y: cy });
     instance.zoom(0.5);
 
-    // Animate nodes bursting outward from center
+    // Lay out and fit the whole graph so every node is visible on load.
     instance.layout({
       ...getLayout(filters.layoutMode),
       randomize: false,
-      animationDuration: 1800,
+      animationDuration: 1200,
     }).run();
 
     setCytoscape(instance);

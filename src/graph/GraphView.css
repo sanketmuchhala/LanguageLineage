@@ -5,7 +5,11 @@
 .graph-view {
   width: 100%;
   height: 100%;
-  background-color: var(--bg-canvas);
+  /* Depth: a faint central lift fading to a black vignette, so the atlas feels
+     like it sits in space rather than on a flat void. */
+  background:
+    radial-gradient(circle at 50% 43%, rgba(74, 222, 128, 0.05) 0%, transparent 40%),
+    radial-gradient(125% 105% at 50% 46%, #0c0c0c 0%, #000000 64%);
   position: relative;
   transition: background-color 0.4s var(--ease-out-quart, ease);
   touch-action: none;

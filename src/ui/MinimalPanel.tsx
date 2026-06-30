@@ -15,7 +15,7 @@ interface MinimalPanelProps {
 
 export function MinimalPanel({ onBackToLanding }: MinimalPanelProps) {
   const [collapsed, setCollapsed] = useState(() => window.innerWidth < 640);
-  const { dataset, filters, validationReport, updateFilters, attributeFilters, setAttributeFilters, resetAttributeFilters, isDarkMode, toggleDarkMode } = useGraphStore();
+  const { dataset, filters, updateFilters, attributeFilters, setAttributeFilters, resetAttributeFilters, isDarkMode, toggleDarkMode } = useGraphStore();
 
   const handleLayoutChange = (mode: 'dag' | 'force' | 'cluster' | 'timeline') => {
     updateFilters({ layoutMode: mode });
@@ -36,8 +36,6 @@ export function MinimalPanel({ onBackToLanding }: MinimalPanelProps) {
       },
     });
   };
-
-  const hasWarnings = validationReport && validationReport.summary.warnings > 0;
 
   const uniqueParadigms = useMemo(() => {
     if (!dataset) return [];
@@ -95,12 +93,6 @@ export function MinimalPanel({ onBackToLanding }: MinimalPanelProps) {
               )}
             </div>
           </header>
-
-          {hasWarnings && (
-            <div className="validation-warning">
-              {validationReport!.summary.warnings} validation warnings
-            </div>
-          )}
 
           <section className="panel-section mode-toggle-section">
             <div className="graph-mode-toggle">

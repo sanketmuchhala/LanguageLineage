@@ -19,8 +19,12 @@
 .sidebar-inner {
   width: 300px;
   height: 100%;
-  background-color: var(--bg-surface);
-  border-right: 1px solid var(--border-primary);
+  /* Frosted glass floating over the atlas */
+  background: rgba(9, 9, 11, 0.82);
+  backdrop-filter: blur(22px) saturate(1.1);
+  -webkit-backdrop-filter: blur(22px) saturate(1.1);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 1px 0 30px rgba(0, 0, 0, 0.5);
   overflow-y: auto;
   overflow-x: hidden;
   display: flex;
@@ -601,3 +605,136 @@
     height: 18px;
   }
 }
+
+/* ============================================
+   PREMIUM REFINEMENT PASS
+   ============================================ */
+
+/* Generous rhythm + hairline borders */
+.panel-header { padding: 18px 18px 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+.panel-section { padding: 17px 18px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+
+/* Section headers — quieter, more deliberate */
+.panel-section h3,
+.relationship-filters h3 {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--text-tertiary);
+  margin-bottom: 13px;
+}
+
+/* Brand mark — soft gradient tile with a glow */
+.panel-logo-mark {
+  background: linear-gradient(145deg, #4ade80, #22c55e);
+  color: #06180c;
+  border-radius: 9px;
+  box-shadow: 0 2px 12px rgba(74, 222, 128, 0.32);
+}
+.panel-title { font-size: 15px; letter-spacing: -0.01em; }
+
+/* Icon buttons — glassier */
+.icon-btn {
+  border-radius: 8px;
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+}
+.icon-btn:hover { background: rgba(74, 222, 128, 0.1); border-color: rgba(74, 222, 128, 0.4); }
+
+/* Mode segmented control */
+.graph-mode-toggle {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.06);
+  border-radius: 11px;
+  padding: 4px;
+}
+.graph-mode-toggle button.active {
+  background: rgba(74, 222, 128, 0.14);
+  color: var(--accent);
+  box-shadow: inset 0 0 0 1px rgba(74, 222, 128, 0.2), 0 1px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Layout switcher — green-tint active instead of loud solid fill */
+.layout-toggle button {
+  padding: 9px 4px;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.06);
+  transition: all 0.2s var(--ease-out-quart, ease);
+}
+.layout-toggle button:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: var(--text-primary);
+}
+.layout-toggle button.active {
+  background: rgba(74, 222, 128, 0.13);
+  color: var(--accent);
+  border-color: rgba(74, 222, 128, 0.5);
+  box-shadow: inset 0 0 0 1px rgba(74, 222, 128, 0.12);
+}
+
+/* Search — glassy field with a focus glow */
+.search-box {
+  padding: 11px 14px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.search-box:focus {
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.13);
+}
+
+/* Custom premium checkboxes */
+.toggle { margin-bottom: 11px; gap: 11px; }
+.toggle input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.03);
+  position: relative;
+  transition: background 0.16s ease, border-color 0.16s ease;
+}
+.toggle input[type="checkbox"]:hover { border-color: rgba(74, 222, 128, 0.5); }
+.toggle input[type="checkbox"]:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.toggle input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 5.5px;
+  top: 1.5px;
+  width: 4.5px;
+  height: 9px;
+  border: solid #06180c;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.toggle input[type="checkbox"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Filter chips — green-tint active */
+.filter-chip {
+  padding: 4px 11px;
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.07);
+}
+.filter-chip:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(74, 222, 128, 0.45);
+  color: var(--text-primary);
+}
+.filter-chip.active {
+  background: rgba(74, 222, 128, 0.14);
+  color: var(--accent);
+  border-color: rgba(74, 222, 128, 0.5);
+}
+
+/* Slider thumb glow (keeps native track) */
+.slider { accent-color: var(--accent); height: 5px; }
