@@ -1004,16 +1004,6 @@ function buildPageHeader(node: Language): string {
 </div>`;
 }
 
-function adoptionLabel(u: string | null | undefined): string | null {
-  switch (u) {
-    case 'dominant': return 'Industry-dominant';
-    case 'large': return 'Widely used';
-    case 'moderate': return 'Moderate adoption';
-    case 'niche': return 'Niche / specialized';
-    default: return null;
-  }
-}
-
 // Curated, plain-language succession notes for well-known languages: what each one
 // displaced, and what (if anything) is taking its place. Languages without an entry
 // fall back to the graph-derived "Built on / Influenced" lineage only.
@@ -1048,10 +1038,10 @@ const SUCCESSION: Record<string, { replaced?: string; replacedBy?: string }> = {
   reasonml: { replacedBy: 'ReScript, its renamed and refocused successor' },
 };
 
-// The "language record card" that leads each page: logo, developer, website, what it
-// is written in and used for, and where it sits in the lineage (what it built on, what
-// it influenced, what it replaced and what is replacing it).
-function buildInfoCard(node: Language, rels: Relationship[], nodeMap: Map<string, Language>): string {
+// The integrated page header: logo, name, tagline, a horizontal spec rail of key data
+// (written in, released, developer, typing, license), and the curated succession notes —
+// woven into the top of the article rather than boxed into a card.
+function buildLanguageHeader(node: Language, rels: Relationship[], nodeMap: Map<string, Language>): string {
   const e = ENRICHMENT[node.id];
   const isTool = node.id.startsWith('tool:');
   const slug = idToSlug(node.id);
@@ -1071,69 +1061,47 @@ function buildInfoCard(node: Language, rels: Relationship[], nodeMap: Map<string
   const writtenInIds = [...new Set(rels.filter(r => r.to_language === node.id && implTypes.includes(r.relationship)).map(r => r.from_language))];
   const writtenIn = writtenInIds.length
     ? writtenInIds.map(id => linkNode(id, nodeMap)).join(', ')
-    : (node.self_hosting ? `${escapeHtml(node.name)} itself (self-hosting)` : '');
-
-  const useRaw = USE_CASES[slug];
-  let usedFor = '';
-  if (useRaw) {
-    const text = useRaw.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-    const first = text.split(/\.\s/)[0];
-    usedFor = first ? `${first}.` : '';
-  }
-
-  const predIds = [...new Set(rels.filter(r => r.to_language === node.id && r.relationship === 'influenced').map(r => r.from_language))].slice(0, 7);
-  const succIds = [...new Set(rels.filter(r => r.from_language === node.id && r.relationship === 'influenced').map(r => r.to_language))].slice(0, 7);
-  const chip = (id: string) => `<a class="lc-chip" href="/${idToPrefix(id)}/${idToSlug(id)}">${escapeHtml(nameFromId(id, nodeMap))}</a>`;
+    : (node.self_hosting ? `${escapeHtml(node.name)} (self-hosting)` : '');
 
   const developer = node.company || joinNames(e?.facts.designers ?? []) || joinNames(e?.facts.developers ?? []) || '';
   const license = joinNames(e?.facts.license ?? []) || '';
-  const exts = (e?.facts.file_extensions ?? []).slice(0, 4).join(' ');
   const website = e?.facts.website || '';
-  const adoption = adoptionLabel(node.current_users_estimate);
-  const paradigm = (!isTool && node.paradigm?.length) ? node.paradigm.join(', ') : '';
   const typing = (!isTool && node.typing && !['unspecified', 'none'].includes(node.typing)) ? node.typing : '';
 
-  const facts: string[] = [];
-  const fact = (label: string, value: string) => `<div class="lc-fact"><dt>${label}</dt><dd>${value}</dd></div>`;
-  if (developer) facts.push(fact(isTool ? 'Built by' : 'Developer', escapeHtml(developer)));
-  if (node.first_release_year && node.first_release_year > 0) facts.push(fact('First released', String(node.first_release_year)));
-  if (node.peak_year) facts.push(fact('Peak', String(node.peak_year)));
-  if (paradigm) facts.push(fact('Paradigm', escapeHtml(paradigm)));
-  if (typing) facts.push(fact('Typing', escapeHtml(typing)));
-  if (license) facts.push(fact('License', escapeHtml(license)));
-  if (exts) facts.push(fact('File extension', `<code>${escapeHtml(exts)}</code>`));
-  if (adoption) facts.push(fact('Adoption', adoption));
+  // Horizontal spec rail — the page's key data, read like an instrument readout rather
+  // than boxed into a card. Each cell is a value over a small monospace label.
+  const cells: Array<[string, string]> = [];
+  if (writtenIn) cells.push([writtenIn, 'Written in']);
+  if (node.first_release_year && node.first_release_year > 0) cells.push([String(node.first_release_year), 'First released']);
+  if (developer) cells.push([escapeHtml(developer), isTool ? 'Built by' : 'Developer']);
+  if (typing) cells.push([escapeHtml(typing), 'Typing']);
+  if (license) cells.push([escapeHtml(license), 'License']);
+  const rail = cells.length
+    ? `<div class="spec-rail">${cells.map(([v, l]) => `<div class="spec-cell"><span class="spec-val">${v}</span><span class="spec-lab">${l}</span></div>`).join('')}</div>`
+    : '';
 
   const succ = SUCCESSION[slug];
-  const succRows: string[] = [];
-  if (succ?.replaced) succRows.push(`<div class="lc-succ"><span class="lc-succ-k">Replaced</span><span>${escapeHtml(succ.replaced)}</span></div>`);
-  if (succ?.replacedBy) succRows.push(`<div class="lc-succ"><span class="lc-succ-k">Being replaced by</span><span>${escapeHtml(succ.replacedBy)}</span></div>`);
+  const succHtml = (succ?.replaced || succ?.replacedBy)
+    ? `<div class="succession">
+    ${succ.replaced ? `<div class="succ-row"><span class="succ-k">Replaced</span><span>${escapeHtml(succ.replaced)}</span></div>` : ''}
+    ${succ.replacedBy ? `<div class="succ-row"><span class="succ-k">Being replaced by</span><span>${escapeHtml(succ.replacedBy)}</span></div>` : ''}
+  </div>`
+    : '';
 
-  const kindLabel = isTool ? 'Toolchain' : 'Programming language';
-  const since = (node.first_release_year && node.first_release_year > 0) ? ` &middot; since ${node.first_release_year}` : '';
+  const kind = isTool ? 'Toolchain' : 'Programming language';
+  const year = (node.first_release_year && node.first_release_year > 0) ? ` &middot; ${node.first_release_year}` : '';
 
-  return `<article class="lang-card">
-  <header class="lang-card-top">
-    ${logo}
-    <div class="lang-card-id">
-      <p class="lang-card-kind">${kindLabel}${since}</p>
-      <h1>${escapeHtml(node.name)}</h1>
-      ${tagline ? `<p class="lang-card-tagline">${escapeHtml(tagline)}</p>` : ''}
-    </div>
-    ${website ? `<a class="lang-card-site" href="${escapeHtml(website)}" rel="nofollow noopener noreferrer" target="_blank">Official site &rsaquo;</a>` : ''}
-  </header>
-
-  ${writtenIn ? `<div class="lc-key"><span class="lc-key-label">Written in</span><span class="lc-key-value">${writtenIn}</span></div>` : ''}
-  ${usedFor ? `<div class="lc-key"><span class="lc-key-label">Used for</span><span class="lc-key-value">${escapeHtml(usedFor)}</span></div>` : ''}
-
-  ${facts.length ? `<dl class="lang-card-facts">${facts.join('')}</dl>` : ''}
-
-  ${(predIds.length || succIds.length || succRows.length) ? `<div class="lang-card-lineage">
-    ${predIds.length ? `<div class="lc-line"><span class="lc-line-k">Built on</span><span class="lc-chips">${predIds.map(chip).join('')}</span></div>` : ''}
-    ${succIds.length ? `<div class="lc-line"><span class="lc-line-k">Influenced</span><span class="lc-chips">${succIds.map(chip).join('')}</span></div>` : ''}
-    ${succRows.join('')}
-  </div>` : ''}
-</article>`;
+  return `<header class="lang-head">
+  ${logo}
+  <div class="lang-head-main">
+    <p class="lang-head-eyebrow">${kind}${year}</p>
+    <h1>${escapeHtml(node.name)}</h1>
+    ${tagline ? `<p class="lang-head-tagline">${escapeHtml(tagline)}</p>` : ''}
+  </div>
+  ${website ? `<a class="lang-head-site" href="${escapeHtml(website)}" rel="nofollow noopener noreferrer" target="_blank">Official site &rsaquo;</a>` : ''}
+</header>
+${rail}
+${succHtml}`;
 }
 
 // Full enriched block (facts + overview) for nodes without a hand-authored PRIORITY_CONTENT entry.
@@ -1559,7 +1527,7 @@ ${faqs.map(f => `<div class="faq-item">
     <a href="/">Home</a> &rsaquo; <a href="/${prefix}">${prefix === 'tools' ? 'Tools' : 'Languages'}</a> &rsaquo; ${escapeHtml(node.name)}
   </nav>
 
-  ${buildInfoCard(node, rels, nodeMap)}
+  ${buildLanguageHeader(node, rels, nodeMap)}
 
   ${buildToolIntro(node)}
 

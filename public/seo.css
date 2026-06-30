@@ -198,59 +198,43 @@ h1 {
   }
 }
 
-/* ============ Language record card ============ */
-.lang-card {
-  position: relative;
-  background: var(--bg-surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 28px 28px 24px;
-  margin-bottom: 36px;
-  overflow: hidden;
-}
-.lang-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--accent), rgba(74, 222, 128, 0) 70%);
-}
-.lang-card-top {
+/* ============ Language page header ============ */
+.lang-head {
   display: flex;
   align-items: flex-start;
-  gap: 20px;
-  margin-bottom: 20px;
+  gap: 22px;
+  margin: 8px 0 0;
 }
-.lang-card .lang-logo-tile { width: 64px; height: 64px; border-radius: 16px; padding: 11px; }
+.lang-head .lang-logo-tile { width: 68px; height: 68px; border-radius: 16px; padding: 12px; }
 .lang-logo-tile--mark {
   font-family: 'Fraunces', Georgia, serif;
-  font-size: 30px;
+  font-size: 32px;
   font-weight: 600;
   color: var(--text-tertiary);
   background: var(--bg-card);
   padding: 0;
 }
-.lang-card-id { flex: 1; min-width: 0; }
-.lang-card-kind {
+.lang-head-main { flex: 1; min-width: 0; }
+.lang-head-eyebrow {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--text-tertiary);
-  margin: 0 0 6px;
+  margin: 0 0 10px;
 }
-.lang-card h1 {
-  font-size: 40px;
-  margin: 0 0 8px;
-  line-height: 1.05;
+.lang-head h1 {
+  font-size: 52px;
+  margin: 0 0 12px;
+  line-height: 1.04;
 }
-.lang-card-tagline {
+.lang-head-tagline {
   margin: 0;
   color: var(--text-secondary);
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.45;
 }
-.lang-card-site {
+.lang-head-site {
   flex-shrink: 0;
   align-self: center;
   font-family: 'JetBrains Mono', monospace;
@@ -259,108 +243,72 @@ h1 {
   color: var(--accent);
   border: 1px solid rgba(74, 222, 128, 0.4);
   border-radius: 999px;
-  padding: 7px 14px;
+  padding: 8px 15px;
   text-decoration: none;
   white-space: nowrap;
   transition: background 0.18s, border-color 0.18s;
 }
-.lang-card-site:hover { background: rgba(74, 222, 128, 0.12); border-color: var(--accent); }
+.lang-head-site:hover { background: rgba(74, 222, 128, 0.12); border-color: var(--accent); }
 
-.lc-key {
+/* Horizontal spec rail — key data as an instrument-style readout. */
+.spec-rail {
   display: flex;
-  gap: 14px;
-  align-items: baseline;
-  padding: 11px 0;
+  flex-wrap: wrap;
   border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  margin: 26px 0 0;
 }
-.lc-key-label {
-  flex-shrink: 0;
-  width: 96px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-tertiary);
+.spec-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 14px 22px 14px 0;
+  margin-right: 22px;
+  border-right: 1px solid var(--border);
 }
-.lc-key-value { color: var(--text); font-size: 16px; line-height: 1.5; }
-.lc-key-value a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(74, 222, 128, 0.35); }
-.lc-key-value a:hover { color: var(--accent-hover); }
-
-.lang-card-facts {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1px;
-  margin: 16px 0 0;
-  background: var(--border);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  overflow: hidden;
-}
-.lc-fact { background: var(--bg-surface); padding: 12px 14px; }
-.lc-fact dt {
+.spec-cell:last-child { border-right: none; margin-right: 0; }
+.spec-val { color: var(--text); font-size: 16px; line-height: 1.3; }
+.spec-val a { color: var(--accent); text-decoration: none; }
+.spec-val a:hover { color: var(--accent-hover); }
+.spec-lab {
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-tertiary);
-  margin-bottom: 4px;
 }
-.lc-fact dd { margin: 0; color: var(--text); font-size: 14px; line-height: 1.4; }
-.lc-fact dd a { color: var(--accent); text-decoration: none; }
-.lc-fact code { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text-secondary); }
 
-.lang-card-lineage {
-  margin-top: 18px;
-  padding-top: 18px;
-  border-top: 1px solid var(--border);
+/* Succession line — what it replaced and what is replacing it. */
+.succession {
+  margin: 24px 0 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 11px;
 }
-.lc-line { display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; }
-.lc-line-k {
+.succ-row { display: flex; gap: 16px; align-items: baseline; }
+.succ-k {
   flex-shrink: 0;
-  width: 80px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-tertiary);
-}
-.lc-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.lc-chip {
-  font-size: 13px;
-  color: var(--text-secondary);
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 3px 11px;
-  text-decoration: none;
-  transition: color 0.15s, border-color 0.15s;
-}
-.lc-chip:hover { color: var(--accent); border-color: rgba(74, 222, 128, 0.45); }
-.lc-succ { display: flex; gap: 12px; align-items: baseline; }
-.lc-succ-k {
-  flex-shrink: 0;
-  width: 80px;
+  width: 132px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   letter-spacing: 0.04em;
+  text-transform: uppercase;
   color: var(--accent);
 }
-.lc-succ span:last-child { color: var(--text-secondary); font-size: 14px; line-height: 1.5; }
+.succ-row span:last-child { color: var(--text-secondary); font-size: 15px; line-height: 1.6; }
 
 .lang-written-q { margin-top: 8px; }
 
 @media (max-width: 600px) {
-  .lang-card { padding: 20px 18px; border-radius: 14px; }
-  .lang-card-top { flex-wrap: wrap; gap: 14px; }
-  .lang-card .lang-logo-tile { width: 52px; height: 52px; border-radius: 13px; padding: 8px; }
+  .lang-head { flex-wrap: wrap; gap: 14px; }
+  .lang-head .lang-logo-tile { width: 52px; height: 52px; border-radius: 13px; padding: 9px; }
   .lang-logo-tile--mark { font-size: 26px; padding: 0; }
-  .lang-card h1 { font-size: 30px; }
-  .lang-card-site { order: 3; align-self: flex-start; }
-  .lc-key, .lc-line, .lc-succ { flex-direction: column; gap: 4px; }
-  .lc-key-label, .lc-line-k, .lc-succ-k { width: auto; }
+  .lang-head h1 { font-size: 34px; }
+  .lang-head-tagline { font-size: 16px; }
+  .lang-head-site { order: 3; align-self: flex-start; }
+  .spec-cell { padding: 11px 16px 11px 0; margin-right: 16px; }
+  .succ-row { flex-direction: column; gap: 3px; }
+  .succ-k { width: auto; }
 }
 
 h2 {
