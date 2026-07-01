@@ -412,7 +412,7 @@ async function main() {
     e.facts.designers.length + e.facts.developers.length + e.facts.license.length +
     e.facts.influenced_by.length + e.facts.file_extensions.length + (e.facts.website ? 1 : 0) + (e.tagline ? 1 : 0);
   const rows = Object.entries(ordered)
-    .map(([id, e]) => `| \`${id}\` | ${e.name} | ${e.wikidata_id} | ${factCount(e)} | ${e.facts.designers.join(', ') || '—'} |`)
+    .map(([id, e]) => `| \`${id}\` | ${e.name} | ${e.wikidata_id} | ${factCount(e)} | ${e.facts.designers.join(', ') || '-'} |`)
     .join('\n');
   const unresolvedRows = unresolved.map((u) => `| \`${u.id}\` | ${u.name} | ${u.reason.replace(/\|/g, ' ')} |`).join('\n')
     || '| _None_ |  |  |';

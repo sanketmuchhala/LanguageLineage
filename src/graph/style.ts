@@ -191,7 +191,7 @@ export function getCytoscapeStyle(
       },
     },
 
-    // Highlighted nodes (ancestors / descendants / neighbors) — visible, no glow
+    // Highlighted nodes (ancestors / descendants / neighbors), visible, no glow
     {
       selector: 'node.highlighted',
       style: {
@@ -203,7 +203,7 @@ export function getCytoscapeStyle(
       },
     },
 
-    // The single selected/clicked node — glow treatment
+    // The single selected/clicked node, glow treatment
     {
       selector: 'node.selected',
       style: {

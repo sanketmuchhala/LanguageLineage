@@ -17,8 +17,8 @@
   <meta property="og:image:height" content="630" />
   <meta property="og:image:type" content="image/png" />
   <meta property="article:published_time" content="2024-01-01" />
-  <meta property="article:modified_time" content="2026-06-30" />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"How JavaScript Engines Work","description":"JavaScript engines like V8, SpiderMonkey, and JavaScriptCore are written in C++. Learn how they parse, compile, and execute JavaScript code.","url":"https://www.languagelineage.org/guides/how-javascript-engines-work","datePublished":"2024-01-01","dateModified":"2026-06-30","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":["programming languages","compiler implementation","runtime implementation"],"inLanguage":"en"}</script>
+  <meta property="article:modified_time" content="2026-07-01" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"How JavaScript Engines Work","description":"JavaScript engines like V8, SpiderMonkey, and JavaScriptCore are written in C++. Learn how they parse, compile, and execute JavaScript code.","url":"https://www.languagelineage.org/guides/how-javascript-engines-work","datePublished":"2024-01-01","dateModified":"2026-07-01","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":["programming languages","compiler implementation","runtime implementation"],"inLanguage":"en"}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://www.languagelineage.org/guides"},{"@type":"ListItem","position":3,"name":"How JavaScript Engines Work","item":"https://www.languagelineage.org/guides/how-javascript-engines-work"}]}</script>
 </head>
 <body class="seo-page">
@@ -39,10 +39,10 @@
 
   <h1>How JavaScript Engines Work</h1>
 
-  <div class="answer-box">A JavaScript engine parses JavaScript source, compiles it to bytecode and then to machine code, and executes it. The three major engines — <strong>V8</strong>, <strong>SpiderMonkey</strong>, and <strong>JavaScriptCore</strong> — are written mainly in <strong>C++</strong> (SpiderMonkey also uses Rust). JavaScript the <em>language</em> is defined by the ECMAScript standard; the engines are the implementations.</div>
+  <div class="answer-box">A JavaScript engine parses JavaScript source, compiles it to bytecode and then to machine code, and executes it. The three major engines, <strong>V8</strong>, <strong>SpiderMonkey</strong>, and <strong>JavaScriptCore</strong>, are written mainly in <strong>C++</strong> (SpiderMonkey also uses Rust). JavaScript the <em>language</em> is defined by the ECMAScript standard; the engines are the implementations.</div>
 
 <h2>The language vs the engine</h2>
-<p>"What is JavaScript written in?" is really two questions. <a href="/languages/javascript">JavaScript</a> itself is a specification — ECMAScript, standardized by TC39 — so the language is not "written in" anything. What is written in a concrete language is the <em>engine</em> that runs JavaScript, and the performance-critical parts of every major engine are written in C++.</p>
+<p>"What is JavaScript written in?" is really two questions. <a href="/languages/javascript">JavaScript</a> itself is a specification, ECMAScript, standardized by TC39, so the language is not "written in" anything. What is written in a concrete language is the <em>engine</em> that runs JavaScript, and the performance-critical parts of every major engine are written in C++.</p>
 
 <h2>The execution pipeline</h2>
 <p>Modern engines do not simply interpret source line by line. They run a multi-stage pipeline:</p>
@@ -108,6 +108,7 @@
       <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
     </div>
   </div>
+  <p class="footer-note">Articles here are drafted with AI and reviewed by a human. Implementation and lineage facts are sourced from public references such as Wikipedia and Wikidata, and cited on each page. Spot an error? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue on GitHub</a> and it gets fixed.</p>
   <div class="footer-bottom">Made with <span style="color:#fb7185">❤️</span> by <a href="https://github.com/sanketmuchhala" rel="noopener noreferrer">Sanket Muchhala</a> &middot; <a href="/">Language Lineage</a></div>
   </div>
 </footer>

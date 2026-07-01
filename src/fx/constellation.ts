@@ -1,4 +1,4 @@
-// A faint, calm field of drifting nodes and links behind the hero — ambient
+// A faint, calm field of drifting nodes and links behind the hero, ambient
 // texture, not a light show. No cursor reactivity, low contrast, slow drift.
 // Framework-agnostic: initConstellation(canvas) -> destroy().
 

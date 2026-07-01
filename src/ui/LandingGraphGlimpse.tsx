@@ -68,7 +68,7 @@ export function LandingGraphGlimpse({ onOpen }: Props) {
         const elements: Array<Record<string, unknown>> = [];
 
         // Build the visible edges first (trim weaker influence edges to reduce clutter),
-        // then only render nodes that still have a connection — so the teaser never shows
+        // then only render nodes that still have a connection, so the teaser never shows
         // stranded, disconnected nodes.
         const keptEdges = dataset.edges.filter((e) =>
           !((e.relationship === 'influenced' || e.relationship === 'influenced_by') && e.confidence < 0.88));

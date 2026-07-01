@@ -17,8 +17,8 @@
   <meta property="og:image:height" content="630" />
   <meta property="og:image:type" content="image/png" />
   <meta property="article:published_time" content="2024-01-01" />
-  <meta property="article:modified_time" content="2026-06-30" />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"How Rust is Bootstrapped","description":"Rust is a self-hosting language. The Rust compiler (rustc) is written in Rust itself. Learn how the Rust bootstrap process works.","url":"https://www.languagelineage.org/guides/how-rust-is-bootstrapped","datePublished":"2024-01-01","dateModified":"2026-06-30","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":["programming languages","compiler implementation","runtime implementation"],"inLanguage":"en"}</script>
+  <meta property="article:modified_time" content="2026-07-01" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"How Rust is Bootstrapped","description":"Rust is a self-hosting language. The Rust compiler (rustc) is written in Rust itself. Learn how the Rust bootstrap process works.","url":"https://www.languagelineage.org/guides/how-rust-is-bootstrapped","datePublished":"2024-01-01","dateModified":"2026-07-01","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":["programming languages","compiler implementation","runtime implementation"],"inLanguage":"en"}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://www.languagelineage.org/guides"},{"@type":"ListItem","position":3,"name":"How Rust is Bootstrapped","item":"https://www.languagelineage.org/guides/how-rust-is-bootstrapped"}]}</script>
 </head>
 <body class="seo-page">
@@ -39,14 +39,14 @@
 
   <h1>How Rust is Bootstrapped</h1>
 
-  <div class="answer-box">The Rust compiler (<strong>rustc</strong>) is written in Rust. To bootstrap Rust from scratch, you need a prior version of rustc — the compiler bootstraps itself through a stage-based process.</div>
+  <div class="answer-box">The Rust compiler (<strong>rustc</strong>) is written in Rust. To bootstrap Rust from scratch, you need a prior version of rustc, the compiler bootstraps itself through a stage-based process.</div>
 
 <h2>The Rust Bootstrap Process</h2>
 <p>Rust uses a multi-stage bootstrap:</p>
 <ul>
 <li><strong>Stage 0:</strong> Download a pre-compiled rustc binary (the "beta" channel release)</li>
 <li><strong>Stage 1:</strong> Use Stage 0 to compile the current rustc source code</li>
-<li><strong>Stage 2:</strong> Use Stage 1 to compile rustc again — this is the final compiler</li>
+<li><strong>Stage 2:</strong> Use Stage 1 to compile rustc again, this is the final compiler</li>
 </ul>
 <p>Stage 2 is used because it ensures the compiler was compiled by the same-version compiler, catching any bootstrap-specific bugs.</p>
 
@@ -101,6 +101,7 @@
       <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
     </div>
   </div>
+  <p class="footer-note">Articles here are drafted with AI and reviewed by a human. Implementation and lineage facts are sourced from public references such as Wikipedia and Wikidata, and cited on each page. Spot an error? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue on GitHub</a> and it gets fixed.</p>
   <div class="footer-bottom">Made with <span style="color:#fb7185">❤️</span> by <a href="https://github.com/sanketmuchhala" rel="noopener noreferrer">Sanket Muchhala</a> &middot; <a href="/">Language Lineage</a></div>
   </div>
 </footer>

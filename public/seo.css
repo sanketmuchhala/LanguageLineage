@@ -1,4 +1,4 @@
-/* Language Lineage — Static SEO Pages */
+/* Language Lineage, Static SEO Pages */
 :root {
   --bg: #000000;
   --bg-surface: #0e0e0e;
@@ -250,7 +250,53 @@ h1 {
 }
 .lang-head-site:hover { background: rgba(74, 222, 128, 0.12); border-color: var(--accent); }
 
-/* Horizontal spec rail — key data as an instrument-style readout. */
+/* Relationship map, inline-SVG lineage graph at the top of the page. */
+.rel-map {
+  margin: 30px 0 10px;
+  padding: 18px 0 6px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.rel-map svg { width: 100%; height: auto; display: block; }
+.rel-col-head {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  fill: var(--text-tertiary);
+}
+.rel-node { cursor: pointer; }
+.rel-node-label { font-size: 13px; fill: var(--text-secondary); }
+.rel-node circle { transition: stroke-width 0.15s; }
+.rel-node:hover .rel-node-label { fill: var(--accent); }
+.rel-node:hover circle { stroke-width: 3; }
+.rel-focal-mark { font-family: 'Fraunces', Georgia, serif; font-size: 26px; font-weight: 600; fill: var(--text); }
+.rel-focal-label { font-size: 15px; font-weight: 600; fill: var(--text); }
+.rel-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 10px;
+}
+.rel-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+.rel-legend-item i { width: 8px; height: 8px; border-radius: 50%; }
+@media (max-width: 600px) {
+  .rel-node-label { font-size: 16px; }
+  .rel-focal-label { font-size: 18px; }
+  .rel-col-head { font-size: 13px; }
+}
+
+/* Horizontal spec rail, key data as an instrument-style readout. */
 .spec-rail {
   display: flex;
   flex-wrap: wrap;
@@ -278,7 +324,7 @@ h1 {
   color: var(--text-tertiary);
 }
 
-/* Succession line — what it replaced and what is replacing it. */
+/* Succession line, what it replaced and what is replacing it. */
 .succession {
   margin: 24px 0 0;
   display: flex;
@@ -377,7 +423,7 @@ p {
 .seo-main li a { color: var(--text); font-weight: 500; text-decoration: none; border-bottom: 1px solid rgba(74, 222, 128, 0.28); }
 .seo-main li a:hover { color: var(--accent); }
 
-/* Answer box — the featured snippet target */
+/* Answer box, the featured snippet target */
 .answer-box {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -596,6 +642,19 @@ td a { color: var(--accent); }
 .footer-col-head { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); margin-bottom: 4px; }
 .footer-col a { font-size: 13px; color: var(--text-tertiary); text-decoration: none; line-height: 1.4; }
 .footer-col a:hover { color: var(--accent); text-decoration: none; }
+.footer-note {
+  max-width: 660px;
+  margin: 0 auto 22px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-tertiary);
+}
+.footer-note a { color: var(--text-secondary); border-bottom: 1px solid var(--border); }
+.footer-note a:hover { color: var(--accent); }
+
 .footer-bottom { font-size: 12px; color: var(--text-tertiary); border-top: 1px solid var(--border); padding-top: 20px; }
 .footer-bottom a { color: var(--text-tertiary); }
 .footer-bottom a:hover { color: var(--accent); }
@@ -870,7 +929,7 @@ pre {
 }
 
 /* ============================================
-   RESPONSIVE — Tablet (641–1024px)
+   RESPONSIVE, Tablet (641–1024px)
    ============================================ */
 @media (max-width: 1024px) {
   .seo-main {
@@ -884,10 +943,10 @@ pre {
 }
 
 /* ============================================
-   RESPONSIVE — Mobile (≤640px)
+   RESPONSIVE, Mobile (≤640px)
    ============================================ */
 @media (max-width: 640px) {
-  /* Nav — two-row layout on mobile */
+  /* Nav, two-row layout on mobile */
   .seo-nav {
     flex-wrap: wrap;
     height: auto;
@@ -970,7 +1029,7 @@ pre {
     grid-template-columns: 1fr;
   }
 
-  /* Tables — scrollable on mobile */
+  /* Tables, scrollable on mobile */
   table {
     display: block;
     overflow-x: auto;
@@ -1148,7 +1207,7 @@ pre {
 }
 
 /* ============================================
-   RESPONSIVE — Small Phone (≤390px)
+   RESPONSIVE, Small Phone (≤390px)
    ============================================ */
 @media (max-width: 390px) {
   .seo-main {
@@ -1175,7 +1234,7 @@ pre {
 }
 
 /* ============================================
-   TIMELINE PAGE — Glassmorphism Edition
+   TIMELINE PAGE, Glassmorphism Edition
    ============================================ */
 
 /* Year HUD */
@@ -1201,7 +1260,7 @@ pre {
 .tl-scroll-content { position: relative; flex-shrink: 0; }
 #tl-svg { display: block; overflow: visible; }
 
-/* Per-segment bezier paths — NO CSS transition; JS drives dashoffset per-frame */
+/* Per-segment bezier paths, NO CSS transition; JS drives dashoffset per-frame */
 .tl-seg-bg { fill: none; stroke: rgba(255,255,255,0.07); stroke-width: 2.5; stroke-linecap: round; }
 .tl-seg { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round; opacity: 0.85; }
 .tl-seg.lit { stroke-width: 4.5; filter: drop-shadow(0 0 6px var(--accent)); opacity: 1; animation: seg-pulse 1.8s ease-in-out infinite; }
@@ -1268,7 +1327,7 @@ pre {
 .tl-card.visible .tl-card-tags { opacity: 1; transform: translateY(0); }
 .tl-card-tag { font-size: 7px; font-weight: 700; text-transform: uppercase; background: rgba(74,222,128,0.1); color: var(--accent); border-radius: 3px; padding: 1px 4px; }
 
-/* "+" button — bottom-right, rotates 90° on hover */
+/* "+" button, bottom-right, rotates 90° on hover */
 .tl-expand-btn {
   position: absolute; bottom: 7px; right: 7px;
   width: 17px; height: 17px;
@@ -1296,7 +1355,7 @@ pre {
 /* Graph mode */
 .tl-outer.graph-mode #tl-svg { opacity: 0; transition: opacity 0.4s ease; }
 .tl-outer.graph-mode .tl-card { transition: opacity 0.45s ease, transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.25s ease, border-color 0.2s ease, left 0.65s cubic-bezier(0.25,0.46,0.45,0.94), top 0.65s cubic-bezier(0.25,0.46,0.45,0.94), width 0.5s cubic-bezier(0.25,0.46,0.45,0.94), height 0.5s cubic-bezier(0.25,0.46,0.45,0.94), border-radius 0.5s ease, padding 0.3s ease, background 0.3s ease; }
-/* Horizontal grid lines — chart feel */
+/* Horizontal grid lines, chart feel */
 .tl-outer.graph-mode { background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.045) 39px, rgba(255,255,255,0.045) 40px); }
 /* Circle cards in graph mode */
 .tl-outer.graph-mode .tl-card { overflow: hidden; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
@@ -1307,9 +1366,9 @@ pre {
 .tl-outer.graph-mode .tl-card .tl-graph-dot { display: flex; }
 .tl-outer.graph-mode .tl-card:hover { transform: translate(-50%,-50%) scale(1.4) !important; box-shadow: 0 0 0 2px rgba(255,255,255,0.45), 0 6px 22px rgba(74,222,128,0.55) !important; z-index: 10; cursor: pointer; }
 .tl-outer.graph-mode .tl-card:hover::after { content: attr(data-name); position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: rgba(10,14,20,0.95); color: var(--text); font-size: 10px; font-weight: 700; white-space: nowrap; padding: 3px 9px 4px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.18); pointer-events: none; z-index: 20; letter-spacing: 0.04em; }
-/* Axis — full-viewport overlay in graph mode (position set by JS) */
+/* Axis, full-viewport overlay in graph mode (position set by JS) */
 #tl-graph-axis { overflow: hidden; }
-/* Graph dot — hidden by default, flex in graph mode */
+/* Graph dot, hidden by default, flex in graph mode */
 .tl-graph-dot { display: none; align-items: center; justify-content: center; width: 100%; height: 100%; }
 .tl-graph-dot img { width: 58%; height: 58%; object-fit: contain; }
 .tl-graph-dot span { font-size: 7px; font-weight: 900; }
@@ -1319,7 +1378,7 @@ pre {
 .tl-card.tl-card-exiting .tl-card-tags,
 .tl-card.tl-card-exiting .tl-expand-btn { visibility: hidden; }
 
-/* Modal — springs from "+" click position */
+/* Modal, springs from "+" click position */
 .tl-modal { position: fixed; z-index: 60; background: var(--bg-card); border: 1px solid rgba(74,222,128,0.3); border-radius: 16px; padding: 20px 22px; width: 300px; pointer-events: none; opacity: 0; transform: scale(0); transition: opacity 0.3s ease, transform 0.45s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 12px 48px rgba(0,0,0,0.55); }
 .tl-modal.show { opacity: 1; transform: scale(1); pointer-events: auto; }
 .tl-modal-close { position: absolute; top: 12px; right: 14px; background: none; border: none; color: var(--text-tertiary); cursor: pointer; font-size: 16px; line-height: 1; padding: 2px 6px; border-radius: 4px; font-family: inherit; }
@@ -1336,7 +1395,7 @@ pre {
 .tl-modal-link { font-size: 11px; font-weight: 600; color: var(--accent); }
 .tl-modal-link:hover { text-decoration: underline; }
 
-/* Mobile — vertical bezier timeline (layout handled by JS) */
+/* Mobile, vertical bezier timeline (layout handled by JS) */
 @media (max-width: 768px) {
   .tl-year-hud, .tl-prog-track, .tl-decade-nav { display: none; }
   .tl-mode-toggle { display: none; }
@@ -1349,7 +1408,7 @@ pre {
 }
 
 /* ============================================
-   TOUCH — active states for SEO pages
+   TOUCH, active states for SEO pages
    ============================================ */
 @media (hover: none) and (pointer: coarse) {
   .related-card:hover,

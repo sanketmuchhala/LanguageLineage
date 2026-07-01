@@ -40,7 +40,7 @@ export function initCountUps(root: ParentNode = document, selector = '.stat-numb
   }
 
   // The landing scrolls inside .landing, and IntersectionObserver proved
-  // unreliable against that fixed container — so trigger on scroll position.
+  // unreliable against that fixed container, so trigger on scroll position.
   const scroller = (root instanceof Document ? document.querySelector('.landing') : null);
   let raf = 0;
   let cleanedUp = false;

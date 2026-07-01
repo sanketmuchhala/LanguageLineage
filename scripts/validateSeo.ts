@@ -51,7 +51,7 @@ const sitemap = checkFile('sitemap.xml');
 if (sitemap) {
   const urlCount = (sitemap.match(/<url>/g) || []).length;
   ok(`sitemap.xml has ${urlCount} URLs`);
-  if (urlCount < 100) warn(`sitemap.xml has only ${urlCount} URLs — expected ~140+`);
+  if (urlCount < 100) warn(`sitemap.xml has only ${urlCount} URLs, expected ~140+`);
   if (sitemap.includes('https://languagelineage.org')) fail('sitemap.xml contains non-www URLs');
   else ok('sitemap.xml uses canonical www host');
 }
@@ -72,7 +72,7 @@ if (manifest) {
 // index.html
 const indexHtml = readFileSync(join(ROOT, 'index.html'), 'utf8');
 const indexChecks = [
-  // canonical intentionally omitted from index.html — react-helmet-async sets it per route
+  // canonical intentionally omitted from index.html, react-helmet-async sets it per route
   ['og:title', 'og:title'],
   ['og:description', 'og:description'],
   ['og:image', 'og:image'],
@@ -163,7 +163,7 @@ const GUIDE_SLUGS = [
 for (const slug of GUIDE_SLUGS) {
   checkFile(`guides/${slug}/index.html`);
 }
-if (GUIDE_SLUGS.length < 10) warn(`Only ${GUIDE_SLUGS.length} guides — expected 10+`);
+if (GUIDE_SLUGS.length < 10) warn(`Only ${GUIDE_SLUGS.length} guides, expected 10+`);
 else ok(`${GUIDE_SLUGS.length} guide pages checked`);
 
 // Collection index pages

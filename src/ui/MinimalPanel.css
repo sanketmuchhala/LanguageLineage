@@ -623,7 +623,7 @@
 .panel-header { padding: 18px 18px 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
 .panel-section { padding: 17px 18px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
 
-/* Section headers — quieter, more deliberate */
+/* Section headers, quieter, more deliberate */
 .panel-section h3,
 .relationship-filters h3 {
   font-size: 10px;
@@ -633,7 +633,7 @@
   margin-bottom: 13px;
 }
 
-/* Brand mark — soft gradient tile with a glow */
+/* Brand mark, soft gradient tile with a glow */
 .panel-logo-mark {
   background: linear-gradient(145deg, #4ade80, #22c55e);
   color: #06180c;
@@ -642,7 +642,7 @@
 }
 .panel-title { font-size: 15px; letter-spacing: -0.01em; }
 
-/* Icon buttons — glassier */
+/* Icon buttons, glassier */
 .icon-btn {
   border-radius: 8px;
   border-color: rgba(255, 255, 255, 0.08);
@@ -663,7 +663,7 @@
   box-shadow: inset 0 0 0 1px rgba(74, 222, 128, 0.2), 0 1px 6px rgba(0, 0, 0, 0.3);
 }
 
-/* Layout switcher — green-tint active instead of loud solid fill */
+/* Layout switcher, green-tint active instead of loud solid fill */
 .layout-toggle button {
   padding: 9px 4px;
   border-radius: 9px;
@@ -683,7 +683,7 @@
   box-shadow: inset 0 0 0 1px rgba(74, 222, 128, 0.12);
 }
 
-/* Search — glassy field with a focus glow */
+/* Search, glassy field with a focus glow */
 .search-box {
   padding: 11px 14px;
   border-radius: 10px;
@@ -728,7 +728,7 @@
 }
 .toggle input[type="checkbox"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-/* Filter chips — green-tint active */
+/* Filter chips, green-tint active */
 .filter-chip {
   padding: 4px 11px;
   background: rgba(255, 255, 255, 0.03);

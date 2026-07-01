@@ -1717,7 +1717,7 @@
 </div>
 <div id="tl-graph-axis" style="display:none;"></div>
 <button class="tl-mode-toggle" id="tl-mode-toggle">Graph</button>
-<!-- Modal — springs from "+" click position -->
+<!-- Modal, springs from "+" click position -->
 <div class="tl-modal" id="tl-modal">
   <button class="tl-modal-close" id="tl-modal-close">&#x2715;</button>
   <div class="tl-modal-header">
@@ -1773,6 +1773,7 @@
       <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
     </div>
   </div>
+  <p class="footer-note">Articles here are drafted with AI and reviewed by a human. Implementation and lineage facts are sourced from public references such as Wikipedia and Wikidata, and cited on each page. Spot an error? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue on GitHub</a> and it gets fixed.</p>
   <div class="footer-bottom">Made with <span style="color:#fb7185">❤️</span> by <a href="https://github.com/sanketmuchhala" rel="noopener noreferrer">Sanket Muchhala</a> &middot; <a href="/">Language Lineage</a></div>
   </div>
 </footer>
@@ -1841,7 +1842,7 @@ cards.forEach(function(card){
   });
 });
 
-// "+" button — modal springs from click origin
+// "+" button, modal springs from click origin
 cards.forEach(function(card){
   var btn=card.querySelector('.tl-expand-btn');
   if(!btn)return;
@@ -1880,7 +1881,7 @@ cards.forEach(function(card){
 document.getElementById('tl-modal-close').addEventListener('click',function(){modal.classList.remove('show');});
 document.addEventListener('click',function(e){if(modal.classList.contains('show')&&!modal.contains(e.target))modal.classList.remove('show');});
 
-// Graph mode toggle — viewport-fitting decade-column logo circles
+// Graph mode toggle, viewport-fitting decade-column logo circles
 function setGraphMode(on){
   graphMode=on;
   modeBtn.textContent=on?'Timeline':'Graph';
@@ -2112,7 +2113,7 @@ window.addEventListener('load',function(){
     var mCardRevealed=new Array(cards.length).fill(false);
     mCardRevealed[0]=true;
 
-    // Vertical bezier path — vertical tangents give smooth S-curve flow
+    // Vertical bezier path, vertical tangents give smooth S-curve flow
     var mpd='M '+mpts[0].x+' '+mpts[0].y;
     for(var mi=1;mi<mpts.length;mi++){
       var mp=mpts[mi-1],mc=mpts[mi];
