@@ -18,11 +18,11 @@
   <meta property="og:image:height" content="630" />
   <meta property="og:image:type" content="image/png" />
   <meta property="article:published_time" content="2008-01-01" />
-  <meta property="article:modified_time" content="2026-06-30" />
+  <meta property="article:modified_time" content="2026-07-01" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="What is V8 written in? Google's JavaScript engine explained | Language Lineage" />
   <meta name="twitter:description" content="Google's V8 JavaScript engine is written in C++. It powers Chrome, Node.js, and Deno. Explore its implementation." />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What is V8 written in?","description":"Google's V8 JavaScript engine is written in C++. It powers Chrome, Node.js, and Deno. Explore its implementation.","url":"https://www.languagelineage.org/tools/v8","datePublished":"2008-01-01","dateModified":"2026-06-30","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":{"@type":"SoftwareApplication","name":"V8","dateCreated":"2008"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What is V8 written in?","description":"Google's V8 JavaScript engine is written in C++. It powers Chrome, Node.js, and Deno. Explore its implementation.","url":"https://www.languagelineage.org/tools/v8","datePublished":"2008-01-01","dateModified":"2026-07-01","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":{"@type":"SoftwareApplication","name":"V8","dateCreated":"2008"}}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is V8 written in?","acceptedAnswer":{"@type":"Answer","text":"V8, the JavaScript and WebAssembly engine from Google, is written in C++. It compiles JavaScript to machine code with a tiered JIT and powers Chrome, Node.js, Deno, and Electron."}},{"@type":"Question","name":"When was V8 first released?","acceptedAnswer":{"@type":"Answer","text":"V8 was first released in 2008."}}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://www.languagelineage.org/tools"},{"@type":"ListItem","position":3,"name":"V8","item":"https://www.languagelineage.org/tools/v8"}]}</script>
 </head>
@@ -98,7 +98,7 @@
 </section>
 <section class="intent-section">
   <h2>Why a JavaScript engine is written in C++</h2>
-  <p>JavaScript is a high-level, dynamically typed language, but the engine that runs it needs direct memory control, manual layout of objects, and tight machine-code generation. C++ provides that. V8 parses JavaScript, generates bytecode for its Ignition interpreter, and hot paths are optimized to native code by the TurboFan and Maglev compilers — all implemented in C++.</p>
+  <p>JavaScript is a high-level, dynamically typed language, but the engine that runs it needs direct memory control, manual layout of objects, and tight machine-code generation. C++ provides that. V8 parses JavaScript, generates bytecode for its Ignition interpreter, and hot paths are optimized to native code by the TurboFan and Maglev compilers, all implemented in C++.</p>
 </section>
   <h2>Relationship Graph</h2>
 <p style="font-size:13px;color:var(--text-tertiary);margin-bottom:12px">All directly connected languages. Click any node to navigate to its page.</p>
@@ -207,6 +207,7 @@
       <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
     </div>
   </div>
+  <p class="footer-note">Articles here are drafted with AI and reviewed by a human. Implementation and lineage facts are sourced from public references such as Wikipedia and Wikidata, and cited on each page. Spot an error? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue on GitHub</a> and it gets fixed.</p>
   <div class="footer-bottom">Made with <span style="color:#fb7185">❤️</span> by <a href="https://github.com/sanketmuchhala" rel="noopener noreferrer">Sanket Muchhala</a> &middot; <a href="/">Language Lineage</a></div>
   </div>
 </footer>

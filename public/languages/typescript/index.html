@@ -18,12 +18,12 @@
   <meta property="og:image:height" content="630" />
   <meta property="og:image:type" content="image/png" />
   <meta property="article:published_time" content="2012-01-01" />
-  <meta property="article:modified_time" content="2026-06-30" />
+  <meta property="article:modified_time" content="2026-07-01" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="What is TypeScript written in? tsc compiler explained | Language Lineage" />
   <meta name="twitter:description" content="TypeScript's compiler, tsc, is self-hosting and written in TypeScript. Explore its implementation and language lineage." />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What is TypeScript written in?","description":"TypeScript's compiler, tsc, is self-hosting and written in TypeScript. Explore its implementation and language lineage.","url":"https://www.languagelineage.org/languages/typescript","datePublished":"2012-01-01","dateModified":"2026-06-30","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":{"@type":"SoftwareApplication","name":"TypeScript","dateCreated":"2012"}}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is TypeScript written in?","acceptedAnswer":{"@type":"Answer","text":"The TypeScript compiler, tsc, is written in TypeScript itself, so TypeScript is self-hosting. TypeScript has no separate runtime; it compiles (transpiles) to JavaScript, which runs on JavaScript engines like V8."}},{"@type":"Question","name":"What languages influenced TypeScript?","acceptedAnswer":{"@type":"Answer","text":"TypeScript was influenced by JavaScript, C#, Haskell among others. See the influence section above for the full list."}},{"@type":"Question","name":"Which languages did TypeScript influence?","acceptedAnswer":{"@type":"Answer","text":"TypeScript influenced Dart, Angular among others."}},{"@type":"Question","name":"Is TypeScript self-hosting?","acceptedAnswer":{"@type":"Answer","text":"Yes, TypeScript is self-hosting — its compiler can compile itself."}},{"@type":"Question","name":"When was TypeScript first released?","acceptedAnswer":{"@type":"Answer","text":"TypeScript was first released in 2012. It was designed by Microsoft, Anders Hejlsberg, and Steven Lucco."}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What is TypeScript written in?","description":"TypeScript's compiler, tsc, is self-hosting and written in TypeScript. Explore its implementation and language lineage.","url":"https://www.languagelineage.org/languages/typescript","datePublished":"2012-01-01","dateModified":"2026-07-01","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":{"@type":"SoftwareApplication","name":"TypeScript","dateCreated":"2012"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is TypeScript written in?","acceptedAnswer":{"@type":"Answer","text":"The TypeScript compiler, tsc, is written in TypeScript itself, so TypeScript is self-hosting. TypeScript has no separate runtime; it compiles (transpiles) to JavaScript, which runs on JavaScript engines like V8."}},{"@type":"Question","name":"What languages influenced TypeScript?","acceptedAnswer":{"@type":"Answer","text":"TypeScript was influenced by JavaScript, C#, Haskell among others. See the influence section above for the full list."}},{"@type":"Question","name":"Which languages did TypeScript influence?","acceptedAnswer":{"@type":"Answer","text":"TypeScript influenced Dart, Angular among others."}},{"@type":"Question","name":"Is TypeScript self-hosting?","acceptedAnswer":{"@type":"Answer","text":"Yes, TypeScript is self-hosting, its compiler can compile itself."}},{"@type":"Question","name":"When was TypeScript first released?","acceptedAnswer":{"@type":"Answer","text":"TypeScript was first released in 2012. It was designed by Microsoft, Anders Hejlsberg, and Steven Lucco."}}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"Languages","item":"https://www.languagelineage.org/languages"},{"@type":"ListItem","position":3,"name":"TypeScript","item":"https://www.languagelineage.org/languages/typescript"}]}</script>
 </head>
 <body class="seo-page">
@@ -69,7 +69,7 @@
   
 
   <h2 class="lang-written-q">What is TypeScript written in?</h2>
-  <div class="answer-box"><strong>TypeScript</strong> is self-hosting: the TypeScript compiler (<strong>tsc</strong>) is written in <strong>TypeScript</strong>. It does not have its own runtime — it transpiles to JavaScript, which then runs on engines such as V8.</div>
+  <div class="answer-box"><strong>TypeScript</strong> is self-hosting: the TypeScript compiler (<strong>tsc</strong>) is written in <strong>TypeScript</strong>. It does not have its own runtime, it transpiles to JavaScript, which then runs on engines such as V8.</div>
 
   <section class="intent-section">
   <h2>What TypeScript is used for</h2>
@@ -104,12 +104,12 @@
   </div>
 <div class="quick-fact">
     <dt>Runtime</dt>
-    <dd>None of its own — runs on JS engines</dd>
+    <dd>None of its own, runs on JS engines</dd>
   </div></dl>
 </section>
 <section class="intent-section">
   <h2>TypeScript transpiles, it does not run</h2>
-  <p>TypeScript is a typed superset of JavaScript. The compiler checks types and then strips them away, emitting plain JavaScript. There is no TypeScript virtual machine: the generated JavaScript executes on whatever engine the target uses — V8 in Node.js and Chrome, JavaScriptCore in Safari.</p>
+  <p>TypeScript is a typed superset of JavaScript. The compiler checks types and then strips them away, emitting plain JavaScript. There is no TypeScript virtual machine: the generated JavaScript executes on whatever engine the target uses, V8 in Node.js and Chrome, JavaScriptCore in Safari.</p>
 <p>tsc is itself written in TypeScript and compiled with a previous version of tsc, making TypeScript self-hosting in the same sense as Rust or Go.</p>
 </section>
   <h2>Relationship Graph</h2>
@@ -144,11 +144,11 @@
       </tr></tbody>
 </table>
 
-  <h2>Influenced By</h2><ul><li><a href="/languages/javascript">JavaScript</a> — TypeScript is a typed superset of JavaScript</li>
-<li><a href="/languages/csharp">C#</a> — TypeScript designed by Anders Hejlsberg, who created C#</li>
-<li><a href="/languages/haskell">Haskell</a> — TypeScript's algebraic types influenced by Haskell/ML</li></ul>
-<h2>Languages TypeScript Influenced</h2><ul><li><a href="/languages/angular">Angular</a> — Angular 2+ written in TypeScript</li>
-<li><a href="/languages/dart">Dart</a> — Dart and TypeScript are contemporaries in typed JS space</li></ul>
+  <h2>Influenced By</h2><ul><li><a href="/languages/javascript">JavaScript</a>, TypeScript is a typed superset of JavaScript</li>
+<li><a href="/languages/csharp">C#</a>, TypeScript designed by Anders Hejlsberg, who created C#</li>
+<li><a href="/languages/haskell">Haskell</a>, TypeScript's algebraic types influenced by Haskell/ML</li></ul>
+<h2>Languages TypeScript Influenced</h2><ul><li><a href="/languages/angular">Angular</a>, Angular 2+ written in TypeScript</li>
+<li><a href="/languages/dart">Dart</a>, Dart and TypeScript are contemporaries in typed JS space</li></ul>
 
   
 <h2>Frequently Asked Questions</h2>
@@ -166,7 +166,7 @@
 </div>
 <div class="faq-item">
   <div class="faq-question">Is TypeScript self-hosting?</div>
-  <div class="faq-answer">Yes, TypeScript is self-hosting — its compiler can compile itself.</div>
+  <div class="faq-answer">Yes, TypeScript is self-hosting, its compiler can compile itself.</div>
 </div>
 <div class="faq-item">
   <div class="faq-question">When was TypeScript first released?</div>
@@ -256,6 +256,7 @@
       <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
     </div>
   </div>
+  <p class="footer-note">Articles here are drafted with AI and reviewed by a human. Implementation and lineage facts are sourced from public references such as Wikipedia and Wikidata, and cited on each page. Spot an error? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue on GitHub</a> and it gets fixed.</p>
   <div class="footer-bottom">Made with <span style="color:#fb7185">❤️</span> by <a href="https://github.com/sanketmuchhala" rel="noopener noreferrer">Sanket Muchhala</a> &middot; <a href="/">Language Lineage</a></div>
   </div>
 </footer>

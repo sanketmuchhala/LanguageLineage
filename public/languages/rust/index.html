@@ -4,26 +4,26 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>What is Rust written in? rustc bootstrapping explained | Language Lineage</title>
-  <meta name="description" content="Modern Rust is self-hosting — rustc is written in Rust. Explore its OCaml origins, bootstrap chain, and LLVM backend." />
+  <meta name="description" content="Modern Rust is self-hosting, rustc is written in Rust. Explore its OCaml origins, bootstrap chain, and LLVM backend." />
   <link rel="canonical" href="https://www.languagelineage.org/languages/rust" />
   <link rel="icon" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Geist:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"><script defer src="/fx.js"></script><link rel="stylesheet" href="/seo.css" />
   <link rel="alternate" href="https://www.languagelineage.org/questions/what-is-rust-written-in" />
   <meta property="og:type" content="article" />
   <meta property="og:title" content="What is Rust written in? rustc bootstrapping explained | Language Lineage" />
-  <meta property="og:description" content="Modern Rust is self-hosting — rustc is written in Rust. Explore its OCaml origins, bootstrap chain, and LLVM backend." />
+  <meta property="og:description" content="Modern Rust is self-hosting, rustc is written in Rust. Explore its OCaml origins, bootstrap chain, and LLVM backend." />
   <meta property="og:url" content="https://www.languagelineage.org/languages/rust" />
   <meta property="og:image" content="https://www.languagelineage.org/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:type" content="image/png" />
   <meta property="article:published_time" content="2010-01-01" />
-  <meta property="article:modified_time" content="2026-06-30" />
+  <meta property="article:modified_time" content="2026-07-01" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="What is Rust written in? rustc bootstrapping explained | Language Lineage" />
-  <meta name="twitter:description" content="Modern Rust is self-hosting — rustc is written in Rust. Explore its OCaml origins, bootstrap chain, and LLVM backend." />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What is Rust written in?","description":"Modern Rust is self-hosting — rustc is written in Rust. Explore its OCaml origins, bootstrap chain, and LLVM backend.","url":"https://www.languagelineage.org/languages/rust","datePublished":"2010-01-01","dateModified":"2026-06-30","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":{"@type":"SoftwareApplication","name":"Rust","dateCreated":"2010"}}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is Rust written in?","acceptedAnswer":{"@type":"Answer","text":"Rust is self-hosting. The official Rust compiler, rustc, is written in Rust. The first Rust compiler was written in OCaml, and modern rustc uses LLVM as its backend."}},{"@type":"Question","name":"What languages influenced Rust?","acceptedAnswer":{"@type":"Answer","text":"Rust was influenced by Haskell, C++, Cyclone among others. See the influence section above for the full list."}},{"@type":"Question","name":"Which languages did Rust influence?","acceptedAnswer":{"@type":"Answer","text":"Rust influenced V, Gleam, Zig among others."}},{"@type":"Question","name":"Is Rust self-hosting?","acceptedAnswer":{"@type":"Answer","text":"Yes, Rust is self-hosting — its compiler can compile itself."}},{"@type":"Question","name":"When was Rust first released?","acceptedAnswer":{"@type":"Answer","text":"Rust was first released in 2010. It was designed by Graydon Hoare."}}]}</script>
+  <meta name="twitter:description" content="Modern Rust is self-hosting, rustc is written in Rust. Explore its OCaml origins, bootstrap chain, and LLVM backend." />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What is Rust written in?","description":"Modern Rust is self-hosting, rustc is written in Rust. Explore its OCaml origins, bootstrap chain, and LLVM backend.","url":"https://www.languagelineage.org/languages/rust","datePublished":"2010-01-01","dateModified":"2026-07-01","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":{"@type":"SoftwareApplication","name":"Rust","dateCreated":"2010"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is Rust written in?","acceptedAnswer":{"@type":"Answer","text":"Rust is self-hosting. The official Rust compiler, rustc, is written in Rust. The first Rust compiler was written in OCaml, and modern rustc uses LLVM as its backend."}},{"@type":"Question","name":"What languages influenced Rust?","acceptedAnswer":{"@type":"Answer","text":"Rust was influenced by Haskell, C++, Cyclone among others. See the influence section above for the full list."}},{"@type":"Question","name":"Which languages did Rust influence?","acceptedAnswer":{"@type":"Answer","text":"Rust influenced V, Gleam, Zig among others."}},{"@type":"Question","name":"Is Rust self-hosting?","acceptedAnswer":{"@type":"Answer","text":"Yes, Rust is self-hosting, its compiler can compile itself."}},{"@type":"Question","name":"When was Rust first released?","acceptedAnswer":{"@type":"Answer","text":"Rust was first released in 2010. It was designed by Graydon Hoare."}}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"Languages","item":"https://www.languagelineage.org/languages"},{"@type":"ListItem","position":3,"name":"Rust","item":"https://www.languagelineage.org/languages/rust"}]}</script>
 </head>
 <body class="seo-page">
@@ -174,23 +174,23 @@
       </tr></tbody>
 </table>
 
-  <h2>Influenced By</h2><ul><li><a href="/languages/cyclone">Cyclone</a> — Cyclone's region-based memory directly inspired Rust's ownership system</li>
-<li><a href="/languages/ml">ML</a> — ML family influenced Rust's type system and pattern matching</li>
-<li><a href="/languages/clu">CLU</a> — CLU influenced Rust's iterator protocol and exception handling</li>
-<li><a href="/languages/haskell">Haskell</a> — Rust adopted algebraic types and type classes from Haskell</li>
-<li><a href="/languages/cxx">C++</a> — Rust influenced by C++'s systems programming model</li>
-<li><a href="/languages/erlang">Erlang</a> — Erlang influenced Rust's actor-style concurrency model</li>
-<li><a href="/languages/alef">Alef</a> — Alef influenced Rust's concurrency model</li>
-<li><a href="/languages/limbo">Limbo</a> — Limbo influenced Rust's concurrency design</li>
-<li><a href="/languages/scheme">Scheme</a> — Scheme influenced Rust's macro and metaprogramming system</li>
-<li><a href="/languages/swift">Swift</a> — Swift and Rust mutually influenced each other</li>
-<li><a href="/languages/elm">Elm</a> — Elm influenced Rust's functional style and error handling</li></ul>
-<h2>Languages Rust Influenced</h2><ul><li><a href="/languages/gleam">Gleam</a> — Gleam's type system and tooling heavily inspired by Rust</li>
-<li><a href="/languages/zig">Zig</a> — Zig influenced by Rust's safety and systems programming approach</li>
-<li><a href="/languages/move">Move</a> — Move's safety model is influenced by Rust.</li>
-<li><a href="/languages/swift">Swift</a> — Rust influenced Swift's memory safety features</li>
-<li><a href="/languages/v">V</a> — V influenced by Rust's safety concepts</li>
-<li><a href="/languages/pony">Pony</a> — Pony shares safety goals with Rust.</li></ul>
+  <h2>Influenced By</h2><ul><li><a href="/languages/cyclone">Cyclone</a>, Cyclone's region-based memory directly inspired Rust's ownership system</li>
+<li><a href="/languages/ml">ML</a>, ML family influenced Rust's type system and pattern matching</li>
+<li><a href="/languages/clu">CLU</a>, CLU influenced Rust's iterator protocol and exception handling</li>
+<li><a href="/languages/haskell">Haskell</a>, Rust adopted algebraic types and type classes from Haskell</li>
+<li><a href="/languages/cxx">C++</a>, Rust influenced by C++'s systems programming model</li>
+<li><a href="/languages/erlang">Erlang</a>, Erlang influenced Rust's actor-style concurrency model</li>
+<li><a href="/languages/alef">Alef</a>, Alef influenced Rust's concurrency model</li>
+<li><a href="/languages/limbo">Limbo</a>, Limbo influenced Rust's concurrency design</li>
+<li><a href="/languages/scheme">Scheme</a>, Scheme influenced Rust's macro and metaprogramming system</li>
+<li><a href="/languages/swift">Swift</a>, Swift and Rust mutually influenced each other</li>
+<li><a href="/languages/elm">Elm</a>, Elm influenced Rust's functional style and error handling</li></ul>
+<h2>Languages Rust Influenced</h2><ul><li><a href="/languages/gleam">Gleam</a>, Gleam's type system and tooling heavily inspired by Rust</li>
+<li><a href="/languages/zig">Zig</a>, Zig influenced by Rust's safety and systems programming approach</li>
+<li><a href="/languages/move">Move</a>, Move's safety model is influenced by Rust.</li>
+<li><a href="/languages/swift">Swift</a>, Rust influenced Swift's memory safety features</li>
+<li><a href="/languages/v">V</a>, V influenced by Rust's safety concepts</li>
+<li><a href="/languages/pony">Pony</a>, Pony shares safety goals with Rust.</li></ul>
 
   
 <h2>Frequently Asked Questions</h2>
@@ -208,7 +208,7 @@
 </div>
 <div class="faq-item">
   <div class="faq-question">Is Rust self-hosting?</div>
-  <div class="faq-answer">Yes, Rust is self-hosting — its compiler can compile itself.</div>
+  <div class="faq-answer">Yes, Rust is self-hosting, its compiler can compile itself.</div>
 </div>
 <div class="faq-item">
   <div class="faq-question">When was Rust first released?</div>
@@ -305,6 +305,7 @@
       <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
     </div>
   </div>
+  <p class="footer-note">Articles here are drafted with AI and reviewed by a human. Implementation and lineage facts are sourced from public references such as Wikipedia and Wikidata, and cited on each page. Spot an error? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue on GitHub</a> and it gets fixed.</p>
   <div class="footer-bottom">Made with <span style="color:#fb7185">❤️</span> by <a href="https://github.com/sanketmuchhala" rel="noopener noreferrer">Sanket Muchhala</a> &middot; <a href="/">Language Lineage</a></div>
   </div>
 </footer>

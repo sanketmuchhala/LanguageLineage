@@ -1,4 +1,4 @@
-// One-time "decode" / scramble-resolve on an element's text — characters settle
+// One-time "decode" / scramble-resolve on an element's text, characters settle
 // left-to-right like source compiling. Operates on text nodes only, so inline
 // markup (coloured spans) is preserved. Character count per position is constant,
 // and the element height is locked during the run, so layout does not jump.

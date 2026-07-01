@@ -18,12 +18,12 @@
   <meta property="og:image:height" content="630" />
   <meta property="og:image:type" content="image/png" />
   <meta property="article:published_time" content="1972-01-01" />
-  <meta property="article:modified_time" content="2026-06-30" />
+  <meta property="article:modified_time" content="2026-07-01" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="What was C written in? C compiler lineage explained | Language Lineage" />
   <meta name="twitter:description" content="C bootstrapped from B in the early 1970s and became self-hosting within its first year. Explore its compiler history." />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What is C written in?","description":"C bootstrapped from B in the early 1970s and became self-hosting within its first year. Explore its compiler history.","url":"https://www.languagelineage.org/languages/c","datePublished":"1972-01-01","dateModified":"2026-06-30","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":{"@type":"SoftwareApplication","name":"C","dateCreated":"1972"}}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is C written in?","acceptedAnswer":{"@type":"Answer","text":"C is compiled by toolchains such as GCC and Clang. GCC is written primarily in C, and Clang is written in C++, so C compilers are largely written in C and C++. C itself compiles down to machine code."}},{"@type":"Question","name":"What languages influenced C?","acceptedAnswer":{"@type":"Answer","text":"C was influenced by B, ALGOL, Fortran among others. See the influence section above for the full list."}},{"@type":"Question","name":"Which languages did C influence?","acceptedAnswer":{"@type":"Answer","text":"C influenced C++, Objective-C, Ada among others."}},{"@type":"Question","name":"Is C self-hosting?","acceptedAnswer":{"@type":"Answer","text":"Yes, C is self-hosting — its compiler can compile itself."}},{"@type":"Question","name":"When was C first released?","acceptedAnswer":{"@type":"Answer","text":"C was first released in 1972. It was designed by Dennis M. Ritchie."}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What is C written in?","description":"C bootstrapped from B in the early 1970s and became self-hosting within its first year. Explore its compiler history.","url":"https://www.languagelineage.org/languages/c","datePublished":"1972-01-01","dateModified":"2026-07-01","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":{"@type":"SoftwareApplication","name":"C","dateCreated":"1972"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is C written in?","acceptedAnswer":{"@type":"Answer","text":"C is compiled by toolchains such as GCC and Clang. GCC is written primarily in C, and Clang is written in C++, so C compilers are largely written in C and C++. C itself compiles down to machine code."}},{"@type":"Question","name":"What languages influenced C?","acceptedAnswer":{"@type":"Answer","text":"C was influenced by B, ALGOL, Fortran among others. See the influence section above for the full list."}},{"@type":"Question","name":"Which languages did C influence?","acceptedAnswer":{"@type":"Answer","text":"C influenced C++, Objective-C, Ada among others."}},{"@type":"Question","name":"Is C self-hosting?","acceptedAnswer":{"@type":"Answer","text":"Yes, C is self-hosting, its compiler can compile itself."}},{"@type":"Question","name":"When was C first released?","acceptedAnswer":{"@type":"Answer","text":"C was first released in 1972. It was designed by Dennis M. Ritchie."}}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"Languages","item":"https://www.languagelineage.org/languages"},{"@type":"ListItem","position":3,"name":"C","item":"https://www.languagelineage.org/languages/c"}]}</script>
 </head>
 <body class="seo-page">
@@ -109,7 +109,7 @@
 </section>
 <section class="intent-section">
   <h2>Why C is the substrate of computing</h2>
-  <p>C compiles directly to machine code, with no managed runtime of its own. That makes it the implementation language for operating-system kernels, language runtimes, and the compilers themselves. Many interpreters on this site — including CPython, the reference Ruby (MRI), and PHP — have runtimes written in C.</p>
+  <p>C compiles directly to machine code, with no managed runtime of its own. That makes it the implementation language for operating-system kernels, language runtimes, and the compilers themselves. Many interpreters on this site, including CPython, the reference Ruby (MRI), and PHP, have runtimes written in C.</p>
 <p>C is effectively self-hosting. A new build of GCC is produced by an existing C/C++ compiler in a multi-stage bootstrap, the same pattern used by self-hosting languages like Rust and Go.</p>
 </section>
 <section class="intent-section">
@@ -173,26 +173,26 @@
       </tr></tbody>
 </table>
 
-  <h2>Influenced By</h2><ul><li><a href="/languages/b">B</a> — C evolved directly from B at Bell Labs</li>
-<li><a href="/languages/bcpl">BCPL</a> — C directly descended from BCPL via B language</li>
-<li><a href="/languages/algol">ALGOL</a> — C adopted block structure and control flow from ALGOL</li>
-<li><a href="/languages/algol68">ALGOL 68</a> — ALGOL 68 influenced C's structured programming</li>
-<li><a href="/languages/fortran">Fortran</a> — BCPL and Fortran both influenced C's design</li></ul>
-<h2>Languages C Influenced</h2><ul><li><a href="/languages/cxx">C++</a> — C++ is a superset extension of C</li>
-<li><a href="/languages/objective-c">Objective-C</a> — Objective-C adds Smalltalk messaging to C</li>
-<li><a href="/languages/zig">Zig</a> — Zig designed as modern C replacement</li>
-<li><a href="/languages/go">Go</a> — Go's syntax influenced by C</li>
-<li><a href="/languages/python">Python</a> — C influenced Python's syntax and CPython implementation</li>
-<li><a href="/languages/d">D</a> — D designed as improved C/C++</li>
-<li><a href="/languages/perl">Perl</a> — Perl influenced by C's syntax and operators</li>
-<li><a href="/languages/hare">Hare</a> — Hare is a C-like systems language.</li>
-<li><a href="/languages/v">V</a> — V influenced by C and Go for systems programming</li>
-<li><a href="/languages/awk">AWK</a> — AWK influenced by C syntax</li>
-<li><a href="/languages/php">PHP</a> — PHP influenced by C's syntax</li>
-<li><a href="/languages/bash">Bash</a> — Bash influenced by C's operators and syntax</li>
-<li><a href="/languages/odin">Odin</a> — Odin is designed as a modern alternative to C.</li>
-<li><a href="/languages/ada">Ada</a> — Ada influenced by C's systems programming</li>
-<li><a href="/languages/chapel">Chapel</a> — Chapel borrows imperative syntax from C.</li></ul>
+  <h2>Influenced By</h2><ul><li><a href="/languages/b">B</a>, C evolved directly from B at Bell Labs</li>
+<li><a href="/languages/bcpl">BCPL</a>, C directly descended from BCPL via B language</li>
+<li><a href="/languages/algol">ALGOL</a>, C adopted block structure and control flow from ALGOL</li>
+<li><a href="/languages/algol68">ALGOL 68</a>, ALGOL 68 influenced C's structured programming</li>
+<li><a href="/languages/fortran">Fortran</a>, BCPL and Fortran both influenced C's design</li></ul>
+<h2>Languages C Influenced</h2><ul><li><a href="/languages/cxx">C++</a>, C++ is a superset extension of C</li>
+<li><a href="/languages/objective-c">Objective-C</a>, Objective-C adds Smalltalk messaging to C</li>
+<li><a href="/languages/zig">Zig</a>, Zig designed as modern C replacement</li>
+<li><a href="/languages/go">Go</a>, Go's syntax influenced by C</li>
+<li><a href="/languages/python">Python</a>, C influenced Python's syntax and CPython implementation</li>
+<li><a href="/languages/d">D</a>, D designed as improved C/C++</li>
+<li><a href="/languages/perl">Perl</a>, Perl influenced by C's syntax and operators</li>
+<li><a href="/languages/hare">Hare</a>, Hare is a C-like systems language.</li>
+<li><a href="/languages/v">V</a>, V influenced by C and Go for systems programming</li>
+<li><a href="/languages/awk">AWK</a>, AWK influenced by C syntax</li>
+<li><a href="/languages/php">PHP</a>, PHP influenced by C's syntax</li>
+<li><a href="/languages/bash">Bash</a>, Bash influenced by C's operators and syntax</li>
+<li><a href="/languages/odin">Odin</a>, Odin is designed as a modern alternative to C.</li>
+<li><a href="/languages/ada">Ada</a>, Ada influenced by C's systems programming</li>
+<li><a href="/languages/chapel">Chapel</a>, Chapel borrows imperative syntax from C.</li></ul>
 
   
 <h2>Frequently Asked Questions</h2>
@@ -210,7 +210,7 @@
 </div>
 <div class="faq-item">
   <div class="faq-question">Is C self-hosting?</div>
-  <div class="faq-answer">Yes, C is self-hosting — its compiler can compile itself.</div>
+  <div class="faq-answer">Yes, C is self-hosting, its compiler can compile itself.</div>
 </div>
 <div class="faq-item">
   <div class="faq-question">When was C first released?</div>
@@ -360,6 +360,7 @@
       <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
     </div>
   </div>
+  <p class="footer-note">Articles here are drafted with AI and reviewed by a human. Implementation and lineage facts are sourced from public references such as Wikipedia and Wikidata, and cited on each page. Spot an error? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue on GitHub</a> and it gets fixed.</p>
   <div class="footer-bottom">Made with <span style="color:#fb7185">❤️</span> by <a href="https://github.com/sanketmuchhala" rel="noopener noreferrer">Sanket Muchhala</a> &middot; <a href="/">Language Lineage</a></div>
   </div>
 </footer>

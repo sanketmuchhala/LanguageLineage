@@ -1,5 +1,5 @@
 /* ============================================
-   LANGUAGE LINEAGE — Graph Explorer Theme
+   LANGUAGE LINEAGE, Graph Explorer Theme
    Compiler Atlas: dark technical systems aesthetic
    Tokens: src/styles/tokens.css
    ============================================ */
@@ -260,7 +260,7 @@ body::before {
   }
 }
 
-/* Touch — no hover states on graph UI */
+/* Touch, no hover states on graph UI */
 @media (hover: none) and (pointer: coarse) {
   .legend:hover {
     border-color: var(--border-primary);

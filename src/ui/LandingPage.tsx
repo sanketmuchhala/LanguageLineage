@@ -302,7 +302,7 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
         </div>
       </section>
 
-      {/* More Than a Family Tree — comparison section */}
+      {/* More Than a Family Tree, comparison section */}
       <section className="section more-than-section">
         <div className="section-header">
           <p className="section-eyebrow reveal">Beyond influence</p>
@@ -323,13 +323,13 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
             </thead>
             <tbody>
               <tr><td>Influence &amp; ancestry</td><td>✓</td><td>✓</td></tr>
-              <tr><td>Compiler implementation</td><td>—</td><td>✓</td></tr>
-              <tr><td>Runtime / VM written in</td><td>—</td><td>✓</td></tr>
-              <tr><td>Bootstrap chain</td><td>—</td><td>✓</td></tr>
-              <tr><td>Transpilation relationships</td><td>—</td><td>✓</td></tr>
-              <tr><td>Confidence scores + sources</td><td>—</td><td>✓</td></tr>
-              <tr><td>Interactive graph explorer</td><td>—</td><td>✓</td></tr>
-              <tr><td>Programmatic pages per language</td><td>—</td><td>✓</td></tr>
+              <tr><td>Compiler implementation</td><td className="cmp-absent">✗</td><td>✓</td></tr>
+              <tr><td>Runtime / VM written in</td><td className="cmp-absent">✗</td><td>✓</td></tr>
+              <tr><td>Bootstrap chain</td><td className="cmp-absent">✗</td><td>✓</td></tr>
+              <tr><td>Transpilation relationships</td><td className="cmp-absent">✗</td><td>✓</td></tr>
+              <tr><td>Confidence scores + sources</td><td className="cmp-absent">✗</td><td>✓</td></tr>
+              <tr><td>Interactive graph explorer</td><td className="cmp-absent">✗</td><td>✓</td></tr>
+              <tr><td>Programmatic pages per language</td><td className="cmp-absent">✗</td><td>✓</td></tr>
             </tbody>
           </table>
         </div>
@@ -474,6 +474,12 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
           </div>
         </div>
         <div className="footer-bottom">
+          <p className="footer-note">
+            Articles here are drafted with AI and reviewed by a human. Implementation and
+            lineage facts are sourced from public references such as Wikipedia and Wikidata,
+            and cited on each page.{' '}
+            <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" target="_blank" rel="noopener noreferrer">Report an error</a>.
+          </p>
           <p>&copy; 2026 Language Lineage</p>
         </div>
       </footer>

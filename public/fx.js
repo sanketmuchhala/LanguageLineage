@@ -1,6 +1,6 @@
 /* Minimal, progressive-enhancement motion for the static article pages: a quiet
  * fade-up as sections scroll into view. Content is fully visible without JS and
- * under prefers-reduced-motion — we only ever hide elements that are below the
+ * under prefers-reduced-motion, we only ever hide elements that are below the
  * fold, and only once this script runs, so the LCP content is never affected. */
 (function () {
   'use strict';
@@ -28,7 +28,7 @@
     }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 
     targets.forEach(function (el) {
-      // Leave anything already in (or near) view untouched — no flash, no delay.
+      // Leave anything already in (or near) view untouched, no flash, no delay.
       if (el.getBoundingClientRect().top < vh * 0.9) return;
       el.classList.add('seo-reveal');
       io.observe(el);

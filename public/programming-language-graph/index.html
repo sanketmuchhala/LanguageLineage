@@ -13,7 +13,7 @@
   <meta property="og:url" content="https://www.languagelineage.org/programming-language-graph" />
   <meta property="og:image" content="https://www.languagelineage.org/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is a programming language graph?","acceptedAnswer":{"@type":"Answer","text":"A programming language graph is a network visualization showing relationships between programming languages — including influence, ancestry, compiler implementation, runtime implementation, and bootstrapping chains."}},{"@type":"Question","name":"How many languages are in the Language Lineage graph?","acceptedAnswer":{"@type":"Answer","text":"The Language Lineage graph contains 131 programming languages and 21 compilers/runtimes, connected by 443 relationships."}},{"@type":"Question","name":"What relationships does the graph show?","acceptedAnswer":{"@type":"Answer","text":"The graph shows: influence (language A inspired language B), compiler_written_in (the compiler for language A is written in B), runtime_written_in (the runtime is written in B), bootstrap_written_in (A bootstraps via B), transpiled_to (A compiles to B), and rewritten_in."}},{"@type":"Question","name":"How is this different from HOPL or Wikipedia genealogy charts?","acceptedAnswer":{"@type":"Answer","text":"HOPL and Wikipedia show influence and ancestry. Language Lineage adds implementation relationships — what compilers and runtimes are actually written in — with confidence scores and evidence sources for every relationship."}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is a programming language graph?","acceptedAnswer":{"@type":"Answer","text":"A programming language graph is a network visualization showing relationships between programming languages, including influence, ancestry, compiler implementation, runtime implementation, and bootstrapping chains."}},{"@type":"Question","name":"How many languages are in the Language Lineage graph?","acceptedAnswer":{"@type":"Answer","text":"The Language Lineage graph contains 131 programming languages and 21 compilers/runtimes, connected by 443 relationships."}},{"@type":"Question","name":"What relationships does the graph show?","acceptedAnswer":{"@type":"Answer","text":"The graph shows: influence (language A inspired language B), compiler_written_in (the compiler for language A is written in B), runtime_written_in (the runtime is written in B), bootstrap_written_in (A bootstraps via B), transpiled_to (A compiles to B), and rewritten_in."}},{"@type":"Question","name":"How is this different from HOPL or Wikipedia genealogy charts?","acceptedAnswer":{"@type":"Answer","text":"HOPL and Wikipedia show influence and ancestry. Language Lineage adds implementation relationships, what compilers and runtimes are actually written in, with confidence scores and evidence sources for every relationship."}}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"Programming Language Graph","item":"https://www.languagelineage.org/programming-language-graph"}]}</script>
 </head>
 <body class="seo-page">
@@ -35,7 +35,7 @@
   <h1>Programming Language Graph</h1>
   <p>An interactive graph of 131 programming languages and 21 compilers and runtimes, connected by 443 evidence-backed relationships. Explore how languages influenced each other and what they are implemented in.</p>
 
-  <div class="answer-box">The Language Lineage graph maps both <strong>influence relationships</strong> (which language inspired which) and <strong>implementation relationships</strong> (what compiler, runtime, or bootstrap chain each language uses) — with confidence scores and source citations for every edge.</div>
+  <div class="answer-box">The Language Lineage graph maps both <strong>influence relationships</strong> (which language inspired which) and <strong>implementation relationships</strong> (what compiler, runtime, or bootstrap chain each language uses), with confidence scores and source citations for every edge.</div>
 
   <h2>What is a programming language graph?</h2>
   <p>A programming language graph represents languages as nodes and their relationships as edges. Unlike a static family tree, an interactive graph lets you:</p>
@@ -78,17 +78,17 @@
   <h2>How is this different from a static genealogy chart?</h2>
   <p>Static programming language genealogy charts (like the HOPL database or Wikipedia's SVG diagrams) show influence ancestry. Language Lineage adds:</p>
   <ul>
-    <li><strong>Implementation data</strong> — what compilers and runtimes are written in</li>
-    <li><strong>Bootstrap chains</strong> — which languages can compile their own compilers</li>
-    <li><strong>Confidence scores</strong> — every relationship has a confidence value (0–1)</li>
-    <li><strong>Evidence sources</strong> — links to Wikipedia, papers, and documentation for every edge</li>
-    <li><strong>Interactivity</strong> — click, filter, zoom, switch layouts</li>
+    <li><strong>Implementation data</strong>, what compilers and runtimes are written in</li>
+    <li><strong>Bootstrap chains</strong>, which languages can compile their own compilers</li>
+    <li><strong>Confidence scores</strong>, every relationship has a confidence value (0–1)</li>
+    <li><strong>Evidence sources</strong>, links to Wikipedia, papers, and documentation for every edge</li>
+    <li><strong>Interactivity</strong>, click, filter, zoom, switch layouts</li>
   </ul>
 
   <h2>Frequently Asked Questions</h2>
   <div class="faq-item">
     <div class="faq-question">What is a programming language graph?</div>
-    <div class="faq-answer">A programming language graph is a network visualization showing relationships between programming languages — including influence, ancestry, compiler implementation, runtime implementation, and bootstrapping chains.</div>
+    <div class="faq-answer">A programming language graph is a network visualization showing relationships between programming languages, including influence, ancestry, compiler implementation, runtime implementation, and bootstrapping chains.</div>
   </div>
   <div class="faq-item">
     <div class="faq-question">How many languages are in the Language Lineage graph?</div>
@@ -100,7 +100,7 @@
   </div>
   <div class="faq-item">
     <div class="faq-question">How is this different from HOPL or Wikipedia genealogy charts?</div>
-    <div class="faq-answer">HOPL and Wikipedia show influence and ancestry. Language Lineage adds implementation relationships — what compilers and runtimes are actually written in — with confidence scores and evidence sources for every relationship.</div>
+    <div class="faq-answer">HOPL and Wikipedia show influence and ancestry. Language Lineage adds implementation relationships, what compilers and runtimes are actually written in, with confidence scores and evidence sources for every relationship.</div>
   </div>
 
   <a class="explore-btn" href="/explore">Open Interactive Graph &rarr;</a>
@@ -159,6 +159,7 @@
       <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
     </div>
   </div>
+  <p class="footer-note">Articles here are drafted with AI and reviewed by a human. Implementation and lineage facts are sourced from public references such as Wikipedia and Wikidata, and cited on each page. Spot an error? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue on GitHub</a> and it gets fixed.</p>
   <div class="footer-bottom">Made with <span style="color:#fb7185">❤️</span> by <a href="https://github.com/sanketmuchhala" rel="noopener noreferrer">Sanket Muchhala</a> &middot; <a href="/">Language Lineage</a></div>
   </div>
 </footer>

@@ -1,6 +1,6 @@
 // Animates "data packets" travelling along the hero specimen-graph edges, in the
 // edge's semantic colour (influence blue / runtime green / compiler amber) and in
-// the direction of the arrow — the graph looks like it is compiling. Appends SVG
+// the direction of the arrow, the graph looks like it is compiling. Appends SVG
 // circles after the edges group (so they render under the nodes) and drives them
 // with a single rAF. Gated by prefers-reduced-motion.
 

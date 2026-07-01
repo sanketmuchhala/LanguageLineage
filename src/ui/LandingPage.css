@@ -1,5 +1,5 @@
 /* ============================================
-   LANGUAGE LINEAGE — Landing Page
+   LANGUAGE LINEAGE, Landing Page
    Compiler Atlas: dark technical systems aesthetic
    ============================================ */
 
@@ -40,7 +40,7 @@
   background: var(--color-accent);
 }
 
-/* Reveal Animation — a clean, restrained fade-up */
+/* Reveal Animation, a clean, restrained fade-up */
 .reveal {
   opacity: 0;
   transform: translateY(22px);
@@ -219,7 +219,7 @@
   z-index: 2;
 }
 
-/* Hero graph specimen: caption (top), graph (middle), record (bottom) — floats
+/* Hero graph specimen: caption (top), graph (middle), record (bottom), floats
    seamlessly on the hero, no box. A soft radial halo gives it gentle presence. */
 .hero-panel {
   position: relative;
@@ -849,7 +849,7 @@
 }
 
 /* ============================================
-   MORE THAN SECTION — comparison table
+   MORE THAN SECTION, comparison table
    ============================================ */
 .more-than-section .section-text.centered {
   max-width: 680px;
@@ -903,6 +903,8 @@
 .comparison-table td:nth-child(2) {
   color: var(--color-text-subtle);
 }
+
+.comparison-table .cmp-absent { color: var(--color-text-subtle); font-weight: 400; }
 
 @media (max-width: 768px) {
   .comparison-table { font-size: 13px; }
@@ -998,6 +1000,19 @@
   margin: 0;
 }
 
+.footer-bottom .footer-note {
+  font-family: var(--font-body);
+  max-width: 620px;
+  margin: 0 auto 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--color-text-subtle);
+}
+.footer-bottom .footer-note a { color: var(--color-text); border-bottom: 1px solid var(--color-border); }
+.footer-bottom .footer-note a:hover { color: var(--color-accent); }
+
 /* ============================================
    LANGUAGE INDEX SECTION
    ============================================ */
@@ -1077,12 +1092,12 @@
 }
 
 /* ============================================
-   RESPONSIVE — Large desktop (1200px+)
+   RESPONSIVE, Large desktop (1200px+)
    ============================================ */
 /* (1200px breakpoint reserved) */
 
 /* ============================================
-   RESPONSIVE — iPad Landscape (769–1024px)
+   RESPONSIVE, iPad Landscape (769–1024px)
    ============================================ */
 @media (min-width: 769px) and (max-width: 1024px) {
   .landing-nav {
@@ -1126,7 +1141,7 @@
 }
 
 /* ============================================
-   RESPONSIVE — Tablet & below (≤1024px)
+   RESPONSIVE, Tablet & below (≤1024px)
    ============================================ */
 @media (max-width: 1024px) {
   .hero-inner {
@@ -1196,10 +1211,10 @@
 }
 
 /* ============================================
-   RESPONSIVE — Mobile (≤768px)
+   RESPONSIVE, Mobile (≤768px)
    ============================================ */
 @media (max-width: 768px) {
-  /* Nav — two-row layout */
+  /* Nav, two-row layout */
   .landing-nav {
     padding: 0 16px;
     flex-wrap: wrap;
@@ -1265,7 +1280,7 @@
     border-radius: 100px;
   }
 
-  /* Hero — extra top padding for two-row nav */
+  /* Hero, extra top padding for two-row nav */
   .hero {
     padding: 116px 0 48px;
     min-height: auto;
@@ -1328,7 +1343,7 @@
     padding-bottom: 0;
   }
 
-  /* Stats — 2×2 grid */
+  /* Stats, 2×2 grid */
   .stats-bar {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -1370,7 +1385,7 @@
     margin-bottom: 48px;
   }
 
-  /* Features — compact horizontal card layout */
+  /* Features, compact horizontal card layout */
   .features-grid {
     grid-template-columns: 1fr;
     gap: 10px;
@@ -1485,7 +1500,7 @@
 }
 
 /* ============================================
-   RESPONSIVE — Small Phone (≤480px)
+   RESPONSIVE, Small Phone (≤480px)
    ============================================ */
 @media (max-width: 480px) {
   .hero {
@@ -1573,7 +1588,7 @@
 }
 
 /* ============================================
-   TOUCH — Active states & no-hover cleanup
+   TOUCH, Active states & no-hover cleanup
    ============================================ */
 @media (hover: none) and (pointer: coarse) {
   .btn-primary:active {
@@ -1597,7 +1612,7 @@
 }
 
 /* ============================================
-   THE ATLAS — live glimpse of the real graph
+   THE ATLAS, live glimpse of the real graph
    ============================================ */
 .atlas-section {
   position: relative;
@@ -1759,7 +1774,7 @@
    MOTION & POLISH  (reduced-motion handled globally in tokens.css)
    ============================================ */
 
-/* Hero graph materialises on load — the one orchestrated moment. */
+/* Hero graph materialises on load, the one orchestrated moment. */
 .hero-graph-svg { animation: hg-enter 1.1s var(--ease-out-quart, ease) both; }
 @keyframes hg-enter {
   from { opacity: 0; transform: scale(0.94); }

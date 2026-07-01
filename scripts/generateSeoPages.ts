@@ -68,6 +68,7 @@ const FOOTER_HTML = `<footer class="seo-footer-rich">
       <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
     </div>
   </div>
+  <p class="footer-note">Articles here are drafted with AI and reviewed by a human. Implementation and lineage facts are sourced from public references such as Wikipedia and Wikidata, and cited on each page. Spot an error? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue on GitHub</a> and it gets fixed.</p>
   <div class="footer-bottom">Made with <span style="color:#fb7185">❤️</span> by <a href="https://github.com/sanketmuchhala" rel="noopener noreferrer">Sanket Muchhala</a> &middot; <a href="/">Language Lineage</a></div>
   </div>
 </footer>`;
@@ -215,7 +216,7 @@ const PRIORITY_TITLES: Record<string, { title: string; description: string }> = 
   },
   rust: {
     title: 'What is Rust written in? rustc bootstrapping explained | Language Lineage',
-    description: 'Modern Rust is self-hosting — rustc is written in Rust. Explore its OCaml origins, bootstrap chain, and LLVM backend.',
+    description: 'Modern Rust is self-hosting, rustc is written in Rust. Explore its OCaml origins, bootstrap chain, and LLVM backend.',
   },
   go: {
     title: 'What is Go written in? Go compiler lineage explained | Language Lineage',
@@ -431,7 +432,7 @@ const PRIORITY_CONTENT: Record<string, PriorityContent> = {
     sections: [
       {
         heading: 'Why C is the substrate of computing',
-        body: `<p>C compiles directly to machine code, with no managed runtime of its own. That makes it the implementation language for operating-system kernels, language runtimes, and the compilers themselves. Many interpreters on this site — including CPython, the reference Ruby (MRI), and PHP — have runtimes written in C.</p>
+        body: `<p>C compiles directly to machine code, with no managed runtime of its own. That makes it the implementation language for operating-system kernels, language runtimes, and the compilers themselves. Many interpreters on this site, including CPython, the reference Ruby (MRI), and PHP, have runtimes written in C.</p>
 <p>C is effectively self-hosting. A new build of GCC is produced by an existing C/C++ compiler in a multi-stage bootstrap, the same pattern used by self-hosting languages like Rust and Go.</p>`,
       },
       {
@@ -454,12 +455,12 @@ const PRIORITY_CONTENT: Record<string, PriorityContent> = {
       { label: 'Short answer', value: 'Compiled by g++, Clang, and MSVC (all C++)' },
       { label: 'Created by', value: 'Bjarne Stroustrup, 1985' },
       { label: 'Backend', value: 'LLVM (Clang) or GCC' },
-      { label: 'Self-hosting', value: 'Yes — C++ compilers are written in C++' },
+      { label: 'Self-hosting', value: 'Yes, C++ compilers are written in C++' },
     ],
     sections: [
       {
         heading: 'C++ compilers and the LLVM backend',
-        body: `<p>C++ has no single reference compiler. The three dominant toolchains — GCC's g++, Clang, and Microsoft's MSVC — each parse C++ and emit native code. Clang is a C++ front end for LLVM, and LLVM's optimizer and code generator are also written in C++. That same LLVM backend is used by Rust, Swift, and Julia.</p>
+        body: `<p>C++ has no single reference compiler. The three dominant toolchains, GCC's g++, Clang, and Microsoft's MSVC, each parse C++ and emit native code. Clang is a C++ front end for LLVM, and LLVM's optimizer and code generator are also written in C++. That same LLVM backend is used by Rust, Swift, and Julia.</p>
 <p>Because every major C++ compiler is itself a C++ program, building a compiler requires an existing C++ toolchain, the classic self-hosting arrangement.</p>`,
       },
       {
@@ -476,18 +477,18 @@ const PRIORITY_CONTENT: Record<string, PriorityContent> = {
     ],
   },
   typescript: {
-    answerHtml: '<strong>TypeScript</strong> is self-hosting: the TypeScript compiler (<strong>tsc</strong>) is written in <strong>TypeScript</strong>. It does not have its own runtime — it transpiles to JavaScript, which then runs on engines such as V8.',
+    answerHtml: '<strong>TypeScript</strong> is self-hosting: the TypeScript compiler (<strong>tsc</strong>) is written in <strong>TypeScript</strong>. It does not have its own runtime, it transpiles to JavaScript, which then runs on engines such as V8.',
     faqAnswer: 'The TypeScript compiler, tsc, is written in TypeScript itself, so TypeScript is self-hosting. TypeScript has no separate runtime; it compiles (transpiles) to JavaScript, which runs on JavaScript engines like V8.',
     facts: [
       { label: 'Short answer', value: 'tsc is written in TypeScript' },
       { label: 'Created by', value: 'Anders Hejlsberg, Microsoft, 2012' },
       { label: 'Output', value: 'Transpiles to JavaScript' },
-      { label: 'Runtime', value: 'None of its own — runs on JS engines' },
+      { label: 'Runtime', value: 'None of its own, runs on JS engines' },
     ],
     sections: [
       {
         heading: 'TypeScript transpiles, it does not run',
-        body: `<p>TypeScript is a typed superset of JavaScript. The compiler checks types and then strips them away, emitting plain JavaScript. There is no TypeScript virtual machine: the generated JavaScript executes on whatever engine the target uses — V8 in Node.js and Chrome, JavaScriptCore in Safari.</p>
+        body: `<p>TypeScript is a typed superset of JavaScript. The compiler checks types and then strips them away, emitting plain JavaScript. There is no TypeScript virtual machine: the generated JavaScript executes on whatever engine the target uses, V8 in Node.js and Chrome, JavaScriptCore in Safari.</p>
 <p>tsc is itself written in TypeScript and compiled with a previous version of tsc, making TypeScript self-hosting in the same sense as Rust or Go.</p>`,
       },
     ],
@@ -598,7 +599,7 @@ const PRIORITY_CONTENT: Record<string, PriorityContent> = {
     sections: [
       {
         heading: 'Why a JavaScript engine is written in C++',
-        body: `<p>JavaScript is a high-level, dynamically typed language, but the engine that runs it needs direct memory control, manual layout of objects, and tight machine-code generation. C++ provides that. V8 parses JavaScript, generates bytecode for its Ignition interpreter, and hot paths are optimized to native code by the TurboFan and Maglev compilers — all implemented in C++.</p>`,
+        body: `<p>JavaScript is a high-level, dynamically typed language, but the engine that runs it needs direct memory control, manual layout of objects, and tight machine-code generation. C++ provides that. V8 parses JavaScript, generates bytecode for its Ignition interpreter, and hot paths are optimized to native code by the TurboFan and Maglev compilers, all implemented in C++.</p>`,
       },
     ],
   },
@@ -699,7 +700,7 @@ function buildImplementationNarrative(node: Language, rels: Relationship[], node
   }
   // Teach the self-hosting concept the first time it comes up.
   if (node.self_hosting) {
-    out += ` Reaching self-hosting — where a language is mature enough to compile itself — is a milestone that proves the language can handle a large, real-world program.`;
+    out += ` Reaching self-hosting, where a language is mature enough to compile itself, is a milestone that proves the language can handle a large, real-world program.`;
   }
   return out;
 }
@@ -896,9 +897,9 @@ const USE_CASES: Record<string, string> = {
 <p>Notable software: Android apps at Google, Pinterest, and Netflix, plus back-ends using the Ktor and Spring frameworks.</p>`,
   scala: `<p>Scala blends object-oriented and functional programming on the JVM and is popular for large-scale data processing and back-end systems where type safety and concurrency matter.</p>
 <p>Notable software: Apache Spark, Apache Kafka tooling, and the back-ends of Twitter and many data platforms.</p>`,
-  haskell: `<p>Haskell is a purely functional language used in academia, research, and industries that prize correctness — finance, compilers, and formal verification. Its strong type system and laziness make it a laboratory for language ideas later adopted elsewhere.</p>
+  haskell: `<p>Haskell is a purely functional language used in academia, research, and industries that prize correctness, finance, compilers, and formal verification. Its strong type system and laziness make it a laboratory for language ideas later adopted elsewhere.</p>
 <p>Notable software: the Cardano blockchain, parts of financial trading systems, and the pandoc document converter.</p>`,
-  lua: `<p>Lua is a tiny, fast, embeddable scripting language designed to be dropped into larger programs — especially games and configuration. Its small footprint makes it ideal for extending C/C++ applications.</p>
+  lua: `<p>Lua is a tiny, fast, embeddable scripting language designed to be dropped into larger programs, especially games and configuration. Its small footprint makes it ideal for extending C/C++ applications.</p>
 <p>Notable software: scripting in World of Warcraft and Roblox, the Redis and Nginx (OpenResty) scripting layers, and many game engines.</p>`,
   perl: `<p>Perl is a text-processing and system-administration powerhouse, famous for its regular expressions and "glue" scripting. It dominated early web CGI and bioinformatics, and still handles log processing and automation.</p>
 <p>Notable software: large amounts of legacy web and sysadmin tooling, and bioinformatics pipelines built on BioPerl.</p>`,
@@ -914,11 +915,11 @@ const USE_CASES: Record<string, string> = {
 <p>Notable software: data platforms and back-ends at Nubank, Walmart, and many fintech companies.</p>`,
   ocaml: `<p>OCaml is a fast, statically typed functional language used in compilers, formal verification, and finance, where its expressive type system catches errors early.</p>
 <p>Notable software: the first Rust compiler, Jane Street's trading systems, the Coq proof assistant, and the Flow type checker for JavaScript.</p>`,
-  fortran: `<p>Fortran remains the language of high-performance numerical and scientific computing — weather prediction, computational physics, and engineering simulations — where decades of optimized math libraries still run.</p>
+  fortran: `<p>Fortran remains the language of high-performance numerical and scientific computing, weather prediction, computational physics, and engineering simulations, where decades of optimized math libraries still run.</p>
 <p>Notable software: climate and weather models, and core linear-algebra libraries (BLAS, LAPACK) that underpin much of modern scientific computing.</p>`,
   cobol: `<p>COBOL still runs a huge share of the world's banking, insurance, and government batch systems, prized for stable, readable business data processing on mainframes.</p>
-<p>Notable software: core transaction systems at banks and government agencies — an estimated majority of daily business transactions still touch COBOL.</p>`,
-  lisp: `<p>Lisp pioneered ideas — the REPL, garbage collection, macros, treating code as data — that shaped every language after it. It was historically central to artificial-intelligence research and remains influential in language design.</p>
+<p>Notable software: core transaction systems at banks and government agencies, an estimated majority of daily business transactions still touch COBOL.</p>`,
+  lisp: `<p>Lisp pioneered ideas, the REPL, garbage collection, macros, treating code as data, that shaped every language after it. It was historically central to artificial-intelligence research and remains influential in language design.</p>
 <p>Notable software: classic AI systems, Emacs (via Emacs Lisp), and AutoCAD's scripting (AutoLISP).</p>`,
   dart: `<p>Dart is Google's language for the Flutter framework, used to build cross-platform mobile, web, and desktop apps from a single codebase.</p>
 <p>Notable software: Flutter apps including Google Pay, and many cross-platform mobile applications.</p>`,
@@ -930,7 +931,7 @@ const USE_CASES: Record<string, string> = {
 <p>Notable use: boot code and performance-critical routines inside virtually every operating system and game console.</p>`,
   smalltalk: `<p>Smalltalk pioneered pure object-oriented programming, the integrated development environment, and the graphical UI. It is still used in some finance and industrial systems, and its ideas shaped Python, Ruby, and Objective-C.</p>
 <p>Notable software: trading and logistics systems, and the modern Pharo and Squeak environments.</p>`,
-  prolog: `<p>Prolog is the leading logic-programming language, used for artificial intelligence, expert systems, natural-language processing, and theorem proving — you state facts and rules and let the engine search for answers.</p>
+  prolog: `<p>Prolog is the leading logic-programming language, used for artificial intelligence, expert systems, natural-language processing, and theorem proving, you state facts and rules and let the engine search for answers.</p>
 <p>Notable use: parts of IBM Watson, scheduling and constraint systems, and academic AI research (often via SWI-Prolog).</p>`,
   ada: `<p>Ada is built for safety-critical, real-time systems where failure is not an option: avionics, defense, rail signaling, and spacecraft. Its strong typing and runtime checks catch errors early.</p>
 <p>Notable use: aircraft flight software (Boeing, Airbus), air-traffic control, and rail and defense systems.</p>`,
@@ -940,7 +941,7 @@ const USE_CASES: Record<string, string> = {
 <p>Notable software: the Gradle build system and Jenkins pipeline scripts are written in Groovy.</p>`,
   matlab: `<p>MATLAB is a numerical-computing environment used across engineering and science for matrix math, signal and image processing, control systems, and simulation. Its toolboxes and Simulink make it standard in many labs and industries.</p>
 <p>Notable use: control-system and signal-processing design in automotive, aerospace, and academic research.</p>`,
-  delphi: `<p>Delphi (Object Pascal) is a rapid application development tool for native Windows — and now cross-platform — desktop software, known for fast compilation and visual form design.</p>
+  delphi: `<p>Delphi (Object Pascal) is a rapid application development tool for native Windows, and now cross-platform, desktop software, known for fast compilation and visual form design.</p>
 <p>Notable software: the original Skype client and many long-lived business and point-of-sale applications.</p>`,
   fsharp: `<p>F# is a functional-first language on .NET, used for data processing, finance, and analytics where its concise syntax and strong types reduce bugs.</p>
 <p>Notable use: quantitative finance, data pipelines, and analytics teams on the .NET platform.</p>`,
@@ -948,7 +949,7 @@ const USE_CASES: Record<string, string> = {
 <p>Notable software: front-end applications at companies like NoRedInk that value crash-free UIs.</p>`,
   crystal: `<p>Crystal offers Ruby-like syntax with static typing and native compilation, aimed at developers who want Ruby's productivity with much higher performance.</p>
 <p>Notable use: web APIs and tools where teams want Ruby ergonomics without the runtime cost.</p>`,
-  nim: `<p>Nim is a general-purpose language with Python-like readability that compiles to C, C++, or JavaScript, giving native speed with a small runtime — handy for systems tools, games, and embedded work.</p>
+  nim: `<p>Nim is a general-purpose language with Python-like readability that compiles to C, C++, or JavaScript, giving native speed with a small runtime, handy for systems tools, games, and embedded work.</p>
 <p>Notable software: the Status messaging client and a range of community tools and games.</p>`,
   tcl: `<p>Tcl ("Tool Command Language") is a compact scripting and embedding language, long used to add scripting to applications and for test automation, networking, and electronic-design tools.</p>
 <p>Notable use: scripting in Cisco network gear, EDA chip-design tools, and the Expect automation tool.</p>`,
@@ -1128,7 +1129,7 @@ function buildRelationshipMap(node: Language, rels: Relationship[], nodeMap: Map
 }
 
 // The integrated page header: logo, name, tagline, a horizontal spec rail of key data
-// (written in, released, developer, typing, license), and the curated succession notes —
+// (written in, released, developer, typing, license), and the curated succession notes ,
 // woven into the top of the article rather than boxed into a card.
 function buildLanguageHeader(node: Language, rels: Relationship[], nodeMap: Map<string, Language>, mapHtml = ''): string {
   const e = ENRICHMENT[node.id];
@@ -1157,7 +1158,7 @@ function buildLanguageHeader(node: Language, rels: Relationship[], nodeMap: Map<
   const website = e?.facts.website || '';
   const typing = (!isTool && node.typing && !['unspecified', 'none'].includes(node.typing)) ? node.typing : '';
 
-  // Horizontal spec rail — the page's key data, read like an instrument readout rather
+  // Horizontal spec rail, the page's key data, read like an instrument readout rather
   // than boxed into a card. Each cell is a value over a small monospace label.
   const cells: Array<[string, string]> = [];
   if (writtenIn) cells.push([writtenIn, 'Written in']);
@@ -1320,7 +1321,7 @@ function buildInfluenceSection(node: Language, rels: Relationship[], nodeMap: Ma
   if (influencedBy.length > 0) {
     const items = influencedBy
       .sort((a, b) => b.confidence - a.confidence)
-      .map(r => `<li>${linkNode(r.from_language, nodeMap)}${r.notes ? ` — ${escapeHtml(r.notes)}` : ''}</li>`)
+      .map(r => `<li>${linkNode(r.from_language, nodeMap)}${r.notes ? `, ${escapeHtml(r.notes)}` : ''}</li>`)
       .join('\n');
     parts.push(`<h2>Influenced By</h2><ul>${items}</ul>`);
   }
@@ -1328,7 +1329,7 @@ function buildInfluenceSection(node: Language, rels: Relationship[], nodeMap: Ma
   if (influenced.length > 0) {
     const items = influenced
       .sort((a, b) => b.confidence - a.confidence)
-      .map(r => `<li>${linkNode(r.to_language, nodeMap)}${r.notes ? ` — ${escapeHtml(r.notes)}` : ''}</li>`)
+      .map(r => `<li>${linkNode(r.to_language, nodeMap)}${r.notes ? `, ${escapeHtml(r.notes)}` : ''}</li>`)
       .join('\n');
     parts.push(`<h2>Languages ${escapeHtml(node.name)} Influenced</h2><ul>${items}</ul>`);
   }
@@ -1372,7 +1373,7 @@ function buildFaqs(node: Language, rels: Relationship[], nodeMap: Map<string, La
   if (node.self_hosting) {
     faqs.push({
       q: `Is ${node.name} self-hosting?`,
-      a: `Yes, ${node.name} is self-hosting — its compiler can compile itself.`,
+      a: `Yes, ${node.name} is self-hosting, its compiler can compile itself.`,
     });
   }
 
@@ -1744,7 +1745,7 @@ const QUESTIONS: QuestionDef[] = [
   {
     slug: 'what-is-java-written-in',
     title: 'What is Java written in?',
-    answer: "The Java compiler (javac) is written in Java — making it partially self-hosting. The HotSpot JVM, the primary Java runtime, is written in C and C++. The Java standard library (java.lang, java.util, etc.) is written in Java itself.",
+    answer: "The Java compiler (javac) is written in Java, making it partially self-hosting. The HotSpot JVM, the primary Java runtime, is written in C and C++. The Java standard library (java.lang, java.util, etc.) is written in Java itself.",
     details: `<p>Java has multiple implementation layers: the compiler, the virtual machine, and the standard library. A complete answer depends on which layer you mean.</p>
 <p>The <strong>javac compiler</strong> is written in Java. It compiles Java source files to JVM bytecode. Because javac is itself written in Java, new versions are bootstrapped using an existing Java toolchain.</p>
 <p>The <strong>HotSpot JVM</strong>, the primary Java runtime, is written mainly in C and C++. HotSpot includes the bytecode interpreter, JIT compiler, garbage collectors, class loader, and native platform integration.</p>
@@ -1763,9 +1764,9 @@ const QUESTIONS: QuestionDef[] = [
   {
     slug: 'what-is-c-written-in',
     title: 'What is C written in?',
-    answer: "C compilers like GCC and Clang are written in C and C++. C is one of the earliest self-hosted languages — the original C compiler was written in B, then rewritten in C itself. GCC (GNU Compiler Collection) is primarily written in C and C++; Clang is written in C++.",
+    answer: "C compilers like GCC and Clang are written in C and C++. C is one of the earliest self-hosted languages, the original C compiler was written in B, then rewritten in C itself. GCC (GNU Compiler Collection) is primarily written in C and C++; Clang is written in C++.",
     details: `<p>C compilers are generally self-hosted: they are written in C (or C++) and can compile their own source code. GCC, the GNU Compiler Collection, is implemented primarily in C with some C++. Clang/LLVM is implemented in C++.</p>
-<p>Historically, the original C compiler was written in B (a predecessor to C) on the PDP-7. It was then rewritten in C once the language had enough capability — one of the earliest examples of compiler bootstrapping.</p>
+<p>Historically, the original C compiler was written in B (a predecessor to C) on the PDP-7. It was then rewritten in C once the language had enough capability, one of the earliest examples of compiler bootstrapping.</p>
 <p>The dataset records <code>compiler_written_in</code> relationships from C and C++ to GCC and Clang, and a historical bootstrap relationship reflecting C's early self-hosting.</p>`,
     relatedLangs: ['c', 'cxx', 'b'],
     relatedTools: ['gcc', 'clang'],
@@ -1773,7 +1774,7 @@ const QUESTIONS: QuestionDef[] = [
   {
     slug: 'what-is-cpp-written-in',
     title: 'What is C++ written in?',
-    answer: "C++ compilers including GCC and Clang/LLVM are implemented in C++. The original Cfront compiler — which translated C++ to C — was written in C. GCC became capable of compiling C++ and is itself written in C++. Clang, the modern alternative, is written in C++ and built on the LLVM infrastructure.",
+    answer: "C++ compilers including GCC and Clang/LLVM are implemented in C++. The original Cfront compiler, which translated C++ to C, was written in C. GCC became capable of compiling C++ and is itself written in C++. Clang, the modern alternative, is written in C++ and built on the LLVM infrastructure.",
     details: `<p>The two dominant C++ compilers are GCC and Clang. Both are written in C++, making them self-hosting for the C++ language.</p>
 <p>Cfront, the original C++ compiler developed at Bell Labs in the 1980s, was written in C and translated C++ code into C for compilation. GCC later gained C++ support and is now written in C++ itself.</p>
 <p>Clang is built on the LLVM compiler infrastructure. Both Clang and the LLVM core libraries are implemented in C++.</p>`,
@@ -1784,7 +1785,7 @@ const QUESTIONS: QuestionDef[] = [
     slug: 'what-is-typescript-written-in',
     title: 'What is TypeScript written in?',
     answer: "The TypeScript compiler (tsc) is written in TypeScript itself, making it self-hosting. It compiles TypeScript to JavaScript, so the compiled tsc runs on any JavaScript engine. The TypeScript compiler and language services are fully self-hosted.",
-    details: `<p>TypeScript is self-hosting: the tsc compiler is written in TypeScript. This means TypeScript's compiler is compiled by itself — a previous version of tsc compiles the next version.</p>
+    details: `<p>TypeScript is self-hosting: the tsc compiler is written in TypeScript. This means TypeScript's compiler is compiled by itself, a previous version of tsc compiles the next version.</p>
 <p>Since TypeScript compiles to JavaScript, the compiled tsc binary runs on Node.js or any JavaScript engine. This makes TypeScript's self-hosting unique: it's a compiled language whose compiler runs as interpreted JavaScript.</p>`,
     relatedLangs: ['typescript', 'javascript'],
     relatedTools: [],
@@ -1814,7 +1815,7 @@ const QUESTIONS: QuestionDef[] = [
     title: 'What is CPython written in?',
     answer: "CPython, the reference implementation of Python, is written primarily in C. Its interpreter, object model, and most of the standard library are implemented in C. Some higher-level standard library modules (like email or html.parser) are written in Python.",
     details: `<p>CPython is the canonical Python implementation. When Python documentation refers to "Python," it typically means CPython's behavior.</p>
-<p>CPython's core — the bytecode interpreter, memory allocator, garbage collector, object model, and C API — is implemented in C. This gives CPython excellent interoperability with C libraries via the Python/C API.</p>
+<p>CPython's core, the bytecode interpreter, memory allocator, garbage collector, object model, and C API, is implemented in C. This gives CPython excellent interoperability with C libraries via the Python/C API.</p>
 <p>CPython compiles Python source files to .pyc bytecode files, which the interpreter then executes. This is distinct from true ahead-of-time compilation.</p>`,
     relatedLangs: ['python', 'c'],
     relatedTools: [],
@@ -1838,14 +1839,14 @@ const QUESTIONS: QuestionDef[] = [
     slug: 'what-is-a-self-hosting-compiler',
     title: 'What is a self-hosting compiler?',
     answer: "A self-hosting compiler is a compiler that is written in the language it compiles. Once self-hosted, the language no longer depends on another language for its compiler. Self-hosting languages include Rust, Go, TypeScript, Haskell, and Kotlin, among others.",
-    details: `<p>Self-hosting is closely related to bootstrapping. A compiler is self-hosting when its source code is written in the language it compiles — meaning it can compile itself.</p>
+    details: `<p>Self-hosting is closely related to bootstrapping. A compiler is self-hosting when its source code is written in the language it compiles, meaning it can compile itself.</p>
 <p>Self-hosting compilers:</p>
 <ul>
-  <li><strong>Rust</strong> — rustc is written in Rust (self-hosted since 2011)</li>
-  <li><strong>Go</strong> — gc toolchain is written in Go (since version 1.5)</li>
-  <li><strong>TypeScript</strong> — tsc is written in TypeScript</li>
-  <li><strong>Haskell/GHC</strong> — GHC is written in Haskell</li>
-  <li><strong>Java/javac</strong> — javac is written in Java</li>
+  <li><strong>Rust</strong>, rustc is written in Rust (self-hosted since 2011)</li>
+  <li><strong>Go</strong>, gc toolchain is written in Go (since version 1.5)</li>
+  <li><strong>TypeScript</strong>, tsc is written in TypeScript</li>
+  <li><strong>Haskell/GHC</strong>, GHC is written in Haskell</li>
+  <li><strong>Java/javac</strong>, javac is written in Java</li>
 </ul>
 <p>Self-hosting is considered a sign of language maturity. It also provides a kind of correctness check: if the language's own compiler works, many of the language's features have been validated in a real-world use case.</p>`,
     relatedLangs: ['rust', 'go', 'typescript', 'haskell', 'java'],
@@ -2061,10 +2062,10 @@ function buildProgrammingLanguageGraph(languages: Language[], rels: Relationship
   const toolCount = languages.filter(l => l.id.startsWith('tool:')).length;
   const relTypes = [...new Set(rels.map(r => r.relationship))];
   const faqs = [
-    { q: 'What is a programming language graph?', a: 'A programming language graph is a network visualization showing relationships between programming languages — including influence, ancestry, compiler implementation, runtime implementation, and bootstrapping chains.' },
+    { q: 'What is a programming language graph?', a: 'A programming language graph is a network visualization showing relationships between programming languages, including influence, ancestry, compiler implementation, runtime implementation, and bootstrapping chains.' },
     { q: 'How many languages are in the Language Lineage graph?', a: `The Language Lineage graph contains ${langCount} programming languages and ${toolCount} compilers/runtimes, connected by ${rels.length} relationships.` },
     { q: 'What relationships does the graph show?', a: 'The graph shows: influence (language A inspired language B), compiler_written_in (the compiler for language A is written in B), runtime_written_in (the runtime is written in B), bootstrap_written_in (A bootstraps via B), transpiled_to (A compiles to B), and rewritten_in.' },
-    { q: 'How is this different from HOPL or Wikipedia genealogy charts?', a: 'HOPL and Wikipedia show influence and ancestry. Language Lineage adds implementation relationships — what compilers and runtimes are actually written in — with confidence scores and evidence sources for every relationship.' },
+    { q: 'How is this different from HOPL or Wikipedia genealogy charts?', a: 'HOPL and Wikipedia show influence and ancestry. Language Lineage adds implementation relationships, what compilers and runtimes are actually written in, with confidence scores and evidence sources for every relationship.' },
   ];
   const faqJsonLd = JSON.stringify({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqs.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) });
   const breadcrumbJsonLd = JSON.stringify({ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: SITE }, { '@type': 'ListItem', position: 2, name: 'Programming Language Graph', item: url }] });
@@ -2097,7 +2098,7 @@ ${NAV_HTML}
   <h1>Programming Language Graph</h1>
   <p>An interactive graph of ${langCount} programming languages and ${toolCount} compilers and runtimes, connected by ${rels.length} evidence-backed relationships. Explore how languages influenced each other and what they are implemented in.</p>
 
-  <div class="answer-box">The Language Lineage graph maps both <strong>influence relationships</strong> (which language inspired which) and <strong>implementation relationships</strong> (what compiler, runtime, or bootstrap chain each language uses) — with confidence scores and source citations for every edge.</div>
+  <div class="answer-box">The Language Lineage graph maps both <strong>influence relationships</strong> (which language inspired which) and <strong>implementation relationships</strong> (what compiler, runtime, or bootstrap chain each language uses), with confidence scores and source citations for every edge.</div>
 
   <h2>What is a programming language graph?</h2>
   <p>A programming language graph represents languages as nodes and their relationships as edges. Unlike a static family tree, an interactive graph lets you:</p>
@@ -2147,11 +2148,11 @@ ${NAV_HTML}
   <h2>How is this different from a static genealogy chart?</h2>
   <p>Static programming language genealogy charts (like the HOPL database or Wikipedia's SVG diagrams) show influence ancestry. Language Lineage adds:</p>
   <ul>
-    <li><strong>Implementation data</strong> — what compilers and runtimes are written in</li>
-    <li><strong>Bootstrap chains</strong> — which languages can compile their own compilers</li>
-    <li><strong>Confidence scores</strong> — every relationship has a confidence value (0–1)</li>
-    <li><strong>Evidence sources</strong> — links to Wikipedia, papers, and documentation for every edge</li>
-    <li><strong>Interactivity</strong> — click, filter, zoom, switch layouts</li>
+    <li><strong>Implementation data</strong>, what compilers and runtimes are written in</li>
+    <li><strong>Bootstrap chains</strong>, which languages can compile their own compilers</li>
+    <li><strong>Confidence scores</strong>, every relationship has a confidence value (0–1)</li>
+    <li><strong>Evidence sources</strong>, links to Wikipedia, papers, and documentation for every edge</li>
+    <li><strong>Interactivity</strong>, click, filter, zoom, switch layouts</li>
   </ul>
 
   <h2>Frequently Asked Questions</h2>
@@ -2193,7 +2194,7 @@ function buildProgrammingLanguageFamilyTree(languages: Language[]): string {
     { q: 'What is a programming language family tree?', a: 'A programming language family tree shows which languages influenced or descended from other languages. Languages in the same "family" share syntactic, semantic, or conceptual heritage.' },
     { q: 'What is the C family of programming languages?', a: 'The C family includes languages that adopted C\'s syntax (curly braces, semicolons) or systems-programming philosophy: C++, Objective-C, Java, C#, Go, Rust, JavaScript, and many others.' },
     { q: 'What is the Lisp family of languages?', a: 'The Lisp family includes languages derived from John McCarthy\'s original Lisp (1958): Scheme, Common Lisp, Clojure, Racket, and Emacs Lisp. They share s-expression syntax and support for macros.' },
-    { q: 'How does Language Lineage differ from a traditional family tree?', a: 'Traditional family trees show influence. Language Lineage also maps implementation relationships: what compilers and runtimes each language uses, bootstrap chains, and transpilation targets — with confidence scores and evidence sources.' },
+    { q: 'How does Language Lineage differ from a traditional family tree?', a: 'Traditional family trees show influence. Language Lineage also maps implementation relationships: what compilers and runtimes each language uses, bootstrap chains, and transpilation targets, with confidence scores and evidence sources.' },
   ];
   const faqJsonLd = JSON.stringify({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqs.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) });
   const breadcrumbJsonLd = JSON.stringify({ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: SITE }, { '@type': 'ListItem', position: 2, name: 'Programming Language Family Tree', item: url }] });
@@ -2209,7 +2210,7 @@ function buildProgrammingLanguageFamilyTree(languages: Language[]): string {
   <link rel="icon" href="/favicon.svg" />
   ${FONTS_HEAD}<link rel="stylesheet" href="/seo.css" />
   <meta property="og:title" content="Programming Language Family Tree | Interactive Lineage Graph" />
-  <meta property="og:description" content="C family, Lisp family, ML family, JVM family and more — interactive programming language family tree with implementation data." />
+  <meta property="og:description" content="C family, Lisp family, ML family, JVM family and more, interactive programming language family tree with implementation data." />
   <meta property="og:url" content="${url}" />
   <meta property="og:image" content="${SITE}/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -2224,7 +2225,7 @@ ${NAV_HTML}
   </nav>
 
   <h1>Programming Language Family Tree</h1>
-  <p>The programming language family tree maps how languages descend from and influence each other. Language Lineage extends this with implementation data — what compilers, runtimes, and bootstrap chains each language uses.</p>
+  <p>The programming language family tree maps how languages descend from and influence each other. Language Lineage extends this with implementation data, what compilers, runtimes, and bootstrap chains each language uses.</p>
 
   <div class="answer-box">The Language Lineage graph contains ${langCount} programming languages grouped into families by influence, implementation, and conceptual ancestry. It goes beyond influence trees to include <strong>compiler, runtime, and bootstrap relationships</strong>.</div>
 
@@ -2238,13 +2239,13 @@ ${NAV_HTML}
     }).join('\n    ')}
   </div>`).join('\n\n  ')}
 
-  <h2>More than influence — implementation lineage</h2>
+  <h2>More than influence, implementation lineage</h2>
   <p>Traditional family trees show only conceptual influence. Language Lineage also tracks:</p>
   <ul>
-    <li><a href="/relationships/compiler-written-in"><strong>compiler_written_in</strong></a> — what language each compiler is implemented in</li>
-    <li><a href="/relationships/runtime-written-in"><strong>runtime_written_in</strong></a> — what language each runtime or VM is implemented in</li>
-    <li><a href="/relationships/bootstrap-written-in"><strong>bootstrap_written_in</strong></a> — how self-hosting compilers bootstrap themselves</li>
-    <li><a href="/relationships/transpiled-to"><strong>transpiled_to</strong></a> — which languages compile to other languages</li>
+    <li><a href="/relationships/compiler-written-in"><strong>compiler_written_in</strong></a>, what language each compiler is implemented in</li>
+    <li><a href="/relationships/runtime-written-in"><strong>runtime_written_in</strong></a>, what language each runtime or VM is implemented in</li>
+    <li><a href="/relationships/bootstrap-written-in"><strong>bootstrap_written_in</strong></a>, how self-hosting compilers bootstrap themselves</li>
+    <li><a href="/relationships/transpiled-to"><strong>transpiled_to</strong></a>, which languages compile to other languages</li>
   </ul>
 
   <h2>Frequently Asked Questions</h2>
@@ -2275,9 +2276,9 @@ function buildProgrammingLanguageGenealogy(languages: Language[], rels: Relation
   const url = `${SITE}/programming-language-genealogy`;
   const influenceCount = rels.filter(r => r.relationship === 'influenced').length;
   const faqs = [
-    { q: 'What is programming language genealogy?', a: 'Programming language genealogy is the study of how programming languages descend from, influence, and relate to each other — tracing ancestry chains and identifying language families.' },
+    { q: 'What is programming language genealogy?', a: 'Programming language genealogy is the study of how programming languages descend from, influence, and relate to each other, tracing ancestry chains and identifying language families.' },
     { q: 'How is influence different from implementation in language genealogy?', a: 'Influence means one language inspired another\'s design. Implementation means one language was used to build another\'s compiler, runtime, or interpreter. Both are part of a complete language lineage picture.' },
-    { q: 'Which programming language has the most descendants?', a: 'C and Lisp are among the most influential languages by direct and indirect influence. Many modern languages — Go, Rust, JavaScript, Java — trace some ancestry to C.' },
+    { q: 'Which programming language has the most descendants?', a: 'C and Lisp are among the most influential languages by direct and indirect influence. Many modern languages, Go, Rust, JavaScript, Java, trace some ancestry to C.' },
   ];
   const faqJsonLd = JSON.stringify({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqs.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) });
   const breadcrumbJsonLd = JSON.stringify({ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: SITE }, { '@type': 'ListItem', position: 2, name: 'Programming Language Genealogy', item: url }] });
@@ -2308,26 +2309,26 @@ ${NAV_HTML}
   </nav>
 
   <h1>Programming Language Genealogy</h1>
-  <p>Programming language genealogy traces ancestry, influence, and implementation relationships between languages — from the first high-level languages of the 1950s to modern systems and scripting languages.</p>
+  <p>Programming language genealogy traces ancestry, influence, and implementation relationships between languages, from the first high-level languages of the 1950s to modern systems and scripting languages.</p>
 
   <div class="answer-box">The Language Lineage dataset contains <strong>${influenceCount} influence relationships</strong> across ${languages.filter(l => l.id.startsWith('lang:')).length} programming languages, tracking both conceptual influence and implementation lineage.</div>
 
   <h2>Influence versus implementation</h2>
   <p>Programming language genealogy has two distinct dimensions:</p>
   <ul>
-    <li><strong>Conceptual influence</strong> — language A's design choices inspired language B (syntax, semantics, paradigm). Example: Smalltalk influenced Python's object model.</li>
-    <li><strong>Implementation lineage</strong> — language A was used to build B's compiler, runtime, or interpreter. Example: C was used to implement CPython (Python's runtime).</li>
+    <li><strong>Conceptual influence</strong>, language A's design choices inspired language B (syntax, semantics, paradigm). Example: Smalltalk influenced Python's object model.</li>
+    <li><strong>Implementation lineage</strong>, language A was used to build B's compiler, runtime, or interpreter. Example: C was used to implement CPython (Python's runtime).</li>
   </ul>
   <p>Most genealogy charts show only influence. Language Lineage shows both, with <a href="/dataset">evidence sources and confidence scores</a>.</p>
 
   <h2>Major genealogical lines</h2>
   <ul>
-    <li><strong>FORTRAN → COBOL → PL/1 → ALGOL 60</strong> — early high-level languages</li>
-    <li><strong>ALGOL 60 → CPL → BCPL → B → C</strong> — the path to C</li>
-    <li><strong>C → C++ → Java → Kotlin / Scala</strong> — object-oriented mainstream</li>
-    <li><strong>Lisp → Scheme → Racket, Common Lisp → Clojure</strong> — functional tradition</li>
-    <li><strong>ML → SML → OCaml → F#, ReasonML</strong> — typed functional languages</li>
-    <li><strong>Smalltalk → Objective-C, Ruby, Python (OO concepts)</strong> — message-passing OO</li>
+    <li><strong>FORTRAN → COBOL → PL/1 → ALGOL 60</strong>, early high-level languages</li>
+    <li><strong>ALGOL 60 → CPL → BCPL → B → C</strong>, the path to C</li>
+    <li><strong>C → C++ → Java → Kotlin / Scala</strong>, object-oriented mainstream</li>
+    <li><strong>Lisp → Scheme → Racket, Common Lisp → Clojure</strong>, functional tradition</li>
+    <li><strong>ML → SML → OCaml → F#, ReasonML</strong>, typed functional languages</li>
+    <li><strong>Smalltalk → Objective-C, Ruby, Python (OO concepts)</strong>, message-passing OO</li>
   </ul>
 
   <h2>Frequently Asked Questions</h2>
@@ -2400,13 +2401,13 @@ ${NAV_HTML}
   </nav>
 
   <h1>Programming Language Evolution Timeline</h1>
-  <p>From assembly language in ${minYear} to modern systems languages in ${maxYear} — trace how programming languages evolved decade by decade. Each language links to its full lineage page with compiler, runtime, and influence relationships.</p>
+  <p>From assembly language in ${minYear} to modern systems languages in ${maxYear}, trace how programming languages evolved decade by decade. Each language links to its full lineage page with compiler, runtime, and influence relationships.</p>
 
   <div class="answer-box">The dataset spans <strong>${minYear}–${maxYear}</strong> with ${langNodes.length} programming languages. See the <a href="/timeline">interactive timeline visualization</a> for a graphical view.</div>
 
   ${sortedDecades.map(dec => {
     const langs = (decades[dec] ?? []).sort((a, b) => (a.first_release_year ?? 0) - (b.first_release_year ?? 0));
-    return `<h2>${dec}s — ${langs.length} language${langs.length !== 1 ? 's' : ''}</h2>
+    return `<h2>${dec}s, ${langs.length} language${langs.length !== 1 ? 's' : ''}</h2>
   <div class="related-grid">
     ${langs.map(l => `<a href="/languages/${idToSlug(l.id)}" class="related-card">${escapeHtml(l.name)}${l.first_release_year ? ` <small>(${l.first_release_year})</small>` : ''}</a>`).join('\n    ')}
   </div>`;
@@ -2450,7 +2451,7 @@ function buildWhatAreLanguagesWrittenIn(languages: Language[], rels: Relationshi
   ];
   const faqs = [
     { q: 'What does "what is a programming language written in" mean?', a: 'It means what programming language was used to implement the compiler, interpreter, or runtime of another language. The implementation language is different from the language specification.' },
-    { q: 'Can a language be written in itself?', a: 'Yes — this is called a self-hosting compiler. Rust, Go, TypeScript, Haskell, and Java\'s javac are all self-hosting. The first version must be written in another language, then it bootstraps itself.' },
+    { q: 'Can a language be written in itself?', a: 'Yes, this is called a self-hosting compiler. Rust, Go, TypeScript, Haskell, and Java\'s javac are all self-hosting. The first version must be written in another language, then it bootstraps itself.' },
     { q: 'Why does it matter what a language is written in?', a: 'The implementation language affects performance characteristics, portability, interoperability with native libraries, and how the language bootstraps itself. C and C++ are common choices for performance-critical runtimes.' },
     { q: 'How many languages in the dataset have compiler or runtime implementation data?', a: `The dataset includes ${implRels.length} compiler and runtime relationships across ${new Set(implRels.map(r => r.to_language)).size} languages.` },
   ];
@@ -2487,13 +2488,13 @@ ${NAV_HTML}
   <div class="answer-box">Programming languages are implemented using other programming languages. The implementation language (used to build the compiler or runtime) is separate from the language specification itself. C and C++ are the most common implementation languages for performance-critical runtimes.</div>
 
   <h2>Language vs. implementation</h2>
-  <p>When we say "Python is written in C," we mean CPython — the reference implementation — is written in C. The Python <em>language specification</em> doesn't mandate any implementation language. You could write a Python interpreter in JavaScript, and some people have.</p>
+  <p>When we say "Python is written in C," we mean CPython, the reference implementation, is written in C. The Python <em>language specification</em> doesn't mandate any implementation language. You could write a Python interpreter in JavaScript, and some people have.</p>
   <p>The key terms:</p>
   <ul>
-    <li><strong>Language specification</strong> — defines the syntax and semantics (e.g., the Python Reference Manual)</li>
-    <li><strong>Compiler</strong> — translates source code to machine code or bytecode (e.g., javac, rustc, tsc)</li>
-    <li><strong>Interpreter / runtime</strong> — executes code (e.g., CPython, V8, HotSpot JVM)</li>
-    <li><strong>VM (virtual machine)</strong> — an abstract machine that runs bytecode (JVM, CLR, BEAM)</li>
+    <li><strong>Language specification</strong>, defines the syntax and semantics (e.g., the Python Reference Manual)</li>
+    <li><strong>Compiler</strong>, translates source code to machine code or bytecode (e.g., javac, rustc, tsc)</li>
+    <li><strong>Interpreter / runtime</strong>, executes code (e.g., CPython, V8, HotSpot JVM)</li>
+    <li><strong>VM (virtual machine)</strong>, an abstract machine that runs bytecode (JVM, CLR, BEAM)</li>
   </ul>
 
   <h2>What popular languages are written in</h2>
@@ -2527,7 +2528,7 @@ ${NAV_HTML}
   </ul>
 
   <h2>Self-hosting languages</h2>
-  <p>Some languages' compilers are written in the language itself — called self-hosting. This requires bootstrapping: an initial compiler written in another language, which is then used to compile the self-hosted version. Self-hosting languages: <a href="/languages/rust">Rust</a>, <a href="/languages/go">Go</a>, <a href="/languages/typescript">TypeScript</a>, <a href="/languages/haskell">Haskell</a>, <a href="/languages/java">Java (javac)</a>.</p>
+  <p>Some languages' compilers are written in the language itself, called self-hosting. This requires bootstrapping: an initial compiler written in another language, which is then used to compile the self-hosted version. Self-hosting languages: <a href="/languages/rust">Rust</a>, <a href="/languages/go">Go</a>, <a href="/languages/typescript">TypeScript</a>, <a href="/languages/haskell">Haskell</a>, <a href="/languages/java">Java (javac)</a>.</p>
   <p>See: <a href="/questions/what-is-compiler-bootstrapping">What is compiler bootstrapping?</a> and <a href="/questions/what-is-a-self-hosting-compiler">What is a self-hosting compiler?</a></p>
 
   <h2>Frequently Asked Questions</h2>
@@ -2565,7 +2566,7 @@ function buildCompilerRuntimeBootstrap(rels: Relationship[]): string {
   const relTypeCounts: Record<string, number> = {};
   for (const r of rels) { relTypeCounts[r.relationship] = (relTypeCounts[r.relationship] ?? 0) + 1; }
   const faqs = [
-    { q: 'What is the difference between a compiler and a runtime?', a: 'A compiler translates source code to another form (machine code, bytecode, or another language). A runtime is the environment that executes the program — managing memory, concurrency, and standard library calls at execution time.' },
+    { q: 'What is the difference between a compiler and a runtime?', a: 'A compiler translates source code to another form (machine code, bytecode, or another language). A runtime is the environment that executes the program, managing memory, concurrency, and standard library calls at execution time.' },
     { q: 'What does runtime_written_in mean in the dataset?', a: 'runtime_written_in means the runtime or interpreter for language A is implemented in language B. For example, CPython (Python\'s runtime) is written in C, so there\'s a runtime_written_in relationship from C to Python.' },
     { q: 'What is a bootstrap compiler?', a: 'A bootstrap compiler is an intermediate compiler used to bring a self-hosting compiler into existence. For example, Rust\'s first bootstrapper was written in OCaml; Go\'s first compiler was written in C.' },
     { q: 'How does transpilation differ from compilation?', a: 'Transpilation (source-to-source compilation) transforms code from one high-level language to another, rather than to machine code or bytecode. TypeScript transpiles to JavaScript. CoffeeScript transpiles to JavaScript.' },
@@ -2584,7 +2585,7 @@ function buildCompilerRuntimeBootstrap(rels: Relationship[]): string {
   <link rel="icon" href="/favicon.svg" />
   ${FONTS_HEAD}<link rel="stylesheet" href="/seo.css" />
   <meta property="og:title" content="Compiler, Runtime, and Bootstrap Relationships Explained" />
-  <meta property="og:description" content="Compiler, runtime, bootstrap, transpilation — what they mean and how Language Lineage tracks them." />
+  <meta property="og:description" content="Compiler, runtime, bootstrap, transpilation, what they mean and how Language Lineage tracks them." />
   <meta property="og:url" content="${url}" />
   <meta property="og:image" content="${SITE}/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -2615,7 +2616,7 @@ ${NAV_HTML}
   </table>
 
   <h2>What is a compiler?</h2>
-  <p>A compiler translates source code from one language to another — typically from a high-level language to machine code, bytecode, or another high-level language. Examples: <a href="/tools/gcc">GCC</a> (C/C++ → machine code), <a href="/tools/ghc">GHC</a> (Haskell → machine code), tsc (TypeScript → JavaScript).</p>
+  <p>A compiler translates source code from one language to another, typically from a high-level language to machine code, bytecode, or another high-level language. Examples: <a href="/tools/gcc">GCC</a> (C/C++ → machine code), <a href="/tools/ghc">GHC</a> (Haskell → machine code), tsc (TypeScript → JavaScript).</p>
 
   <h2>What is a runtime?</h2>
   <p>A runtime (or interpreter) is the environment that executes a program. It handles memory allocation, garbage collection, I/O, and standard library calls at execution time. Examples: <a href="/tools/v8">V8</a> (JavaScript), CPython (Python), <a href="/tools/hotspot">HotSpot JVM</a> (Java bytecode).</p>
@@ -2774,7 +2775,7 @@ const RELATIONSHIP_DEFS: Record<string, { label: string; h1: string; description
   bootstrap_written_in: {
     label: 'Bootstrap Chain',
     h1: 'Bootstrap and Self-Hosting Chains',
-    description: 'Bootstrapping is the process of writing a compiler in the same language it compiles. These relationships show the bootstrap chains — what language was used to write the initial compiler before self-hosting was achieved.',
+    description: 'Bootstrapping is the process of writing a compiler in the same language it compiles. These relationships show the bootstrap chains, what language was used to write the initial compiler before self-hosting was achieved.',
     color: '#a78bfa',
   },
   influenced: {
@@ -2887,7 +2888,7 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
 
 <h2>The chicken-and-egg problem</h2>
 <p>A compiler is just a program, and like any program in a compiled language it has to be compiled before it can run. So how do you compile the very first compiler for a brand-new language, when no compiler for that language exists yet? This is the bootstrapping problem, and every self-hosting language has had to solve it.</p>
-<p>The answer is to break the circular dependency once, at the beginning, using a language that already works. The first compiler — the <strong>stage 0</strong> or "seed" compiler — is written in an existing language such as C, OCaml, or assembly. It only needs to be good enough to compile the second compiler, which is written in the new language itself. From then on, the language can compile itself and the seed can be retired.</p>
+<p>The answer is to break the circular dependency once, at the beginning, using a language that already works. The first compiler, the <strong>stage 0</strong> or "seed" compiler, is written in an existing language such as C, OCaml, or assembly. It only needs to be good enough to compile the second compiler, which is written in the new language itself. From then on, the language can compile itself and the seed can be retired.</p>
 
 <h2>The three bootstrap stages</h2>
 <p>A typical self-hosting build runs in three stages, and the last two are the proof that bootstrapping succeeded:</p>
@@ -2898,7 +2899,7 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
 </ul>
 
 <h2>Why languages bootstrap</h2>
-<p>Self-hosting is a milestone of maturity. It proves the language is expressive and complete enough to build a large, performance-sensitive systems program — a compiler. It also lets the compiler team write the compiler in the language they are designing, so every improvement to the language immediately benefits the tool that builds it. Finally, it removes the long-term dependency on a foreign implementation language.</p>
+<p>Self-hosting is a milestone of maturity. It proves the language is expressive and complete enough to build a large, performance-sensitive systems program, a compiler. It also lets the compiler team write the compiler in the language they are designing, so every improvement to the language immediately benefits the tool that builds it. Finally, it removes the long-term dependency on a foreign implementation language.</p>
 
 <h2>Real bootstrap chains</h2>
 <p>The Language Lineage dataset records the historical implementation language for each toolchain. A few well-documented chains:</p>
@@ -2911,7 +2912,7 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
 <p>See <a href="/relationships/bootstrap-written-in">every bootstrap relationship in the dataset</a> for the full list, each with a source and confidence score.</p>
 
 <h2>Trust, reproducibility, and breaking the binary chain</h2>
-<p>Because each compiler is built by an earlier compiler, you are ultimately trusting a long chain of binaries you did not build yourself. Ken Thompson's classic lecture "Reflections on Trusting Trust" showed that a malicious compiler could inject code into programs — including into future copies of itself — invisibly. Modern projects respond with reproducible builds and "diverse double-compilation," and with seed compilers like <a href="/tools/mrustc">mrustc</a> that let you rebuild a toolchain from source in a different language rather than from a pre-built binary.</p>
+<p>Because each compiler is built by an earlier compiler, you are ultimately trusting a long chain of binaries you did not build yourself. Ken Thompson's classic lecture "Reflections on Trusting Trust" showed that a malicious compiler could inject code into programs, including into future copies of itself, invisibly. Modern projects respond with reproducible builds and "diverse double-compilation," and with seed compilers like <a href="/tools/mrustc">mrustc</a> that let you rebuild a toolchain from source in a different language rather than from a pre-built binary.</p>
 
 <a class="explore-btn" href="/explore">Explore Bootstrap Chains in Graph &rarr;</a>`,
   },
@@ -2934,7 +2935,7 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
 </ul>
 
 <h2>Self-Hosting vs. Bootstrapping</h2>
-<p>Bootstrapping is the process of <em>achieving</em> self-hosting. A self-hosting language is the <em>result</em>. Not all languages are self-hosting — many interpreters are written in C and never become self-hosting.</p>
+<p>Bootstrapping is the process of <em>achieving</em> self-hosting. A self-hosting language is the <em>result</em>. Not all languages are self-hosting, many interpreters are written in C and never become self-hosting.</p>
 
 <a class="explore-btn" href="/explore">Explore in Graph &rarr;</a>`,
   },
@@ -2946,7 +2947,7 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
     content: `<div class="answer-box">A <strong>compiler</strong> translates source code to machine code ahead of time. An <strong>interpreter</strong> executes source code directly at runtime. A <strong>runtime</strong> is the environment that manages execution, memory, and I/O for a running program.</div>
 
 <h2>Compilers</h2>
-<p>A compiler takes source code and produces an executable (machine code, bytecode, or another language). Examples: GCC (C/C++), rustc (Rust), javac (Java). The compiler itself is written in some implementation language — this is what the Language Lineage "compiler_written_in" relationships track.</p>
+<p>A compiler takes source code and produces an executable (machine code, bytecode, or another language). Examples: GCC (C/C++), rustc (Rust), javac (Java). The compiler itself is written in some implementation language, this is what the Language Lineage "compiler_written_in" relationships track.</p>
 
 <h2>Interpreters</h2>
 <p>An interpreter reads and executes source code without a separate compilation step. CPython (the standard Python interpreter) is an interpreter written in C. The "runtime_written_in" relationship tracks what language the interpreter is written in.</p>
@@ -2966,19 +2967,19 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
 <h2>Two kinds of family ties</h2>
 <p>Languages are related in two distinct ways, and it helps to keep them separate:</p>
 <ul>
-<li><strong>Influence</strong> — a design lineage. <a href="/languages/python">Python</a> borrowed readability from <a href="/languages/abc">ABC</a> and list handling from Lisp, but no Python code came from them.</li>
-<li><strong>Implementation</strong> — what a language is built in. Python's reference interpreter, CPython, is written in <a href="/languages/c">C</a>. That is a concrete dependency, not just inspiration.</li>
+<li><strong>Influence</strong>, a design lineage. <a href="/languages/python">Python</a> borrowed readability from <a href="/languages/abc">ABC</a> and list handling from Lisp, but no Python code came from them.</li>
+<li><strong>Implementation</strong>, what a language is built in. Python's reference interpreter, CPython, is written in <a href="/languages/c">C</a>. That is a concrete dependency, not just inspiration.</li>
 </ul>
 <p>Most "family tree" diagrams only show influence. This atlas tracks both, which is why C sits at the center of so much of the graph: dozens of languages were <em>inspired</em> by others but are <em>implemented</em> in C.</p>
 
 <h2>The roots (1950s)</h2>
-<p>The first high-level languages established the paradigms everything else descends from. <a href="/languages/fortran">Fortran</a> (1957, John Backus at IBM) pioneered imperative scientific computing and proved a compiler could match hand-written assembly. <a href="/languages/lisp">Lisp</a> (1958, John McCarthy) introduced functional programming, garbage collection, the REPL, and the radical idea of treating code as data. <a href="/languages/cobol">COBOL</a> (1959, Grace Hopper and CODASYL) brought English-like syntax to business computing — and still runs much of the world's banking.</p>
+<p>The first high-level languages established the paradigms everything else descends from. <a href="/languages/fortran">Fortran</a> (1957, John Backus at IBM) pioneered imperative scientific computing and proved a compiler could match hand-written assembly. <a href="/languages/lisp">Lisp</a> (1958, John McCarthy) introduced functional programming, garbage collection, the REPL, and the radical idea of treating code as data. <a href="/languages/cobol">COBOL</a> (1959, Grace Hopper and CODASYL) brought English-like syntax to business computing, and still runs much of the world's banking.</p>
 
 <h2>The ALGOL line and the birth of C (1960s–70s)</h2>
-<p><a href="/languages/algol">ALGOL</a> introduced block structure and lexical scoping, the grammar of nearly every modern language. That line ran through <a href="/languages/bcpl">BCPL</a> to <a href="/languages/b">B</a> and then to <a href="/languages/c">C</a> (1972, Dennis Ritchie at Bell Labs). C became the implementation language of choice for operating systems and runtimes — it is what Unix, and later Linux, are written in. Its descendant <a href="/languages/cxx">C++</a> added object orientation and templates, and C became the runtime language for Python, Ruby, PHP, Lua, and many more.</p>
+<p><a href="/languages/algol">ALGOL</a> introduced block structure and lexical scoping, the grammar of nearly every modern language. That line ran through <a href="/languages/bcpl">BCPL</a> to <a href="/languages/b">B</a> and then to <a href="/languages/c">C</a> (1972, Dennis Ritchie at Bell Labs). C became the implementation language of choice for operating systems and runtimes, it is what Unix, and later Linux, are written in. Its descendant <a href="/languages/cxx">C++</a> added object orientation and templates, and C became the runtime language for Python, Ruby, PHP, Lua, and many more.</p>
 
 <h2>The functional and object-oriented branches (1970s–90s)</h2>
-<p>Two influential branches grew in parallel. On the functional side, <a href="/languages/ml">ML</a> introduced powerful static type inference, leading to <a href="/languages/haskell">Haskell</a>, <a href="/languages/ocaml">OCaml</a>, and later <a href="/languages/fsharp">F#</a> — and OCaml is where the first <a href="/languages/rust">Rust</a> compiler was written. On the object-oriented side, <a href="/languages/smalltalk">Smalltalk</a> defined pure OOP and the modern IDE, shaping Python, Ruby, and Objective-C. <a href="/languages/java">Java</a> (1995) then took managed runtimes and garbage collection mainstream with the JVM, and <a href="/languages/javascript">JavaScript</a> (1995) brought dynamic scripting to the web.</p>
+<p>Two influential branches grew in parallel. On the functional side, <a href="/languages/ml">ML</a> introduced powerful static type inference, leading to <a href="/languages/haskell">Haskell</a>, <a href="/languages/ocaml">OCaml</a>, and later <a href="/languages/fsharp">F#</a>, and OCaml is where the first <a href="/languages/rust">Rust</a> compiler was written. On the object-oriented side, <a href="/languages/smalltalk">Smalltalk</a> defined pure OOP and the modern IDE, shaping Python, Ruby, and Objective-C. <a href="/languages/java">Java</a> (1995) then took managed runtimes and garbage collection mainstream with the JVM, and <a href="/languages/javascript">JavaScript</a> (1995) brought dynamic scripting to the web.</p>
 
 <h2>The modern era (2000s–2020s)</h2>
 <p>Today's languages synthesize all of these threads. <a href="/languages/go">Go</a> (2009) revived the simplicity of C with built-in concurrency. <a href="/languages/rust">Rust</a> (2010) combined ML-style types with systems-level control and memory safety without a garbage collector. <a href="/languages/swift">Swift</a> and <a href="/languages/kotlin">Kotlin</a> modernized mobile development, and <a href="/languages/typescript">TypeScript</a> added a type system on top of JavaScript. Each one is a remix of decisions made decades earlier.</p>
@@ -2993,10 +2994,10 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
     title: 'How JavaScript Engines Work | Language Lineage',
     h1: 'How JavaScript Engines Work',
     description: 'JavaScript engines like V8, SpiderMonkey, and JavaScriptCore are written in C++. Learn how they parse, compile, and execute JavaScript code.',
-    content: `<div class="answer-box">A JavaScript engine parses JavaScript source, compiles it to bytecode and then to machine code, and executes it. The three major engines — <strong>V8</strong>, <strong>SpiderMonkey</strong>, and <strong>JavaScriptCore</strong> — are written mainly in <strong>C++</strong> (SpiderMonkey also uses Rust). JavaScript the <em>language</em> is defined by the ECMAScript standard; the engines are the implementations.</div>
+    content: `<div class="answer-box">A JavaScript engine parses JavaScript source, compiles it to bytecode and then to machine code, and executes it. The three major engines, <strong>V8</strong>, <strong>SpiderMonkey</strong>, and <strong>JavaScriptCore</strong>, are written mainly in <strong>C++</strong> (SpiderMonkey also uses Rust). JavaScript the <em>language</em> is defined by the ECMAScript standard; the engines are the implementations.</div>
 
 <h2>The language vs the engine</h2>
-<p>"What is JavaScript written in?" is really two questions. <a href="/languages/javascript">JavaScript</a> itself is a specification — ECMAScript, standardized by TC39 — so the language is not "written in" anything. What is written in a concrete language is the <em>engine</em> that runs JavaScript, and the performance-critical parts of every major engine are written in C++.</p>
+<p>"What is JavaScript written in?" is really two questions. <a href="/languages/javascript">JavaScript</a> itself is a specification, ECMAScript, standardized by TC39, so the language is not "written in" anything. What is written in a concrete language is the <em>engine</em> that runs JavaScript, and the performance-critical parts of every major engine are written in C++.</p>
 
 <h2>The execution pipeline</h2>
 <p>Modern engines do not simply interpret source line by line. They run a multi-stage pipeline:</p>
@@ -3057,14 +3058,14 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
     title: 'How Rust is Bootstrapped | Language Lineage',
     h1: 'How Rust is Bootstrapped',
     description: 'Rust is a self-hosting language. The Rust compiler (rustc) is written in Rust itself. Learn how the Rust bootstrap process works.',
-    content: `<div class="answer-box">The Rust compiler (<strong>rustc</strong>) is written in Rust. To bootstrap Rust from scratch, you need a prior version of rustc — the compiler bootstraps itself through a stage-based process.</div>
+    content: `<div class="answer-box">The Rust compiler (<strong>rustc</strong>) is written in Rust. To bootstrap Rust from scratch, you need a prior version of rustc, the compiler bootstraps itself through a stage-based process.</div>
 
 <h2>The Rust Bootstrap Process</h2>
 <p>Rust uses a multi-stage bootstrap:</p>
 <ul>
 <li><strong>Stage 0:</strong> Download a pre-compiled rustc binary (the "beta" channel release)</li>
 <li><strong>Stage 1:</strong> Use Stage 0 to compile the current rustc source code</li>
-<li><strong>Stage 2:</strong> Use Stage 1 to compile rustc again — this is the final compiler</li>
+<li><strong>Stage 2:</strong> Use Stage 1 to compile rustc again, this is the final compiler</li>
 </ul>
 <p>Stage 2 is used because it ensures the compiler was compiled by the same-version compiler, catching any bootstrap-specific bugs.</p>
 
@@ -3116,8 +3117,8 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
     slug: 'how-programming-languages-are-made',
     title: 'How Are Programming Languages Made? | Language Lineage',
     h1: 'How Are Programming Languages Made?',
-    description: 'Learn how programming languages are designed and implemented. Languages are built using other languages — compilers and interpreters are programs written in existing languages.',
-    content: `<div class="answer-box">Programming languages are implemented using other languages. A compiler or interpreter is a program — and every program is written in some language. The first compilers were written in assembly; today most are self-hosting or written in C, C++, or Rust.</div>
+    description: 'Learn how programming languages are designed and implemented. Languages are built using other languages, compilers and interpreters are programs written in existing languages.',
+    content: `<div class="answer-box">Programming languages are implemented using other languages. A compiler or interpreter is a program, and every program is written in some language. The first compilers were written in assembly; today most are self-hosting or written in C, C++, or Rust.</div>
 
 <h2>What is a Programming Language Implementation?</h2>
 <p>A programming language is defined by its specification (grammar, semantics). Its <em>implementation</em> is a compiler or interpreter that executes code written in that language. CPython implements Python; rustc implements Rust; V8 implements JavaScript.</p>
@@ -3126,7 +3127,7 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
 <p>A <strong>compiler</strong> translates source code to machine code or bytecode ahead of time. A <strong>interpreter</strong> reads and executes source code directly. Most languages use one or both: Java compiles to bytecode, then the JVM interprets or JIT-compiles that bytecode.</p>
 
 <h2>The Bootstrap Problem</h2>
-<p>To write a compiler for a new language, you need an existing language to write it in. Early compilers were written in assembly or C. Once a compiler is stable, it can be rewritten in the language itself — this is called bootstrapping. Languages like Rust, Go, Haskell, and OCaml are self-hosting: their compilers are written in themselves.</p>
+<p>To write a compiler for a new language, you need an existing language to write it in. Early compilers were written in assembly or C. Once a compiler is stable, it can be rewritten in the language itself, this is called bootstrapping. Languages like Rust, Go, Haskell, and OCaml are self-hosting: their compilers are written in themselves.</p>
 
 <h2>Examples from the Dataset</h2>
 <ul>
@@ -3370,7 +3371,7 @@ function buildToolsIndex(langs: Language[]): string {
     <a href="/">Home</a> &rsaquo; Tools
   </nav>
   <h1>Compilers, Runtimes, and Tools</h1>
-  <div class="answer-box">This section covers the ${toolNodes.length} major compiler and runtime tools in the Language Lineage dataset — including GCC, LLVM, V8, SpiderMonkey, GHC, and HotSpot JVM. Each entry documents what the tool is written in, its relationships to languages, and its implementation history.</div>
+  <div class="answer-box">This section covers the ${toolNodes.length} major compiler and runtime tools in the Language Lineage dataset, including GCC, LLVM, V8, SpiderMonkey, GHC, and HotSpot JVM. Each entry documents what the tool is written in, its relationships to languages, and its implementation history.</div>
   <div class="tool-index-grid">${cards}</div>
   <a class="explore-btn" href="/explore">Explore All in Graph &rarr;</a>
 </main>
@@ -3645,7 +3646,7 @@ function buildTimelinePage(languages: Language[], rels: Relationship[]): string 
 </div>
 <div id="tl-graph-axis" style="display:none;"></div>
 <button class="tl-mode-toggle" id="tl-mode-toggle">Graph</button>
-<!-- Modal — springs from "+" click position -->
+<!-- Modal, springs from "+" click position -->
 <div class="tl-modal" id="tl-modal">
   <button class="tl-modal-close" id="tl-modal-close">&#x2715;</button>
   <div class="tl-modal-header">
@@ -3725,7 +3726,7 @@ cards.forEach(function(card){
   });
 });
 
-// "+" button — modal springs from click origin
+// "+" button, modal springs from click origin
 cards.forEach(function(card){
   var btn=card.querySelector('.tl-expand-btn');
   if(!btn)return;
@@ -3764,7 +3765,7 @@ cards.forEach(function(card){
 document.getElementById('tl-modal-close').addEventListener('click',function(){modal.classList.remove('show');});
 document.addEventListener('click',function(e){if(modal.classList.contains('show')&&!modal.contains(e.target))modal.classList.remove('show');});
 
-// Graph mode toggle — viewport-fitting decade-column logo circles
+// Graph mode toggle, viewport-fitting decade-column logo circles
 function setGraphMode(on){
   graphMode=on;
   modeBtn.textContent=on?'Timeline':'Graph';
@@ -3996,7 +3997,7 @@ window.addEventListener('load',function(){
     var mCardRevealed=new Array(cards.length).fill(false);
     mCardRevealed[0]=true;
 
-    // Vertical bezier path — vertical tangents give smooth S-curve flow
+    // Vertical bezier path, vertical tangents give smooth S-curve flow
     var mpd='M '+mpts[0].x+' '+mpts[0].y;
     for(var mi=1;mi<mpts.length;mi++){
       var mp=mpts[mi-1],mc=mpts[mi];
