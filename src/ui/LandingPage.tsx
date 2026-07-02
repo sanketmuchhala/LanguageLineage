@@ -5,6 +5,15 @@ import { initDataFlow } from '../fx/dataFlow';
 import { initCountUps, initHeroParallax } from '../fx/interactions';
 import './LandingPage.css';
 
+const FIELD_RECORDS = [
+  { name: 'Python', slug: 'python', href: '/languages/python', color: '#34d399', relLabel: 'runtime written in', fact: 'CPython runtime written in C since 1991. Not self-hosting.' },
+  { name: 'Rust', slug: 'rust', href: '/languages/rust', color: '#a78bfa', relLabel: 'bootstrap written in', fact: 'First written in OCaml, then bootstrapped through itself.' },
+  { name: 'JavaScript', slug: 'javascript', href: '/languages/javascript', color: '#34d399', relLabel: 'runtime written in', fact: 'V8, SpiderMonkey, and JavaScriptCore all written in C++.' },
+  { name: 'Go', slug: 'go', href: '/languages/go', color: '#e3a008', relLabel: 'compiler written in', fact: 'Original gc compiler in C; now self-hosting since Go 1.5.' },
+  { name: 'Java', slug: 'java', href: '/languages/java', color: '#34d399', relLabel: 'runtime written in', fact: 'HotSpot JVM written in C and C++.' },
+  { name: 'What is compiler bootstrapping?', slug: 'bootstrapping', href: '/guides/what-is-compiler-bootstrapping', color: '#60a5fa', relLabel: 'guide', fact: 'How languages compile themselves, and why it matters.' },
+];
+
 interface LandingPageProps {
   onEnterGraph: () => void;
 }
@@ -221,6 +230,29 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
 
       {/* The atlas: a live glimpse of the real graph */}
       <LandingGraphGlimpse onOpen={onEnterGraph} />
+
+      {/* Field Records Section */}
+      <section className="section records-section">
+        <div className="records-inner">
+          <p className="section-eyebrow reveal">Field Records</p>
+          <h2 className="section-title records-title reveal">Language and tool pages</h2>
+          <div className="records-grid reveal">
+            {FIELD_RECORDS.map((rec) => (
+              <a key={rec.slug} href={rec.href} className="record-entry">
+                <span className="record-tick" style={{ backgroundColor: rec.color }} aria-hidden="true" />
+                <span className="record-name">{rec.name}</span>
+                <span className="record-fact">{rec.fact}</span>
+                <span className="record-rel">{rec.relLabel}</span>
+              </a>
+            ))}
+          </div>
+          <div className="records-browse reveal">
+            <a href="/languages" className="records-all-link">All 131 languages &rarr;</a>
+            <a href="/tools" className="records-all-link">All 21 tools &rarr;</a>
+            <a href="/guides" className="records-all-link">Guides &rarr;</a>
+          </div>
+        </div>
+      </section>
 
       {/* How Section */}
       <section id="explore" className="section how-section">
