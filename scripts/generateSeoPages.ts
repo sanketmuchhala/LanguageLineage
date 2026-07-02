@@ -2044,7 +2044,242 @@ ${FOOTER_HTML}
 </html>`;
 }
 
-function buildQuestionsIndex(): string {
+// ============================================================
+// AUTO-GENERATED QUESTION PAGES  (Phase 3)
+// ============================================================
+
+interface AutoQNode {
+  node: Language;
+  implEdges: Relationship[];
+}
+
+function buildAutoQuestionPage(aqn: AutoQNode, nodeMap: Map<string, Language>): string {
+  const { node, implEdges } = aqn;
+  const slug = idToSlug(node.id);
+  const url = `${SITE}/questions/what-is-${slug}-written-in`;
+  const title = `What is ${node.name} written in?`;
+  const enrich = ENRICHMENT[node.id];
+
+  const compilerEdges = implEdges.filter(e => e.relationship === 'compiler_written_in');
+  const runtimeEdges  = implEdges.filter(e => e.relationship === 'runtime_written_in');
+  const bootstrapEdges = implEdges.filter(e => e.relationship === 'bootstrap_written_in');
+  const isSelfHosting = implEdges.some(e => e.from_language === node.id);
+
+  function getNodeName(id: string): string {
+    const n = nodeMap.get(id);
+    return n ? n.name : id.replace(/^(lang|tool):/, '');
+  }
+  function uniqFromLangs(edges: Relationship[]): string[] {
+    const seen = new Set<string>();
+    return edges.reduce<string[]>((acc, e) => {
+      if (!seen.has(e.from_language)) { seen.add(e.from_language); acc.push(getNodeName(e.from_language)); }
+      return acc;
+    }, []);
+  }
+  function joinNames(names: string[]): string {
+    if (names.length === 1) return names[0];
+    if (names.length === 2) return `${names[0]} and ${names[1]}`;
+    return `${names.slice(0, -1).join(', ')}, and ${names[names.length - 1]}`;
+  }
+
+  // Synthesize direct answer
+  const answerParts: string[] = [];
+  if (isSelfHosting) {
+    answerParts.push(`${node.name} is self-hosting: its compiler is written in ${node.name} itself.`);
+    const nonSelf = compilerEdges.filter(e => e.from_language !== node.id);
+    if (nonSelf.length > 0) answerParts.push(`It also relies on ${joinNames(uniqFromLangs(nonSelf))} in its toolchain.`);
+  } else {
+    if (compilerEdges.length > 0) {
+      answerParts.push(`The ${node.name} compiler is written in ${joinNames(uniqFromLangs(compilerEdges))}.`);
+    }
+    if (runtimeEdges.length > 0) {
+      const rn = joinNames(uniqFromLangs(runtimeEdges));
+      answerParts.push(compilerEdges.length > 0 ? `Its runtime is written in ${rn}.` : `The ${node.name} runtime is written in ${rn}.`);
+    }
+    if (bootstrapEdges.length > 0) {
+      answerParts.push(`It bootstraps via ${joinNames(uniqFromLangs(bootstrapEdges))}.`);
+    }
+  }
+  const answerText = answerParts.join(' ');
+
+  // Build meta description with enough context to exceed 75 chars
+  const descParts: string[] = [answerText];
+  const goodTagline = enrich?.tagline && enrich.tagline.length > 3 && enrich.tagline !== 'node js';
+  if (goodTagline) descParts.push(` ${node.name} is ${aOrAn(enrich!.tagline!)} ${enrich!.tagline!}`);
+  const designers: string[] = (enrich?.facts as Record<string, string[]> | undefined)?.designers?.filter((d: string) => d?.length > 0) ?? [];
+  if (designers.length > 0) {
+    descParts.push(goodTagline
+      ? `, designed by ${joinNames(designers.slice(0, 2))}`
+      : ` ${node.name} was designed by ${joinNames(designers.slice(0, 2))}`);
+  }
+  if (node.first_release_year && node.first_release_year > 0) descParts.push(`, first released in ${node.first_release_year}`);
+  descParts.push('. Explore the full lineage on Language Lineage.');
+  const metaDescription = truncateMetaDescription(descParts.join(''));
+
+  // Title tag with hook (implementation language) if it fits in 75 chars
+  const allImplNames = uniqFromLangs(implEdges);
+  let hookText = isSelfHosting ? 'self-hosting' : allImplNames.length === 1 ? `written in ${allImplNames[0]}` : `${allImplNames[0]}${allImplNames.length > 1 ? ' and more' : ''}`;
+  const hookFits = (title.length + 1 + hookText.length + 19) <= 75;
+  const pageTitleTag = hookFits ? `${title} ${hookText} | Language Lineage` : `${title} | Language Lineage`;
+
+  // Enrichment context line
+  const enrichBits: string[] = [];
+  if (enrich?.tagline) enrichBits.push(`${node.name} is ${aOrAn(enrich.tagline)} ${enrich.tagline}`);
+  if (enrich?.designers && enrich.designers.length > 0) enrichBits.push(`designed by ${joinNames(enrich.designers.slice(0, 3))}`);
+  if (node.first_release_year && node.first_release_year > 0) enrichBits.push(`first released in ${node.first_release_year}`);
+  const enrichLine = enrichBits.length > 0 ? `<p>${escapeHtml(enrichBits.join(', '))}.</p>` : '';
+
+  // Implementation table rows
+  const relLabel: Record<string, string> = {
+    compiler_written_in: 'Compiler',
+    runtime_written_in: 'Runtime',
+    bootstrap_written_in: 'Bootstrap',
+  };
+  const tableRows = implEdges.map(e => {
+    const implNodeName = getNodeName(e.from_language);
+    const implSlug = e.from_language.replace(/^(lang|tool):/, '').replace(/_/g, '-');
+    const implPrefix = e.from_language.startsWith('tool:') ? 'tools' : 'languages';
+    const since = e.start_year ? ` (since ${e.start_year})` : '';
+    const notes = e.notes ? escapeHtml(e.notes) : '';
+    return `<tr><td>${relLabel[e.relationship] ?? e.relationship.replace(/_/g, ' ')}</td><td><a href="/${implPrefix}/${implSlug}">${escapeHtml(implNodeName)}</a>${since}</td><td>${notes}</td></tr>`;
+  }).join('\n      ');
+
+  // Context section explaining the relationship type
+  let contextHtml = '';
+  if (isSelfHosting) {
+    contextHtml = `<h2>Self-hosting</h2>
+<p>${escapeHtml(node.name)} is a self-hosting language: its compiler is written in ${escapeHtml(node.name)} itself. Self-hosting means the compiler can compile its own source code, which is a milestone in a language's maturity. New versions of the compiler are built using an older version of the same compiler, a process called bootstrapping.</p>
+<p>Self-hosting also acts as a practical stress test: if a language can compile its own compiler, most core language features have been validated in a complex, real-world workload. See <a href="/guides/what-is-compiler-bootstrapping">what is compiler bootstrapping</a> for a full explanation.</p>`;
+  } else if (bootstrapEdges.length > 0) {
+    const bLangs = joinNames(uniqFromLangs(bootstrapEdges));
+    contextHtml = `<h2>Bootstrap chain</h2>
+<p>Bootstrapping is the process of using a language's own compiler to compile a new version of itself. The very first compiler must be written in another language; once functional, that compiler can compile a self-hosted version. ${escapeHtml(node.name)} uses ${escapeHtml(bLangs)} as part of its bootstrap chain.</p>
+<p>See the guide on <a href="/guides/what-is-compiler-bootstrapping">what is compiler bootstrapping</a> for a walkthrough of how bootstrap chains work in practice.</p>`;
+  } else if (runtimeEdges.length > 0 && compilerEdges.length === 0) {
+    const rLangs = joinNames(uniqFromLangs(runtimeEdges));
+    contextHtml = `<h2>Runtime model</h2>
+<p>The ${escapeHtml(node.name)} runtime, written in ${escapeHtml(rLangs)}, manages the execution of ${escapeHtml(node.name)} programs. Runtime-based languages rely on a host process to interpret or compile code at runtime rather than compiling entirely ahead-of-time to native machine code. This means running ${escapeHtml(node.name)} programs requires the runtime to be present on the target system.</p>
+<p>The choice of ${escapeHtml(rLangs)} for the runtime gives ${escapeHtml(node.name)} access to native performance, established platform abstractions, and existing ecosystem libraries.</p>`;
+  } else if (compilerEdges.length > 0) {
+    const cLangs = joinNames(uniqFromLangs(compilerEdges));
+    contextHtml = `<h2>Compiler implementation</h2>
+<p>The ${escapeHtml(node.name)} compiler, written in ${escapeHtml(cLangs)}, translates ${escapeHtml(node.name)} source code into an executable or intermediate format. The choice of implementation language affects the compiler's portability, build-time dependencies, and the path toward ${escapeHtml(node.name)} eventually becoming self-hosting.</p>
+<p>Many language compilers are written in C or C++ for maximum portability and performance. When a compiler is written in a higher-level language, it can leverage that language's abstractions for clearer compiler code, at the cost of a longer bootstrap dependency chain.</p>`;
+  }
+
+  // Related links
+  const seenIds = new Set<string>();
+  const relatedLinks: string[] = [];
+  for (const e of implEdges.slice(0, 4)) {
+    if (seenIds.has(e.from_language)) continue;
+    seenIds.add(e.from_language);
+    const n = nodeMap.get(e.from_language);
+    if (!n) continue;
+    const s = idToSlug(n.id);
+    const pfx = n.id.startsWith('tool:') ? 'tools' : 'languages';
+    relatedLinks.push(`<a href="/${pfx}/${s}" class="discover-link">${escapeHtml(n.name)}</a>`);
+  }
+  relatedLinks.push(`<a href="/languages/${slug}" class="discover-link">${escapeHtml(node.name)} language page</a>`);
+  relatedLinks.push(`<a href="/what-are-programming-languages-written-in" class="discover-link">What are programming languages written in?</a>`);
+  relatedLinks.push(`<a href="/questions" class="discover-link">All questions</a>`);
+
+  // JSON-LD
+  const faqJsonLd = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [{ '@type': 'Question', name: title, acceptedAnswer: { '@type': 'Answer', text: answerText } }],
+  });
+  const articleJsonLd = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description: metaDescription,
+    url,
+    datePublished: node.first_release_year ? `${node.first_release_year}-01-01` : '2024-01-01',
+    dateModified: BUILD_DATE,
+    author: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
+    publisher: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
+    speakable: { '@type': 'SpeakableSpecification', cssSelector: ['.question-answer'] },
+  });
+  const breadcrumbJsonLd = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'Questions', item: `${SITE}/questions` },
+      { '@type': 'ListItem', position: 3, name: title, item: url },
+    ],
+  });
+
+  const pubDate = node.first_release_year ? `${node.first_release_year}-01-01` : '2024-01-01';
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${escapeHtml(pageTitleTag)}</title>
+  <meta name="description" content="${escapeHtml(metaDescription)}" />
+  <link rel="canonical" href="${url}" />
+  <link rel="icon" href="/favicon.svg" />
+  ${FONTS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  <link rel="alternate" href="${SITE}/languages/${slug}" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="${escapeHtml(pageTitleTag)}" />
+  <meta property="og:description" content="${escapeHtml(metaDescription)}" />
+  <meta property="og:url" content="${url}" />
+  <meta property="og:image" content="${SITE}/og-image.png" />
+  <meta property="article:published_time" content="${pubDate}" />
+  <meta property="article:modified_time" content="${BUILD_DATE}" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="${escapeHtml(pageTitleTag)}" />
+  <meta name="twitter:description" content="${escapeHtml(metaDescription)}" />
+  <script type="application/ld+json">${faqJsonLd}</script>
+  <script type="application/ld+json">${articleJsonLd}</script>
+  <script type="application/ld+json">${breadcrumbJsonLd}</script>
+</head>
+<body class="seo-page">
+${NAV_HTML}
+<main class="seo-main">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; <a href="/questions">Questions</a> &rsaquo; ${escapeHtml(title)}
+  </nav>
+
+  <h1>${escapeHtml(title)}</h1>
+
+  <div class="question-answer">${escapeHtml(answerText)}</div>
+
+  ${enrichLine}
+
+  <h2>Implementation</h2>
+  <table class="impl-table">
+    <thead><tr><th>Layer</th><th>Written in</th><th>Notes</th></tr></thead>
+    <tbody>
+      ${tableRows}
+    </tbody>
+  </table>
+
+  ${contextHtml}
+
+  <h2>Explore in the Graph</h2>
+  <p>See ${escapeHtml(node.name)}'s full lineage, including all implementation and influence relationships, in the interactive graph.</p>
+  <a class="explore-btn" href="/explore">Open Interactive Graph &rarr;</a>
+  <p>Or view the <a href="/languages/${slug}">${escapeHtml(node.name)} language page</a> for the complete record.</p>
+
+  <section class="discover-more" data-nosnippet>
+    <h2>Related Pages</h2>
+    <div class="discover-links">
+      ${relatedLinks.join('\n      ')}
+    </div>
+  </section>
+
+</main>
+${FOOTER_HTML}
+</body>
+</html>`;
+}
+
+function buildQuestionsIndex(autoPages: AutoQNode[]): string {
   const url = `${SITE}/questions`;
   const breadcrumbJsonLd = JSON.stringify({
     '@context': 'https://schema.org',
@@ -2054,6 +2289,12 @@ function buildQuestionsIndex(): string {
       { '@type': 'ListItem', position: 2, name: 'Questions', item: url },
     ],
   });
+  const autoLinks = autoPages
+    .sort((a, b) => a.node.name.localeCompare(b.node.name))
+    .map(aqn => {
+      const s = idToSlug(aqn.node.id);
+      return `<a href="/questions/what-is-${s}-written-in" class="related-card">What is ${escapeHtml(aqn.node.name)} written in?</a>`;
+    }).join('\n    ');
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -2081,7 +2322,7 @@ ${NAV_HTML}
   <h1>Programming Language Questions Answered</h1>
   <p>Direct, dataset-backed answers to common questions about what programming languages are written in, how compilers are bootstrapped, and how languages relate to each other.</p>
 
-  <h2>What is X written in?</h2>
+  <h2>Featured: what is X written in?</h2>
   <div class="related-grid">
     ${QUESTIONS.filter(q => q.slug.startsWith('what-is-') && q.slug.endsWith('-written-in')).map(q =>
       `<a href="/questions/${q.slug}" class="related-card">${escapeHtml(q.title)}</a>`
@@ -2093,6 +2334,11 @@ ${NAV_HTML}
     ${QUESTIONS.filter(q => !q.slug.endsWith('-written-in')).map(q =>
       `<a href="/questions/${q.slug}" class="related-card">${escapeHtml(q.title)}</a>`
     ).join('\n    ')}
+  </div>
+
+  <h2>More languages (${autoPages.length})</h2>
+  <div class="related-grid">
+    ${autoLinks}
   </div>
 
   <a class="explore-btn" href="/explore">Explore the Interactive Graph &rarr;</a>
@@ -3541,6 +3787,33 @@ const languages: Language[] = raw.languages ?? [];
 const rels: Relationship[] = raw.relationships ?? [];
 const nodeMap = new Map(languages.map(l => [l.id, l]));
 
+// Phase 3: compute auto-question-page nodes
+const IMPL_REL_TYPES_Q = new Set(['compiler_written_in', 'runtime_written_in', 'bootstrap_written_in']);
+const HAND_AUTHORED_Q = new Set([
+  'python','javascript','rust','go','java','c','cxx','typescript','ruby',
+]);
+const incomingImplMap = new Map<string, Relationship[]>();
+for (const rel of rels) {
+  if (!IMPL_REL_TYPES_Q.has(rel.relationship)) continue;
+  if (!rel.to_language.startsWith('lang:')) continue;
+  if (!incomingImplMap.has(rel.to_language)) incomingImplMap.set(rel.to_language, []);
+  incomingImplMap.get(rel.to_language)!.push(rel);
+}
+const AUTO_QUESTION_NODES: AutoQNode[] = [];
+for (const node of languages) {
+  if (!node.id.startsWith('lang:')) continue;
+  const slug = idToSlug(node.id);
+  if (HAND_AUTHORED_Q.has(slug)) continue;
+  const implEdges = incomingImplMap.get(node.id) ?? [];
+  if (implEdges.length === 0) continue;
+  if (!ENRICHMENT[node.id]) continue;
+  AUTO_QUESTION_NODES.push({ node, implEdges });
+}
+// Add auto slugs to QUESTION_PAGE_LANGS so language pages get cross-reference links
+for (const { node } of AUTO_QUESTION_NODES) {
+  QUESTION_PAGE_LANGS.add(idToSlug(node.id));
+}
+
 let count = 0;
 
 // Language and tool pages
@@ -4155,10 +4428,14 @@ writeFile(join(PUBLIC, 'compiler-runtime-bootstrap', 'index.html'), buildCompile
 console.log('Generated 6 new landing pages');
 
 // Question pages
-writeFile(join(PUBLIC, 'questions', 'index.html'), buildQuestionsIndex());
+writeFile(join(PUBLIC, 'questions', 'index.html'), buildQuestionsIndex(AUTO_QUESTION_NODES));
 for (const q of QUESTIONS) {
   writeFile(join(PUBLIC, 'questions', q.slug, 'index.html'), buildQuestionPage(q, nodeMap));
 }
-console.log(`Generated questions index + ${QUESTIONS.length} question pages`);
+for (const aqn of AUTO_QUESTION_NODES) {
+  const slug = idToSlug(aqn.node.id);
+  writeFile(join(PUBLIC, 'questions', `what-is-${slug}-written-in`, 'index.html'), buildAutoQuestionPage(aqn, nodeMap));
+}
+console.log(`Generated questions index + ${QUESTIONS.length} hand-authored + ${AUTO_QUESTION_NODES.length} auto question pages`);
 
 console.log('SEO page generation complete.');

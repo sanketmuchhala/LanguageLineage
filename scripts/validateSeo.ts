@@ -51,7 +51,7 @@ const sitemap = checkFile('sitemap.xml');
 if (sitemap) {
   const urlCount = (sitemap.match(/<url>/g) || []).length;
   ok(`sitemap.xml has ${urlCount} URLs`);
-  if (urlCount < 100) warn(`sitemap.xml has only ${urlCount} URLs, expected ~140+`);
+  if (urlCount < 280) warn(`sitemap.xml has only ${urlCount} URLs, expected 280+ after Phase 3 auto question pages`);
   if (sitemap.includes('https://languagelineage.org')) fail('sitemap.xml contains non-www URLs');
   else ok('sitemap.xml uses canonical www host');
 }
@@ -236,6 +236,37 @@ for (const slug of QUESTION_SLUGS) {
   if (!content.includes('question-answer')) { fail(`questions/${slug}: missing answer box`); questionErrors++; }
 }
 if (questionErrors === 0) ok(`${QUESTION_SLUGS.length} question pages valid`);
+
+// Phase 3: auto-generated question pages spot-check
+// Compute qualifying nodes using same criteria as generateSeoPages.ts
+interface SitemapRel { relationship: string; to_language: string }
+const sitemapRaw2 = JSON.parse(readFileSync(join(ROOT, 'dataset/v5/lineage_v5.json'), 'utf8'));
+const sitemapEnrich = JSON.parse(readFileSync(join(ROOT, 'dataset/v5/enrichment_v5.json'), 'utf8')).enrichment ?? {};
+const IMPL_REL_TYPES_V = new Set(['compiler_written_in', 'runtime_written_in', 'bootstrap_written_in']);
+const HAND_AUTHORED_V = new Set(['python','javascript','rust','go','java','c','cxx','typescript','ruby']);
+const implRelsV: SitemapRel[] = (sitemapRaw2.relationships ?? []).filter((r: SitemapRel) => IMPL_REL_TYPES_V.has(r.relationship));
+const incomingImplV = new Set(implRelsV.filter((r: SitemapRel) => r.to_language.startsWith('lang:')).map((r: SitemapRel) => r.to_language));
+const autoSlugsV: string[] = [];
+for (const node of (sitemapRaw2.languages ?? []) as Array<{id: string}>) {
+  if (!node.id.startsWith('lang:')) continue;
+  const slug = node.id.replace(/^lang:/, '').replace(/_/g, '-');
+  if (HAND_AUTHORED_V.has(slug)) continue;
+  if (!incomingImplV.has(node.id)) continue;
+  if (!sitemapEnrich[node.id]) continue;
+  autoSlugsV.push(slug);
+}
+const SPOT_CHECK_AUTO = autoSlugsV.slice(0, 5);
+let autoErrors = 0;
+for (const slug of SPOT_CHECK_AUTO) {
+  const path = `questions/what-is-${slug}-written-in/index.html`;
+  const content = checkFile(path);
+  if (!content) { autoErrors++; continue; }
+  if (!content.includes('<h1>')) { fail(`${path}: missing h1`); autoErrors++; }
+  if (!content.includes('question-answer')) { fail(`${path}: missing answer box`); autoErrors++; }
+  if (!content.includes('impl-table')) { fail(`${path}: missing implementation table`); autoErrors++; }
+  if (!content.includes('application/ld+json')) { fail(`${path}: missing JSON-LD`); autoErrors++; }
+}
+if (autoErrors === 0) ok(`${autoSlugsV.length} auto question pages generated; spot-checked ${SPOT_CHECK_AUTO.length}`);
 
 // Check Discover More section on priority language pages
 const discoverMoreChecks = ['languages/python/index.html', 'languages/rust/index.html', 'languages/javascript/index.html'];
