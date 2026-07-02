@@ -95,6 +95,7 @@ const urls: Array<{ loc: string; changefreq: string; priority: string }> = [
   ...QUESTION_SLUGS.map(s => ({ loc: `${SITE}/questions/${s}`, changefreq: 'monthly', priority: '0.8' })),
   ...AUTO_QUESTION_SLUGS.map(s => ({ loc: `${SITE}/questions/what-is-${s}-written-in`, changefreq: 'monthly', priority: '0.65' })),
   // Core pages
+  { loc: `${SITE}/directory`, changefreq: 'monthly', priority: '0.85' },
   { loc: `${SITE}/dataset`, changefreq: 'monthly', priority: '0.8' },
   { loc: `${SITE}/languages`, changefreq: 'monthly', priority: '0.75' },
   { loc: `${SITE}/tools`, changefreq: 'monthly', priority: '0.75' },

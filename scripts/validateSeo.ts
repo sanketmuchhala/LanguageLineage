@@ -246,6 +246,7 @@ const NEW_LANDING_PAGES = [
   'programming-language-evolution/index.html',
   'what-are-programming-languages-written-in/index.html',
   'compiler-runtime-bootstrap/index.html',
+  'directory/index.html',
 ];
 let landingErrors = 0;
 for (const p of NEW_LANDING_PAGES) {

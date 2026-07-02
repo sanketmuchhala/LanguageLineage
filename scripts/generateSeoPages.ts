@@ -47,6 +47,7 @@ const FOOTER_HTML = `<footer class="seo-footer-rich">
       <a href="/what-are-programming-languages-written-in">What languages are written in</a>
       <a href="/explore">Interactive Graph</a>
       <a href="/dataset">Dataset</a>
+      <a href="/directory">Site Directory</a>
     </div>
     <div class="footer-col">
       <span class="footer-col-head">Popular Languages</span>
@@ -4910,6 +4911,108 @@ ${chainBlocks}
   });
 })();
 
+function buildDirectoryPage(languages: Language[], rels: Relationship[]): string {
+  const sortedLanguages = [...languages].filter(l => idToPrefix(l.id) === 'languages').sort((a, b) => a.name.localeCompare(b.name));
+  const sortedTools = [...languages].filter(l => idToPrefix(l.id) === 'tools').sort((a, b) => a.name.localeCompare(b.name));
+  
+  const langLinks = sortedLanguages.map(l => `<li>${linkNode(l.id, nodeMap)}</li>`).join('\n');
+  const toolLinks = sortedTools.map(l => `<li>${linkNode(l.id, nodeMap)}</li>`).join('\n');
+  
+  const handQLinks = QUESTIONS.map(q => `<li><a href="/questions/${q.slug}">${escapeHtml(q.title)}</a></li>`).join('\n');
+  const autoQLinks = AUTO_QUESTION_NODES.map(aqn => {
+    const slug = idToSlug(aqn.node.id);
+    return `<li><a href="/questions/what-is-${slug}-written-in">What is ${escapeHtml(aqn.node.name)} written in?</a></li>`;
+  }).join('\n');
+  
+  const guideLinks = GUIDES.map(g => `<li><a href="/guides/${g.slug}">${escapeHtml(g.title.split(' |')[0] || '')}</a></li>`).join('\n');
+  
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Site Directory | Language Lineage</title>
+  <meta name="description" content="A complete directory of all programming languages, tools, questions, and guides on Language Lineage.">
+  <link rel="canonical" href="${SITE}/directory">
+  <meta property="og:title" content="Site Directory | Language Lineage">
+  <meta property="og:description" content="A complete directory of all programming languages, tools, questions, and guides on Language Lineage.">
+  <meta property="og:url" content="${SITE}/directory">
+  <meta property="og:image" content="${ogImg('directory.png')}">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="stylesheet" href="/seo.css">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Site Directory | Language Lineage",
+      "description": "A complete directory of all programming languages, tools, questions, and guides on Language Lineage.",
+      "url": "${SITE}/directory"
+    }
+  </script>
+  <style>
+    .directory-list {
+      columns: 3;
+      column-gap: 2rem;
+      list-style: none;
+      padding: 0;
+      margin-top: 1rem;
+      margin-bottom: 3rem;
+    }
+    .directory-list li {
+      margin-bottom: 0.75rem;
+      break-inside: avoid;
+    }
+    .directory-list a {
+      text-decoration: none;
+      color: #3b82f6;
+    }
+    .directory-list a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 768px) { .directory-list { columns: 2; } }
+    @media (max-width: 480px) { .directory-list { columns: 1; } }
+  </style>
+  ${FONTS_HEAD}
+</head>
+<body>
+  ${NAV_HTML}
+  <main class="seo-main" id="main-content">
+    <div class="hero">
+      <h1>Site Directory</h1>
+      <p class="hero-subtitle">A complete index of every language, tool, and question on Language Lineage.</p>
+    </div>
+    
+    <div class="content-body">
+      <h2>Programming Languages</h2>
+      <ul class="directory-list">
+        ${langLinks}
+      </ul>
+      
+      <h2>Compilers &amp; Tools</h2>
+      <ul class="directory-list">
+        ${toolLinks}
+      </ul>
+      
+      <h2>Guides &amp; Articles</h2>
+      <ul class="directory-list">
+        ${guideLinks}
+      </ul>
+      
+      <h2>Implementation Questions</h2>
+      <ul class="directory-list">
+        ${handQLinks}
+        ${autoQLinks}
+      </ul>
+    </div>
+  </main>
+  ${FOOTER_HTML}
+</body>
+</html>`;
+
+  return html;
+}
+
 // Guide pages
 for (const guide of GUIDES) {
   writeFile(join(PUBLIC, 'guides', guide.slug, 'index.html'), processPage(buildGuidePage(guide)));
@@ -4926,6 +5029,10 @@ console.log('Generated 4 collection index pages');
 // Timeline page
 writeFile(join(PUBLIC, 'timeline', 'index.html'), buildTimelinePage(languages, rels));
 console.log('Generated timeline page');
+
+// Directory page
+writeFile(join(PUBLIC, 'directory', 'index.html'), buildDirectoryPage(languages, rels));
+console.log('Generated directory page');
 
 // New landing pages
 writeFile(join(PUBLIC, 'programming-language-graph', 'index.html'), buildProgrammingLanguageGraph(languages, rels));
