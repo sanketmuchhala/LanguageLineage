@@ -1822,3 +1822,89 @@
 /* Live atlas: fade the graph in once it has laid out. */
 .atlas-canvas { opacity: 0; transition: opacity 0.9s ease; }
 .atlas-frame.is-ready .atlas-canvas { opacity: 1; }
+
+/* Field Records section */
+.records-section { padding: 80px 0; }
+.records-inner { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+.records-title { margin-bottom: 32px; }
+.records-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.record-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 20px 20px 18px;
+  border-right: 1px solid rgba(255,255,255,0.10);
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.18s ease;
+}
+.record-entry:nth-child(3n) { border-right: none; }
+.record-entry:nth-last-child(-n+3) { border-bottom: none; }
+.record-entry:hover { background: rgba(255,255,255,0.03); }
+.record-tick {
+  display: block;
+  width: 28px;
+  height: 3px;
+  border-radius: 2px;
+  margin-bottom: 4px;
+  flex-shrink: 0;
+}
+.record-name {
+  font-family: var(--font-display, 'Fraunces', serif);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--color-text, #fafafa);
+  line-height: 1.2;
+}
+.record-fact {
+  font-size: 0.82rem;
+  color: var(--color-text-muted, #9a9a9a);
+  line-height: 1.45;
+  flex: 1;
+}
+.record-rel {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 0.72rem;
+  color: var(--color-text-subtle, #5a5a5a);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-top: 4px;
+}
+.records-browse {
+  display: flex;
+  gap: 24px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+.records-all-link {
+  font-size: 0.85rem;
+  color: var(--color-text-muted, #9a9a9a);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+  padding-bottom: 1px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.records-all-link:hover { color: var(--color-accent, #4ade80); border-color: var(--color-accent, #4ade80); }
+
+@media (max-width: 640px) {
+  .records-grid { grid-template-columns: 1fr; }
+  .record-entry { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.10); }
+  .record-entry:last-child { border-bottom: none; }
+}
+@media (min-width: 641px) and (max-width: 880px) {
+  .records-grid { grid-template-columns: repeat(2, 1fr); }
+  .record-entry:nth-child(3n) { border-right: 1px solid rgba(255,255,255,0.10); }
+  .record-entry:nth-child(2n) { border-right: none; }
+  .record-entry:nth-last-child(-n+2) { border-bottom: none; }
+  .record-entry:nth-last-child(-n+3):not(:nth-last-child(-n+2)) { border-bottom: 1px solid rgba(255,255,255,0.10); }
+}
+@media (max-width: 320px) {
+  .records-inner { padding: 0 12px; }
+}

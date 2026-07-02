@@ -441,7 +441,7 @@ Acceptance criteria:
 
 ### Phase 10: Homepage conversion pass
 
-Status: not started.
+Status: DONE (2026-07-02). PR #31.
 Impact: medium. Effort: low-medium. Dependencies: Phase 9 (deep links make the featured section far stronger).
 
 Why: the homepage ranks (position 7.3, 1.85% CTR, the site's best) but sends visitors only to `/explore`. It should also route people and link equity to the records and guides.
