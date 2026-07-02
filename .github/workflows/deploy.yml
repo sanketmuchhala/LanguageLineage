@@ -40,12 +40,6 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
-      - name: Resolve Symlinks
-        run: |
-          # GitHub Pages does not support symlinks pointing outside the artifact.
-          # Replace the dist/dataset symlink with a hard copy of the directory.
-          rm dist/dataset
-          cp -R dataset dist/dataset
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
