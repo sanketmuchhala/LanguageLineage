@@ -31,7 +31,7 @@ function checkFile(rel: string): string | null {
 }
 
 // Static files
-const staticFiles = ['robots.txt', 'sitemap.xml', 'manifest.json', 'og-image.svg', 'seo.css', 'llms.txt', 'favicon.svg', 'logo-mark.svg', 'logo-banner.svg'];
+const staticFiles = ['robots.txt', 'sitemap.xml', 'manifest.json', 'og-image.svg', 'seo.css', 'llms.txt', 'llms-full.txt', 'favicon.svg', 'logo-mark.svg', 'logo-banner.svg'];
 for (const f of staticFiles) {
   const content = checkFile(f);
   if (content) ok(`public/${f} exists (${content.length} bytes)`);
@@ -85,6 +85,11 @@ for (const [label, needle] of indexChecks) {
   if (!indexHtml.includes(needle)) fail(`index.html missing ${label}`);
   else ok(`index.html has ${label}`);
 }
+if (indexHtml.includes('"@type": "Dataset"') || indexHtml.includes('"@type":"Dataset"')) {
+  fail('index.html duplicates Dataset JSON-LD; Dataset schema belongs on /dataset only');
+} else {
+  ok('Dataset JSON-LD has a single source of truth on /dataset');
+}
 
 // Language/tool pages
 interface LangNode { id: string; name: string }
@@ -100,6 +105,7 @@ function idToPrefix(id: string): string {
 
 const titles = new Set<string>();
 let pageErrors = 0;
+let embedKitErrors = 0;
 
 for (const lang of languages) {
   const prefix = idToPrefix(lang.id);
@@ -113,6 +119,13 @@ for (const lang of languages) {
   if (!content.includes('name="description"')) { fail(`${relPath}: missing meta description`); pageErrors++; }
   if (!content.includes('rel="canonical"')) { fail(`${relPath}: missing canonical`); pageErrors++; }
   if (!content.includes('application/ld+json')) { fail(`${relPath}: missing JSON-LD`); pageErrors++; }
+  if (lang.id.startsWith('lang:')) {
+    const expectedEmbed = `https://www.languagelineage.org/embed?lang=${idToSlug(lang.id)}`;
+    if (!content.includes('class="embed-kit"') || !content.includes(expectedEmbed)) {
+      fail(`${relPath}: missing portable embed kit`);
+      embedKitErrors++;
+    }
+  }
 
   // Check description length
   const descMatch = content.match(/name="description" content="([^"]+)"/);
@@ -131,12 +144,48 @@ for (const lang of languages) {
 }
 
 if (pageErrors === 0) ok(`All ${languages.length} language/tool pages valid`);
+if (embedKitErrors === 0) ok('All language pages have portable embed snippets');
 
 // Dataset page
 const datasetPage = checkFile('dataset/index.html');
 if (datasetPage) {
   if (!datasetPage.includes('<h1>')) fail('dataset/index.html missing h1');
   else ok('dataset/index.html has h1');
+  const requiredDatasetArtifacts = [
+    'Current version:</strong> v5.0',
+    'Download dataset JSON',
+    'Creative Commons Attribution 4.0 International',
+    'class="citation-block"',
+    'class="embed-kit"',
+    'https://www.languagelineage.org/embed?lang=rust',
+  ];
+  for (const artifact of requiredDatasetArtifacts) {
+    if (!datasetPage.includes(artifact)) fail(`dataset/index.html missing Phase 13 artifact: ${artifact}`);
+  }
+
+  const jsonLdMatch = datasetPage.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+  try {
+    const schema = JSON.parse(jsonLdMatch?.[1] ?? '{}');
+    if (schema['@type'] !== 'Dataset') fail('dataset/index.html JSON-LD is not Dataset');
+    if (schema.version !== '5.0') fail('dataset/index.html JSON-LD missing version 5.0');
+    if (schema.license !== 'https://creativecommons.org/licenses/by/4.0/') fail('dataset/index.html JSON-LD has unexpected license');
+    if (schema.distribution?.contentUrl !== `${SITE}/dataset/v5/lineage_v5.json`) fail('dataset/index.html JSON-LD missing direct DataDownload URL');
+    else ok('dataset/index.html Dataset JSON-LD has version, license, and download metadata');
+  } catch {
+    fail('dataset/index.html Dataset JSON-LD is invalid JSON');
+  }
+}
+
+// Phase 13: llms.txt must cover the complete indexable sitemap.
+if (sitemap) {
+  const sitemapUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
+  for (const file of ['llms.txt', 'llms-full.txt']) {
+    const llms = checkFile(file);
+    if (!llms) continue;
+    const missing = sitemapUrls.filter(url => !llms.includes(`](${url})`));
+    if (missing.length > 0) fail(`${file} is missing ${missing.length} sitemap URLs; first missing: ${missing[0]}`);
+    else ok(`${file} lists all ${sitemapUrls.length} indexable pages`);
+  }
 }
 
 // Relationship pages

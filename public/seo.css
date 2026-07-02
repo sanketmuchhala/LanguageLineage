@@ -759,6 +759,45 @@ pre {
   margin-bottom: 16px;
 }
 
+.dataset-version {
+  color: var(--text-secondary);
+  margin: 20px 0 24px;
+}
+
+.download-btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.download-btn:hover {
+  background: rgba(74, 222, 128, 0.08);
+  text-decoration: none;
+}
+
+.embed-kit {
+  margin: 40px 0 24px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.embed-code,
+.citation-block {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.embed-attribution {
+  color: var(--text-tertiary);
+  font-size: 13px;
+}
+
 /* Featured languages grid (languages index page) */
 .featured-langs {
   display: grid;
