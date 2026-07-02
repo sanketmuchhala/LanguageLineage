@@ -348,7 +348,7 @@ Acceptance criteria:
 
 ### Phase 6: Internal linking architecture and crawl-depth audit
 
-Status: not started.
+Status: complete. PR #26 merged 2026-07-02.
 Impact: medium. Effort: medium. Dependencies: Phases 3 and 5 (link targets exist).
 
 Why: link equity currently pools in footers and ad-hoc related blocks. With roughly 300 pages after Phase 3, deliberate hub-and-spoke linking decides which pages rank.
