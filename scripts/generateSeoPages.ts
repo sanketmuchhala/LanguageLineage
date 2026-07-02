@@ -206,6 +206,60 @@ function writeFile(filePath: string, content: string) {
   writeFileSync(filePath, content, 'utf8');
 }
 
+const TOC_SKIP = ['Evidence Sources', 'Related Languages', 'Discover More', 'Frequently Asked', 'Explore in the Graph', 'Related Pages', 'Quick Facts'];
+
+function insertPageToc(html: string): string {
+  if (!html.includes('%%TOC%%')) return html;
+
+  const headings: { id: string; text: string }[] = [];
+  const idCounter: Record<string, number> = {};
+
+  const processed = html.replace(
+    /<h2((?:[^>]*?))>([\s\S]*?)<\/h2>/g,
+    (match, attrs: string, inner: string) => {
+      if (attrs.includes('lang-written-q')) return match;
+      const text = inner.replace(/<[^>]+>/g, '').trim();
+      if (TOC_SKIP.some(p => text.startsWith(p))) return match;
+      if (!text) return match;
+
+      const baseId = text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
+      if (!baseId) return match;
+
+      const count = idCounter[baseId] ?? 0;
+      idCounter[baseId] = count + 1;
+      const id = count === 0 ? baseId : `${baseId}-${count}`;
+
+      if (attrs.includes('id=')) {
+        const existingId = attrs.match(/id="([^"]+)"/)?.[1] ?? id;
+        headings.push({ id: existingId, text });
+        return match;
+      }
+
+      headings.push({ id, text });
+      return `<h2${attrs} id="${id}">${inner}</h2>`;
+    }
+  );
+
+  if (headings.length < 5) return processed.replace('%%TOC%%', '');
+
+  const tocHtml = `<nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+${headings.map(h => `    <li><a href="#${h.id}">${escapeHtml(h.text)}</a></li>`).join('\n')}
+  </ol>
+</nav>`;
+
+  return processed.replace('%%TOC%%', tocHtml);
+}
+
+function processPage(html: string): string {
+  // Wrap tables in overflow container to preserve semantics while enabling mobile scroll
+  const wrapped = html
+    .replace(/<table\b([^>]*)>/g, '<div class="table-wrap"><table$1>')
+    .replace(/<\/table>/g, '</table></div>');
+  return insertPageToc(wrapped);
+}
+
 function nameFromId(id: string, nodeMap: Map<string, Language>): string {
   return nodeMap.get(id)?.name ?? id.replace(/^(lang|tool):/, '').replace(/_/g, ' ');
 }
@@ -1773,6 +1827,7 @@ ${faqs.map(f => `<div class="faq-item">
 
   <h2 class="lang-written-q">What is ${escapeHtml(node.name)} written in?</h2>
   ${buildAnswerBox(node, rels, nodeMap)}
+  %%TOC%%
 
   ${buildUseCases(node)}
 ${priorityContentHtml ? `
@@ -3375,7 +3430,7 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
   <text x="404" y="134" class="bd-node-self">gc (Go 1.5)</text>
   <text x="404" y="164" class="bd-year">self-hosting 2015</text>
 </svg>
-<figcaption style="text-align:center;font-size:12px;color:#5a5a5a">Simplified bootstrap chains. Green border = self-hosting. Violet arrows = bootstrap_written_in edges from the dataset.</figcaption>
+<figcaption>Simplified bootstrap chains. Green border = self-hosting. Violet arrows = bootstrap_written_in edges from the dataset.</figcaption>
 </figure>
 
 <h2>Why languages bootstrap</h2>
@@ -3891,6 +3946,7 @@ function buildGuidePage(guide: (typeof GUIDES)[0]): string {
   </nav>
 
   <h1>${escapeHtml(guide.h1)}</h1>
+  %%TOC%%
 
   ${guide.content}
 
@@ -4186,7 +4242,7 @@ let count = 0;
 for (const node of languages) {
   const prefix = idToPrefix(node.id);
   const slug = idToSlug(node.id);
-  const html = buildNodePage(node, rels, nodeMap);
+  const html = processPage(buildNodePage(node, rels, nodeMap));
   writeFile(join(PUBLIC, prefix, slug, 'index.html'), html);
   count++;
 }
@@ -4872,7 +4928,7 @@ ${chainBlocks}
 
 // Guide pages
 for (const guide of GUIDES) {
-  writeFile(join(PUBLIC, 'guides', guide.slug, 'index.html'), buildGuidePage(guide));
+  writeFile(join(PUBLIC, 'guides', guide.slug, 'index.html'), processPage(buildGuidePage(guide)));
 }
 console.log(`Generated ${GUIDES.length} guide pages`);
 
@@ -4899,11 +4955,11 @@ console.log('Generated 6 new landing pages');
 // Question pages
 writeFile(join(PUBLIC, 'questions', 'index.html'), buildQuestionsIndex(AUTO_QUESTION_NODES));
 for (const q of QUESTIONS) {
-  writeFile(join(PUBLIC, 'questions', q.slug, 'index.html'), buildQuestionPage(q, nodeMap));
+  writeFile(join(PUBLIC, 'questions', q.slug, 'index.html'), processPage(buildQuestionPage(q, nodeMap)));
 }
 for (const aqn of AUTO_QUESTION_NODES) {
   const slug = idToSlug(aqn.node.id);
-  writeFile(join(PUBLIC, 'questions', `what-is-${slug}-written-in`, 'index.html'), buildAutoQuestionPage(aqn, nodeMap));
+  writeFile(join(PUBLIC, 'questions', `what-is-${slug}-written-in`, 'index.html'), processPage(buildAutoQuestionPage(aqn, nodeMap)));
 }
 console.log(`Generated questions index + ${QUESTIONS.length} hand-authored + ${AUTO_QUESTION_NODES.length} auto question pages`);
 

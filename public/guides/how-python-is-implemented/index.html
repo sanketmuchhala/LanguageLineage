@@ -38,17 +38,27 @@
   </nav>
 
   <h1>How Python is Implemented</h1>
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#the-language-vs-the-implementation">The language vs the implementation</a></li>
+    <li><a href="#how-cpython-runs-your-code">How CPython runs your code</a></li>
+    <li><a href="#alternative-python-implementations">Alternative Python implementations</a></li>
+    <li><a href="#is-python-self-hosting">Is Python self-hosting?</a></li>
+    <li><a href="#history-and-influences">History and influences</a></li>
+  </ol>
+</nav>
 
   <div class="answer-box"><strong>CPython</strong>, the reference Python implementation, is written in <strong>C</strong>. It compiles Python source to bytecode and runs that bytecode on a virtual machine implemented in C. Python the <em>language</em> is a specification, so other implementations exist: PyPy (in RPython), Jython (in Java), IronPython (in C#), and MicroPython (in C).</div>
 
-<h2>The language vs the implementation</h2>
+<h2 id="the-language-vs-the-implementation">The language vs the implementation</h2>
 <p>The Python language is defined by a specification and a reference implementation, not by a single source language. When people ask what Python is "written in," they almost always mean CPython, because it is the interpreter nearly everyone runs. CPython's bytecode interpreter, object model, memory manager, and C API are written in <a href="/languages/c">C</a>. The C standard library underneath gives Python its low-level system access, threading, and file I/O.</p>
 
-<h2>How CPython runs your code</h2>
+<h2 id="how-cpython-runs-your-code">How CPython runs your code</h2>
 <p>CPython does not execute Python text directly. It first compiles each module to bytecode (cached as <code>.pyc</code> files) and then runs that bytecode in a loop written in C, the CPython virtual machine. A detail that comes from this design is the Global Interpreter Lock (GIL), a mechanism in the C interpreter that lets only one thread execute Python bytecode at a time; recent CPython releases have begun offering an experimental "free-threaded" build that removes it. The reference source lives at <a href="https://github.com/python/cpython" rel="noopener noreferrer" target="_blank">github.com/python/cpython</a>.</p>
 
-<h2>Alternative Python implementations</h2>
-<table class="impl-table">
+<h2 id="alternative-python-implementations">Alternative Python implementations</h2>
+<div class="table-wrap"><table class="impl-table">
   <thead><tr><th>Implementation</th><th>Written in</th><th>Why use it</th></tr></thead>
   <tbody>
     <tr><td>CPython</td><td>C</td><td>The reference interpreter and default runtime</td></tr>
@@ -57,12 +67,12 @@
     <tr><td>IronPython</td><td>C#</td><td>Runs Python on the .NET runtime</td></tr>
     <tr><td>MicroPython</td><td>C</td><td>A tiny Python for microcontrollers</td></tr>
   </tbody>
-</table>
+</table></div>
 
-<h2>Is Python self-hosting?</h2>
+<h2 id="is-python-self-hosting">Is Python self-hosting?</h2>
 <p>No. The standard interpreter, CPython, is written in C, not Python, so Python is not self-hosting the way <a href="/languages/rust">Rust</a> or <a href="/languages/go">Go</a> are. PyPy comes closest: it is written in RPython, a restricted subset of Python designed to be analyzable and compilable to C.</p>
 
-<h2>History and influences</h2>
+<h2 id="history-and-influences">History and influences</h2>
 <p>Python was created by Guido van Rossum, who began it at CWI in the Netherlands in 1989 and released it in 1991. Its readability and design come directly from the <a href="/languages/abc">ABC</a> language, where van Rossum had previously worked, with further influence from <a href="/languages/modula3">Modula-3</a>, C, and Lisp. Python in turn influenced <a href="/languages/ruby">Ruby</a>, CoffeeScript, Swift, and many others. See the <a href="/languages/python">Python page</a> for the full, sourced relationship map.</p>
 
 <a class="explore-btn" href="/languages/python">View Python in Graph &rarr;</a>

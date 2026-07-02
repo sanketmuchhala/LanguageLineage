@@ -46,7 +46,7 @@
   <p>Swift is a general-purpose, multi-paradigm, compiled programming language, first released in 2014.</p>
 
   <h2>Implementation</h2>
-  <table class="impl-table">
+  <div class="table-wrap"><table class="impl-table">
     <thead><tr><th>Layer</th><th>Written in</th><th>Notes</th></tr></thead>
     <tbody>
       <tr><td>Compiler</td><td><a href="/languages/c">C</a> (since 2014)</td><td>Early Swift compiler had significant C components</td></tr>
@@ -55,7 +55,7 @@
       <tr><td>Bootstrap</td><td><a href="/languages/machine-code">Machine Code</a> (since 2022)</td><td>Swift bootstrap chain via LLVM</td></tr>
       <tr><td>Compiler</td><td><a href="/tools/llvm">LLVM</a> (since 2014)</td><td>Swift uses LLVM as compiler backend</td></tr>
     </tbody>
-  </table>
+  </table></div>
 
   <h2>Self-hosting</h2>
 <p>Swift is a self-hosting language: its compiler is written in Swift itself. Self-hosting means the compiler can compile its own source code, which is a milestone in a language's maturity. New versions of the compiler are built using an older version of the same compiler, a process called bootstrapping.</p>

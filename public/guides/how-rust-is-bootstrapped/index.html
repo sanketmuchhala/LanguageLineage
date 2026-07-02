@@ -38,10 +38,11 @@
   </nav>
 
   <h1>How Rust is Bootstrapped</h1>
+  
 
   <div class="answer-box">The Rust compiler (<strong>rustc</strong>) is written in Rust. To bootstrap Rust from scratch, you need a prior version of rustc, the compiler bootstraps itself through a stage-based process.</div>
 
-<h2>The Rust Bootstrap Process</h2>
+<h2 id="the-rust-bootstrap-process">The Rust Bootstrap Process</h2>
 <p>Rust uses a multi-stage bootstrap:</p>
 <ul>
 <li><strong>Stage 0:</strong> Download a pre-compiled rustc binary (the "beta" channel release)</li>
@@ -50,10 +51,10 @@
 </ul>
 <p>Stage 2 is used because it ensures the compiler was compiled by the same-version compiler, catching any bootstrap-specific bugs.</p>
 
-<h2>Historical Bootstrap</h2>
+<h2 id="historical-bootstrap">Historical Bootstrap</h2>
 <p>Rust's original compiler (before it was rewritten in Rust) was written in OCaml. The transition to self-hosting happened around 2011–2012. The OCaml compiler was phased out once the Rust-in-Rust compiler was stable.</p>
 
-<h2>mrustc: An Alternative Bootstrap Path</h2>
+<h2 id="mrustc-an-alternative-bootstrap-path">mrustc: An Alternative Bootstrap Path</h2>
 <p>mrustc is an alternative Rust compiler written in C++ that can compile older Rust code. It provides a bootstrap path that does not require a pre-compiled rustc binary, which is important for reproducible builds.</p>
 
 <a class="explore-btn" href="/languages/rust">View Rust in Graph &rarr;</a>

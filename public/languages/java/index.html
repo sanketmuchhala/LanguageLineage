@@ -70,21 +70,33 @@
 
   <h2 class="lang-written-q">What is Java written in?</h2>
   <div class="answer-box"><strong>Java</strong> has several layers. The <strong>javac</strong> compiler is written in <strong>Java</strong>, while the HotSpot JVM runtime is written mainly in <strong>C and C++</strong>. The Java standard library is largely written in Java.</div>
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#what-java-is-used-for">What Java is used for</a></li>
+    <li><a href="#about-java">About Java</a></li>
+    <li><a href="#java-in-the-language-family-tree">Java in the language family tree</a></li>
+    <li><a href="#java-compiler-vs-jvm-runtime">Java compiler vs JVM runtime</a></li>
+    <li><a href="#hotspot-jvm-and-modern-jit-compilation">HotSpot JVM and modern JIT compilation</a></li>
+    <li><a href="#java-implementation-layers">Java implementation layers</a></li>
+    <li><a href="#java-release-history">Java release history</a></li>
+  </ol>
+</nav>
 
   <section class="intent-section">
-  <h2>What Java is used for</h2>
+  <h2 id="what-java-is-used-for">What Java is used for</h2>
   <p>Java is a workhorse of enterprise back-end systems, Android apps, and big-data tooling. Its "write once, run anywhere" JVM, strong tooling, and vast ecosystem (Spring, Hibernate) make it a staple of banks, large web services, and Android development.</p>
 <p>Notable software: Android apps, Minecraft (Java Edition), and big-data systems like Apache Hadoop, Kafka, and Elasticsearch.</p>
 </section>
 
 
   <section class="intent-section">
-  <h2>About Java</h2>
+  <h2 id="about-java">About Java</h2>
   <p><strong>Java</strong> is an object-oriented programming language. It is a statically typed and garbage-collected language that compiles to bytecode that runs on a virtual machine. It supports object-oriented and imperative programming. Compiling to bytecode for a virtual machine is the same model the JVM and .NET use: the VM, not the CPU, interprets or JIT-compiles the bytecode.</p>
   <p>Java first appeared in 1995 and was designed by James Gosling and Sun Microsystems at Sun Microsystems. Today Java is one of the most widely used programming languages in the world.</p>
 </section>
 <section class="intent-section">
-  <h2>Java in the language family tree</h2>
+  <h2 id="java-in-the-language-family-tree">Java in the language family tree</h2>
   <p>Java drew on ideas from <a href="/languages/cxx">C++</a>, <a href="/languages/simula">Simula</a>, <a href="/languages/ada">Ada</a>, <a href="/languages/smalltalk">Smalltalk</a>, and <a href="/languages/mesa">Mesa</a> and went on to influence <a href="/languages/kotlin">Kotlin</a>, <a href="/languages/scala">Scala</a>, <a href="/languages/groovy">Groovy</a>, <a href="/languages/csharp">C#</a>, <a href="/languages/d">D</a>, and <a href="/languages/javascript">JavaScript</a>.</p>
   <p class="enrich-cite" style="font-size:13px;color:var(--text-tertiary);margin-top:14px">Sources: <a href="https://en.wikipedia.org/wiki/Java_(programming_language)" rel="noopener noreferrer" target="_blank">Wikipedia</a> &middot; <a href="https://www.wikidata.org/wiki/Q251" rel="noopener noreferrer" target="_blank">Wikidata</a> &middot; <a href="https://www.oracle.com/java/" rel="noopener noreferrer" target="_blank">Official site</a></p>
 </section>
@@ -108,20 +120,20 @@
   </div></dl>
 </section>
 <section class="intent-section">
-  <h2>Java compiler vs JVM runtime</h2>
+  <h2 id="java-compiler-vs-jvm-runtime">Java compiler vs JVM runtime</h2>
   <p>Java has a two-stage execution model that separates compilation from running. The javac compiler takes Java source files and produces class files containing JVM bytecode. Bytecode is a compact, platform-independent instruction set: the same class files run on Windows, Linux, and macOS without recompilation. Javac itself is written in Java and is part of the JDK (Java Development Kit). Because javac is a Java program, building a new version of javac requires an existing Java compiler.</p>
 <p>Executing bytecode is a different job from compiling source. The HotSpot JVM, which is the production JVM in OpenJDK (and thus in Oracle JDK, Amazon Corretto, Eclipse Temurin, and others), is written primarily in C and C++. HotSpot includes an interpreter for cold code paths, a JIT compiler that compiles hot methods to native machine code, and a suite of garbage collectors. The JIT compiler observes which methods are called most often and optimizes those aggressively, including inlining call chains that would be expensive to analyze at compile time.</p>
 <p>The Java standard library (java.lang, java.util, java.io, java.nio, and friends) is largely written in Java, though some classes have native methods that delegate to C or C++ for low-level OS integration. The combination gives Java its portability: application code and most of the standard library are bytecode that the JVM runs anywhere; only the JVM itself is platform-native code.</p>
 </section>
 <section class="intent-section">
-  <h2>HotSpot JVM and modern JIT compilation</h2>
+  <h2 id="hotspot-jvm-and-modern-jit-compilation">HotSpot JVM and modern JIT compilation</h2>
   <p>HotSpot's name comes from its original insight: most programs spend most of their time in a small fraction of their code. HotSpot monitors execution counts and compiles hot methods to native code using two JIT compilers: C1 (the client compiler, fast to compile but less optimized output) and C2 (the server compiler, slower to compile but generates heavily optimized native code). By default, methods start with the C1 tier and are promoted to C2 if they remain hot enough.</p>
 <p>GraalVM is a JDK distribution that replaces the C2 compiler with Graal, a JIT written entirely in Java. Graal can apply more aggressive speculative optimizations because it can use the full Java type system to represent its internal analysis. GraalVM also offers Native Image, which AOT-compiles Java applications to self-contained native executables by running compilation offline, reducing startup time and memory footprint significantly.</p>
 <p>Modern Java garbage collector options include: G1 (Garbage First, the default since Java 9, designed for large heaps with predictable pause targets), ZGC (concurrent, sub-millisecond pauses, available since Java 15, generational since Java 21), and Shenandoah (concurrent compaction, contributed by Red Hat). Each collector makes different tradeoffs between throughput, latency, and footprint.</p>
 </section>
 <section class="intent-section">
-  <h2>Java implementation layers</h2>
-  <table class="impl-table">
+  <h2 id="java-implementation-layers">Java implementation layers</h2>
+  <div class="table-wrap"><table class="impl-table">
   <thead><tr><th>Layer</th><th>Written in</th><th>What it does</th></tr></thead>
   <tbody>
     <tr><td>javac</td><td>Java</td><td>Compiles Java source to JVM bytecode (.class files)</td></tr>
@@ -130,10 +142,10 @@
     <tr><td>Java standard library (java.*)</td><td>Java (with native stubs)</td><td>Core APIs; some native methods delegate to C for OS calls</td></tr>
     <tr><td>GC (G1, ZGC, Shenandoah)</td><td>C++</td><td>Memory management, running concurrently with application threads</td></tr>
   </tbody>
-</table>
+</table></div>
 </section>
 <section class="intent-section">
-  <h2>Java release history</h2>
+  <h2 id="java-release-history">Java release history</h2>
   <span id="release-date"></span>
 <p>Java was created by James Gosling and colleagues at Sun Microsystems beginning in 1991, under the internal codename "Oak." The Green Project aimed to build a language for consumer electronics with a small footprint and platform independence. When the consumer electronics market did not materialize, the team pivoted to the web: Java 1.0 launched in January 1996 alongside the promise of "Write Once, Run Anywhere," backed by the first browser-embedded JVM.</p>
 <p>Java 1.1 (1997) added inner classes, reflection, and JDBC. Java 1.2 (1998, branded Java 2) introduced the Collections framework and the Swing UI toolkit. Java 5 (2004, previously numbered 1.5) was the biggest language update before Java 8: generics, annotations, enum types, autoboxing, and the enhanced for loop. Java 8 (March 2014) added lambda expressions, the Stream API, and the new java.time package.</p>

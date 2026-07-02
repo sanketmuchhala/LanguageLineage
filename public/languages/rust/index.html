@@ -70,21 +70,34 @@
 
   <h2 class="lang-written-q">What is Rust written in?</h2>
   <div class="answer-box"><strong>Rust</strong> is self-hosting: the official compiler, <strong>rustc</strong>, is written in <strong>Rust</strong>. Early Rust used an OCaml compiler, and modern rustc uses LLVM as its backend.</div>
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#what-rust-is-used-for">What Rust is used for</a></li>
+    <li><a href="#about-rust">About Rust</a></li>
+    <li><a href="#rust-in-the-language-family-tree">Rust in the language family tree</a></li>
+    <li><a href="#the-ocaml-origin-and-bootstrap-transition">The OCaml origin and bootstrap transition</a></li>
+    <li><a href="#rustc-compiler-architecture">rustc compiler architecture</a></li>
+    <li><a href="#mrustc-an-alternative-bootstrap-path">mrustc: an alternative bootstrap path</a></li>
+    <li><a href="#rust-implementation-layers">Rust implementation layers</a></li>
+    <li><a href="#rust-release-history-and-edition-system">Rust release history and edition system</a></li>
+  </ol>
+</nav>
 
   <section class="intent-section">
-  <h2>What Rust is used for</h2>
+  <h2 id="what-rust-is-used-for">What Rust is used for</h2>
   <p>Rust targets systems programming where safety and speed both matter: operating systems, browsers, command-line tools, WebAssembly, and performance-critical services. Its ownership model prevents whole classes of memory bugs without a garbage collector.</p>
 <p>Notable software: parts of Firefox, the Deno runtime, the ripgrep and fd CLI tools, and components inside Windows, Android, and the Linux kernel.</p>
 </section>
 
 
   <section class="intent-section">
-  <h2>About Rust</h2>
+  <h2 id="about-rust">About Rust</h2>
   <p><strong>Rust</strong> is a memory-safe programming language without garbage collection. It is a statically typed language that compiles ahead of time to native machine code. It supports systems, imperative, and functional programming.</p>
   <p>Rust first appeared in 2010 and was designed by Graydon Hoare at Mozilla. Rust has a large, active user base today.</p>
 </section>
 <section class="intent-section">
-  <h2>Rust in the language family tree</h2>
+  <h2 id="rust-in-the-language-family-tree">Rust in the language family tree</h2>
   <p>Rust drew on ideas from <a href="/languages/haskell">Haskell</a>, <a href="/languages/cxx">C++</a>, <a href="/languages/cyclone">Cyclone</a>, <a href="/languages/clu">CLU</a>, and <a href="/languages/alef">Alef</a> and went on to influence <a href="/languages/v">V</a>, <a href="/languages/gleam">Gleam</a>, <a href="/languages/zig">Zig</a>, <a href="/languages/swift">Swift</a>, <a href="/languages/pony">Pony</a>, and <a href="/languages/move">Move</a>.</p>
   <p class="enrich-cite" style="font-size:13px;color:var(--text-tertiary);margin-top:14px">Sources: <a href="https://en.wikipedia.org/wiki/Rust_(programming_language)" rel="noopener noreferrer" target="_blank">Wikipedia</a> &middot; <a href="https://www.wikidata.org/wiki/Q575650" rel="noopener noreferrer" target="_blank">Wikidata</a> &middot; <a href="https://rust-lang.org/" rel="noopener noreferrer" target="_blank">Official site</a></p>
 </section>
@@ -108,26 +121,26 @@
   </div></dl>
 </section>
 <section class="intent-section">
-  <h2>The OCaml origin and bootstrap transition</h2>
+  <h2 id="the-ocaml-origin-and-bootstrap-transition">The OCaml origin and bootstrap transition</h2>
   <p>Rust did not start self-hosted. Graydon Hoare began the language in 2006 as a personal project while working at Mozilla. The first compiler, known informally as rustboot, was written in OCaml. OCaml was a pragmatic choice for a language researcher: it has a powerful type system and pattern matching that suited the rapid experimentation Rust required in those early years.</p>
 <p>Mozilla began sponsoring the project in 2009. By that point the team was designing Rust's ownership and borrowing rules, a type system complex enough that the OCaml compiler would have become a maintenance burden: OCaml developers on the team were limited, and writing the compiler in the language being designed is the strongest possible end-to-end test of its expressiveness.</p>
 <p>The transition happened incrementally. The team first rewrote rustboot in Rust while keeping OCaml as the compilation host. Once that Rust-in-Rust compiler could compile itself, the OCaml dependency was dropped. By 2011, Rust was self-hosting: every new rustc release is compiled by the previous release. This is the standard self-hosting bootstrap: a stage-0 binary (the prior release) compiles stage-1 from the current source, stage-1 compiles stage-2, and stage-2 must be byte-for-byte identical to stage-3 to confirm the toolchain is internally consistent.</p>
 </section>
 <section class="intent-section">
-  <h2>rustc compiler architecture</h2>
+  <h2 id="rustc-compiler-architecture">rustc compiler architecture</h2>
   <p>rustc is a multi-stage compiler with several distinct intermediate representations. Source code is parsed into an abstract syntax tree (AST), then lowered to HIR (High-level Intermediate Representation), where type inference and trait resolution run. HIR is then lowered to MIR (Mid-level Intermediate Representation), which is the layer where the borrow checker operates. MIR's explicit control-flow graph makes liveness analysis and borrow-checking tractable.</p>
 <p>After MIR, rustc lowers to LLVM IR and calls LLVM for machine-code generation. LLVM provides target support for x86-64, ARM, RISC-V, WebAssembly, and other platforms. The decision to use LLVM from the beginning let rustc focus on language semantics rather than code generation, and gave Rust access to decades of LLVM optimization work.</p>
 <p>A second backend, Cranelift, has been available since Rust 1.67 as an opt-in alternative for debug builds. Cranelift compiles faster than LLVM at the cost of less optimized output, which speeds up the inner loop of Rust development. Cranelift is also the JIT backend for Wasmtime. The long-term goal is to use Cranelift for debug builds and LLVM for release builds.</p>
 </section>
 <section class="intent-section">
-  <h2>mrustc: an alternative bootstrap path</h2>
+  <h2 id="mrustc-an-alternative-bootstrap-path">mrustc: an alternative bootstrap path</h2>
   <p>mrustc is an independent Rust compiler written in C++. Unlike rustc, mrustc does not aim to be a general-purpose production compiler. Its purpose is security: it can compile an early version of rustc without relying on a pre-built rustc binary, breaking the binary dependency chain that concerns reproducible-build advocates.</p>
 <p>The Bootstrappable Builds project highlights the risk that a malicious binary compiler could inject hidden code into programs it compiles, including future compilers, in a way that no inspection of source code would reveal. This is Ken Thompson's "Trusting Trust" attack. mrustc provides a path from C (which has diverse compilers like GCC and Clang to cross-check each other) to Rust without trusting a Rust binary of unknown provenance.</p>
 <p>In practice, most Rust users rely on the rustup toolchain manager, which downloads pre-built binaries from the official Rust release infrastructure. mrustc is relevant to distributions and organizations that require a fully source-audited build chain.</p>
 </section>
 <section class="intent-section">
-  <h2>Rust implementation layers</h2>
-  <table class="impl-table">
+  <h2 id="rust-implementation-layers">Rust implementation layers</h2>
+  <div class="table-wrap"><table class="impl-table">
   <thead><tr><th>Layer</th><th>Written in</th><th>What it does</th></tr></thead>
   <tbody>
     <tr><td>rustc frontend (parser, HIR, MIR, borrow checker)</td><td>Rust</td><td>Parses, analyzes, type-checks, and borrow-checks Rust source</td></tr>
@@ -137,10 +150,10 @@
     <tr><td>mrustc</td><td>C++</td><td>Independent compiler for security-audited bootstrap chains</td></tr>
     <tr><td>Rust standard library</td><td>Rust</td><td>core and std, including allocator, collections, I/O, and threading</td></tr>
   </tbody>
-</table>
+</table></div>
 </section>
 <section class="intent-section">
-  <h2>Rust release history and edition system</h2>
+  <h2 id="rust-release-history-and-edition-system">Rust release history and edition system</h2>
   <span id="release-date"></span>
 <p>Graydon Hoare started Rust in 2006 as a personal project. Mozilla sponsored the project from 2009. Rust 0.1 shipped in January 2012. The language went through extensive design iteration during those years: early Rust had typestate, a different memory model, and a green-threading runtime, all of which were removed before 1.0.</p>
 <p>Rust 1.0 was released on May 15, 2015. It committed to stability: code that compiled under Rust 1.0 would compile without modification under all future Rust 1.x releases. Rust has shipped a new stable release every six weeks since 1.0, and that cadence has been maintained without interruption.</p>

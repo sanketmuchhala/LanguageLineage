@@ -38,16 +38,17 @@
   </nav>
 
   <h1>GCC vs LLVM: Compiler Infrastructure</h1>
+  
 
   <div class="answer-box">Both GCC (GNU Compiler Collection) and LLVM are written in <strong>C++</strong>. GCC is the older, traditionally Unix-focused compiler. LLVM is a modular, reusable compiler infrastructure used by Clang, Rust, Swift, Kotlin/Native, and many others.</div>
 
-<h2>GCC</h2>
+<h2 id="gcc">GCC</h2>
 <p>GCC has been the primary open-source C/C++ compiler since 1987. It supports dozens of languages (C, C++, Fortran, Ada, Go, D) and targets hundreds of architectures. GCC is written in C++ (migrated from C in 2012) and is licensed under GPL.</p>
 
-<h2>LLVM</h2>
+<h2 id="llvm">LLVM</h2>
 <p>LLVM started as a research project at the University of Illinois in 2000. It provides a modular compiler infrastructure with a well-defined intermediate representation (LLVM IR). Languages that compile to LLVM IR can target any architecture LLVM supports.</p>
 
-<h2>Languages That Use LLVM</h2>
+<h2 id="languages-that-use-llvm">Languages That Use LLVM</h2>
 <ul>
 <li>Clang (C/C++/Objective-C frontend)</li>
 <li>Rust (rustc uses LLVM as its backend)</li>
@@ -57,8 +58,8 @@
 <li>Haskell (GHC LLVM backend)</li>
 </ul>
 
-<h2>Key Differences</h2>
-<table>
+<h2 id="key-differences">Key Differences</h2>
+<div class="table-wrap"><table>
 <thead><tr><th>Aspect</th><th>GCC</th><th>LLVM</th></tr></thead>
 <tbody>
 <tr><td>License</td><td>GPL</td><td>Apache 2.0</td></tr>
@@ -66,7 +67,7 @@
 <tr><td>IR</td><td>GIMPLE/RTL</td><td>LLVM IR</td></tr>
 <tr><td>JIT support</td><td>Limited</td><td>First-class (MCJIT)</td></tr>
 </tbody>
-</table>
+</table></div>
 
 <a class="explore-btn" href="/explore">Explore Compiler Relationships in Graph &rarr;</a>
 

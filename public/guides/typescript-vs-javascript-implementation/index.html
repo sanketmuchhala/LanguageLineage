@@ -38,43 +38,55 @@
   </nav>
 
   <h1>TypeScript vs JavaScript Compilers: tsc, swc, and esbuild</h1>
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#what-typescript-adds-to-javascript">What TypeScript adds to JavaScript</a></li>
+    <li><a href="#tsc-the-official-typescript-compiler">tsc: the official TypeScript compiler</a></li>
+    <li><a href="#swc-a-typescript-transpiler-written-in-rust">swc: a TypeScript transpiler written in Rust</a></li>
+    <li><a href="#esbuild-a-bundler-and-transpiler-written-in-go">esbuild: a bundler and transpiler written in Go</a></li>
+    <li><a href="#comparison">Comparison</a></li>
+    <li><a href="#type-only-transpilation-vs-full-compilation">Type-only transpilation vs full compilation</a></li>
+    <li><a href="#the-full-implementation-chain">The full implementation chain</a></li>
+  </ol>
+</nav>
 
   <div class="answer-box">TypeScript is a superset of JavaScript with static types. The <strong>official compiler, tsc</strong>, is written in TypeScript (self-hosting). Alternatives such as <strong>swc</strong> (Rust) and <strong>esbuild</strong> (Go) transpile TypeScript at much higher speed but skip type checking. All three output plain JavaScript, which then runs in a JavaScript engine written in C++.</div>
 
-<h2>What TypeScript adds to JavaScript</h2>
+<h2 id="what-typescript-adds-to-javascript">What TypeScript adds to JavaScript</h2>
 <p>TypeScript is not a new runtime. It is JavaScript with an optional static type system layered on top. TypeScript source code is not executed directly; it is compiled, or more precisely transpiled, to plain JavaScript, which then runs in V8, SpiderMonkey, JavaScriptCore, or any other JavaScript engine. The TypeScript compiler removes type annotations and outputs JavaScript that behaves identically at runtime.</p>
 <p>This means TypeScript has two implementation layers: the transpiler (what turns TypeScript into JavaScript) and the JavaScript engine (what executes the resulting JavaScript). The <code>transpiled_to</code> relationship in the Language Lineage dataset records the first layer; <code>compiler_written_in</code> and <code>runtime_written_in</code> capture the second.</p>
 
-<h2>tsc: the official TypeScript compiler</h2>
+<h2 id="tsc-the-official-typescript-compiler">tsc: the official TypeScript compiler</h2>
 <p>tsc is the TypeScript compiler developed and maintained by Microsoft. Its most important property is that it is <strong>self-hosting</strong>: tsc is written in TypeScript. Each new version of tsc is compiled by the previous version. This mirrors the bootstrap pattern of mature self-hosting compilers like GHC (Haskell) and rustc (Rust).</p>
 <p>tsc performs two jobs: type checking and transpilation. Type checking analyzes the type annotations and infers types, catching errors at compile time. Transpilation strips type annotations and transforms TypeScript-only syntax (decorators, enums, parameter properties) to plain JavaScript. Both jobs happen in a single pass, but they can be decoupled: <code>tsc --noEmit</code> only type-checks, while tools like esbuild only transpile.</p>
 <p>tsc is not optimized for speed. It builds a full program graph for type checking, which is computationally expensive for large codebases. A cold tsc build on a large TypeScript project (say, 200,000 lines) can take 30 to 60 seconds. The project mode (<code>--build</code>) and incremental compilation (<code>--incremental</code>) reduce this significantly for rebuilds.</p>
 
-<h2>swc: a TypeScript transpiler written in Rust</h2>
+<h2 id="swc-a-typescript-transpiler-written-in-rust">swc: a TypeScript transpiler written in Rust</h2>
 <p>swc (Speedy Web Compiler) is a TypeScript and JavaScript transpiler written in <a href="/languages/rust">Rust</a>. It is developed by Donny/강동윤 and sponsored by Vercel. swc is used under the hood in Next.js, Deno (for TypeScript stripping), and several other build tools.</p>
 <p>swc does not perform TypeScript type checking. It treats type annotations as syntax to strip, parsing them with a handwritten Rust parser and emitting JavaScript without any type analysis. This limitation is intentional: skipping the type checker is what makes swc 20 to 70 times faster than tsc for transpilation. swc is the right choice when a separate type-checking step runs in CI (via <code>tsc --noEmit</code>) and raw build speed matters for the development loop.</p>
 <p>The <code>rewritten_in</code> relationship in the dataset reflects tools that were significantly reimplemented; swc is a distinct project, so the dataset records it as a separate tool with its own <code>compiler_written_in</code> edge to Rust.</p>
 
-<h2>esbuild: a bundler and transpiler written in Go</h2>
+<h2 id="esbuild-a-bundler-and-transpiler-written-in-go">esbuild: a bundler and transpiler written in Go</h2>
 <p>esbuild is a JavaScript and TypeScript bundler and transpiler written in <a href="/languages/go">Go</a>. It was created by Evan Wallace (co-founder of Figma) and first released in 2020. esbuild is used by Vite as its development-server transpiler and by many other modern build tools.</p>
 <p>Like swc, esbuild does not type-check TypeScript. It strips types and emits JavaScript, relying on the user to run <code>tsc --noEmit</code> separately. esbuild's speed advantage comes from Go's execution model and careful design: a single-pass parser, minimal allocations, and deliberate avoidance of complex AST transformations. An esbuild build that would take 90 seconds in webpack typically takes under a second.</p>
 <p>esbuild also bundles: it resolves imports, concatenates modules, and applies tree-shaking. This makes it a bundler plus transpiler in one tool, whereas swc focuses purely on single-file transpilation.</p>
 
-<h2>Comparison</h2>
-<table class="impl-table">
+<h2 id="comparison">Comparison</h2>
+<div class="table-wrap"><table class="impl-table">
   <thead><tr><th>Tool</th><th>Written in</th><th>Type-checks?</th><th>Speed</th><th>Primary use</th></tr></thead>
   <tbody>
     <tr><td>tsc</td><td>TypeScript (self-hosting)</td><td>Yes</td><td>Slow (full program analysis)</td><td>Official compiler, type checking, IDE integration</td></tr>
     <tr><td>swc</td><td>Rust</td><td>No (strip only)</td><td>20-70x faster than tsc</td><td>Fast transpilation in build pipelines (Next.js, Deno)</td></tr>
     <tr><td>esbuild</td><td>Go</td><td>No (strip only)</td><td>10-100x faster than webpack</td><td>Fast bundling and transpilation (Vite dev server)</td></tr>
   </tbody>
-</table>
+</table></div>
 
-<h2>Type-only transpilation vs full compilation</h2>
+<h2 id="type-only-transpilation-vs-full-compilation">Type-only transpilation vs full compilation</h2>
 <p>One nuance: TypeScript's type system is erased at runtime. There are no type annotations at all in the JavaScript output. This means TypeScript types have no runtime cost and cannot be inspected at runtime via reflection (unlike Java generics, which are mostly erased, but with some residual type information). Runtime type checking (narrowing, <code>instanceof</code>, discriminated unions) in TypeScript is built from ordinary JavaScript constructs, not from preserved type metadata.</p>
 <p>This also means TypeScript does not generate any code for its type annotations; the JavaScript output from <code>tsc --noEmit</code> is structurally identical (ignoring whitespace) to what you would get from a fast stripper like swc or esbuild. The type checker is a compile-time analysis tool, not a runtime component.</p>
 
-<h2>The full implementation chain</h2>
+<h2 id="the-full-implementation-chain">The full implementation chain</h2>
 <p>TypeScript code runs through two hops before reaching the CPU. First, a transpiler (tsc, swc, or esbuild) converts TypeScript to JavaScript. Second, a JavaScript engine (V8, SpiderMonkey, or JavaScriptCore, all written in C++) executes the JavaScript. So the full chain is: TypeScript source to tsc/swc/esbuild (TypeScript/Rust/Go) to JavaScript to V8 (C++) to machine code. This chain is what "what is TypeScript written in?" is really asking about.</p>
 <p>TypeScript is unusual among major languages in that it has no dedicated runtime at all. There is no "TypeScript virtual machine." The language is purely a compile-time layer, and the runtime is whatever JavaScript engine the output runs in. This is fundamentally different from Java or Python, which have dedicated runtimes (the JVM and CPython) that are written in specific languages and have specific performance characteristics.</p>
 <p>See the <a href="/languages/typescript">TypeScript language page</a> and the <a href="/relationships/transpiled-to">transpiled_to relationships</a> for the full dataset view.</p>

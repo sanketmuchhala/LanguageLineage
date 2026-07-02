@@ -70,21 +70,33 @@
 
   <h2 class="lang-written-q">What is Go written in?</h2>
   <div class="answer-box"><strong>Go</strong> is self-hosting: since Go 1.5, the Go compiler and most of the runtime have been written in <strong>Go</strong>. Before that rewrite, the original Go compiler was written in <strong>C</strong>.</div>
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#what-go-is-used-for">What Go is used for</a></li>
+    <li><a href="#about-go">About Go</a></li>
+    <li><a href="#go-in-the-language-family-tree">Go in the language family tree</a></li>
+    <li><a href="#go-before-and-after-go-1-5">Go before and after Go 1.5</a></li>
+    <li><a href="#go-runtime-architecture">Go runtime architecture</a></li>
+    <li><a href="#go-implementation-layers">Go implementation layers</a></li>
+    <li><a href="#go-release-history">Go release history</a></li>
+  </ol>
+</nav>
 
   <section class="intent-section">
-  <h2>What Go is used for</h2>
+  <h2 id="what-go-is-used-for">What Go is used for</h2>
   <p>Go is built for cloud infrastructure and networked services: its fast compilation, simple concurrency (goroutines), and single static binaries make it ideal for servers, CLIs, and DevOps tooling.</p>
 <p>Notable software: Docker, Kubernetes, Terraform, and much of the modern cloud-native stack are written in Go.</p>
 </section>
 
 
   <section class="intent-section">
-  <h2>About Go</h2>
+  <h2 id="about-go">About Go</h2>
   <p><strong>Go</strong> is a programming language developed by Google and the open-source community. It is a statically typed and garbage-collected language that compiles ahead of time to native machine code. It supports imperative and concurrent programming.</p>
   <p>Go first appeared in 2009 and was designed by Rob Pike, Ken Thompson, and Robert Griesemer at Google. Go has a large, active user base today.</p>
 </section>
 <section class="intent-section">
-  <h2>Go in the language family tree</h2>
+  <h2 id="go-in-the-language-family-tree">Go in the language family tree</h2>
   <p>Go drew on ideas from <a href="/languages/newsqueak">Newsqueak</a>, <a href="/languages/limbo">Limbo</a>, <a href="/languages/alef">Alef</a>, <a href="/languages/oberon2">Oberon-2</a>, and <a href="/languages/oberon">Oberon</a> and went on to influence <a href="/languages/v">V</a>, <a href="/languages/crystal">Crystal</a>, and <a href="/languages/odin">Odin</a>.</p>
   <p class="enrich-cite" style="font-size:13px;color:var(--text-tertiary);margin-top:14px">Sources: <a href="https://en.wikipedia.org/wiki/Go_(programming_language)" rel="noopener noreferrer" target="_blank">Wikipedia</a> &middot; <a href="https://www.wikidata.org/wiki/Q37227" rel="noopener noreferrer" target="_blank">Wikidata</a> &middot; <a href="https://golang.org" rel="noopener noreferrer" target="_blank">Official site</a></p>
 </section>
@@ -108,20 +120,20 @@
   </div></dl>
 </section>
 <section class="intent-section">
-  <h2>Go before and after Go 1.5</h2>
+  <h2 id="go-before-and-after-go-1-5">Go before and after Go 1.5</h2>
   <p>The original Go toolchain was written in C. Robert Griesemer, Rob Pike, and Ken Thompson designed Go at Google beginning in 2007, and the first open-source release in November 2009 shipped with a C compiler. Using C was pragmatic: the team were C experts, the Go runtime and scheduler concepts were familiar in C, and writing a new language's first compiler in C is the conventional bootstrapping path.</p>
 <p>The move to a self-hosted compiler was deliberate and methodical. In 2013, Russ Cox created a tool that mechanically translated the C compiler source to Go, producing a Go compiler that was syntactically Go but still structurally a C program. That automatically translated compiler was the foundation for Go 1.5's compiler, released in August 2015.</p>
 <p>Go 1.5 removed the C compiler entirely from the toolchain. The build system no longer required a C toolchain: you only needed a prior Go binary to bootstrap. The same release also moved the runtime's garbage collector and scheduler from C to Go, significantly improving the ability of Go contributors to understand and modify the runtime. The Go garbage collector, written in Go since 1.5, received major improvements in 1.5 (concurrent), 1.8 (sub-millisecond pauses), and 1.14 (preemptible goroutines).</p>
 </section>
 <section class="intent-section">
-  <h2>Go runtime architecture</h2>
+  <h2 id="go-runtime-architecture">Go runtime architecture</h2>
   <p>The Go runtime is written in Go and a small amount of assembly, and provides three major services: goroutine scheduling, garbage collection, and low-level primitives for the standard library.</p>
 <p>Goroutines are Go's concurrency primitive. They are multiplexed onto operating system threads using an M:N scheduler. The scheduler's model has three entities: M (OS thread), P (logical processor, controlled by GOMAXPROCS), and G (goroutine). Each P holds a local run queue of goroutines and draws from a global run queue when its own is empty. Work stealing lets an idle P take goroutines from a busy P's queue, keeping all available OS threads occupied.</p>
 <p>Go's garbage collector is a concurrent tri-color mark-sweep collector designed for low-latency applications. The collector runs concurrently with the program during the mark and sweep phases and stops the world only briefly to acknowledge marking completion and to flip the write barrier state. Goroutine stacks start small (a few kilobytes) and grow by copying to a larger allocation on demand, which allows starting hundreds of thousands of goroutines in a single process without pre-allocating large stacks.</p>
 </section>
 <section class="intent-section">
-  <h2>Go implementation layers</h2>
-  <table class="impl-table">
+  <h2 id="go-implementation-layers">Go implementation layers</h2>
+  <div class="table-wrap"><table class="impl-table">
   <thead><tr><th>Layer</th><th>Written in</th><th>Notes</th></tr></thead>
   <tbody>
     <tr><td>gc compiler (go tool compile)</td><td>Go</td><td>Self-hosted since Go 1.5 (August 2015)</td></tr>
@@ -130,10 +142,10 @@
     <tr><td>Standard library</td><td>Go</td><td>Nearly all pure Go, with small assembly stubs for atomic operations and syscalls</td></tr>
     <tr><td>gccgo</td><td>C++</td><td>Alternative Go frontend for GCC; less commonly used than the gc compiler</td></tr>
   </tbody>
-</table>
+</table></div>
 </section>
 <section class="intent-section">
-  <h2>Go release history</h2>
+  <h2 id="go-release-history">Go release history</h2>
   <span id="release-date"></span>
 <p>Go was designed by Robert Griesemer, Rob Pike, and Ken Thompson at Google starting in September 2007. The initial goal was a language that addressed frustrations with C++ build times and Java's verbosity while retaining C-like simplicity. Go's concurrency model drew from Tony Hoare's Communicating Sequential Processes (CSP), which Rob Pike had previously explored in the Newsqueak and Limbo languages.</p>
 <p>Go was open-sourced in November 2009 under a BSD-style license. Go 1.0 shipped in March 2012 with a compatibility guarantee: source code written for Go 1.0 would continue to compile on all future Go 1.x releases. That promise has been kept without exception.</p>

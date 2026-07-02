@@ -405,6 +405,7 @@ p {
   color: var(--text-secondary);
   font-size: 16px;
   line-height: 1.7;
+  max-width: 68ch;
 }
 
 /* Article lists: custom green markers, no default bullets. */
@@ -530,12 +531,19 @@ p {
   background: rgba(227, 160, 8, 0.08);
 }
 
+/* Table overflow wrapper — preserves table semantics while allowing mobile scroll */
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 8px;
+}
+
 /* Tables */
 table {
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
-  margin-bottom: 8px;
 }
 
 thead th {
@@ -940,6 +948,73 @@ pre {
   white-space: nowrap;
 }
 
+/* Figure / diagram treatment */
+.bootstrap-diagram-wrap,
+.seo-figure {
+  background: var(--bg-surface);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 8px;
+  padding: 24px 20px 16px;
+  margin: 24px 0;
+  overflow-x: auto;
+}
+.bootstrap-diagram-wrap figcaption,
+.seo-figure figcaption {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: #9a9a9a;
+  text-align: center;
+  margin-top: 10px;
+  line-height: 1.5;
+}
+
+/* Page table of contents */
+.page-toc {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 0 0 40px;
+  display: inline-block;
+  min-width: 200px;
+  max-width: 100%;
+}
+.page-toc-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin: 0 0 10px;
+  max-width: none;
+}
+.page-toc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.page-toc-list li {
+  padding-left: 0;
+  margin-bottom: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  max-width: none;
+}
+.page-toc-list li::before { display: none; }
+.page-toc-list a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-bottom: none;
+  transition: color 0.15s;
+}
+.page-toc-list a:hover { color: var(--accent); }
+
 /* ============================================
    RESPONSIVE, Tablet (641–1024px)
    ============================================ */
@@ -1041,13 +1116,8 @@ pre {
     grid-template-columns: 1fr;
   }
 
-  /* Tables, scrollable on mobile */
+  /* Tables: smaller text on mobile; horizontal scroll via .table-wrap wrapper */
   table {
-    display: block;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    border: 1px solid var(--border);
-    border-radius: 8px;
     font-size: 13px;
   }
 

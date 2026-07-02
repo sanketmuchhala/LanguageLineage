@@ -70,14 +70,14 @@
   <p>When people ask "what is Python written in?" they usually mean the <strong>CPython implementation language</strong>. CPython is the reference implementation maintained by the Python Software Foundation. Its interpreter core, object model, memory allocator, and C API are implemented primarily in C, with many higher-level library modules written in Python.</p>
 <p>Because its core is written in C, Python is often said to be "built on C". However, Python as a <em>language specification</em> is separate from any particular implementation. The specification does not require C. CPython is simply the dominant runtime and the behavior most people mean when they say "Python."</p>
 <h2>Python implementation layers</h2>
-<table class="impl-table">
+<div class="table-wrap"><table class="impl-table">
   <thead><tr><th>Layer</th><th>Written in</th><th>Role</th></tr></thead>
   <tbody>
     <tr><td>CPython core</td><td>C</td><td>Interpreter, object model, memory management, C API</td></tr>
     <tr><td>Standard library</td><td>Python and C</td><td>Built-in modules, libraries, extension modules</td></tr>
     <tr><td>Alternative runtimes</td><td>RPython, Java, C#</td><td>PyPy, Jython, IronPython</td></tr>
   </tbody>
-</table>
+</table></div>
 <p>The dataset records a <code>runtime_written_in</code> relationship from C to Python because CPython is the reference and most widely deployed Python runtime.</p>
 
   <h2>Explore in the Graph</h2>

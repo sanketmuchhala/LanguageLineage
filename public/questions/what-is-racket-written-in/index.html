@@ -46,13 +46,13 @@
   <p>Racket is a functional and contractual programming language, with strong, dynamic and reflective typing, derived from Scheme, first released in 1994.</p>
 
   <h2>Implementation</h2>
-  <table class="impl-table">
+  <div class="table-wrap"><table class="impl-table">
     <thead><tr><th>Layer</th><th>Written in</th><th>Notes</th></tr></thead>
     <tbody>
       <tr><td>Runtime</td><td><a href="/tools/chez-scheme">Chez Scheme</a> (since 2019)</td><td>Racket migrated backend to Chez Scheme in 2019</td></tr>
       <tr><td>Compiler</td><td><a href="/languages/racket">Racket</a> (since 2010)</td><td>Racket compiler is self-hosting</td></tr>
     </tbody>
-  </table>
+  </table></div>
 
   <h2>Self-hosting</h2>
 <p>Racket is a self-hosting language: its compiler is written in Racket itself. Self-hosting means the compiler can compile its own source code, which is a milestone in a language's maturity. New versions of the compiler are built using an older version of the same compiler, a process called bootstrapping.</p>

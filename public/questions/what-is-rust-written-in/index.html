@@ -70,7 +70,7 @@
   <p>Rustc, the official Rust compiler, is written in Rust, making Rust self-hosting. Self-hosting means the compiler can compile the source code of its own compiler.</p>
 <p>Rust was not self-hosting from day one. Early Rust used a compiler written in OCaml, then moved to rustc written in Rust once the language and compiler were mature enough.</p>
 <h2>Rust implementation layers</h2>
-<table class="impl-table">
+<div class="table-wrap"><table class="impl-table">
   <thead><tr><th>Layer</th><th>Written in</th><th>Role</th></tr></thead>
   <tbody>
     <tr><td>rustc frontend and compiler driver</td><td>Rust</td><td>Parses, type-checks, and drives compilation</td></tr>
@@ -78,7 +78,7 @@
     <tr><td>LLVM backend</td><td>C++</td><td>Optimization and machine-code generation</td></tr>
     <tr><td>mrustc</td><td>C++</td><td>Alternative compiler relevant to bootstrap chains</td></tr>
   </tbody>
-</table>
+</table></div>
 <p>The bootstrap chain normally uses a previous rustc snapshot to build the next compiler version. The dataset records both Rust's self-hosting chain and the historical OCaml origin.</p>
 
   <h2>Explore in the Graph</h2>

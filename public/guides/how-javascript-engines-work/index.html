@@ -38,13 +38,23 @@
   </nav>
 
   <h1>How JavaScript Engines Work</h1>
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#the-language-vs-the-engine">The language vs the engine</a></li>
+    <li><a href="#the-execution-pipeline">The execution pipeline</a></li>
+    <li><a href="#v8-chrome-node-js-deno">V8 (Chrome, Node.js, Deno)</a></li>
+    <li><a href="#spidermonkey-firefox">SpiderMonkey (Firefox)</a></li>
+    <li><a href="#javascriptcore-safari-bun">JavaScriptCore (Safari, Bun)</a></li>
+  </ol>
+</nav>
 
   <div class="answer-box">A JavaScript engine parses JavaScript source, compiles it to bytecode and then to machine code, and executes it. The three major engines, <strong>V8</strong>, <strong>SpiderMonkey</strong>, and <strong>JavaScriptCore</strong>, are written mainly in <strong>C++</strong> (SpiderMonkey also uses Rust). JavaScript the <em>language</em> is defined by the ECMAScript standard; the engines are the implementations.</div>
 
-<h2>The language vs the engine</h2>
+<h2 id="the-language-vs-the-engine">The language vs the engine</h2>
 <p>"What is JavaScript written in?" is really two questions. <a href="/languages/javascript">JavaScript</a> itself is a specification, ECMAScript, standardized by TC39, so the language is not "written in" anything. What is written in a concrete language is the <em>engine</em> that runs JavaScript, and the performance-critical parts of every major engine are written in C++.</p>
 
-<h2>The execution pipeline</h2>
+<h2 id="the-execution-pipeline">The execution pipeline</h2>
 <p>Modern engines do not simply interpret source line by line. They run a multi-stage pipeline:</p>
 <ul>
 <li><strong>Parser:</strong> turns source text into an abstract syntax tree (AST).</li>
@@ -54,13 +64,13 @@
 </ul>
 <p>All of this needs precise control over memory layout and machine code, which is why these engines are written in C++ rather than in a managed language.</p>
 
-<h2>V8 (Chrome, Node.js, Deno)</h2>
+<h2 id="v8-chrome-node-js-deno">V8 (Chrome, Node.js, Deno)</h2>
 <p>V8 is Google's open-source JavaScript and WebAssembly engine, written in C++. It powers Chrome, <a href="/languages/javascript">Node.js</a>, Electron, and Deno. Note that the runtimes built on top differ in language: Node.js wraps V8 in C++ and JavaScript, while Deno wraps the same V8 engine in <a href="/languages/rust">Rust</a>.</p>
 
-<h2>SpiderMonkey (Firefox)</h2>
+<h2 id="spidermonkey-firefox">SpiderMonkey (Firefox)</h2>
 <p>SpiderMonkey is Mozilla's engine and the first JavaScript engine ever built, written by Brendan Eich in 1995 alongside the language itself. It is written in C++ with a growing amount of Rust, and powers Firefox.</p>
 
-<h2>JavaScriptCore (Safari, Bun)</h2>
+<h2 id="javascriptcore-safari-bun">JavaScriptCore (Safari, Bun)</h2>
 <p>JavaScriptCore (also called Nitro) is Apple's engine, written in C++, with a four-tier JIT. It powers Safari and every browser on iOS, and it is also the engine inside Bun, a runtime whose own code is written in <a href="/languages/zig">Zig</a>.</p>
 
 <a class="explore-btn" href="/explore">Explore JavaScript Relationships in Graph &rarr;</a>
