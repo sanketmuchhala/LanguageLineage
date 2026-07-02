@@ -19,6 +19,8 @@ const FONTS_HEAD = `<link rel="preload" href="/fonts/fraunces.woff2" as="font" t
 
 const BRAND_MARK = `<img class="nav-logo-mark" src="/logo-mark.svg" width="22" height="22" alt="" aria-hidden="true">`;
 
+const SKIP_LINK = `<a href="#main-content" class="skip-link">Skip to main content</a>`;
+
 const NAV_HTML = `<nav class="seo-nav">
   <a href="/" class="nav-brand">${BRAND_MARK}Language Lineage</a>
   <a href="/relationships">Relationships</a>
@@ -1806,17 +1808,9 @@ ${faqs.map(f => `<div class="faq-item">
   <script type="application/ld+json">${breadcrumbJsonLd}</script>
 </head>
 <body class="seo-page">
-<nav class="seo-nav">
-  <a href="/" class="nav-brand">${BRAND_MARK}Language Lineage</a>
-  <a href="/relationships">Relationships</a>
-  <a href="/languages">Languages</a>
-  <a href="/tools">Tools</a>
-  <a href="/guides">Guides</a>
-  <a href="/timeline">Timeline</a>
-  <a href="/dataset">Dataset</a>
-  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
-</nav>
-<main class="seo-main">
+${SKIP_LINK}
+${NAV_HTML}
+<main class="seo-main" id="main-content">
   <nav class="breadcrumb" aria-label="breadcrumb">
     <a href="/">Home</a> &rsaquo; <a href="/${prefix}">${prefix === 'tools' ? 'Tools' : 'Languages'}</a> &rsaquo; ${escapeHtml(node.name)}
   </nav>
@@ -2190,8 +2184,9 @@ function buildQuestionPage(q: QuestionDef, nodeMap: Map<string, Language>): stri
   <script type="application/ld+json">${breadcrumbJsonLd}</script>
 </head>
 <body class="seo-page">
+${SKIP_LINK}
 ${NAV_HTML}
-<main class="seo-main">
+<main class="seo-main" id="main-content">
   <nav class="breadcrumb" aria-label="breadcrumb">
     <a href="/">Home</a> &rsaquo; <a href="/questions">Questions</a> &rsaquo; ${escapeHtml(q.title)}
   </nav>
@@ -2421,8 +2416,9 @@ function buildAutoQuestionPage(aqn: AutoQNode, nodeMap: Map<string, Language>): 
   <script type="application/ld+json">${breadcrumbJsonLd}</script>
 </head>
 <body class="seo-page">
+${SKIP_LINK}
 ${NAV_HTML}
-<main class="seo-main">
+<main class="seo-main" id="main-content">
   <nav class="breadcrumb" aria-label="breadcrumb">
     <a href="/">Home</a> &rsaquo; <a href="/questions">Questions</a> &rsaquo; ${escapeHtml(title)}
   </nav>
@@ -2495,8 +2491,9 @@ function buildQuestionsIndex(autoPages: AutoQNode[]): string {
   <script type="application/ld+json">${breadcrumbJsonLd}</script>
 </head>
 <body class="seo-page">
+${SKIP_LINK}
 ${NAV_HTML}
-<main class="seo-main">
+<main class="seo-main" id="main-content">
   <nav class="breadcrumb" aria-label="breadcrumb">
     <a href="/">Home</a> &rsaquo; Questions
   </nav>
@@ -2567,8 +2564,9 @@ function buildProgrammingLanguageGraph(languages: Language[], rels: Relationship
   <script type="application/ld+json">${breadcrumbJsonLd}</script>
 </head>
 <body class="seo-page">
+${SKIP_LINK}
 ${NAV_HTML}
-<main class="seo-main">
+<main class="seo-main" id="main-content">
   <nav class="breadcrumb" aria-label="breadcrumb">
     <a href="/">Home</a> &rsaquo; Programming Language Graph
   </nav>
@@ -2696,8 +2694,9 @@ function buildProgrammingLanguageFamilyTree(languages: Language[]): string {
   <script type="application/ld+json">${breadcrumbJsonLd}</script>
 </head>
 <body class="seo-page">
+${SKIP_LINK}
 ${NAV_HTML}
-<main class="seo-main">
+<main class="seo-main" id="main-content">
   <nav class="breadcrumb" aria-label="breadcrumb">
     <a href="/">Home</a> &rsaquo; Programming Language Family Tree
   </nav>
@@ -2780,8 +2779,9 @@ function buildProgrammingLanguageGenealogy(languages: Language[], rels: Relation
   <script type="application/ld+json">${breadcrumbJsonLd}</script>
 </head>
 <body class="seo-page">
+${SKIP_LINK}
 ${NAV_HTML}
-<main class="seo-main">
+<main class="seo-main" id="main-content">
   <nav class="breadcrumb" aria-label="breadcrumb">
     <a href="/">Home</a> &rsaquo; Programming Language Genealogy
   </nav>
@@ -2872,8 +2872,9 @@ function buildProgrammingLanguageEvolution(languages: Language[]): string {
   <script type="application/ld+json">${breadcrumbJsonLd}</script>
 </head>
 <body class="seo-page">
+${SKIP_LINK}
 ${NAV_HTML}
-<main class="seo-main">
+<main class="seo-main" id="main-content">
   <nav class="breadcrumb" aria-label="breadcrumb">
     <a href="/">Home</a> &rsaquo; Programming Language Evolution
   </nav>
@@ -2955,8 +2956,9 @@ function buildWhatAreLanguagesWrittenIn(languages: Language[], rels: Relationshi
   <script type="application/ld+json">${breadcrumbJsonLd}</script>
 </head>
 <body class="seo-page">
+${SKIP_LINK}
 ${NAV_HTML}
-<main class="seo-main">
+<main class="seo-main" id="main-content">
   <nav class="breadcrumb" aria-label="breadcrumb">
     <a href="/">Home</a> &rsaquo; What Are Programming Languages Written In?
   </nav>
@@ -3071,8 +3073,9 @@ function buildCompilerRuntimeBootstrap(rels: Relationship[]): string {
   <script type="application/ld+json">${breadcrumbJsonLd}</script>
 </head>
 <body class="seo-page">
+${SKIP_LINK}
 ${NAV_HTML}
-<main class="seo-main">
+<main class="seo-main" id="main-content">
   <nav class="breadcrumb" aria-label="breadcrumb">
     <a href="/">Home</a> &rsaquo; Compiler, Runtime, and Bootstrap Relationships
   </nav>
@@ -3171,17 +3174,9 @@ function buildDatasetPage(languages: Language[], rels: Relationship[]): string {
   <script type="application/ld+json">${datasetJsonLd}</script>
 </head>
 <body class="seo-page">
-<nav class="seo-nav">
-  <a href="/" class="nav-brand">${BRAND_MARK}Language Lineage</a>
-  <a href="/relationships">Relationships</a>
-  <a href="/languages">Languages</a>
-  <a href="/tools">Tools</a>
-  <a href="/guides">Guides</a>
-  <a href="/timeline">Timeline</a>
-  <a href="/dataset">Dataset</a>
-  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
-</nav>
-<main class="seo-main">
+${SKIP_LINK}
+${NAV_HTML}
+<main class="seo-main" id="main-content">
   <nav class="breadcrumb" aria-label="breadcrumb">
     <a href="/">Home</a> &rsaquo; Dataset
   </nav>
@@ -3323,17 +3318,9 @@ function buildRelationshipPage(type: string, rels: Relationship[], nodeMap: Map<
   <meta property="og:image:type" content="image/png" />
 </head>
 <body class="seo-page">
-<nav class="seo-nav">
-  <a href="/" class="nav-brand">${BRAND_MARK}Language Lineage</a>
-  <a href="/relationships">Relationships</a>
-  <a href="/languages">Languages</a>
-  <a href="/tools">Tools</a>
-  <a href="/guides">Guides</a>
-  <a href="/timeline">Timeline</a>
-  <a href="/dataset">Dataset</a>
-  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
-</nav>
-<main class="seo-main">
+${SKIP_LINK}
+${NAV_HTML}
+<main class="seo-main" id="main-content">
   <nav class="breadcrumb" aria-label="breadcrumb">
     <a href="/">Home</a> &rsaquo; <a href="/relationships">Relationships</a> &rsaquo; ${escapeHtml(def.label)}
   </nav>
@@ -3930,17 +3917,9 @@ function buildGuidePage(guide: (typeof GUIDES)[0]): string {
   <script type="application/ld+json">${breadcrumbJsonLd}</script>
 </head>
 <body class="seo-page">
-<nav class="seo-nav">
-  <a href="/" class="nav-brand">${BRAND_MARK}Language Lineage</a>
-  <a href="/relationships">Relationships</a>
-  <a href="/languages">Languages</a>
-  <a href="/tools">Tools</a>
-  <a href="/guides">Guides</a>
-  <a href="/timeline">Timeline</a>
-  <a href="/dataset">Dataset</a>
-  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
-</nav>
-<main class="seo-main">
+${SKIP_LINK}
+${NAV_HTML}
+<main class="seo-main" id="main-content">
   <nav class="breadcrumb" aria-label="breadcrumb">
     <a href="/">Home</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; ${escapeHtml(guide.h1)}
   </nav>
@@ -4004,17 +3983,9 @@ function buildLanguagesIndex(langs: Language[]): string {
   <meta property="og:image:type" content="image/png" />
 </head>
 <body class="seo-page">
-<nav class="seo-nav">
-  <a href="/" class="nav-brand">${BRAND_MARK}Language Lineage</a>
-  <a href="/relationships">Relationships</a>
-  <a href="/languages">Languages</a>
-  <a href="/tools">Tools</a>
-  <a href="/guides">Guides</a>
-  <a href="/timeline">Timeline</a>
-  <a href="/dataset">Dataset</a>
-  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
-</nav>
-<main class="seo-main">
+${SKIP_LINK}
+${NAV_HTML}
+<main class="seo-main" id="main-content">
   <nav class="breadcrumb" aria-label="breadcrumb">
     <a href="/">Home</a> &rsaquo; Languages
   </nav>
@@ -4073,17 +4044,9 @@ function buildToolsIndex(langs: Language[]): string {
   <meta property="og:image:type" content="image/png" />
 </head>
 <body class="seo-page">
-<nav class="seo-nav">
-  <a href="/" class="nav-brand">${BRAND_MARK}Language Lineage</a>
-  <a href="/relationships">Relationships</a>
-  <a href="/languages">Languages</a>
-  <a href="/tools">Tools</a>
-  <a href="/guides">Guides</a>
-  <a href="/timeline">Timeline</a>
-  <a href="/dataset">Dataset</a>
-  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
-</nav>
-<main class="seo-main">
+${SKIP_LINK}
+${NAV_HTML}
+<main class="seo-main" id="main-content">
   <nav class="breadcrumb" aria-label="breadcrumb">
     <a href="/">Home</a> &rsaquo; Tools
   </nav>
@@ -4121,17 +4084,9 @@ function buildGuidesIndex(): string {
   <meta property="og:image:type" content="image/png" />
 </head>
 <body class="seo-page">
-<nav class="seo-nav">
-  <a href="/" class="nav-brand">${BRAND_MARK}Language Lineage</a>
-  <a href="/relationships">Relationships</a>
-  <a href="/languages">Languages</a>
-  <a href="/tools">Tools</a>
-  <a href="/guides">Guides</a>
-  <a href="/timeline">Timeline</a>
-  <a href="/dataset">Dataset</a>
-  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
-</nav>
-<main class="seo-main">
+${SKIP_LINK}
+${NAV_HTML}
+<main class="seo-main" id="main-content">
   <nav class="breadcrumb" aria-label="breadcrumb">
     <a href="/">Home</a> &rsaquo; Guides
   </nav>
@@ -4178,17 +4133,9 @@ function buildRelationshipsIndex(rels: Relationship[]): string {
   <meta property="og:image:type" content="image/png" />
 </head>
 <body class="seo-page">
-<nav class="seo-nav">
-  <a href="/" class="nav-brand">${BRAND_MARK}Language Lineage</a>
-  <a href="/relationships">Relationships</a>
-  <a href="/languages">Languages</a>
-  <a href="/tools">Tools</a>
-  <a href="/guides">Guides</a>
-  <a href="/timeline">Timeline</a>
-  <a href="/dataset">Dataset</a>
-  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
-</nav>
-<main class="seo-main">
+${SKIP_LINK}
+${NAV_HTML}
+<main class="seo-main" id="main-content">
   <nav class="breadcrumb" aria-label="breadcrumb">
     <a href="/">Home</a> &rsaquo; Relationships
   </nav>
@@ -4365,16 +4312,10 @@ function buildTimelinePage(languages: Language[], rels: Relationship[]): string 
   <meta property="og:image:type" content="image/png" />
 </head>
 <body class="seo-page">
-<nav class="seo-nav">
-  <a href="/" class="nav-brand">${BRAND_MARK}Language Lineage</a>
-  <a href="/relationships">Relationships</a>
-  <a href="/languages">Languages</a>
-  <a href="/tools">Tools</a>
-  <a href="/guides">Guides</a>
-  <a href="/timeline">Timeline</a>
-  <a href="/dataset">Dataset</a>
-  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
-</nav>
+${SKIP_LINK}
+${NAV_HTML}
+<h1 class="sr-only">Programming Language Timeline</h1>
+<main id="main-content">
 <div class="tl-prog-track"><div class="tl-prog-fill" id="tlp"></div></div>
 <div class="tl-decade-nav" id="tldnav">${decadeButtons}</div>
 <div class="tl-year-hud"><span class="tl-year-num" id="tl-year-hud">1948</span></div>
@@ -4405,6 +4346,7 @@ function buildTimelinePage(languages: Language[], rels: Relationship[]): string 
   <div class="tl-modal-note" id="tl-modal-note"></div>
   <a class="tl-modal-link" id="tl-modal-link" href="#">View full profile &#x2192;</a>
 </div>
+</main>
 ${FOOTER_HTML}
 <script>
 (function(){

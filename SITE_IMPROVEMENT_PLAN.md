@@ -348,7 +348,7 @@ Acceptance criteria:
 
 ### Phase 6: Internal linking architecture and crawl-depth audit
 
-Status: not started.
+Status: DONE (2026-07-02). PR #27 merged.
 Impact: medium. Effort: medium. Dependencies: Phases 3 and 5 (link targets exist).
 
 Why: link equity currently pools in footers and ad-hoc related blocks. With roughly 300 pages after Phase 3, deliberate hub-and-spoke linking decides which pages rank.
@@ -372,7 +372,7 @@ Acceptance criteria:
 
 ### Phase 7: Per-page social images (OG cards)
 
-Status: not started.
+Status: DONE (2026-07-02). PR #26 merged. 191 OG images generated (3.9 MB), one per language/tool page.
 Impact: medium (social CTR, Discover eligibility). Effort: medium. Dependencies: Phase 1 (logos).
 
 Why: every page currently shares one generic OG image. Per-page cards make shares and SERP thumbnails distinctive.
@@ -482,7 +482,7 @@ Acceptance criteria:
 
 ### Phase 12: Accessibility sweep
 
-Status: not started.
+Status: DONE (2026-07-02). PR #33.
 Impact: medium. Effort: medium. Dependencies: Phase 9 (the graph table exists).
 
 Tasks:

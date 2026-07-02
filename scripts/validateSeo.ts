@@ -369,6 +369,18 @@ for (const filePath of allHtmlFiles) {
   } else {
     fail(`${rel}: missing meta description`);
   }
+
+  // Heading hierarchy: exactly one h1, no skipped levels
+  const h1Count = (html.match(/<h1[\s>]/gi) || []).length;
+  if (h1Count === 0) fail(`${rel}: missing <h1>`);
+  if (h1Count > 1) fail(`${rel}: multiple <h1> tags (${h1Count})`);
+  const headingLevels = [...html.matchAll(/<h([1-6])[\s>]/gi)].map(m => parseInt(m[1]));
+  for (let i = 1; i < headingLevels.length; i++) {
+    if (headingLevels[i] - headingLevels[i - 1] > 1) {
+      fail(`${rel}: heading level skips from h${headingLevels[i-1]} to h${headingLevels[i]}`);
+      break;
+    }
+  }
 }
 
 const dupTitles = [...titleMap.entries()].filter(([, files]) => files.length > 1);

@@ -17,7 +17,7 @@
   --atlas-border-strong: rgba(255, 255, 255, 0.18);
   --atlas-text: #fafafa;
   --atlas-text-2: #9a9a9a;
-  --atlas-text-3: #5a5a5a;
+  --atlas-text-3: #767676; /* min 4.5:1 on #000 - WCAG AA */
 
   /* --- Brand / interactive accent (signal green: compiler-success / verified) --- */
   --atlas-accent: #4ade80;
