@@ -16,7 +16,8 @@
     "logos:graph": "tsx scripts/renderGraphLogoAssets.ts",
     "content:wikipedia": "tsx scripts/harvestWikipediaContent.ts",
     "seo:generate": "tsx scripts/generateSeoPages.ts && tsx scripts/generateSitemap.ts && tsx scripts/generateLlmsTxt.ts",
-    "seo:validate": "tsx scripts/validateSeo.ts"
+    "seo:validate": "tsx scripts/validateSeo.ts",
+    "seo:links": "tsx scripts/auditInternalLinks.ts"
   },
   "dependencies": {
     "@types/react-window": "^1.8.8",
