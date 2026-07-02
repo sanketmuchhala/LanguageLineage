@@ -56,6 +56,9 @@ const GUIDE_SLUGS = [
   'gcc-vs-llvm',
   'how-programming-languages-are-made',
   'v8-vs-spidermonkey-vs-javascriptcore',
+  'typescript-vs-javascript-implementation',
+  'graalvm-vs-hotspot',
+  'the-c-bootstrap-chain',
 ];
 
 const QUESTION_SLUGS = [

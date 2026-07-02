@@ -159,11 +159,14 @@ const GUIDE_SLUGS = [
   'gcc-vs-llvm',
   'how-programming-languages-are-made',
   'v8-vs-spidermonkey-vs-javascriptcore',
+  'typescript-vs-javascript-implementation',
+  'graalvm-vs-hotspot',
+  'the-c-bootstrap-chain',
 ];
 for (const slug of GUIDE_SLUGS) {
   checkFile(`guides/${slug}/index.html`);
 }
-if (GUIDE_SLUGS.length < 10) warn(`Only ${GUIDE_SLUGS.length} guides, expected 10+`);
+if (GUIDE_SLUGS.length < 13) warn(`Only ${GUIDE_SLUGS.length} guides, expected 13+`);
 else ok(`${GUIDE_SLUGS.length} guide pages checked`);
 
 // Collection index pages
