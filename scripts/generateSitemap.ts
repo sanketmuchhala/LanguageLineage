@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, readdirSync, existsSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -16,12 +16,34 @@ function idToPrefix(id: string): string {
 }
 
 interface Language { id: string }
-interface Relationship { relationship: string }
+interface FullLanguage { id: string; name: string }
+interface Relationship { relationship: string; to_language: string; from_language: string }
 
 const raw = JSON.parse(readFileSync(join(ROOT, 'dataset/v5/lineage_v5.json'), 'utf8'));
-const languages: Language[] = raw.languages ?? [];
+const languages: FullLanguage[] = raw.languages ?? [];
 const rels: Relationship[] = raw.relationships ?? [];
 const relTypes = [...new Set(rels.map((r) => r.relationship))];
+
+// Auto-question-page qualifying nodes (same criteria as generateSeoPages.ts)
+const enrichmentRaw = JSON.parse(readFileSync(join(ROOT, 'dataset/v5/enrichment_v5.json'), 'utf8'));
+const enrichmentMap: Record<string, unknown> = enrichmentRaw.enrichment ?? {};
+const IMPL_REL_TYPES_Q = new Set(['compiler_written_in', 'runtime_written_in', 'bootstrap_written_in']);
+const HAND_AUTHORED_Q = new Set(['python','javascript','rust','go','java','c','cxx','typescript','ruby']);
+const incomingImplIds = new Set<string>();
+for (const rel of rels) {
+  if (!IMPL_REL_TYPES_Q.has(rel.relationship)) continue;
+  if (!rel.to_language.startsWith('lang:')) continue;
+  incomingImplIds.add(rel.to_language);
+}
+const AUTO_QUESTION_SLUGS: string[] = [];
+for (const node of languages) {
+  if (!node.id.startsWith('lang:')) continue;
+  const slug = idToSlug(node.id);
+  if (HAND_AUTHORED_Q.has(slug)) continue;
+  if (!incomingImplIds.has(node.id)) continue;
+  if (!enrichmentMap[node.id]) continue;
+  AUTO_QUESTION_SLUGS.push(slug);
+}
 
 const GUIDE_SLUGS = [
   'what-is-compiler-bootstrapping',
@@ -68,6 +90,7 @@ const urls: Array<{ loc: string; changefreq: string; priority: string }> = [
   // Questions
   { loc: `${SITE}/questions`, changefreq: 'monthly', priority: '0.75' },
   ...QUESTION_SLUGS.map(s => ({ loc: `${SITE}/questions/${s}`, changefreq: 'monthly', priority: '0.8' })),
+  ...AUTO_QUESTION_SLUGS.map(s => ({ loc: `${SITE}/questions/what-is-${s}-written-in`, changefreq: 'monthly', priority: '0.65' })),
   // Core pages
   { loc: `${SITE}/dataset`, changefreq: 'monthly', priority: '0.8' },
   { loc: `${SITE}/languages`, changefreq: 'monthly', priority: '0.75' },
