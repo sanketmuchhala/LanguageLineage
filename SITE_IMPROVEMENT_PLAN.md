@@ -302,7 +302,7 @@ Acceptance criteria:
 
 ### Phase 4: Rescue high-impression, poor-position pages
 
-Status: not started.
+Status: complete (2026-07-02). PR #24 merged. All 5 priority pages exceed 1200 words (rust 1580, java 1412, python 1388, go 1301, javascript 1287), each with 4+ sections and anchored #release-date. Bootstrapping guide has SVG bootstrap chain diagram (violet arrows, green self-hosting border), detailed Rust-via-OCaml and Go-via-C-1.5 chain walkthroughs, glossary (bootstrapping/self-hosting/cross-compilation/trusting trust), and FAQPage JSON-LD. Validation: 0 errors, 0 warnings.
 Impact: high. Effort: high (this is a writing phase). Dependencies: Phase 2.
 
 Why: `/languages/rust` has 898 impressions at position 29.7. "rust language" (122 imp, pos 56), "rust language release date" (50 imp, pos 53), and the bootstrapping query cluster (roughly 42 imp, pos 37 to 48) all show demand the current content is too thin to win.
