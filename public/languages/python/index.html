@@ -109,8 +109,15 @@
 </section>
 <section class="intent-section">
   <h2>Python language vs CPython</h2>
-  <p>When people ask what Python is written in, they usually mean CPython, the reference implementation maintained by the Python Software Foundation. CPython includes the bytecode interpreter, object model, memory management, and C API, and those core pieces are implemented primarily in C.</p>
-<p>The Python language itself is a specification. That specification does not require C. A compatible Python implementation can be written in another language as long as it follows the same language behavior.</p>
+  <p>When people ask what Python is written in, they almost always mean CPython, the reference implementation maintained by the Python Software Foundation. CPython is a bytecode interpreter: it compiles Python source code to a compact intermediate format and then executes those instructions inside a tight C loop called <code>ceval.c</code>. The parser, abstract-syntax-tree builder, bytecode compiler, and the main evaluation loop are all implemented in C.</p>
+<p>CPython also ships the Python standard library, which is a mix: the performance-sensitive parts (regular expressions, JSON, CSV parsing, cryptography) are C extension modules, while the majority of the library is written in Python itself. This split reflects a deliberate design choice: write in Python where clarity matters, drop to C where speed does.</p>
+<p>The Python language itself is a specification, not a piece of code. That specification does not mandate C. A compatible Python implementation can be written in any language as long as it follows the same language semantics defined in the CPython documentation and the language reference.</p>
+</section>
+<section class="intent-section">
+  <h2>CPython architecture and the C extension API</h2>
+  <p>CPython's internal architecture connects Python objects to C memory through a single foundational struct: <code>PyObject</code>. Every Python value, whether an integer, a list, or a function, is a <code>PyObject</code> at the C level. The reference-count field inside that struct drives CPython's primary memory management strategy: when the count reaches zero, the object is freed. A cycle-detecting garbage collector runs periodically to handle circular references that reference counting alone cannot reclaim.</p>
+<p>CPython exposes a stable C extension API so that third-party libraries can implement performance-sensitive logic in C while behaving like ordinary Python modules. NumPy, Pandas, SciPy, and most data-science libraries use this API. Extensions link directly against the Python interpreter, which is why NumPy wheels are specific to a Python version and platform.</p>
+<p>The GIL (Global Interpreter Lock) is a mutex inside CPython that protects the interpreter's internal state. Only one thread can execute Python bytecode at a time. This simplifies reference counting but limits parallelism on CPU-bound workloads. Python 3.13 introduced an experimental free-threaded build (PEP 703) that removes the GIL, though the ABI-stable extension ecosystem is still catching up.</p>
 </section>
 <section class="intent-section">
   <h2>Python implementations compared</h2>
@@ -118,11 +125,21 @@
   <thead><tr><th>Implementation</th><th>Written in</th><th>Role</th></tr></thead>
   <tbody>
     <tr><td>CPython</td><td>C and Python</td><td>Reference implementation and most common runtime</td></tr>
-    <tr><td>PyPy</td><td>RPython and Python</td><td>Alternative runtime with JIT compilation</td></tr>
-    <tr><td>Jython</td><td>Java</td><td>Python implementation for the JVM</td></tr>
-    <tr><td>IronPython</td><td>C#</td><td>Python implementation for .NET</td></tr>
+    <tr><td>PyPy</td><td>RPython and Python</td><td>Alternative runtime with JIT compilation, often 5-10x faster on CPU-bound loops</td></tr>
+    <tr><td>Jython</td><td>Java</td><td>Python implementation that runs on the JVM and integrates with Java libraries</td></tr>
+    <tr><td>IronPython</td><td>C#</td><td>Python implementation for .NET; integrates with the CLR</td></tr>
+    <tr><td>MicroPython</td><td>C</td><td>Lean CPython-compatible implementation for microcontrollers</td></tr>
+    <tr><td>GraalPy</td><td>Java</td><td>Python on GraalVM, targeting high-throughput JIT performance</td></tr>
   </tbody>
 </table>
+</section>
+<section class="intent-section">
+  <h2>Python release history</h2>
+  <span id="release-date"></span>
+<p>Guido van Rossum began Python in the late 1980s as a hobby project at Centrum Wiskunde and Informatica (CWI) in the Netherlands, aiming for a language that was easy to read and to teach. The first public release, Python 0.9.0, appeared in February 1991. Python 1.0 arrived in January 1994, adding lambda, map, filter, and reduce.</p>
+<p>Python 2.0 (October 2000) introduced list comprehensions, garbage collection for cycles, and Unicode support. The 2.x line continued until Python 2.7 (2010), which received extended support through 2020 to ease migration.</p>
+<p>Python 3.0 (December 2008) was a clean break: it unified the string and bytes model around Unicode, removed the old-style division behavior, and dropped several legacy warts. Adoption was initially slow because Python 3 was intentionally incompatible with Python 2. By the mid-2010s, the ecosystem had largely migrated.</p>
+<p>The modern Python 3.x cycle follows an annual release cadence. Notable milestones: 3.5 (2015, async and await), 3.6 (2016, f-strings), 3.8 (2019, walrus operator), 3.10 (2021, structural pattern matching), 3.12 (2023, per-interpreter GIL, improved error messages), 3.13 (2024, free-threaded experimental build). Each minor release is supported for five years.</p>
 </section>
   <h2>Relationship Graph</h2>
 <p style="font-size:13px;color:var(--text-tertiary);margin-bottom:12px">All directly connected languages. Click any node to navigate to its page.</p>

@@ -298,8 +298,15 @@ const PRIORITY_CONTENT: Record<string, PriorityContent> = {
     sections: [
       {
         heading: 'Python language vs CPython',
-        body: `<p>When people ask what Python is written in, they usually mean CPython, the reference implementation maintained by the Python Software Foundation. CPython includes the bytecode interpreter, object model, memory management, and C API, and those core pieces are implemented primarily in C.</p>
-<p>The Python language itself is a specification. That specification does not require C. A compatible Python implementation can be written in another language as long as it follows the same language behavior.</p>`,
+        body: `<p>When people ask what Python is written in, they almost always mean CPython, the reference implementation maintained by the Python Software Foundation. CPython is a bytecode interpreter: it compiles Python source code to a compact intermediate format and then executes those instructions inside a tight C loop called <code>ceval.c</code>. The parser, abstract-syntax-tree builder, bytecode compiler, and the main evaluation loop are all implemented in C.</p>
+<p>CPython also ships the Python standard library, which is a mix: the performance-sensitive parts (regular expressions, JSON, CSV parsing, cryptography) are C extension modules, while the majority of the library is written in Python itself. This split reflects a deliberate design choice: write in Python where clarity matters, drop to C where speed does.</p>
+<p>The Python language itself is a specification, not a piece of code. That specification does not mandate C. A compatible Python implementation can be written in any language as long as it follows the same language semantics defined in the CPython documentation and the language reference.</p>`,
+      },
+      {
+        heading: 'CPython architecture and the C extension API',
+        body: `<p>CPython's internal architecture connects Python objects to C memory through a single foundational struct: <code>PyObject</code>. Every Python value, whether an integer, a list, or a function, is a <code>PyObject</code> at the C level. The reference-count field inside that struct drives CPython's primary memory management strategy: when the count reaches zero, the object is freed. A cycle-detecting garbage collector runs periodically to handle circular references that reference counting alone cannot reclaim.</p>
+<p>CPython exposes a stable C extension API so that third-party libraries can implement performance-sensitive logic in C while behaving like ordinary Python modules. NumPy, Pandas, SciPy, and most data-science libraries use this API. Extensions link directly against the Python interpreter, which is why NumPy wheels are specific to a Python version and platform.</p>
+<p>The GIL (Global Interpreter Lock) is a mutex inside CPython that protects the interpreter's internal state. Only one thread can execute Python bytecode at a time. This simplifies reference counting but limits parallelism on CPU-bound workloads. Python 3.13 introduced an experimental free-threaded build (PEP 703) that removes the GIL, though the ABI-stable extension ecosystem is still catching up.</p>`,
       },
       {
         heading: 'Python implementations compared',
@@ -307,11 +314,21 @@ const PRIORITY_CONTENT: Record<string, PriorityContent> = {
   <thead><tr><th>Implementation</th><th>Written in</th><th>Role</th></tr></thead>
   <tbody>
     <tr><td>CPython</td><td>C and Python</td><td>Reference implementation and most common runtime</td></tr>
-    <tr><td>PyPy</td><td>RPython and Python</td><td>Alternative runtime with JIT compilation</td></tr>
-    <tr><td>Jython</td><td>Java</td><td>Python implementation for the JVM</td></tr>
-    <tr><td>IronPython</td><td>C#</td><td>Python implementation for .NET</td></tr>
+    <tr><td>PyPy</td><td>RPython and Python</td><td>Alternative runtime with JIT compilation, often 5-10x faster on CPU-bound loops</td></tr>
+    <tr><td>Jython</td><td>Java</td><td>Python implementation that runs on the JVM and integrates with Java libraries</td></tr>
+    <tr><td>IronPython</td><td>C#</td><td>Python implementation for .NET; integrates with the CLR</td></tr>
+    <tr><td>MicroPython</td><td>C</td><td>Lean CPython-compatible implementation for microcontrollers</td></tr>
+    <tr><td>GraalPy</td><td>Java</td><td>Python on GraalVM, targeting high-throughput JIT performance</td></tr>
   </tbody>
 </table>`,
+      },
+      {
+        heading: 'Python release history',
+        body: `<span id="release-date"></span>
+<p>Guido van Rossum began Python in the late 1980s as a hobby project at Centrum Wiskunde and Informatica (CWI) in the Netherlands, aiming for a language that was easy to read and to teach. The first public release, Python 0.9.0, appeared in February 1991. Python 1.0 arrived in January 1994, adding lambda, map, filter, and reduce.</p>
+<p>Python 2.0 (October 2000) introduced list comprehensions, garbage collection for cycles, and Unicode support. The 2.x line continued until Python 2.7 (2010), which received extended support through 2020 to ease migration.</p>
+<p>Python 3.0 (December 2008) was a clean break: it unified the string and bytes model around Unicode, removed the old-style division behavior, and dropped several legacy warts. Adoption was initially slow because Python 3 was intentionally incompatible with Python 2. By the mid-2010s, the ecosystem had largely migrated.</p>
+<p>The modern Python 3.x cycle follows an annual release cadence. Notable milestones: 3.5 (2015, async and await), 3.6 (2016, f-strings), 3.8 (2019, walrus operator), 3.10 (2021, structural pattern matching), 3.12 (2023, per-interpreter GIL, improved error messages), 3.13 (2024, free-threaded experimental build). Each minor release is supported for five years.</p>`,
       },
     ],
   },
@@ -327,19 +344,35 @@ const PRIORITY_CONTENT: Record<string, PriorityContent> = {
     sections: [
       {
         heading: 'JavaScript language vs JavaScript engines',
-        body: `<p>JavaScript source code runs inside an engine. The ECMAScript specification defines the language, but engines such as V8, SpiderMonkey, and JavaScriptCore implement parsing, bytecode generation, JIT compilation, garbage collection, and runtime behavior.</p>
-<p>That is why the most useful answer is about engines: V8 powers Chrome and Node.js, SpiderMonkey powers Firefox, and JavaScriptCore powers Safari. Their performance-sensitive implementation code is primarily C++.</p>`,
+        body: `<p>JavaScript source code runs inside an engine. The ECMAScript specification, maintained by TC39 and published by Ecma International, defines the language: its syntax, semantics, and standard library. Engines such as V8, SpiderMonkey, and JavaScriptCore implement that specification. A JavaScript program is not "written in" a particular language any more than a PDF document is "written in" Acrobat; the engine is the implementation.</p>
+<p>That distinction matters when answering "what is JavaScript written in?" The answer that is actually useful is about engines, because the engines are what run on your machine. V8 powers Chrome and Node.js. SpiderMonkey powers Firefox. JavaScriptCore powers Safari. Every major engine writes its performance-critical compilation and runtime code in C++, which gives it the low-level control needed to JIT-compile JavaScript to native machine code at acceptable overhead.</p>
+<p>TypeScript, Babel, and other transpilers are written in JavaScript or TypeScript. They are pre-processing tools, not engines. They transform source code before it reaches an engine, but they do not define how JavaScript executes.</p>`,
+      },
+      {
+        heading: 'How modern JavaScript engines compile code',
+        body: `<p>Modern JavaScript engines do not interpret source code line by line. They use a multi-tier compilation pipeline that trades compilation cost against execution speed based on how often each function runs.</p>
+<p>V8's pipeline illustrates the pattern. First, V8 parses JavaScript into an AST and compiles it to Ignition bytecode, a compact intermediate representation. Ignition executes bytecode immediately. While it runs, V8 tracks how many times each function is called and what types its arguments receive. Functions that exceed a hotness threshold are handed to TurboFan, V8's optimizing JIT compiler, which generates highly tuned machine code based on the observed types. V8 introduced Maglev in 2023 as a mid-tier between Ignition and TurboFan, reducing compilation latency for medium-hot functions.</p>
+<p>Speculative optimization is key. TurboFan assumes that a variable that has always been an integer will continue to be one, and generates fast integer code. If that assumption breaks because a string arrives, the engine deoptimizes: it throws away the compiled code and falls back to Ignition, then potentially recompiles with the wider type profile. This cycle is invisible to developers but drives JavaScript performance on tight loops and server-side Node.js workloads.</p>`,
       },
       {
         heading: 'Major JavaScript engines',
         body: `<table class="impl-table">
-  <thead><tr><th>Engine</th><th>Written in</th><th>Used by</th></tr></thead>
+  <thead><tr><th>Engine</th><th>Written in</th><th>Used by</th><th>JIT tiers</th></tr></thead>
   <tbody>
-    <tr><td>V8</td><td>C++</td><td>Chrome, Node.js, Deno, Electron</td></tr>
-    <tr><td>SpiderMonkey</td><td>C++, Rust, JavaScript</td><td>Firefox</td></tr>
-    <tr><td>JavaScriptCore</td><td>C++</td><td>Safari and WebKit</td></tr>
+    <tr><td>V8</td><td>C++</td><td>Chrome, Node.js, Deno, Electron</td><td>Ignition, Maglev, TurboFan</td></tr>
+    <tr><td>SpiderMonkey</td><td>C++, Rust, JavaScript</td><td>Firefox</td><td>Baseline JIT, IonMonkey</td></tr>
+    <tr><td>JavaScriptCore</td><td>C++</td><td>Safari and WebKit</td><td>LLInt, Baseline JIT, DFG, FTL</td></tr>
+    <tr><td>Hermes</td><td>C++</td><td>React Native</td><td>AOT bytecode, minimal JIT</td></tr>
+    <tr><td>QuickJS</td><td>C</td><td>Embedded environments</td><td>Interpreter only</td></tr>
   </tbody>
 </table>`,
+      },
+      {
+        heading: 'JavaScript release history',
+        body: `<span id="release-date"></span>
+<p>Brendan Eich created JavaScript in ten days in May 1995 while at Netscape, under a brief to make Navigator's pages interactive without requiring a Java applet. It shipped as LiveScript, was renamed JavaScript for marketing reasons, and had little in common with Java beyond the name and some syntax surface. Microsoft's JScript reverse-engineered it for Internet Explorer shortly after.</p>
+<p>Ecma International standardized the language as ECMAScript. ES1 was published in June 1997. ES3 (1999) added regular expressions and try/catch and became the de-facto baseline for the 2000s. ES5 (2009) added strict mode, JSON support, and Array methods. ES6, rechristened ES2015, was the biggest release in the language's history: classes, arrow functions, promises, modules, template literals, destructuring, and generators.</p>
+<p>Since ES2016, TC39 has shipped a new ECMAScript edition every June. Major additions include async/await (ES2017), optional chaining and nullish coalescing (ES2020), top-level await (ES2022), and array grouping and set operations (ES2024). The V8 and SpiderMonkey teams typically ship new syntax within months of TC39 Stage 4 approval.</p>`,
       },
     ],
   },
@@ -354,21 +387,44 @@ const PRIORITY_CONTENT: Record<string, PriorityContent> = {
     ],
     sections: [
       {
-        heading: 'How Rust bootstraps itself',
-        body: `<p>Rustc is written in Rust, so building a new rustc needs an existing compiler. The normal bootstrap chain uses a previous rustc snapshot to compile the current compiler source. This is the standard self-hosting pattern for mature compiled languages.</p>
-<p>The historical path matters: Rust did not start self-hosted. The early compiler was written in OCaml, then the project moved to a Rust-in-Rust compiler once the language was capable enough to compile itself.</p>`,
+        heading: 'The OCaml origin and bootstrap transition',
+        body: `<p>Rust did not start self-hosted. Graydon Hoare began the language in 2006 as a personal project while working at Mozilla. The first compiler, known informally as rustboot, was written in OCaml. OCaml was a pragmatic choice for a language researcher: it has a powerful type system and pattern matching that suited the rapid experimentation Rust required in those early years.</p>
+<p>Mozilla began sponsoring the project in 2009. By that point the team was designing Rust's ownership and borrowing rules, a type system complex enough that the OCaml compiler would have become a maintenance burden: OCaml developers on the team were limited, and writing the compiler in the language being designed is the strongest possible end-to-end test of its expressiveness.</p>
+<p>The transition happened incrementally. The team first rewrote rustboot in Rust while keeping OCaml as the compilation host. Once that Rust-in-Rust compiler could compile itself, the OCaml dependency was dropped. By 2011, Rust was self-hosting: every new rustc release is compiled by the previous release. This is the standard self-hosting bootstrap: a stage-0 binary (the prior release) compiles stage-1 from the current source, stage-1 compiles stage-2, and stage-2 must be byte-for-byte identical to stage-3 to confirm the toolchain is internally consistent.</p>`,
+      },
+      {
+        heading: 'rustc compiler architecture',
+        body: `<p>rustc is a multi-stage compiler with several distinct intermediate representations. Source code is parsed into an abstract syntax tree (AST), then lowered to HIR (High-level Intermediate Representation), where type inference and trait resolution run. HIR is then lowered to MIR (Mid-level Intermediate Representation), which is the layer where the borrow checker operates. MIR's explicit control-flow graph makes liveness analysis and borrow-checking tractable.</p>
+<p>After MIR, rustc lowers to LLVM IR and calls LLVM for machine-code generation. LLVM provides target support for x86-64, ARM, RISC-V, WebAssembly, and other platforms. The decision to use LLVM from the beginning let rustc focus on language semantics rather than code generation, and gave Rust access to decades of LLVM optimization work.</p>
+<p>A second backend, Cranelift, has been available since Rust 1.67 as an opt-in alternative for debug builds. Cranelift compiles faster than LLVM at the cost of less optimized output, which speeds up the inner loop of Rust development. Cranelift is also the JIT backend for Wasmtime. The long-term goal is to use Cranelift for debug builds and LLVM for release builds.</p>`,
+      },
+      {
+        heading: 'mrustc: an alternative bootstrap path',
+        body: `<p>mrustc is an independent Rust compiler written in C++. Unlike rustc, mrustc does not aim to be a general-purpose production compiler. Its purpose is security: it can compile an early version of rustc without relying on a pre-built rustc binary, breaking the binary dependency chain that concerns reproducible-build advocates.</p>
+<p>The Bootstrappable Builds project highlights the risk that a malicious binary compiler could inject hidden code into programs it compiles, including future compilers, in a way that no inspection of source code would reveal. This is Ken Thompson's "Trusting Trust" attack. mrustc provides a path from C (which has diverse compilers like GCC and Clang to cross-check each other) to Rust without trusting a Rust binary of unknown provenance.</p>
+<p>In practice, most Rust users rely on the rustup toolchain manager, which downloads pre-built binaries from the official Rust release infrastructure. mrustc is relevant to distributions and organizations that require a fully source-audited build chain.</p>`,
       },
       {
         heading: 'Rust implementation layers',
         body: `<table class="impl-table">
   <thead><tr><th>Layer</th><th>Written in</th><th>What it does</th></tr></thead>
   <tbody>
-    <tr><td>rustc frontend and compiler driver</td><td>Rust</td><td>Parses, analyzes, type-checks, and drives compilation</td></tr>
-    <tr><td>Historical rustboot compiler</td><td>OCaml</td><td>Original compiler before Rust became self-hosting</td></tr>
-    <tr><td>LLVM backend</td><td>C++</td><td>Optimization and machine-code generation backend used by rustc</td></tr>
-    <tr><td>mrustc</td><td>C++</td><td>Alternative compiler useful in bootstrap discussions</td></tr>
+    <tr><td>rustc frontend (parser, HIR, MIR, borrow checker)</td><td>Rust</td><td>Parses, analyzes, type-checks, and borrow-checks Rust source</td></tr>
+    <tr><td>LLVM backend</td><td>C++</td><td>Optimization and machine-code generation for release builds</td></tr>
+    <tr><td>Cranelift backend</td><td>Rust</td><td>Optional fast debug-build backend; also powers Wasmtime</td></tr>
+    <tr><td>rustboot (historical)</td><td>OCaml</td><td>Original compiler before Rust became self-hosting (2006 to 2011)</td></tr>
+    <tr><td>mrustc</td><td>C++</td><td>Independent compiler for security-audited bootstrap chains</td></tr>
+    <tr><td>Rust standard library</td><td>Rust</td><td>core and std, including allocator, collections, I/O, and threading</td></tr>
   </tbody>
 </table>`,
+      },
+      {
+        heading: 'Rust release history and edition system',
+        body: `<span id="release-date"></span>
+<p>Graydon Hoare started Rust in 2006 as a personal project. Mozilla sponsored the project from 2009. Rust 0.1 shipped in January 2012. The language went through extensive design iteration during those years: early Rust had typestate, a different memory model, and a green-threading runtime, all of which were removed before 1.0.</p>
+<p>Rust 1.0 was released on May 15, 2015. It committed to stability: code that compiled under Rust 1.0 would compile without modification under all future Rust 1.x releases. Rust has shipped a new stable release every six weeks since 1.0, and that cadence has been maintained without interruption.</p>
+<p>The edition system manages language evolution without breaking the stability promise. An edition is an opt-in compatibility boundary: code in Rust 2015, 2018, and 2021 editions can coexist in one crate graph, and rustc compiles them all. Editions allow the language to change syntax without forcing every crate to update at once. The 2018 edition made the module system cleaner and introduced the async keyword. The 2021 edition updated closure captures and improved the prelude. Rust 2024 was stabilized in 2025.</p>
+<p>The Rust Foundation was established in February 2021, with AWS, Google, Huawei, Microsoft, and Mozilla as founding members, to own the Rust trademark, run the infrastructure, and fund core team contributors. Rust has since been adopted by the Linux kernel (support landed in Linux 6.1 in December 2022), the Windows kernel, Android, and major cloud providers.</p>`,
       },
     ],
   },
@@ -384,19 +440,35 @@ const PRIORITY_CONTENT: Record<string, PriorityContent> = {
     sections: [
       {
         heading: 'Go before and after Go 1.5',
-        body: `<p>The original Go toolchain was written in C. In Go 1.5, the project completed the move to a self-hosted compiler written in Go. That transition made the compiler easier for Go contributors to maintain and aligned the toolchain with the language it compiles.</p>
-<p>The Go runtime is also mostly Go, including scheduler and garbage collector code, with architecture-specific assembly where direct machine-level control is needed.</p>`,
+        body: `<p>The original Go toolchain was written in C. Robert Griesemer, Rob Pike, and Ken Thompson designed Go at Google beginning in 2007, and the first open-source release in November 2009 shipped with a C compiler. Using C was pragmatic: the team were C experts, the Go runtime and scheduler concepts were familiar in C, and writing a new language's first compiler in C is the conventional bootstrapping path.</p>
+<p>The move to a self-hosted compiler was deliberate and methodical. In 2013, Russ Cox created a tool that mechanically translated the C compiler source to Go, producing a Go compiler that was syntactically Go but still structurally a C program. That automatically translated compiler was the foundation for Go 1.5's compiler, released in August 2015.</p>
+<p>Go 1.5 removed the C compiler entirely from the toolchain. The build system no longer required a C toolchain: you only needed a prior Go binary to bootstrap. The same release also moved the runtime's garbage collector and scheduler from C to Go, significantly improving the ability of Go contributors to understand and modify the runtime. The Go garbage collector, written in Go since 1.5, received major improvements in 1.5 (concurrent), 1.8 (sub-millisecond pauses), and 1.14 (preemptible goroutines).</p>`,
+      },
+      {
+        heading: 'Go runtime architecture',
+        body: `<p>The Go runtime is written in Go and a small amount of assembly, and provides three major services: goroutine scheduling, garbage collection, and low-level primitives for the standard library.</p>
+<p>Goroutines are Go's concurrency primitive. They are multiplexed onto operating system threads using an M:N scheduler. The scheduler's model has three entities: M (OS thread), P (logical processor, controlled by GOMAXPROCS), and G (goroutine). Each P holds a local run queue of goroutines and draws from a global run queue when its own is empty. Work stealing lets an idle P take goroutines from a busy P's queue, keeping all available OS threads occupied.</p>
+<p>Go's garbage collector is a concurrent tri-color mark-sweep collector designed for low-latency applications. The collector runs concurrently with the program during the mark and sweep phases and stops the world only briefly to acknowledge marking completion and to flip the write barrier state. Goroutine stacks start small (a few kilobytes) and grow by copying to a larger allocation on demand, which allows starting hundreds of thousands of goroutines in a single process without pre-allocating large stacks.</p>`,
       },
       {
         heading: 'Go implementation layers',
         body: `<table class="impl-table">
   <thead><tr><th>Layer</th><th>Written in</th><th>Notes</th></tr></thead>
   <tbody>
-    <tr><td>Modern compiler</td><td>Go</td><td>Self-hosted since Go 1.5</td></tr>
-    <tr><td>Historical compiler</td><td>C</td><td>Used before the Go 1.5 rewrite</td></tr>
-    <tr><td>Runtime</td><td>Go and assembly</td><td>Scheduler, garbage collector, low-level architecture support</td></tr>
+    <tr><td>gc compiler (go tool compile)</td><td>Go</td><td>Self-hosted since Go 1.5 (August 2015)</td></tr>
+    <tr><td>Original compiler</td><td>C</td><td>Used before Go 1.5; mechanically translated to Go in 2013 to 2015</td></tr>
+    <tr><td>Runtime (scheduler, GC)</td><td>Go and assembly</td><td>Concurrent GC, goroutine scheduler using the GMP model</td></tr>
+    <tr><td>Standard library</td><td>Go</td><td>Nearly all pure Go, with small assembly stubs for atomic operations and syscalls</td></tr>
+    <tr><td>gccgo</td><td>C++</td><td>Alternative Go frontend for GCC; less commonly used than the gc compiler</td></tr>
   </tbody>
 </table>`,
+      },
+      {
+        heading: 'Go release history',
+        body: `<span id="release-date"></span>
+<p>Go was designed by Robert Griesemer, Rob Pike, and Ken Thompson at Google starting in September 2007. The initial goal was a language that addressed frustrations with C++ build times and Java's verbosity while retaining C-like simplicity. Go's concurrency model drew from Tony Hoare's Communicating Sequential Processes (CSP), which Rob Pike had previously explored in the Newsqueak and Limbo languages.</p>
+<p>Go was open-sourced in November 2009 under a BSD-style license. Go 1.0 shipped in March 2012 with a compatibility guarantee: source code written for Go 1.0 would continue to compile on all future Go 1.x releases. That promise has been kept without exception.</p>
+<p>Key releases: Go 1.5 (August 2015, self-hosted compiler and concurrent GC), Go 1.11 (2018, module system replacing GOPATH), Go 1.14 (2020, asynchronous preemption for goroutines), Go 1.18 (March 2022, generics via type parameters, the biggest language change since 1.0), Go 1.21 (August 2023, built-in min, max, and clear functions, WASI preview), Go 1.22 (2024, loop variable semantics corrected). Go ships two releases per year, in February and August.</p>`,
       },
     ],
   },
@@ -412,19 +484,35 @@ const PRIORITY_CONTENT: Record<string, PriorityContent> = {
     sections: [
       {
         heading: 'Java compiler vs JVM runtime',
-        body: `<p>Java source code is compiled by javac into JVM bytecode. Javac itself is written in Java, so the Java compiler is self-hosting in the practical sense: new compiler versions are built using an existing Java toolchain.</p>
-<p>Running Java bytecode is a different job. The HotSpot JVM includes an interpreter, JIT compiler, garbage collectors, class loading, and platform integration. Those runtime layers are implemented mainly in C and C++.</p>`,
+        body: `<p>Java has a two-stage execution model that separates compilation from running. The javac compiler takes Java source files and produces class files containing JVM bytecode. Bytecode is a compact, platform-independent instruction set: the same class files run on Windows, Linux, and macOS without recompilation. Javac itself is written in Java and is part of the JDK (Java Development Kit). Because javac is a Java program, building a new version of javac requires an existing Java compiler.</p>
+<p>Executing bytecode is a different job from compiling source. The HotSpot JVM, which is the production JVM in OpenJDK (and thus in Oracle JDK, Amazon Corretto, Eclipse Temurin, and others), is written primarily in C and C++. HotSpot includes an interpreter for cold code paths, a JIT compiler that compiles hot methods to native machine code, and a suite of garbage collectors. The JIT compiler observes which methods are called most often and optimizes those aggressively, including inlining call chains that would be expensive to analyze at compile time.</p>
+<p>The Java standard library (java.lang, java.util, java.io, java.nio, and friends) is largely written in Java, though some classes have native methods that delegate to C or C++ for low-level OS integration. The combination gives Java its portability: application code and most of the standard library are bytecode that the JVM runs anywhere; only the JVM itself is platform-native code.</p>`,
+      },
+      {
+        heading: 'HotSpot JVM and modern JIT compilation',
+        body: `<p>HotSpot's name comes from its original insight: most programs spend most of their time in a small fraction of their code. HotSpot monitors execution counts and compiles hot methods to native code using two JIT compilers: C1 (the client compiler, fast to compile but less optimized output) and C2 (the server compiler, slower to compile but generates heavily optimized native code). By default, methods start with the C1 tier and are promoted to C2 if they remain hot enough.</p>
+<p>GraalVM is a JDK distribution that replaces the C2 compiler with Graal, a JIT written entirely in Java. Graal can apply more aggressive speculative optimizations because it can use the full Java type system to represent its internal analysis. GraalVM also offers Native Image, which AOT-compiles Java applications to self-contained native executables by running compilation offline, reducing startup time and memory footprint significantly.</p>
+<p>Modern Java garbage collector options include: G1 (Garbage First, the default since Java 9, designed for large heaps with predictable pause targets), ZGC (concurrent, sub-millisecond pauses, available since Java 15, generational since Java 21), and Shenandoah (concurrent compaction, contributed by Red Hat). Each collector makes different tradeoffs between throughput, latency, and footprint.</p>`,
       },
       {
         heading: 'Java implementation layers',
         body: `<table class="impl-table">
   <thead><tr><th>Layer</th><th>Written in</th><th>What it does</th></tr></thead>
   <tbody>
-    <tr><td>javac</td><td>Java</td><td>Compiles Java source to JVM bytecode</td></tr>
-    <tr><td>HotSpot JVM</td><td>C and C++</td><td>Runs bytecode, JIT-compiles hot code, manages memory</td></tr>
-    <tr><td>Java standard library</td><td>Java</td><td>Core APIs such as java.lang and java.util</td></tr>
+    <tr><td>javac</td><td>Java</td><td>Compiles Java source to JVM bytecode (.class files)</td></tr>
+    <tr><td>HotSpot JVM (interpreter + JIT)</td><td>C and C++</td><td>Executes bytecode; JIT-compiles hot methods to native code via C1 and C2</td></tr>
+    <tr><td>Graal JIT</td><td>Java</td><td>Alternative JIT in GraalVM; replaces C2 with a Java-written optimizing compiler</td></tr>
+    <tr><td>Java standard library (java.*)</td><td>Java (with native stubs)</td><td>Core APIs; some native methods delegate to C for OS calls</td></tr>
+    <tr><td>GC (G1, ZGC, Shenandoah)</td><td>C++</td><td>Memory management, running concurrently with application threads</td></tr>
   </tbody>
 </table>`,
+      },
+      {
+        heading: 'Java release history',
+        body: `<span id="release-date"></span>
+<p>Java was created by James Gosling and colleagues at Sun Microsystems beginning in 1991, under the internal codename "Oak." The Green Project aimed to build a language for consumer electronics with a small footprint and platform independence. When the consumer electronics market did not materialize, the team pivoted to the web: Java 1.0 launched in January 1996 alongside the promise of "Write Once, Run Anywhere," backed by the first browser-embedded JVM.</p>
+<p>Java 1.1 (1997) added inner classes, reflection, and JDBC. Java 1.2 (1998, branded Java 2) introduced the Collections framework and the Swing UI toolkit. Java 5 (2004, previously numbered 1.5) was the biggest language update before Java 8: generics, annotations, enum types, autoboxing, and the enhanced for loop. Java 8 (March 2014) added lambda expressions, the Stream API, and the new java.time package.</p>
+<p>Oracle acquired Sun in 2010. Java 9 (September 2017) introduced the module system (Project Jigsaw) and shifted to a six-month release cadence. Since then, Java releases arrive in March and September, with Long-Term Support (LTS) versions every three years. LTS releases: Java 11 (September 2018), Java 17 (September 2021), Java 21 (September 2023). Pattern matching, sealed classes, records, and virtual threads (Project Loom) shipped across Java 14 through 21.</p>`,
       },
     ],
   },
@@ -3194,23 +3282,143 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
 <li><strong>Stage 2:</strong> Use the stage-1 compiler to compile the same source again. Now the compiler has compiled itself. Building a <strong>stage 3</strong> and checking that it is byte-for-byte identical to stage 2 is a common correctness test: if a compiler compiled by itself produces the same compiler again, the toolchain is internally consistent.</li>
 </ul>
 
+<h2>Bootstrap chain diagram</h2>
+<figure class="bootstrap-diagram-wrap" aria-label="Bootstrap chains for Rust and Go">
+<svg viewBox="0 0 540 185" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:540px;display:block;margin:0 auto 0.5rem;font-family:inherit">
+  <style>
+    .bd-lbl{font-size:11px;fill:#9a9a9a;font-weight:600;letter-spacing:.04em}
+    .bd-node{font-size:12px;fill:#fafafa;text-anchor:middle;dominant-baseline:middle}
+    .bd-node-self{font-size:12px;fill:#4ade80;text-anchor:middle;dominant-baseline:middle;font-weight:600}
+    .bd-etype{font-size:10px;fill:#8b5cf6;text-anchor:middle}
+    .bd-year{font-size:10px;fill:#5a5a5a;text-anchor:middle}
+  </style>
+  <!-- Row labels -->
+  <text x="4" y="54" class="bd-lbl">RUST</text>
+  <text x="4" y="134" class="bd-lbl">GO</text>
+  <!-- === RUST CHAIN === -->
+  <!-- OCaml node -->
+  <rect x="58" y="34" width="88" height="40" rx="5" fill="#161616" stroke="#5a5a5a" stroke-width="1.5"/>
+  <text x="102" y="54" class="bd-node">OCaml</text>
+  <!-- arrow 1 -->
+  <line x1="146" y1="54" x2="192" y2="54" stroke="#8b5cf6" stroke-width="2"/>
+  <polygon points="192,50 200,54 192,58" fill="#8b5cf6"/>
+  <text x="169" y="47" class="bd-etype">bootstrap</text>
+  <!-- rustboot node -->
+  <rect x="200" y="34" width="100" height="40" rx="5" fill="#161616" stroke="#5a5a5a" stroke-width="1.5"/>
+  <text x="250" y="50" class="bd-node">rustboot</text>
+  <text x="250" y="64" class="bd-node" style="font-size:10px;fill:#9a9a9a">(in OCaml)</text>
+  <!-- arrow 2 -->
+  <line x1="300" y1="54" x2="346" y2="54" stroke="#8b5cf6" stroke-width="2"/>
+  <polygon points="346,50 354,54 346,58" fill="#8b5cf6"/>
+  <text x="323" y="47" class="bd-etype">bootstrap</text>
+  <!-- rustc self-hosting node -->
+  <rect x="354" y="34" width="100" height="40" rx="5" fill="#161616" stroke="#4ade80" stroke-width="2"/>
+  <text x="404" y="54" class="bd-node-self">rustc (Rust)</text>
+  <text x="404" y="84" class="bd-year">self-hosting 2011</text>
+  <!-- === GO CHAIN === -->
+  <!-- C node -->
+  <rect x="58" y="114" width="88" height="40" rx="5" fill="#161616" stroke="#5a5a5a" stroke-width="1.5"/>
+  <text x="102" y="134" class="bd-node">C compiler</text>
+  <!-- arrow 1 -->
+  <line x1="146" y1="134" x2="192" y2="134" stroke="#8b5cf6" stroke-width="2"/>
+  <polygon points="192,130 200,134 192,138" fill="#8b5cf6"/>
+  <text x="169" y="127" class="bd-etype">bootstrap</text>
+  <!-- early gc node -->
+  <rect x="200" y="114" width="100" height="40" rx="5" fill="#161616" stroke="#5a5a5a" stroke-width="1.5"/>
+  <text x="250" y="130" class="bd-node">gc compiler</text>
+  <text x="250" y="144" class="bd-node" style="font-size:10px;fill:#9a9a9a">(in C)</text>
+  <!-- arrow 2 -->
+  <line x1="300" y1="134" x2="346" y2="134" stroke="#8b5cf6" stroke-width="2"/>
+  <polygon points="346,130 354,134 346,138" fill="#8b5cf6"/>
+  <text x="323" y="127" class="bd-etype">bootstrap</text>
+  <!-- go self-hosting node -->
+  <rect x="354" y="114" width="100" height="40" rx="5" fill="#161616" stroke="#4ade80" stroke-width="2"/>
+  <text x="404" y="134" class="bd-node-self">gc (Go 1.5)</text>
+  <text x="404" y="164" class="bd-year">self-hosting 2015</text>
+</svg>
+<figcaption style="text-align:center;font-size:12px;color:#5a5a5a">Simplified bootstrap chains. Green border = self-hosting. Violet arrows = bootstrap_written_in edges from the dataset.</figcaption>
+</figure>
+
 <h2>Why languages bootstrap</h2>
 <p>Self-hosting is a milestone of maturity. It proves the language is expressive and complete enough to build a large, performance-sensitive systems program, a compiler. It also lets the compiler team write the compiler in the language they are designing, so every improvement to the language immediately benefits the tool that builds it. Finally, it removes the long-term dependency on a foreign implementation language.</p>
 
-<h2>Real bootstrap chains</h2>
-<p>The Language Lineage dataset records the historical implementation language for each toolchain. A few well-documented chains:</p>
-<ul>
-<li><a href="/languages/rust">Rust</a>: the first compiler (rustboot) was written in <a href="/languages/ocaml">OCaml</a>; once the language was capable enough, rustc was rewritten in Rust and has been self-hosting since 2011. Each release is built by the previous release, and the <a href="/tools/mrustc">mrustc</a> project (written in C++) can compile an early rustc to break the dependency on prior binaries.</li>
-<li><a href="/languages/go">Go</a>: the original compiler was written in <a href="/languages/c">C</a>; in Go 1.5 (2015) the toolchain was translated to Go, making it self-hosting.</li>
-<li><a href="/languages/haskell">Haskell</a>: <a href="/tools/ghc">GHC</a> is written in Haskell, with a runtime system in C.</li>
-<li><a href="/languages/c">C</a> and <a href="/languages/cxx">C++</a>: <a href="/tools/gcc">GCC</a> is bootstrapped from an earlier C/C++ compiler through exactly the stage 0/1/2 process described above.</li>
-</ul>
+<h2>Real bootstrap chains from the dataset</h2>
+<p>The Language Lineage dataset records the historical implementation language for each toolchain via <code>bootstrap_written_in</code> edges. Here are two chains in detail:</p>
+<h3>Rust via OCaml</h3>
+<p><a href="/languages/rust">Rust</a> began as Graydon Hoare's personal project in 2006. The first compiler, rustboot, was written in <a href="/languages/ocaml">OCaml</a>. OCaml's algebraic types and pattern matching were well-suited to the experimental type-system work Rust required. Mozilla sponsored the project in 2009, and the team gradually rewrote rustboot in Rust. By 2011, rustc could compile itself: the OCaml dependency was gone. Each rustc release since then has been compiled by the previous stable release. The <a href="/tools/mrustc">mrustc</a> project (written in C++) provides an alternative seed that can compile an early rustc without trusting a prior Rust binary.</p>
+<h3>Go via C at version 1.5</h3>
+<p><a href="/languages/go">Go</a>'s original toolchain was written in <a href="/languages/c">C</a>. The Go team at Google designed the language starting in 2007 and open-sourced it in November 2009, with a Plan 9-style C compiler as the implementation. In 2013, Russ Cox ran an automated translation of the C compiler sources to Go, producing a Go-syntax compiler that was still structurally C. That translated compiler was refined and shipped as the default compiler in Go 1.5 (August 2015), removing the C toolchain requirement entirely. From Go 1.5 onward, the build tool only needs a previous Go binary as seed.</p>
+<p>Other examples: <a href="/languages/haskell">Haskell</a>'s <a href="/tools/ghc">GHC</a> is written in Haskell with a C runtime. <a href="/tools/gcc">GCC</a> is bootstrapped from an earlier C/C++ compiler through exactly the stage 0/1/2 process. <a href="/languages/typescript">TypeScript</a>'s tsc is written in TypeScript and compiles itself.</p>
 <p>See <a href="/relationships/bootstrap-written-in">every bootstrap relationship in the dataset</a> for the full list, each with a source and confidence score.</p>
 
-<h2>Trust, reproducibility, and breaking the binary chain</h2>
-<p>Because each compiler is built by an earlier compiler, you are ultimately trusting a long chain of binaries you did not build yourself. Ken Thompson's classic lecture "Reflections on Trusting Trust" showed that a malicious compiler could inject code into programs, including into future copies of itself, invisibly. Modern projects respond with reproducible builds and "diverse double-compilation," and with seed compilers like <a href="/tools/mrustc">mrustc</a> that let you rebuild a toolchain from source in a different language rather than from a pre-built binary.</p>
+<h2>Glossary</h2>
+<dl class="quick-facts">
+  <div><dt>Bootstrapping</dt><dd>The process of using a minimal working compiler to compile a more capable compiler, repeating until a language can compile its own full implementation.</dd></div>
+  <div><dt>Self-hosting</dt><dd>A compiler is self-hosting when the compiler's own source code can be compiled by that same compiler. Self-hosting is the end-state that bootstrapping achieves.</dd></div>
+  <div><dt>Cross-compilation</dt><dd>Compiling a program on one platform (the host) so that it runs on a different platform (the target). Cross-compilation is often used to bootstrap a compiler for a new CPU architecture from an existing one.</dd></div>
+  <div><dt>Trusting Trust</dt><dd>Ken Thompson's 1984 observation that a malicious compiler can be made to inject hidden code into programs it compiles, including into copies of itself, in a way that cannot be detected by reading source code. The attack propagates through any binary-distributed compiler chain.</dd></div>
+</dl>
 
-<a class="explore-btn" href="/explore">Explore Bootstrap Chains in Graph &rarr;</a>`,
+<h2>Frequently asked questions</h2>
+<div class="faq-block">
+<details open>
+  <summary><strong>Is Rust's compiler written in Rust?</strong></summary>
+  <p>Yes. rustc, the official Rust compiler, is written in Rust and has been self-hosting since 2011. The first Rust compiler was written in OCaml.</p>
+</details>
+<details>
+  <summary><strong>Is Go's compiler written in Go?</strong></summary>
+  <p>Yes, since Go 1.5 (August 2015). The original Go compiler was written in C. A mechanical translation produced a Go-syntax version, which became the self-hosted gc compiler shipped in Go 1.5.</p>
+</details>
+<details>
+  <summary><strong>What language was the first Rust compiler written in?</strong></summary>
+  <p>OCaml. The initial rustboot compiler was written in OCaml because of its expressive type system. It was replaced by a self-hosted rustc by 2011.</p>
+</details>
+<details>
+  <summary><strong>What is the difference between self-hosting and bootstrapping?</strong></summary>
+  <p>Bootstrapping is the process; self-hosting is the result. You bootstrap a compiler by progressively compiling it with earlier versions until it can compile itself. A self-hosting compiler is one that has successfully reached that state.</p>
+</details>
+</div>
+
+<a class="explore-btn" href="/explore">Explore Bootstrap Chains in Graph &rarr;</a>
+
+<script type="application/ld+json">${JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is Rust's compiler written in Rust?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. rustc, the official Rust compiler, is written in Rust and has been self-hosting since 2011. The first Rust compiler was written in OCaml."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is Go's compiler written in Go?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, since Go 1.5 in August 2015. The original Go compiler was written in C. A mechanical translation produced a Go-syntax version, which became the self-hosted gc compiler shipped in Go 1.5."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What language was the first Rust compiler written in?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "OCaml. The initial rustboot compiler was written in OCaml because of its expressive type system. It was replaced by a self-hosted rustc by 2011."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between self-hosting and bootstrapping?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Bootstrapping is the process; self-hosting is the result. You bootstrap a compiler by progressively compiling it with earlier versions until it can compile itself. A self-hosting compiler is one that has successfully reached that state."
+      }
+    }
+  ]
+})}</script>`,
   },
   {
     slug: 'what-is-self-hosting',
