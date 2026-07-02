@@ -1,10 +1,39 @@
-# Language Lineage
+# Language Lineage — Full Site Reference
 
-> An open, evidence-backed dataset and interactive graph of what programming languages are written in, how compilers are bootstrapped, and how languages influenced each other.
+Language Lineage is a structured knowledge base for programming-language implementation and influence relationships. It answers questions such as what Python is written in, how Rust is bootstrapped, and which languages influenced JavaScript.
 
-The v5.0 dataset contains 152 nodes (131 languages and 21 tools) and 443 sourced relationships. The dataset is available under CC BY 4.0 at https://www.languagelineage.org/dataset.
+## Dataset
 
-## Indexable pages
+- Version: 5.0
+- Total nodes: 152
+- Language nodes: 131
+- Tool nodes: 21
+- Relationships: 443
+- Evidence coverage: every relationship has at least one source URL
+- License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+- Download: https://www.languagelineage.org/dataset/v5/lineage_v5.json
+- Artifact page: https://www.languagelineage.org/dataset
+
+## Relationship types
+
+| Type | Count |
+|---|---:|
+| influenced | 252 |
+| compiler_written_in | 96 |
+| runtime_written_in | 67 |
+| bootstrap_written_in | 15 |
+| transpiled_to | 11 |
+| rewritten_in | 2 |
+
+## Data schema
+
+Language and tool nodes include identity, release year, implementation, paradigm, typing, runtime, self-hosting, cluster, enrichment, and logo metadata. Relationships include source and target identifiers, relationship type, date range, confidence, evidence URL, and notes.
+
+## Citation
+
+Language Lineage. Programming Language Lineage Dataset, v5.0. 152 nodes and 443 relationships. https://www.languagelineage.org/dataset
+
+## Complete indexable page catalog
 
 - [Programming Language Lineage Graph | What Languages Are Written In](https://www.languagelineage.org/): Explore what programming languages are written in, how compilers are bootstrapped, and how languages evolved. Interactive graph of 152 languages and 443 relationships.
 - [Interactive Graph Explorer](https://www.languagelineage.org/explore): Explore implementation, bootstrap, runtime, and influence relationships across 152 language and tool nodes.

@@ -14,7 +14,7 @@
 
 # Programming Language Lineage Graph
 
-An interactive graph visualization mapping the lineage, influence, and implementation relationships between 152 programming languages, from Machine Code (year 0) to Zig (2023).
+An interactive, evidence-backed graph mapping implementation, bootstrapping, runtime, and influence relationships across 152 nodes: 131 programming languages and 21 compiler/runtime tools.
 
 ## Live Site
 
@@ -24,6 +24,11 @@ An interactive graph visualization mapping the lineage, influence, and implement
 - Dataset: [languagelineage.org/dataset](https://languagelineage.org/dataset)
 - Language pages: [languagelineage.org/languages/python](https://languagelineage.org/languages/python)
 - Guides: [languagelineage.org/guides](https://languagelineage.org/guides)
+- Raw dataset: [download v5 JSON](https://www.languagelineage.org/dataset/v5/lineage_v5.json)
+
+<p align="center">
+  <img src="public/og-image.png" alt="Language Lineage programming language graph preview" width="900">
+</p>
 
 ## Overview
 
@@ -141,11 +146,11 @@ ProgrammingLanguageGraph/
 
 | Type | Count | Color | Description |
 |------|-------|-------|-------------|
-| `influenced` | 189 | Muted yellow | Language A influenced the design of language B |
-| `compiler_written_in` | 54 | Muted red | Language A's compiler is written in language B |
-| `runtime_written_in` | 38 | Muted blue | Language A's runtime is written in language B |
-| `bootstrap_written_in` | 9 | Muted green | Bootstrap binary seed relationship |
-| `transpiled_to` | 8 | Muted purple | Language A compiles to language B |
+| `influenced` | 252 | Muted yellow | Language A influenced the design of language B |
+| `compiler_written_in` | 96 | Muted red | Language A's compiler is written in language B |
+| `runtime_written_in` | 67 | Muted blue | Language A's runtime is written in language B |
+| `bootstrap_written_in` | 15 | Muted green | Bootstrap binary seed relationship |
+| `transpiled_to` | 11 | Muted purple | Language A compiles to language B |
 | `rewritten_in` | 2 | Muted orange | Implementation rewritten from one language to another |
 | `influenced_by` | 0 | Muted yellow | Reverse influence (schema supports it, no auto-created edges) |
 
@@ -245,30 +250,31 @@ npm run analyze:v5
 | `/` | SPA | Landing page with graph preview |
 | `/explore` | SPA | Interactive graph explorer |
 | `/dataset` | Static HTML | Dataset overview page |
-| `/languages` | Static HTML | Index of all 98 languages |
-| `/languages/{slug}` | Static HTML | Individual language page (112 total) |
-| `/tools` | Static HTML | Index of all 14 tools |
+| `/languages` | Static HTML | Index of all 131 languages |
+| `/languages/{slug}` | Static HTML | Individual language page |
+| `/tools` | Static HTML | Index of all 21 tools |
 | `/tools/{slug}` | Static HTML | Individual tool page |
 | `/guides` | Static HTML | Index of all guides |
-| `/guides/{slug}` | Static HTML | Individual guide (10 guides) |
+| `/guides/{slug}` | Static HTML | Individual guide (13 guides) |
 | `/relationships` | Static HTML | Index of all relationship types |
 | `/relationships/{slug}` | Static HTML | Individual relationship type page |
-| `/sitemap.xml` | XML | Sitemap (156 URLs) |
+| `/sitemap.xml` | XML | Complete indexable URL inventory |
 | `/robots.txt` | Text | Crawler directives |
-| `/llms.txt` | Text | LLM-readable dataset summary |
+| `/llms.txt` | Text | LLM-readable index of every public page |
+| `/llms-full.txt` | Text | Expanded dataset and page reference |
 
 ## Adding a New Language
 
 1. Edit `dataset/v5/lineage_v5.json` — add the language node and relationships
-2. Run `npm run seo:generate` — regenerates all 112+ static pages
+2. Run `npm run seo:generate` — regenerates all static pages
 3. Run `npm run seo:validate` — confirms 0 errors
 4. Deploy (Vercel picks up changes automatically on push)
 
 ## Citation
 
 ```
-Language Lineage (languagelineage.org). Programming Language Lineage Dataset, v5.
-152 nodes, 443 relationships. Accessed 2026. https://languagelineage.org/dataset
+Language Lineage. Programming Language Lineage Dataset, v5.0.
+152 nodes and 443 relationships. Accessed 2026. https://www.languagelineage.org/dataset
 ```
 
 ## Controls
@@ -313,8 +319,9 @@ The app loads v5 by default. Previous versions remain available in `dataset/`.
 |--------|---------|---------|
 | `dev` | `npm run dev` | Start development server |
 | `build` | `npm run build` | SEO generate + TypeScript + Vite production build |
-| `seo:generate` | `npm run seo:generate` | Generate all static HTML pages, sitemap, llms.txt |
+| `seo:generate` | `npm run seo:generate` | Generate all static HTML pages, sitemap, `llms.txt`, and `llms-full.txt` |
 | `seo:validate` | `npm run seo:validate` | Validate all generated pages (0 errors expected) |
+| `test:embed` | `npm run test:embed` | Load the production iframe snippet from a plain `file://` HTML page |
 | `analyze` | `npm run analyze` | Run dataset analyzer on default path |
 | `analyze:v4` | `npm run analyze:v4` | Run analyzer on v4 dataset |
 | `analyze:v5` | `npm run analyze:v5` | Run analyzer on v5 dataset |
@@ -358,4 +365,4 @@ These were used during the v4 enrichment process and are kept for reference:
 
 ## License
 
-MIT License. See [LICENSE](LICENSE) for details.
+The dataset is licensed under [Creative Commons Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/) (CC BY 4.0). Source code is MIT licensed.

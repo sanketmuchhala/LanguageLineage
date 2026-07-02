@@ -9,6 +9,10 @@ const ROOT = join(__dirname, '..');
 const PUBLIC = join(ROOT, 'public');
 const DATASET_PATH = join(ROOT, 'dataset/v5/lineage_v5.json');
 const SITE = 'https://www.languagelineage.org';
+const DATASET_VERSION = '5.0';
+const DATASET_LICENSE_NAME = 'Creative Commons Attribution 4.0 International';
+const DATASET_LICENSE_URL = 'https://creativecommons.org/licenses/by/4.0/';
+const DATASET_DOWNLOAD_PATH = '/dataset/v5/lineage_v5.json';
 const BUILD_DATE = new Date().toISOString().slice(0, 10);
 
 function ogImg(filename: string): string {
@@ -208,7 +212,7 @@ function writeFile(filePath: string, content: string) {
   writeFileSync(filePath, content, 'utf8');
 }
 
-const TOC_SKIP = ['Evidence Sources', 'Related Languages', 'Discover More', 'Frequently Asked', 'Explore in the Graph', 'Related Pages', 'Quick Facts'];
+const TOC_SKIP = ['Evidence Sources', 'Related Languages', 'Discover More', 'Frequently Asked', 'Explore in the Graph', 'Embed this graph', 'Related Pages', 'Quick Facts'];
 
 function insertPageToc(html: string): string {
   if (!html.includes('%%TOC%%')) return html;
@@ -1590,6 +1594,19 @@ function buildGraphSection(node: Language): string {
 ></iframe>`;
 }
 
+function buildEmbedKit(node: Language): string {
+  const slug = idToSlug(node.id);
+  const pagePath = `/${idToPrefix(node.id)}/${slug}`;
+  const snippet = `<iframe src="${SITE}/embed?lang=${encodeURIComponent(slug)}" width="100%" height="500" loading="lazy" style="border:0" title="${node.name} relationship graph"></iframe>`;
+
+  return `<section class="embed-kit" data-nosnippet>
+  <h2>Embed this graph</h2>
+  <p>Paste this iframe into any HTML page to show the ${escapeHtml(node.name)} relationship graph.</p>
+  <pre class="embed-code"><code>${escapeHtml(snippet)}</code></pre>
+  <p class="embed-attribution">Please attribute the visualization to <a href="${SITE}">Language Lineage</a> and link to the <a href="${pagePath}">${escapeHtml(node.name)} source record</a>.</p>
+</section>`;
+}
+
 function buildSources(node: Language, rels: Relationship[]): string {
   const id = node.id;
   const sources = [...new Set(
@@ -1836,7 +1853,9 @@ ${priorityContentHtml ? `
   ${buildRelatedSection(node, rels, nodeMap)}
 
   ${buildDiscoverMore(node, rels, nodeMap)}
-
+${node.id.startsWith('lang:') ? `
+  ${buildEmbedKit(node)}
+` : ''}
   <a class="explore-btn" href="/explore?node=${encodeURIComponent(node.id)}">Explore ${escapeHtml(node.name)} in Graph &rarr;</a>
 </main>
 ${FOOTER_HTML}
@@ -3133,6 +3152,11 @@ ${FOOTER_HTML}
 function buildDatasetPage(languages: Language[], rels: Relationship[]): string {
   const langCount = languages.filter(l => l.id.startsWith('lang:')).length;
   const toolCount = languages.filter(l => l.id.startsWith('tool:')).length;
+  const years = languages.map(l => l.first_release_year).filter((year): year is number => typeof year === 'number' && year > 0);
+  const minYear = Math.min(...years);
+  const maxYear = Math.max(...years);
+  const featuredEmbedNode = languages.find(l => l.id === 'lang:rust');
+  const downloadUrl = `${SITE}${DATASET_DOWNLOAD_PATH}`;
 
   const relTypeCounts: Record<string, number> = {};
   rels.forEach(r => { relTypeCounts[r.relationship] = (relTypeCounts[r.relationship] || 0) + 1; });
@@ -3148,10 +3172,19 @@ function buildDatasetPage(languages: Language[], rels: Relationship[]): string {
     name: 'Programming Language Lineage Dataset',
     description: `Structured dataset of ${languages.length} programming languages and tools with ${rels.length} documented implementation and influence relationships.`,
     url: `${SITE}/dataset`,
+    version: DATASET_VERSION,
+    dateModified: BUILD_DATE,
+    isAccessibleForFree: true,
+    keywords: ['programming languages', 'compiler implementation', 'runtime implementation', 'language history', 'software engineering'],
     creator: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
-    license: 'https://creativecommons.org/licenses/by/4.0/',
-    temporalCoverage: '1949/2023',
+    license: DATASET_LICENSE_URL,
+    temporalCoverage: `${minYear}/${maxYear}`,
     variableMeasured: Object.keys(relTypeCounts),
+    distribution: {
+      '@type': 'DataDownload',
+      contentUrl: downloadUrl,
+      encodingFormat: 'application/json',
+    },
   });
 
   return `<!DOCTYPE html>
@@ -3185,6 +3218,8 @@ ${NAV_HTML}
 
   <p>An open, evidence-backed dataset of programming language implementation and influence relationships. Every relationship includes a confidence score and at least one evidence source URL.</p>
 
+  <p class="dataset-version"><strong>Current version:</strong> v${DATASET_VERSION}</p>
+
   <div class="stat-grid">
     <div class="stat-card">
       <span class="stat-number">${languages.length}</span>
@@ -3215,11 +3250,18 @@ ${NAV_HTML}
   <p>Each relationship contains: <code>from_language</code>, <code>to_language</code>, <code>relationship</code>, <code>confidence</code> (0–1), <code>evidence_source</code> (URL), <code>notes</code>.</p>
 
   <h2>Download</h2>
-  <p>The raw dataset JSON is available at:</p>
-  <pre>https://www.languagelineage.org/dataset/v5/lineage_v5.json</pre>
+  <p>Download the complete v${DATASET_VERSION} dataset as JSON. Counts and metadata on this page are generated from this file.</p>
+  <p><a class="download-btn" href="${DATASET_DOWNLOAD_PATH}" download="language-lineage-v5.json">Download dataset JSON</a></p>
+  <pre><code>${downloadUrl}</code></pre>
+
+  <h2>License</h2>
+  <p>The Language Lineage dataset is licensed under the <a href="${DATASET_LICENSE_URL}" rel="license noopener noreferrer">${DATASET_LICENSE_NAME} (CC BY 4.0)</a>. You may share and adapt the data for any purpose, provided you give appropriate credit and indicate whether changes were made.</p>
 
   <h2>Citation</h2>
-  <pre>Language Lineage dataset (languagelineage.org). Accessed ${new Date().getFullYear()}.</pre>
+  <p>Suggested citation:</p>
+  <pre class="citation-block"><code>Language Lineage. Programming Language Lineage Dataset, v${DATASET_VERSION}. ${languages.length} nodes and ${rels.length} relationships. Accessed ${new Date().getFullYear()}. ${SITE}/dataset</code></pre>
+
+  ${featuredEmbedNode ? buildEmbedKit(featuredEmbedNode) : ''}
 
   <a class="explore-btn" href="/explore">Explore in Graph &rarr;</a>
 </main>

@@ -15,7 +15,7 @@
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:type" content="image/png" />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"Programming Language Lineage Dataset","description":"Structured dataset of 152 programming languages and tools with 443 documented implementation and influence relationships.","url":"https://www.languagelineage.org/dataset","creator":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"license":"https://creativecommons.org/licenses/by/4.0/","temporalCoverage":"1949/2023","variableMeasured":["influenced","bootstrap_written_in","compiler_written_in","runtime_written_in","rewritten_in","transpiled_to"]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","name":"Programming Language Lineage Dataset","description":"Structured dataset of 152 programming languages and tools with 443 documented implementation and influence relationships.","url":"https://www.languagelineage.org/dataset","version":"5.0","dateModified":"2026-07-02","isAccessibleForFree":true,"keywords":["programming languages","compiler implementation","runtime implementation","language history","software engineering"],"creator":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"license":"https://creativecommons.org/licenses/by/4.0/","temporalCoverage":"1949/2023","variableMeasured":["influenced","bootstrap_written_in","compiler_written_in","runtime_written_in","rewritten_in","transpiled_to"],"distribution":{"@type":"DataDownload","contentUrl":"https://www.languagelineage.org/dataset/v5/lineage_v5.json","encodingFormat":"application/json"}}</script>
 </head>
 <body class="seo-page">
 <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -37,6 +37,8 @@
   <h1>Programming Language Lineage Dataset</h1>
 
   <p>An open, evidence-backed dataset of programming language implementation and influence relationships. Every relationship includes a confidence score and at least one evidence source URL.</p>
+
+  <p class="dataset-version"><strong>Current version:</strong> v5.0</p>
 
   <div class="stat-grid">
     <div class="stat-card">
@@ -73,11 +75,23 @@
   <p>Each relationship contains: <code>from_language</code>, <code>to_language</code>, <code>relationship</code>, <code>confidence</code> (0–1), <code>evidence_source</code> (URL), <code>notes</code>.</p>
 
   <h2>Download</h2>
-  <p>The raw dataset JSON is available at:</p>
-  <pre>https://www.languagelineage.org/dataset/v5/lineage_v5.json</pre>
+  <p>Download the complete v5.0 dataset as JSON. Counts and metadata on this page are generated from this file.</p>
+  <p><a class="download-btn" href="/dataset/v5/lineage_v5.json" download="language-lineage-v5.json">Download dataset JSON</a></p>
+  <pre><code>https://www.languagelineage.org/dataset/v5/lineage_v5.json</code></pre>
+
+  <h2>License</h2>
+  <p>The Language Lineage dataset is licensed under the <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener noreferrer">Creative Commons Attribution 4.0 International (CC BY 4.0)</a>. You may share and adapt the data for any purpose, provided you give appropriate credit and indicate whether changes were made.</p>
 
   <h2>Citation</h2>
-  <pre>Language Lineage dataset (languagelineage.org). Accessed 2026.</pre>
+  <p>Suggested citation:</p>
+  <pre class="citation-block"><code>Language Lineage. Programming Language Lineage Dataset, v5.0. 152 nodes and 443 relationships. Accessed 2026. https://www.languagelineage.org/dataset</code></pre>
+
+  <section class="embed-kit" data-nosnippet>
+  <h2>Embed this graph</h2>
+  <p>Paste this iframe into any HTML page to show the Rust relationship graph.</p>
+  <pre class="embed-code"><code>&lt;iframe src=&quot;https://www.languagelineage.org/embed?lang=rust&quot; width=&quot;100%&quot; height=&quot;500&quot; loading=&quot;lazy&quot; style=&quot;border:0&quot; title=&quot;Rust relationship graph&quot;&gt;&lt;/iframe&gt;</code></pre>
+  <p class="embed-attribution">Please attribute the visualization to <a href="https://www.languagelineage.org">Language Lineage</a> and link to the <a href="/languages/rust">Rust source record</a>.</p>
+</section>
 
   <a class="explore-btn" href="/explore">Explore in Graph &rarr;</a>
 </main>
