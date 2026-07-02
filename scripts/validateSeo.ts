@@ -176,7 +176,7 @@ ok(`${indexPages.length} collection index pages checked`);
 
 // Priority title spot-checks
 const prioritySpotChecks: Array<[string, string]> = [
-  ['languages/python/index.html', 'CPython implementation explained'],
+  ['languages/python/index.html', 'CPython: written in C'],
   ['languages/rust/index.html', 'rustc bootstrapping explained'],
   ['languages/javascript/index.html', 'V8, SpiderMonkey, and JSC'],
 ];
@@ -286,6 +286,78 @@ try {
 } catch {
   fail('vercel.json is invalid JSON');
 }
+
+// Phase 2: Title and description uniqueness + length sweep across all generated pages.
+// Covers every index.html under public/ except the SPA shell.
+import { readdirSync, statSync } from 'fs';
+
+function walkHtmlFiles(dir: string): string[] {
+  const results: string[] = [];
+  for (const entry of readdirSync(dir)) {
+    const full = join(dir, entry);
+    if (statSync(full).isDirectory()) results.push(...walkHtmlFiles(full));
+    else if (entry === 'index.html') results.push(full);
+  }
+  return results;
+}
+
+const allHtmlFiles = walkHtmlFiles(PUBLIC);
+const titleMap = new Map<string, string[]>(); // title -> [file, ...]
+const descMap = new Map<string, string[]>();
+const TITLE_MAX = 75;
+const DESC_MIN = 75;
+const DESC_MAX = 180;
+let titleLengthErrors = 0;
+let descLengthErrors = 0;
+
+for (const filePath of allHtmlFiles) {
+  const rel = filePath.replace(PUBLIC + '/', '');
+  const html = readFileSync(filePath, 'utf8');
+
+  const titleMatch = html.match(/<title>([^<]+)<\/title>/);
+  const descMatch = html.match(/<meta name="description" content="([^"]+)"/);
+
+  if (titleMatch) {
+    const t = titleMatch[1].replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    if (!titleMap.has(t)) titleMap.set(t, []);
+    titleMap.get(t)!.push(rel);
+    if (t.length > TITLE_MAX) { fail(`${rel}: title too long (${t.length} chars, max ${TITLE_MAX}): "${t.slice(0, 60)}..."`); titleLengthErrors++; }
+  } else {
+    fail(`${rel}: missing <title>`);
+  }
+
+  if (descMatch) {
+    const d = descMatch[1].replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    if (!descMap.has(d)) descMap.set(d, []);
+    descMap.get(d)!.push(rel);
+    if (d.length < DESC_MIN) { warn(`${rel}: description too short (${d.length} chars, min ${DESC_MIN})`); descLengthErrors++; }
+    if (d.length > DESC_MAX) { warn(`${rel}: description too long (${d.length} chars, max ${DESC_MAX})`); descLengthErrors++; }
+  } else {
+    fail(`${rel}: missing meta description`);
+  }
+}
+
+const dupTitles = [...titleMap.entries()].filter(([, files]) => files.length > 1);
+const dupDescs = [...descMap.entries()].filter(([, files]) => files.length > 1);
+
+if (dupTitles.length === 0) {
+  ok(`All ${allHtmlFiles.length} pages have unique titles`);
+} else {
+  for (const [t, files] of dupTitles) {
+    fail(`Duplicate title "${t.slice(0, 60)}" on: ${files.slice(0, 3).join(', ')}`);
+  }
+}
+
+if (dupDescs.length === 0) {
+  ok(`All ${allHtmlFiles.length} pages have unique descriptions`);
+} else {
+  for (const [d, files] of dupDescs) {
+    fail(`Duplicate description "${d.slice(0, 60)}" on: ${files.slice(0, 3).join(', ')}`);
+  }
+}
+
+if (titleLengthErrors === 0) ok(`All titles within ${TITLE_MAX} chars`);
+if (descLengthErrors === 0) ok(`All descriptions within ${DESC_MIN}-${DESC_MAX} chars`);
 
 // Summary
 console.log('');
