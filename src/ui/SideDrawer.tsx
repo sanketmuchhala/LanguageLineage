@@ -1,19 +1,84 @@
+import { useState } from 'react';
 import { useGraphStore } from '../store/useGraphStore';
 import { LOGO_MAP, LOGO_COLORS, getLogoPresentation } from '../data/logoMap';
 import { getAdaptiveLogoBackground, getLogoBorderColor } from '../utils/colorContrast';
 import './SideDrawer.css';
 
+const REL_TYPE_LABELS: Record<string, string> = {
+  compiler_written_in: 'compiler written in',
+  runtime_written_in: 'runtime written in',
+  bootstrap_written_in: 'bootstrap written in',
+  rewritten_in: 'rewritten in',
+  influenced: 'influenced',
+  influenced_by: 'influenced by',
+  transpiled_to: 'transpiled to',
+};
+
 export function SideDrawer() {
-  const { dataset, datasetIndex, selectedNodeId, selectedEdgeId, sideDrawerOpen, setSideDrawerOpen, explorationMode, setExplorationMode, isDarkMode } =
+  const [copyFeedback, setCopyFeedback] = useState(false);
+  const { dataset, datasetIndex, selectedNodeId, selectedEdgeId, sideDrawerOpen, setSideDrawerOpen, explorationMode, setExplorationMode, isDarkMode, traceMode, traceNodeA, traceNodeB, tracePath, traceEdgeIds } =
     useGraphStore();
 
-  if (!sideDrawerOpen || !dataset) {
-    return null;
-  }
+  if (!dataset) return null;
+  if (!sideDrawerOpen) return null;
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      setCopyFeedback(true);
+      setTimeout(() => setCopyFeedback(false), 1800);
+    });
+  };
 
   const handleClose = () => {
     setSideDrawerOpen(false);
   };
+
+  // Trace mode: show trace result when both nodes picked
+  if (traceMode && traceNodeA && traceNodeB) {
+    const nodeA = dataset.languageMap.get(traceNodeA);
+    const nodeB = dataset.languageMap.get(traceNodeB);
+    const pathNodes = tracePath?.map((id) => dataset.languageMap.get(id));
+    const pathEdges = traceEdgeIds?.map((id) => dataset.edgeMap.get(id));
+
+    return (
+      <>
+        <div className="side-drawer-backdrop visible" onClick={handleClose} />
+        <div className="side-drawer">
+          <div className="drawer-header">
+            <h2>Trace Path</h2>
+            <button className="drawer-close" onClick={handleClose}>✕</button>
+          </div>
+          <div className="drawer-content">
+            {tracePath ? (
+              <section className="drawer-section">
+                <h3>{nodeA?.name} → {nodeB?.name}</h3>
+                <p className="trace-hop-count">{tracePath.length - 1} hop{tracePath.length !== 2 ? 's' : ''}</p>
+                <ol className="trace-path-list">
+                  {tracePath.map((nodeId, i) => {
+                    const n = pathNodes?.[i];
+                    const edge = i < (pathEdges?.length ?? 0) ? pathEdges?.[i] : null;
+                    const rel = edge ? REL_TYPE_LABELS[edge.relationship] ?? edge.relationship : null;
+                    const isEndpoint = i === 0 || i === tracePath.length - 1;
+                    return (
+                      <li key={nodeId} className={isEndpoint ? 'trace-endpoint' : ''}>
+                        <span className="trace-node-name">{n?.name ?? nodeId}</span>
+                        {rel && <span className="trace-edge-label">{rel} →</span>}
+                      </li>
+                    );
+                  })}
+                </ol>
+              </section>
+            ) : (
+              <section className="drawer-section">
+                <p className="trace-no-path">No path found between <strong>{nodeA?.name}</strong> and <strong>{nodeB?.name}</strong> under active relationship filters.</p>
+                <p className="trace-no-path-hint">Try enabling more relationship types in the panel.</p>
+              </section>
+            )}
+          </div>
+        </div>
+      </>
+    );
+  }
 
   // Show node details
   if (selectedNodeId) {
@@ -42,12 +107,25 @@ export function SideDrawer() {
         <div className="side-drawer">
         <div className="drawer-header">
           <h2>{node.name}</h2>
-          <button className="drawer-close" onClick={handleClose}>
-            ✕
-          </button>
+          <div className="drawer-header-actions">
+            <button
+              className="copy-link-btn"
+              onClick={handleCopyLink}
+              title="Copy link to this node"
+            >
+              {copyFeedback ? 'Copied!' : 'Copy link'}
+            </button>
+            <button className="drawer-close" onClick={handleClose}>✕</button>
+          </div>
         </div>
 
         <div className="drawer-content">
+          {traceMode && traceNodeA && !traceNodeB && (
+            <section className="drawer-section trace-hint-section">
+              <p className="trace-select-hint">Trace mode: now click the destination node.</p>
+            </section>
+          )}
+
           {logoUrl && (
               <div
                 className="language-logo"
@@ -156,34 +234,56 @@ export function SideDrawer() {
           </section>
 
           {outgoing.length > 0 && (
-            <section className="drawer-section">
-              <h3>Outgoing Edges ({outgoing.length})</h3>
-              <ul className="edge-list">
-                {outgoing.map((edge) => {
-                  const targetNode = dataset.languageMap.get(edge.to_language);
-                  return (
-                    <li key={edge.id}>
-                      → {targetNode?.name || edge.to_language} ({edge.relationship})
-                    </li>
-                  );
-                })}
-              </ul>
+            <section className="drawer-section" id={`rel-table-${selectedNodeId}`}>
+              <h3>Outgoing ({outgoing.length})</h3>
+              <table className="rel-table" aria-label={`${node.name} outgoing relationships`}>
+                <thead>
+                  <tr>
+                    <th scope="col">Target</th>
+                    <th scope="col">Relationship</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {outgoing.map((edge) => {
+                    const targetNode = dataset.languageMap.get(edge.to_language);
+                    const prefix = edge.to_language.startsWith('tool:') ? 'tools' : 'languages';
+                    const tSlug = edge.to_language.replace(/^(lang|tool):/, '').replace(/_/g, '-');
+                    return (
+                      <tr key={edge.id}>
+                        <td><a href={`/${prefix}/${tSlug}`}>{targetNode?.name ?? edge.to_language}</a></td>
+                        <td>{REL_TYPE_LABELS[edge.relationship] ?? edge.relationship}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </section>
           )}
 
           {incoming.length > 0 && (
             <section className="drawer-section">
-              <h3>Incoming Edges ({incoming.length})</h3>
-              <ul className="edge-list">
-                {incoming.map((edge) => {
-                  const sourceNode = dataset.languageMap.get(edge.from_language);
-                  return (
-                    <li key={edge.id}>
-                      ← {sourceNode?.name || edge.from_language} ({edge.relationship})
-                    </li>
-                  );
-                })}
-              </ul>
+              <h3>Incoming ({incoming.length})</h3>
+              <table className="rel-table" aria-label={`${node.name} incoming relationships`}>
+                <thead>
+                  <tr>
+                    <th scope="col">Source</th>
+                    <th scope="col">Relationship</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {incoming.map((edge) => {
+                    const sourceNode = dataset.languageMap.get(edge.from_language);
+                    const prefix = edge.from_language.startsWith('tool:') ? 'tools' : 'languages';
+                    const sSlug = edge.from_language.replace(/^(lang|tool):/, '').replace(/_/g, '-');
+                    return (
+                      <tr key={edge.id}>
+                        <td><a href={`/${prefix}/${sSlug}`}>{sourceNode?.name ?? edge.from_language}</a></td>
+                        <td>{REL_TYPE_LABELS[edge.relationship] ?? edge.relationship}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </section>
           )}
         </div>

@@ -404,3 +404,81 @@
   background: var(--accent-glow);
   border-color: var(--accent);
 }
+
+/* Drawer header with actions (copy link + close) */
+.drawer-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.copy-link-btn {
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border-accent);
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+.copy-link-btn:hover { background: var(--accent-subtle); }
+
+/* Accessible relationship table */
+.rel-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin-top: 6px;
+}
+.rel-table th {
+  text-align: left;
+  padding: 6px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+  border-bottom: 1px solid var(--border);
+}
+.rel-table td {
+  padding: 7px 8px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+.rel-table tbody tr:last-child td { border-bottom: none; }
+.rel-table td a { color: var(--accent); text-decoration: none; font-size: 12px; }
+.rel-table td a:hover { text-decoration: underline; }
+
+/* Trace mode UI */
+.trace-hint-section { border-left: 2px solid var(--accent); padding-left: 10px; }
+.trace-select-hint { font-size: 13px; color: var(--accent); margin: 0; font-weight: 500; }
+.trace-hop-count { font-size: 11px; color: var(--text-tertiary); margin: 0 0 10px; font-family: 'JetBrains Mono', monospace; }
+.trace-path-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 2px; }
+.trace-path-list li { display: flex; flex-direction: column; gap: 2px; padding: 6px 8px; border-radius: 6px; background: var(--bg-card); }
+.trace-path-list li.trace-endpoint { background: rgba(74,222,128,0.08); border: 1px solid rgba(74,222,128,0.25); }
+.trace-node-name { font-size: 13px; font-weight: 600; color: var(--text); }
+.trace-edge-label { font-size: 11px; color: var(--text-tertiary); font-family: 'JetBrains Mono', monospace; }
+.trace-no-path { font-size: 13px; color: var(--text-secondary); }
+.trace-no-path-hint { font-size: 12px; color: var(--text-tertiary); }
+
+/* Trace toggle in MinimalPanel */
+.trace-toggle-btn {
+  width: 100%;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.trace-toggle-btn:hover { border-color: var(--accent); color: var(--accent); }
+.trace-toggle-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(74,222,128,0.08); }
+.trace-hint { font-size: 11px; color: var(--text-tertiary); margin: 6px 0 0; line-height: 1.4; }

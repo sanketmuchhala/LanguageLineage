@@ -184,6 +184,77 @@ export function applyAttributeFilters(
   });
 }
 
+// BFS shortest path between two nodes (treats graph as undirected for traversal)
+export function findShortestPath(
+  index: DatasetIndex,
+  fromId: string,
+  toId: string,
+  activeRelTypes: Set<string>
+): { nodes: string[]; edgeIds: string[] } | null {
+  if (fromId === toId) return { nodes: [fromId], edgeIds: [] };
+
+  type Prev = { nodeId: string; edgeId: string } | null;
+  const visited = new Map<string, Prev>();
+  visited.set(fromId, null);
+  const queue: string[] = [fromId];
+
+  let found = false;
+  outer: while (queue.length > 0) {
+    const current = queue.shift()!;
+    for (const edge of index.outgoingEdges.get(current) || []) {
+      if (!activeRelTypes.has(edge.relationship)) continue;
+      if (!visited.has(edge.to_language)) {
+        visited.set(edge.to_language, { nodeId: current, edgeId: edge.id });
+        if (edge.to_language === toId) { found = true; break outer; }
+        queue.push(edge.to_language);
+      }
+    }
+    for (const edge of index.incomingEdges.get(current) || []) {
+      if (!activeRelTypes.has(edge.relationship)) continue;
+      if (!visited.has(edge.from_language)) {
+        visited.set(edge.from_language, { nodeId: current, edgeId: edge.id });
+        if (edge.from_language === toId) { found = true; break outer; }
+        queue.push(edge.from_language);
+      }
+    }
+  }
+
+  if (!found && !visited.has(toId)) return null;
+
+  const nodes: string[] = [];
+  const edgeIds: string[] = [];
+  let cur = toId;
+  while (cur !== fromId) {
+    nodes.unshift(cur);
+    const prev = visited.get(cur)!;
+    if (!prev) break;
+    edgeIds.unshift(prev.edgeId);
+    cur = prev.nodeId;
+  }
+  nodes.unshift(fromId);
+
+  return { nodes, edgeIds };
+}
+
+// Highlight a trace path: endpoints are .selected, intermediate nodes are .highlighted
+export function activateTracePath(cy: Core, pathNodeIds: string[], pathEdgeIds: string[]): void {
+  cy.batch(() => {
+    cy.elements().addClass('faded').removeClass('highlighted selected');
+    pathNodeIds.forEach((id, i) => {
+      const node = cy.getElementById(id);
+      node.removeClass('faded');
+      if (i === 0 || i === pathNodeIds.length - 1) {
+        node.addClass('highlighted selected');
+      } else {
+        node.addClass('highlighted');
+      }
+    });
+    pathEdgeIds.forEach((id) => {
+      cy.getElementById(id).removeClass('faded').addClass('highlighted');
+    });
+  });
+}
+
 // Highlight a specific edge
 export function highlightEdge(cy: Core, edgeId: string): void {
   const edge = cy.getElementById(edgeId);

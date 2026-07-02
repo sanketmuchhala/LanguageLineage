@@ -1843,7 +1843,7 @@ ${priorityContentHtml ? `
 
   ${buildDiscoverMore(node, rels, nodeMap)}
 
-  <a class="explore-btn" href="/explore?lang=${encodeURIComponent(idToSlug(node.id))}">Explore ${escapeHtml(node.name)} in Graph &rarr;</a>
+  <a class="explore-btn" href="/explore?node=${encodeURIComponent(node.id)}">Explore ${escapeHtml(node.name)} in Graph &rarr;</a>
 </main>
 ${FOOTER_HTML}
 </body>

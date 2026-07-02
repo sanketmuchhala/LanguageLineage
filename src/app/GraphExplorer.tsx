@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useGraphStore } from '../store/useGraphStore';
 import { loadDataset } from '../data/loadDataset';
 import { validateDataset } from '../data/validateDataset';
@@ -26,9 +26,17 @@ const REL_LABELS: Record<string, string> = {
 
 export function GraphExplorer() {
   const navigate = useNavigate();
-  const { setDataset, setDatasetIndex, setValidationReport } = useGraphStore();
+  const [searchParams] = useSearchParams();
+  const { setDataset, setDatasetIndex, setValidationReport, setPendingFocusNodeId } = useGraphStore();
   const dataset = useGraphStore((s) => s.dataset);
   const layoutMode = useGraphStore((s) => s.filters.layoutMode);
+
+  // Read deep link ?node= param and queue it for focus after layout
+  useEffect(() => {
+    const nodeId = searchParams.get('node');
+    if (nodeId) setPendingFocusNodeId(nodeId);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Load dataset when graph explorer mounts (not on landing page)
   useEffect(() => {
@@ -73,9 +81,15 @@ export function GraphExplorer() {
           }
           break;
         case 'escape':
-          state.setSelectedNode(null);
-          state.setSelectedEdge(null);
-          if (state.cy) deactivateFocusMode(state.cy);
+          if (state.traceMode) {
+            state.clearTrace();
+            if (state.cy) deactivateFocusMode(state.cy);
+          } else {
+            state.setSelectedNode(null);
+            state.setSelectedEdge(null);
+            if (state.cy) deactivateFocusMode(state.cy);
+            history.replaceState(null, '', '/explore');
+          }
           break;
         case 'r': {
           const { cy, filters } = state;
