@@ -1,62 +1,48 @@
-# Claude Code Instructions
+# Agent Instructions
 
 ## Core Principles
 
-**ONLY make the changes explicitly requested. Nothing more.**
+Only make the changes explicitly requested. The SITE_IMPROVEMENT_PLAN.md at repo root is the canonical source of explicit requests for improvement phases.
 
-### What NOT to do:
-- ❌ Don't add features that weren't asked for
-- ❌ Don't refactor code unless specifically requested
-- ❌ Don't add comments or documentation unless asked
-- ❌ Don't "improve" or "optimize" code that's working
-- ❌ Don't add error handling for edge cases that don't exist
-- ❌ Don't add type annotations to code that doesn't have them
-- ❌ Don't rename variables or functions for "clarity"
-- ❌ Don't add validation or checks beyond what's needed
-- ❌ Don't create abstractions or helpers for one-time use
-- ❌ Don't add backwards compatibility code
-- ❌ Don't make the code "more maintainable" unless asked
+### What not to do:
+- Do not add features that were not asked for
+- Do not refactor working code unless specifically requested
+- Do not add comments or documentation unless asked
+- Do not rename variables or functions for "clarity"
+- Do not create abstractions or helpers for one-time use
 
-### What TO do:
-- ✅ Read the request carefully and understand exactly what's needed
-- ✅ Make ONLY the specific changes requested
-- ✅ Test that the changes work
-- ✅ Keep the same coding style as existing code
-- ✅ If unclear, ask for clarification before making changes
-
-### Example:
-**User says:** "Change the node color to blue"
-
-**WRONG approach:**
-- Change node color to blue
-- Add a config file for colors
-- Add hover states
-- Add color validation
-- Add comments explaining the color choice
-- Refactor the color logic into a separate function
-
-**RIGHT approach:**
-- Change the node color to blue
-- Done.
+### What to do:
+- Read the request carefully and understand exactly what is needed
+- Make only the specific changes requested
+- Test that the changes work
+- Keep the same coding style as existing code
+- If unclear, ask for clarification before making changes
 
 ## Project-Specific Rules
 
-### This is a graph visualization project
-- All nodes must be the same size (70px) - NO EXCEPTIONS
-- Don't add animations unless requested
-- Don't change the layout algorithm unless told to
-- Don't modify the dataset structure
+### This is a graph visualization and SEO content site
+- Node sizing is degree-based (not fixed size). Do not change this.
+- Do not change the dataset schema or field names. Adding nodes or edges is fine.
+- Do not modify the design system (Section 1.6 of SITE_IMPROVEMENT_PLAN.md) without explicit approval.
+
+### Static pages
+- Everything under `public/languages/`, `public/tools/`, `public/questions/`, `public/guides/`, `public/relationships/`, `public/timeline/`, `public/sitemap.xml`, and `public/llms.txt` is generated output. Never hand-edit these files. Edit the generator scripts in `scripts/`, then run `npm run seo:generate`.
+- Always run `npm run type-check`, `npm run seo:validate`, and `npm run build` before committing.
 
 ### When making UI changes:
-- Keep it minimal and clean
-- Don't add extra panels or controls
-- Don't add tooltips or hints unless asked
-- Mobile responsive changes should be minimal
+- Keep it minimal and clean per the design system
+- Respect `prefers-reduced-motion`
+- Test at 320px, 390px, 768px, and 1440px widths
 
 ### When debugging:
 - Fix only the specific bug reported
-- Don't "clean up" surrounding code
-- Don't add logging unless necessary
+- Do not "clean up" surrounding code
+- Do not add logging unless necessary
 
-## Summary
-**If the user didn't ask for it, don't add it. Period.**
+## Validation gate (run before every commit)
+
+```
+npm run type-check        # must pass
+npm run seo:validate      # must report 0 errors, 0 warnings
+npm run build             # must pass (Cytoscape chunk-size warning is expected)
+```
