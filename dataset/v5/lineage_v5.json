@@ -2583,12 +2583,12 @@
       "cluster_hint": "dynamic",
       "company": null,
       "garbage_collected": true,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/8/85/Camelia.svg",
       "peak_year": null,
       "current_users_estimate": "niche",
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Camelia.svg",
+      "logo_license": "Artistic 2.0",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:hack",
@@ -2607,12 +2607,12 @@
       "cluster_hint": "dynamic",
       "company": "Meta",
       "garbage_collected": true,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/5/52/Webysther_20160330_-_Hack_%28language%29.svg",
       "peak_year": null,
       "current_users_estimate": "moderate",
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Webysther_20160330_-_Hack_(language).svg",
+      "logo_license": "Public domain",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:rescript",
@@ -2629,12 +2629,12 @@
       "cluster_hint": "functional",
       "company": null,
       "garbage_collected": true,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/9/92/Rescript-logo.svg",
       "peak_year": null,
       "current_users_estimate": "niche",
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Rescript-logo.svg",
+      "logo_license": "MIT",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:vala",
@@ -2652,12 +2652,12 @@
       "cluster_hint": "systems",
       "company": null,
       "garbage_collected": true,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/e/e4/Vala_Logo_New.svg",
       "peak_year": null,
       "current_users_estimate": "niche",
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Vala_Logo_New.svg",
+      "logo_license": "MIT",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:eiffel",
@@ -2674,12 +2674,12 @@
       "cluster_hint": "other",
       "company": "Eiffel Software",
       "garbage_collected": true,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Eiffel_logo.svg",
       "peak_year": null,
       "current_users_estimate": "niche",
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Eiffel_logo.svg",
+      "logo_license": "Public domain",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:forth",
@@ -2721,12 +2721,12 @@
       "cluster_hint": "other",
       "company": "Ethereum Foundation",
       "garbage_collected": false,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/9/98/Solidity_logo.svg",
       "peak_year": null,
       "current_users_estimate": "moderate",
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Solidity_logo.svg",
+      "logo_license": "CC BY-SA 3.0",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:io",
@@ -2745,12 +2745,12 @@
       "cluster_hint": "dynamic",
       "company": null,
       "garbage_collected": true,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/2/26/Io-logo.svg",
       "peak_year": null,
       "current_users_estimate": "niche",
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Io-logo.svg",
+      "logo_license": "Public domain",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:clean",
@@ -2951,12 +2951,12 @@
       "cluster_hint": "functional",
       "company": null,
       "garbage_collected": false,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/2/23/The_ATS_Logo.svg",
       "peak_year": null,
       "current_users_estimate": "niche",
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:The_ATS_Logo.svg",
+      "logo_license": "CC BY-SA 4.0",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:roc",
@@ -3019,12 +3019,12 @@
       "cluster_hint": "functional",
       "company": null,
       "garbage_collected": true,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/d/dc/Lean_logo2.svg",
       "peak_year": null,
       "current_users_estimate": "niche",
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Lean_logo2.svg",
+      "logo_license": "Public domain",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:coq",
@@ -3043,12 +3043,12 @@
       "cluster_hint": "functional",
       "company": "INRIA",
       "garbage_collected": true,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/8/81/Rocq_logo.svg",
       "peak_year": null,
       "current_users_estimate": "niche",
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Rocq_logo.svg",
+      "logo_license": "Public domain",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:qsharp",
@@ -3066,12 +3066,12 @@
       "cluster_hint": "clr",
       "company": "Microsoft",
       "garbage_collected": true,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/f/f8/Q_mini.png",
       "peak_year": null,
       "current_users_estimate": "niche",
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Q_mini.png",
+      "logo_license": "CC BY-SA 4.0",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:powershell",
@@ -3090,12 +3090,12 @@
       "cluster_hint": "clr",
       "company": "Microsoft",
       "garbage_collected": true,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/0/0c/Ps_black_128.svg",
       "peak_year": null,
       "current_users_estimate": "large",
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Ps_black_128.svg",
+      "logo_license": "MIT",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:haxe",
@@ -3115,12 +3115,12 @@
       "cluster_hint": "other",
       "company": null,
       "garbage_collected": true,
-      "logo_url": null,
+      "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/haxe/haxe-original.svg",
       "peak_year": null,
       "current_users_estimate": "niche",
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://github.com/devicons/devicon/tree/master/icons/haxe",
+      "logo_license": "Devicon MIT; trademarks retained by owners",
+      "logo_kind": "devicon"
     },
     {
       "id": "lang:actionscript",
@@ -3139,12 +3139,12 @@
       "cluster_hint": "dynamic",
       "company": "Macromedia / Adobe",
       "garbage_collected": true,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/4/45/Farm-Fresh_page_white_actionscript.png",
       "peak_year": 2009,
       "current_users_estimate": "niche",
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Farm-Fresh_page_white_actionscript.png",
+      "logo_license": "CC BY 3.0 us",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "lang:chapel",
@@ -3308,12 +3308,12 @@
       "cluster_hint": "other",
       "company": null,
       "garbage_collected": true,
-      "logo_url": null,
+      "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nixos/nixos-plain.svg",
       "peak_year": null,
       "current_users_estimate": "moderate",
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://github.com/devicons/devicon/tree/master/icons/nixos",
+      "logo_license": "Devicon MIT; trademarks retained by owners",
+      "logo_kind": "devicon"
     },
     {
       "id": "lang:move",
@@ -3331,12 +3331,12 @@
       "cluster_hint": "other",
       "company": "Meta",
       "garbage_collected": false,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/d/db/Diem_logo.svg",
       "peak_year": null,
       "current_users_estimate": "niche",
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Diem_logo.svg",
+      "logo_license": "Public domain",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "tool:hhvm",
@@ -3353,12 +3353,12 @@
       "cluster_hint": "tools",
       "company": "Meta",
       "garbage_collected": true,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/4/47/Webysther_20160330_-_HHVM.svg",
       "peak_year": null,
       "current_users_estimate": "moderate",
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Webysther_20160330_-_HHVM.svg",
+      "logo_license": "Public domain",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "tool:moarvm",
@@ -3397,12 +3397,12 @@
       "cluster_hint": "tools",
       "company": "Oracle",
       "garbage_collected": true,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/9/9c/GraalVM-logo-rabbit.svg",
       "peak_year": null,
       "current_users_estimate": "moderate",
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:GraalVM-logo-rabbit.svg",
+      "logo_license": "Public domain",
+      "logo_kind": "wikimedia"
     },
     {
       "id": "tool:quickjs",
@@ -3485,12 +3485,12 @@
       "cluster_hint": "tools",
       "company": null,
       "garbage_collected": true,
-      "logo_url": null,
+      "logo_url": "https://upload.wikimedia.org/wikipedia/commons/0/02/Babel_Logo.svg",
       "peak_year": null,
       "current_users_estimate": "dominant",
-      "logo_source": null,
-      "logo_license": null,
-      "logo_kind": "none"
+      "logo_source": "https://commons.wikimedia.org/wiki/File:Babel_Logo.svg",
+      "logo_license": "CC BY-SA 4.0",
+      "logo_kind": "wikimedia"
     }
   ],
   "relationships": [

@@ -1639,6 +1639,31 @@
         "wikipedia": "https://en.wikipedia.org/wiki/Hack_(programming_language)"
       }
     },
+    "lang:hare": {
+      "name": "Hare",
+      "wikidata_id": "Q112200588",
+      "wikipedia_title": "Hare",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Hare",
+      "tagline": "programming language",
+      "facts": {
+        "designers": [],
+        "developers": [
+          "Drew DeVault"
+        ],
+        "license": [
+          "Mozilla Public License",
+          "GNU General Public License, version 3.0"
+        ],
+        "influenced_by": [],
+        "implemented_in": [],
+        "website": "https://harelang.org",
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q112200588",
+        "wikipedia": "https://en.wikipedia.org/wiki/Hare"
+      }
+    },
     "lang:haskell": {
       "name": "Haskell",
       "wikidata_id": "Q34010",
@@ -2465,6 +2490,32 @@
       "sources": {
         "wikidata": "https://www.wikidata.org/wiki/Q118152673",
         "wikipedia": "https://en.wikipedia.org/wiki/Mojo_(programming_language)"
+      }
+    },
+    "lang:move": {
+      "name": "Move",
+      "wikidata_id": "Q64684932",
+      "wikipedia_title": "Diem (digital currency)",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Diem_(digital_currency)",
+      "tagline": "digital currency proposed by Meta Platforms",
+      "facts": {
+        "designers": [
+          "David A. Marcus"
+        ],
+        "developers": [],
+        "license": [
+          "Apache Software License 2.0"
+        ],
+        "influenced_by": [],
+        "implemented_in": [
+          "Rust"
+        ],
+        "website": "https://www.diem.com/en-us/",
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q64684932",
+        "wikipedia": "https://en.wikipedia.org/wiki/Diem_(digital_currency)"
       }
     },
     "lang:mypy": {
@@ -3317,6 +3368,32 @@
       "sources": {
         "wikidata": "https://www.wikidata.org/wiki/Q116885321",
         "wikipedia": "https://en.wikipedia.org/wiki/ReScript"
+      }
+    },
+    "lang:roc": {
+      "name": "Roc",
+      "wikidata_id": "Q124813537",
+      "wikipedia_title": "Roc",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/Roc",
+      "tagline": "functional programming language",
+      "facts": {
+        "designers": [],
+        "developers": [],
+        "license": [
+          "Universal Permissive License"
+        ],
+        "influenced_by": [
+          "Rust",
+          "Elm",
+          "Haskell"
+        ],
+        "implemented_in": [],
+        "website": "https://www.roc-lang.org/",
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q124813537",
+        "wikipedia": "https://en.wikipedia.org/wiki/Roc"
       }
     },
     "lang:ruby": {
@@ -4370,6 +4447,26 @@
       "sources": {
         "wikidata": "https://www.wikidata.org/wiki/Q16948420",
         "wikipedia": "https://en.wikipedia.org/wiki/MoarVM"
+      }
+    },
+    "tool:quickjs": {
+      "name": "QuickJS",
+      "wikidata_id": "Q138809058",
+      "wikipedia_title": "List of JavaScript engines",
+      "wikipedia_url": "https://en.wikipedia.org/wiki/List_of_JavaScript_engines",
+      "tagline": "Wikimedia list article",
+      "facts": {
+        "designers": [],
+        "developers": [],
+        "license": [],
+        "influenced_by": [],
+        "implemented_in": [],
+        "website": null,
+        "file_extensions": []
+      },
+      "sources": {
+        "wikidata": "https://www.wikidata.org/wiki/Q138809058",
+        "wikipedia": "https://en.wikipedia.org/wiki/List_of_JavaScript_engines"
       }
     },
     "tool:roslyn": {

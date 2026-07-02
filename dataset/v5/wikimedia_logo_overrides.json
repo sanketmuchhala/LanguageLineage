@@ -4,5 +4,142 @@
     "storage": "Wikimedia Commons original file URLs",
     "replacement": "fill missing logos and replace proxy logos only"
   },
-  "logos": {}
+  "logos": {
+    "lang:actionscript": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/4/45/Farm-Fresh_page_white_actionscript.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Farm-Fresh_page_white_actionscript.png",
+      "license": "CC BY 3.0 us",
+      "kind": "wikimedia",
+      "wikidata_item": "Q234657",
+      "commons_file": "Farm-Fresh page white actionscript.png"
+    },
+    "lang:ats": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/2/23/The_ATS_Logo.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:The_ATS_Logo.svg",
+      "license": "CC BY-SA 4.0",
+      "kind": "wikimedia",
+      "wikidata_item": "Q621618",
+      "commons_file": "The ATS Logo.svg"
+    },
+    "lang:coq": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/8/81/Rocq_logo.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:Rocq_logo.svg",
+      "license": "Public domain",
+      "kind": "wikimedia",
+      "wikidata_item": "Q1131652",
+      "commons_file": "Rocq logo.svg"
+    },
+    "lang:eiffel": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Eiffel_logo.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:Eiffel_logo.svg",
+      "license": "Public domain",
+      "kind": "wikimedia",
+      "wikidata_item": "Q732089",
+      "commons_file": "Eiffel logo.svg"
+    },
+    "lang:hack": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/5/52/Webysther_20160330_-_Hack_%28language%29.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:Webysther_20160330_-_Hack_(language).svg",
+      "license": "Public domain",
+      "kind": "wikimedia",
+      "wikidata_item": "Q15971618",
+      "commons_file": "Webysther 20160330 - Hack (language).svg"
+    },
+    "lang:io": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/2/26/Io-logo.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:Io-logo.svg",
+      "license": "Public domain",
+      "kind": "wikimedia",
+      "wikidata_item": "Q756175",
+      "commons_file": "Io-logo.svg"
+    },
+    "lang:lean": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/d/dc/Lean_logo2.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:Lean_logo2.svg",
+      "license": "Public domain",
+      "kind": "wikimedia",
+      "wikidata_item": "Q6509476",
+      "commons_file": "Lean logo2.svg"
+    },
+    "lang:move": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/d/db/Diem_logo.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:Diem_logo.svg",
+      "license": "Public domain",
+      "kind": "wikimedia",
+      "wikidata_item": "Q64684932",
+      "commons_file": "Diem logo.svg"
+    },
+    "lang:powershell": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/0/0c/Ps_black_128.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:Ps_black_128.svg",
+      "license": "MIT",
+      "kind": "wikimedia",
+      "wikidata_item": "Q840410",
+      "commons_file": "Ps black 128.svg"
+    },
+    "lang:qsharp": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/f/f8/Q_mini.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Q_mini.png",
+      "license": "CC BY-SA 4.0",
+      "kind": "wikimedia",
+      "wikidata_item": "Q45322975",
+      "commons_file": "Q mini.png"
+    },
+    "lang:raku": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/8/85/Camelia.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:Camelia.svg",
+      "license": "Artistic 2.0",
+      "kind": "wikimedia",
+      "wikidata_item": "Q2052676",
+      "commons_file": "Camelia.svg"
+    },
+    "lang:rescript": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/9/92/Rescript-logo.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:Rescript-logo.svg",
+      "license": "MIT",
+      "kind": "wikimedia",
+      "wikidata_item": "Q116885321",
+      "commons_file": "Rescript-logo.svg"
+    },
+    "lang:solidity": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/9/98/Solidity_logo.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:Solidity_logo.svg",
+      "license": "CC BY-SA 3.0",
+      "kind": "wikimedia",
+      "wikidata_item": "Q24909565",
+      "commons_file": "Solidity logo.svg"
+    },
+    "lang:vala": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/e/e4/Vala_Logo_New.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:Vala_Logo_New.svg",
+      "license": "MIT",
+      "kind": "wikimedia",
+      "wikidata_item": "Q1138939",
+      "commons_file": "Vala Logo New.svg"
+    },
+    "tool:babel": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/0/02/Babel_Logo.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:Babel_Logo.svg",
+      "license": "CC BY-SA 4.0",
+      "kind": "wikimedia",
+      "wikidata_item": "Q55604651",
+      "commons_file": "Babel Logo.svg"
+    },
+    "tool:graalvm": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/9/9c/GraalVM-logo-rabbit.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:GraalVM-logo-rabbit.svg",
+      "license": "Public domain",
+      "kind": "wikimedia",
+      "wikidata_item": "Q16928072",
+      "commons_file": "GraalVM-logo-rabbit.svg"
+    },
+    "tool:hhvm": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/4/47/Webysther_20160330_-_HHVM.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:Webysther_20160330_-_HHVM.svg",
+      "license": "Public domain",
+      "kind": "wikimedia",
+      "wikidata_item": "Q18150679",
+      "commons_file": "Webysther 20160330 - HHVM.svg"
+    }
+  }
 }
