@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useGraphStore } from '../store/useGraphStore';
+import { deactivateFocusMode } from '../graph/selectors';
 import { SearchBox } from './SearchBox';
 import { Slider } from './Slider';
 import { Toggle } from './Toggle';
@@ -60,6 +61,18 @@ export function MinimalPanel({ onBackToLanding }: MinimalPanelProps) {
     dataset.languages.forEach((l) => { if (l.typing) set.add(l.typing); });
     return [...set].sort();
   }, [dataset]);
+
+  const { traceMode, setTraceMode, clearTrace, cy } = useGraphStore();
+
+  const handleTraceToggle = () => {
+    if (traceMode) {
+      setTraceMode(false);
+      clearTrace();
+      if (cy) deactivateFocusMode(cy);
+    } else {
+      setTraceMode(true);
+    }
+  };
 
   const hasActiveFilters = attributeFilters.paradigms.length > 0 || attributeFilters.typing !== null || attributeFilters.decade !== null;
 
@@ -131,6 +144,20 @@ export function MinimalPanel({ onBackToLanding }: MinimalPanelProps) {
               <button className={filters.layoutMode === 'cluster' ? 'active' : ''} onClick={() => handleLayoutChange('cluster')}>Cluster</button>
               <button className={filters.layoutMode === 'timeline' ? 'active' : ''} onClick={() => handleLayoutChange('timeline')}>Timeline</button>
             </div>
+          </section>
+
+          <section className="panel-section">
+            <h3>Trace Path</h3>
+            <button
+              className={`trace-toggle-btn${traceMode ? ' active' : ''}`}
+              onClick={handleTraceToggle}
+              title="Find the shortest path between two nodes"
+            >
+              {traceMode ? 'Exit Trace Mode' : 'Trace A to B'}
+            </button>
+            {traceMode && (
+              <p className="trace-hint">Click a start node, then click an end node.</p>
+            )}
           </section>
 
           <section className="panel-section">

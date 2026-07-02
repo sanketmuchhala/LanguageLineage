@@ -27,6 +27,16 @@ interface GraphStore {
   attributeFilters: { paradigms: string[]; typing: string | null; decade: number | null };
   isDarkMode: boolean;
 
+  // Deep link: node to focus after layout settles
+  pendingFocusNodeId: string | null;
+
+  // Trace mode: A-to-B shortest path
+  traceMode: boolean;
+  traceNodeA: string | null;
+  traceNodeB: string | null;
+  tracePath: string[] | null;
+  traceEdgeIds: string[] | null;
+
   // Actions
   setDataset: (dataset: NormalizedDataset) => void;
   setDatasetIndex: (index: DatasetIndex) => void;
@@ -44,6 +54,11 @@ interface GraphStore {
   resetAttributeFilters: () => void;
   resetFilters: () => void;
   toggleDarkMode: () => void;
+  setPendingFocusNodeId: (id: string | null) => void;
+  setTraceMode: (active: boolean) => void;
+  setTraceNodes: (a: string | null, b: string | null) => void;
+  setTracePath: (path: string[] | null, edgeIds: string[] | null) => void;
+  clearTrace: () => void;
 }
 
 const DEFAULT_FILTERS: FilterState = {
@@ -82,6 +97,12 @@ export const useGraphStore = create<GraphStore>((set) => ({
   explorationMode: 'none',
   attributeFilters: { paradigms: [], typing: null, decade: null },
   isDarkMode: true,
+  pendingFocusNodeId: null,
+  traceMode: false,
+  traceNodeA: null,
+  traceNodeB: null,
+  tracePath: null,
+  traceEdgeIds: null,
 
   // Actions
   setDataset: (dataset) => set({ dataset }),
@@ -136,4 +157,15 @@ export const useGraphStore = create<GraphStore>((set) => ({
       document.documentElement.classList.toggle('light', !next);
       return { isDarkMode: next };
     }),
+  setPendingFocusNodeId: (id) => set({ pendingFocusNodeId: id }),
+  setTraceMode: (active) => set((state) => ({
+    traceMode: active,
+    traceNodeA: active ? state.traceNodeA : null,
+    traceNodeB: active ? state.traceNodeB : null,
+    tracePath: active ? state.tracePath : null,
+    traceEdgeIds: active ? state.traceEdgeIds : null,
+  })),
+  setTraceNodes: (a, b) => set({ traceNodeA: a, traceNodeB: b }),
+  setTracePath: (path, edgeIds) => set({ tracePath: path, traceEdgeIds: edgeIds }),
+  clearTrace: () => set({ traceNodeA: null, traceNodeB: null, tracePath: null, traceEdgeIds: null }),
 }));

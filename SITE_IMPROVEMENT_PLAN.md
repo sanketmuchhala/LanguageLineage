@@ -418,7 +418,7 @@ Acceptance criteria:
 
 ### Phase 9: Explore app upgrades (deep links, trace mode, accessible table)
 
-Status: not started.
+Status: DONE (2026-07-02). PR #30.
 Impact: high for product usefulness. Effort: high. Dependencies: none technically, but do it after the SEO phases; it is SPA-only and invisible to crawlers.
 
 Why: the graph is the product's soul, but it is currently a dead end: not linkable, not accessible, and it cannot answer "how do these two connect", which is the most natural question a graph invites.

@@ -6,7 +6,7 @@ import { buildCytoscapeElements } from './buildElements';
 import { getCytoscapeStyle } from './style';
 import { BASE_CYTOSCAPE_CONFIG } from './cytoscapeConfig';
 import { DAG_LAYOUT, FORCE_LAYOUT, CLUSTER_LAYOUT, buildTimelineLayout } from './layouts';
-import { activateFocusMode, deactivateFocusMode, applyTimelineVisibility, clearTimelineVisibility, getAncestors, getDescendants, activateExplorationMode, applyAttributeFilters } from './selectors';
+import { activateFocusMode, deactivateFocusMode, applyTimelineVisibility, clearTimelineVisibility, getAncestors, getDescendants, activateExplorationMode, applyAttributeFilters, findShortestPath, activateTracePath } from './selectors';
 import './GraphView.css';
 
 // Register cose-bilkent layout
@@ -65,6 +65,22 @@ export function GraphView() {
     instance.zoom(0.5);
 
     instance.on('layoutstop', () => {
+      // Deep link: focus the pending node once after layout settles
+      const { pendingFocusNodeId, setPendingFocusNodeId, setSelectedNode } = useGraphStore.getState();
+      if (pendingFocusNodeId) {
+        const target = instance.getElementById(pendingFocusNodeId);
+        if (target && target.length > 0) {
+          setSelectedNode(pendingFocusNodeId);
+          activateFocusMode(instance, pendingFocusNodeId);
+          const calm = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+          if (!calm) {
+            instance.animate({ center: { eles: target }, zoom: 1.4 }, { duration: 600, easing: 'ease-in-out-cubic' });
+          }
+        }
+        setPendingFocusNodeId(null);
+        return;
+      }
+
       if (!window.matchMedia('(max-width: 640px)').matches || instance.zoom() >= 0.4) return;
 
       const center = {
@@ -84,10 +100,46 @@ export function GraphView() {
     setCytoscape(instance);
 
     // Node tap: lock selection, then smoothly bring it to centre.
+    // In trace mode: first tap sets A, second tap sets B and computes path.
     instance.on('tap', 'node', (evt) => {
       const node = evt.target;
+      const state = useGraphStore.getState();
+
+      if (state.traceMode) {
+        if (!state.traceNodeA) {
+          // First node selected: set A, open drawer
+          state.setTraceNodes(node.id(), null);
+          state.setSelectedNode(node.id());
+          state.setSideDrawerOpen(true);
+        } else if (node.id() !== state.traceNodeA) {
+          // Second node: compute path
+          const { datasetIndex, filters: currentFilters } = useGraphStore.getState();
+          if (datasetIndex) {
+            const activeRelTypes = new Set(
+              Object.entries(currentFilters.relationshipFilters)
+                .filter(([, v]) => v)
+                .map(([k]) => k)
+            );
+            const result = findShortestPath(datasetIndex, state.traceNodeA, node.id(), activeRelTypes);
+            state.setTraceNodes(state.traceNodeA, node.id());
+            state.setTracePath(result?.nodes ?? null, result?.edgeIds ?? null);
+            state.setSideDrawerOpen(true);
+            if (result) {
+              activateTracePath(instance, result.nodes, result.edgeIds);
+              const pathEles = result.nodes.reduce((col, id) => col.union(instance.getElementById(id)), instance.collection());
+              const calm = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+              if (!calm) instance.animate({ fit: { eles: pathEles, padding: 80 } }, { duration: 600, easing: 'ease-in-out-cubic' });
+            } else {
+              deactivateFocusMode(instance);
+            }
+          }
+        }
+        return;
+      }
+
       setSelectedNode(node.id());
       activateFocusMode(instance, node.id());
+      history.replaceState(null, '', `/explore?node=${encodeURIComponent(node.id())}`);
       const calm = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (!calm) {
         instance.animate({ center: { eles: node } }, { duration: 430, easing: 'ease-in-out-cubic' });
@@ -100,12 +152,19 @@ export function GraphView() {
       setSelectedEdge(edgeId);
     });
 
-    // Background tap: clear selection
+    // Background tap: clear selection and URL param
     instance.on('tap', (evt) => {
       if (evt.target === instance) {
+        const state = useGraphStore.getState();
+        if (state.traceMode) {
+          state.clearTrace();
+          deactivateFocusMode(instance);
+          return;
+        }
         setSelectedNode(null);
         setSelectedEdge(null);
         deactivateFocusMode(instance);
+        history.replaceState(null, '', '/explore');
       }
     });
 
