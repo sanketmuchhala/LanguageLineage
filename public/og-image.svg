@@ -42,8 +42,8 @@
 
   <!-- stats -->
   <g font-family="Helvetica, Arial, sans-serif">
-    <g transform="translate(96 496)"><rect width="172" height="60" rx="10" fill="#0e0e0e" stroke="#ffffff" stroke-opacity="0.1"/><text x="22" y="34" font-size="30" font-weight="700" fill="#4ade80">112</text><text x="22" y="52" font-size="12" fill="#7a7a7a">languages &amp; tools</text></g>
-    <g transform="translate(284 496)"><rect width="172" height="60" rx="10" fill="#0e0e0e" stroke="#ffffff" stroke-opacity="0.1"/><text x="22" y="34" font-size="30" font-weight="700" fill="#4ade80">347</text><text x="22" y="52" font-size="12" fill="#7a7a7a">sourced relationships</text></g>
+    <g transform="translate(96 496)"><rect width="172" height="60" rx="10" fill="#0e0e0e" stroke="#ffffff" stroke-opacity="0.1"/><text x="22" y="34" font-size="30" font-weight="700" fill="#4ade80">152</text><text x="22" y="52" font-size="12" fill="#7a7a7a">languages &amp; tools</text></g>
+    <g transform="translate(284 496)"><rect width="172" height="60" rx="10" fill="#0e0e0e" stroke="#ffffff" stroke-opacity="0.1"/><text x="22" y="34" font-size="30" font-weight="700" fill="#4ade80">443</text><text x="22" y="52" font-size="12" fill="#7a7a7a">sourced relationships</text></g>
     <g transform="translate(472 496)"><rect width="150" height="60" rx="10" fill="#0e0e0e" stroke="#ffffff" stroke-opacity="0.1"/><text x="22" y="34" font-size="30" font-weight="700" fill="#4ade80">6</text><text x="22" y="52" font-size="12" fill="#7a7a7a">relation types</text></g>
   </g>
 
