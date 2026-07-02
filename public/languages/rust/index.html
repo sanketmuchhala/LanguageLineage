@@ -108,21 +108,44 @@
   </div></dl>
 </section>
 <section class="intent-section">
-  <h2>How Rust bootstraps itself</h2>
-  <p>Rustc is written in Rust, so building a new rustc needs an existing compiler. The normal bootstrap chain uses a previous rustc snapshot to compile the current compiler source. This is the standard self-hosting pattern for mature compiled languages.</p>
-<p>The historical path matters: Rust did not start self-hosted. The early compiler was written in OCaml, then the project moved to a Rust-in-Rust compiler once the language was capable enough to compile itself.</p>
+  <h2>The OCaml origin and bootstrap transition</h2>
+  <p>Rust did not start self-hosted. Graydon Hoare began the language in 2006 as a personal project while working at Mozilla. The first compiler, known informally as rustboot, was written in OCaml. OCaml was a pragmatic choice for a language researcher: it has a powerful type system and pattern matching that suited the rapid experimentation Rust required in those early years.</p>
+<p>Mozilla began sponsoring the project in 2009. By that point the team was designing Rust's ownership and borrowing rules, a type system complex enough that the OCaml compiler would have become a maintenance burden: OCaml developers on the team were limited, and writing the compiler in the language being designed is the strongest possible end-to-end test of its expressiveness.</p>
+<p>The transition happened incrementally. The team first rewrote rustboot in Rust while keeping OCaml as the compilation host. Once that Rust-in-Rust compiler could compile itself, the OCaml dependency was dropped. By 2011, Rust was self-hosting: every new rustc release is compiled by the previous release. This is the standard self-hosting bootstrap: a stage-0 binary (the prior release) compiles stage-1 from the current source, stage-1 compiles stage-2, and stage-2 must be byte-for-byte identical to stage-3 to confirm the toolchain is internally consistent.</p>
+</section>
+<section class="intent-section">
+  <h2>rustc compiler architecture</h2>
+  <p>rustc is a multi-stage compiler with several distinct intermediate representations. Source code is parsed into an abstract syntax tree (AST), then lowered to HIR (High-level Intermediate Representation), where type inference and trait resolution run. HIR is then lowered to MIR (Mid-level Intermediate Representation), which is the layer where the borrow checker operates. MIR's explicit control-flow graph makes liveness analysis and borrow-checking tractable.</p>
+<p>After MIR, rustc lowers to LLVM IR and calls LLVM for machine-code generation. LLVM provides target support for x86-64, ARM, RISC-V, WebAssembly, and other platforms. The decision to use LLVM from the beginning let rustc focus on language semantics rather than code generation, and gave Rust access to decades of LLVM optimization work.</p>
+<p>A second backend, Cranelift, has been available since Rust 1.67 as an opt-in alternative for debug builds. Cranelift compiles faster than LLVM at the cost of less optimized output, which speeds up the inner loop of Rust development. Cranelift is also the JIT backend for Wasmtime. The long-term goal is to use Cranelift for debug builds and LLVM for release builds.</p>
+</section>
+<section class="intent-section">
+  <h2>mrustc: an alternative bootstrap path</h2>
+  <p>mrustc is an independent Rust compiler written in C++. Unlike rustc, mrustc does not aim to be a general-purpose production compiler. Its purpose is security: it can compile an early version of rustc without relying on a pre-built rustc binary, breaking the binary dependency chain that concerns reproducible-build advocates.</p>
+<p>The Bootstrappable Builds project highlights the risk that a malicious binary compiler could inject hidden code into programs it compiles, including future compilers, in a way that no inspection of source code would reveal. This is Ken Thompson's "Trusting Trust" attack. mrustc provides a path from C (which has diverse compilers like GCC and Clang to cross-check each other) to Rust without trusting a Rust binary of unknown provenance.</p>
+<p>In practice, most Rust users rely on the rustup toolchain manager, which downloads pre-built binaries from the official Rust release infrastructure. mrustc is relevant to distributions and organizations that require a fully source-audited build chain.</p>
 </section>
 <section class="intent-section">
   <h2>Rust implementation layers</h2>
   <table class="impl-table">
   <thead><tr><th>Layer</th><th>Written in</th><th>What it does</th></tr></thead>
   <tbody>
-    <tr><td>rustc frontend and compiler driver</td><td>Rust</td><td>Parses, analyzes, type-checks, and drives compilation</td></tr>
-    <tr><td>Historical rustboot compiler</td><td>OCaml</td><td>Original compiler before Rust became self-hosting</td></tr>
-    <tr><td>LLVM backend</td><td>C++</td><td>Optimization and machine-code generation backend used by rustc</td></tr>
-    <tr><td>mrustc</td><td>C++</td><td>Alternative compiler useful in bootstrap discussions</td></tr>
+    <tr><td>rustc frontend (parser, HIR, MIR, borrow checker)</td><td>Rust</td><td>Parses, analyzes, type-checks, and borrow-checks Rust source</td></tr>
+    <tr><td>LLVM backend</td><td>C++</td><td>Optimization and machine-code generation for release builds</td></tr>
+    <tr><td>Cranelift backend</td><td>Rust</td><td>Optional fast debug-build backend; also powers Wasmtime</td></tr>
+    <tr><td>rustboot (historical)</td><td>OCaml</td><td>Original compiler before Rust became self-hosting (2006 to 2011)</td></tr>
+    <tr><td>mrustc</td><td>C++</td><td>Independent compiler for security-audited bootstrap chains</td></tr>
+    <tr><td>Rust standard library</td><td>Rust</td><td>core and std, including allocator, collections, I/O, and threading</td></tr>
   </tbody>
 </table>
+</section>
+<section class="intent-section">
+  <h2>Rust release history and edition system</h2>
+  <span id="release-date"></span>
+<p>Graydon Hoare started Rust in 2006 as a personal project. Mozilla sponsored the project from 2009. Rust 0.1 shipped in January 2012. The language went through extensive design iteration during those years: early Rust had typestate, a different memory model, and a green-threading runtime, all of which were removed before 1.0.</p>
+<p>Rust 1.0 was released on May 15, 2015. It committed to stability: code that compiled under Rust 1.0 would compile without modification under all future Rust 1.x releases. Rust has shipped a new stable release every six weeks since 1.0, and that cadence has been maintained without interruption.</p>
+<p>The edition system manages language evolution without breaking the stability promise. An edition is an opt-in compatibility boundary: code in Rust 2015, 2018, and 2021 editions can coexist in one crate graph, and rustc compiles them all. Editions allow the language to change syntax without forcing every crate to update at once. The 2018 edition made the module system cleaner and introduced the async keyword. The 2021 edition updated closure captures and improved the prelude. Rust 2024 was stabilized in 2025.</p>
+<p>The Rust Foundation was established in February 2021, with AWS, Google, Huawei, Microsoft, and Mozilla as founding members, to own the Rust trademark, run the infrastructure, and fund core team contributors. Rust has since been adopted by the Linux kernel (support landed in Linux 6.1 in December 2022), the Windows kernel, Android, and major cloud providers.</p>
 </section>
   <h2>Relationship Graph</h2>
 <p style="font-size:13px;color:var(--text-tertiary);margin-bottom:12px">All directly connected languages. Click any node to navigate to its page.</p>

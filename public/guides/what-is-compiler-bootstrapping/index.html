@@ -53,23 +53,106 @@
 <li><strong>Stage 2:</strong> Use the stage-1 compiler to compile the same source again. Now the compiler has compiled itself. Building a <strong>stage 3</strong> and checking that it is byte-for-byte identical to stage 2 is a common correctness test: if a compiler compiled by itself produces the same compiler again, the toolchain is internally consistent.</li>
 </ul>
 
+<h2>Bootstrap chain diagram</h2>
+<figure class="bootstrap-diagram-wrap" aria-label="Bootstrap chains for Rust and Go">
+<svg viewBox="0 0 540 185" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:540px;display:block;margin:0 auto 0.5rem;font-family:inherit">
+  <style>
+    .bd-lbl{font-size:11px;fill:#9a9a9a;font-weight:600;letter-spacing:.04em}
+    .bd-node{font-size:12px;fill:#fafafa;text-anchor:middle;dominant-baseline:middle}
+    .bd-node-self{font-size:12px;fill:#4ade80;text-anchor:middle;dominant-baseline:middle;font-weight:600}
+    .bd-etype{font-size:10px;fill:#8b5cf6;text-anchor:middle}
+    .bd-year{font-size:10px;fill:#5a5a5a;text-anchor:middle}
+  </style>
+  <!-- Row labels -->
+  <text x="4" y="54" class="bd-lbl">RUST</text>
+  <text x="4" y="134" class="bd-lbl">GO</text>
+  <!-- === RUST CHAIN === -->
+  <!-- OCaml node -->
+  <rect x="58" y="34" width="88" height="40" rx="5" fill="#161616" stroke="#5a5a5a" stroke-width="1.5"/>
+  <text x="102" y="54" class="bd-node">OCaml</text>
+  <!-- arrow 1 -->
+  <line x1="146" y1="54" x2="192" y2="54" stroke="#8b5cf6" stroke-width="2"/>
+  <polygon points="192,50 200,54 192,58" fill="#8b5cf6"/>
+  <text x="169" y="47" class="bd-etype">bootstrap</text>
+  <!-- rustboot node -->
+  <rect x="200" y="34" width="100" height="40" rx="5" fill="#161616" stroke="#5a5a5a" stroke-width="1.5"/>
+  <text x="250" y="50" class="bd-node">rustboot</text>
+  <text x="250" y="64" class="bd-node" style="font-size:10px;fill:#9a9a9a">(in OCaml)</text>
+  <!-- arrow 2 -->
+  <line x1="300" y1="54" x2="346" y2="54" stroke="#8b5cf6" stroke-width="2"/>
+  <polygon points="346,50 354,54 346,58" fill="#8b5cf6"/>
+  <text x="323" y="47" class="bd-etype">bootstrap</text>
+  <!-- rustc self-hosting node -->
+  <rect x="354" y="34" width="100" height="40" rx="5" fill="#161616" stroke="#4ade80" stroke-width="2"/>
+  <text x="404" y="54" class="bd-node-self">rustc (Rust)</text>
+  <text x="404" y="84" class="bd-year">self-hosting 2011</text>
+  <!-- === GO CHAIN === -->
+  <!-- C node -->
+  <rect x="58" y="114" width="88" height="40" rx="5" fill="#161616" stroke="#5a5a5a" stroke-width="1.5"/>
+  <text x="102" y="134" class="bd-node">C compiler</text>
+  <!-- arrow 1 -->
+  <line x1="146" y1="134" x2="192" y2="134" stroke="#8b5cf6" stroke-width="2"/>
+  <polygon points="192,130 200,134 192,138" fill="#8b5cf6"/>
+  <text x="169" y="127" class="bd-etype">bootstrap</text>
+  <!-- early gc node -->
+  <rect x="200" y="114" width="100" height="40" rx="5" fill="#161616" stroke="#5a5a5a" stroke-width="1.5"/>
+  <text x="250" y="130" class="bd-node">gc compiler</text>
+  <text x="250" y="144" class="bd-node" style="font-size:10px;fill:#9a9a9a">(in C)</text>
+  <!-- arrow 2 -->
+  <line x1="300" y1="134" x2="346" y2="134" stroke="#8b5cf6" stroke-width="2"/>
+  <polygon points="346,130 354,134 346,138" fill="#8b5cf6"/>
+  <text x="323" y="127" class="bd-etype">bootstrap</text>
+  <!-- go self-hosting node -->
+  <rect x="354" y="114" width="100" height="40" rx="5" fill="#161616" stroke="#4ade80" stroke-width="2"/>
+  <text x="404" y="134" class="bd-node-self">gc (Go 1.5)</text>
+  <text x="404" y="164" class="bd-year">self-hosting 2015</text>
+</svg>
+<figcaption style="text-align:center;font-size:12px;color:#5a5a5a">Simplified bootstrap chains. Green border = self-hosting. Violet arrows = bootstrap_written_in edges from the dataset.</figcaption>
+</figure>
+
 <h2>Why languages bootstrap</h2>
 <p>Self-hosting is a milestone of maturity. It proves the language is expressive and complete enough to build a large, performance-sensitive systems program, a compiler. It also lets the compiler team write the compiler in the language they are designing, so every improvement to the language immediately benefits the tool that builds it. Finally, it removes the long-term dependency on a foreign implementation language.</p>
 
-<h2>Real bootstrap chains</h2>
-<p>The Language Lineage dataset records the historical implementation language for each toolchain. A few well-documented chains:</p>
-<ul>
-<li><a href="/languages/rust">Rust</a>: the first compiler (rustboot) was written in <a href="/languages/ocaml">OCaml</a>; once the language was capable enough, rustc was rewritten in Rust and has been self-hosting since 2011. Each release is built by the previous release, and the <a href="/tools/mrustc">mrustc</a> project (written in C++) can compile an early rustc to break the dependency on prior binaries.</li>
-<li><a href="/languages/go">Go</a>: the original compiler was written in <a href="/languages/c">C</a>; in Go 1.5 (2015) the toolchain was translated to Go, making it self-hosting.</li>
-<li><a href="/languages/haskell">Haskell</a>: <a href="/tools/ghc">GHC</a> is written in Haskell, with a runtime system in C.</li>
-<li><a href="/languages/c">C</a> and <a href="/languages/cxx">C++</a>: <a href="/tools/gcc">GCC</a> is bootstrapped from an earlier C/C++ compiler through exactly the stage 0/1/2 process described above.</li>
-</ul>
+<h2>Real bootstrap chains from the dataset</h2>
+<p>The Language Lineage dataset records the historical implementation language for each toolchain via <code>bootstrap_written_in</code> edges. Here are two chains in detail:</p>
+<h3>Rust via OCaml</h3>
+<p><a href="/languages/rust">Rust</a> began as Graydon Hoare's personal project in 2006. The first compiler, rustboot, was written in <a href="/languages/ocaml">OCaml</a>. OCaml's algebraic types and pattern matching were well-suited to the experimental type-system work Rust required. Mozilla sponsored the project in 2009, and the team gradually rewrote rustboot in Rust. By 2011, rustc could compile itself: the OCaml dependency was gone. Each rustc release since then has been compiled by the previous stable release. The <a href="/tools/mrustc">mrustc</a> project (written in C++) provides an alternative seed that can compile an early rustc without trusting a prior Rust binary.</p>
+<h3>Go via C at version 1.5</h3>
+<p><a href="/languages/go">Go</a>'s original toolchain was written in <a href="/languages/c">C</a>. The Go team at Google designed the language starting in 2007 and open-sourced it in November 2009, with a Plan 9-style C compiler as the implementation. In 2013, Russ Cox ran an automated translation of the C compiler sources to Go, producing a Go-syntax compiler that was still structurally C. That translated compiler was refined and shipped as the default compiler in Go 1.5 (August 2015), removing the C toolchain requirement entirely. From Go 1.5 onward, the build tool only needs a previous Go binary as seed.</p>
+<p>Other examples: <a href="/languages/haskell">Haskell</a>'s <a href="/tools/ghc">GHC</a> is written in Haskell with a C runtime. <a href="/tools/gcc">GCC</a> is bootstrapped from an earlier C/C++ compiler through exactly the stage 0/1/2 process. <a href="/languages/typescript">TypeScript</a>'s tsc is written in TypeScript and compiles itself.</p>
 <p>See <a href="/relationships/bootstrap-written-in">every bootstrap relationship in the dataset</a> for the full list, each with a source and confidence score.</p>
 
-<h2>Trust, reproducibility, and breaking the binary chain</h2>
-<p>Because each compiler is built by an earlier compiler, you are ultimately trusting a long chain of binaries you did not build yourself. Ken Thompson's classic lecture "Reflections on Trusting Trust" showed that a malicious compiler could inject code into programs, including into future copies of itself, invisibly. Modern projects respond with reproducible builds and "diverse double-compilation," and with seed compilers like <a href="/tools/mrustc">mrustc</a> that let you rebuild a toolchain from source in a different language rather than from a pre-built binary.</p>
+<h2>Glossary</h2>
+<dl class="quick-facts">
+  <div><dt>Bootstrapping</dt><dd>The process of using a minimal working compiler to compile a more capable compiler, repeating until a language can compile its own full implementation.</dd></div>
+  <div><dt>Self-hosting</dt><dd>A compiler is self-hosting when the compiler's own source code can be compiled by that same compiler. Self-hosting is the end-state that bootstrapping achieves.</dd></div>
+  <div><dt>Cross-compilation</dt><dd>Compiling a program on one platform (the host) so that it runs on a different platform (the target). Cross-compilation is often used to bootstrap a compiler for a new CPU architecture from an existing one.</dd></div>
+  <div><dt>Trusting Trust</dt><dd>Ken Thompson's 1984 observation that a malicious compiler can be made to inject hidden code into programs it compiles, including into copies of itself, in a way that cannot be detected by reading source code. The attack propagates through any binary-distributed compiler chain.</dd></div>
+</dl>
+
+<h2>Frequently asked questions</h2>
+<div class="faq-block">
+<details open>
+  <summary><strong>Is Rust's compiler written in Rust?</strong></summary>
+  <p>Yes. rustc, the official Rust compiler, is written in Rust and has been self-hosting since 2011. The first Rust compiler was written in OCaml.</p>
+</details>
+<details>
+  <summary><strong>Is Go's compiler written in Go?</strong></summary>
+  <p>Yes, since Go 1.5 (August 2015). The original Go compiler was written in C. A mechanical translation produced a Go-syntax version, which became the self-hosted gc compiler shipped in Go 1.5.</p>
+</details>
+<details>
+  <summary><strong>What language was the first Rust compiler written in?</strong></summary>
+  <p>OCaml. The initial rustboot compiler was written in OCaml because of its expressive type system. It was replaced by a self-hosted rustc by 2011.</p>
+</details>
+<details>
+  <summary><strong>What is the difference between self-hosting and bootstrapping?</strong></summary>
+  <p>Bootstrapping is the process; self-hosting is the result. You bootstrap a compiler by progressively compiling it with earlier versions until it can compile itself. A self-hosting compiler is one that has successfully reached that state.</p>
+</details>
+</div>
 
 <a class="explore-btn" href="/explore">Explore Bootstrap Chains in Graph &rarr;</a>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is Rust's compiler written in Rust?","acceptedAnswer":{"@type":"Answer","text":"Yes. rustc, the official Rust compiler, is written in Rust and has been self-hosting since 2011. The first Rust compiler was written in OCaml."}},{"@type":"Question","name":"Is Go's compiler written in Go?","acceptedAnswer":{"@type":"Answer","text":"Yes, since Go 1.5 in August 2015. The original Go compiler was written in C. A mechanical translation produced a Go-syntax version, which became the self-hosted gc compiler shipped in Go 1.5."}},{"@type":"Question","name":"What language was the first Rust compiler written in?","acceptedAnswer":{"@type":"Answer","text":"OCaml. The initial rustboot compiler was written in OCaml because of its expressive type system. It was replaced by a self-hosted rustc by 2011."}},{"@type":"Question","name":"What is the difference between self-hosting and bootstrapping?","acceptedAnswer":{"@type":"Answer","text":"Bootstrapping is the process; self-hosting is the result. You bootstrap a compiler by progressively compiling it with earlier versions until it can compile itself. A self-hosting compiler is one that has successfully reached that state."}}]}</script>
 
 </main>
 <footer class="seo-footer-rich">

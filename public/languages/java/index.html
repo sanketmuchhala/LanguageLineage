@@ -109,19 +109,35 @@
 </section>
 <section class="intent-section">
   <h2>Java compiler vs JVM runtime</h2>
-  <p>Java source code is compiled by javac into JVM bytecode. Javac itself is written in Java, so the Java compiler is self-hosting in the practical sense: new compiler versions are built using an existing Java toolchain.</p>
-<p>Running Java bytecode is a different job. The HotSpot JVM includes an interpreter, JIT compiler, garbage collectors, class loading, and platform integration. Those runtime layers are implemented mainly in C and C++.</p>
+  <p>Java has a two-stage execution model that separates compilation from running. The javac compiler takes Java source files and produces class files containing JVM bytecode. Bytecode is a compact, platform-independent instruction set: the same class files run on Windows, Linux, and macOS without recompilation. Javac itself is written in Java and is part of the JDK (Java Development Kit). Because javac is a Java program, building a new version of javac requires an existing Java compiler.</p>
+<p>Executing bytecode is a different job from compiling source. The HotSpot JVM, which is the production JVM in OpenJDK (and thus in Oracle JDK, Amazon Corretto, Eclipse Temurin, and others), is written primarily in C and C++. HotSpot includes an interpreter for cold code paths, a JIT compiler that compiles hot methods to native machine code, and a suite of garbage collectors. The JIT compiler observes which methods are called most often and optimizes those aggressively, including inlining call chains that would be expensive to analyze at compile time.</p>
+<p>The Java standard library (java.lang, java.util, java.io, java.nio, and friends) is largely written in Java, though some classes have native methods that delegate to C or C++ for low-level OS integration. The combination gives Java its portability: application code and most of the standard library are bytecode that the JVM runs anywhere; only the JVM itself is platform-native code.</p>
+</section>
+<section class="intent-section">
+  <h2>HotSpot JVM and modern JIT compilation</h2>
+  <p>HotSpot's name comes from its original insight: most programs spend most of their time in a small fraction of their code. HotSpot monitors execution counts and compiles hot methods to native code using two JIT compilers: C1 (the client compiler, fast to compile but less optimized output) and C2 (the server compiler, slower to compile but generates heavily optimized native code). By default, methods start with the C1 tier and are promoted to C2 if they remain hot enough.</p>
+<p>GraalVM is a JDK distribution that replaces the C2 compiler with Graal, a JIT written entirely in Java. Graal can apply more aggressive speculative optimizations because it can use the full Java type system to represent its internal analysis. GraalVM also offers Native Image, which AOT-compiles Java applications to self-contained native executables by running compilation offline, reducing startup time and memory footprint significantly.</p>
+<p>Modern Java garbage collector options include: G1 (Garbage First, the default since Java 9, designed for large heaps with predictable pause targets), ZGC (concurrent, sub-millisecond pauses, available since Java 15, generational since Java 21), and Shenandoah (concurrent compaction, contributed by Red Hat). Each collector makes different tradeoffs between throughput, latency, and footprint.</p>
 </section>
 <section class="intent-section">
   <h2>Java implementation layers</h2>
   <table class="impl-table">
   <thead><tr><th>Layer</th><th>Written in</th><th>What it does</th></tr></thead>
   <tbody>
-    <tr><td>javac</td><td>Java</td><td>Compiles Java source to JVM bytecode</td></tr>
-    <tr><td>HotSpot JVM</td><td>C and C++</td><td>Runs bytecode, JIT-compiles hot code, manages memory</td></tr>
-    <tr><td>Java standard library</td><td>Java</td><td>Core APIs such as java.lang and java.util</td></tr>
+    <tr><td>javac</td><td>Java</td><td>Compiles Java source to JVM bytecode (.class files)</td></tr>
+    <tr><td>HotSpot JVM (interpreter + JIT)</td><td>C and C++</td><td>Executes bytecode; JIT-compiles hot methods to native code via C1 and C2</td></tr>
+    <tr><td>Graal JIT</td><td>Java</td><td>Alternative JIT in GraalVM; replaces C2 with a Java-written optimizing compiler</td></tr>
+    <tr><td>Java standard library (java.*)</td><td>Java (with native stubs)</td><td>Core APIs; some native methods delegate to C for OS calls</td></tr>
+    <tr><td>GC (G1, ZGC, Shenandoah)</td><td>C++</td><td>Memory management, running concurrently with application threads</td></tr>
   </tbody>
 </table>
+</section>
+<section class="intent-section">
+  <h2>Java release history</h2>
+  <span id="release-date"></span>
+<p>Java was created by James Gosling and colleagues at Sun Microsystems beginning in 1991, under the internal codename "Oak." The Green Project aimed to build a language for consumer electronics with a small footprint and platform independence. When the consumer electronics market did not materialize, the team pivoted to the web: Java 1.0 launched in January 1996 alongside the promise of "Write Once, Run Anywhere," backed by the first browser-embedded JVM.</p>
+<p>Java 1.1 (1997) added inner classes, reflection, and JDBC. Java 1.2 (1998, branded Java 2) introduced the Collections framework and the Swing UI toolkit. Java 5 (2004, previously numbered 1.5) was the biggest language update before Java 8: generics, annotations, enum types, autoboxing, and the enhanced for loop. Java 8 (March 2014) added lambda expressions, the Stream API, and the new java.time package.</p>
+<p>Oracle acquired Sun in 2010. Java 9 (September 2017) introduced the module system (Project Jigsaw) and shifted to a six-month release cadence. Since then, Java releases arrive in March and September, with Long-Term Support (LTS) versions every three years. LTS releases: Java 11 (September 2018), Java 17 (September 2021), Java 21 (September 2023). Pattern matching, sealed classes, records, and virtual threads (Project Loom) shipped across Java 14 through 21.</p>
 </section>
   <h2>Relationship Graph</h2>
 <p style="font-size:13px;color:var(--text-tertiary);margin-bottom:12px">All directly connected languages. Click any node to navigate to its page.</p>

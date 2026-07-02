@@ -109,19 +109,35 @@
 </section>
 <section class="intent-section">
   <h2>JavaScript language vs JavaScript engines</h2>
-  <p>JavaScript source code runs inside an engine. The ECMAScript specification defines the language, but engines such as V8, SpiderMonkey, and JavaScriptCore implement parsing, bytecode generation, JIT compilation, garbage collection, and runtime behavior.</p>
-<p>That is why the most useful answer is about engines: V8 powers Chrome and Node.js, SpiderMonkey powers Firefox, and JavaScriptCore powers Safari. Their performance-sensitive implementation code is primarily C++.</p>
+  <p>JavaScript source code runs inside an engine. The ECMAScript specification, maintained by TC39 and published by Ecma International, defines the language: its syntax, semantics, and standard library. Engines such as V8, SpiderMonkey, and JavaScriptCore implement that specification. A JavaScript program is not "written in" a particular language any more than a PDF document is "written in" Acrobat; the engine is the implementation.</p>
+<p>That distinction matters when answering "what is JavaScript written in?" The answer that is actually useful is about engines, because the engines are what run on your machine. V8 powers Chrome and Node.js. SpiderMonkey powers Firefox. JavaScriptCore powers Safari. Every major engine writes its performance-critical compilation and runtime code in C++, which gives it the low-level control needed to JIT-compile JavaScript to native machine code at acceptable overhead.</p>
+<p>TypeScript, Babel, and other transpilers are written in JavaScript or TypeScript. They are pre-processing tools, not engines. They transform source code before it reaches an engine, but they do not define how JavaScript executes.</p>
+</section>
+<section class="intent-section">
+  <h2>How modern JavaScript engines compile code</h2>
+  <p>Modern JavaScript engines do not interpret source code line by line. They use a multi-tier compilation pipeline that trades compilation cost against execution speed based on how often each function runs.</p>
+<p>V8's pipeline illustrates the pattern. First, V8 parses JavaScript into an AST and compiles it to Ignition bytecode, a compact intermediate representation. Ignition executes bytecode immediately. While it runs, V8 tracks how many times each function is called and what types its arguments receive. Functions that exceed a hotness threshold are handed to TurboFan, V8's optimizing JIT compiler, which generates highly tuned machine code based on the observed types. V8 introduced Maglev in 2023 as a mid-tier between Ignition and TurboFan, reducing compilation latency for medium-hot functions.</p>
+<p>Speculative optimization is key. TurboFan assumes that a variable that has always been an integer will continue to be one, and generates fast integer code. If that assumption breaks because a string arrives, the engine deoptimizes: it throws away the compiled code and falls back to Ignition, then potentially recompiles with the wider type profile. This cycle is invisible to developers but drives JavaScript performance on tight loops and server-side Node.js workloads.</p>
 </section>
 <section class="intent-section">
   <h2>Major JavaScript engines</h2>
   <table class="impl-table">
-  <thead><tr><th>Engine</th><th>Written in</th><th>Used by</th></tr></thead>
+  <thead><tr><th>Engine</th><th>Written in</th><th>Used by</th><th>JIT tiers</th></tr></thead>
   <tbody>
-    <tr><td>V8</td><td>C++</td><td>Chrome, Node.js, Deno, Electron</td></tr>
-    <tr><td>SpiderMonkey</td><td>C++, Rust, JavaScript</td><td>Firefox</td></tr>
-    <tr><td>JavaScriptCore</td><td>C++</td><td>Safari and WebKit</td></tr>
+    <tr><td>V8</td><td>C++</td><td>Chrome, Node.js, Deno, Electron</td><td>Ignition, Maglev, TurboFan</td></tr>
+    <tr><td>SpiderMonkey</td><td>C++, Rust, JavaScript</td><td>Firefox</td><td>Baseline JIT, IonMonkey</td></tr>
+    <tr><td>JavaScriptCore</td><td>C++</td><td>Safari and WebKit</td><td>LLInt, Baseline JIT, DFG, FTL</td></tr>
+    <tr><td>Hermes</td><td>C++</td><td>React Native</td><td>AOT bytecode, minimal JIT</td></tr>
+    <tr><td>QuickJS</td><td>C</td><td>Embedded environments</td><td>Interpreter only</td></tr>
   </tbody>
 </table>
+</section>
+<section class="intent-section">
+  <h2>JavaScript release history</h2>
+  <span id="release-date"></span>
+<p>Brendan Eich created JavaScript in ten days in May 1995 while at Netscape, under a brief to make Navigator's pages interactive without requiring a Java applet. It shipped as LiveScript, was renamed JavaScript for marketing reasons, and had little in common with Java beyond the name and some syntax surface. Microsoft's JScript reverse-engineered it for Internet Explorer shortly after.</p>
+<p>Ecma International standardized the language as ECMAScript. ES1 was published in June 1997. ES3 (1999) added regular expressions and try/catch and became the de-facto baseline for the 2000s. ES5 (2009) added strict mode, JSON support, and Array methods. ES6, rechristened ES2015, was the biggest release in the language's history: classes, arrow functions, promises, modules, template literals, destructuring, and generators.</p>
+<p>Since ES2016, TC39 has shipped a new ECMAScript edition every June. Major additions include async/await (ES2017), optional chaining and nullish coalescing (ES2020), top-level await (ES2022), and array grouping and set operations (ES2024). The V8 and SpiderMonkey teams typically ship new syntax within months of TC39 Stage 4 approval.</p>
 </section>
   <h2>Relationship Graph</h2>
 <p style="font-size:13px;color:var(--text-tertiary);margin-bottom:12px">All directly connected languages. Click any node to navigate to its page.</p>
