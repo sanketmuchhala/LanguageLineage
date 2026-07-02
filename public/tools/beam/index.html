@@ -43,14 +43,15 @@
   </nav>
 
   <header class="lang-head">
-  <div class="lang-logo-tile" style="background:#111820;border-color:#2b3440"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/erlang/erlang-original.svg" alt="BEAM VM logo" width="56" height="56" loading="eager" decoding="async" /></div>
   <div class="lang-head-main">
     <p class="lang-head-eyebrow">Toolchain &middot; 1986</p>
     <h1>BEAM VM</h1>
     <p class="lang-head-tagline">Virtual machine that runs bytecode compiled from Erlang and related languages.</p>
+    
   </div>
-  
+  <div class="lang-logo-tile" style="background:#111820;border-color:#2b3440"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/erlang/erlang-original.svg" alt="BEAM VM logo" width="56" height="56" loading="eager" decoding="async" /></div>
 </header>
+<div class="spec-rail"><div class="spec-cell"><span class="spec-val"><a href="/languages/c">C</a>, <a href="/languages/erlang">Erlang</a></span><span class="spec-lab">Written in</span></div><div class="spec-cell"><span class="spec-val">1986</span><span class="spec-lab">First released</span></div></div>
 <figure class="rel-map">
   <svg viewBox="0 0 760 184" role="img" aria-label="BEAM VM relationship map" preserveAspectRatio="xMidYMid meet">
     <text x="150" y="20" text-anchor="middle" class="rel-col-head">Built from</text>
@@ -60,7 +61,6 @@
   </svg>
   <figcaption class="rel-legend"><span class="rel-legend-item"><i style="background:#34d399"></i>Runtime</span></figcaption>
 </figure>
-<div class="spec-rail"><div class="spec-cell"><span class="spec-val"><a href="/languages/c">C</a>, <a href="/languages/erlang">Erlang</a></span><span class="spec-lab">Written in</span></div><div class="spec-cell"><span class="spec-val">1986</span><span class="spec-lab">First released</span></div></div>
 
 
   <p class="tool-intro">Bogdan/Björn's Erlang Abstract Machine.</p>
@@ -100,35 +100,6 @@
   <h2>The Erlang virtual machine</h2>
   <p>BEAM is the bytecode interpreter at the heart of the Erlang/OTP system. Written in C, it schedules millions of lightweight processes, isolates their memory, and passes messages between them. Elixir compiles to the same BEAM bytecode, so it inherits the entire Erlang runtime.</p>
 </section>
-  <h2>Relationship Graph</h2>
-<p style="font-size:13px;color:var(--text-tertiary);margin-bottom:12px">All directly connected languages. Click any node to navigate to its page.</p>
-<iframe
-  src="/embed?lang=beam"
-  loading="lazy"
-  width="100%"
-  height="500"
-  style="border:none;border-radius:12px;display:block;background:#0a0a0b"
-  title="BEAM VM relationship graph"
-></iframe>
-
-  <h2>Runtime Implementation</h2>
-<table>
-  <thead><tr><th>Language</th><th>Confidence</th><th>Notes</th><th>Source</th></tr></thead>
-  <tbody><tr>
-        <td><a href="/languages/c">C</a></td>
-        <td class="confidence-high">95%</td>
-        <td>BEAM VM written in C</td>
-        <td><a href="https://github.com/erlang/otp" rel="noopener noreferrer" target="_blank">Source</a></td>
-      </tr>
-<tr>
-        <td><a href="/languages/erlang">Erlang</a></td>
-        <td class="confidence-high">98%</td>
-        <td>BEAM VM created for Erlang</td>
-        <td><a href="https://github.com/erlang/otp" rel="noopener noreferrer" target="_blank">Source</a></td>
-      </tr></tbody>
-</table>
-
-  
 
   
 <h2>Frequently Asked Questions</h2>

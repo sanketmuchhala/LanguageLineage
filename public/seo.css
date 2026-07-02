@@ -202,17 +202,28 @@ h1 {
 .lang-head {
   display: flex;
   align-items: flex-start;
-  gap: 22px;
-  margin: 8px 0 0;
+  justify-content: space-between;
+  gap: 32px;
+  margin: 16px 0 0;
 }
-.lang-head .lang-logo-tile { width: 68px; height: 68px; border-radius: 16px; padding: 12px; }
+.lang-head .lang-logo-tile {
+  flex-shrink: 0;
+  width: 96px;
+  height: 96px;
+  border-radius: 22px;
+  padding: 16px;
+  align-self: flex-start;
+}
 .lang-logo-tile--mark {
   font-family: 'Fraunces', Georgia, serif;
-  font-size: 32px;
+  font-size: 40px;
   font-weight: 600;
   color: var(--text-tertiary);
   background: var(--bg-card);
   padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .lang-head-main { flex: 1; min-width: 0; }
 .lang-head-eyebrow {
@@ -221,29 +232,30 @@ h1 {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--text-tertiary);
-  margin: 0 0 10px;
+  margin: 0 0 12px;
 }
 .lang-head h1 {
-  font-size: 52px;
-  margin: 0 0 12px;
-  line-height: 1.04;
+  font-size: 64px;
+  margin: 0 0 14px;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
 }
 .lang-head-tagline {
   margin: 0;
   color: var(--text-secondary);
   font-size: 18px;
-  line-height: 1.45;
+  line-height: 1.5;
 }
 .lang-head-site {
-  flex-shrink: 0;
-  align-self: center;
+  display: inline-flex;
+  margin-top: 20px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 12px;
   letter-spacing: 0.04em;
   color: var(--accent);
   border: 1px solid rgba(74, 222, 128, 0.4);
   border-radius: 999px;
-  padding: 8px 15px;
+  padding: 8px 16px;
   text-decoration: none;
   white-space: nowrap;
   transition: background 0.18s, border-color 0.18s;
@@ -346,12 +358,12 @@ h1 {
 .lang-written-q { margin-top: 8px; }
 
 @media (max-width: 600px) {
-  .lang-head { flex-wrap: wrap; gap: 14px; }
-  .lang-head .lang-logo-tile { width: 52px; height: 52px; border-radius: 13px; padding: 9px; }
-  .lang-logo-tile--mark { font-size: 26px; padding: 0; }
-  .lang-head h1 { font-size: 34px; }
+  .lang-head { gap: 16px; }
+  .lang-head .lang-logo-tile { width: 64px; height: 64px; border-radius: 16px; padding: 10px; }
+  .lang-logo-tile--mark { font-size: 28px; }
+  .lang-head h1 { font-size: 38px; }
   .lang-head-tagline { font-size: 16px; }
-  .lang-head-site { order: 3; align-self: flex-start; }
+  .lang-head-site { margin-top: 14px; }
   .spec-cell { padding: 11px 16px 11px 0; margin-right: 16px; }
   .succ-row { flex-direction: column; gap: 3px; }
   .succ-k { width: auto; }

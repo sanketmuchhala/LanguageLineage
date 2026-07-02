@@ -43,14 +43,15 @@
   </nav>
 
   <header class="lang-head">
-  <div class="lang-logo-tile" style="background:#111820;border-color:#5d4f85"><img src="https://upload.wikimedia.org/wikipedia/commons/2/2b/Haskell-logo.png" alt="GHC logo" width="56" height="56" loading="eager" decoding="async" /></div>
   <div class="lang-head-main">
     <p class="lang-head-eyebrow">Toolchain &middot; 1992</p>
     <h1>GHC</h1>
     <p class="lang-head-tagline">Compiler for the Haskell programming language.</p>
+    <a class="lang-head-site" href="https://www.haskell.org/ghc/" rel="nofollow noopener noreferrer" target="_blank">Official site &rsaquo;</a>
   </div>
-  <a class="lang-head-site" href="https://www.haskell.org/ghc/" rel="nofollow noopener noreferrer" target="_blank">Official site &rsaquo;</a>
+  <div class="lang-logo-tile" style="background:#111820;border-color:#5d4f85"><img src="https://upload.wikimedia.org/wikipedia/commons/2/2b/Haskell-logo.png" alt="GHC logo" width="56" height="56" loading="eager" decoding="async" /></div>
 </header>
+<div class="spec-rail"><div class="spec-cell"><span class="spec-val"><a href="/languages/haskell">Haskell</a>, <a href="/languages/c">C</a>, <a href="/languages/lazy-ml">Lazy ML</a></span><span class="spec-lab">Written in</span></div><div class="spec-cell"><span class="spec-val">1992</span><span class="spec-lab">First released</span></div><div class="spec-cell"><span class="spec-val">University of Glasgow</span><span class="spec-lab">Built by</span></div><div class="spec-cell"><span class="spec-val">3-clause BSD License</span><span class="spec-lab">License</span></div></div>
 <figure class="rel-map">
   <svg viewBox="0 0 760 224" role="img" aria-label="GHC relationship map" preserveAspectRatio="xMidYMid meet">
     <text x="150" y="20" text-anchor="middle" class="rel-col-head">Built from</text>
@@ -60,7 +61,6 @@
   </svg>
   <figcaption class="rel-legend"><span class="rel-legend-item"><i style="background:#e3a008"></i>Compiler</span><span class="rel-legend-item"><i style="background:#34d399"></i>Runtime</span><span class="rel-legend-item"><i style="background:#a78bfa"></i>Bootstrap</span></figcaption>
 </figure>
-<div class="spec-rail"><div class="spec-cell"><span class="spec-val"><a href="/languages/haskell">Haskell</a>, <a href="/languages/c">C</a>, <a href="/languages/lazy-ml">Lazy ML</a></span><span class="spec-lab">Written in</span></div><div class="spec-cell"><span class="spec-val">1992</span><span class="spec-lab">First released</span></div><div class="spec-cell"><span class="spec-val">University of Glasgow</span><span class="spec-lab">Built by</span></div><div class="spec-cell"><span class="spec-val">3-clause BSD License</span><span class="spec-lab">License</span></div></div>
 
 
   <p class="tool-intro">Glasgow Haskell Compiler.</p>
@@ -104,49 +104,6 @@
   <p>In the Language Lineage dataset, GHC is <strong>self-hosting</strong>, so its own compiler is written in GHC itself, its runtime is implemented in <a href="/languages/c">C</a>, and its toolchain was bootstrapped from <a href="/languages/lazy-ml">Lazy ML</a>. Reaching self-hosting, where a language is mature enough to compile itself, is a milestone that proves the language can handle a large, real-world program.</p>
 </section>
 <section class="intent-section"><p class="enrich-cite" style="font-size:13px;color:var(--text-tertiary);margin-top:14px">Sources: <a href="https://en.wikipedia.org/wiki/Glasgow_Haskell_Compiler" rel="noopener noreferrer" target="_blank">Wikipedia</a> &middot; <a href="https://www.wikidata.org/wiki/Q2318908" rel="noopener noreferrer" target="_blank">Wikidata</a> &middot; <a href="https://www.haskell.org/ghc/" rel="noopener noreferrer" target="_blank">Official site</a></p></section>
-  <h2>Relationship Graph</h2>
-<p style="font-size:13px;color:var(--text-tertiary);margin-bottom:12px">All directly connected languages. Click any node to navigate to its page.</p>
-<iframe
-  src="/embed?lang=ghc"
-  loading="lazy"
-  width="100%"
-  height="500"
-  style="border:none;border-radius:12px;display:block;background:#0a0a0b"
-  title="GHC relationship graph"
-></iframe>
-
-  <h2>Compiler Implementation</h2>
-<table>
-  <thead><tr><th>Language</th><th>Confidence</th><th>Notes</th><th>Source</th></tr></thead>
-  <tbody><tr>
-        <td><a href="/languages/haskell">Haskell</a></td>
-        <td class="confidence-high">99%</td>
-        <td>GHC is written in Haskell; start year normalized to Haskell first-release year for dataset chronology.</td>
-        <td><a href="https://en.wikipedia.org/wiki/Glasgow_Haskell_Compiler" rel="noopener noreferrer" target="_blank">Source</a></td>
-      </tr></tbody>
-</table>
-<h2>Runtime Implementation</h2>
-<table>
-  <thead><tr><th>Language</th><th>Confidence</th><th>Notes</th><th>Source</th></tr></thead>
-  <tbody><tr>
-        <td><a href="/languages/c">C</a></td>
-        <td class="confidence-high">97%</td>
-        <td>GHC's runtime system (RTS) is written in C and C--</td>
-        <td><a href="https://en.wikipedia.org/wiki/Glasgow_Haskell_Compiler" rel="noopener noreferrer" target="_blank">Source</a></td>
-      </tr></tbody>
-</table>
-<h2>Bootstrap Chain</h2>
-<table>
-  <thead><tr><th>Language</th><th>Confidence</th><th>Notes</th><th>Source</th></tr></thead>
-  <tbody><tr>
-        <td><a href="/languages/lazy-ml">Lazy ML</a></td>
-        <td class="confidence-high">95%</td>
-        <td>Original GHC prototype written in Lazy ML by Kevin Hammond in 1989 before the Haskell rewrite</td>
-        <td><a href="https://wiki.haskell.org/GHC:History" rel="noopener noreferrer" target="_blank">Source</a></td>
-      </tr></tbody>
-</table>
-
-  
 
   
 <h2>Frequently Asked Questions</h2>
