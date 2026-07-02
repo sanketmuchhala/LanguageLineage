@@ -1162,7 +1162,7 @@ function buildRelationshipMap(node: Language, rels: Relationship[], nodeMap: Map
   rels.filter(r => r.to_language === node.id && r.relationship === 'influenced')
     .sort((a, b) => b.confidence - a.confidence)
     .forEach(r => { if (!inSeen.has(r.from_language)) { inSeen.add(r.from_language); inputs.push({ id: r.from_language, rel: 'influenced' }); } });
-  const left = inputs.slice(0, 5);
+  const left = inputs.slice(0, 8);
 
   const outSeen = new Set<string>();
   const outputs: Conn[] = [];
@@ -1171,7 +1171,7 @@ function buildRelationshipMap(node: Language, rels: Relationship[], nodeMap: Map
     .forEach(r => { if (!outSeen.has(r.to_language)) { outSeen.add(r.to_language); outputs.push({ id: r.to_language, rel: 'influenced' }); } });
   rels.filter(r => r.from_language === node.id && r.relationship === 'transpiled_to')
     .forEach(r => { if (!outSeen.has(r.to_language)) { outSeen.add(r.to_language); outputs.push({ id: r.to_language, rel: 'transpiled_to' }); } });
-  const right = outputs.slice(0, 5);
+  const right = outputs.slice(0, 8);
 
   if (!left.length && !right.length) return '';
 
@@ -1282,16 +1282,16 @@ function buildLanguageHeader(node: Language, rels: Relationship[], nodeMap: Map<
   const year = (node.first_release_year && node.first_release_year > 0) ? ` &middot; ${node.first_release_year}` : '';
 
   return `<header class="lang-head">
-  ${logo}
   <div class="lang-head-main">
     <p class="lang-head-eyebrow">${kind}${year}</p>
     <h1>${escapeHtml(node.name)}</h1>
     ${tagline ? `<p class="lang-head-tagline">${escapeHtml(tagline)}</p>` : ''}
+    ${website ? `<a class="lang-head-site" href="${escapeHtml(website)}" rel="nofollow noopener noreferrer" target="_blank">Official site &rsaquo;</a>` : ''}
   </div>
-  ${website ? `<a class="lang-head-site" href="${escapeHtml(website)}" rel="nofollow noopener noreferrer" target="_blank">Official site &rsaquo;</a>` : ''}
+  ${logo}
 </header>
-${mapHtml}
 ${rail}
+${mapHtml}
 ${succHtml}`;
 }
 
@@ -1779,12 +1779,7 @@ ${priorityContentHtml ? `
 
   ${priorityContentHtml}
 ` : `
-`}  ${buildGraphSection(node)}
-
-  ${buildImplSection(node, rels, nodeMap)}
-
-  ${buildInfluenceSection(node, rels, nodeMap)}
-
+`}
   ${faqSection}
 
   ${buildSources(node, rels)}
