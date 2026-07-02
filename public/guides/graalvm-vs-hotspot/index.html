@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GraalVM vs HotSpot: Two JVM Implementations Compared | Language Lineage</title>
+  <meta name="description" content="HotSpot (C and C++) is the standard JVM in OpenJDK. GraalVM replaces the C2 JIT with a Java-written compiler and adds polyglot and Native Image support. Both run the same bytecode." />
+  <link rel="canonical" href="https://www.languagelineage.org/guides/graalvm-vs-hotspot" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Geist:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"><script defer src="/fx.js"></script><link rel="stylesheet" href="/seo.css" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="GraalVM vs HotSpot: Two JVM Implementations Compared | Language Lineage" />
+  <meta property="og:description" content="HotSpot (C and C++) is the standard JVM in OpenJDK. GraalVM replaces the C2 JIT with a Java-written compiler and adds polyglot and Native Image support. Both run the same bytecode." />
+  <meta property="og:url" content="https://www.languagelineage.org/guides/graalvm-vs-hotspot" />
+  <meta property="og:image" content="https://www.languagelineage.org/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="article:published_time" content="2024-01-01" />
+  <meta property="article:modified_time" content="2026-07-02" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"GraalVM vs HotSpot: Two JVM Implementations Compared","description":"HotSpot (C and C++) is the standard JVM in OpenJDK. GraalVM replaces the C2 JIT with a Java-written compiler and adds polyglot and Native Image support. Both run the same bytecode.","url":"https://www.languagelineage.org/guides/graalvm-vs-hotspot","datePublished":"2024-01-01","dateModified":"2026-07-02","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":["programming languages","compiler implementation","runtime implementation"],"inLanguage":"en"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://www.languagelineage.org/guides"},{"@type":"ListItem","position":3,"name":"GraalVM vs HotSpot: Two JVM Implementations Compared","item":"https://www.languagelineage.org/guides/graalvm-vs-hotspot"}]}</script>
+</head>
+<body class="seo-page">
+<nav class="seo-nav">
+  <a href="/" class="nav-brand"><img class="nav-logo-mark" src="/logo-mark.svg" width="22" height="22" alt="" aria-hidden="true">Language Lineage</a>
+  <a href="/relationships">Relationships</a>
+  <a href="/languages">Languages</a>
+  <a href="/tools">Tools</a>
+  <a href="/guides">Guides</a>
+  <a href="/timeline">Timeline</a>
+  <a href="/dataset">Dataset</a>
+  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
+</nav>
+<main class="seo-main">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; GraalVM vs HotSpot: Two JVM Implementations Compared
+  </nav>
+
+  <h1>GraalVM vs HotSpot: Two JVM Implementations Compared</h1>
+
+  <div class="answer-box"><strong>HotSpot</strong> is the standard JVM in OpenJDK, written in C and C++. <strong>GraalVM</strong> is a JDK distribution that replaces HotSpot's C2 JIT compiler with Graal, a JIT written entirely in Java, and adds polyglot support and Native Image (AOT compilation to native executables). Both run the same Java bytecode; the difference is in the implementation and the extended capabilities.</div>
+
+<h2>HotSpot: the standard JVM</h2>
+<p>HotSpot is the production JVM inside OpenJDK, which is the open-source basis for Oracle JDK, Amazon Corretto, Eclipse Temurin, Microsoft Build of OpenJDK, and others. The interpreter and JIT compilers are written in C++; the garbage collectors, class-loading mechanism, and much of the JVM infrastructure are also C++, with some C in the lower-level platform integration.</p>
+<p>HotSpot uses a tiered compilation model. Cold code starts in the interpreter. Methods that are called often are promoted first to the C1 (client) compiler, which produces lightly optimized machine code quickly, then potentially to the C2 (server) compiler, which applies aggressive optimizations including inlining, loop unrolling, and speculative devirtualization. C2 is a large, complex piece of C++ that took Oracle engineers years to develop.</p>
+<p>HotSpot's garbage collectors include: Serial GC (single-threaded, small heaps), Parallel GC (throughput-focused), G1 GC (the default since Java 9, balancing throughput and latency), ZGC (sub-millisecond pauses, generational since Java 21), and Shenandoah (concurrent compaction, contributed by Red Hat). All are written in C++.</p>
+
+<h2>GraalVM: a JVM with a Java-written JIT</h2>
+<p>GraalVM is a JDK distribution developed by Oracle Labs (and the open-source TruffleRuby / Graal community). Its defining property is that the Graal JIT compiler is written in Java. It uses the JVM Compiler Interface (JVMCI), which was added to HotSpot in Java 9 to allow plugging in a custom JIT compiler. Graal loads as a regular Java class and replaces the C2 tier.</p>
+<p>Writing the JIT in Java has several advantages. Java engineers can contribute to the JIT without knowing C++. The compiler can apply sophisticated speculative optimizations using Java's own type system to represent its abstract interpretation. Graal is also the technology behind Oracle's claim that "GraalVM can run faster than HotSpot's C2" for some workloads: the better escape analysis and inlining decisions possible in Java outweigh the overhead of the JIT itself being managed code.</p>
+<p>GraalVM is not a single product but a distribution: it ships HotSpot with Graal replacing C2, plus additional capabilities built on top of the Truffle framework.</p>
+
+<h2>Native Image: AOT compilation for Java</h2>
+<p>GraalVM's most distinctive feature is Native Image: a build-time tool that statically analyzes a Java application and compiles it ahead-of-time to a self-contained native executable. The executable does not include a JVM; instead, it includes a minimal runtime (Substrate VM) written in Java that handles garbage collection and threading.</p>
+<p>Native Image eliminates JVM startup time: a native Spring Boot application that takes 3 to 5 seconds to start under HotSpot might start in under 100 milliseconds as a native binary. This matters for serverless functions, CLI tools, and container-based deployments where startup latency is a first-class concern.</p>
+<p>The tradeoff: Native Image requires closed-world assumption (all reachable classes must be known at build time), which breaks dynamic class loading, reflection, and serialization patterns common in older Java frameworks. Modern frameworks like Micronaut, Quarkus, and (with careful configuration) Spring Boot have addressed this with build-time reflection registration.</p>
+
+<h2>Polyglot: running other languages on Truffle</h2>
+<p>GraalVM includes the Truffle language implementation framework, which lets other language runtimes run on GraalVM and benefit from the Graal JIT. Truffle-based language implementations include TruffleRuby (Ruby), Graal.js (JavaScript), GraalPy (Python), and FastR (R). When a Truffle language's code gets hot, Graal JIT-compiles it to native machine code.</p>
+<p>This makes GraalVM genuinely polyglot at the runtime level, not just at the API level. A Ruby method called frequently from Java can be JIT-compiled and inlined into the calling Java code's native compilation. HotSpot has no equivalent capability.</p>
+
+<h2>Comparison</h2>
+<table class="impl-table">
+  <thead><tr><th>Property</th><th>HotSpot JVM</th><th>GraalVM</th></tr></thead>
+  <tbody>
+    <tr><td>JIT compiler</td><td>C1 and C2 (written in C++)</td><td>C1 and Graal (C1 in C++, Graal in Java)</td></tr>
+    <tr><td>Base language</td><td>C and C++</td><td>C++ (HotSpot base) + Java (Graal, Substrate VM)</td></tr>
+    <tr><td>AOT compilation</td><td>No (jaotc was experimental, removed in Java 17)</td><td>Yes: Native Image via Substrate VM</td></tr>
+    <tr><td>Polyglot</td><td>No</td><td>Yes: Truffle-based Ruby, Python, JavaScript, R</td></tr>
+    <tr><td>Startup time</td><td>Standard JVM startup (seconds for large apps)</td><td>Milliseconds for native image builds</td></tr>
+    <tr><td>Peak throughput</td><td>Excellent (C2 is highly mature)</td><td>Equal or better for some workloads</td></tr>
+    <tr><td>License</td><td>GPL v2 with classpath exception (OpenJDK)</td><td>Community Edition: GPL; Enterprise: Oracle license</td></tr>
+  </tbody>
+</table>
+
+<h2>Which to use</h2>
+<p>Use HotSpot for established enterprise Java applications where compatibility and operational stability matter. It has the longest track record, the most production deployments, and C2 is an extremely well-tuned JIT for traditional long-running services.</p>
+<p>Use GraalVM when you need Native Image (serverless, containers, CLI tools), when you want to run Ruby or Python workloads on the same JVM as Java, or when you want to experiment with Graal's JIT on workloads where C2's analysis limits performance. GraalVM Community Edition (free, GPL) is suitable for most use cases.</p>
+
+<h2>The significance of writing a JIT in Java</h2>
+<p>The Graal JIT being written in Java is more than a curiosity. It means a JVM JIT compiler can be compiled and optimized by the JVM itself: Graal is a Java program that runs on the JVM and gets JIT-compiled by... Graal. This self-application is called partial evaluation and it is the basis of the Futamura projections, a theoretical framework for deriving efficient interpreters and compilers from each other. The Truffle framework exploits partial evaluation to JIT-compile language interpreters: you write a simple interpreter in Java, Truffle + Graal partially evaluate it against the program being interpreted, and the result is machine code for that specific program.</p>
+<p>This is why Truffle-based language implementations can reach competitive performance without writing a JIT compiler from scratch. TruffleRuby and GraalPy do not implement their own compilation pipelines; they implement interpreters that Graal transforms into efficient native code automatically. This represents a different approach to the "what language is the runtime written in?" question: the runtime is Java, and the JIT compiler is also Java, but the JIT-compiled output is architecture-native machine code.</p>
+<p>See the <a href="/languages/java">Java language page</a> for the full implementation graph, including the Graal JIT relationship.</p>
+
+<a class="explore-btn" href="/explore">Explore Java Relationships in Graph &rarr;</a>
+
+</main>
+<footer class="seo-footer-rich">
+  <div data-nosnippet>
+  <div class="footer-grid">
+    <div class="footer-col">
+      <span class="footer-col-head">Explore</span>
+      <a href="/programming-language-graph">Programming language graph</a>
+      <a href="/programming-language-family-tree">Language family tree</a>
+      <a href="/programming-language-evolution">Evolution timeline</a>
+      <a href="/what-are-programming-languages-written-in">What languages are written in</a>
+      <a href="/explore">Interactive Graph</a>
+      <a href="/dataset">Dataset</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Popular Languages</span>
+      <a href="/languages/python">Python</a>
+      <a href="/languages/javascript">JavaScript</a>
+      <a href="/languages/rust">Rust</a>
+      <a href="/languages/go">Go</a>
+      <a href="/languages/java">Java</a>
+      <a href="/languages/c">C</a>
+      <a href="/languages/cxx">C++</a>
+      <a href="/languages/typescript">TypeScript</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Questions</span>
+      <a href="/questions/what-is-python-written-in">What is Python written in?</a>
+      <a href="/questions/what-is-javascript-written-in">What is JavaScript written in?</a>
+      <a href="/questions/what-is-rust-written-in">What is Rust written in?</a>
+      <a href="/questions/what-is-go-written-in">What is Go written in?</a>
+      <a href="/questions/what-is-compiler-bootstrapping">What is compiler bootstrapping?</a>
+      <a href="/questions">All questions &rarr;</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Tools &amp; Guides</span>
+      <a href="/tools/v8">V8</a>
+      <a href="/tools/llvm">LLVM</a>
+      <a href="/tools/gcc">GCC</a>
+      <a href="/tools/ghc">GHC</a>
+      <a href="/guides">All guides</a>
+      <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </div>
+  <p class="footer-note">Articles here are drafted with AI and reviewed by a human. Implementation and lineage facts are sourced from public references such as Wikipedia and Wikidata, and cited on each page. Spot an error? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue on GitHub</a> and it gets fixed.</p>
+  <div class="footer-bottom">Made with <span style="color:#fb7185">❤️</span> by <a href="https://github.com/sanketmuchhala" rel="noopener noreferrer">Sanket Muchhala</a> &middot; <a href="/">Language Lineage</a></div>
+  </div>
+</footer>
+</body>
+</html>

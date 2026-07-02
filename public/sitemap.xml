@@ -1818,4 +1818,22 @@
     <changefreq>monthly</changefreq>
     <priority>0.65</priority>
   </url>
+  <url>
+    <loc>https://www.languagelineage.org/guides/typescript-vs-javascript-implementation</loc>
+    <lastmod>2026-07-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.65</priority>
+  </url>
+  <url>
+    <loc>https://www.languagelineage.org/guides/graalvm-vs-hotspot</loc>
+    <lastmod>2026-07-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.65</priority>
+  </url>
+  <url>
+    <loc>https://www.languagelineage.org/guides/the-c-bootstrap-chain</loc>
+    <lastmod>2026-07-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.65</priority>
+  </url>
 </urlset>

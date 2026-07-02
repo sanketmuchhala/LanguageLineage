@@ -3687,6 +3687,104 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
 
 <a class="explore-btn" href="/explore">Explore JavaScript Relationships in Graph &rarr;</a>`,
   },
+  {
+    slug: 'typescript-vs-javascript-implementation',
+    title: 'TypeScript vs JavaScript Compilers: tsc, swc, esbuild | Language Lineage',
+    h1: 'TypeScript vs JavaScript Compilers: tsc, swc, and esbuild',
+    description: 'TypeScript adds types to JavaScript. The official compiler tsc is self-hosting TypeScript; swc is written in Rust; esbuild is written in Go. All three transpile to JavaScript.',
+    content: `<div class="answer-box">TypeScript is a superset of JavaScript with static types. The <strong>official compiler, tsc</strong>, is written in TypeScript (self-hosting). Alternatives such as <strong>swc</strong> (Rust) and <strong>esbuild</strong> (Go) transpile TypeScript at much higher speed but skip type checking. All three output plain JavaScript, which then runs in a JavaScript engine written in C++.</div>
+
+<h2>What TypeScript adds to JavaScript</h2>
+<p>TypeScript is not a new runtime. It is JavaScript with an optional static type system layered on top. TypeScript source code is not executed directly; it is compiled, or more precisely transpiled, to plain JavaScript, which then runs in V8, SpiderMonkey, JavaScriptCore, or any other JavaScript engine. The TypeScript compiler removes type annotations and outputs JavaScript that behaves identically at runtime.</p>
+<p>This means TypeScript has two implementation layers: the transpiler (what turns TypeScript into JavaScript) and the JavaScript engine (what executes the resulting JavaScript). The <code>transpiled_to</code> relationship in the Language Lineage dataset records the first layer; <code>compiler_written_in</code> and <code>runtime_written_in</code> capture the second.</p>
+
+<h2>tsc: the official TypeScript compiler</h2>
+<p>tsc is the TypeScript compiler developed and maintained by Microsoft. Its most important property is that it is <strong>self-hosting</strong>: tsc is written in TypeScript. Each new version of tsc is compiled by the previous version. This mirrors the bootstrap pattern of mature self-hosting compilers like GHC (Haskell) and rustc (Rust).</p>
+<p>tsc performs two jobs: type checking and transpilation. Type checking analyzes the type annotations and infers types, catching errors at compile time. Transpilation strips type annotations and transforms TypeScript-only syntax (decorators, enums, parameter properties) to plain JavaScript. Both jobs happen in a single pass, but they can be decoupled: <code>tsc --noEmit</code> only type-checks, while tools like esbuild only transpile.</p>
+<p>tsc is not optimized for speed. It builds a full program graph for type checking, which is computationally expensive for large codebases. A cold tsc build on a large TypeScript project (say, 200,000 lines) can take 30 to 60 seconds. The project mode (<code>--build</code>) and incremental compilation (<code>--incremental</code>) reduce this significantly for rebuilds.</p>
+
+<h2>swc: a TypeScript transpiler written in Rust</h2>
+<p>swc (Speedy Web Compiler) is a TypeScript and JavaScript transpiler written in <a href="/languages/rust">Rust</a>. It is developed by Donny/강동윤 and sponsored by Vercel. swc is used under the hood in Next.js, Deno (for TypeScript stripping), and several other build tools.</p>
+<p>swc does not perform TypeScript type checking. It treats type annotations as syntax to strip, parsing them with a handwritten Rust parser and emitting JavaScript without any type analysis. This limitation is intentional: skipping the type checker is what makes swc 20 to 70 times faster than tsc for transpilation. swc is the right choice when a separate type-checking step runs in CI (via <code>tsc --noEmit</code>) and raw build speed matters for the development loop.</p>
+<p>The <code>rewritten_in</code> relationship in the dataset reflects tools that were significantly reimplemented; swc is a distinct project, so the dataset records it as a separate tool with its own <code>compiler_written_in</code> edge to Rust.</p>
+
+<h2>esbuild: a bundler and transpiler written in Go</h2>
+<p>esbuild is a JavaScript and TypeScript bundler and transpiler written in <a href="/languages/go">Go</a>. It was created by Evan Wallace (co-founder of Figma) and first released in 2020. esbuild is used by Vite as its development-server transpiler and by many other modern build tools.</p>
+<p>Like swc, esbuild does not type-check TypeScript. It strips types and emits JavaScript, relying on the user to run <code>tsc --noEmit</code> separately. esbuild's speed advantage comes from Go's execution model and careful design: a single-pass parser, minimal allocations, and deliberate avoidance of complex AST transformations. An esbuild build that would take 90 seconds in webpack typically takes under a second.</p>
+<p>esbuild also bundles: it resolves imports, concatenates modules, and applies tree-shaking. This makes it a bundler plus transpiler in one tool, whereas swc focuses purely on single-file transpilation.</p>
+
+<h2>Comparison</h2>
+<table class="impl-table">
+  <thead><tr><th>Tool</th><th>Written in</th><th>Type-checks?</th><th>Speed</th><th>Primary use</th></tr></thead>
+  <tbody>
+    <tr><td>tsc</td><td>TypeScript (self-hosting)</td><td>Yes</td><td>Slow (full program analysis)</td><td>Official compiler, type checking, IDE integration</td></tr>
+    <tr><td>swc</td><td>Rust</td><td>No (strip only)</td><td>20-70x faster than tsc</td><td>Fast transpilation in build pipelines (Next.js, Deno)</td></tr>
+    <tr><td>esbuild</td><td>Go</td><td>No (strip only)</td><td>10-100x faster than webpack</td><td>Fast bundling and transpilation (Vite dev server)</td></tr>
+  </tbody>
+</table>
+
+<h2>Type-only transpilation vs full compilation</h2>
+<p>One nuance: TypeScript's type system is erased at runtime. There are no type annotations at all in the JavaScript output. This means TypeScript types have no runtime cost and cannot be inspected at runtime via reflection (unlike Java generics, which are mostly erased, but with some residual type information). Runtime type checking (narrowing, <code>instanceof</code>, discriminated unions) in TypeScript is built from ordinary JavaScript constructs, not from preserved type metadata.</p>
+<p>This also means TypeScript does not generate any code for its type annotations; the JavaScript output from <code>tsc --noEmit</code> is structurally identical (ignoring whitespace) to what you would get from a fast stripper like swc or esbuild. The type checker is a compile-time analysis tool, not a runtime component.</p>
+
+<h2>The full implementation chain</h2>
+<p>TypeScript code runs through two hops before reaching the CPU. First, a transpiler (tsc, swc, or esbuild) converts TypeScript to JavaScript. Second, a JavaScript engine (V8, SpiderMonkey, or JavaScriptCore, all written in C++) executes the JavaScript. So the full chain is: TypeScript source to tsc/swc/esbuild (TypeScript/Rust/Go) to JavaScript to V8 (C++) to machine code. This chain is what "what is TypeScript written in?" is really asking about.</p>
+<p>TypeScript is unusual among major languages in that it has no dedicated runtime at all. There is no "TypeScript virtual machine." The language is purely a compile-time layer, and the runtime is whatever JavaScript engine the output runs in. This is fundamentally different from Java or Python, which have dedicated runtimes (the JVM and CPython) that are written in specific languages and have specific performance characteristics.</p>
+<p>See the <a href="/languages/typescript">TypeScript language page</a> and the <a href="/relationships/transpiled-to">transpiled_to relationships</a> for the full dataset view.</p>
+
+<a class="explore-btn" href="/explore">Explore TypeScript Relationships in Graph &rarr;</a>`,
+  },
+  {
+    slug: 'graalvm-vs-hotspot',
+    title: 'GraalVM vs HotSpot: Two JVM Implementations Compared | Language Lineage',
+    h1: 'GraalVM vs HotSpot: Two JVM Implementations Compared',
+    description: 'HotSpot (C and C++) is the standard JVM in OpenJDK. GraalVM replaces the C2 JIT with a Java-written compiler and adds polyglot and Native Image support. Both run the same bytecode.',
+    content: `<div class="answer-box"><strong>HotSpot</strong> is the standard JVM in OpenJDK, written in C and C++. <strong>GraalVM</strong> is a JDK distribution that replaces HotSpot's C2 JIT compiler with Graal, a JIT written entirely in Java, and adds polyglot support and Native Image (AOT compilation to native executables). Both run the same Java bytecode; the difference is in the implementation and the extended capabilities.</div>
+
+<h2>HotSpot: the standard JVM</h2>
+<p>HotSpot is the production JVM inside OpenJDK, which is the open-source basis for Oracle JDK, Amazon Corretto, Eclipse Temurin, Microsoft Build of OpenJDK, and others. The interpreter and JIT compilers are written in C++; the garbage collectors, class-loading mechanism, and much of the JVM infrastructure are also C++, with some C in the lower-level platform integration.</p>
+<p>HotSpot uses a tiered compilation model. Cold code starts in the interpreter. Methods that are called often are promoted first to the C1 (client) compiler, which produces lightly optimized machine code quickly, then potentially to the C2 (server) compiler, which applies aggressive optimizations including inlining, loop unrolling, and speculative devirtualization. C2 is a large, complex piece of C++ that took Oracle engineers years to develop.</p>
+<p>HotSpot's garbage collectors include: Serial GC (single-threaded, small heaps), Parallel GC (throughput-focused), G1 GC (the default since Java 9, balancing throughput and latency), ZGC (sub-millisecond pauses, generational since Java 21), and Shenandoah (concurrent compaction, contributed by Red Hat). All are written in C++.</p>
+
+<h2>GraalVM: a JVM with a Java-written JIT</h2>
+<p>GraalVM is a JDK distribution developed by Oracle Labs (and the open-source TruffleRuby / Graal community). Its defining property is that the Graal JIT compiler is written in Java. It uses the JVM Compiler Interface (JVMCI), which was added to HotSpot in Java 9 to allow plugging in a custom JIT compiler. Graal loads as a regular Java class and replaces the C2 tier.</p>
+<p>Writing the JIT in Java has several advantages. Java engineers can contribute to the JIT without knowing C++. The compiler can apply sophisticated speculative optimizations using Java's own type system to represent its abstract interpretation. Graal is also the technology behind Oracle's claim that "GraalVM can run faster than HotSpot's C2" for some workloads: the better escape analysis and inlining decisions possible in Java outweigh the overhead of the JIT itself being managed code.</p>
+<p>GraalVM is not a single product but a distribution: it ships HotSpot with Graal replacing C2, plus additional capabilities built on top of the Truffle framework.</p>
+
+<h2>Native Image: AOT compilation for Java</h2>
+<p>GraalVM's most distinctive feature is Native Image: a build-time tool that statically analyzes a Java application and compiles it ahead-of-time to a self-contained native executable. The executable does not include a JVM; instead, it includes a minimal runtime (Substrate VM) written in Java that handles garbage collection and threading.</p>
+<p>Native Image eliminates JVM startup time: a native Spring Boot application that takes 3 to 5 seconds to start under HotSpot might start in under 100 milliseconds as a native binary. This matters for serverless functions, CLI tools, and container-based deployments where startup latency is a first-class concern.</p>
+<p>The tradeoff: Native Image requires closed-world assumption (all reachable classes must be known at build time), which breaks dynamic class loading, reflection, and serialization patterns common in older Java frameworks. Modern frameworks like Micronaut, Quarkus, and (with careful configuration) Spring Boot have addressed this with build-time reflection registration.</p>
+
+<h2>Polyglot: running other languages on Truffle</h2>
+<p>GraalVM includes the Truffle language implementation framework, which lets other language runtimes run on GraalVM and benefit from the Graal JIT. Truffle-based language implementations include TruffleRuby (Ruby), Graal.js (JavaScript), GraalPy (Python), and FastR (R). When a Truffle language's code gets hot, Graal JIT-compiles it to native machine code.</p>
+<p>This makes GraalVM genuinely polyglot at the runtime level, not just at the API level. A Ruby method called frequently from Java can be JIT-compiled and inlined into the calling Java code's native compilation. HotSpot has no equivalent capability.</p>
+
+<h2>Comparison</h2>
+<table class="impl-table">
+  <thead><tr><th>Property</th><th>HotSpot JVM</th><th>GraalVM</th></tr></thead>
+  <tbody>
+    <tr><td>JIT compiler</td><td>C1 and C2 (written in C++)</td><td>C1 and Graal (C1 in C++, Graal in Java)</td></tr>
+    <tr><td>Base language</td><td>C and C++</td><td>C++ (HotSpot base) + Java (Graal, Substrate VM)</td></tr>
+    <tr><td>AOT compilation</td><td>No (jaotc was experimental, removed in Java 17)</td><td>Yes: Native Image via Substrate VM</td></tr>
+    <tr><td>Polyglot</td><td>No</td><td>Yes: Truffle-based Ruby, Python, JavaScript, R</td></tr>
+    <tr><td>Startup time</td><td>Standard JVM startup (seconds for large apps)</td><td>Milliseconds for native image builds</td></tr>
+    <tr><td>Peak throughput</td><td>Excellent (C2 is highly mature)</td><td>Equal or better for some workloads</td></tr>
+    <tr><td>License</td><td>GPL v2 with classpath exception (OpenJDK)</td><td>Community Edition: GPL; Enterprise: Oracle license</td></tr>
+  </tbody>
+</table>
+
+<h2>Which to use</h2>
+<p>Use HotSpot for established enterprise Java applications where compatibility and operational stability matter. It has the longest track record, the most production deployments, and C2 is an extremely well-tuned JIT for traditional long-running services.</p>
+<p>Use GraalVM when you need Native Image (serverless, containers, CLI tools), when you want to run Ruby or Python workloads on the same JVM as Java, or when you want to experiment with Graal's JIT on workloads where C2's analysis limits performance. GraalVM Community Edition (free, GPL) is suitable for most use cases.</p>
+
+<h2>The significance of writing a JIT in Java</h2>
+<p>The Graal JIT being written in Java is more than a curiosity. It means a JVM JIT compiler can be compiled and optimized by the JVM itself: Graal is a Java program that runs on the JVM and gets JIT-compiled by... Graal. This self-application is called partial evaluation and it is the basis of the Futamura projections, a theoretical framework for deriving efficient interpreters and compilers from each other. The Truffle framework exploits partial evaluation to JIT-compile language interpreters: you write a simple interpreter in Java, Truffle + Graal partially evaluate it against the program being interpreted, and the result is machine code for that specific program.</p>
+<p>This is why Truffle-based language implementations can reach competitive performance without writing a JIT compiler from scratch. TruffleRuby and GraalPy do not implement their own compilation pipelines; they implement interpreters that Graal transforms into efficient native code automatically. This represents a different approach to the "what language is the runtime written in?" question: the runtime is Java, and the JIT compiler is also Java, but the JIT-compiled output is architecture-native machine code.</p>
+<p>See the <a href="/languages/java">Java language page</a> for the full implementation graph, including the Graal JIT relationship.</p>
+
+<a class="explore-btn" href="/explore">Explore Java Relationships in Graph &rarr;</a>`,
+  },
 ];
 
 function buildGuidePage(guide: (typeof GUIDES)[0]): string {
@@ -4608,6 +4706,109 @@ for (const type of relTypes) {
   writeFile(join(PUBLIC, 'relationships', slug, 'index.html'), buildRelationshipPage(type, rels, nodeMap));
 }
 console.log(`Generated ${relTypes.length} relationship pages`);
+
+// Build the C-bootstrap-chain guide from dataset edges (Phase 5 chain pillar)
+(function buildChainGuide() {
+  const IMPL_TYPES = new Set(['compiler_written_in', 'runtime_written_in', 'bootstrap_written_in', 'rewritten_in']);
+  const STOP_IDS = new Set(['lang:c', 'lang:cxx']);
+  const REL_LABELS: Record<string, string> = {
+    compiler_written_in: 'compiler written in',
+    runtime_written_in: 'runtime written in',
+    bootstrap_written_in: 'bootstrapped from',
+    rewritten_in: 'rewritten in',
+  };
+  const relPriority = (r: string) => r === 'bootstrap_written_in' ? 0 : r === 'compiler_written_in' ? 1 : r === 'rewritten_in' ? 2 : 3;
+
+  function traceChain(targetId: string, maxDepth = 7): Array<{from: string; to: string; rel: string}> {
+    const chain: Array<{from: string; to: string; rel: string}> = [];
+    let current = targetId;
+    const visited = new Set<string>([current]);
+    while (chain.length < maxDepth) {
+      const candidates = rels.filter(e => e.to_language === current && IMPL_TYPES.has(e.relationship) && !visited.has(e.from_language));
+      if (candidates.length === 0) break;
+      candidates.sort((a, b) => relPriority(a.relationship) - relPriority(b.relationship));
+      const best = candidates[0];
+      chain.push({ from: best.from_language, to: current, rel: best.relationship });
+      if (STOP_IDS.has(best.from_language)) break;
+      if (best.from_language === current) break; // self-hosting loop
+      visited.add(best.from_language);
+      current = best.from_language;
+    }
+    return chain.reverse();
+  }
+
+  function nodeName(id: string): string { return nodeMap.get(id)?.name ?? id.replace(/^(lang|tool):/, ''); }
+  function nodeHref(id: string): string { const p = id.startsWith('tool:') ? 'tools' : 'languages'; return `/${p}/${idToSlug(id)}`; }
+  function nodeLink(id: string): string { return `<a href="${nodeHref(id)}">${nodeName(id)}</a>`; }
+
+  function renderChain(targetId: string, label: string): string {
+    const chain = traceChain(targetId);
+    if (chain.length === 0) return '';
+    const steps = chain.map(link => {
+      const relLabel = REL_LABELS[link.rel] ?? link.rel;
+      return `<li>${nodeLink(link.from)} <span class="chain-rel">${relLabel}</span> ${nodeLink(link.to)}</li>`;
+    });
+    return `<div class="chain-block">
+<h3>${label}</h3>
+<ol class="impl-chain">${steps.join('')}</ol>
+</div>`;
+  }
+
+  // Target languages and their display labels
+  const chainTargets: Array<[string, string]> = [
+    ['lang:python', 'Python (CPython runtime)'],
+    ['lang:rust', 'Rust (rustc bootstrap origin)'],
+    ['lang:go', 'Go (gc compiler bootstrap origin)'],
+    ['lang:javascript', 'JavaScript (V8 engine)'],
+    ['lang:java', 'Java (HotSpot JVM)'],
+    ['lang:haskell', 'Haskell (GHC runtime)'],
+    ['lang:ruby', 'Ruby (CRuby runtime)'],
+    ['lang:typescript', 'TypeScript (tsc transpiler chain)'],
+  ];
+
+  const chainBlocks = chainTargets.map(([id, label]) => renderChain(id, label)).filter(Boolean).join('\n');
+  const chainCount = chainTargets.filter(([id]) => traceChain(id).length > 0).length;
+
+  const content = `<div class="answer-box">C is the implementation language of last resort for most modern programming ecosystems. Python's runtime, Ruby's runtime, and the Go and Rust bootstrap origins all trace back to C or C++ within one or two hops. The chains below are computed directly from the Language Lineage dataset's implementation edges.</div>
+
+<h2>Why C is at the center</h2>
+<p>When a new programming language is designed, its first compiler or runtime almost always gets written in C or C++. The reasons are practical: C runs everywhere, has no runtime dependency, can be compiled by GCC or Clang on any system, and gives the implementer direct control over memory layout and calling conventions. Every major operating system exposes its API in C. Every CPU architecture has a C compiler.</p>
+<p>This creates a pattern: the first implementation of Language X is written in C. Once X matures, the community rewrites the implementation in X itself (self-hosting), or in a higher-level systems language like C++ or Rust. But the historical chain from X back to C remains encoded in the dataset as bootstrap or implementation edges.</p>
+<p>The Language Lineage dataset records <code>compiler_written_in</code>, <code>runtime_written_in</code>, <code>bootstrap_written_in</code>, and <code>rewritten_in</code> edges for 152 languages and tools. The chains below are computed at generation time by following those edges backward until reaching C or C++.</p>
+
+<h2>Implementation chains from the dataset</h2>
+<p>${chainCount} out of ${chainTargets.length} target languages have traceable chains to C or C++ in the current dataset. Chains read from root (C or C++) to target language.</p>
+${chainBlocks}
+
+<h2>The self-hosting escape hatch</h2>
+<p>Several languages in the chains above are now self-hosting: the modern compiler or runtime is written in the language itself. Rust's rustc is written in Rust. Go's gc compiler is written in Go. The TypeScript compiler tsc is written in TypeScript. But each of those languages began with a compiler or runtime written in C, C++, or OCaml. The "chain to C" is a historical record, not a current dependency for most of these languages.</p>
+<p>There are exceptions. CPython, the reference Python runtime, is still written in C. CRuby, the reference Ruby implementation, is still written in C. These are ongoing dependencies, not just historical ones. C is not just the bootstrap ancestor; it is the active implementation language for some of the world's most widely used runtimes.</p>
+
+<h2>Why OCaml appears in the Rust chain</h2>
+<p>Rust's first compiler, rustboot, was written in OCaml, not C. This is unusual. OCaml's powerful type system was well-suited to the experimental type theory work Rust required in its early years. The chain for Rust therefore goes through OCaml on its way back to C, because OCaml's own runtime is written in C. This shows that "back to C" does not always mean a direct hop; intermediate systems languages appear in some chains.</p>
+
+<h2>Limitations of the chains</h2>
+<p>The chains above follow a single path through the implementation graph: at each step, they pick the highest-priority edge type (bootstrap preferred over compiler preferred over runtime). This means some nuance is lost. Python's chain leads to C via its runtime, but Python also has PyPy (RPython/Python), Jython (Java), and GraalPy (Java), each with different implementation chains. The chain here is for the dominant, reference implementation only.</p>
+<p>Similarly, the Go chain leads to C via the historical bootstrap origin (the original gc compiler was in C). The modern Go compiler has been self-hosted since Go 1.5. If you followed the current dependency rather than the bootstrap origin, Go would be a one-step self-referential chain. The dataset distinguishes bootstrap origins from current implementation with the <code>bootstrap_written_in</code> edge type.</p>
+
+<h2>What the chains reveal about software architecture</h2>
+<p>Looking at these chains together reveals a structural pattern in software: performance-critical runtimes descend from C, while developer-facing tooling tends to be written in the language it serves. CPython and CRuby are written in C because their performance profile demands direct memory control. But the Python standard library is mostly Python, the Ruby standard library is mostly Ruby, and the Rust standard library is Rust. The C layer is a substrate, not the full story.</p>
+<p>Another pattern: the higher a language sits in the abstraction hierarchy, the more likely its first implementation is written in a lower-level language, and the more likely it later becomes self-hosting. Rust, Go, Haskell, TypeScript, and Java's javac are all self-hosting today. CPython and CRuby are notable exceptions: they remain C programs by choice, trading the simplicity and performance of C for the ecosystem benefits of being close to the OS and hardware.</p>
+<p>The chains also show how knowledge transfers through the ecosystem. OCaml appeared as the original language for the Rust compiler because Graydon Hoare knew OCaml and its type theory was well-matched to Rust's ambitions. Go used C because Rob Pike, Ken Thompson, and the rest of the team were Unix and Plan 9 veterans who designed the language in the C tradition. The choice of bootstrap language leaves a historical record in the dataset that reflects the intellectual genealogy of the project as much as its technical requirements.</p>
+
+<h2>Reading the dataset yourself</h2>
+<p>Every edge shown above is in the public dataset at <a href="/dataset">Language Lineage dataset</a>. The relationship pages show all edges of each type: <a href="/relationships/runtime-written-in">runtime_written_in</a>, <a href="/relationships/compiler-written-in">compiler_written_in</a>, <a href="/relationships/bootstrap-written-in">bootstrap_written_in</a>. The <a href="/guides/what-is-compiler-bootstrapping">compiler bootstrapping guide</a> explains the bootstrap pattern in detail. Each language page in the dataset also shows the relationship map at the top, including all implementation edges.</p>
+
+<a class="explore-btn" href="/explore">Explore Implementation Chains in Graph &rarr;</a>`;
+
+  GUIDES.push({
+    slug: 'the-c-bootstrap-chain',
+    title: 'How Modern Languages Trace Their Toolchains Back to C | Language Lineage',
+    h1: 'How Modern Languages Trace Their Toolchains Back to C',
+    description: `How Python, Rust, Go, JavaScript, Java, Ruby, and Haskell trace their compiler or runtime implementation back to C or C++. ${chainCount} chains computed from the Language Lineage dataset.`,
+    content,
+  });
+})();
 
 // Guide pages
 for (const guide of GUIDES) {
