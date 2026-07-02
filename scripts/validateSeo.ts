@@ -393,6 +393,26 @@ if (dupDescs.length === 0) {
 if (titleLengthErrors === 0) ok(`All titles within ${TITLE_MAX} chars`);
 if (descLengthErrors === 0) ok(`All descriptions within ${DESC_MIN}-${DESC_MAX} chars`);
 
+// OG images check
+const OG_DIR = join(PUBLIC, 'og');
+if (existsSync(OG_DIR)) {
+  const { readdirSync, statSync } = await import('fs');
+  const ogFiles = readdirSync(OG_DIR).filter(f => f.endsWith('.png'));
+  let totalBytes = 0;
+  let oversized = 0;
+  for (const f of ogFiles) {
+    const sz = statSync(join(OG_DIR, f)).size;
+    totalBytes += sz;
+    if (sz > 120 * 1024) oversized++;
+  }
+  const mb = (totalBytes / 1024 / 1024).toFixed(1);
+  if (oversized > 0) warn(`${oversized} OG images exceed 120 kB`);
+  if (totalBytes > 20 * 1024 * 1024) warn(`OG image total (${mb} MB) exceeds 20 MB`);
+  ok(`${ogFiles.length} OG images (${mb} MB)`);
+} else {
+  warn('public/og/ directory missing; run npm run og:generate');
+}
+
 // Summary
 console.log('');
 console.log(`Validation complete: ${errors} errors, ${warnings} warnings`);

@@ -1,4 +1,4 @@
-import { readFileSync, mkdirSync, writeFileSync } from 'fs';
+import { readFileSync, mkdirSync, writeFileSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { LOGO_MAP, LOGO_COLORS, getLogoPresentation } from '../src/data/logoMap.js';
@@ -10,6 +10,10 @@ const PUBLIC = join(ROOT, 'public');
 const DATASET_PATH = join(ROOT, 'dataset/v5/lineage_v5.json');
 const SITE = 'https://www.languagelineage.org';
 const BUILD_DATE = new Date().toISOString().slice(0, 10);
+
+function ogImg(filename: string): string {
+  return existsSync(join(PUBLIC, 'og', filename)) ? `${SITE}/og/${filename}` : `${SITE}/og-image.png`;
+}
 
 const FONTS_HEAD = `<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Geist:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"><script defer src="/fx.js"></script>`;
 
@@ -1734,7 +1738,7 @@ ${faqs.map(f => `<div class="faq-item">
   <meta property="og:title" content="${escapeHtml(title)}" />
   <meta property="og:description" content="${escapeHtml(description)}" />
   <meta property="og:url" content="${url}" />
-  <meta property="og:image" content="${SITE}/og-image.png" />
+  <meta property="og:image" content="${ogImg(`${prefix}-${slug}.png`)}" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:type" content="image/png" />
@@ -2122,7 +2126,10 @@ function buildQuestionPage(q: QuestionDef, nodeMap: Map<string, Language>): stri
   <meta property="og:title" content="${escapeHtml(q.titleHook ? `${q.title} ${q.titleHook}` : q.title)} | Language Lineage" />
   <meta property="og:description" content="${escapeHtml(metaDescription)}" />
   <meta property="og:url" content="${url}" />
-  <meta property="og:image" content="${SITE}/og-image.png" />
+  <meta property="og:image" content="${ogImg(`questions-${q.slug}.png`)}" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
   <meta property="article:published_time" content="2024-01-01" />
   <meta property="article:modified_time" content="${BUILD_DATE}" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -3260,7 +3267,7 @@ function buildRelationshipPage(type: string, rels: Relationship[], nodeMap: Map<
   ${FONTS_HEAD}<link rel="stylesheet" href="/seo.css" />
   <meta property="og:title" content="${escapeHtml(title)}" />
   <meta property="og:url" content="${url}" />
-  <meta property="og:image" content="${SITE}/og-image.png" />
+  <meta property="og:image" content="${ogImg(`relationships-${slug}.png`)}" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:type" content="image/png" />
@@ -3863,7 +3870,7 @@ function buildGuidePage(guide: (typeof GUIDES)[0]): string {
   <meta property="og:title" content="${escapeHtml(guide.title)}" />
   <meta property="og:description" content="${escapeHtml(guide.description)}" />
   <meta property="og:url" content="${url}" />
-  <meta property="og:image" content="${SITE}/og-image.png" />
+  <meta property="og:image" content="${ogImg(`guides-${guide.slug}.png`)}" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:type" content="image/png" />
