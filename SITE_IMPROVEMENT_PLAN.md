@@ -395,7 +395,7 @@ Acceptance criteria:
 
 ### Phase 8: Static page UI/UX editorial pass
 
-Status: not started.
+Status: DONE (2026-07-02). PR #29.
 Impact: medium (dwell time, perceived quality, mobile CTR). Effort: medium. Dependencies: Phase 4 (long pages exist to style).
 
 Why: content phases will make pages much longer; the reading experience has to keep up, especially on mobile where GSC shows 529 impressions and 0 clicks.

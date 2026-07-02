@@ -70,14 +70,14 @@
   <p>The Go compiler toolchain is written in Go. The Go runtime, including the scheduler and garbage collector, is also mostly written in Go, with assembly where the runtime needs architecture-specific machine-level behavior.</p>
 <p>Before Go 1.5, the compiler was written in C. Go 1.5 completed the move to a self-hosted compiler, which means modern Go is built using Go itself.</p>
 <h2>Go implementation layers</h2>
-<table class="impl-table">
+<div class="table-wrap"><table class="impl-table">
   <thead><tr><th>Layer</th><th>Written in</th><th>Role</th></tr></thead>
   <tbody>
     <tr><td>Modern compiler</td><td>Go</td><td>Compiles Go source; self-hosted since Go 1.5</td></tr>
     <tr><td>Historical compiler</td><td>C</td><td>Used before the Go 1.5 rewrite</td></tr>
     <tr><td>Runtime</td><td>Go and assembly</td><td>Goroutines, scheduler, garbage collector, low-level runtime support</td></tr>
   </tbody>
-</table>
+</table></div>
 <p>The dataset records Go's self-hosted compiler and runtime relationships as well as the historical compiler relationship from C.</p>
 
   <h2>Explore in the Graph</h2>

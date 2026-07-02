@@ -46,7 +46,7 @@
   <p>Crystal is a programming language, first released in 2014.</p>
 
   <h2>Implementation</h2>
-  <table class="impl-table">
+  <div class="table-wrap"><table class="impl-table">
     <thead><tr><th>Layer</th><th>Written in</th><th>Notes</th></tr></thead>
     <tbody>
       <tr><td>Bootstrap</td><td><a href="/languages/ruby">Ruby</a> (since 2014)</td><td>Crystal compiler bootstrapped from Ruby</td></tr>
@@ -54,7 +54,7 @@
       <tr><td>Compiler</td><td><a href="/tools/llvm">LLVM</a> (since 2014)</td><td>Crystal compiler uses LLVM backend</td></tr>
       <tr><td>Compiler</td><td><a href="/languages/ruby">Ruby</a> (since 2014)</td><td>Crystal compiler bootstrapped from Ruby initially</td></tr>
     </tbody>
-  </table>
+  </table></div>
 
   <h2>Self-hosting</h2>
 <p>Crystal is a self-hosting language: its compiler is written in Crystal itself. Self-hosting means the compiler can compile its own source code, which is a milestone in a language's maturity. New versions of the compiler are built using an older version of the same compiler, a process called bootstrapping.</p>

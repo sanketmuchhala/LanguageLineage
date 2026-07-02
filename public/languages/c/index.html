@@ -70,21 +70,31 @@
 
   <h2 class="lang-written-q">What is C written in?</h2>
   <div class="answer-box"><strong>C</strong> is compiled by toolchains such as <strong>GCC</strong> and <strong>Clang</strong>. Those compilers are themselves written in C and C++, so in practice C is self-hosting: a C compiler is built using an existing C/C++ compiler.</div>
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#what-c-is-used-for">What C is used for</a></li>
+    <li><a href="#about-c">About C</a></li>
+    <li><a href="#c-in-the-language-family-tree">C in the language family tree</a></li>
+    <li><a href="#why-c-is-the-substrate-of-computing">Why C is the substrate of computing</a></li>
+    <li><a href="#c-compilers-compared">C compilers compared</a></li>
+  </ol>
+</nav>
 
   <section class="intent-section">
-  <h2>What C is used for</h2>
+  <h2 id="what-c-is-used-for">What C is used for</h2>
   <p>C is the language of operating systems, embedded devices, and the low-level machinery that everything else runs on. Its direct memory access and minimal runtime make it the default for kernels, device drivers, and language runtimes.</p>
 <p>Notable software: the Linux and Windows kernels, SQLite, Redis, and the CPython, Ruby, and PHP interpreters are all written in C.</p>
 </section>
 
 
   <section class="intent-section">
-  <h2>About C</h2>
+  <h2 id="about-c">About C</h2>
   <p><strong>C</strong> is a general-purpose programming language. It is a statically typed language that compiles ahead of time to native machine code. It supports imperative and procedural programming.</p>
   <p>C first appeared in 1972 and was designed by Dennis M. Ritchie at Bell Labs. Today C is one of the most widely used programming languages in the world.</p>
 </section>
 <section class="intent-section">
-  <h2>C in the language family tree</h2>
+  <h2 id="c-in-the-language-family-tree">C in the language family tree</h2>
   <p>C drew on ideas from <a href="/languages/b">B</a>, <a href="/languages/algol">ALGOL</a>, <a href="/languages/fortran">Fortran</a>, <a href="/languages/bcpl">BCPL</a>, and <a href="/languages/algol68">ALGOL 68</a> and went on to influence <a href="/languages/cxx">C++</a>, <a href="/languages/objective-c">Objective-C</a>, <a href="/languages/ada">Ada</a>, <a href="/languages/python">Python</a>, <a href="/languages/d">D</a>, and <a href="/languages/zig">Zig</a>.</p>
   <p class="enrich-cite" style="font-size:13px;color:var(--text-tertiary);margin-top:14px">Sources: <a href="https://en.wikipedia.org/wiki/C_(programming_language)" rel="noopener noreferrer" target="_blank">Wikipedia</a> &middot; <a href="https://www.wikidata.org/wiki/Q15777" rel="noopener noreferrer" target="_blank">Wikidata</a> &middot; <a href="https://www.iso.org/standard/74528.html" rel="noopener noreferrer" target="_blank">Official site</a></p>
 </section>
@@ -108,20 +118,20 @@
   </div></dl>
 </section>
 <section class="intent-section">
-  <h2>Why C is the substrate of computing</h2>
+  <h2 id="why-c-is-the-substrate-of-computing">Why C is the substrate of computing</h2>
   <p>C compiles directly to machine code, with no managed runtime of its own. That makes it the implementation language for operating-system kernels, language runtimes, and the compilers themselves. Many interpreters on this site, including CPython, the reference Ruby (MRI), and PHP, have runtimes written in C.</p>
 <p>C is effectively self-hosting. A new build of GCC is produced by an existing C/C++ compiler in a multi-stage bootstrap, the same pattern used by self-hosting languages like Rust and Go.</p>
 </section>
 <section class="intent-section">
-  <h2>C compilers compared</h2>
-  <table class="impl-table">
+  <h2 id="c-compilers-compared">C compilers compared</h2>
+  <div class="table-wrap"><table class="impl-table">
   <thead><tr><th>Compiler</th><th>Written in</th><th>Notes</th></tr></thead>
   <tbody>
     <tr><td>GCC</td><td>C and C++</td><td>GNU Compiler Collection; bootstrapped in multiple stages</td></tr>
     <tr><td>Clang</td><td>C++</td><td>LLVM-based C/C++/Objective-C front end</td></tr>
     <tr><td>TCC</td><td>C</td><td>Tiny C Compiler; small, fast, used in bootstrap discussions</td></tr>
   </tbody>
-</table>
+</table></div>
 </section>
 
   

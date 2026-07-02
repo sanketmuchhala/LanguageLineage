@@ -38,14 +38,26 @@
   </nav>
 
   <h1>What is Compiler Bootstrapping?</h1>
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#the-chicken-and-egg-problem">The chicken-and-egg problem</a></li>
+    <li><a href="#the-three-bootstrap-stages">The three bootstrap stages</a></li>
+    <li><a href="#bootstrap-chain-diagram">Bootstrap chain diagram</a></li>
+    <li><a href="#why-languages-bootstrap">Why languages bootstrap</a></li>
+    <li><a href="#real-bootstrap-chains-from-the-dataset">Real bootstrap chains from the dataset</a></li>
+    <li><a href="#glossary">Glossary</a></li>
+    <li><a href="#frequently-asked-questions">Frequently asked questions</a></li>
+  </ol>
+</nav>
 
   <div class="answer-box">Compiler bootstrapping is the process of building a compiler for a programming language that is <strong>written in that same language</strong>. Because you cannot compile the compiler without already having a compiler, the first version is written in a different, already-working language, and each later version is compiled by the version before it. A language whose compiler can compile its own source code is called <em>self-hosting</em>.</div>
 
-<h2>The chicken-and-egg problem</h2>
+<h2 id="the-chicken-and-egg-problem">The chicken-and-egg problem</h2>
 <p>A compiler is just a program, and like any program in a compiled language it has to be compiled before it can run. So how do you compile the very first compiler for a brand-new language, when no compiler for that language exists yet? This is the bootstrapping problem, and every self-hosting language has had to solve it.</p>
 <p>The answer is to break the circular dependency once, at the beginning, using a language that already works. The first compiler, the <strong>stage 0</strong> or "seed" compiler, is written in an existing language such as C, OCaml, or assembly. It only needs to be good enough to compile the second compiler, which is written in the new language itself. From then on, the language can compile itself and the seed can be retired.</p>
 
-<h2>The three bootstrap stages</h2>
+<h2 id="the-three-bootstrap-stages">The three bootstrap stages</h2>
 <p>A typical self-hosting build runs in three stages, and the last two are the proof that bootstrapping succeeded:</p>
 <ul>
 <li><strong>Stage 0 (seed):</strong> An existing compiler, often a previous release of the same compiler downloaded as a binary, or a one-time compiler written in another language.</li>
@@ -53,7 +65,7 @@
 <li><strong>Stage 2:</strong> Use the stage-1 compiler to compile the same source again. Now the compiler has compiled itself. Building a <strong>stage 3</strong> and checking that it is byte-for-byte identical to stage 2 is a common correctness test: if a compiler compiled by itself produces the same compiler again, the toolchain is internally consistent.</li>
 </ul>
 
-<h2>Bootstrap chain diagram</h2>
+<h2 id="bootstrap-chain-diagram">Bootstrap chain diagram</h2>
 <figure class="bootstrap-diagram-wrap" aria-label="Bootstrap chains for Rust and Go">
 <svg viewBox="0 0 540 185" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:540px;display:block;margin:0 auto 0.5rem;font-family:inherit">
   <style>
@@ -107,13 +119,13 @@
   <text x="404" y="134" class="bd-node-self">gc (Go 1.5)</text>
   <text x="404" y="164" class="bd-year">self-hosting 2015</text>
 </svg>
-<figcaption style="text-align:center;font-size:12px;color:#5a5a5a">Simplified bootstrap chains. Green border = self-hosting. Violet arrows = bootstrap_written_in edges from the dataset.</figcaption>
+<figcaption>Simplified bootstrap chains. Green border = self-hosting. Violet arrows = bootstrap_written_in edges from the dataset.</figcaption>
 </figure>
 
-<h2>Why languages bootstrap</h2>
+<h2 id="why-languages-bootstrap">Why languages bootstrap</h2>
 <p>Self-hosting is a milestone of maturity. It proves the language is expressive and complete enough to build a large, performance-sensitive systems program, a compiler. It also lets the compiler team write the compiler in the language they are designing, so every improvement to the language immediately benefits the tool that builds it. Finally, it removes the long-term dependency on a foreign implementation language.</p>
 
-<h2>Real bootstrap chains from the dataset</h2>
+<h2 id="real-bootstrap-chains-from-the-dataset">Real bootstrap chains from the dataset</h2>
 <p>The Language Lineage dataset records the historical implementation language for each toolchain via <code>bootstrap_written_in</code> edges. Here are two chains in detail:</p>
 <h3>Rust via OCaml</h3>
 <p><a href="/languages/rust">Rust</a> began as Graydon Hoare's personal project in 2006. The first compiler, rustboot, was written in <a href="/languages/ocaml">OCaml</a>. OCaml's algebraic types and pattern matching were well-suited to the experimental type-system work Rust required. Mozilla sponsored the project in 2009, and the team gradually rewrote rustboot in Rust. By 2011, rustc could compile itself: the OCaml dependency was gone. Each rustc release since then has been compiled by the previous stable release. The <a href="/tools/mrustc">mrustc</a> project (written in C++) provides an alternative seed that can compile an early rustc without trusting a prior Rust binary.</p>
@@ -122,7 +134,7 @@
 <p>Other examples: <a href="/languages/haskell">Haskell</a>'s <a href="/tools/ghc">GHC</a> is written in Haskell with a C runtime. <a href="/tools/gcc">GCC</a> is bootstrapped from an earlier C/C++ compiler through exactly the stage 0/1/2 process. <a href="/languages/typescript">TypeScript</a>'s tsc is written in TypeScript and compiles itself.</p>
 <p>See <a href="/relationships/bootstrap-written-in">every bootstrap relationship in the dataset</a> for the full list, each with a source and confidence score.</p>
 
-<h2>Glossary</h2>
+<h2 id="glossary">Glossary</h2>
 <dl class="quick-facts">
   <div><dt>Bootstrapping</dt><dd>The process of using a minimal working compiler to compile a more capable compiler, repeating until a language can compile its own full implementation.</dd></div>
   <div><dt>Self-hosting</dt><dd>A compiler is self-hosting when the compiler's own source code can be compiled by that same compiler. Self-hosting is the end-state that bootstrapping achieves.</dd></div>
@@ -130,7 +142,7 @@
   <div><dt>Trusting Trust</dt><dd>Ken Thompson's 1984 observation that a malicious compiler can be made to inject hidden code into programs it compiles, including into copies of itself, in a way that cannot be detected by reading source code. The attack propagates through any binary-distributed compiler chain.</dd></div>
 </dl>
 
-<h2>Frequently asked questions</h2>
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
 <div class="faq-block">
 <details open>
   <summary><strong>Is Rust's compiler written in Rust?</strong></summary>

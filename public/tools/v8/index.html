@@ -67,12 +67,13 @@
 
   <h2 class="lang-written-q">What is V8 written in?</h2>
   <div class="answer-box"><strong>V8</strong>, Google's JavaScript and WebAssembly engine, is written in <strong>C++</strong>. It JIT-compiles JavaScript directly to machine code and powers Chrome, Node.js, and Deno.</div>
+  
 
   
 
 
   <section class="intent-section">
-  <h2>About V8</h2>
+  <h2 id="about-v8">About V8</h2>
   <p><strong>V8</strong> is an open-source JavaScript engine developed by Google.</p>
   <p>V8 first appeared in 2008. Development is led by Lars Bak, Christian Plesner Hansen, and Kasper Lund.</p>
 </section>
@@ -97,7 +98,7 @@
   </div></dl>
 </section>
 <section class="intent-section">
-  <h2>Why a JavaScript engine is written in C++</h2>
+  <h2 id="why-a-javascript-engine-is-written-in-c">Why a JavaScript engine is written in C++</h2>
   <p>JavaScript is a high-level, dynamically typed language, but the engine that runs it needs direct memory control, manual layout of objects, and tight machine-code generation. C++ provides that. V8 parses JavaScript, generates bytecode for its Ignition interpreter, and hot paths are optimized to native code by the TurboFan and Maglev compilers, all implemented in C++.</p>
 </section>
 

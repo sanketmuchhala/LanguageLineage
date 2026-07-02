@@ -38,19 +38,29 @@
   </nav>
 
   <h1>How Are Programming Languages Made?</h1>
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#what-is-a-programming-language-implementation">What is a Programming Language Implementation?</a></li>
+    <li><a href="#what-compilers-and-interpreters-do">What Compilers and Interpreters Do</a></li>
+    <li><a href="#the-bootstrap-problem">The Bootstrap Problem</a></li>
+    <li><a href="#examples-from-the-dataset">Examples from the Dataset</a></li>
+    <li><a href="#further-reading">Further Reading</a></li>
+  </ol>
+</nav>
 
   <div class="answer-box">Programming languages are implemented using other languages. A compiler or interpreter is a program, and every program is written in some language. The first compilers were written in assembly; today most are self-hosting or written in C, C++, or Rust.</div>
 
-<h2>What is a Programming Language Implementation?</h2>
+<h2 id="what-is-a-programming-language-implementation">What is a Programming Language Implementation?</h2>
 <p>A programming language is defined by its specification (grammar, semantics). Its <em>implementation</em> is a compiler or interpreter that executes code written in that language. CPython implements Python; rustc implements Rust; V8 implements JavaScript.</p>
 
-<h2>What Compilers and Interpreters Do</h2>
+<h2 id="what-compilers-and-interpreters-do">What Compilers and Interpreters Do</h2>
 <p>A <strong>compiler</strong> translates source code to machine code or bytecode ahead of time. A <strong>interpreter</strong> reads and executes source code directly. Most languages use one or both: Java compiles to bytecode, then the JVM interprets or JIT-compiles that bytecode.</p>
 
-<h2>The Bootstrap Problem</h2>
+<h2 id="the-bootstrap-problem">The Bootstrap Problem</h2>
 <p>To write a compiler for a new language, you need an existing language to write it in. Early compilers were written in assembly or C. Once a compiler is stable, it can be rewritten in the language itself, this is called bootstrapping. Languages like Rust, Go, Haskell, and OCaml are self-hosting: their compilers are written in themselves.</p>
 
-<h2>Examples from the Dataset</h2>
+<h2 id="examples-from-the-dataset">Examples from the Dataset</h2>
 <ul>
 <li><a href="/languages/python">Python (CPython)</a> is implemented in C</li>
 <li><a href="/languages/rust">Rust (rustc)</a> is self-hosting, with an original OCaml implementation</li>
@@ -59,7 +69,7 @@
 <li><a href="/languages/java">Java (javac)</a> is self-hosting; the HotSpot JVM is written in C++</li>
 </ul>
 
-<h2>Further Reading</h2>
+<h2 id="further-reading">Further Reading</h2>
 <ul>
 <li><a href="/guides/what-is-compiler-bootstrapping">What is compiler bootstrapping?</a></li>
 <li><a href="/guides/compiler-vs-interpreter-vs-runtime">Compiler vs interpreter vs runtime</a></li>

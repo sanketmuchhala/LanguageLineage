@@ -71,14 +71,14 @@
 <p>The <strong>javac compiler</strong> is written in Java. It compiles Java source files to JVM bytecode. Because javac is itself written in Java, new versions are bootstrapped using an existing Java toolchain.</p>
 <p>The <strong>HotSpot JVM</strong>, the primary Java runtime, is written mainly in C and C++. HotSpot includes the bytecode interpreter, JIT compiler, garbage collectors, class loader, and native platform integration.</p>
 <h2>Java implementation layers</h2>
-<table class="impl-table">
+<div class="table-wrap"><table class="impl-table">
   <thead><tr><th>Layer</th><th>Written in</th><th>Role</th></tr></thead>
   <tbody>
     <tr><td>javac</td><td>Java</td><td>Compiles Java source to JVM bytecode</td></tr>
     <tr><td>HotSpot JVM</td><td>C and C++</td><td>Executes bytecode, JIT-compiles hot code, manages memory</td></tr>
     <tr><td>Standard library</td><td>Java</td><td>Core APIs such as java.lang and java.util</td></tr>
   </tbody>
-</table>
+</table></div>
 
   <h2>Explore in the Graph</h2>
   <p>See implementation and influence relationships interactively.</p>

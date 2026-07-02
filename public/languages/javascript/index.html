@@ -70,21 +70,33 @@
 
   <h2 class="lang-written-q">What is JavaScript written in?</h2>
   <div class="answer-box"><strong>JavaScript</strong> is a language standard, so the language itself is not "written in" one language. Modern JavaScript engines are mostly written in <strong>C++</strong>: V8, SpiderMonkey, and JavaScriptCore all use C++ for performance-critical compiler and runtime code.</div>
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#what-javascript-is-used-for">What JavaScript is used for</a></li>
+    <li><a href="#about-javascript">About JavaScript</a></li>
+    <li><a href="#javascript-in-the-language-family-tree">JavaScript in the language family tree</a></li>
+    <li><a href="#javascript-language-vs-javascript-engines">JavaScript language vs JavaScript engines</a></li>
+    <li><a href="#how-modern-javascript-engines-compile-code">How modern JavaScript engines compile code</a></li>
+    <li><a href="#major-javascript-engines">Major JavaScript engines</a></li>
+    <li><a href="#javascript-release-history">JavaScript release history</a></li>
+  </ol>
+</nav>
 
   <section class="intent-section">
-  <h2>What JavaScript is used for</h2>
+  <h2 id="what-javascript-is-used-for">What JavaScript is used for</h2>
   <p>JavaScript runs in every web browser, so it is the language of interactive front-end development; with Node.js it also runs servers, build tools, and desktop apps. Frameworks like React, Vue, and Angular are built in it, and it powers everything from single-page apps to serverless functions.</p>
 <p>Notable software: virtually every modern website's interactivity, plus desktop apps built on Electron such as VS Code, Slack, and Discord.</p>
 </section>
 
 
   <section class="intent-section">
-  <h2>About JavaScript</h2>
+  <h2 id="about-javascript">About JavaScript</h2>
   <p><strong>JavaScript</strong> is a high-level programming language. It is a dynamically typed and garbage-collected language that compiles to bytecode that runs on a virtual machine. It supports imperative, object-oriented, and functional programming. Compiling to bytecode for a virtual machine is the same model the JVM and .NET use: the VM, not the CPU, interprets or JIT-compiles the bytecode.</p>
   <p>JavaScript first appeared in 1995 and was designed by Brendan Eich. Today JavaScript is one of the most widely used programming languages in the world.</p>
 </section>
 <section class="intent-section">
-  <h2>JavaScript in the language family tree</h2>
+  <h2 id="javascript-in-the-language-family-tree">JavaScript in the language family tree</h2>
   <p>JavaScript drew on ideas from <a href="/languages/smalltalk">Smalltalk</a>, <a href="/languages/java">Java</a>, <a href="/languages/scheme">Scheme</a>, <a href="/languages/self">Self</a>, and <a href="/languages/lisp">Lisp</a> and went on to influence <a href="/languages/typescript">TypeScript</a>, <a href="/languages/coffeescript">CoffeeScript</a>, <a href="/languages/dart">Dart</a>, <a href="/languages/reasonml">ReasonML</a>, <a href="/languages/solidity">Solidity</a>, and <a href="/languages/actionscript">ActionScript</a>.</p>
   <p class="enrich-cite" style="font-size:13px;color:var(--text-tertiary);margin-top:14px">Sources: <a href="https://en.wikipedia.org/wiki/JavaScript" rel="noopener noreferrer" target="_blank">Wikipedia</a> &middot; <a href="https://www.wikidata.org/wiki/Q2005" rel="noopener noreferrer" target="_blank">Wikidata</a> &middot; <a href="https://www.ecma-international.org/publications-and-standards/standards/ecma-262/" rel="noopener noreferrer" target="_blank">Official site</a></p>
 </section>
@@ -108,20 +120,20 @@
   </div></dl>
 </section>
 <section class="intent-section">
-  <h2>JavaScript language vs JavaScript engines</h2>
+  <h2 id="javascript-language-vs-javascript-engines">JavaScript language vs JavaScript engines</h2>
   <p>JavaScript source code runs inside an engine. The ECMAScript specification, maintained by TC39 and published by Ecma International, defines the language: its syntax, semantics, and standard library. Engines such as V8, SpiderMonkey, and JavaScriptCore implement that specification. A JavaScript program is not "written in" a particular language any more than a PDF document is "written in" Acrobat; the engine is the implementation.</p>
 <p>That distinction matters when answering "what is JavaScript written in?" The answer that is actually useful is about engines, because the engines are what run on your machine. V8 powers Chrome and Node.js. SpiderMonkey powers Firefox. JavaScriptCore powers Safari. Every major engine writes its performance-critical compilation and runtime code in C++, which gives it the low-level control needed to JIT-compile JavaScript to native machine code at acceptable overhead.</p>
 <p>TypeScript, Babel, and other transpilers are written in JavaScript or TypeScript. They are pre-processing tools, not engines. They transform source code before it reaches an engine, but they do not define how JavaScript executes.</p>
 </section>
 <section class="intent-section">
-  <h2>How modern JavaScript engines compile code</h2>
+  <h2 id="how-modern-javascript-engines-compile-code">How modern JavaScript engines compile code</h2>
   <p>Modern JavaScript engines do not interpret source code line by line. They use a multi-tier compilation pipeline that trades compilation cost against execution speed based on how often each function runs.</p>
 <p>V8's pipeline illustrates the pattern. First, V8 parses JavaScript into an AST and compiles it to Ignition bytecode, a compact intermediate representation. Ignition executes bytecode immediately. While it runs, V8 tracks how many times each function is called and what types its arguments receive. Functions that exceed a hotness threshold are handed to TurboFan, V8's optimizing JIT compiler, which generates highly tuned machine code based on the observed types. V8 introduced Maglev in 2023 as a mid-tier between Ignition and TurboFan, reducing compilation latency for medium-hot functions.</p>
 <p>Speculative optimization is key. TurboFan assumes that a variable that has always been an integer will continue to be one, and generates fast integer code. If that assumption breaks because a string arrives, the engine deoptimizes: it throws away the compiled code and falls back to Ignition, then potentially recompiles with the wider type profile. This cycle is invisible to developers but drives JavaScript performance on tight loops and server-side Node.js workloads.</p>
 </section>
 <section class="intent-section">
-  <h2>Major JavaScript engines</h2>
-  <table class="impl-table">
+  <h2 id="major-javascript-engines">Major JavaScript engines</h2>
+  <div class="table-wrap"><table class="impl-table">
   <thead><tr><th>Engine</th><th>Written in</th><th>Used by</th><th>JIT tiers</th></tr></thead>
   <tbody>
     <tr><td>V8</td><td>C++</td><td>Chrome, Node.js, Deno, Electron</td><td>Ignition, Maglev, TurboFan</td></tr>
@@ -130,10 +142,10 @@
     <tr><td>Hermes</td><td>C++</td><td>React Native</td><td>AOT bytecode, minimal JIT</td></tr>
     <tr><td>QuickJS</td><td>C</td><td>Embedded environments</td><td>Interpreter only</td></tr>
   </tbody>
-</table>
+</table></div>
 </section>
 <section class="intent-section">
-  <h2>JavaScript release history</h2>
+  <h2 id="javascript-release-history">JavaScript release history</h2>
   <span id="release-date"></span>
 <p>Brendan Eich created JavaScript in ten days in May 1995 while at Netscape, under a brief to make Navigator's pages interactive without requiring a Java applet. It shipped as LiveScript, was renamed JavaScript for marketing reasons, and had little in common with Java beyond the name and some syntax surface. Microsoft's JScript reverse-engineered it for Internet Explorer shortly after.</p>
 <p>Ecma International standardized the language as ECMAScript. ES1 was published in June 1997. ES3 (1999) added regular expressions and try/catch and became the de-facto baseline for the 2000s. ES5 (2009) added strict mode, JSON support, and Array methods. ES6, rechristened ES2015, was the biggest release in the language's history: classes, arrow functions, promises, modules, template literals, destructuring, and generators.</p>

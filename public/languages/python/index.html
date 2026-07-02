@@ -70,21 +70,33 @@
 
   <h2 class="lang-written-q">What is Python written in?</h2>
   <div class="answer-box"><strong>Python</strong> usually means <strong>CPython</strong>, the reference implementation, and CPython is written primarily in <strong>C</strong>. The Python language specification is implementation-independent, so other Python runtimes can be written in other languages.</div>
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#what-python-is-used-for">What Python is used for</a></li>
+    <li><a href="#about-python">About Python</a></li>
+    <li><a href="#python-in-the-language-family-tree">Python in the language family tree</a></li>
+    <li><a href="#python-language-vs-cpython">Python language vs CPython</a></li>
+    <li><a href="#cpython-architecture-and-the-c-extension-api">CPython architecture and the C extension API</a></li>
+    <li><a href="#python-implementations-compared">Python implementations compared</a></li>
+    <li><a href="#python-release-history">Python release history</a></li>
+  </ol>
+</nav>
 
   <section class="intent-section">
-  <h2>What Python is used for</h2>
+  <h2 id="what-python-is-used-for">What Python is used for</h2>
   <p>Python is the default language of data science, machine learning, and AI, and a mainstay for scripting, automation, and back-end web development. Libraries like NumPy, pandas, PyTorch, and TensorFlow made it the lingua franca of analytics and deep learning, while Django and Flask power web apps.</p>
 <p>Notable software written in or built on Python includes Instagram's backend, Dropbox, much of YouTube's early code, and tooling at Google and Netflix.</p>
 </section>
 
 
   <section class="intent-section">
-  <h2>About Python</h2>
+  <h2 id="about-python">About Python</h2>
   <p><strong>Python</strong> is a general-purpose programming language. It is a dynamically typed and garbage-collected language that is executed directly by an interpreter. It supports imperative, object-oriented, and functional programming.</p>
   <p>Python first appeared in 1991 and was designed by Guido van Rossum. Development is led by Python Software Foundation. Today Python is one of the most widely used programming languages in the world.</p>
 </section>
 <section class="intent-section">
-  <h2>Python in the language family tree</h2>
+  <h2 id="python-in-the-language-family-tree">Python in the language family tree</h2>
   <p>Python drew on ideas from <a href="/languages/smalltalk">Smalltalk</a>, <a href="/languages/abc">ABC</a>, <a href="/languages/modula3">Modula-3</a>, <a href="/languages/clu">CLU</a>, and <a href="/languages/icon">Icon</a> and went on to influence <a href="/languages/ruby">Ruby</a>, <a href="/languages/coffeescript">CoffeeScript</a>, <a href="/languages/groovy">Groovy</a>, <a href="/languages/d">D</a>, <a href="/languages/mojo">Mojo</a>, and <a href="/languages/julia">Julia</a>.</p>
   <p class="enrich-cite" style="font-size:13px;color:var(--text-tertiary);margin-top:14px">Sources: <a href="https://en.wikipedia.org/wiki/Python_(programming_language)" rel="noopener noreferrer" target="_blank">Wikipedia</a> &middot; <a href="https://www.wikidata.org/wiki/Q28865" rel="noopener noreferrer" target="_blank">Wikidata</a> &middot; <a href="https://www.python.org/" rel="noopener noreferrer" target="_blank">Official site</a></p>
 </section>
@@ -108,20 +120,20 @@
   </div></dl>
 </section>
 <section class="intent-section">
-  <h2>Python language vs CPython</h2>
+  <h2 id="python-language-vs-cpython">Python language vs CPython</h2>
   <p>When people ask what Python is written in, they almost always mean CPython, the reference implementation maintained by the Python Software Foundation. CPython is a bytecode interpreter: it compiles Python source code to a compact intermediate format and then executes those instructions inside a tight C loop called <code>ceval.c</code>. The parser, abstract-syntax-tree builder, bytecode compiler, and the main evaluation loop are all implemented in C.</p>
 <p>CPython also ships the Python standard library, which is a mix: the performance-sensitive parts (regular expressions, JSON, CSV parsing, cryptography) are C extension modules, while the majority of the library is written in Python itself. This split reflects a deliberate design choice: write in Python where clarity matters, drop to C where speed does.</p>
 <p>The Python language itself is a specification, not a piece of code. That specification does not mandate C. A compatible Python implementation can be written in any language as long as it follows the same language semantics defined in the CPython documentation and the language reference.</p>
 </section>
 <section class="intent-section">
-  <h2>CPython architecture and the C extension API</h2>
+  <h2 id="cpython-architecture-and-the-c-extension-api">CPython architecture and the C extension API</h2>
   <p>CPython's internal architecture connects Python objects to C memory through a single foundational struct: <code>PyObject</code>. Every Python value, whether an integer, a list, or a function, is a <code>PyObject</code> at the C level. The reference-count field inside that struct drives CPython's primary memory management strategy: when the count reaches zero, the object is freed. A cycle-detecting garbage collector runs periodically to handle circular references that reference counting alone cannot reclaim.</p>
 <p>CPython exposes a stable C extension API so that third-party libraries can implement performance-sensitive logic in C while behaving like ordinary Python modules. NumPy, Pandas, SciPy, and most data-science libraries use this API. Extensions link directly against the Python interpreter, which is why NumPy wheels are specific to a Python version and platform.</p>
 <p>The GIL (Global Interpreter Lock) is a mutex inside CPython that protects the interpreter's internal state. Only one thread can execute Python bytecode at a time. This simplifies reference counting but limits parallelism on CPU-bound workloads. Python 3.13 introduced an experimental free-threaded build (PEP 703) that removes the GIL, though the ABI-stable extension ecosystem is still catching up.</p>
 </section>
 <section class="intent-section">
-  <h2>Python implementations compared</h2>
-  <table class="impl-table">
+  <h2 id="python-implementations-compared">Python implementations compared</h2>
+  <div class="table-wrap"><table class="impl-table">
   <thead><tr><th>Implementation</th><th>Written in</th><th>Role</th></tr></thead>
   <tbody>
     <tr><td>CPython</td><td>C and Python</td><td>Reference implementation and most common runtime</td></tr>
@@ -131,10 +143,10 @@
     <tr><td>MicroPython</td><td>C</td><td>Lean CPython-compatible implementation for microcontrollers</td></tr>
     <tr><td>GraalPy</td><td>Java</td><td>Python on GraalVM, targeting high-throughput JIT performance</td></tr>
   </tbody>
-</table>
+</table></div>
 </section>
 <section class="intent-section">
-  <h2>Python release history</h2>
+  <h2 id="python-release-history">Python release history</h2>
   <span id="release-date"></span>
 <p>Guido van Rossum began Python in the late 1980s as a hobby project at Centrum Wiskunde and Informatica (CWI) in the Netherlands, aiming for a language that was easy to read and to teach. The first public release, Python 0.9.0, appeared in February 1991. Python 1.0 arrived in January 1994, adding lambda, map, filter, and reduce.</p>
 <p>Python 2.0 (October 2000) introduced list comprehensions, garbage collection for cycles, and Unicode support. The 2.x line continued until Python 2.7 (2010), which received extended support through 2020 to ease migration.</p>
