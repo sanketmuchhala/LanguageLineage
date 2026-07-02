@@ -372,7 +372,7 @@ Acceptance criteria:
 
 ### Phase 7: Per-page social images (OG cards)
 
-Status: not started.
+Status: complete. PR #27 merged 2026-07-02.
 Impact: medium (social CTR, Discover eligibility). Effort: medium. Dependencies: Phase 1 (logos).
 
 Why: every page currently shares one generic OG image. Per-page cards make shares and SERP thumbnails distinctive.
