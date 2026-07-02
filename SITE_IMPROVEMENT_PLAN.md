@@ -323,7 +323,7 @@ Acceptance criteria:
 
 ### Phase 5: New pillar content, comparisons and chains
 
-Status: not started.
+Status: complete (2026-07-02). PR #25 merged. 3 new guide pages: typescript-vs-javascript-implementation (~981 words), graalvm-vs-hotspot (~1057 words), the-c-bootstrap-chain (~987 words, chains computed from dataset BFS over *_written_in edges). 13 guides total, 306 sitemap URLs. 0 errors, 0 warnings.
 Impact: medium-high. Effort: high. Dependencies: Phases 1 and 2.
 
 Why: the site's unique asset is computable implementation lineage. Nobody else can generate "the full chain from Rust back to machine code" from data. Comparisons and chain pillars capture adjacent query demand the current page types cannot.
