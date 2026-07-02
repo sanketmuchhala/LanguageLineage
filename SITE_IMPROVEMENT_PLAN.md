@@ -250,7 +250,7 @@ Acceptance criteria:
 
 ### Phase 2: SERP title and meta description CTR pass
 
-Status: not started.
+Status: complete (2026-07-02). PR #22 merged. All 197 pages: 0 duplicate titles, 0 duplicate descriptions, all titles within 75 chars, all descriptions 75-180 chars. Question pages now include direct answer in title via titleHook. Language pages separated to "Implementation, History, and Lineage" pattern. Relationship pages quantified. truncateMetaDescription fixed for mid-word periods. Validator extended with full uniqueness+length sweep.
 Impact: highest of the whole plan (fixes 0% CTR at positions 8 to 12). Effort: medium. Dependencies: none.
 
 Why: Section 2 shows queries sitting on page 1 to 2 with zero clicks. Ranking is not the problem; the snippet is.
