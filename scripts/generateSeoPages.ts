@@ -1562,13 +1562,30 @@ function buildToolIntro(node: Language): string {
 
 const QUESTION_PAGE_LANGS = new Set(['python','javascript','rust','go','java','c','cxx','typescript','ruby','v8','cpython']);
 
+// Some language slugs differ from their question page slug (cxx -> cpp)
+const QUESTION_SLUG_OVERRIDE: Record<string, string> = { cxx: 'cpp' };
+
+// Contextually relevant guide links per language slug (at most 2)
+const LANG_GUIDE_LINKS: Record<string, Array<{ slug: string; label: string }>> = {
+  python:     [{ slug: 'how-python-is-implemented', label: 'How Python is implemented' }],
+  rust:       [{ slug: 'how-rust-is-bootstrapped', label: 'How Rust bootstraps itself' }, { slug: 'the-c-bootstrap-chain', label: 'Toolchain lineage back to C' }],
+  javascript: [{ slug: 'v8-vs-spidermonkey-vs-javascriptcore', label: 'V8 vs SpiderMonkey vs JavaScriptCore' }],
+  typescript: [{ slug: 'typescript-vs-javascript-implementation', label: 'TypeScript vs JavaScript compilers' }],
+  java:       [{ slug: 'graalvm-vs-hotspot', label: 'GraalVM vs HotSpot' }],
+  c:          [{ slug: 'gcc-vs-llvm', label: 'GCC vs LLVM: compiler infrastructure' }, { slug: 'the-c-bootstrap-chain', label: 'How modern languages trace back to C' }, { slug: 'how-programming-languages-are-made', label: 'How programming languages are made' }],
+  cxx:        [{ slug: 'gcc-vs-llvm', label: 'GCC vs LLVM: compiler infrastructure' }],
+  go:         [{ slug: 'the-c-bootstrap-chain', label: 'Toolchain lineage back to C' }],
+  haskell:    [{ slug: 'what-is-compiler-bootstrapping', label: 'Compiler bootstrapping explained' }],
+};
+
 function buildDiscoverMore(node: Language, rels: Relationship[], nodeMap: Map<string, Language>): string {
   const slug = idToSlug(node.id);
   const name = escapeHtml(node.name);
   const links: string[] = [];
 
   if (QUESTION_PAGE_LANGS.has(slug)) {
-    links.push(`<a href="/questions/what-is-${slug}-written-in" class="discover-link">What is ${name} written in?</a>`);
+    const qSlug = QUESTION_SLUG_OVERRIDE[slug] ?? slug;
+    links.push(`<a href="/questions/what-is-${qSlug}-written-in" class="discover-link">What is ${name} written in?</a>`);
   }
   links.push(`<a href="/what-are-programming-languages-written-in" class="discover-link">What are programming languages written in?</a>`);
   links.push(`<a href="/programming-language-family-tree" class="discover-link">${name} in the language family tree</a>`);
@@ -1596,6 +1613,15 @@ function buildDiscoverMore(node: Language, rels: Relationship[], nodeMap: Map<st
   for (const r of influencers) {
     const s = nodeMap.get(r.from_language);
     if (s) links.push(`<a href="/${idToPrefix(s.id)}/${idToSlug(s.id)}" class="discover-link">Languages that influenced ${name}: ${escapeHtml(s.name)}</a>`);
+  }
+
+  // Per-language contextual guide links (at most 2, deduplicated against already-added bootstrap guide)
+  const addedGuides = new Set(links.filter(l => l.includes('/guides/')).map(l => l.match(/\/guides\/([^"]+)/)?.[1]).filter(Boolean));
+  for (const g of (LANG_GUIDE_LINKS[slug] ?? [])) {
+    if (!addedGuides.has(g.slug)) {
+      links.push(`<a href="/guides/${g.slug}" class="discover-link">${g.label}</a>`);
+      addedGuides.add(g.slug);
+    }
   }
 
   if (links.length === 0) return '';
@@ -2019,6 +2045,16 @@ const QUESTIONS: QuestionDef[] = [
   }
 ];
 
+// Related question slugs per question slug (used to cross-link orphan question pages)
+const RELATED_QUESTIONS: Record<string, Array<{ slug: string; title: string }>> = {
+  'what-is-javascript-written-in': [{ slug: 'is-javascript-written-in-c', title: 'Is JavaScript written in C?' }],
+  'what-is-rust-written-in': [
+    { slug: 'is-rustc-written-in-rust', title: 'Is rustc written in Rust?' },
+    { slug: 'is-rust-compiled', title: 'Is Rust compiled?' },
+  ],
+  'what-is-python-written-in': [{ slug: 'what-is-cpython-written-in', title: 'What is CPython written in?' }],
+};
+
 function buildQuestionPage(q: QuestionDef, nodeMap: Map<string, Language>): string {
   const url = `${SITE}/questions/${q.slug}`;
   const metaDescription = truncateMetaDescription(q.answer);
@@ -2068,6 +2104,7 @@ function buildQuestionPage(q: QuestionDef, nodeMap: Map<string, Language>): stri
       const node = nodeMap.get(`tool:${slug}`);
       return node ? `<a href="/tools/${slug}" class="discover-link">${escapeHtml(node.name)}</a>` : '';
     }),
+    ...(RELATED_QUESTIONS[q.slug] ?? []).map(rq => `<a href="/questions/${rq.slug}" class="discover-link">${escapeHtml(rq.title)}</a>`),
   ].filter(Boolean);
 
   return `<!DOCTYPE html>
@@ -2569,8 +2606,8 @@ function buildProgrammingLanguageFamilyTree(languages: Language[]): string {
   const langCount = languages.filter(l => l.id.startsWith('lang:')).length;
   const families = [
     { name: 'C family', members: ['C', 'C++', 'Objective-C', 'Java', 'JavaScript', 'C#', 'Go', 'Rust'], desc: 'Languages influenced by C\'s syntax and systems-programming philosophy.' },
-    { name: 'Lisp family', members: ['Lisp', 'Scheme', 'Common Lisp', 'Clojure', 'Racket', 'Emacs Lisp'], desc: 'Languages derived from John McCarthy\'s Lisp, emphasizing homoiconicity and macros.' },
-    { name: 'ML family', members: ['ML', 'OCaml', 'Haskell', 'F#', 'Elm', 'ReasonML', 'SML'], desc: 'Statically typed functional languages with algebraic data types and type inference.' },
+    { name: 'Lisp family', members: ['Lisp', 'Scheme', 'Clojure', 'Racket'], desc: 'Languages derived from John McCarthy\'s Lisp, emphasizing homoiconicity and macros.' },
+    { name: 'ML family', members: ['ML', 'OCaml', 'Haskell', 'F#', 'SML'], desc: 'Statically typed functional languages with algebraic data types and type inference.' },
     { name: 'JVM family', members: ['Java', 'Scala', 'Kotlin', 'Groovy', 'Clojure'], desc: 'Languages that compile to JVM bytecode and run on the Java Virtual Machine.' },
     { name: 'BEAM family', members: ['Erlang', 'Elixir', 'Gleam'], desc: 'Languages targeting the BEAM (Erlang VM), designed for concurrency and fault tolerance.' },
   ];
@@ -2617,8 +2654,8 @@ ${NAV_HTML}
   <p>${escapeHtml(f.desc)}</p>
   <div class="related-grid">
     ${f.members.map(m => {
-      const slug = m.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
-      const fixedSlug = slug === 'c++' ? 'cxx' : slug === 'c#' ? 'csharp' : slug === 'objective-c' ? 'objective-c' : slug === 'f#' ? 'fsharp' : slug;
+      const specialSlug: Record<string, string> = { 'C++': 'cxx', 'C#': 'csharp', 'F#': 'fsharp' };
+      const fixedSlug = specialSlug[m] ?? m.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
       return `<a href="/languages/${fixedSlug}" class="related-card">${escapeHtml(m)}</a>`;
     }).join('\n    ')}
   </div>`).join('\n\n  ')}
@@ -3876,10 +3913,20 @@ function buildLanguagesIndex(langs: Language[]): string {
 </a>`;
   }).filter(Boolean).join('\n');
 
-  const allCards = langNodes.map(l => {
-    const slug = idToSlug(l.id);
-    return `<a href="/languages/${slug}" class="related-card">${escapeHtml(l.name)}</a>`;
-  }).join('\n');
+  // Group by decade
+  const byDecade = new Map<string, typeof langNodes>();
+  for (const l of [...langNodes].sort((a, b) => (a.first_release_year ?? 9999) - (b.first_release_year ?? 9999) || a.name.localeCompare(b.name))) {
+    const decade = l.first_release_year ? `${Math.floor(l.first_release_year / 10) * 10}s` : 'Unknown';
+    if (!byDecade.has(decade)) byDecade.set(decade, []);
+    byDecade.get(decade)!.push(l);
+  }
+  const decadeSections = [...byDecade.entries()].map(([decade, members]) => {
+    const cards = members.map(l => {
+      const slug = idToSlug(l.id);
+      return `<a href="/languages/${slug}" class="related-card">${escapeHtml(l.name)}</a>`;
+    }).join('\n');
+    return `<h2>${escapeHtml(decade)}</h2>\n  <div class="related-grid">${cards}</div>`;
+  }).join('\n\n  ');
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -3919,8 +3966,7 @@ function buildLanguagesIndex(langs: Language[]): string {
   <h2>Popular Languages</h2>
   <div class="featured-langs">${featuredCards}</div>
 
-  <h2>All Languages (A&ndash;Z)</h2>
-  <div class="related-grid">${allCards}</div>
+  ${decadeSections}
 
   <a class="explore-btn" href="/explore">Explore All in Graph &rarr;</a>
 </main>
@@ -3931,14 +3977,25 @@ ${FOOTER_HTML}
 
 function buildToolsIndex(langs: Language[]): string {
   const toolNodes = langs.filter(l => l.id.startsWith('tool:')).sort((a, b) => a.name.localeCompare(b.name));
-  const cards = toolNodes.map(l => {
-    const slug = idToSlug(l.id);
-    const intro = l.notes ? `<span class="tool-index-note">${escapeHtml(l.notes.split('.')[0])}.</span>` : '';
-    return `<a href="/tools/${slug}" class="tool-index-card">
+
+  // Group by decade of first_release_year
+  const byDecade = new Map<string, typeof toolNodes>();
+  for (const l of [...toolNodes].sort((a, b) => (a.first_release_year ?? 9999) - (b.first_release_year ?? 9999) || a.name.localeCompare(b.name))) {
+    const decade = l.first_release_year ? `${Math.floor(l.first_release_year / 10) * 10}s` : 'Unknown';
+    if (!byDecade.has(decade)) byDecade.set(decade, []);
+    byDecade.get(decade)!.push(l);
+  }
+  const decadeSections = [...byDecade.entries()].map(([decade, members]) => {
+    const cards = members.map(l => {
+      const slug = idToSlug(l.id);
+      const intro = l.notes ? `<span class="tool-index-note">${escapeHtml(l.notes.split('.')[0])}.</span>` : '';
+      return `<a href="/tools/${slug}" class="tool-index-card">
   <span class="tool-index-name">${escapeHtml(l.name)}</span>
   ${intro}
 </a>`;
-  }).join('\n');
+    }).join('\n');
+    return `<h2>${escapeHtml(decade)}</h2>\n  <div class="tool-index-grid">${cards}</div>`;
+  }).join('\n\n  ');
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -3974,7 +4031,7 @@ function buildToolsIndex(langs: Language[]): string {
   </nav>
   <h1>Compilers, Runtimes, and Tools</h1>
   <div class="answer-box">This section covers the ${toolNodes.length} major compiler and runtime tools in the Language Lineage dataset, including GCC, LLVM, V8, SpiderMonkey, GHC, and HotSpot JVM. Each entry documents what the tool is written in, its relationships to languages, and its implementation history.</div>
-  <div class="tool-index-grid">${cards}</div>
+  ${decadeSections}
   <a class="explore-btn" href="/explore">Explore All in Graph &rarr;</a>
 </main>
 ${FOOTER_HTML}
@@ -4080,6 +4137,7 @@ function buildRelationshipsIndex(rels: Relationship[]): string {
   <h1>Relationship Types</h1>
   <p>The Language Lineage dataset tracks six types of relationships across ${rels.length} total edges. Each relationship type has its own evidence requirements and confidence scoring.</p>
   <div class="rel-cards">${cards}</div>
+  <p>Not sure which relationship type to look for? See <a href="/compiler-runtime-bootstrap">Compiler, runtime, and bootstrap explained</a> for a plain-language breakdown of the three most-confused terms.</p>
   <a class="explore-btn" href="/explore">Explore All Relationships in Graph &rarr;</a>
 </main>
 ${FOOTER_HTML}
