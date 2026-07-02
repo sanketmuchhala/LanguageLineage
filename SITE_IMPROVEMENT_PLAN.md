@@ -461,7 +461,7 @@ Acceptance criteria:
 
 ### Phase 11: Performance and Core Web Vitals
 
-Status: not started.
+Status: DONE (2026-07-02). PR #32.
 Impact: medium (CWV is a ranking signal; mobile 0% CTR partly reflects experience). Effort: medium. Dependencies: Phases 7, 8, 10 (measure after the additive phases so wins stick).
 
 Tasks:
