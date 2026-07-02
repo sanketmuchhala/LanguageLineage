@@ -276,7 +276,7 @@ Acceptance criteria:
 
 ### Phase 3: Question page expansion (programmatic, quality-gated)
 
-Status: not started.
+Status: complete (2026-07-02). PR #23 merged. 104 auto question pages generated via buildAutoQuestionPage(). Quality gate: incoming impl edges + enrichment entry. Each page has direct answer, impl table, context section, FAQPage/Article/BreadcrumbList JSON-LD, rel="alternate" cross-reference. Sitemap grew from 199 to 303 URLs. 0 errors, 0 warnings.
 Impact: high (multiplies the site's proven winning format). Effort: medium-high. Dependencies: Phase 1 (enrichment), Phase 2 (title formulas).
 
 Why: "what is X written in" is the site's proven format (page-1 rankings). Only 17 question pages exist; the dataset can authoritatively answer this for every language with implementation edges.
