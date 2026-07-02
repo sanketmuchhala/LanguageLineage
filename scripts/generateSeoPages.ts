@@ -177,8 +177,16 @@ function truncateMetaDescription(text: string, maxLength = 155): string {
   if (normalized.length <= maxLength) return normalized;
 
   const clipped = normalized.slice(0, maxLength - 3);
-  const sentenceEnd = Math.max(clipped.lastIndexOf('.'), clipped.lastIndexOf('?'), clipped.lastIndexOf('!'));
-  if (sentenceEnd >= 80) return `${clipped.slice(0, sentenceEnd + 1)}`;
+  // Only match sentence-ending punctuation followed by a space (not mid-word periods like "Node.js")
+  let sentenceEnd = -1;
+  for (let i = clipped.length - 1; i >= 80; i--) {
+    if ((clipped[i] === '.' || clipped[i] === '?' || clipped[i] === '!') &&
+        (i + 1 === clipped.length || clipped[i + 1] === ' ')) {
+      sentenceEnd = i;
+      break;
+    }
+  }
+  if (sentenceEnd >= 80) return clipped.slice(0, sentenceEnd + 1);
 
   const lastSpace = clipped.lastIndexOf(' ');
   const trimmed = clipped
@@ -207,7 +215,7 @@ function linkNode(id: string, nodeMap: Map<string, Language>): string {
 
 const PRIORITY_TITLES: Record<string, { title: string; description: string }> = {
   python: {
-    title: 'What is Python written in? CPython implementation explained | Language Lineage',
+    title: 'What is Python written in? CPython: written in C | Language Lineage',
     description: "Python's reference implementation, CPython, is written in C. Explore its runtime, bootstrap history, and language lineage.",
   },
   javascript: {
@@ -243,15 +251,15 @@ const PRIORITY_TITLES: Record<string, { title: string; description: string }> = 
     description: "TypeScript's compiler, tsc, is self-hosting and written in TypeScript. Explore its implementation and language lineage.",
   },
   v8: {
-    title: "What is V8 written in? Google's JavaScript engine explained | Language Lineage",
+    title: "What is V8 written in? Google's JS engine in C++ | Language Lineage",
     description: "Google's V8 JavaScript engine is written in C++. It powers Chrome, Node.js, and Deno. Explore its implementation.",
   },
   llvm: {
-    title: 'What is LLVM written in? Compiler infrastructure explained | Language Lineage',
+    title: 'What is LLVM written in? Compiler infrastructure in C++ | Language Lineage',
     description: 'LLVM is written in C++. It is a compiler infrastructure used by Clang, Rust, Swift, and many other languages.',
   },
   gcc: {
-    title: 'What is GCC written in? GNU compiler collection explained | Language Lineage',
+    title: 'What is GCC written in? GNU collection written in C++ | Language Lineage',
     description: 'GCC (GNU Compiler Collection) is written in C and C++. It compiles C, C++, Fortran, Ada, Go, and other languages.',
   },
   spidermonkey: {
@@ -1514,15 +1522,38 @@ function buildNodePage(node: Language, rels: Relationship[], nodeMap: Map<string
   const slug = idToSlug(node.id);
   const url = `${SITE}/${prefix}/${slug}`;
   const priorityOverride = PRIORITY_TITLES[slug];
-  const title = priorityOverride ? priorityOverride.title : `What is ${node.name} written in? | Language Lineage`;
   const implRels = rels.filter(r => r.to_language === node.id && ['compiler_written_in', 'runtime_written_in', 'bootstrap_written_in'].includes(r.relationship));
   const implLangs = [...new Set(implRels.map(r => nameFromId(r.from_language, nodeMap)))];
   const enrich = ENRICHMENT[node.id];
-  const descParts: string[] = [enrich?.tagline ? `${node.name} is ${aOrAn(enrich.tagline)} ${enrich.tagline}` : node.name];
-  if (implLangs.length > 0) descParts.push(`implemented in ${implLangs.slice(0, 2).join(' and ')}`);
-  if (node.first_release_year && node.first_release_year > 0) descParts.push(`first released in ${node.first_release_year}`);
-  const descriptionBase = `${descParts.join(', ')}.`;
-  const description = truncateMetaDescription(priorityOverride ? priorityOverride.description : descriptionBase, 160);
+
+  // Language/tool pages target brand queries ("X language", "X release date").
+  // Question pages own the "what is X written in" queries.
+  const defaultTitle = `${node.name}: Implementation, History, and Lineage | Language Lineage`;
+  const title = priorityOverride ? priorityOverride.title : defaultTitle;
+
+  // Description leads with the implementation answer, then context, to serve both
+  // "what is X written in" and "X language" search intents from a single snippet.
+  function buildDefaultDesc(): string {
+    const implType = implRels.find(r => r.relationship === 'runtime_written_in')
+      ? 'runtime'
+      : implRels.find(r => r.relationship === 'compiler_written_in')
+      ? 'compiler'
+      : implRels.length > 0 ? 'implementation' : '';
+    const isTool = prefix === 'tools';
+    const implSentence = implLangs.length > 0
+      ? isTool
+        ? `${node.name} is written in ${implLangs.slice(0, 2).join(' and ')}. `
+        : `${node.name}'s ${implType} is written in ${implLangs.slice(0, 2).join(' and ')}. `
+      : '';
+    const context = enrich?.tagline
+      ? `${node.name} is ${aOrAn(enrich.tagline)} ${enrich.tagline}`
+      : node.name;
+    const year = node.first_release_year && node.first_release_year > 0
+      ? `, first released in ${node.first_release_year}`
+      : '';
+    return `${implSentence}${context}${year}. Explore the full lineage.`;
+  }
+  const description = truncateMetaDescription(priorityOverride ? priorityOverride.description : buildDefaultDesc(), 160);
   const priorityHtml = buildPriorityContent(node);
   const priorityContentHtml = priorityHtml
     ? `${buildEnrichedOverview(node, rels, nodeMap, false)}\n${priorityHtml}`
@@ -1658,6 +1689,9 @@ ${FOOTER_HTML}
 interface QuestionDef {
   slug: string;
   title: string;
+  // Short phrase (under 35 chars) appended to the title in the <title> tag to give the direct answer.
+  // Helps searchers see the answer before clicking.
+  titleHook?: string;
   answer: string;
   details: string;
   relatedLangs: string[];
@@ -1668,6 +1702,7 @@ const QUESTIONS: QuestionDef[] = [
   {
     slug: 'what-is-python-written-in',
     title: 'What is Python written in?',
+    titleHook: 'CPython is written in C',
     answer: "Python's reference implementation, CPython, is written primarily in C. The language specification itself is implementation-independent, but CPython is the dominant runtime and is implemented in C for performance and portability. Other implementations include Jython (Java), PyPy (Python/RPython), and IronPython (.NET).",
     details: `<p>When people ask "what is Python written in?" they usually mean the <strong>CPython implementation language</strong>. CPython is the reference implementation maintained by the Python Software Foundation. Its interpreter core, object model, memory allocator, and C API are implemented primarily in C, with many higher-level library modules written in Python.</p>
 <p>Because its core is written in C, Python is often said to be "built on C". However, Python as a <em>language specification</em> is separate from any particular implementation. The specification does not require C. CPython is simply the dominant runtime and the behavior most people mean when they say "Python."</p>
@@ -1687,6 +1722,7 @@ const QUESTIONS: QuestionDef[] = [
   {
     slug: 'what-is-javascript-written-in',
     title: 'What is JavaScript written in?',
+    titleHook: 'V8 and SpiderMonkey: C++',
     answer: "The major JavaScript engines are written in C++. Google's V8 (used in Chrome and Node.js), Mozilla's SpiderMonkey, and Apple's JavaScriptCore are all implemented in C++. The JavaScript language specification is defined by ECMAScript and doesn't mandate any particular implementation language.",
     details: `<p>JavaScript itself is a language standard, defined by ECMAScript. The useful implementation question is about JavaScript engines: the programs that parse, compile, optimize, and execute JavaScript code.</p>
 <p>While the very first JavaScript engine was written in C, most modern major engines use C++ for performance-critical compiler and runtime code. V8 powers Chrome and Node.js, SpiderMonkey powers Firefox, and JavaScriptCore powers Safari and WebKit-based environments.</p>
@@ -1706,6 +1742,7 @@ const QUESTIONS: QuestionDef[] = [
   {
     slug: 'what-is-rust-written-in',
     title: 'What is Rust written in?',
+    titleHook: 'rustc is self-hosting',
     answer: "Rust is self-hosting: the Rust compiler (rustc) is written in Rust. The first version of rustc was written in OCaml; Rust became self-hosting in 2011. mrustc is an alternative Rust compiler written in C++ that can bootstrap rustc from source.",
     details: `<p>Rustc, the official Rust compiler, is written in Rust, making Rust self-hosting. Self-hosting means the compiler can compile the source code of its own compiler.</p>
 <p>Rust was not self-hosting from day one. Early Rust used a compiler written in OCaml, then moved to rustc written in Rust once the language and compiler were mature enough.</p>
@@ -1726,6 +1763,7 @@ const QUESTIONS: QuestionDef[] = [
   {
     slug: 'what-is-go-written-in',
     title: 'What is Go written in?',
+    titleHook: 'Self-hosting since Go 1.5',
     answer: "Go is self-hosting since version 1.5 (2015). The Go compiler and runtime are written in Go itself. Before Go 1.5, the gc compiler was written in C. The transition to a self-hosted compiler was completed as part of the Go 1.5 release.",
     details: `<p>The Go compiler toolchain is written in Go. The Go runtime, including the scheduler and garbage collector, is also mostly written in Go, with assembly where the runtime needs architecture-specific machine-level behavior.</p>
 <p>Before Go 1.5, the compiler was written in C. Go 1.5 completed the move to a self-hosted compiler, which means modern Go is built using Go itself.</p>
@@ -1745,6 +1783,7 @@ const QUESTIONS: QuestionDef[] = [
   {
     slug: 'what-is-java-written-in',
     title: 'What is Java written in?',
+    titleHook: 'javac in Java, HotSpot in C++',
     answer: "The Java compiler (javac) is written in Java, making it partially self-hosting. The HotSpot JVM, the primary Java runtime, is written in C and C++. The Java standard library (java.lang, java.util, etc.) is written in Java itself.",
     details: `<p>Java has multiple implementation layers: the compiler, the virtual machine, and the standard library. A complete answer depends on which layer you mean.</p>
 <p>The <strong>javac compiler</strong> is written in Java. It compiles Java source files to JVM bytecode. Because javac is itself written in Java, new versions are bootstrapped using an existing Java toolchain.</p>
@@ -1764,6 +1803,7 @@ const QUESTIONS: QuestionDef[] = [
   {
     slug: 'what-is-c-written-in',
     title: 'What is C written in?',
+    titleHook: 'GCC and Clang are C and C++',
     answer: "C compilers like GCC and Clang are written in C and C++. C is one of the earliest self-hosted languages, the original C compiler was written in B, then rewritten in C itself. GCC (GNU Compiler Collection) is primarily written in C and C++; Clang is written in C++.",
     details: `<p>C compilers are generally self-hosted: they are written in C (or C++) and can compile their own source code. GCC, the GNU Compiler Collection, is implemented primarily in C with some C++. Clang/LLVM is implemented in C++.</p>
 <p>Historically, the original C compiler was written in B (a predecessor to C) on the PDP-7. It was then rewritten in C once the language had enough capability, one of the earliest examples of compiler bootstrapping.</p>
@@ -1774,6 +1814,7 @@ const QUESTIONS: QuestionDef[] = [
   {
     slug: 'what-is-cpp-written-in',
     title: 'What is C++ written in?',
+    titleHook: 'GCC and Clang/LLVM are C++',
     answer: "C++ compilers including GCC and Clang/LLVM are implemented in C++. The original Cfront compiler, which translated C++ to C, was written in C. GCC became capable of compiling C++ and is itself written in C++. Clang, the modern alternative, is written in C++ and built on the LLVM infrastructure.",
     details: `<p>The two dominant C++ compilers are GCC and Clang. Both are written in C++, making them self-hosting for the C++ language.</p>
 <p>Cfront, the original C++ compiler developed at Bell Labs in the 1980s, was written in C and translated C++ code into C for compilation. GCC later gained C++ support and is now written in C++ itself.</p>
@@ -1784,6 +1825,7 @@ const QUESTIONS: QuestionDef[] = [
   {
     slug: 'what-is-typescript-written-in',
     title: 'What is TypeScript written in?',
+    titleHook: 'tsc is self-hosting',
     answer: "The TypeScript compiler (tsc) is written in TypeScript itself, making it self-hosting. It compiles TypeScript to JavaScript, so the compiled tsc runs on any JavaScript engine. The TypeScript compiler and language services are fully self-hosted.",
     details: `<p>TypeScript is self-hosting: the tsc compiler is written in TypeScript. This means TypeScript's compiler is compiled by itself, a previous version of tsc compiles the next version.</p>
 <p>Since TypeScript compiles to JavaScript, the compiled tsc binary runs on Node.js or any JavaScript engine. This makes TypeScript's self-hosting unique: it's a compiled language whose compiler runs as interpreted JavaScript.</p>`,
@@ -1793,6 +1835,7 @@ const QUESTIONS: QuestionDef[] = [
   {
     slug: 'what-is-ruby-written-in',
     title: 'What is Ruby written in?',
+    titleHook: 'CRuby (MRI) is written in C',
     answer: "The reference Ruby implementation, MRI (Matz's Ruby Interpreter, also called CRuby), is written in C. Alternative implementations include JRuby (written in Java, runs on the JVM) and TruffleRuby (based on GraalVM, also Java-based).",
     details: `<p>MRI/CRuby is the original and most widely used Ruby runtime, maintained by Yukihiro Matsumoto's team. Its interpreter and standard library are implemented in C.</p>
 <p>JRuby is an alternative implementation that runs Ruby on the Java Virtual Machine. It's written in Java and provides interoperability with Java libraries.</p>
@@ -1803,6 +1846,7 @@ const QUESTIONS: QuestionDef[] = [
   {
     slug: 'what-is-v8-written-in',
     title: 'What is V8 written in?',
+    titleHook: 'V8 is written in C++',
     answer: "V8, Google's JavaScript engine used in Chrome, Node.js, and Deno, is written in C++. V8 compiles JavaScript directly to native machine code using JIT compilation. It's open source and maintained by Google.",
     details: `<p>V8 is a high-performance JavaScript and WebAssembly engine. It's used in Google Chrome, Node.js, Deno, and Electron, among others.</p>
 <p>V8 is implemented in C++ and includes: a parser, a bytecode interpreter (Ignition), a JIT compiler (TurboFan), a garbage collector (Orinoco), and WebAssembly support (Liftoff/TurboFan).</p>
@@ -1813,6 +1857,7 @@ const QUESTIONS: QuestionDef[] = [
   {
     slug: 'what-is-cpython-written-in',
     title: 'What is CPython written in?',
+    titleHook: 'CPython is written in C',
     answer: "CPython, the reference implementation of Python, is written primarily in C. Its interpreter, object model, and most of the standard library are implemented in C. Some higher-level standard library modules (like email or html.parser) are written in Python.",
     details: `<p>CPython is the canonical Python implementation. When Python documentation refers to "Python," it typically means CPython's behavior.</p>
 <p>CPython's core, the bytecode interpreter, memory allocator, garbage collector, object model, and C API, is implemented in C. This gives CPython excellent interoperability with C libraries via the Python/C API.</p>
@@ -1823,6 +1868,7 @@ const QUESTIONS: QuestionDef[] = [
   {
     slug: 'what-is-compiler-bootstrapping',
     title: 'What is compiler bootstrapping?',
+    titleHook: 'self-compiling explained',
     answer: "Compiler bootstrapping is the process of writing a compiler for a programming language in that same language. The first version of the compiler must be written in another language; subsequent versions are compiled by the self-hosted compiler. Examples: Rust's rustc, Go's gc, TypeScript's tsc, and GHC (Haskell).",
     details: `<p>Bootstrapping a compiler is a milestone in a language's maturity: it means the language is expressive enough to implement its own compiler.</p>
 <p>The bootstrap process typically works like this:</p>
@@ -1838,6 +1884,7 @@ const QUESTIONS: QuestionDef[] = [
   {
     slug: 'what-is-a-self-hosting-compiler',
     title: 'What is a self-hosting compiler?',
+    titleHook: 'compiles its own source',
     answer: "A self-hosting compiler is a compiler that is written in the language it compiles. Once self-hosted, the language no longer depends on another language for its compiler. Self-hosting languages include Rust, Go, TypeScript, Haskell, and Kotlin, among others.",
     details: `<p>Self-hosting is closely related to bootstrapping. A compiler is self-hosting when its source code is written in the language it compiles, meaning it can compile itself.</p>
 <p>Self-hosting compilers:</p>
@@ -1855,6 +1902,7 @@ const QUESTIONS: QuestionDef[] = [
   {
     slug: 'is-javascript-written-in-c',
     title: 'Is JavaScript written in C?',
+    titleHook: 'No, modern engines are C++',
     answer: "No, modern JavaScript engines like V8 and JavaScriptCore are written in C++, not C. Historically, the very first engine (SpiderMonkey) was written in C, but it has since been rewritten in C++, Rust, and JavaScript.",
     details: `<p>A common misconception is that JavaScript is written in C. While C heavily influenced JavaScript's syntax, the engines that actually execute JavaScript code are almost universally written in C++ today.</p>
 <p>Google's V8 (used in Chrome and Node.js) and Apple's JavaScriptCore (used in Safari) are both implemented in C++. Mozilla's SpiderMonkey, the original JavaScript engine, was initially written in C by Brendan Eich, but has evolved into a complex codebase of C++, Rust, and JavaScript itself.</p>`,
@@ -1864,6 +1912,7 @@ const QUESTIONS: QuestionDef[] = [
   {
     slug: 'is-rustc-written-in-rust',
     title: 'Is rustc written in Rust?',
+    titleHook: 'Yes, self-hosting since 2011',
     answer: "Yes, rustc (the official Rust compiler) is written entirely in Rust. It is a self-hosting compiler, meaning it compiles its own source code.",
     details: `<p>The Rust compiler, <code>rustc</code>, is a classic example of a self-hosting compiler. The source code for <code>rustc</code> is written in Rust, and it uses an older version of itself (a bootstrap compiler) to compile the newest version.</p>
 <p>However, <code>rustc</code> relies on LLVM as its backend to generate optimized machine code. LLVM itself is written in C++.</p>`,
@@ -1873,6 +1922,7 @@ const QUESTIONS: QuestionDef[] = [
   {
     slug: 'is-rust-compiled',
     title: 'Is Rust a compiled language?',
+    titleHook: 'Yes, AOT compiled via LLVM',
     answer: "Yes, Rust is a compiled language. The Rust compiler (rustc) translates Rust source code ahead-of-time (AOT) directly into native machine code using the LLVM backend.",
     details: `<p>Unlike interpreted languages (like Python or JavaScript) or bytecode-compiled languages (like Java or C#), Rust is an ahead-of-time (AOT) compiled language.</p>
 <p>When you run <code>cargo build</code> or <code>rustc</code>, the compiler parses your Rust code and passes it to the LLVM infrastructure, which generates highly optimized, native machine code for your specific target architecture (e.g., x86_64, ARM). This results in a standalone binary executable that does not require a runtime or interpreter to run.</p>`,
@@ -1937,21 +1987,21 @@ function buildQuestionPage(q: QuestionDef, nodeMap: Map<string, Language>): stri
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>${escapeHtml(q.title)} | Language Lineage</title>
+  <title>${escapeHtml(q.titleHook ? `${q.title} ${q.titleHook}` : q.title)} | Language Lineage</title>
   <meta name="description" content="${escapeHtml(metaDescription)}" />
   <link rel="canonical" href="${url}" />
   <link rel="icon" href="/favicon.svg" />
   ${FONTS_HEAD}<link rel="stylesheet" href="/seo.css" />
   ${matchingLangSlug && QUESTION_PAGE_LANGS.has(matchingLangSlug) ? `<link rel="alternate" href="${SITE}/languages/${matchingLangSlug}" />` : ''}
   <meta property="og:type" content="article" />
-  <meta property="og:title" content="${escapeHtml(q.title)} | Language Lineage" />
+  <meta property="og:title" content="${escapeHtml(q.titleHook ? `${q.title} ${q.titleHook}` : q.title)} | Language Lineage" />
   <meta property="og:description" content="${escapeHtml(metaDescription)}" />
   <meta property="og:url" content="${url}" />
   <meta property="og:image" content="${SITE}/og-image.png" />
   <meta property="article:published_time" content="2024-01-01" />
   <meta property="article:modified_time" content="${BUILD_DATE}" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="${escapeHtml(q.title)}" />
+  <meta name="twitter:title" content="${escapeHtml(q.titleHook ? `${q.title} ${q.titleHook}` : q.title)}" />
   <meta name="twitter:description" content="${escapeHtml(metaDescription)}" />
   <script type="application/ld+json">${faqJsonLd}</script>
   <script type="application/ld+json">${articleJsonLd}</script>
@@ -2076,7 +2126,7 @@ function buildProgrammingLanguageGraph(languages: Language[], rels: Relationship
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Programming Language Graph | Interactive Language Lineage Map</title>
-  <meta name="description" content="Explore an interactive programming language graph with ${langCount} languages and ${rels.length} relationships. See what languages are written in, how compilers are implemented, and how languages influenced each other." />
+  <meta name="description" content="Interactive graph of ${langCount} programming languages and ${rels.length} relationships: what languages are written in, how compilers are implemented, and how they influenced each other." />
   <link rel="canonical" href="${url}" />
   <link rel="icon" href="/favicon.svg" />
   ${FONTS_HEAD}<link rel="stylesheet" href="/seo.css" />
@@ -2810,7 +2860,7 @@ function buildRelationshipPage(type: string, rels: Relationship[], nodeMap: Map<
   const typeRels = rels.filter(r => r.relationship === type);
   const slug = type.replace(/_/g, '-');
   const url = `${SITE}/relationships/${slug}`;
-  const title = `${def.h1} | Language Lineage`;
+  const title = `${typeRels.length} ${def.h1} | Language Lineage`;
 
   const rows = typeRels.sort((a, b) => b.confidence - a.confidence).map(r => {
     const fromName = nameFromId(r.from_language, nodeMap);
