@@ -11,6 +11,7 @@ import '../styles/tokens.css';
 import './App.css';
 
 const GraphExplorer = lazy(() => import('./GraphExplorer'));
+const HowItWorksGraph = lazy(() => import('./HowItWorksGraph'));
 const EmbedGraph = lazy(() => import('./EmbedGraph'));
 
 function LoadingScreen() {
@@ -59,6 +60,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LandingPageWrapper />} />
           <Route path="/explore" element={<GraphExplorerWrapper />} />
+          <Route path="/how-it-works" element={<Suspense fallback={<LoadingScreen />}><HowItWorksGraph /></Suspense>} />
           <Route path="/embed" element={<Suspense fallback={null}><EmbedGraph /></Suspense>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
