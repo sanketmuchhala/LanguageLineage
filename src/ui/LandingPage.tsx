@@ -100,7 +100,10 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
               </svg>
             </button>
             <a href="/dataset" className="btn-secondary">
-              Methodology &amp; dataset
+              Dataset
+            </a>
+            <a href="/how-it-works" className="btn-secondary">
+              How It Works
             </a>
           </div>
         </div>

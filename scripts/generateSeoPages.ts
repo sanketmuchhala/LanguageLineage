@@ -33,6 +33,7 @@ const NAV_HTML = `<nav class="seo-nav">
   <a href="/guides">Guides</a>
   <a href="/timeline">Timeline</a>
   <a href="/dataset">Dataset</a>
+  <a href="/how-it-works">How It Works</a>
   <a href="/explore" class="nav-enter-graph">Enter Graph</a>
 </nav>`;
 
@@ -79,7 +80,7 @@ const FOOTER_HTML = `<footer class="seo-footer-rich">
       <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
     </div>
   </div>
-  <p class="footer-note">Articles here are drafted with AI and reviewed by a human. Implementation and lineage facts are sourced from public references such as Wikipedia and Wikidata, and cited on each page. Spot an error? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue on GitHub</a> and it gets fixed.</p>
+  <p class="footer-note">The Language Lineage dataset is meticulously curated and verified by human researchers. We use AI agents to assist with large-scale data gathering and modeling, but every implementation fact is manually reviewed for accuracy. Spot an error? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue on GitHub</a> and it gets fixed. <a href="/how-it-works">Learn how it works &rarr;</a></p>
   <div class="footer-bottom">Made with <span style="color:#fb7185">❤️</span> by <a href="https://github.com/sanketmuchhala" rel="noopener noreferrer">Sanket Muchhala</a> &middot; <a href="/">Language Lineage</a></div>
   </div>
 </footer>`;
@@ -4462,17 +4463,6 @@ cards.forEach(function(card){
   if(!btn)return;
   btn.addEventListener('click',function(e){
     e.stopPropagation();
-    var MODAL_W=300,MODAL_H=240;
-    var br=btn.getBoundingClientRect();
-    var btnCx=(br.left+br.right)/2,btnCy=(br.top+br.bottom)/2;
-    var mx=btnCx+14,my=btnCy-MODAL_H/2;
-    if(mx+MODAL_W>window.innerWidth-8)mx=btnCx-MODAL_W-14;
-    if(my<8)my=8;
-    if(my+MODAL_H>window.innerHeight-8)my=window.innerHeight-MODAL_H-8;
-    modal.style.left=mx+'px';modal.style.top=my+'px';
-    var ox=Math.min(98,Math.max(2,(btnCx-mx)/MODAL_W*100));
-    var oy=Math.min(98,Math.max(2,(btnCy-my)/MODAL_H*100));
-    modal.style.transformOrigin=ox.toFixed(1)+'% '+oy.toFixed(1)+'%';
     var color=card.dataset.color;
     var logoEl=document.getElementById('tl-modal-logo');
     logoEl.style.borderColor=color;logoEl.style.background=color+'22';logoEl.innerHTML='';
@@ -4911,6 +4901,111 @@ ${chainBlocks}
   });
 })();
 
+function buildHowItWorksPage(): string {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "How It Works: AI Agents & Human Review",
+    "description": "Learn how Language Lineage combines AI agent scraping, LLM processing, and meticulous human verification to build the ultimate programming language dataset.",
+    "url": "${SITE}/how-it-works"
+  };
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How It Works: AI Agents &amp; Human Review | Language Lineage</title>
+  <meta name="description" content="Learn how Language Lineage combines AI agent scraping, LLM processing, and meticulous human verification to build the ultimate programming language dataset.">
+  <link rel="canonical" href="${SITE}/how-it-works">
+  <link rel="icon" href="/favicon.svg">
+  ${FONTS_HEAD}
+  <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+  <link rel="stylesheet" href="/seo.css">
+  <style>
+    .hw-hero { text-align: center; padding: 80px 20px 40px; }
+    .hw-hero h1 { font-family: 'Fraunces', serif; font-size: 48px; font-weight: 600; line-height: 1.1; margin-bottom: 20px; color: var(--text); }
+    .hw-subtitle { font-size: 20px; color: var(--text-secondary); max-width: 700px; margin: 0 auto; line-height: 1.5; }
+    
+    .hw-pipeline { margin: 60px auto; max-width: 900px; padding: 0 20px; position: relative; }
+    .hw-step { display: flex; align-items: flex-start; gap: 30px; margin-bottom: 60px; position: relative; }
+    .hw-step-icon { width: 80px; height: 80px; flex-shrink: 0; border-radius: 50%; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 32px; z-index: 2; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+    .hw-step-icon.glow-green { border-color: rgba(74,222,128,0.5); box-shadow: 0 0 30px rgba(74,222,128,0.15); animation: pulseGreen 3s infinite; }
+    .hw-step-icon.glow-blue { border-color: rgba(96,165,250,0.5); box-shadow: 0 0 30px rgba(96,165,250,0.15); animation: pulseBlue 3s infinite 1s; }
+    .hw-step-icon.glow-amber { border-color: rgba(227,160,8,0.5); box-shadow: 0 0 30px rgba(227,160,8,0.15); animation: pulseAmber 3s infinite 2s; }
+    
+    .hw-step-content { padding-top: 10px; }
+    .hw-step-title { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600; color: var(--text); margin-bottom: 12px; }
+    .hw-step-desc { font-size: 16px; color: var(--text-secondary); line-height: 1.6; }
+    
+    .hw-line { position: absolute; left: 60px; top: 100px; bottom: -40px; width: 2px; background: rgba(255,255,255,0.1); z-index: 1; }
+    .hw-line-glow { position: absolute; left: -1px; top: 0; width: 4px; height: 100px; background: linear-gradient(to bottom, transparent, var(--accent), transparent); animation: travelDown 3s infinite linear; }
+    
+    @keyframes travelDown {
+      0% { top: -100px; opacity: 0; }
+      20% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { top: 100%; opacity: 0; }
+    }
+    @keyframes pulseGreen { 0%, 100% { box-shadow: 0 0 30px rgba(74,222,128,0.15); } 50% { box-shadow: 0 0 50px rgba(74,222,128,0.3); } }
+    @keyframes pulseBlue { 0%, 100% { box-shadow: 0 0 30px rgba(96,165,250,0.15); } 50% { box-shadow: 0 0 50px rgba(96,165,250,0.3); } }
+    @keyframes pulseAmber { 0%, 100% { box-shadow: 0 0 30px rgba(227,160,8,0.15); } 50% { box-shadow: 0 0 50px rgba(227,160,8,0.3); } }
+
+    @media (max-width: 768px) {
+      .hw-step { flex-direction: column; gap: 20px; align-items: center; text-align: center; margin-bottom: 50px; }
+      .hw-line { left: 50%; top: 90px; }
+      .hw-hero { padding: 40px 20px 20px; }
+      .hw-title { font-size: 36px; }
+    }
+    
+    /* Vfx background grid */
+    .hw-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 40px 40px; mask-image: linear-gradient(to bottom, black 0%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%); }
+  </style>
+</head>
+<body class="seo-page">
+  ${SKIP_LINK}
+  ${NAV_HTML}
+  <div class="hw-bg"></div>
+  <main class="seo-main" id="main-content">
+    <div class="hw-hero">
+      <h1>How It Works</h1>
+      <p class="hw-subtitle">Language Lineage is built on a rigorous pipeline that combines the scale of AI agents with the absolute accuracy of human experts.</p>
+    </div>
+    
+    <div class="hw-pipeline">
+      <div class="hw-line"><div class="hw-line-glow"></div></div>
+      
+      <div class="hw-step">
+        <div class="hw-step-icon glow-blue">🤖</div>
+        <div class="hw-step-content">
+          <h2 class="hw-step-title">1. Autonomous AI Agents Scrape &amp; Gather</h2>
+          <p class="hw-step-desc">Specialized AI agents continuously monitor public repositories, Wikidata, Wikipedia, and compiler source trees. They gather raw unstructured data, historical release notes, and complex repository structures at a scale humans couldn't manage alone.</p>
+        </div>
+      </div>
+      
+      <div class="hw-step">
+        <div class="hw-step-icon glow-amber">🧠</div>
+        <div class="hw-step-content">
+          <h2 class="hw-step-title">2. LLM Processing &amp; Structuring</h2>
+          <p class="hw-step-desc">The raw data is passed through advanced Large Language Models. These models parse natural language, resolve conflicting historical dates, and map complex relationships (like compiler bootstrapping chains) into our strict, strongly-typed JSON dataset schema.</p>
+        </div>
+      </div>
+      
+      <div class="hw-step">
+        <div class="hw-step-icon glow-green">👨‍💻</div>
+        <div class="hw-step-content">
+          <h2 class="hw-step-title">3. Human Verification &amp; Curation</h2>
+          <p class="hw-step-desc">AI isn't perfect, so humans have the final say. Every single implementation edge, release date, and lineage connection is manually verified by human researchers before it goes live. This ensures the atlas remains an authoritative, evidence-backed record of software history.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+  ${FOOTER_HTML}
+</body>
+</html>`;
+  return html;
+}
+
 function buildDirectoryPage(languages: Language[], rels: Relationship[]): string {
   const sortedLanguages = [...languages].filter(l => idToPrefix(l.id) === 'languages').sort((a, b) => a.name.localeCompare(b.name));
   const sortedTools = [...languages].filter(l => idToPrefix(l.id) === 'tools').sort((a, b) => a.name.localeCompare(b.name));
@@ -5033,6 +5128,10 @@ console.log('Generated timeline page');
 // Directory page
 writeFile(join(PUBLIC, 'directory', 'index.html'), buildDirectoryPage(languages, rels));
 console.log('Generated directory page');
+
+// How It Works page
+writeFile(join(PUBLIC, 'how-it-works', 'index.html'), buildHowItWorksPage());
+console.log('Generated how-it-works page');
 
 // New landing pages
 writeFile(join(PUBLIC, 'programming-language-graph', 'index.html'), buildProgrammingLanguageGraph(languages, rels));
