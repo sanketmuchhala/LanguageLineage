@@ -67,6 +67,7 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
           <a href="/guides">Guides</a>
           <a href="/timeline">Timeline</a>
           <a href="/dataset">Dataset</a>
+          <a href="/how-it-works">How It Works</a>
         </div>
         <button className="nav-cta" onClick={onEnterGraph}>
           Enter Graph
