@@ -4971,15 +4971,16 @@ function buildHowItWorksPage(languages: Language[], rels: Relationship[]): strin
 
   // Pipeline diagram: six stations, one corrections loop. Station <a> elements
   // anchor to the matching section; every animation is gated on reduced motion.
-  // Two compositions share one plate: horizontal for wide viewports, vertical
-  // for narrow ones, so the figure always fits with no inner scrollbar.
-  const stations: Array<{ href: string; idx: string; name: string; sub: string }> = [
-    { href: '#sources', idx: '01', name: 'Sources', sub: 'wikidata · commons' },
-    { href: '#research', idx: '02', name: 'Research agents', sub: '2 harvesters · audits' },
-    { href: '#assembly', idx: '03', name: 'Assembly', sub: 'npm run dataset:v5' },
-    { href: '#review', idx: '04', name: 'Human review', sub: 'git diff · sign-off' },
-    { href: '#gates', idx: '05', name: 'Validation gates', sub: '0 errors · 0 warnings' },
-    { href: '#publication', idx: '06', name: 'Publication', sub: 'static pages · graph' },
+  // Both compositions are vertical: a wide annotated one for desktop and a
+  // compact one for narrow viewports, so the figure always fits with no inner
+  // scrollbar.
+  const stations: Array<{ href: string; idx: string; name: string; sub: string; a: string; b: string }> = [
+    { href: '#sources', idx: '01', name: 'Sources', sub: 'wikidata · commons', a: 'in: wikidata claims (CC0) · commons files', b: 'primary repos and docs for evidence URLs' },
+    { href: '#research', idx: '02', name: 'Research agents', sub: '2 harvesters · audits', a: `out: enrichment_v5.json · ${enrichedCount}/${nodeCount} cited`, b: 'audit report on every run, with reasons' },
+    { href: '#assembly', idx: '03', name: 'Assembly', sub: 'npm run dataset:v5', a: `out: lineage_v5.json · ${nodeCount} nodes · ${edgeCount} edges`, b: 'deterministic: same inputs, same bytes' },
+    { href: '#review', idx: '04', name: 'Human review', sub: 'git diff · sign-off', a: 'every diff read and signed by a person', b: `${highConfCount}/${edgeCount} edges score 0.9+ · ${deepDiveCount} deep dives` },
+    { href: '#gates', idx: '05', name: 'Validation gates', sub: '0 errors · 0 warnings', a: 'tsc · validateDataset · validateSeo', b: 'exit 1 on any error · no override flag' },
+    { href: '#publication', idx: '06', name: 'Publication', sub: 'static pages · graph', a: '300+ pages · sitemap · llms.txt', b: '/explore graph · dataset download (CC BY 4.0)' },
   ];
 
   const ARROW_DEFS = `<defs>
@@ -4991,29 +4992,31 @@ function buildHowItWorksPage(languages: Language[], rels: Relationship[]): strin
       </marker>
     </defs>`;
 
-  const hStationSvg = stations.map((s, i) => {
-    const x = 15 + i * 184;
-    const cx = x + 70;
+  const wideStationSvg = stations.map((s, i) => {
+    const y = 22 + i * 100;
     return `<a href="${s.href}" class="hw-station">
-      <rect class="hw-station-box" x="${x}" y="78" width="140" height="58" rx="10" fill="#161616" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
-      <text class="hw-station-idx" x="${cx}" y="68" text-anchor="middle">${s.idx}</text>
-      <text class="hw-station-name" x="${cx}" y="103" text-anchor="middle">${s.name}</text>
-      <text class="hw-station-sub" x="${cx}" y="120" text-anchor="middle">${s.sub}</text>
+      <rect class="hw-station-box" x="250" y="${y}" width="330" height="64" rx="10" fill="#161616" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+      <text class="hw-station-idx" x="268" y="${y + 37}" text-anchor="start">${s.idx}</text>
+      <text class="hw-station-name" x="415" y="${y + 28}" text-anchor="middle">${s.name}</text>
+      <text class="hw-station-sub" x="415" y="${y + 46}" text-anchor="middle">${s.sub}</text>
+      <path d="M 580 ${y + 32} H 606" stroke="rgba(255,255,255,0.14)" stroke-width="1" fill="none"/>
+      <text class="hw-anno-a" x="618" y="${y + 28}" text-anchor="start">${s.a}</text>
+      <text class="hw-anno-b" x="618" y="${y + 46}" text-anchor="start">${s.b}</text>
     </a>`;
   }).join('\n');
-  const hConnectorSvg = stations.slice(0, -1).map((_, i) => `<path d="M ${155 + i * 184} 107 H ${191 + i * 184}" stroke="rgba(255,255,255,0.28)" stroke-width="1.5" fill="none" marker-end="url(#hw-arrow)"/>`).join('\n');
+  const wideConnectorSvg = stations.slice(0, -1).map((_, i) => `<path d="M 415 ${86 + i * 100} V ${114 + i * 100}" stroke="rgba(255,255,255,0.28)" stroke-width="1.5" fill="none" marker-end="url(#hw-arrow)"/>`).join('\n');
 
-  const diagramSvgH = `<svg class="hw-svg-h" viewBox="0 0 1080 236" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Pipeline diagram">
+  const diagramSvgWide = `<svg class="hw-svg-wide" viewBox="0 0 1080 620" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Pipeline diagram">
     <title>Pipeline: sources, research agents, assembly, human review, validation gates, publication. Corrections loop from publication back to the research agents.</title>
     ${ARROW_DEFS}
-    <path class="hw-flow" d="M 155 107 H 935" stroke="var(--accent, #4ade80)" stroke-width="1.5" stroke-dasharray="5 9" opacity="0.45" fill="none"/>
-    ${hConnectorSvg}
-    <path d="M 1005 140 V 192 H 269 V 146" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-dasharray="4 6" fill="none" marker-end="url(#hw-arrow)"/>
-    <a href="#corrections" class="hw-station"><text class="hw-station-sub" x="637" y="210" text-anchor="middle">corrections re-enter as new research</text></a>
-    ${hStationSvg}
+    <path class="hw-flow" d="M 415 86 V 522" stroke="var(--accent, #4ade80)" stroke-width="1.5" stroke-dasharray="5 9" opacity="0.45" fill="none"/>
+    ${wideConnectorSvg}
+    <path d="M 250 554 H 150 V 154 H 242" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-dasharray="4 6" fill="none" marker-end="url(#hw-arrow)"/>
+    <a href="#corrections" class="hw-station"><text class="hw-station-sub" transform="rotate(-90 130 354)" x="130" y="354" text-anchor="middle">corrections re-enter as new research</text></a>
+    ${wideStationSvg}
   </svg>`;
 
-  const vStationSvg = stations.map((s, i) => {
+  const compactStationSvg = stations.map((s, i) => {
     const y = 16 + i * 96;
     return `<a href="${s.href}" class="hw-station">
       <rect class="hw-station-box" x="32" y="${y}" width="280" height="60" rx="10" fill="#161616" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
@@ -5022,16 +5025,16 @@ function buildHowItWorksPage(languages: Language[], rels: Relationship[]): strin
       <text class="hw-station-sub" x="180" y="${y + 44}" text-anchor="middle">${s.sub}</text>
     </a>`;
   }).join('\n');
-  const vConnectorSvg = stations.slice(0, -1).map((_, i) => `<path d="M 172 ${76 + i * 96} V ${104 + i * 96}" stroke="rgba(255,255,255,0.28)" stroke-width="1.5" fill="none" marker-end="url(#hw-arrow)"/>`).join('\n');
+  const compactConnectorSvg = stations.slice(0, -1).map((_, i) => `<path d="M 172 ${76 + i * 96} V ${104 + i * 96}" stroke="rgba(255,255,255,0.28)" stroke-width="1.5" fill="none" marker-end="url(#hw-arrow)"/>`).join('\n');
 
-  const diagramSvgV = `<svg class="hw-svg-v" viewBox="0 0 380 572" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Pipeline diagram">
+  const diagramSvgCompact = `<svg class="hw-svg-compact" viewBox="0 0 380 572" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Pipeline diagram">
     <title>Pipeline: sources, research agents, assembly, human review, validation gates, publication. Corrections loop from publication back to the research agents.</title>
     ${ARROW_DEFS}
     <path class="hw-flow" d="M 172 76 V 496" stroke="var(--accent, #4ade80)" stroke-width="1.5" stroke-dasharray="5 9" opacity="0.45" fill="none"/>
-    ${vConnectorSvg}
+    ${compactConnectorSvg}
     <path d="M 312 526 H 352 V 142 H 320" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-dasharray="4 6" fill="none" marker-end="url(#hw-arrow)"/>
     <a href="#corrections" class="hw-station"><text class="hw-station-sub" transform="rotate(90 366 320)" x="366" y="320" text-anchor="middle">corrections re-enter as new research</text></a>
-    ${vStationSvg}
+    ${compactStationSvg}
   </svg>`;
 
   // Fig. 2: the specimen record drawn as the two nodes it connects.
@@ -5382,13 +5385,15 @@ npm run build          # regenerate everything, then compile</code></pre>
     .hw-stat span { font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-tertiary); }
     /* Figures always fit; nothing on this page may grow an inner scrollbar. */
     .seo-main pre { white-space: pre-wrap; word-break: break-word; }
-    .hw-plate { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 22px 22px 12px; width: min(1060px, calc(100vw - 32px)); margin-left: calc((100% - min(1060px, calc(100vw - 32px))) / 2); }
+    .hw-plate { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 22px 22px 12px; width: min(1060px, calc(100vw - 32px)); margin: 0 0 48px calc((100% - min(1060px, calc(100vw - 32px))) / 2); }
     .hw-plate-art svg { width: 100%; height: auto; display: block; }
-    .hw-plate-art .hw-svg-v { display: none; margin: 0 auto; max-width: 420px; }
+    .hw-plate-art .hw-svg-compact { display: none; margin: 0 auto; max-width: 420px; }
     @media (max-width: 899px) {
-      .hw-plate-art .hw-svg-h { display: none; }
-      .hw-plate-art .hw-svg-v { display: block; }
+      .hw-plate-art .hw-svg-wide { display: none; }
+      .hw-plate-art .hw-svg-compact { display: block; }
     }
+    .hw-anno-a { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.03em; fill: var(--text-secondary); }
+    .hw-anno-b { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.03em; fill: var(--text-tertiary); }
     .hw-plate-caption { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px 16px; padding: 10px 2px 4px; border-top: 1px solid var(--border); margin-top: 14px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); }
     .hw-fig { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px 20px 10px; margin: 26px auto 30px; max-width: 620px; }
     .hw-fig svg { width: 100%; height: auto; display: block; max-width: 500px; margin: 0 auto; }
@@ -5480,7 +5485,7 @@ ${NAV_HTML}
   </div>
 
   <div class="hw-plate">
-    <div class="hw-plate-art">${diagramSvgH}${diagramSvgV}</div>
+    <div class="hw-plate-art">${diagramSvgWide}${diagramSvgCompact}</div>
     <div class="hw-plate-caption"><span>Fig. 1 &middot; One fact's path from public claim to published page. Click a station.</span><span>Rebuilt in full on every deploy</span></div>
   </div>
 

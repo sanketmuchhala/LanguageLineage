@@ -23,13 +23,15 @@
     .hw-stat span { font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-tertiary); }
     /* Figures always fit; nothing on this page may grow an inner scrollbar. */
     .seo-main pre { white-space: pre-wrap; word-break: break-word; }
-    .hw-plate { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 22px 22px 12px; width: min(1060px, calc(100vw - 32px)); margin-left: calc((100% - min(1060px, calc(100vw - 32px))) / 2); }
+    .hw-plate { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 22px 22px 12px; width: min(1060px, calc(100vw - 32px)); margin: 0 0 48px calc((100% - min(1060px, calc(100vw - 32px))) / 2); }
     .hw-plate-art svg { width: 100%; height: auto; display: block; }
-    .hw-plate-art .hw-svg-v { display: none; margin: 0 auto; max-width: 420px; }
+    .hw-plate-art .hw-svg-compact { display: none; margin: 0 auto; max-width: 420px; }
     @media (max-width: 899px) {
-      .hw-plate-art .hw-svg-h { display: none; }
-      .hw-plate-art .hw-svg-v { display: block; }
+      .hw-plate-art .hw-svg-wide { display: none; }
+      .hw-plate-art .hw-svg-compact { display: block; }
     }
+    .hw-anno-a { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.03em; fill: var(--text-secondary); }
+    .hw-anno-b { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.03em; fill: var(--text-tertiary); }
     .hw-plate-caption { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px 16px; padding: 10px 2px 4px; border-top: 1px solid var(--border); margin-top: 14px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); }
     .hw-fig { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px 20px 10px; margin: 26px auto 30px; max-width: 620px; }
     .hw-fig svg { width: 100%; height: auto; display: block; max-width: 500px; margin: 0 auto; }
@@ -131,7 +133,7 @@
   </div>
 
   <div class="hw-plate">
-    <div class="hw-plate-art"><svg class="hw-svg-h" viewBox="0 0 1080 236" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Pipeline diagram">
+    <div class="hw-plate-art"><svg class="hw-svg-wide" viewBox="0 0 1080 620" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Pipeline diagram">
     <title>Pipeline: sources, research agents, assembly, human review, validation gates, publication. Corrections loop from publication back to the research agents.</title>
     <defs>
       <marker id="hw-arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
@@ -141,51 +143,69 @@
         <path d="M 0 0 L 7 3 L 0 6 Z" fill="rgba(52,211,153,0.8)"/>
       </marker>
     </defs>
-    <path class="hw-flow" d="M 155 107 H 935" stroke="var(--accent, #4ade80)" stroke-width="1.5" stroke-dasharray="5 9" opacity="0.45" fill="none"/>
-    <path d="M 155 107 H 191" stroke="rgba(255,255,255,0.28)" stroke-width="1.5" fill="none" marker-end="url(#hw-arrow)"/>
-<path d="M 339 107 H 375" stroke="rgba(255,255,255,0.28)" stroke-width="1.5" fill="none" marker-end="url(#hw-arrow)"/>
-<path d="M 523 107 H 559" stroke="rgba(255,255,255,0.28)" stroke-width="1.5" fill="none" marker-end="url(#hw-arrow)"/>
-<path d="M 707 107 H 743" stroke="rgba(255,255,255,0.28)" stroke-width="1.5" fill="none" marker-end="url(#hw-arrow)"/>
-<path d="M 891 107 H 927" stroke="rgba(255,255,255,0.28)" stroke-width="1.5" fill="none" marker-end="url(#hw-arrow)"/>
-    <path d="M 1005 140 V 192 H 269 V 146" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-dasharray="4 6" fill="none" marker-end="url(#hw-arrow)"/>
-    <a href="#corrections" class="hw-station"><text class="hw-station-sub" x="637" y="210" text-anchor="middle">corrections re-enter as new research</text></a>
+    <path class="hw-flow" d="M 415 86 V 522" stroke="var(--accent, #4ade80)" stroke-width="1.5" stroke-dasharray="5 9" opacity="0.45" fill="none"/>
+    <path d="M 415 86 V 114" stroke="rgba(255,255,255,0.28)" stroke-width="1.5" fill="none" marker-end="url(#hw-arrow)"/>
+<path d="M 415 186 V 214" stroke="rgba(255,255,255,0.28)" stroke-width="1.5" fill="none" marker-end="url(#hw-arrow)"/>
+<path d="M 415 286 V 314" stroke="rgba(255,255,255,0.28)" stroke-width="1.5" fill="none" marker-end="url(#hw-arrow)"/>
+<path d="M 415 386 V 414" stroke="rgba(255,255,255,0.28)" stroke-width="1.5" fill="none" marker-end="url(#hw-arrow)"/>
+<path d="M 415 486 V 514" stroke="rgba(255,255,255,0.28)" stroke-width="1.5" fill="none" marker-end="url(#hw-arrow)"/>
+    <path d="M 250 554 H 150 V 154 H 242" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-dasharray="4 6" fill="none" marker-end="url(#hw-arrow)"/>
+    <a href="#corrections" class="hw-station"><text class="hw-station-sub" transform="rotate(-90 130 354)" x="130" y="354" text-anchor="middle">corrections re-enter as new research</text></a>
     <a href="#sources" class="hw-station">
-      <rect class="hw-station-box" x="15" y="78" width="140" height="58" rx="10" fill="#161616" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
-      <text class="hw-station-idx" x="85" y="68" text-anchor="middle">01</text>
-      <text class="hw-station-name" x="85" y="103" text-anchor="middle">Sources</text>
-      <text class="hw-station-sub" x="85" y="120" text-anchor="middle">wikidata · commons</text>
+      <rect class="hw-station-box" x="250" y="22" width="330" height="64" rx="10" fill="#161616" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+      <text class="hw-station-idx" x="268" y="59" text-anchor="start">01</text>
+      <text class="hw-station-name" x="415" y="50" text-anchor="middle">Sources</text>
+      <text class="hw-station-sub" x="415" y="68" text-anchor="middle">wikidata · commons</text>
+      <path d="M 580 54 H 606" stroke="rgba(255,255,255,0.14)" stroke-width="1" fill="none"/>
+      <text class="hw-anno-a" x="618" y="50" text-anchor="start">in: wikidata claims (CC0) · commons files</text>
+      <text class="hw-anno-b" x="618" y="68" text-anchor="start">primary repos and docs for evidence URLs</text>
     </a>
 <a href="#research" class="hw-station">
-      <rect class="hw-station-box" x="199" y="78" width="140" height="58" rx="10" fill="#161616" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
-      <text class="hw-station-idx" x="269" y="68" text-anchor="middle">02</text>
-      <text class="hw-station-name" x="269" y="103" text-anchor="middle">Research agents</text>
-      <text class="hw-station-sub" x="269" y="120" text-anchor="middle">2 harvesters · audits</text>
+      <rect class="hw-station-box" x="250" y="122" width="330" height="64" rx="10" fill="#161616" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+      <text class="hw-station-idx" x="268" y="159" text-anchor="start">02</text>
+      <text class="hw-station-name" x="415" y="150" text-anchor="middle">Research agents</text>
+      <text class="hw-station-sub" x="415" y="168" text-anchor="middle">2 harvesters · audits</text>
+      <path d="M 580 154 H 606" stroke="rgba(255,255,255,0.14)" stroke-width="1" fill="none"/>
+      <text class="hw-anno-a" x="618" y="150" text-anchor="start">out: enrichment_v5.json · 148/152 cited</text>
+      <text class="hw-anno-b" x="618" y="168" text-anchor="start">audit report on every run, with reasons</text>
     </a>
 <a href="#assembly" class="hw-station">
-      <rect class="hw-station-box" x="383" y="78" width="140" height="58" rx="10" fill="#161616" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
-      <text class="hw-station-idx" x="453" y="68" text-anchor="middle">03</text>
-      <text class="hw-station-name" x="453" y="103" text-anchor="middle">Assembly</text>
-      <text class="hw-station-sub" x="453" y="120" text-anchor="middle">npm run dataset:v5</text>
+      <rect class="hw-station-box" x="250" y="222" width="330" height="64" rx="10" fill="#161616" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+      <text class="hw-station-idx" x="268" y="259" text-anchor="start">03</text>
+      <text class="hw-station-name" x="415" y="250" text-anchor="middle">Assembly</text>
+      <text class="hw-station-sub" x="415" y="268" text-anchor="middle">npm run dataset:v5</text>
+      <path d="M 580 254 H 606" stroke="rgba(255,255,255,0.14)" stroke-width="1" fill="none"/>
+      <text class="hw-anno-a" x="618" y="250" text-anchor="start">out: lineage_v5.json · 152 nodes · 443 edges</text>
+      <text class="hw-anno-b" x="618" y="268" text-anchor="start">deterministic: same inputs, same bytes</text>
     </a>
 <a href="#review" class="hw-station">
-      <rect class="hw-station-box" x="567" y="78" width="140" height="58" rx="10" fill="#161616" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
-      <text class="hw-station-idx" x="637" y="68" text-anchor="middle">04</text>
-      <text class="hw-station-name" x="637" y="103" text-anchor="middle">Human review</text>
-      <text class="hw-station-sub" x="637" y="120" text-anchor="middle">git diff · sign-off</text>
+      <rect class="hw-station-box" x="250" y="322" width="330" height="64" rx="10" fill="#161616" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+      <text class="hw-station-idx" x="268" y="359" text-anchor="start">04</text>
+      <text class="hw-station-name" x="415" y="350" text-anchor="middle">Human review</text>
+      <text class="hw-station-sub" x="415" y="368" text-anchor="middle">git diff · sign-off</text>
+      <path d="M 580 354 H 606" stroke="rgba(255,255,255,0.14)" stroke-width="1" fill="none"/>
+      <text class="hw-anno-a" x="618" y="350" text-anchor="start">every diff read and signed by a person</text>
+      <text class="hw-anno-b" x="618" y="368" text-anchor="start">259/443 edges score 0.9+ · 16 deep dives</text>
     </a>
 <a href="#gates" class="hw-station">
-      <rect class="hw-station-box" x="751" y="78" width="140" height="58" rx="10" fill="#161616" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
-      <text class="hw-station-idx" x="821" y="68" text-anchor="middle">05</text>
-      <text class="hw-station-name" x="821" y="103" text-anchor="middle">Validation gates</text>
-      <text class="hw-station-sub" x="821" y="120" text-anchor="middle">0 errors · 0 warnings</text>
+      <rect class="hw-station-box" x="250" y="422" width="330" height="64" rx="10" fill="#161616" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+      <text class="hw-station-idx" x="268" y="459" text-anchor="start">05</text>
+      <text class="hw-station-name" x="415" y="450" text-anchor="middle">Validation gates</text>
+      <text class="hw-station-sub" x="415" y="468" text-anchor="middle">0 errors · 0 warnings</text>
+      <path d="M 580 454 H 606" stroke="rgba(255,255,255,0.14)" stroke-width="1" fill="none"/>
+      <text class="hw-anno-a" x="618" y="450" text-anchor="start">tsc · validateDataset · validateSeo</text>
+      <text class="hw-anno-b" x="618" y="468" text-anchor="start">exit 1 on any error · no override flag</text>
     </a>
 <a href="#publication" class="hw-station">
-      <rect class="hw-station-box" x="935" y="78" width="140" height="58" rx="10" fill="#161616" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
-      <text class="hw-station-idx" x="1005" y="68" text-anchor="middle">06</text>
-      <text class="hw-station-name" x="1005" y="103" text-anchor="middle">Publication</text>
-      <text class="hw-station-sub" x="1005" y="120" text-anchor="middle">static pages · graph</text>
+      <rect class="hw-station-box" x="250" y="522" width="330" height="64" rx="10" fill="#161616" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+      <text class="hw-station-idx" x="268" y="559" text-anchor="start">06</text>
+      <text class="hw-station-name" x="415" y="550" text-anchor="middle">Publication</text>
+      <text class="hw-station-sub" x="415" y="568" text-anchor="middle">static pages · graph</text>
+      <path d="M 580 554 H 606" stroke="rgba(255,255,255,0.14)" stroke-width="1" fill="none"/>
+      <text class="hw-anno-a" x="618" y="550" text-anchor="start">300+ pages · sitemap · llms.txt</text>
+      <text class="hw-anno-b" x="618" y="568" text-anchor="start">/explore graph · dataset download (CC BY 4.0)</text>
     </a>
-  </svg><svg class="hw-svg-v" viewBox="0 0 380 572" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Pipeline diagram">
+  </svg><svg class="hw-svg-compact" viewBox="0 0 380 572" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Pipeline diagram">
     <title>Pipeline: sources, research agents, assembly, human review, validation gates, publication. Corrections loop from publication back to the research agents.</title>
     <defs>
       <marker id="hw-arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
