@@ -5010,6 +5010,8 @@ function buildHowItWorksPage(languages: Language[], rels: Relationship[]): strin
     <title>Pipeline: sources, research agents, assembly, human review, validation gates, publication. Corrections loop from publication back to the research agents.</title>
     ${ARROW_DEFS}
     <path class="hw-flow" d="M 415 86 V 522" stroke="var(--accent, #4ade80)" stroke-width="1.5" stroke-dasharray="5 9" opacity="0.45" fill="none"/>
+    <circle class="hw-pulse" cx="415" cy="86" r="3" fill="var(--accent, #4ade80)"/>
+    <circle class="hw-pulse" cx="415" cy="522" r="3" fill="var(--accent, #4ade80)"/>
     ${wideConnectorSvg}
     <path d="M 250 554 H 150 V 154 H 242" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-dasharray="4 6" fill="none" marker-end="url(#hw-arrow)"/>
     <a href="#corrections" class="hw-station"><text class="hw-station-sub" transform="rotate(-90 130 354)" x="130" y="354" text-anchor="middle">corrections re-enter as new research</text></a>
@@ -5031,6 +5033,8 @@ function buildHowItWorksPage(languages: Language[], rels: Relationship[]): strin
     <title>Pipeline: sources, research agents, assembly, human review, validation gates, publication. Corrections loop from publication back to the research agents.</title>
     ${ARROW_DEFS}
     <path class="hw-flow" d="M 172 76 V 496" stroke="var(--accent, #4ade80)" stroke-width="1.5" stroke-dasharray="5 9" opacity="0.45" fill="none"/>
+    <circle class="hw-pulse" cx="172" cy="76" r="3" fill="var(--accent, #4ade80)"/>
+    <circle class="hw-pulse" cx="172" cy="496" r="3" fill="var(--accent, #4ade80)"/>
     ${compactConnectorSvg}
     <path d="M 312 526 H 352 V 142 H 320" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-dasharray="4 6" fill="none" marker-end="url(#hw-arrow)"/>
     <a href="#corrections" class="hw-station"><text class="hw-station-sub" transform="rotate(90 366 320)" x="366" y="320" text-anchor="middle">corrections re-enter as new research</text></a>
@@ -5246,7 +5250,7 @@ ${relRows}
 
 <h2 id="review"><span class="hw-idx">04</span> Human review</h2>
 <p>Agents propose; they never merge. Every change to the dataset or the generators lands as a git diff that a person reads before it reaches the main branch. This is the real chronology fix from the current dataset, exactly as the reviewer saw it:</p>
-<div class="hw-fig">
+<div class="hw-fig hw-anim">
   <div class="hw-diff">
     <span class="hw-diff-meta">edge lang:haskell to tool:ghc &middot; compiler_written_in</span>
     <span class="hw-diff-ctx">  "confidence": 0.99,</span>
@@ -5290,7 +5294,7 @@ npm run build          # regenerate everything, then compile</code></pre>
   <li>An embed snippet on every language page, speakable markup on question pages.</li>
   <li>OG images within budget: 120 kB per image, 20 MB total.</li>
 </ul>
-<div class="hw-fig">
+<div class="hw-fig hw-anim">
   <div class="hw-term">
     <span class="hw-term-line hw-term-cmd">$ npm run seo:validate</span>
     <span class="hw-term-line">OK:   robots.txt has Sitemap directive</span>
@@ -5358,7 +5362,7 @@ npm run build          # regenerate everything, then compile</code></pre>
 </ul>
 
 <p class="hw-cta"><a class="explore-btn" href="/explore">Explore the graph these gates protect &rarr;</a></p>
-<p>Or go straight to the material: <a href="/dataset">download the dataset</a>, or <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">read the pipeline source on GitHub</a>.</p>`;
+<p>Or go straight to the material: <a href="/dataset">download the dataset</a>, or <a href="https://github.com/sanketmuchhala/LanguageLineage/blob/main/PIPELINE.md" rel="noopener noreferrer">read the pipeline source on GitHub</a>.</p>`;
 
   const html = `<!DOCTYPE html>
 <html lang="en">
@@ -5379,10 +5383,19 @@ npm run build          # regenerate everything, then compile</code></pre>
   <script type="application/ld+json">${articleJsonLd}</script>
   <script type="application/ld+json">${breadcrumbJsonLd}</script>
   <style>
+    .seo-main h1 { text-wrap: balance; }
     .hw-lede { font-size: 19px; line-height: 1.65; color: var(--text-secondary); max-width: 62ch; margin: 18px 0 30px; }
     .hw-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px 24px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 18px 0; margin: 0 0 44px; }
-    .hw-stat b { display: block; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 20px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
+    .hw-stat b { display: block; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 26px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
     .hw-stat span { font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-tertiary); }
+    .hw-stat-zero b { color: var(--accent); }
+    /* Numbered stations read as one continuous specimen sheet: each section
+       opens on a hairline rule, and anchor jumps from Fig. 1 land cleanly. */
+    .seo-main > h2 { margin-top: 64px; padding-top: 30px; border-top: 1px solid var(--border); scroll-margin-top: 28px; }
+    .seo-main .page-toc { display: block; max-width: 640px; padding: 18px 24px; }
+    .seo-main .page-toc-list { display: block; column-count: 2; column-gap: 36px; }
+    .seo-main .page-toc-list li { break-inside: avoid; padding: 2px 0; }
+    @media (max-width: 560px) { .seo-main .page-toc-list { column-count: 1; } }
     /* Figures always fit; nothing on this page may grow an inner scrollbar. */
     .seo-main pre { white-space: pre-wrap; word-break: break-word; }
     .hw-plate { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px; padding: 22px 22px 12px; width: min(1060px, calc(100vw - 32px)); margin: 0 0 48px calc((100% - min(1060px, calc(100vw - 32px))) / 2); }
@@ -5408,7 +5421,7 @@ npm run build          # regenerate everything, then compile</code></pre>
     .hw-chips text { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9.5px; letter-spacing: 0.03em; fill: var(--text-secondary); }
     .hw-file-name { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.02em; fill: var(--text); }
     .hw-idx { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; font-weight: 500; color: var(--accent); margin-right: 10px; letter-spacing: 0.05em; }
-    .hw-human { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--text); border-radius: 8px; padding: 14px 18px; margin: 20px 0 26px; max-width: 68ch; }
+    .hw-human { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; padding: 14px 18px; margin: 20px 0 26px; max-width: 68ch; }
     .hw-human b { display: block; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text); margin-bottom: 6px; }
     .hw-human p { margin: 0; font-size: 14.5px; line-height: 1.6; color: var(--text-secondary); }
     .hw-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; }
@@ -5428,21 +5441,26 @@ npm run build          # regenerate everything, then compile</code></pre>
     .hw-col ul { margin-bottom: 0; }
     .hw-cta { margin-top: 36px; }
     @media (prefers-reduced-motion: no-preference) {
+      html { scroll-behavior: smooth; }
       .hw-flow, .hw-dashflow { animation: hwFlow 1.6s linear infinite; }
       @keyframes hwFlow { to { stroke-dashoffset: -28; } }
       .hw-dashflow { animation-duration: 2.2s; }
       .hw-pulse { animation: hwPulse 2.2s ease-in-out infinite; }
       @keyframes hwPulse { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
-      .seo-reveal .hw-term-line, .seo-reveal .hw-diff-del, .seo-reveal .hw-diff-add { opacity: 0; }
-      .seo-reveal.is-in .hw-term-line, .seo-reveal.is-in .hw-diff-del, .seo-reveal.is-in .hw-diff-add { animation: hwLine 0.4s ease forwards; }
+      .seo-main > h2:target { animation: hwTarget 1.4s ease-out; }
+      @keyframes hwTarget { from { background: rgba(74, 222, 128, 0.09); } to { background: transparent; } }
+      /* Line-by-line reveals only arm once JS tags the body, so no-JS readers
+         always see the full diff and terminal output. */
+      .hw-js .hw-anim .hw-term-line, .hw-js .hw-anim .hw-diff-del, .hw-js .hw-anim .hw-diff-add { opacity: 0; }
+      .hw-anim.is-in .hw-term-line, .hw-anim.is-in .hw-diff-del, .hw-anim.is-in .hw-diff-add { animation: hwLine 0.4s ease forwards; }
       @keyframes hwLine { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
-      .seo-reveal.is-in .hw-term-line:nth-child(2), .seo-reveal.is-in .hw-diff span:nth-child(3) { animation-delay: 0.18s; }
-      .seo-reveal.is-in .hw-term-line:nth-child(3), .seo-reveal.is-in .hw-diff span:nth-child(4) { animation-delay: 0.36s; }
-      .seo-reveal.is-in .hw-term-line:nth-child(4), .seo-reveal.is-in .hw-diff span:nth-child(5) { animation-delay: 0.54s; }
-      .seo-reveal.is-in .hw-term-line:nth-child(5) { animation-delay: 0.72s; }
-      .seo-reveal.is-in .hw-term-line:nth-child(6) { animation-delay: 0.9s; }
-      .seo-reveal.is-in .hw-term-line:nth-child(7) { animation-delay: 1.08s; }
-      .seo-reveal.is-in .hw-term-line:nth-child(8) { animation-delay: 1.32s; }
+      .hw-anim.is-in .hw-term-line:nth-child(2), .hw-anim.is-in .hw-diff span:nth-child(3) { animation-delay: 0.18s; }
+      .hw-anim.is-in .hw-term-line:nth-child(3), .hw-anim.is-in .hw-diff span:nth-child(4) { animation-delay: 0.36s; }
+      .hw-anim.is-in .hw-term-line:nth-child(4), .hw-anim.is-in .hw-diff span:nth-child(5) { animation-delay: 0.54s; }
+      .hw-anim.is-in .hw-term-line:nth-child(5) { animation-delay: 0.72s; }
+      .hw-anim.is-in .hw-term-line:nth-child(6) { animation-delay: 0.9s; }
+      .hw-anim.is-in .hw-term-line:nth-child(7) { animation-delay: 1.08s; }
+      .hw-anim.is-in .hw-term-line:nth-child(8) { animation-delay: 1.32s; }
     }
     @media (max-width: 700px) { .hw-cols { grid-template-columns: 1fr; } }
     @media (max-width: 640px) {
@@ -5481,7 +5499,7 @@ ${NAV_HTML}
     <div class="hw-stat"><b>${evidenceCount}/${edgeCount}</b><span>edges with evidence</span></div>
     <div class="hw-stat"><b>${enrichedCount}/${nodeCount}</b><span>nodes with cited facts</span></div>
     <div class="hw-stat"><b>300+</b><span>generated pages</span></div>
-    <div class="hw-stat"><b>0</b><span>errors allowed at ship</span></div>
+    <div class="hw-stat hw-stat-zero"><b>0</b><span>errors allowed at ship</span></div>
   </div>
 
   <div class="hw-plate">
@@ -5493,6 +5511,22 @@ ${NAV_HTML}
 ${content}
 </main>
 ${FOOTER_HTML}
+<script>
+(function () {
+  document.body.classList.add('hw-js');
+  var figs = document.querySelectorAll('.hw-anim');
+  if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    figs.forEach(function (el) { el.classList.add('is-in'); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.35 });
+  figs.forEach(function (el) { io.observe(el); });
+})();
+</script>
 </body>
 </html>`;
 
