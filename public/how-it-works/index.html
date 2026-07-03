@@ -3,51 +3,52 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>How It Works: AI Agents &amp; Human Review | Language Lineage</title>
-  <meta name="description" content="Learn how Language Lineage combines AI agent scraping, LLM processing, and meticulous human verification to build the ultimate programming language dataset.">
+  <title>How It Works: Architecture &amp; Methodology | Language Lineage</title>
+  <meta name="description" content="Deep dive into the 5-phase data pipeline that powers Language Lineage, combining automated scrapers, LLMs, and rigorous human curation.">
   <link rel="canonical" href="https://www.languagelineage.org/how-it-works">
   <link rel="icon" href="/favicon.svg">
   <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><script defer src="/fx.js"></script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"How It Works: AI Agents & Human Review","description":"Learn how Language Lineage combines AI agent scraping, LLM processing, and meticulous human verification to build the ultimate programming language dataset.","url":"${SITE}/how-it-works"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"How It Works: Data Pipeline Architecture","description":"Deep dive into the 5-phase data pipeline that powers Language Lineage, combining automated scrapers, LLMs, and rigorous human curation.","url":"${SITE}/how-it-works"}</script>
   <link rel="stylesheet" href="/seo.css">
   <style>
-    .hw-hero { text-align: center; padding: 80px 20px 40px; }
-    .hw-hero h1 { font-family: 'Fraunces', serif; font-size: 48px; font-weight: 600; line-height: 1.1; margin-bottom: 20px; color: var(--text); }
-    .hw-subtitle { font-size: 20px; color: var(--text-secondary); max-width: 700px; margin: 0 auto; line-height: 1.5; }
+    .hw-hero { text-align: center; padding: 100px 20px 60px; }
+    .hw-hero h1 { font-family: 'Fraunces', serif; font-size: 56px; font-weight: 600; line-height: 1.1; margin-bottom: 24px; color: var(--text); }
+    .hw-subtitle { font-size: 22px; color: var(--text-secondary); max-width: 800px; margin: 0 auto; line-height: 1.6; }
+
+    .hw-diagram-container { width: 100%; max-width: 1000px; margin: 0 auto 80px; padding: 0 20px; overflow-x: auto; }
+    .hw-diagram-svg { width: 100%; min-width: 800px; height: auto; display: block; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.4)); }
+
+    .hw-grid { display: grid; grid-template-columns: 1fr; gap: 40px; max-width: 900px; margin: 0 auto 100px; padding: 0 20px; }
+    .hw-phase { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 40px; display: flex; gap: 30px; align-items: flex-start; transition: transform 0.3s ease, border-color 0.3s ease; }
+    .hw-phase:hover { transform: translateY(-4px); border-color: rgba(74,222,128,0.2); }
     
-    .hw-pipeline { margin: 60px auto; max-width: 900px; padding: 0 20px; position: relative; }
-    .hw-step { display: flex; align-items: flex-start; gap: 30px; margin-bottom: 60px; position: relative; }
-    .hw-step-icon { width: 80px; height: 80px; flex-shrink: 0; border-radius: 50%; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 32px; z-index: 2; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-    .hw-step-icon.glow-green { border-color: rgba(74,222,128,0.5); box-shadow: 0 0 30px rgba(74,222,128,0.15); animation: pulseGreen 3s infinite; }
-    .hw-step-icon.glow-blue { border-color: rgba(96,165,250,0.5); box-shadow: 0 0 30px rgba(96,165,250,0.15); animation: pulseBlue 3s infinite 1s; }
-    .hw-step-icon.glow-amber { border-color: rgba(227,160,8,0.5); box-shadow: 0 0 30px rgba(227,160,8,0.15); animation: pulseAmber 3s infinite 2s; }
-    
-    .hw-step-content { padding-top: 10px; }
-    .hw-step-title { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600; color: var(--text); margin-bottom: 12px; }
-    .hw-step-desc { font-size: 16px; color: var(--text-secondary); line-height: 1.6; }
-    
-    .hw-line { position: absolute; left: 60px; top: 100px; bottom: -40px; width: 2px; background: rgba(255,255,255,0.1); z-index: 1; }
-    .hw-line-glow { position: absolute; left: -1px; top: 0; width: 4px; height: 100px; background: linear-gradient(to bottom, transparent, var(--accent), transparent); animation: travelDown 3s infinite linear; }
-    
-    @keyframes travelDown {
-      0% { top: -100px; opacity: 0; }
-      20% { opacity: 1; }
-      80% { opacity: 1; }
-      100% { top: 100%; opacity: 0; }
-    }
-    @keyframes pulseGreen { 0%, 100% { box-shadow: 0 0 30px rgba(74,222,128,0.15); } 50% { box-shadow: 0 0 50px rgba(74,222,128,0.3); } }
-    @keyframes pulseBlue { 0%, 100% { box-shadow: 0 0 30px rgba(96,165,250,0.15); } 50% { box-shadow: 0 0 50px rgba(96,165,250,0.3); } }
-    @keyframes pulseAmber { 0%, 100% { box-shadow: 0 0 30px rgba(227,160,8,0.15); } 50% { box-shadow: 0 0 50px rgba(227,160,8,0.3); } }
+    .hw-icon-box { width: 64px; height: 64px; flex-shrink: 0; border-radius: 12px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: var(--text-secondary); }
+    .hw-phase:nth-child(1) .hw-icon-box { color: #60a5fa; border-color: rgba(96,165,250,0.3); }
+    .hw-phase:nth-child(2) .hw-icon-box { color: #818cf8; border-color: rgba(129,140,248,0.3); }
+    .hw-phase:nth-child(3) .hw-icon-box { color: #e3a008; border-color: rgba(227,160,8,0.3); }
+    .hw-phase:nth-child(4) .hw-icon-box { color: #4ade80; border-color: rgba(74,222,128,0.3); }
+    .hw-phase:nth-child(5) .hw-icon-box { color: #f472b6; border-color: rgba(244,114,182,0.3); }
+
+    .hw-icon-box svg { width: 32px; height: 32px; stroke-width: 1.5; stroke: currentColor; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+    .hw-phase-content h2 { font-family: 'Fraunces', serif; font-size: 26px; font-weight: 600; color: var(--text); margin: 0 0 16px 0; display: flex; align-items: center; gap: 12px; }
+    .hw-phase-badge { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; padding: 4px 8px; border-radius: 4px; background: rgba(255,255,255,0.1); color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
+    .hw-phase-content p { font-size: 16px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 16px; }
+    .hw-phase-content p:last-child { margin-bottom: 0; }
+
+    /* Diagram Animations */
+    @keyframes flowDash { to { stroke-dashoffset: -40; } }
+    .flow-path { stroke-dasharray: 8 8; animation: flowDash 1s linear infinite; }
+    .node-rect { fill: var(--bg-card); stroke: rgba(255,255,255,0.2); stroke-width: 1.5; rx: 8; }
+    .node-text-title { fill: var(--text); font-family: 'Fraunces', serif; font-size: 16px; font-weight: 600; text-anchor: middle; }
+    .node-text-sub { fill: var(--text-secondary); font-family: 'JetBrains Mono', monospace; font-size: 10px; text-anchor: middle; }
+    .glow-rect { fill: none; stroke: rgba(74,222,128,0.4); stroke-width: 2; rx: 12; filter: drop-shadow(0 0 10px rgba(74,222,128,0.3)); }
 
     @media (max-width: 768px) {
-      .hw-step { flex-direction: column; gap: 20px; align-items: center; text-align: center; margin-bottom: 50px; }
-      .hw-line { left: 50%; top: 90px; }
-      .hw-hero { padding: 40px 20px 20px; }
-      .hw-title { font-size: 36px; }
+      .hw-hero h1 { font-size: 40px; }
+      .hw-phase { flex-direction: column; padding: 30px 24px; gap: 20px; }
+      .hw-phase-content h2 { flex-wrap: wrap; }
     }
-    
-    /* Vfx background grid */
-    .hw-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 40px 40px; mask-image: linear-gradient(to bottom, black 0%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%); }
   </style>
 </head>
 <body class="seo-page">
@@ -63,37 +64,115 @@
   <a href="/how-it-works">How It Works</a>
   <a href="/explore" class="nav-enter-graph">Enter Graph</a>
 </nav>
-  <div class="hw-bg"></div>
   <main class="seo-main" id="main-content">
     <div class="hw-hero">
-      <h1>How It Works</h1>
-      <p class="hw-subtitle">Language Lineage is built on a rigorous pipeline that combines the scale of AI agents with the absolute accuracy of human experts.</p>
+      <h1>Architecture &amp; Methodology</h1>
+      <p class="hw-subtitle">Language Lineage is generated by a deterministic data pipeline that transforms vast amounts of unstructured web data into a rigorous, typed JSON dataset.</p>
     </div>
     
-    <div class="hw-pipeline">
-      <div class="hw-line"><div class="hw-line-glow"></div></div>
-      
-      <div class="hw-step">
-        <div class="hw-step-icon glow-blue">🤖</div>
-        <div class="hw-step-content">
-          <h2 class="hw-step-title">1. Autonomous AI Agents Scrape &amp; Gather</h2>
-          <p class="hw-step-desc">Specialized AI agents continuously monitor public repositories, Wikidata, Wikipedia, and compiler source trees. They gather raw unstructured data, historical release notes, and complex repository structures at a scale humans couldn't manage alone.</p>
+    <div class="hw-diagram-container">
+      <svg class="hw-diagram-svg" viewBox="0 0 1000 240" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="flow-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#3b82f6" />
+            <stop offset="50%" stop-color="#e3a008" />
+            <stop offset="100%" stop-color="#4ade80" />
+          </linearGradient>
+          <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="rgba(255,255,255,0.4)" />
+          </marker>
+        </defs>
+        
+        <!-- Connection Paths -->
+        <path d="M 160 120 L 260 120" stroke="rgba(255,255,255,0.2)" stroke-width="2" marker-end="url(#arrowhead)" />
+        <path d="M 380 120 L 480 120" stroke="rgba(255,255,255,0.2)" stroke-width="2" marker-end="url(#arrowhead)" />
+        <path d="M 600 120 L 700 120" stroke="rgba(255,255,255,0.2)" stroke-width="2" marker-end="url(#arrowhead)" />
+        <path d="M 820 120 L 920 120" stroke="rgba(255,255,255,0.2)" stroke-width="2" marker-end="url(#arrowhead)" />
+        
+        <!-- Animated Flow Lines -->
+        <path d="M 160 120 L 920 120" stroke="url(#flow-grad)" stroke-width="2" class="flow-path" fill="none" />
+        
+        <!-- Nodes -->
+        <!-- Node 1 -->
+        <rect x="40" y="80" width="120" height="80" class="node-rect" />
+        <text x="100" y="115" class="node-text-title">Public Web</text>
+        <text x="100" y="135" class="node-text-sub">Wikidata / GitHub</text>
+
+        <!-- Node 2 -->
+        <rect x="260" y="80" width="120" height="80" class="node-rect" />
+        <text x="320" y="115" class="node-text-title">Harvesting</text>
+        <text x="320" y="135" class="node-text-sub">Custom TS Scrapers</text>
+
+        <!-- Node 3 -->
+        <rect x="480" y="80" width="120" height="80" class="node-rect" />
+        <text x="540" y="115" class="node-text-title">LLM Structuring</text>
+        <text x="540" y="135" class="node-text-sub">Schema Extraction</text>
+
+        <!-- Node 4 -->
+        <rect x="696" y="76" width="128" height="88" class="glow-rect" />
+        <rect x="700" y="80" width="120" height="80" class="node-rect" />
+        <text x="760" y="115" class="node-text-title">Verification</text>
+        <text x="760" y="135" class="node-text-sub">Human Researchers</text>
+
+        <!-- Node 5 -->
+        <rect x="920" y="80" width="60" height="80" class="node-rect" stroke="#4ade80" />
+        <text x="950" y="125" class="node-text-title">Graph</text>
+      </svg>
+    </div>
+    
+    <div class="hw-grid">
+      <div class="hw-phase">
+        <div class="hw-icon-box">
+          <svg viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </div>
+        <div class="hw-phase-content">
+          <h2>Phase 1: Source Discovery <span class="hw-phase-badge">Automated</span></h2>
+          <p>The process begins by identifying high-value programming languages, compilers, and runtimes across the web. Using Wikipedia and Wikidata APIs, we scan categories like "Programming languages created in 2020" to discover new entities.</p>
+          <p>Each entity is assigned a unique, canonical identifier (e.g., <code>lang:rust</code> or <code>tool:v8</code>) which acts as the primary key for the entire data pipeline.</p>
         </div>
       </div>
       
-      <div class="hw-step">
-        <div class="hw-step-icon glow-amber">🧠</div>
-        <div class="hw-step-content">
-          <h2 class="hw-step-title">2. LLM Processing &amp; Structuring</h2>
-          <p class="hw-step-desc">The raw data is passed through advanced Large Language Models. These models parse natural language, resolve conflicting historical dates, and map complex relationships (like compiler bootstrapping chains) into our strict, strongly-typed JSON dataset schema.</p>
+      <div class="hw-phase">
+        <div class="hw-icon-box">
+          <svg viewBox="0 0 24 24"><path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
+        </div>
+        <div class="hw-phase-content">
+          <h2>Phase 2: Data Harvesting <span class="hw-phase-badge">Automated</span></h2>
+          <p>Custom TypeScript crawlers (e.g., <code>harvestWikipediaContent.ts</code>) are deployed to scrape the identified sources. They download thousands of pages of unstructured text, historical release notes, and infobox tables.</p>
+          <p>This phase aggressively caches raw HTML and markdown locally to ensure reproducibility and prevent redundant network requests during subsequent pipeline runs.</p>
         </div>
       </div>
       
-      <div class="hw-step">
-        <div class="hw-step-icon glow-green">👨‍💻</div>
-        <div class="hw-step-content">
-          <h2 class="hw-step-title">3. Human Verification &amp; Curation</h2>
-          <p class="hw-step-desc">AI isn't perfect, so humans have the final say. Every single implementation edge, release date, and lineage connection is manually verified by human researchers before it goes live. This ensures the atlas remains an authoritative, evidence-backed record of software history.</p>
+      <div class="hw-phase">
+        <div class="hw-icon-box">
+          <svg viewBox="0 0 24 24"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+        </div>
+        <div class="hw-phase-content">
+          <h2>Phase 3: LLM Structuring <span class="hw-phase-badge">AI-Assisted</span></h2>
+          <p>The raw, messy text data is fed into Large Language Models using strict JSON schema extraction prompts. The models are tasked with extracting specific, strongly-typed fields: <code>first_release_year</code>, <code>paradigms</code>, and <code>influenced_by</code>.</p>
+          <p>Crucially, the LLMs parse complex technical paragraphs to identify implementation relationships, such as extracting the fact that the early Rust compiler (<code>rustc</code>) was written in OCaml before being bootstrapped in Rust.</p>
+        </div>
+      </div>
+      
+      <div class="hw-phase">
+        <div class="hw-icon-box">
+          <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+        </div>
+        <div class="hw-phase-content">
+          <h2>Phase 4: Human Verification <span class="hw-phase-badge" style="color:var(--bg-main);background:var(--accent);">Manual Curation</span></h2>
+          <p>Language Models confidently hallucinate. Before any data enters the canonical dataset, it must pass a strict human review. Researchers manually inspect the diffs to ensure accuracy.</p>
+          <p>Human curators resolve cyclic dependency loops (like self-hosting bootstrap chains), verify disputed historical dates against primary sources (like mailing list archives), and manually inject relationships that the automated scrapers missed.</p>
+        </div>
+      </div>
+
+      <div class="hw-phase">
+        <div class="hw-icon-box">
+          <svg viewBox="0 0 24 24"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+        </div>
+        <div class="hw-phase-content">
+          <h2>Phase 5: Static Generation <span class="hw-phase-badge">Automated</span></h2>
+          <p>Once the dataset (<code>lineage_v5.json</code>) is finalized and locked, a suite of TypeScript build scripts takes over. They parse the graph to compute PageRank metrics, transitive implementation chains, and topological layers.</p>
+          <p>The build system then generates over 300 statically-rendered HTML pages, SVG timeline cards, and the JSON-LD schema markup required for optimal search engine discovery.</p>
         </div>
       </div>
     </div>
