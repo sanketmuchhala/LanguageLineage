@@ -46,6 +46,7 @@ const FOOTER_HTML = `<footer class="seo-footer-rich">
     <div class="footer-col">
       <span class="footer-col-head">Explore</span>
       <a href="/programming-language-graph">Programming language graph</a>
+      <a href="/embed-kit">Embed the graph</a>
       <a href="/guides/programming-language-family-tree">Language family tree</a>
       <a href="/programming-language-evolution">Evolution timeline</a>
       <a href="/what-are-programming-languages-written-in">What languages are written in</a>
@@ -1738,7 +1739,7 @@ function buildEmbedKit(node: Language): string {
   <h2>Embed this graph</h2>
   <p>Paste this iframe into any HTML page to show the ${escapeHtml(node.name)} relationship graph.</p>
   <pre class="embed-code"><code>${escapeHtml(snippet)}</code></pre>
-  <p class="embed-attribution">Please attribute the visualization to <a href="${SITE}">Language Lineage</a> and link to the <a href="${pagePath}">${escapeHtml(node.name)} source record</a>.</p>
+  <p class="embed-attribution">Please attribute the visualization to <a href="${SITE}">Language Lineage</a> and link to the <a href="${pagePath}">${escapeHtml(node.name)} source record</a>. See the <a href="/embed-kit">embed guide</a> for parameters and sizing.</p>
 </section>`;
 }
 
@@ -5042,6 +5043,111 @@ ${chainBlocks}
 })();
 
 
+function buildEmbedKitPage(languages: Language[], rels: Relationship[]): string {
+  const url = `${SITE}/embed-kit`;
+  const langCount = languages.filter(l => l.id.startsWith('lang:')).length;
+  const toolCount = languages.filter(l => l.id.startsWith('tool:')).length;
+  const title = 'Embed the Language Lineage Graph | Language Lineage';
+  const description = `Put the relationship graph for any of ${langCount + toolCount} languages and tools on your own page with one iframe. Copy-paste snippet, parameters, sizing, and attribution.`;
+  const snippet = `<iframe
+  src="${SITE}/embed?lang=rust"
+  width="100%"
+  height="480"
+  style="border:1px solid #262626;border-radius:8px"
+  loading="lazy"
+  title="Rust implementation and influence graph, from Language Lineage"
+></iframe>`;
+
+  const faqs = [
+    { q: 'Is the embed free to use?', a: 'Yes. The embed is free for any site, commercial or not. It renders from the same public dataset that powers Language Lineage. A visible credit linking back to languagelineage.org is appreciated but not required.' },
+    { q: 'What parameters does the embed take?', a: 'One: lang. Pass the slug of any language or tool page, for example lang=rust for /languages/rust or lang=v8 for /tools/v8. The embed shows an error if the parameter is missing or the slug is unknown.' },
+    { q: 'How tall should the iframe be?', a: 'Between 400 and 600 pixels works for most layouts. Use 480 as a starting point. The graph fits itself to whatever box you give it, so width can be 100%.' },
+    { q: 'Does the embed track my visitors?', a: 'The embed loads Vercel Web Analytics, which records anonymous page-level metrics. It sets no advertising cookies and does not identify individual visitors.' },
+  ];
+  const faqJsonLd = JSON.stringify({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqs.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) });
+  const breadcrumbJsonLd = JSON.stringify({ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: SITE }, { '@type': 'ListItem', position: 2, name: 'Embed the graph', item: url }] });
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${escapeHtml(title)}</title>
+  <meta name="description" content="${escapeHtml(description)}" />
+  <link rel="canonical" href="${url}" />
+  <link rel="icon" href="/favicon.svg" />
+  ${FONTS_HEAD}${ANALYTICS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  <meta property="og:title" content="${escapeHtml(title)}" />
+  <meta property="og:description" content="${escapeHtml(description)}" />
+  <meta property="og:url" content="${url}" />
+  <meta property="og:image" content="${SITE}/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">${faqJsonLd}</script>
+  <script type="application/ld+json">${breadcrumbJsonLd}</script>
+</head>
+<body class="seo-page">
+${SKIP_LINK}
+${NAV_HTML}
+<main class="seo-main" id="main-content">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; Embed the graph
+  </nav>
+
+  <h1>Embed the graph</h1>
+  <p>Any language or tool in the dataset can be dropped onto your own page as a live, interactive graph. One iframe, no script tag, no build step, nothing to install.</p>
+
+  <div class="answer-box">Paste the snippet below and change <code>lang=rust</code> to the slug of whichever of the ${langCount + toolCount} languages and tools you want. The embed renders that node with its implementation and influence edges, drawn from the same ${rels.length}-relationship dataset as the rest of the site.</div>
+
+  <h2>Live example</h2>
+  <p>This is the real embed, running right here:</p>
+  <figure class="seo-figure">
+    <iframe src="/embed?lang=rust" width="100%" height="440" style="border:1px solid var(--border);border-radius:8px;display:block" loading="lazy" title="Rust implementation and influence graph, from Language Lineage"></iframe>
+    <figcaption>Rust and its direct relationships. Drag to pan, scroll to zoom.</figcaption>
+  </figure>
+
+  <h2>The snippet</h2>
+  <pre><code>${escapeHtml(snippet)}</code></pre>
+
+  <h2>Parameters</h2>
+  <table class="impl-table">
+    <thead><tr><th>Parameter</th><th>Required</th><th>Value</th></tr></thead>
+    <tbody>
+      <tr><td><code>lang</code></td><td>Yes</td><td>The slug from any language or tool URL. <code>/languages/rust</code> gives <code>lang=rust</code>; <code>/tools/v8</code> gives <code>lang=v8</code>.</td></tr>
+    </tbody>
+  </table>
+  <p>That is the whole interface. If <code>lang</code> is missing or does not match a node, the frame renders an error message rather than an empty box, so a typo is visible instead of silent.</p>
+
+  <h2>Sizing</h2>
+  <p>The graph fits itself to the box it is given, so <code>width="100%"</code> is almost always right. For height, 400 to 600 pixels suits most article layouts; below about 320 pixels the labels start to crowd. Keep <code>loading="lazy"</code> so the embed costs your readers nothing until they scroll to it.</p>
+
+  <h2>Attribution</h2>
+  <p>Use it freely, on commercial sites included. If you want to credit it, a line under the frame is plenty:</p>
+  <pre><code>${escapeHtml('Graph: <a href="https://www.languagelineage.org">Language Lineage</a>')}</code></pre>
+  <p>If you would rather host the data yourself, or cite it in something written, the <a href="/dataset">dataset page</a> has the raw JSON and a citation block. Every relationship in it carries a confidence score and a source URL, so the numbers are checkable rather than asserted.</p>
+
+  <h2>Frequently asked questions</h2>
+  ${faqs.map(f => `<div class="faq-item">
+    <h3>${escapeHtml(f.q)}</h3>
+    <p>${escapeHtml(f.a)}</p>
+  </div>`).join('\n  ')}
+
+  <a class="explore-btn" href="/explore">Open the full graph &rarr;</a>
+
+  <aside class="discover-more" data-nosnippet>
+    <h2>Discover more</h2>
+    <div class="discover-links">
+      <a href="/dataset" class="discover-link">Download the dataset</a>
+      <a href="/guides/programming-language-family-tree" class="discover-link">Programming language family tree</a>
+      <a href="/programming-language-graph" class="discover-link">Programming language graph</a>
+      <a href="/how-it-works" class="discover-link">How the data is built</a>
+    </div>
+  </aside>
+</main>
+${FOOTER_HTML}
+</body>
+</html>`;
+}
+
 function buildHowItWorksPage(languages: Language[], rels: Relationship[]): string {
   const url = `${SITE}/how-it-works`;
   const title = 'How It Works: Agents, Validation, Human Review | Language Lineage';
@@ -5808,6 +5914,7 @@ console.log('Generated how-it-works page');
 // New landing pages
 writeFile(join(PUBLIC, 'programming-language-graph', 'index.html'), buildProgrammingLanguageGraph(languages, rels));
 writeFile(join(PUBLIC, 'programming-language-family-tree', 'index.html'), buildProgrammingLanguageFamilyTree(languages));
+writeFile(join(PUBLIC, 'embed-kit', 'index.html'), processPage(buildEmbedKitPage(languages, rels)));
 writeFile(join(PUBLIC, 'programming-language-genealogy', 'index.html'), buildProgrammingLanguageGenealogy(languages, rels));
 writeFile(join(PUBLIC, 'programming-language-evolution', 'index.html'), buildProgrammingLanguageEvolution(languages));
 writeFile(join(PUBLIC, 'what-are-programming-languages-written-in', 'index.html'), buildWhatAreLanguagesWrittenIn(languages, rels, nodeMap));

@@ -89,6 +89,7 @@ const urls: Array<{ loc: string; changefreq: string; priority: string }> = [
   { loc: `${SITE}/`, changefreq: 'monthly', priority: '1.0' },
   { loc: `${SITE}/explore`, changefreq: 'monthly', priority: '0.9' },
   // New keyword landing pages
+  { loc: `${SITE}/embed-kit`, changefreq: 'monthly', priority: '0.7' },
   { loc: `${SITE}/programming-language-graph`, changefreq: 'monthly', priority: '0.9' },
   { loc: `${SITE}/programming-language-evolution`, changefreq: 'monthly', priority: '0.85' },
   { loc: `${SITE}/what-are-programming-languages-written-in`, changefreq: 'monthly', priority: '0.85' },
