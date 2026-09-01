@@ -61,6 +61,11 @@ const GUIDE_SLUGS = [
   'the-c-bootstrap-chain',
 ];
 
+// Question pages that canonicalize to their language page (see
+// QUESTION_CANONICAL_TO_LANG in generateSeoPages.ts) are non-canonical, so they
+// stay out of the sitemap.
+const QUESTION_CANONICAL_TO_LANG = new Set(['rust', 'python', 'roc', 'prolog']);
+
 const QUESTION_SLUGS = [
   'what-is-python-written-in',
   'what-is-javascript-written-in',
@@ -85,15 +90,14 @@ const urls: Array<{ loc: string; changefreq: string; priority: string }> = [
   { loc: `${SITE}/explore`, changefreq: 'monthly', priority: '0.9' },
   // New keyword landing pages
   { loc: `${SITE}/programming-language-graph`, changefreq: 'monthly', priority: '0.9' },
-  { loc: `${SITE}/programming-language-family-tree`, changefreq: 'monthly', priority: '0.85' },
   { loc: `${SITE}/programming-language-evolution`, changefreq: 'monthly', priority: '0.85' },
   { loc: `${SITE}/what-are-programming-languages-written-in`, changefreq: 'monthly', priority: '0.85' },
   { loc: `${SITE}/programming-language-genealogy`, changefreq: 'monthly', priority: '0.8' },
   { loc: `${SITE}/compiler-runtime-bootstrap`, changefreq: 'monthly', priority: '0.8' },
   // Questions
   { loc: `${SITE}/questions`, changefreq: 'monthly', priority: '0.75' },
-  ...QUESTION_SLUGS.map(s => ({ loc: `${SITE}/questions/${s}`, changefreq: 'monthly', priority: '0.8' })),
-  ...AUTO_QUESTION_SLUGS.map(s => ({ loc: `${SITE}/questions/what-is-${s}-written-in`, changefreq: 'monthly', priority: '0.65' })),
+  ...QUESTION_SLUGS.filter(s => !QUESTION_CANONICAL_TO_LANG.has((s.match(/^what-is-(.+)-written-in$/) || [])[1] || '')).map(s => ({ loc: `${SITE}/questions/${s}`, changefreq: 'monthly', priority: '0.8' })),
+  ...AUTO_QUESTION_SLUGS.filter(s => !QUESTION_CANONICAL_TO_LANG.has(s)).map(s => ({ loc: `${SITE}/questions/what-is-${s}-written-in`, changefreq: 'monthly', priority: '0.65' })),
   // Core pages
   { loc: `${SITE}/directory`, changefreq: 'monthly', priority: '0.85' },
   { loc: `${SITE}/how-it-works`, changefreq: 'monthly', priority: '0.8' },

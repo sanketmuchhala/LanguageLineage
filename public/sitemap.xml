@@ -19,12 +19,6 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.languagelineage.org/programming-language-family-tree</loc>
-    <lastmod>2026-09-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.85</priority>
-  </url>
-  <url>
     <loc>https://www.languagelineage.org/programming-language-evolution</loc>
     <lastmod>2026-09-01</lastmod>
     <changefreq>monthly</changefreq>
@@ -55,19 +49,7 @@
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://www.languagelineage.org/questions/what-is-python-written-in</loc>
-    <lastmod>2026-09-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://www.languagelineage.org/questions/what-is-javascript-written-in</loc>
-    <lastmod>2026-09-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.languagelineage.org/questions/what-is-rust-written-in</loc>
     <lastmod>2026-09-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -206,12 +188,6 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-scheme-written-in</loc>
-    <lastmod>2026-09-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.65</priority>
-  </url>
-  <url>
-    <loc>https://www.languagelineage.org/questions/what-is-prolog-written-in</loc>
     <lastmod>2026-09-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.65</priority>
@@ -686,12 +662,6 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-speedcoding-written-in</loc>
-    <lastmod>2026-09-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.65</priority>
-  </url>
-  <url>
-    <loc>https://www.languagelineage.org/questions/what-is-roc-written-in</loc>
     <lastmod>2026-09-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.65</priority>

@@ -1644,6 +1644,12 @@ function buildToolIntro(node: Language): string {
 
 const QUESTION_PAGE_LANGS = new Set(['python','javascript','rust','go','java','c','cxx','typescript','ruby','v8','cpython']);
 
+// Slugs where /languages/{slug} and /questions/what-is-{slug}-written-in both draw
+// impressions, so the question page canonicalizes to the stronger language page.
+// Derived from the GSC export (npm run gsc:analyze); elm is deliberately absent
+// because its question page out-ranks and out-clicks the language page.
+const QUESTION_CANONICAL_TO_LANG = new Set(['rust', 'python', 'roc', 'prolog']);
+
 // Some language slugs differ from their question page slug (cxx -> cpp)
 const QUESTION_SLUG_OVERRIDE: Record<string, string> = { cxx: 'cpp' };
 
@@ -1811,7 +1817,6 @@ ${faqs.map(f => `<div class="faq-item">
   <link rel="canonical" href="${url}" />
   <link rel="icon" href="/favicon.svg" />
   ${FONTS_HEAD}${ANALYTICS_HEAD}<link rel="stylesheet" href="/seo.css" />
-  ${QUESTION_PAGE_LANGS.has(slug) ? `<link rel="alternate" href="${SITE}/questions/what-is-${slug}-written-in" />` : ''}
   <meta property="og:type" content="article" />
   <meta property="og:title" content="${escapeHtml(title)}" />
   <meta property="og:description" content="${escapeHtml(description)}" />
@@ -2186,10 +2191,9 @@ function buildQuestionPage(q: QuestionDef, nodeMap: Map<string, Language>): stri
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${escapeHtml(q.titleHook ? `${q.title} ${q.titleHook}` : q.title)} | Language Lineage</title>
   <meta name="description" content="${escapeHtml(metaDescription)}" />
-  <link rel="canonical" href="${url}" />
+  <link rel="canonical" href="${matchingLangSlug && QUESTION_CANONICAL_TO_LANG.has(matchingLangSlug) ? `${SITE}/languages/${matchingLangSlug}` : url}" />
   <link rel="icon" href="/favicon.svg" />
   ${FONTS_HEAD}${ANALYTICS_HEAD}<link rel="stylesheet" href="/seo.css" />
-  ${matchingLangSlug && QUESTION_PAGE_LANGS.has(matchingLangSlug) ? `<link rel="alternate" href="${SITE}/languages/${matchingLangSlug}" />` : ''}
   <meta property="og:type" content="article" />
   <meta property="og:title" content="${escapeHtml(q.titleHook ? `${q.title} ${q.titleHook}` : q.title)} | Language Lineage" />
   <meta property="og:description" content="${escapeHtml(metaDescription)}" />
@@ -2421,10 +2425,9 @@ function buildAutoQuestionPage(aqn: AutoQNode, nodeMap: Map<string, Language>): 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${escapeHtml(pageTitleTag)}</title>
   <meta name="description" content="${escapeHtml(metaDescription)}" />
-  <link rel="canonical" href="${url}" />
+  <link rel="canonical" href="${QUESTION_CANONICAL_TO_LANG.has(slug) ? `${SITE}/languages/${slug}` : url}" />
   <link rel="icon" href="/favicon.svg" />
   ${FONTS_HEAD}${ANALYTICS_HEAD}<link rel="stylesheet" href="/seo.css" />
-  <link rel="alternate" href="${SITE}/languages/${slug}" />
   <meta property="og:type" content="article" />
   <meta property="og:title" content="${escapeHtml(pageTitleTag)}" />
   <meta property="og:description" content="${escapeHtml(metaDescription)}" />
@@ -2681,7 +2684,9 @@ ${FOOTER_HTML}
 }
 
 function buildProgrammingLanguageFamilyTree(languages: Language[]): string {
-  const url = `${SITE}/programming-language-family-tree`;
+  // Canonicalized to the /guides/ version, which holds every impression and
+  // click for this keyword in GSC while this URL has none.
+  const url = `${SITE}/guides/programming-language-family-tree`;
   const langCount = languages.filter(l => l.id.startsWith('lang:')).length;
   const families = [
     { name: 'C family', members: ['C', 'C++', 'Objective-C', 'Java', 'JavaScript', 'C#', 'Go', 'Rust'], desc: 'Languages influenced by C\'s syntax and systems-programming philosophy.' },

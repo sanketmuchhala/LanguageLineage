@@ -389,6 +389,7 @@ function walkHtmlFiles(dir: string): string[] {
 const allHtmlFiles = walkHtmlFiles(PUBLIC);
 const titleMap = new Map<string, string[]>(); // title -> [file, ...]
 const descMap = new Map<string, string[]>();
+const titlePrefixMap = new Map<string, string[]>(); // self-canonical pages only
 const TITLE_MAX = 75;
 const DESC_MIN = 75;
 const DESC_MAX = 180;
@@ -407,6 +408,15 @@ for (const filePath of allHtmlFiles) {
     const t = titleMatch[1].replace(/&amp;/g, '&').replace(/&#039;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
     if (!titleMap.has(t)) titleMap.set(t, []);
     titleMap.get(t)!.push(rel);
+    // A page that canonicalizes elsewhere is a deliberate duplicate, so only
+    // compare title prefixes between pages that are their own canonical.
+    const canonical = html.match(/<link rel="canonical" href="([^"]+)"/)?.[1];
+    const selfUrl = `${SITE}/${rel.replace(/\/?index\.html$/, '')}`.replace(/\/$/, '');
+    if (!canonical || canonical.replace(/\/$/, '') === selfUrl) {
+      const prefix = t.split(' | ')[0].trim().toLowerCase();
+      if (!titlePrefixMap.has(prefix)) titlePrefixMap.set(prefix, []);
+      titlePrefixMap.get(prefix)!.push(rel);
+    }
     if (t.length > TITLE_MAX) { fail(`${rel}: title too long (${t.length} chars, max ${TITLE_MAX}): "${t.slice(0, 60)}..."`); titleLengthErrors++; }
   } else {
     fail(`${rel}: missing <title>`);
@@ -457,6 +467,15 @@ if (dupDescs.length === 0) {
 } else {
   for (const [d, files] of dupDescs) {
     fail(`Duplicate description "${d.slice(0, 60)}" on: ${files.slice(0, 3).join(', ')}`);
+  }
+}
+
+const dupPrefixes = [...titlePrefixMap.entries()].filter(([, files]) => files.length > 1);
+if (dupPrefixes.length === 0) {
+  ok(`No two self-canonical pages share a title prefix`);
+} else {
+  for (const [pfx, files] of dupPrefixes) {
+    fail(`Duplicate title prefix "${pfx.slice(0, 50)}" on: ${files.slice(0, 3).join(', ')}`);
   }
 }
 
