@@ -1000,6 +1000,14 @@ pre {
   margin: 24px 0;
   overflow-x: auto;
 }
+.family-tree-fig { overflow-x: visible; }
+.family-tree-fig svg { width: 100%; height: auto; display: block; }
+.family-tree-fig .ft-compact { display: none; margin: 0 auto; max-width: 380px; }
+@media (max-width: 899px) {
+  .family-tree-fig .ft-wide { display: none; }
+  .family-tree-fig .ft-compact { display: block; }
+}
+
 .bootstrap-diagram-wrap figcaption,
 .seo-figure figcaption {
   font-family: 'JetBrains Mono', monospace;

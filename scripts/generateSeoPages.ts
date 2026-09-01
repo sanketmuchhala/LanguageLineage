@@ -46,7 +46,7 @@ const FOOTER_HTML = `<footer class="seo-footer-rich">
     <div class="footer-col">
       <span class="footer-col-head">Explore</span>
       <a href="/programming-language-graph">Programming language graph</a>
-      <a href="/programming-language-family-tree">Language family tree</a>
+      <a href="/guides/programming-language-family-tree">Language family tree</a>
       <a href="/programming-language-evolution">Evolution timeline</a>
       <a href="/what-are-programming-languages-written-in">What languages are written in</a>
       <a href="/explore">Interactive Graph</a>
@@ -1293,6 +1293,136 @@ function buildRelationshipMap(node: Language, rels: Relationship[], nodeMap: Map
 </figure>`;
 }
 
+// The influence trunk drawn from the dataset: the highest-out-degree languages
+// placed by release year, joined by their real `influenced` edges. Back-influence
+// edges (Swift/Rust and four others) are dropped so every arrow reads left to right.
+const TREE_LANES: Array<{ label: string; ids: string[] }> = [
+  { label: 'Numeric', ids: ['lang:fortran'] },
+  { label: 'ALGOL / C', ids: ['lang:algol', 'lang:pascal', 'lang:c', 'lang:cxx', 'lang:java', 'lang:go', 'lang:kotlin'] },
+  { label: 'Object', ids: ['lang:smalltalk', 'lang:ruby', 'lang:javascript', 'lang:typescript'] },
+  { label: 'Lisp', ids: ['lang:lisp', 'lang:scheme', 'lang:clojure'] },
+  { label: 'ML / typed FP', ids: ['lang:ml', 'lang:haskell', 'lang:ocaml', 'lang:rust', 'lang:swift'] },
+  { label: 'Scripting', ids: ['lang:perl', 'lang:python'] },
+];
+
+function buildFamilyTreeFigure(nodeMap: Map<string, Language>, rels: Relationship[]): string {
+  const placed = new Map<string, { name: string; year: number; lane: number }>();
+  TREE_LANES.forEach((lane, li) => {
+    for (const id of lane.ids) {
+      const n = nodeMap.get(id);
+      if (n && n.first_release_year) placed.set(id, { name: n.name, year: n.first_release_year, lane: li });
+    }
+  });
+
+  // Real influence edges between placed nodes, forward in time only.
+  const edges = rels
+    .filter(r => r.relationship === 'influenced')
+    .filter(r => placed.has(r.from_language) && placed.has(r.to_language))
+    .filter(r => placed.get(r.to_language)!.year > placed.get(r.from_language)!.year);
+
+  // labelAbove lifts the year over the box for nodes staggered into the upper
+  // sub-row, where the box below would otherwise cover it.
+  const nodeBox = (x: number, y: number, name: string, year: number, accent: boolean, labelAbove = false) => {
+    const w = Math.max(46, name.length * 7.2 + 14);
+    const ly = labelAbove ? y - 18 : y + 22;
+    return `<g><rect x="${(x - w / 2).toFixed(1)}" y="${y - 12}" width="${w.toFixed(1)}" height="24" rx="4" fill="#161616" stroke="${accent ? '#4ade80' : '#5a5a5a'}" stroke-width="${accent ? 1.6 : 1}" /><text x="${x.toFixed(1)}" y="${y}" class="ft-n${accent ? ' ft-self' : ''}">${escapeHtml(name)}</text><text x="${x.toFixed(1)}" y="${ly}" class="ft-y">${year}</text></g>`;
+  };
+  const ACCENT = new Set(['lang:c', 'lang:lisp']);
+
+  // --- Wide: horizontal time axis, one row per family ---
+  const W = 900, H = 520, PAD_L = 74, PAD_R = 18, PAD_T = 34, PAD_B = 40, Y0 = 1955, Y1 = 2020;
+  const laneH = (H - PAD_T - PAD_B) / TREE_LANES.length;
+  const xOf = (yr: number) => PAD_L + ((yr - Y0) / (Y1 - Y0)) * (W - PAD_L - PAD_R);
+  const widthOf = (name: string) => Math.max(46, name.length * 7.2 + 14);
+
+  // Languages released within a few years of each other land on top of one
+  // another in their lane, so stagger those within the lane's spare height.
+  const offset = new Map<string, number>();
+  TREE_LANES.forEach((lane, li) => {
+    const members = lane.ids
+      .filter(id => placed.has(id))
+      .sort((a, b) => placed.get(a)!.year - placed.get(b)!.year);
+    // Walk the lane and mark runs of horizontally overlapping neighbours, then
+    // alternate those between the two sub-rows so no pair can collide.
+    let prevRight = -Infinity;
+    let run: string[] = [];
+    const flush = () => {
+      if (run.length > 1) run.forEach((id, k) => offset.set(id, k % 2 === 0 ? -14 : 14));
+      else run.forEach(id => offset.set(id, 0));
+      run = [];
+    };
+    for (const id of members) {
+      const p = placed.get(id)!;
+      const left = xOf(p.year) - widthOf(p.name) / 2;
+      if (left >= prevRight + 6) flush();
+      run.push(id);
+      prevRight = Math.max(prevRight, xOf(p.year) + widthOf(p.name) / 2);
+    }
+    flush();
+  });
+  const yOf = (li: number, id?: string) => PAD_T + li * laneH + laneH / 2 + (id ? offset.get(id) ?? 0 : 0);
+
+  const wideEdges = edges.map(r => {
+    const a = placed.get(r.from_language)!, b = placed.get(r.to_language)!;
+    const ax = xOf(a.year), ay = yOf(a.lane, r.from_language), bx = xOf(b.year), by = yOf(b.lane, r.to_language);
+    const dx = Math.max(18, (bx - ax) * 0.42);
+    return `<path d="M${ax.toFixed(1)} ${ay} C${(ax + dx).toFixed(1)} ${ay} ${(bx - dx).toFixed(1)} ${by} ${bx.toFixed(1)} ${by}" fill="none" stroke="#60a5fa" stroke-width="1.1" opacity="${ay === by ? 0.55 : 0.3}" />`;
+  }).join('');
+  const wideNodes = [...placed.entries()].map(([id, p]) => nodeBox(xOf(p.year), yOf(p.lane, id), p.name, p.year, ACCENT.has(id), (offset.get(id) ?? 0) < 0)).join('');
+  const wideLanes = TREE_LANES.map((lane, li) => `<text x="6" y="${yOf(li)}" class="ft-lane">${escapeHtml(lane.label)}</text>`).join('');
+  const wideAxis = [1960, 1970, 1980, 1990, 2000, 2010].map(dcd =>
+    `<line x1="${xOf(dcd).toFixed(1)}" y1="${PAD_T - 12}" x2="${xOf(dcd).toFixed(1)}" y2="${H - PAD_B + 6}" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1" /><text x="${xOf(dcd).toFixed(1)}" y="${H - PAD_B + 22}" class="ft-dec">${dcd}</text>`
+  ).join('');
+
+  // --- Compact: three columns, ordinal vertical order, so nothing collides at 320px ---
+  const CW = 380, CPAD_T = 30, ROW = 62;
+  const COLS: Array<{ label: string; lanes: number[]; x: number }> = [
+    { label: 'Imperative', lanes: [0, 1], x: 64 },
+    { label: 'Object / script', lanes: [2, 5], x: 190 },
+    { label: 'Functional', lanes: [3, 4], x: 316 },
+  ];
+  const cpos = new Map<string, { x: number; y: number }>();
+  COLS.forEach(col => {
+    const members = [...placed.entries()]
+      .filter(([, p]) => col.lanes.includes(p.lane))
+      .sort((a, b) => a[1].year - b[1].year);
+    members.forEach(([id], i) => cpos.set(id, { x: col.x, y: CPAD_T + 26 + i * ROW }));
+  });
+  const CH = CPAD_T + 26 + Math.max(...COLS.map(c =>
+    [...placed.values()].filter(p => c.lanes.includes(p.lane)).length)) * ROW;
+
+  const compactEdges = edges.map(r => {
+    const a = cpos.get(r.from_language)!, b = cpos.get(r.to_language)!;
+    if (!a || !b) return '';
+    const mid = (a.y + b.y) / 2;
+    return `<path d="M${a.x} ${a.y + 12} C${a.x} ${mid} ${b.x} ${mid} ${b.x} ${b.y - 12}" fill="none" stroke="#60a5fa" stroke-width="1" opacity="${a.x === b.x ? 0.5 : 0.26}" />`;
+  }).join('');
+  const compactNodes = [...placed.entries()].map(([id, p]) => {
+    const c = cpos.get(id)!;
+    return nodeBox(c.x, c.y, p.name, p.year, ACCENT.has(id));
+  }).join('');
+  const compactHeads = COLS.map(c => `<text x="${c.x}" y="${CPAD_T - 6}" class="ft-dec">${escapeHtml(c.label)}</text>`).join('');
+
+  const SVG_STYLE = `<style>
+    .ft-n{font-size:12px;fill:#fafafa;text-anchor:middle;dominant-baseline:middle}
+    .ft-self{fill:#4ade80;font-weight:600}
+    .ft-y{font-size:9px;fill:#5a5a5a;text-anchor:middle}
+    .ft-lane{font-size:10px;fill:#9a9a9a;font-weight:600;letter-spacing:.04em;dominant-baseline:middle}
+    .ft-dec{font-size:10px;fill:#5a5a5a;text-anchor:middle}
+  </style>`;
+  const label = `Influence lineage of ${placed.size} major programming languages from ${Math.min(...[...placed.values()].map(p => p.year))} to ${Math.max(...[...placed.values()].map(p => p.year))}, joined by ${edges.length} dated influence relationships`;
+
+  return `<figure class="seo-figure family-tree-fig">
+<svg class="ft-wide" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${escapeHtml(label)}">
+  ${SVG_STYLE}${wideAxis}${wideLanes}${wideEdges}${wideNodes}
+</svg>
+<svg class="ft-compact" viewBox="0 0 ${CW} ${CH}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${escapeHtml(label)}">
+  ${SVG_STYLE}${compactHeads}${compactEdges}${compactNodes}
+</svg>
+<figcaption>${edges.length} dated <strong>influence</strong> relationships between ${placed.size} languages, straight from the dataset. In the wide view, horizontal position is the first release year. A few mutual-influence pairs (Swift and Rust, Elm and Rust) run both ways and are left out here; <a href="/explore">the full graph</a> has all 252.</figcaption>
+</figure>`;
+}
+
 // The integrated page header: logo, name, tagline, a horizontal spec rail of key data
 // (written in, released, developer, typing, license), and the curated succession notes ,
 // woven into the top of the article rather than boxed into a card.
@@ -1676,7 +1806,7 @@ function buildDiscoverMore(node: Language, rels: Relationship[], nodeMap: Map<st
     links.push(`<a href="/questions/what-is-${qSlug}-written-in" class="discover-link">What is ${name} written in?</a>`);
   }
   links.push(`<a href="/what-are-programming-languages-written-in" class="discover-link">What are programming languages written in?</a>`);
-  links.push(`<a href="/programming-language-family-tree" class="discover-link">${name} in the language family tree</a>`);
+  links.push(`<a href="/guides/programming-language-family-tree" class="discover-link">${name} in the language family tree</a>`);
   links.push(`<a href="/programming-language-graph" class="discover-link">Interactive programming language graph</a>`);
 
   if (node.self_hosting) {
@@ -2669,7 +2799,7 @@ ${NAV_HTML}
   <section class="discover-more" data-nosnippet>
     <h2>Related Pages</h2>
     <div class="discover-links">
-      <a href="/programming-language-family-tree" class="discover-link">Programming language family tree</a>
+      <a href="/guides/programming-language-family-tree" class="discover-link">Programming language family tree</a>
       <a href="/programming-language-evolution" class="discover-link">Programming language evolution timeline</a>
       <a href="/what-are-programming-languages-written-in" class="discover-link">What are programming languages written in?</a>
       <a href="/programming-language-genealogy" class="discover-link">Programming language genealogy</a>
@@ -2850,7 +2980,7 @@ ${NAV_HTML}
     <h2>Related Pages</h2>
     <div class="discover-links">
       <a href="/programming-language-graph" class="discover-link">Programming language graph</a>
-      <a href="/programming-language-family-tree" class="discover-link">Programming language family tree</a>
+      <a href="/guides/programming-language-family-tree" class="discover-link">Programming language family tree</a>
       <a href="/programming-language-evolution" class="discover-link">Programming language evolution timeline</a>
       <a href="/relationships/influenced" class="discover-link">All influence relationships</a>
       <a href="/dataset" class="discover-link">Browse the dataset</a>
@@ -2933,7 +3063,7 @@ ${NAV_HTML}
     <h2>Related Pages</h2>
     <div class="discover-links">
       <a href="/programming-language-graph" class="discover-link">Interactive programming language graph</a>
-      <a href="/programming-language-family-tree" class="discover-link">Programming language family tree</a>
+      <a href="/guides/programming-language-family-tree" class="discover-link">Programming language family tree</a>
       <a href="/programming-language-genealogy" class="discover-link">Programming language genealogy</a>
       <a href="/timeline" class="discover-link">Timeline visualization</a>
     </div>
@@ -3600,6 +3730,8 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
     h1: 'Programming Language Family Tree',
     description: 'The programming language family tree: how Fortran, LISP, and C influenced and implemented the languages that followed, across 75+ years of compiler and runtime history.',
     content: `<div class="answer-box">The programming language family tree traces how languages influenced, implemented, and descended from each other over 75+ years, from <a href="/languages/fortran">Fortran</a> (1957) and <a href="/languages/lisp">Lisp</a> (1958) to <a href="/languages/rust">Rust</a> and beyond. It maps two different kinds of ancestry: <strong>influence</strong> (where a language borrowed ideas) and <strong>implementation</strong> (what a language is actually written in).</div>
+
+{{FAMILY_TREE_FIGURE}}
 
 <h2>Two kinds of family ties</h2>
 <p>Languages are related in two distinct ways, and it helps to keep them separate:</p>
@@ -5644,8 +5776,12 @@ function buildDirectoryPage(languages: Language[], rels: Relationship[]): string
 }
 
 // Guide pages
+const familyTreeFigure = buildFamilyTreeFigure(nodeMap, rels);
 for (const guide of GUIDES) {
-  writeFile(join(PUBLIC, 'guides', guide.slug, 'index.html'), processPage(buildGuidePage(guide)));
+  const g = guide.content.includes('{{FAMILY_TREE_FIGURE}}')
+    ? { ...guide, content: guide.content.replace('{{FAMILY_TREE_FIGURE}}', familyTreeFigure) }
+    : guide;
+  writeFile(join(PUBLIC, 'guides', g.slug, 'index.html'), processPage(buildGuidePage(g)));
 }
 console.log(`Generated ${GUIDES.length} guide pages`);
 

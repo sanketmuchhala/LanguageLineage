@@ -43,6 +43,17 @@ for (const f of allFiles) {
   urlToFile.set(pathToUrl(f), f);
 }
 
+// Pages that canonicalize to a different URL are deliberate duplicates kept only
+// so an already-indexed URL consolidates. They are unlinked and out of the
+// sitemap on purpose, so they are not orphans or depth failures.
+const NON_CANONICAL = new Set<string>();
+for (const [url, f] of urlToFile) {
+  const canonical = readFileSync(f, 'utf8').match(/<link rel="canonical" href="([^"]+)"/)?.[1];
+  if (canonical && canonical.replace(/^https?:\/\/[^/]+/, '').replace(/\/$/, '') !== url.replace(/\/$/, '')) {
+    NON_CANONICAL.add(url);
+  }
+}
+
 // SPA routes that exist but have no index.html in public/
 const KNOWN_SPA = new Set(['/', '/explore', '/embed']);
 const allKnown = new Set([...urlToFile.keys(), ...KNOWN_SPA]);
@@ -102,14 +113,14 @@ for (const [url, links] of outLinks) {
 }
 
 // Over-depth: pages in urlToFile that are not reachable within MAX_DEPTH clicks from /
-const overDepth = [...urlToFile.keys()].filter(url => !depths.has(url));
+const overDepth = [...urlToFile.keys()].filter(url => !depths.has(url) && !NON_CANONICAL.has(url));
 
 // Orphans: pages with fewer than 2 inbound links
 const orphans: Array<{ url: string; count: number }> = [];
 for (const [url] of urlToFile) {
   if (url === '/') continue;
   const count = inLinks.get(url)?.size ?? 0;
-  if (count < 2) orphans.push({ url, count });
+  if (count < 2 && !NON_CANONICAL.has(url)) orphans.push({ url, count });
 }
 orphans.sort((a, b) => a.count - b.count || a.url.localeCompare(b.url));
 
