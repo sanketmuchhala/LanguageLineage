@@ -68,7 +68,16 @@
 
   <h2 class="lang-written-q">What is HotSpot JVM written in?</h2>
   <div class="answer-box">Its runtime is implemented in <strong>C++</strong> (well-documented).</div>
-  
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#what-hotspot-jvm-is-used-for">What HotSpot JVM is used for</a></li>
+    <li><a href="#about-hotspot-jvm">About HotSpot JVM</a></li>
+    <li><a href="#how-hotspot-jvm-is-implemented">How HotSpot JVM is implemented</a></li>
+    <li><a href="#hotspot-jvm-in-the-language-family-tree">HotSpot JVM in the language family tree</a></li>
+    <li><a href="#spot-something-wrong">Spot something wrong?</a></li>
+  </ol>
+</nav>
 
   <section class="intent-section">
   <h2 id="what-hotspot-jvm-is-used-for">What HotSpot JVM is used for</h2>
@@ -147,6 +156,41 @@
   <div class="discover-links"><a href="/what-are-programming-languages-written-in" class="discover-link">What are programming languages written in?</a>
   <a href="/guides/programming-language-family-tree" class="discover-link">HotSpot JVM in the language family tree</a>
   <a href="/programming-language-graph" class="discover-link">Interactive programming language graph</a></div>
+</section>
+
+  <section class="propose" data-nosnippet>
+  <h2 id="spot-something-wrong">Spot something wrong?</h2>
+  <p>Every fact on this page is meant to be checkable. If one is wrong, say so and it becomes a dataset change, not a patch to this page.</p>
+  <form class="propose-form" data-propose novalidate>
+    <input type="hidden" name="nodeId" value="tool:hotspot" />
+    <input type="hidden" name="nodeName" value="HotSpot JVM" />
+    <input type="hidden" name="pagePath" value="/tools/hotspot" />
+    <div class="propose-hp" aria-hidden="true">
+      <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+    </div>
+    <div class="propose-row">
+      <label for="pr-claim-hotspot">Which claim is wrong?</label>
+      <input type="text" id="pr-claim-hotspot" name="claim" maxlength="500" placeholder="e.g. &quot;HotSpot JVM is self-hosting&quot;" />
+    </div>
+    <div class="propose-row">
+      <label for="pr-fix-hotspot">What should it say instead? <span class="propose-req">required</span></label>
+      <textarea id="pr-fix-hotspot" name="correction" rows="4" maxlength="2000" required placeholder="What the record should say, and why."></textarea>
+    </div>
+    <div class="propose-row">
+      <label for="pr-src-hotspot">Evidence (https link)</label>
+      <input type="url" id="pr-src-hotspot" name="evidenceUrl" maxlength="500" placeholder="https://..." />
+    </div>
+    <div class="propose-row">
+      <label for="pr-contact-hotspot">Contact, if you want credit</label>
+      <input type="text" id="pr-contact-hotspot" name="contact" maxlength="200" placeholder="GitHub handle or email, optional" />
+    </div>
+    <div class="propose-actions">
+      <button type="submit" class="propose-btn">Send correction</button>
+      <p class="propose-status" data-propose-status role="status" aria-live="polite"></p>
+    </div>
+    <p class="propose-note">Goes to a public GitHub issue for review. Nothing you write appears on this site.</p>
+  </form>
+  <noscript><p>Or <a href="https://github.com/sanketmuchhala/LanguageLineage/issues/new?title=Correction%3A%20HotSpot%20JVM" rel="noopener noreferrer">open an issue on GitHub</a>.</p></noscript>
 </section>
 
   <a class="explore-btn" href="/explore?node=tool%3Ahotspot">Explore HotSpot JVM in Graph &rarr;</a>

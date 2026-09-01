@@ -142,6 +142,41 @@
   <a href="/programming-language-graph" class="discover-link">Interactive programming language graph</a></div>
 </section>
 
+  <section class="propose" data-nosnippet>
+  <h2 id="spot-something-wrong">Spot something wrong?</h2>
+  <p>Every fact on this page is meant to be checkable. If one is wrong, say so and it becomes a dataset change, not a patch to this page.</p>
+  <form class="propose-form" data-propose novalidate>
+    <input type="hidden" name="nodeId" value="tool:v8" />
+    <input type="hidden" name="nodeName" value="V8" />
+    <input type="hidden" name="pagePath" value="/tools/v8" />
+    <div class="propose-hp" aria-hidden="true">
+      <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+    </div>
+    <div class="propose-row">
+      <label for="pr-claim-v8">Which claim is wrong?</label>
+      <input type="text" id="pr-claim-v8" name="claim" maxlength="500" placeholder="e.g. &quot;V8 is self-hosting&quot;" />
+    </div>
+    <div class="propose-row">
+      <label for="pr-fix-v8">What should it say instead? <span class="propose-req">required</span></label>
+      <textarea id="pr-fix-v8" name="correction" rows="4" maxlength="2000" required placeholder="What the record should say, and why."></textarea>
+    </div>
+    <div class="propose-row">
+      <label for="pr-src-v8">Evidence (https link)</label>
+      <input type="url" id="pr-src-v8" name="evidenceUrl" maxlength="500" placeholder="https://..." />
+    </div>
+    <div class="propose-row">
+      <label for="pr-contact-v8">Contact, if you want credit</label>
+      <input type="text" id="pr-contact-v8" name="contact" maxlength="200" placeholder="GitHub handle or email, optional" />
+    </div>
+    <div class="propose-actions">
+      <button type="submit" class="propose-btn">Send correction</button>
+      <p class="propose-status" data-propose-status role="status" aria-live="polite"></p>
+    </div>
+    <p class="propose-note">Goes to a public GitHub issue for review. Nothing you write appears on this site.</p>
+  </form>
+  <noscript><p>Or <a href="https://github.com/sanketmuchhala/LanguageLineage/issues/new?title=Correction%3A%20V8" rel="noopener noreferrer">open an issue on GitHub</a>.</p></noscript>
+</section>
+
   <a class="explore-btn" href="/explore?node=tool%3Av8">Explore V8 in Graph &rarr;</a>
 </main>
 <footer class="seo-footer-rich">

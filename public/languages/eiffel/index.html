@@ -162,6 +162,41 @@
   <p class="embed-attribution">Please attribute the visualization to <a href="https://www.languagelineage.org">Language Lineage</a> and link to the <a href="/languages/eiffel">Eiffel source record</a>. See the <a href="/embed-kit">embed guide</a> for parameters and sizing.</p>
 </section>
 
+  <section class="propose" data-nosnippet>
+  <h2 id="spot-something-wrong">Spot something wrong?</h2>
+  <p>Every fact on this page is meant to be checkable. If one is wrong, say so and it becomes a dataset change, not a patch to this page.</p>
+  <form class="propose-form" data-propose novalidate>
+    <input type="hidden" name="nodeId" value="lang:eiffel" />
+    <input type="hidden" name="nodeName" value="Eiffel" />
+    <input type="hidden" name="pagePath" value="/languages/eiffel" />
+    <div class="propose-hp" aria-hidden="true">
+      <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+    </div>
+    <div class="propose-row">
+      <label for="pr-claim-eiffel">Which claim is wrong?</label>
+      <input type="text" id="pr-claim-eiffel" name="claim" maxlength="500" placeholder="e.g. &quot;Eiffel is self-hosting&quot;" />
+    </div>
+    <div class="propose-row">
+      <label for="pr-fix-eiffel">What should it say instead? <span class="propose-req">required</span></label>
+      <textarea id="pr-fix-eiffel" name="correction" rows="4" maxlength="2000" required placeholder="What the record should say, and why."></textarea>
+    </div>
+    <div class="propose-row">
+      <label for="pr-src-eiffel">Evidence (https link)</label>
+      <input type="url" id="pr-src-eiffel" name="evidenceUrl" maxlength="500" placeholder="https://..." />
+    </div>
+    <div class="propose-row">
+      <label for="pr-contact-eiffel">Contact, if you want credit</label>
+      <input type="text" id="pr-contact-eiffel" name="contact" maxlength="200" placeholder="GitHub handle or email, optional" />
+    </div>
+    <div class="propose-actions">
+      <button type="submit" class="propose-btn">Send correction</button>
+      <p class="propose-status" data-propose-status role="status" aria-live="polite"></p>
+    </div>
+    <p class="propose-note">Goes to a public GitHub issue for review. Nothing you write appears on this site.</p>
+  </form>
+  <noscript><p>Or <a href="https://github.com/sanketmuchhala/LanguageLineage/issues/new?title=Correction%3A%20Eiffel" rel="noopener noreferrer">open an issue on GitHub</a>.</p></noscript>
+</section>
+
   <a class="explore-btn" href="/explore?node=lang%3Aeiffel">Explore Eiffel in Graph &rarr;</a>
 </main>
 <footer class="seo-footer-rich">

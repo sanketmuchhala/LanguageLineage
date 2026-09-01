@@ -1743,6 +1743,51 @@ function buildEmbedKit(node: Language): string {
 </section>`;
 }
 
+// A correction form on every language and tool page. Submissions go to GitHub
+// issues via /api/propose and are never rendered on the site, so the public
+// surface stays curated. Progressive enhancement: with JS off the block
+// degrades to the plain "open an issue" link it already carried.
+function buildProposeForm(node: Language): string {
+  const slug = idToSlug(node.id);
+  const pagePath = `/${idToPrefix(node.id)}/${slug}`;
+  const name = escapeHtml(node.name);
+
+  return `<section class="propose" data-nosnippet>
+  <h2>Spot something wrong?</h2>
+  <p>Every fact on this page is meant to be checkable. If one is wrong, say so and it becomes a dataset change, not a patch to this page.</p>
+  <form class="propose-form" data-propose novalidate>
+    <input type="hidden" name="nodeId" value="${escapeHtml(node.id)}" />
+    <input type="hidden" name="nodeName" value="${name}" />
+    <input type="hidden" name="pagePath" value="${escapeHtml(pagePath)}" />
+    <div class="propose-hp" aria-hidden="true">
+      <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+    </div>
+    <div class="propose-row">
+      <label for="pr-claim-${slug}">Which claim is wrong?</label>
+      <input type="text" id="pr-claim-${slug}" name="claim" maxlength="500" placeholder="e.g. &quot;${name} is self-hosting&quot;" />
+    </div>
+    <div class="propose-row">
+      <label for="pr-fix-${slug}">What should it say instead? <span class="propose-req">required</span></label>
+      <textarea id="pr-fix-${slug}" name="correction" rows="4" maxlength="2000" required placeholder="What the record should say, and why."></textarea>
+    </div>
+    <div class="propose-row">
+      <label for="pr-src-${slug}">Evidence (https link)</label>
+      <input type="url" id="pr-src-${slug}" name="evidenceUrl" maxlength="500" placeholder="https://..." />
+    </div>
+    <div class="propose-row">
+      <label for="pr-contact-${slug}">Contact, if you want credit</label>
+      <input type="text" id="pr-contact-${slug}" name="contact" maxlength="200" placeholder="GitHub handle or email, optional" />
+    </div>
+    <div class="propose-actions">
+      <button type="submit" class="propose-btn">Send correction</button>
+      <p class="propose-status" data-propose-status role="status" aria-live="polite"></p>
+    </div>
+    <p class="propose-note">Goes to a public GitHub issue for review. Nothing you write appears on this site.</p>
+  </form>
+  <noscript><p>Or <a href="https://github.com/sanketmuchhala/LanguageLineage/issues/new?title=${encodeURIComponent(`Correction: ${node.name}`)}" rel="noopener noreferrer">open an issue on GitHub</a>.</p></noscript>
+</section>`;
+}
+
 function buildSources(node: Language, rels: Relationship[]): string {
   const id = node.id;
   const sources = [...new Set(
@@ -1997,6 +2042,8 @@ ${priorityContentHtml ? `
 ${node.id.startsWith('lang:') ? `
   ${buildEmbedKit(node)}
 ` : ''}
+  ${buildProposeForm(node)}
+
   <a class="explore-btn" href="/explore?node=${encodeURIComponent(node.id)}">Explore ${escapeHtml(node.name)} in Graph &rarr;</a>
 </main>
 ${FOOTER_HTML}

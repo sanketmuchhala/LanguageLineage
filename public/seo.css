@@ -1000,6 +1000,65 @@ pre {
   margin: 24px 0;
   overflow-x: auto;
 }
+/* Correction form */
+.propose {
+  background: var(--bg-surface);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 8px;
+  padding: 24px 20px;
+  margin: 32px 0;
+}
+.propose h2 { margin-top: 0; }
+.propose-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.propose-row { margin-bottom: 14px; }
+.propose-row label {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 6px;
+}
+.propose-req { color: #4ade80; text-transform: none; letter-spacing: 0; }
+.propose-row input,
+.propose-row textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--bg-elevated, #161616);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 6px;
+  padding: 10px 12px;
+  color: var(--text-primary, #fafafa);
+  font: inherit;
+  font-size: 15px;
+}
+.propose-row textarea { resize: vertical; min-height: 92px; }
+.propose-row input:focus-visible,
+.propose-row textarea:focus-visible,
+.propose-btn:focus-visible {
+  outline: 2px solid #4ade80;
+  outline-offset: 2px;
+  border-color: transparent;
+}
+.propose-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.propose-btn {
+  background: #4ade80;
+  color: #0a0a0a;
+  border: 0;
+  border-radius: 6px;
+  padding: 10px 18px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.propose-btn:hover { background: #86efac; }
+.propose-btn:disabled { opacity: 0.55; cursor: default; }
+.propose-status { margin: 0; font-size: 14px; color: var(--text-secondary); }
+.propose-status.is-ok { color: #4ade80; }
+.propose-status.is-error { color: #fb7185; }
+.propose-note { font-size: 13px; color: var(--text-tertiary); margin: 14px 0 0; }
+
 .family-tree-fig { overflow-x: visible; }
 .family-tree-fig svg { width: 100%; height: auto; display: block; }
 .family-tree-fig .ft-compact { display: none; margin: 0 auto; max-width: 380px; }
