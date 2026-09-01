@@ -394,6 +394,7 @@ const DESC_MIN = 75;
 const DESC_MAX = 180;
 let titleLengthErrors = 0;
 let descLengthErrors = 0;
+let missingAnalytics = 0;
 
 for (const filePath of allHtmlFiles) {
   const rel = filePath.replace(PUBLIC + '/', '');
@@ -419,6 +420,12 @@ for (const filePath of allHtmlFiles) {
     if (d.length > DESC_MAX) { warn(`${rel}: description too long (${d.length} chars, max ${DESC_MAX})`); descLengthErrors++; }
   } else {
     fail(`${rel}: missing meta description`);
+  }
+
+  // Vercel Analytics beacon must be present on every generated page
+  if (!html.includes('_vercel/insights')) {
+    fail(`${rel}: missing Vercel Analytics beacon`);
+    missingAnalytics++;
   }
 
   // Heading hierarchy: exactly one h1, no skipped levels
@@ -453,6 +460,7 @@ if (dupDescs.length === 0) {
   }
 }
 
+if (missingAnalytics === 0) ok(`All ${allHtmlFiles.length} pages have the Vercel Analytics beacon`);
 if (titleLengthErrors === 0) ok(`All titles within ${TITLE_MAX} chars`);
 if (descLengthErrors === 0) ok(`All descriptions within ${DESC_MIN}-${DESC_MAX} chars`);
 

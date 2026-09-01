@@ -21,6 +21,9 @@ function ogImg(filename: string): string {
 
 const FONTS_HEAD = `<link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><script defer src="/fx.js"></script>`;
 
+// Vercel Analytics; the SPA gets these via <Analytics /> in src/app/App.tsx
+const ANALYTICS_HEAD = `<script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script>`;
+
 const BRAND_MARK = `<img class="nav-logo-mark" src="/logo-mark.svg" width="22" height="22" alt="" aria-hidden="true">`;
 
 const SKIP_LINK = `<a href="#main-content" class="skip-link">Skip to main content</a>`;
@@ -1807,7 +1810,7 @@ ${faqs.map(f => `<div class="faq-item">
   <meta name="description" content="${escapeHtml(description)}" />
   <link rel="canonical" href="${url}" />
   <link rel="icon" href="/favicon.svg" />
-  ${FONTS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  ${FONTS_HEAD}${ANALYTICS_HEAD}<link rel="stylesheet" href="/seo.css" />
   ${QUESTION_PAGE_LANGS.has(slug) ? `<link rel="alternate" href="${SITE}/questions/what-is-${slug}-written-in" />` : ''}
   <meta property="og:type" content="article" />
   <meta property="og:title" content="${escapeHtml(title)}" />
@@ -2185,7 +2188,7 @@ function buildQuestionPage(q: QuestionDef, nodeMap: Map<string, Language>): stri
   <meta name="description" content="${escapeHtml(metaDescription)}" />
   <link rel="canonical" href="${url}" />
   <link rel="icon" href="/favicon.svg" />
-  ${FONTS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  ${FONTS_HEAD}${ANALYTICS_HEAD}<link rel="stylesheet" href="/seo.css" />
   ${matchingLangSlug && QUESTION_PAGE_LANGS.has(matchingLangSlug) ? `<link rel="alternate" href="${SITE}/languages/${matchingLangSlug}" />` : ''}
   <meta property="og:type" content="article" />
   <meta property="og:title" content="${escapeHtml(q.titleHook ? `${q.title} ${q.titleHook}` : q.title)} | Language Lineage" />
@@ -2420,7 +2423,7 @@ function buildAutoQuestionPage(aqn: AutoQNode, nodeMap: Map<string, Language>): 
   <meta name="description" content="${escapeHtml(metaDescription)}" />
   <link rel="canonical" href="${url}" />
   <link rel="icon" href="/favicon.svg" />
-  ${FONTS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  ${FONTS_HEAD}${ANALYTICS_HEAD}<link rel="stylesheet" href="/seo.css" />
   <link rel="alternate" href="${SITE}/languages/${slug}" />
   <meta property="og:type" content="article" />
   <meta property="og:title" content="${escapeHtml(pageTitleTag)}" />
@@ -2503,7 +2506,7 @@ function buildQuestionsIndex(autoPages: AutoQNode[]): string {
   <meta name="description" content="Direct answers to common programming language questions: what languages are written in, compiler bootstrapping, self-hosting compilers, and more." />
   <link rel="canonical" href="${url}" />
   <link rel="icon" href="/favicon.svg" />
-  ${FONTS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  ${FONTS_HEAD}${ANALYTICS_HEAD}<link rel="stylesheet" href="/seo.css" />
   <meta property="og:title" content="Programming Language Questions Answered | Language Lineage" />
   <meta property="og:description" content="Direct answers to common programming language questions." />
   <meta property="og:url" content="${url}" />
@@ -2575,7 +2578,7 @@ function buildProgrammingLanguageGraph(languages: Language[], rels: Relationship
   <meta name="description" content="Interactive graph of ${langCount} programming languages and ${rels.length} relationships: what languages are written in, how compilers are implemented, and how they influenced each other." />
   <link rel="canonical" href="${url}" />
   <link rel="icon" href="/favicon.svg" />
-  ${FONTS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  ${FONTS_HEAD}${ANALYTICS_HEAD}<link rel="stylesheet" href="/seo.css" />
   <meta property="og:title" content="Programming Language Graph | Interactive Language Lineage Map" />
   <meta property="og:description" content="Interactive programming language graph: ${langCount} languages, ${rels.length} relationships, implementation and influence data." />
   <meta property="og:url" content="${url}" />
@@ -2705,7 +2708,7 @@ function buildProgrammingLanguageFamilyTree(languages: Language[]): string {
   <meta name="description" content="Explore the programming language family tree: C family, Lisp family, ML family, JVM family, and more. Interactive graph with ${langCount} languages and implementation relationships." />
   <link rel="canonical" href="${url}" />
   <link rel="icon" href="/favicon.svg" />
-  ${FONTS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  ${FONTS_HEAD}${ANALYTICS_HEAD}<link rel="stylesheet" href="/seo.css" />
   <meta property="og:title" content="Programming Language Family Tree | Interactive Lineage Graph" />
   <meta property="og:description" content="C family, Lisp family, ML family, JVM family and more, interactive programming language family tree with implementation data." />
   <meta property="og:url" content="${url}" />
@@ -2790,7 +2793,7 @@ function buildProgrammingLanguageGenealogy(languages: Language[], rels: Relation
   <meta name="description" content="Explore programming language genealogy: ${influenceCount} influence relationships, language families, ancestry chains, and implementation lineage across ${languages.length} languages." />
   <link rel="canonical" href="${url}" />
   <link rel="icon" href="/favicon.svg" />
-  ${FONTS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  ${FONTS_HEAD}${ANALYTICS_HEAD}<link rel="stylesheet" href="/seo.css" />
   <meta property="og:title" content="Programming Language Genealogy | Language Evolution and Influence" />
   <meta property="og:description" content="Programming language genealogy: influence, ancestry, and implementation relationships across ${languages.length} languages." />
   <meta property="og:url" content="${url}" />
@@ -2883,7 +2886,7 @@ function buildProgrammingLanguageEvolution(languages: Language[]): string {
   <meta name="description" content="Trace the evolution of programming languages from ${minYear} to ${maxYear}. Decade-by-decade timeline of ${langNodes.length} languages with influence and implementation relationships." />
   <link rel="canonical" href="${url}" />
   <link rel="icon" href="/favicon.svg" />
-  ${FONTS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  ${FONTS_HEAD}${ANALYTICS_HEAD}<link rel="stylesheet" href="/seo.css" />
   <meta property="og:title" content="Programming Language Evolution Timeline | ${minYear} to ${maxYear}" />
   <meta property="og:description" content="${langNodes.length} languages, ${minYear}–${maxYear}. Decade-by-decade programming language evolution." />
   <meta property="og:url" content="${url}" />
@@ -2967,7 +2970,7 @@ function buildWhatAreLanguagesWrittenIn(languages: Language[], rels: Relationshi
   <meta name="description" content="What are programming languages written in? Python is written in C, JavaScript engines in C++, Rust in Rust, Go in Go. Explore ${implRels.length} implementation relationships with evidence." />
   <link rel="canonical" href="${url}" />
   <link rel="icon" href="/favicon.svg" />
-  ${FONTS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  ${FONTS_HEAD}${ANALYTICS_HEAD}<link rel="stylesheet" href="/seo.css" />
   <meta property="og:title" content="What Are Programming Languages Written In?" />
   <meta property="og:description" content="Python is in C, JavaScript engines in C++, Rust in Rust. Explore ${implRels.length} compiler and runtime relationships." />
   <meta property="og:url" content="${url}" />
@@ -3084,7 +3087,7 @@ function buildCompilerRuntimeBootstrap(rels: Relationship[]): string {
   <meta name="description" content="Understand compiler, runtime, and bootstrap relationships in programming language implementation. Definitions, examples, and dataset evidence for all relationship types." />
   <link rel="canonical" href="${url}" />
   <link rel="icon" href="/favicon.svg" />
-  ${FONTS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  ${FONTS_HEAD}${ANALYTICS_HEAD}<link rel="stylesheet" href="/seo.css" />
   <meta property="og:title" content="Compiler, Runtime, and Bootstrap Relationships Explained" />
   <meta property="og:description" content="Compiler, runtime, bootstrap, transpilation, what they mean and how Language Lineage tracks them." />
   <meta property="og:url" content="${url}" />
@@ -3198,7 +3201,7 @@ function buildDatasetPage(languages: Language[], rels: Relationship[]): string {
   <meta name="description" content="Open dataset of ${languages.length} programming languages with ${rels.length} implementation and influence relationships, evidence sources, and confidence scores." />
   <link rel="canonical" href="${SITE}/dataset" />
   <link rel="icon" href="/favicon.svg" />
-  ${FONTS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  ${FONTS_HEAD}${ANALYTICS_HEAD}<link rel="stylesheet" href="/seo.css" />
   <meta property="og:title" content="Programming Language Lineage Dataset" />
   <meta property="og:description" content="Open dataset of ${languages.length} programming languages with ${rels.length} relationships." />
   <meta property="og:url" content="${SITE}/dataset" />
@@ -3353,7 +3356,7 @@ function buildRelationshipPage(type: string, rels: Relationship[], nodeMap: Map<
   <meta name="description" content="${escapeHtml(def.description.slice(0, 160))}" />
   <link rel="canonical" href="${url}" />
   <link rel="icon" href="/favicon.svg" />
-  ${FONTS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  ${FONTS_HEAD}${ANALYTICS_HEAD}<link rel="stylesheet" href="/seo.css" />
   <meta property="og:title" content="${escapeHtml(title)}" />
   <meta property="og:url" content="${url}" />
   <meta property="og:image" content="${ogImg(`relationships-${slug}.png`)}" />
@@ -3946,7 +3949,7 @@ function buildGuidePage(guide: (typeof GUIDES)[0]): string {
   <meta name="description" content="${escapeHtml(guide.description)}" />
   <link rel="canonical" href="${url}" />
   <link rel="icon" href="/favicon.svg" />
-  ${FONTS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  ${FONTS_HEAD}${ANALYTICS_HEAD}<link rel="stylesheet" href="/seo.css" />
   <meta property="og:type" content="article" />
   <meta property="og:title" content="${escapeHtml(guide.title)}" />
   <meta property="og:description" content="${escapeHtml(guide.description)}" />
@@ -4018,7 +4021,7 @@ function buildLanguagesIndex(langs: Language[]): string {
   <meta name="description" content="Browse all ${langNodes.length} programming languages in the Language Lineage dataset. Find what each language is written in, its compiler, runtime, and lineage." />
   <link rel="canonical" href="${SITE}/languages" />
   <link rel="icon" href="/favicon.svg" />
-  ${FONTS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  ${FONTS_HEAD}${ANALYTICS_HEAD}<link rel="stylesheet" href="/seo.css" />
   <meta property="og:title" content="Programming Languages Index | Language Lineage" />
   <meta property="og:url" content="${SITE}/languages" />
   <meta property="og:image" content="${SITE}/og-image.png" />
@@ -4079,7 +4082,7 @@ function buildToolsIndex(langs: Language[]): string {
   <meta name="description" content="Browse ${toolNodes.length} compilers, runtimes, and language tools: GCC, LLVM, V8, SpiderMonkey, GHC, HotSpot JVM, and more. Find what each is written in." />
   <link rel="canonical" href="${SITE}/tools" />
   <link rel="icon" href="/favicon.svg" />
-  ${FONTS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  ${FONTS_HEAD}${ANALYTICS_HEAD}<link rel="stylesheet" href="/seo.css" />
   <meta property="og:title" content="Compilers, Runtimes, and Tools | Language Lineage" />
   <meta property="og:url" content="${SITE}/tools" />
   <meta property="og:image" content="${SITE}/og-image.png" />
@@ -4119,7 +4122,7 @@ function buildGuidesIndex(): string {
   <meta name="description" content="In-depth guides on compiler bootstrapping, self-hosting, JavaScript engines, Python implementation, GCC vs LLVM, and more." />
   <link rel="canonical" href="${SITE}/guides" />
   <link rel="icon" href="/favicon.svg" />
-  ${FONTS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  ${FONTS_HEAD}${ANALYTICS_HEAD}<link rel="stylesheet" href="/seo.css" />
   <meta property="og:title" content="Programming Language Guides | Language Lineage" />
   <meta property="og:url" content="${SITE}/guides" />
   <meta property="og:image" content="${SITE}/og-image.png" />
@@ -4168,7 +4171,7 @@ function buildRelationshipsIndex(rels: Relationship[]): string {
   <meta name="description" content="Browse all 6 relationship types in the Language Lineage dataset: compiler_written_in, runtime_written_in, bootstrap_written_in, influenced, transpiled_to, rewritten_in." />
   <link rel="canonical" href="${SITE}/relationships" />
   <link rel="icon" href="/favicon.svg" />
-  ${FONTS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  ${FONTS_HEAD}${ANALYTICS_HEAD}<link rel="stylesheet" href="/seo.css" />
   <meta property="og:title" content="Relationship Types | Language Lineage" />
   <meta property="og:url" content="${SITE}/relationships" />
   <meta property="og:image" content="${SITE}/og-image.png" />
@@ -4347,7 +4350,7 @@ function buildTimelinePage(languages: Language[], rels: Relationship[]): string 
   <meta name="description" content="75+ years of programming language history. Watch ${sorted.length} languages emerge one by one on an interactive scrollable timeline from Fortran to Rust." />
   <link rel="canonical" href="${SITE}/timeline" />
   <link rel="icon" href="/favicon.svg" />
-  ${FONTS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  ${FONTS_HEAD}${ANALYTICS_HEAD}<link rel="stylesheet" href="/seo.css" />
   <meta property="og:title" content="Programming Language Timeline | Language Lineage" />
   <meta property="og:url" content="${SITE}/timeline" />
   <meta property="og:image" content="${SITE}/og-image.png" />
@@ -5373,7 +5376,7 @@ npm run build          # regenerate everything, then compile</code></pre>
   <meta name="description" content="${escapeHtml(description)}" />
   <link rel="canonical" href="${url}" />
   <link rel="icon" href="/favicon.svg" />
-  ${FONTS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  ${FONTS_HEAD}${ANALYTICS_HEAD}<link rel="stylesheet" href="/seo.css" />
   <meta property="og:type" content="article" />
   <meta property="og:title" content="${escapeHtml(title)}" />
   <meta property="og:description" content="${escapeHtml(description)}" />
@@ -5595,7 +5598,7 @@ function buildDirectoryPage(languages: Language[], rels: Relationship[]): string
     @media (max-width: 768px) { .directory-list { columns: 2; } }
     @media (max-width: 480px) { .directory-list { columns: 1; } }
   </style>
-  ${FONTS_HEAD}
+  ${FONTS_HEAD}${ANALYTICS_HEAD}
 </head>
 <body>
   ${NAV_HTML}

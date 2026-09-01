@@ -394,6 +394,111 @@ function run() {
   }
 
   // -----------------------------------------------------------------------
+  // Period trend (Chart.csv): last 28 days vs the 28 before it
+  // -----------------------------------------------------------------------
+
+  const chartFile = join(exportDir, 'Chart.csv');
+  if (existsSync(chartFile)) {
+    const chart = parseCsv(readFileSync(chartFile, 'utf8'))
+      .filter(r => /^\d{4}-\d{2}-\d{2}$/.test(r['Date'] || ''))
+      .sort((a, b) => (a['Date'] || '').localeCompare(b['Date'] || ''));
+
+    if (chart.length >= 56) {
+      const sum = (rows: Record<string, string>[]) => rows.reduce(
+        (acc, r) => ({
+          clicks: acc.clicks + parseInt(r['Clicks'] || '0', 10),
+          impressions: acc.impressions + parseInt(r['Impressions'] || '0', 10),
+        }),
+        { clicks: 0, impressions: 0 }
+      );
+      const recent = sum(chart.slice(-28));
+      const prior = sum(chart.slice(-56, -28));
+      const ctr = (t: { clicks: number; impressions: number }) =>
+        t.impressions ? (100 * t.clicks / t.impressions).toFixed(2) + '%' : 'n/a';
+
+      console.log('');
+      console.log('='.repeat(72));
+      console.log('PERIOD TREND (last 28 days vs prior 28)');
+      console.log('='.repeat(72));
+      console.log('');
+      console.log(`  Window:      ${chart[chart.length - 28]['Date']} to ${chart[chart.length - 1]['Date']}`);
+      console.log(`  Clicks:      ${prior.clicks} -> ${recent.clicks}`);
+      console.log(`  Impressions: ${prior.impressions} -> ${recent.impressions}`);
+      console.log(`  CTR:         ${ctr(prior)} -> ${ctr(recent)}`);
+    }
+  }
+
+  // -----------------------------------------------------------------------
+  // Per-section rollup by URL segment
+  // -----------------------------------------------------------------------
+
+  const sections = new Map<string, { clicks: number; impressions: number }>();
+  const pageKey = Object.keys(pages[0] || {}).find(k => k.toLowerCase().includes('page')) || 'Top pages';
+  for (const p of pages) {
+    const path = (p[pageKey] || '').replace(/^https?:\/\/[^/]+/, '').split('?')[0];
+    const seg = path === '/' || path === '' ? '(home)' : path.split('/')[1];
+    const cur = sections.get(seg) || { clicks: 0, impressions: 0 };
+    cur.clicks += parseInt(p['Clicks'] || '0', 10);
+    cur.impressions += parseInt(p['Impressions'] || '0', 10);
+    sections.set(seg, cur);
+  }
+
+  console.log('');
+  console.log('='.repeat(72));
+  console.log('SECTION ROLLUP');
+  console.log('='.repeat(72));
+  console.log('');
+  console.log(`  ${'Section'.padEnd(26)} ${'Clicks'.padStart(7)} ${'Impr'.padStart(8)} ${'CTR'.padStart(8)}`);
+  console.log(`  ${'-'.repeat(26)} ${'-'.repeat(7)} ${'-'.repeat(8)} ${'-'.repeat(8)}`);
+  for (const [seg, t] of [...sections.entries()].sort((a, b) => b[1].impressions - a[1].impressions)) {
+    const ctr = t.impressions ? (100 * t.clicks / t.impressions).toFixed(2) + '%' : 'n/a';
+    console.log(`  ${seg.padEnd(26)} ${String(t.clicks).padStart(7)} ${String(t.impressions).padStart(8)} ${ctr.padStart(8)}`);
+  }
+
+  // -----------------------------------------------------------------------
+  // Query-class split. Definitional queries ("what is X written in") are
+  // answered inline by Google, so their impressions rarely convert; the
+  // exploratory cluster converts far better and is where effort pays off.
+  // -----------------------------------------------------------------------
+
+  const EXPLORATORY = /\b(tree|map|graph|chart|diagram|timeline|genealog|family|visual|evolution|history)\b/i;
+  const CONCEPTUAL = /\b(bootstrap|compiler|interpreter|runtime|transpil|self-hosting)\b/i;
+  const DEFINITIONAL = /\bwritten in\b|\bwhat is\b|\bwhat language\b|\bimplemented in\b|\bbuilt on\b/i;
+
+  const classes = new Map<string, { clicks: number; impressions: number }>([
+    ['exploratory', { clicks: 0, impressions: 0 }],
+    ['conceptual', { clicks: 0, impressions: 0 }],
+    ['definitional', { clicks: 0, impressions: 0 }],
+    ['other', { clicks: 0, impressions: 0 }],
+  ]);
+
+  const queryKey = Object.keys(queries[0] || {}).find(k => k.toLowerCase().includes('quer')) || 'Top queries';
+  for (const q of queries) {
+    const text = q[queryKey] || '';
+    // Order matters: exploratory and conceptual win over definitional, since
+    // "history of the X programming language" is an exploratory intent.
+    const cls = EXPLORATORY.test(text) ? 'exploratory'
+      : CONCEPTUAL.test(text) ? 'conceptual'
+      : DEFINITIONAL.test(text) ? 'definitional'
+      : 'other';
+    const cur = classes.get(cls)!;
+    cur.clicks += parseInt(q['Clicks'] || '0', 10);
+    cur.impressions += parseInt(q['Impressions'] || '0', 10);
+  }
+
+  console.log('');
+  console.log('='.repeat(72));
+  console.log('QUERY CLASS SPLIT');
+  console.log('='.repeat(72));
+  console.log('');
+  console.log(`  ${'Class'.padEnd(26)} ${'Clicks'.padStart(7)} ${'Impr'.padStart(8)} ${'CTR'.padStart(8)}`);
+  console.log(`  ${'-'.repeat(26)} ${'-'.repeat(7)} ${'-'.repeat(8)} ${'-'.repeat(8)}`);
+  for (const [cls, t] of [...classes.entries()].sort((a, b) => b[1].impressions - a[1].impressions)) {
+    const ctr = t.impressions ? (100 * t.clicks / t.impressions).toFixed(2) + '%' : 'n/a';
+    console.log(`  ${cls.padEnd(26)} ${String(t.clicks).padStart(7)} ${String(t.impressions).padStart(8)} ${ctr.padStart(8)}`);
+  }
+
+  // -----------------------------------------------------------------------
   // Summary and measurement log row
   // -----------------------------------------------------------------------
 
