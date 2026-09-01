@@ -141,13 +141,16 @@ The required result is 0 errors, 0 warnings.
 - `scripts/generateSeoPages.ts` renders every language, tool, question, guide, relationship, timeline, and dataset page as static HTML into `public/`
 - `scripts/generateSitemap.ts` and `scripts/generateLlmsTxt.ts` derive the sitemap and the `llms.txt` index from the rendered pages rather than a hand-maintained list
 - `scripts/generateOgImages.ts` renders the social preview images
+- every generated page carries the Vercel Analytics beacon, injected by `generateSeoPages.ts`; `validateSeo.ts` fails the build if one is missing, so the measurement surface cannot silently regress
 - the interactive graph at `/explore` fetches the exact same `lineage_v5.json` at runtime, and the downloadable dataset is that same file, not an export
 
 Nobody edits generated HTML. A fix goes into the dataset or a generator and the whole site is rebuilt, so a correction lands everywhere the fact appears.
 
 ## The corrections loop
 
-Spot an error? [Open an issue](https://github.com/sanketmuchhala/LanguageLineage/issues). A correction is never a patch to one page: it becomes a dataset or generator change, re-enters the pipeline at the research or assembly stage, gets reviewed like any other diff, and has to clear every gate before it ships.
+Spot an error? Use the correction form at the bottom of any language or tool page, or [open an issue](https://github.com/sanketmuchhala/LanguageLineage/issues) directly. The form posts to `api/propose.ts`, which files a GitHub issue labelled `correction` and `from-website`; submitted text is never rendered on the site, so the published surface stays curated either way.
+
+A correction is never a patch to one page. It becomes a dataset or generator change, re-enters the pipeline at the research or assembly stage, gets reviewed like any other diff, and has to clear every gate before it ships. That is why the loop in the diagram is literal: the fix lands everywhere the fact appears, not just on the page where it was reported.
 
 ## Command reference
 
@@ -162,6 +165,7 @@ Spot an error? [Open an issue](https://github.com/sanketmuchhala/LanguageLineage
 | `npm run seo:links` | Audit internal links across generated pages |
 | `npm run og:generate` | Render OG preview images |
 | `npm run build` | Everything above that ships: generate, type-check, compile |
+| `npm run gsc:analyze` | Read a GSC export: 28-day trend, section rollup, query-class split |
 
 ## Licensing
 

@@ -14,7 +14,7 @@
 
 # Language Lineage
 
-An interactive, evidence-backed atlas mapping implementation, bootstrapping, runtime, and influence relationships across 152 nodes: 131 programming languages and 21 compiler/runtime tools. 306 indexable pages, 443 sourced relationships.
+An interactive, evidence-backed atlas mapping implementation, bootstrapping, runtime, and influence relationships across 152 nodes: 131 programming languages and 21 compiler/runtime tools. 304 indexable pages, 443 sourced relationships.
 
 ## Live Site
 
@@ -26,6 +26,7 @@ An interactive, evidence-backed atlas mapping implementation, bootstrapping, run
 - Guides: [/guides](https://www.languagelineage.org/guides) (13 guides including comparisons and bootstrap chain analysis)
 - Dataset: [/dataset](https://www.languagelineage.org/dataset) (JSON-LD, download, citation block, embed kit)
 - Embeddable graph: `<iframe src="https://www.languagelineage.org/embed?lang=rust">` (works from any page)
+- Embed guide: [/embed-kit](https://www.languagelineage.org/embed-kit) (live example, snippet, parameters, sizing, attribution)
 
 <p align="center">
   <img src="public/og-image.png" alt="Language Lineage: what programming languages are written in. 152 languages and tools, 443 sourced relationships." width="900">
@@ -106,15 +107,17 @@ LanguageLineage/
 │   └── v5/                            152 nodes, 443 relationships (current)
 │       ├── lineage_v5.json            Primary dataset
 │       └── enrichment_v5.json         Wikidata-sourced facts (148/152 nodes)
+├── api/
+│   └── propose.ts                     Serverless endpoint: correction form to GitHub issue
 ├── scripts/                           Build and data tooling
 │   ├── generateSeoPages.ts            Static page generator (152 node pages, 120 question pages, 13 guides, 6 relationship pages, etc.)
-│   ├── generateSitemap.ts             Sitemap generator (306 URLs)
+│   ├── generateSitemap.ts             Sitemap generator (304 URLs, canonical only)
 │   ├── generateLlmsTxt.ts             LLM-readable site index
 │   ├── generateOgImages.ts            Per-page OG social cards (satori + resvg)
 │   ├── generateV5Dataset.ts           v4 to v5 dataset migration
 │   ├── validateSeo.ts                 SEO validation suite (0 errors expected)
 │   ├── auditInternalLinks.ts          Internal link graph audit
-│   ├── analyzeGsc.ts                  GSC measurement loop analysis (Phase 14)
+│   ├── analyzeGsc.ts                  GSC analysis: period trend, section rollup, query-class split
 │   ├── analyzeDataset.ts              Dataset integrity and graph metrics
 │   ├── harvestWikipediaContent.ts     Wikidata enrichment harvester
 │   ├── harvestWikimediaLogos.ts       Logo candidate harvester
@@ -197,6 +200,8 @@ From the dataset analyzer (`npm run analyze:v5`):
 | `/` | SPA | 1 | Landing page with graph preview and field records |
 | `/explore` | SPA | 1 | Interactive graph explorer (supports `?node=` deep links) |
 | `/embed` | SPA | 1 | Embeddable graph (accepts `?lang=` query param) |
+| `/embed-kit` | Static | 1 | Embed guide: live example, snippet, parameters, attribution |
+| `/api/propose` | Function | 1 | Receives a proposed correction, opens a GitHub issue |
 | `/languages` | Static | 1 | Index of all 131 languages |
 | `/languages/{slug}` | Static | 131 | Individual language pages |
 | `/tools` | Static | 1 | Index of all 21 tools |
@@ -209,8 +214,8 @@ From the dataset analyzer (`npm run analyze:v5`):
 | `/relationships/{slug}` | Static | 6 | Individual relationship type pages |
 | `/timeline` | Static | 1 | Language timeline page |
 | `/dataset` | Static | 1 | Dataset overview with download, citation, and embed kit |
-| Keyword landings | Static | 6 | Root-level SEO landing pages |
-| `/sitemap.xml` | XML | 1 | 306 indexable URLs |
+| Keyword landings | Static | 6 | Root-level SEO landing pages (5 canonical; `/programming-language-family-tree` canonicalizes to the `/guides/` version) |
+| `/sitemap.xml` | XML | 1 | 304 indexable URLs (canonical only) |
 | `/robots.txt` | Text | 1 | Crawler directives |
 | `/llms.txt` | Text | 1 | LLM-readable site index |
 | `/llms-full.txt` | Text | 1 | Expanded LLM reference |
@@ -316,6 +321,22 @@ The app loads v5 by default. Previous versions remain available in `dataset/`.
 - **Lisp's Influence**: 15 outgoing influence edges, 1 incoming
 - **C's Dominance**: 75 total connections (65 outgoing), foundation of modern computing
 
+## Analytics and measurement
+
+Vercel Web Analytics runs on every page. The SPA routes mount `<Analytics />`
+in `src/app/App.tsx`; the static pages get the beacon injected by
+`generateSeoPages.ts` (`ANALYTICS_HEAD`), and `validateSeo.ts` fails the build
+if any generated page is missing it.
+
+Treat Google Search Console as the source of truth for human traffic. Vercel
+Analytics counts headless browsers that execute JavaScript, so its visitor
+numbers can be dominated by scrapers; GSC counts only real search clicks.
+
+`npm run gsc:analyze` reads a GSC export folder and reports the 28-day trend
+against the prior 28 days, a per-section rollup by URL segment, a query-class
+split (definitional vs exploratory vs conceptual), and the Phase 14 decision
+rules. Log each run in the measurement table in `SITE_IMPROVEMENT_PLAN.md`.
+
 ## Citation
 
 ```
@@ -330,6 +351,20 @@ Language Lineage. Programming Language Lineage Dataset, v5.0.
 3. Make changes with evidence sources
 4. Run `npm run analyze:v5` and `npm run seo:validate` to validate
 5. Submit a pull request
+
+### Proposing a correction without a pull request
+
+Every language and tool page carries a correction form. It posts to
+`/api/propose`, which opens a GitHub issue labelled `correction` and
+`from-website`. Nothing submitted is ever rendered on the site: a correction
+becomes a dataset change and re-enters the normal review gates, so the public
+surface stays curated.
+
+Running that endpoint needs `GITHUB_TOKEN` set in the Vercel project (fine-grained,
+this repo only, Issues: read and write). Optionally `TURNSTILE_SECRET_KEY` enables
+Cloudflare Turnstile; without it the endpoint falls back to a honeypot and a
+per-instance rate limit. With no token it answers `503` and the form fails
+politely. See [DISTRIBUTION.md](DISTRIBUTION.md).
 
 ### Data Contributions
 
