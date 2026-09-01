@@ -483,7 +483,7 @@ Acceptance criteria:
 
 ### Phase 12: Accessibility sweep
 
-Status: DONE (2026-07-02). PR #33.
+Status: not started.
 Impact: medium. Effort: medium. Dependencies: Phase 9 (the graph table exists).
 
 Tasks:
@@ -503,7 +503,7 @@ Acceptance criteria:
 
 ### Phase 13: Distribution, embeds, and citability
 
-Status: DONE (2026-07-02).
+Status: DONE (2026-09-01). Per-page embed blocks, the dataset page's CC BY 4.0 license, citation block, version, counts and download already shipped 2026-07-02; this pass added the public `/embed-kit` guide (live iframe, snippet, the one `lang` parameter, sizing, attribution), linked it from every language page's embed block and the footer, and added `DISTRIBUTION.md` with the launch checklist. Link audit: 0 broken, 0 over-depth, 0 orphans.
 Impact: medium (this is the backlink phase; links need artifacts worth linking). Effort: medium. Dependencies: Phases 1 and 9.
 
 Tasks:
@@ -522,10 +522,8 @@ Acceptance criteria:
 
 ### Phase 14: Measurement loop (continuous)
 
-Status: infrastructure shipped (2026-07-02). First measurement iteration pending next GSC export (target: 2026-07-16 or later, allowing 2 weeks for Phases 1 to 13 to index).
+Status: recurring, never "done".
 Impact: compounds everything. Effort: low per iteration. Dependencies: at least Phases 2 to 4 shipped.
-
-Tooling: `npm run gsc:analyze` (see `scripts/analyzeGsc.ts`). Parses GSC Performance CSV exports, compares against the Section 2 baseline, applies the decision rules below, and outputs a ready-to-paste measurement log row.
 
 Cadence: every 2 to 4 weeks after a content phase ships.
 
@@ -545,7 +543,7 @@ Measurement log:
 | Date | Sitemap URLs | Total clicks (28d) | Total impressions (28d) | Notes |
 |---|---|---|---|---|
 | 2026-06-25 | 199 | ~7 | ~2900 | Baseline. Rankings fine, CTR broken. |
-| 2026-07-02 | 306 | (pending) | (pending) | Post-implementation baseline. Phases 1 to 13 shipped. 107 new pages (question expansion, guides). Title/meta rewrite, content depth, OG cards, self-hosted fonts, a11y, embed kit, dataset page. Next GSC pull target: 2026-07-16. |
+| 2026-09-01 | 304 | 30 | 4770 | 28d to Aug 29 vs prior 28d (20 / 4085). CTR 0.49% -> 0.63%. Query-class split: definitional 2613 impr @ 0.08%, exploratory 103 @ 2.91%. Shipped this date: static-page analytics, canonical consolidation, variant-B titles on the five money pages, family-tree figure. Compare these five on the next pull before iterating again. |
 
 ---
 
