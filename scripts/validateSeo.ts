@@ -229,7 +229,7 @@ ok(`${indexPages.length} collection index pages checked`);
 // Priority title spot-checks
 const prioritySpotChecks: Array<[string, string]> = [
   ['languages/python/index.html', 'CPython: written in C'],
-  ['languages/rust/index.html', 'rustc bootstrapping explained'],
+  ['languages/rust/index.html', 'OCaml first, Rust since 2011'],
   ['languages/javascript/index.html', 'V8, SpiderMonkey, and JSC'],
 ];
 for (const [path, expectedSnippet] of prioritySpotChecks) {

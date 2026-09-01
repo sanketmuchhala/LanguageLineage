@@ -285,23 +285,23 @@ function linkNode(id: string, nodeMap: Map<string, Language>): string {
 const PRIORITY_TITLES: Record<string, { title: string; description: string }> = {
   python: {
     title: 'What is Python written in? CPython: written in C | Language Lineage',
-    description: "Python's reference implementation, CPython, is written in C. Explore its runtime, bootstrap history, and language lineage.",
+    description: "CPython, the reference implementation, is written in C. See the chain from C back to assembly, plus PyPy, Jython, and IronPython, with sources.",
   },
   javascript: {
     title: 'What is JavaScript written in? V8, SpiderMonkey, and JSC | Language Lineage',
-    description: 'JavaScript engines V8, SpiderMonkey, and JavaScriptCore are primarily written in C++. Explore their implementations and lineage.',
+    description: 'V8, SpiderMonkey, and JavaScriptCore are all written in C++, with JIT tiers in assembly. Compare the three engines side by side, with sources.',
   },
   rust: {
-    title: 'What is Rust written in? rustc bootstrapping explained | Language Lineage',
-    description: 'Modern Rust is self-hosting, rustc is written in Rust. Explore its OCaml origins, bootstrap chain, and LLVM backend.',
+    title: 'What is Rust written in? OCaml first, Rust since 2011 | Language Lineage',
+    description: 'rustc was written in OCaml until Rust bootstrapped itself in 2011. See the dated chain through every stage, plus the LLVM backend, with sources.',
   },
   go: {
-    title: 'What is Go written in? Go compiler lineage explained | Language Lineage',
-    description: "Modern Go is self-hosting since Go 1.5. The original compiler was written in C. Explore Go's compiler evolution and lineage.",
+    title: 'What is Go written in? C until 1.5, then Go itself | Language Lineage',
+    description: "Go's compiler was written in C until Go 1.5 (2015) translated it to Go. See the dated bootstrap chain and the runtime's C and assembly parts.",
   },
   java: {
-    title: 'What is Java written in? javac and HotSpot explained | Language Lineage',
-    description: "javac is self-hosting and written in Java. The HotSpot JVM is written in C++. Explore Java's compiler and runtime lineage.",
+    title: 'What is Java written in? JVM, javac, and GraalVM | Language Lineage',
+    description: "Java has two answers: javac is self-hosting Java, the HotSpot JVM is C++. See both chains dated from 1995, with GraalVM and the sources.",
   },
   c: {
     title: 'What was C written in? C compiler lineage explained | Language Lineage',
