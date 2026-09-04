@@ -31,7 +31,7 @@ function checkFile(rel: string): string | null {
 }
 
 // Static files
-const staticFiles = ['robots.txt', 'sitemap.xml', 'manifest.json', 'og-image.svg', 'seo.css', 'llms.txt', 'llms-full.txt', 'favicon.svg', 'logo-mark.svg', 'logo-banner.svg'];
+const staticFiles = ['404.html', 'robots.txt', 'sitemap.xml', 'manifest.json', 'og-image.svg', 'seo.css', 'llms.txt', 'llms-full.txt', 'favicon.svg', 'logo-mark.svg', 'logo-banner.svg'];
 for (const f of staticFiles) {
   const content = checkFile(f);
   if (content) ok(`public/${f} exists (${content.length} bytes)`);
@@ -362,14 +362,36 @@ for (const p of speakableChecks) {
 }
 if (speakableErrors === 0) ok(`${speakableChecks.length} question pages have speakable JSON-LD`);
 
-// Phase 5: vercel.json redirect
+// Vercel routing: preserve the canonical-host redirect, limit SPA rewrites to
+// real client routes, and let unknown paths fall through to public/404.html.
 const vercelJson = readFileSync(join(ROOT, 'vercel.json'), 'utf8');
 try {
   const vercel = JSON.parse(vercelJson);
   if (!vercel.redirects || vercel.redirects.length === 0) fail('vercel.json missing redirect rules');
   else ok('vercel.json has redirect rules');
+
+  const rewrites = Array.isArray(vercel.rewrites) ? vercel.rewrites : [];
+  const catchAll = rewrites.find((rewrite: { source?: string }) =>
+    rewrite.source === '/(.*)' || rewrite.source === '/:path(.*)' || rewrite.source === '/:path*'
+  );
+  if (catchAll) fail('vercel.json has a blanket SPA rewrite that masks 404 responses');
+  else ok('vercel.json has no blanket SPA rewrite');
+
+  for (const source of ['/explore', '/embed']) {
+    const rewrite = rewrites.find((candidate: { source?: string }) => candidate.source === source);
+    if (rewrite?.destination !== '/index.html') fail(`vercel.json missing ${source} SPA rewrite`);
+    else ok(`vercel.json preserves ${source} as an SPA route`);
+  }
 } catch {
   fail('vercel.json is invalid JSON');
+}
+
+const notFoundHtml = checkFile('404.html');
+if (notFoundHtml) {
+  if (!notFoundHtml.includes('<h1>404</h1>')) fail('404.html missing 404 heading');
+  else ok('404.html has a 404 heading');
+  if (!notFoundHtml.includes('name="robots" content="noindex, follow"')) fail('404.html must be noindex');
+  else ok('404.html is noindex');
 }
 
 // Phase 2: Title and description uniqueness + length sweep across all generated pages.
