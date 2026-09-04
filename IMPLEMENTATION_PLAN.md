@@ -3,7 +3,25 @@
 **Prepared:** 2026-09-03  
 **Source:** `GROWTH_MASTERPLAN.md` and `docs/GROWTH_MASTERPLAN_FULL.md`  
 **Planning horizon:** First launch plus 12 months  
-**Current state:** Planning only; no implementation in this document is marked complete unless it is already present on `origin/main` or explicitly recorded as shipped.
+**Current state:** Stage 0 completed on 2026-09-03. Implementation branch: `implementation-2026-09-03`.
+
+## Progress log
+
+### 2026-09-03 — Stage 0 complete
+
+- Preserved the research in safety commit `6698d564` on `preserve-claude-research-2026-09-03`.
+- Fetched the remote and confirmed local `main` had been 164 commits behind.
+- Created `implementation-2026-09-03` from `origin/main` at `118b7a49` and cherry-picked the research documents.
+- Confirmed the latest public Vercel production deployment reports SHA `118b7a49`.
+- Ran `npm ci` successfully. Audit reported 10 dependency vulnerabilities (2 low, 2 moderate, 6 high); remediation is a separate reviewed task and must not use `--force` casually.
+- Ran the production build successfully: it generated 152 language/tool pages and a 304-URL sitemap.
+- Ran `npm run seo:validate`: 0 errors and 0 warnings.
+- Ran `npm run seo:links`: 0 broken links, 0 over-depth pages, and 0 orphans.
+- Compared the exact local and live sitemap URL sets: 304 on each with zero differences.
+- Restored build-generated HTML/date churn after verification; the tracked worktree contains only the planning commit.
+- Left `.claude/settings.local.json` and the stale-v4 `bench.mjs` untracked and excluded from the implementation branch.
+
+**Next task:** Stage 1, item 1—implement and preview-test real 404 behavior while preserving SPA, API, and Vercel system routes.
 
 ## 1. Executive direction
 
