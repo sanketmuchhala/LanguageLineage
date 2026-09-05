@@ -1693,13 +1693,34 @@ function buildRelatedSection(node: Language, rels: Relationship[], nodeMap: Map<
   const seen = new Set<string>();
   const related: string[] = [];
 
-  rels.forEach(r => {
+  const incidentRelationships = rels.filter(r => r.from_language === id || r.to_language === id);
+  incidentRelationships.forEach(r => {
     const other = r.from_language === id ? r.to_language : r.from_language;
     if (other !== id && !seen.has(other) && nodeMap.has(other)) {
       seen.add(other);
       related.push(other);
     }
   });
+
+  // The graph should not contain isolated nodes, but keep their generated pages
+  // discoverable if one is introduced. Only isolated nodes fall back to nearby
+  // members of the same curated cluster, ordered by release-year proximity.
+  if (related.length === 0) {
+    const releaseYear = node.first_release_year ?? 0;
+    const fallback = [...nodeMap.values()]
+      .filter(candidate => candidate.id !== id && candidate.cluster_hint === node.cluster_hint)
+      .sort((a, b) => {
+        const yearDistance = Math.abs((a.first_release_year ?? 0) - releaseYear)
+          - Math.abs((b.first_release_year ?? 0) - releaseYear);
+        return yearDistance || a.name.localeCompare(b.name);
+      });
+
+    for (const candidate of fallback) {
+      if (related.length === 12) break;
+      seen.add(candidate.id);
+      related.push(candidate.id);
+    }
+  }
 
   if (related.length === 0) return '';
 

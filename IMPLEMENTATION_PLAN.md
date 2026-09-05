@@ -3,7 +3,7 @@
 **Prepared:** 2026-09-03  
 **Source:** `GROWTH_MASTERPLAN.md` and `docs/GROWTH_MASTERPLAN_FULL.md`  
 **Planning horizon:** First launch plus 12 months  
-**Current state:** Stage 0 completed on 2026-09-03. Implementation branch: `implementation-2026-09-03`.
+**Current state:** Stage 0 and Stage 1 items 1–2 completed. Implementation branch: `implementation-2026-09-03`.
 
 ## Progress log
 
@@ -21,7 +21,15 @@
 - Restored build-generated HTML/date churn after verification; the tracked worktree contains only the planning commit.
 - Left `.claude/settings.local.json` and the stale-v4 `bench.mjs` untracked and excluded from the implementation branch.
 
-**Next task:** Stage 1, item 1—implement and preview-test real 404 behavior while preserving SPA, API, and Vercel system routes.
+### 2026-09-04 — Stage 1 items 1–2 complete
+
+- Replaced the blanket SPA rewrite with explicit `/explore` and `/embed` rewrites plus a static noindex 404 page; API, static, and Vercel system routes remain outside the SPA catch-all.
+- Corrected generated related-page cards so they are derived only from relationships incident to the current node, deduplicated, and limited to 12.
+- Added a documented same-cluster fallback that runs only for isolated nodes.
+- Added SEO validation for duplicate/unrelated related-page cards and the prior Lua/Ada identical-output regression.
+- Regenerated all 152 language/tool pages. The production build, SEO validator, and internal-link audit pass with 0 validation warnings, 0 broken links, 0 over-depth pages, and 0 orphans.
+
+**Next task:** Stage 1, item 3—derive stable per-URL sitemap dates from page inputs and remove `changefreq` and `priority`.
 
 ## 1. Executive direction
 

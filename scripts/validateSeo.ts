@@ -95,6 +95,8 @@ if (indexHtml.includes('"@type": "Dataset"') || indexHtml.includes('"@type":"Dat
 interface LangNode { id: string; name: string }
 const raw = JSON.parse(readFileSync(join(ROOT, 'dataset/v5/lineage_v5.json'), 'utf8'));
 const languages: LangNode[] = raw.languages ?? [];
+interface Relationship { from_language: string; to_language: string }
+const relationships: Relationship[] = raw.relationships ?? [];
 
 function idToSlug(id: string): string {
   return id.replace(/^(lang|tool):/, '').replace(/_/g, '-');
@@ -106,6 +108,8 @@ function idToPrefix(id: string): string {
 const titles = new Set<string>();
 let pageErrors = 0;
 let embedKitErrors = 0;
+let relatedSectionErrors = 0;
+const relatedLinksById = new Map<string, string[]>();
 
 for (const lang of languages) {
   const prefix = idToPrefix(lang.id);
@@ -127,6 +131,38 @@ for (const lang of languages) {
     }
   }
 
+  const directNeighborLinks = new Set<string>();
+  for (const relationship of relationships) {
+    if (relationship.from_language !== lang.id && relationship.to_language !== lang.id) continue;
+    const neighborId = relationship.from_language === lang.id
+      ? relationship.to_language
+      : relationship.from_language;
+    if (neighborId !== lang.id) {
+      directNeighborLinks.add(`/${idToPrefix(neighborId)}/${idToSlug(neighborId)}`);
+    }
+  }
+
+  const relatedGrid = content.match(/<div class="related-grid">([\s\S]*?)<\/div>/)?.[1] ?? '';
+  const relatedLinks = [...relatedGrid.matchAll(/<a href="([^"]+)" class="related-card">/g)]
+    .map(match => match[1]);
+  relatedLinksById.set(lang.id, relatedLinks);
+
+  if (new Set(relatedLinks).size !== relatedLinks.length) {
+    fail(`${relPath}: related links contain duplicates`);
+    relatedSectionErrors++;
+  }
+  if (directNeighborLinks.size > 0) {
+    if (relatedLinks.length === 0) {
+      fail(`${relPath}: related section is empty despite direct graph relationships`);
+      relatedSectionErrors++;
+    }
+    const unrelatedLinks = relatedLinks.filter(link => !directNeighborLinks.has(link));
+    if (unrelatedLinks.length > 0) {
+      fail(`${relPath}: related section contains non-neighbor link ${unrelatedLinks[0]}`);
+      relatedSectionErrors++;
+    }
+  }
+
   // Check description length
   const descMatch = content.match(/name="description" content="([^"]+)"/);
   if (descMatch) {
@@ -145,6 +181,15 @@ for (const lang of languages) {
 
 if (pageErrors === 0) ok(`All ${languages.length} language/tool pages valid`);
 if (embedKitErrors === 0) ok('All language pages have portable embed snippets');
+if (relatedSectionErrors === 0) ok('All related sections are deduplicated and use direct graph neighbors');
+
+const luaRelated = relatedLinksById.get('lang:lua');
+const adaRelated = relatedLinksById.get('lang:ada');
+if (luaRelated && adaRelated && JSON.stringify(luaRelated) === JSON.stringify(adaRelated)) {
+  fail('Lua and Ada related sections are unexpectedly identical');
+} else if (luaRelated && adaRelated) {
+  ok('Lua and Ada related sections differ');
+}
 
 // Dataset page
 const datasetPage = checkFile('dataset/index.html');
