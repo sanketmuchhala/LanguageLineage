@@ -31,7 +31,7 @@ function checkFile(rel: string): string | null {
 }
 
 // Static files
-const staticFiles = ['robots.txt', 'sitemap.xml', 'manifest.json', 'og-image.svg', 'seo.css', 'llms.txt', 'llms-full.txt', 'favicon.svg', 'logo-mark.svg', 'logo-banner.svg'];
+const staticFiles = ['404.html', 'robots.txt', 'sitemap.xml', 'manifest.json', 'og-image.svg', 'seo.css', 'llms.txt', 'llms-full.txt', 'favicon.svg', 'logo-mark.svg', 'logo-banner.svg'];
 for (const f of staticFiles) {
   const content = checkFile(f);
   if (content) ok(`public/${f} exists (${content.length} bytes)`);
@@ -54,6 +54,27 @@ if (sitemap) {
   if (urlCount < 280) warn(`sitemap.xml has only ${urlCount} URLs, expected 280+ after Phase 3 auto question pages`);
   if (sitemap.includes('https://languagelineage.org')) fail('sitemap.xml contains non-www URLs');
   else ok('sitemap.xml uses canonical www host');
+
+  // Per-URL dates come from scripts/page-dates.json and must only advance when a
+  // page's content changes. A single repeated value means the build stamp is back.
+  const lastmods = (sitemap.match(/<lastmod>([^<]*)<\/lastmod>/g) || []).map((m) =>
+    m.replace(/<\/?lastmod>/g, '')
+  );
+  const distinct = new Set(lastmods);
+  if (lastmods.length !== urlCount) fail(`sitemap.xml has ${lastmods.length} lastmod values for ${urlCount} URLs`);
+  else if (distinct.size < 5) fail(`sitemap.xml has only ${distinct.size} distinct lastmod values, expected 5+ (build-stamp regression?)`);
+  else ok(`sitemap.xml has ${distinct.size} distinct lastmod values`);
+
+  const today = new Date().toISOString().slice(0, 10);
+  const malformed = lastmods.filter((d) => !/^\d{4}-\d{2}-\d{2}$/.test(d));
+  const future = lastmods.filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d) && d > today);
+  if (malformed.length > 0) fail(`sitemap.xml has ${malformed.length} malformed lastmod values (e.g. "${malformed[0]}")`);
+  else if (future.length > 0) fail(`sitemap.xml has ${future.length} lastmod values in the future (e.g. ${future[0]})`);
+  else ok('All lastmod values are valid non-future ISO dates');
+
+  if (sitemap.includes('<changefreq>') || sitemap.includes('<priority>')) {
+    fail('sitemap.xml still contains changefreq/priority (both are ignored by Google)');
+  } else ok('sitemap.xml omits changefreq and priority');
 }
 
 // manifest.json
@@ -95,6 +116,8 @@ if (indexHtml.includes('"@type": "Dataset"') || indexHtml.includes('"@type":"Dat
 interface LangNode { id: string; name: string }
 const raw = JSON.parse(readFileSync(join(ROOT, 'dataset/v5/lineage_v5.json'), 'utf8'));
 const languages: LangNode[] = raw.languages ?? [];
+interface Relationship { from_language: string; to_language: string }
+const relationships: Relationship[] = raw.relationships ?? [];
 
 function idToSlug(id: string): string {
   return id.replace(/^(lang|tool):/, '').replace(/_/g, '-');
@@ -106,6 +129,8 @@ function idToPrefix(id: string): string {
 const titles = new Set<string>();
 let pageErrors = 0;
 let embedKitErrors = 0;
+let relatedSectionErrors = 0;
+const relatedLinksById = new Map<string, string[]>();
 
 for (const lang of languages) {
   const prefix = idToPrefix(lang.id);
@@ -127,6 +152,38 @@ for (const lang of languages) {
     }
   }
 
+  const directNeighborLinks = new Set<string>();
+  for (const relationship of relationships) {
+    if (relationship.from_language !== lang.id && relationship.to_language !== lang.id) continue;
+    const neighborId = relationship.from_language === lang.id
+      ? relationship.to_language
+      : relationship.from_language;
+    if (neighborId !== lang.id) {
+      directNeighborLinks.add(`/${idToPrefix(neighborId)}/${idToSlug(neighborId)}`);
+    }
+  }
+
+  const relatedGrid = content.match(/<div class="related-grid">([\s\S]*?)<\/div>/)?.[1] ?? '';
+  const relatedLinks = [...relatedGrid.matchAll(/<a href="([^"]+)" class="related-card">/g)]
+    .map(match => match[1]);
+  relatedLinksById.set(lang.id, relatedLinks);
+
+  if (new Set(relatedLinks).size !== relatedLinks.length) {
+    fail(`${relPath}: related links contain duplicates`);
+    relatedSectionErrors++;
+  }
+  if (directNeighborLinks.size > 0) {
+    if (relatedLinks.length === 0) {
+      fail(`${relPath}: related section is empty despite direct graph relationships`);
+      relatedSectionErrors++;
+    }
+    const unrelatedLinks = relatedLinks.filter(link => !directNeighborLinks.has(link));
+    if (unrelatedLinks.length > 0) {
+      fail(`${relPath}: related section contains non-neighbor link ${unrelatedLinks[0]}`);
+      relatedSectionErrors++;
+    }
+  }
+
   // Check description length
   const descMatch = content.match(/name="description" content="([^"]+)"/);
   if (descMatch) {
@@ -145,6 +202,15 @@ for (const lang of languages) {
 
 if (pageErrors === 0) ok(`All ${languages.length} language/tool pages valid`);
 if (embedKitErrors === 0) ok('All language pages have portable embed snippets');
+if (relatedSectionErrors === 0) ok('All related sections are deduplicated and use direct graph neighbors');
+
+const luaRelated = relatedLinksById.get('lang:lua');
+const adaRelated = relatedLinksById.get('lang:ada');
+if (luaRelated && adaRelated && JSON.stringify(luaRelated) === JSON.stringify(adaRelated)) {
+  fail('Lua and Ada related sections are unexpectedly identical');
+} else if (luaRelated && adaRelated) {
+  ok('Lua and Ada related sections differ');
+}
 
 // Dataset page
 const datasetPage = checkFile('dataset/index.html');
@@ -362,14 +428,36 @@ for (const p of speakableChecks) {
 }
 if (speakableErrors === 0) ok(`${speakableChecks.length} question pages have speakable JSON-LD`);
 
-// Phase 5: vercel.json redirect
+// Vercel routing: preserve the canonical-host redirect, limit SPA rewrites to
+// real client routes, and let unknown paths fall through to public/404.html.
 const vercelJson = readFileSync(join(ROOT, 'vercel.json'), 'utf8');
 try {
   const vercel = JSON.parse(vercelJson);
   if (!vercel.redirects || vercel.redirects.length === 0) fail('vercel.json missing redirect rules');
   else ok('vercel.json has redirect rules');
+
+  const rewrites = Array.isArray(vercel.rewrites) ? vercel.rewrites : [];
+  const catchAll = rewrites.find((rewrite: { source?: string }) =>
+    rewrite.source === '/(.*)' || rewrite.source === '/:path(.*)' || rewrite.source === '/:path*'
+  );
+  if (catchAll) fail('vercel.json has a blanket SPA rewrite that masks 404 responses');
+  else ok('vercel.json has no blanket SPA rewrite');
+
+  for (const source of ['/explore', '/embed']) {
+    const rewrite = rewrites.find((candidate: { source?: string }) => candidate.source === source);
+    if (rewrite?.destination !== '/index.html') fail(`vercel.json missing ${source} SPA rewrite`);
+    else ok(`vercel.json preserves ${source} as an SPA route`);
+  }
 } catch {
   fail('vercel.json is invalid JSON');
+}
+
+const notFoundHtml = checkFile('404.html');
+if (notFoundHtml) {
+  if (!notFoundHtml.includes('<h1>404</h1>')) fail('404.html missing 404 heading');
+  else ok('404.html has a 404 heading');
+  if (!notFoundHtml.includes('name="robots" content="noindex, follow"')) fail('404.html must be noindex');
+  else ok('404.html is noindex');
 }
 
 // Phase 2: Title and description uniqueness + length sweep across all generated pages.
@@ -396,6 +484,7 @@ const DESC_MAX = 180;
 let titleLengthErrors = 0;
 let descLengthErrors = 0;
 let missingAnalytics = 0;
+let unsubstitutedTokens = 0;
 
 for (const filePath of allHtmlFiles) {
   const rel = filePath.replace(PUBLIC + '/', '');
@@ -436,6 +525,12 @@ for (const filePath of allHtmlFiles) {
   if (!html.includes('_vercel/insights')) {
     fail(`${rel}: missing Vercel Analytics beacon`);
     missingAnalytics++;
+  }
+
+  // The lastmod placeholder must always be substituted before a page is written
+  if (html.includes('__LASTMOD__')) {
+    fail(`${rel}: unsubstituted __LASTMOD__ placeholder`);
+    unsubstitutedTokens++;
   }
 
   // Heading hierarchy: exactly one h1, no skipped levels
@@ -480,6 +575,7 @@ if (dupPrefixes.length === 0) {
 }
 
 if (missingAnalytics === 0) ok(`All ${allHtmlFiles.length} pages have the Vercel Analytics beacon`);
+if (unsubstitutedTokens === 0) ok(`All ${allHtmlFiles.length} pages have a substituted lastmod`);
 if (titleLengthErrors === 0) ok(`All titles within ${TITLE_MAX} chars`);
 if (descLengthErrors === 0) ok(`All descriptions within ${DESC_MIN}-${DESC_MAX} chars`);
 

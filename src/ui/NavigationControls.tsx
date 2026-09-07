@@ -2,29 +2,48 @@ import { useGraphStore } from '../store/useGraphStore';
 import { DAG_LAYOUT, FORCE_LAYOUT, CLUSTER_LAYOUT, buildTimelineLayout } from '../graph/layouts';
 import './NavigationControls.css';
 
+/** True when the tree is the mounted view, in which case Cytoscape is absent
+ *  and these controls drive the tree controller instead. */
+function isTreeMode(): boolean {
+  return useGraphStore.getState().filters.layoutMode === 'dag';
+}
+
 export function NavigationControls() {
   const handleFit = () => {
-    const cy = useGraphStore.getState().cy;
+    const { cy, treeController } = useGraphStore.getState();
+    if (isTreeMode()) {
+      treeController?.fit();
+      return;
+    }
     if (!cy) return;
     cy.animate({ fit: { eles: cy.elements(), padding: 50 } } as any, { duration: 400 } as any);
   };
 
   const handleCenter = () => {
-    const { cy, selectedNodeId } = useGraphStore.getState();
-    if (!cy || !selectedNodeId) return;
+    const { cy, selectedNodeId, treeController } = useGraphStore.getState();
+    if (!selectedNodeId) return;
+    if (isTreeMode()) {
+      treeController?.centerOnNode(selectedNodeId);
+      return;
+    }
+    if (!cy) return;
     const node = cy.getElementById(selectedNodeId);
     if (node.length === 0) return;
     cy.animate({ center: { eles: node }, zoom: 1.5 } as any, { duration: 400 } as any);
   };
 
   const handleReset = () => {
-    const { cy, filters } = useGraphStore.getState();
+    const { cy, filters, treeController } = useGraphStore.getState();
+    if (isTreeMode()) {
+      treeController?.reset();
+      return;
+    }
     if (!cy) return;
     let layout;
     switch (filters.layoutMode) {
-      case 'dag': layout = DAG_LAYOUT; break;
       case 'cluster': layout = CLUSTER_LAYOUT; break;
       case 'timeline': layout = buildTimelineLayout(cy); break;
+      case 'dag': layout = DAG_LAYOUT; break;
       case 'force':
       default: layout = FORCE_LAYOUT; break;
     }
@@ -44,7 +63,7 @@ export function NavigationControls() {
           <path d="M12 2v4M12 18v4M2 12h4M18 12h4"/>
         </svg>
       </button>
-      <button className="nav-btn" onClick={handleReset} title="Reset layout">
+      <button className="nav-btn" onClick={handleReset} title="Reset view">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M1 4v6h6M23 20v-6h-6"/>
           <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>

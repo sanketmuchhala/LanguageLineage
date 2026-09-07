@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { lookupDate } from './pageDates.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -85,54 +86,55 @@ const QUESTION_SLUGS = [
   'is-rust-compiled',
 ];
 
-const urls: Array<{ loc: string; changefreq: string; priority: string }> = [
-  { loc: `${SITE}/`, changefreq: 'monthly', priority: '1.0' },
-  { loc: `${SITE}/explore`, changefreq: 'monthly', priority: '0.9' },
+const urls: Array<{ loc: string }> = [
+  { loc: `${SITE}/` },
+  { loc: `${SITE}/explore` },
   // New keyword landing pages
-  { loc: `${SITE}/embed-kit`, changefreq: 'monthly', priority: '0.7' },
-  { loc: `${SITE}/programming-language-graph`, changefreq: 'monthly', priority: '0.9' },
-  { loc: `${SITE}/programming-language-evolution`, changefreq: 'monthly', priority: '0.85' },
-  { loc: `${SITE}/what-are-programming-languages-written-in`, changefreq: 'monthly', priority: '0.85' },
-  { loc: `${SITE}/programming-language-genealogy`, changefreq: 'monthly', priority: '0.8' },
-  { loc: `${SITE}/compiler-runtime-bootstrap`, changefreq: 'monthly', priority: '0.8' },
+  { loc: `${SITE}/embed-kit` },
+  { loc: `${SITE}/programming-language-graph` },
+  { loc: `${SITE}/programming-language-evolution` },
+  { loc: `${SITE}/what-are-programming-languages-written-in` },
+  { loc: `${SITE}/programming-language-genealogy` },
+  { loc: `${SITE}/compiler-runtime-bootstrap` },
   // Questions
-  { loc: `${SITE}/questions`, changefreq: 'monthly', priority: '0.75' },
-  ...QUESTION_SLUGS.filter(s => !QUESTION_CANONICAL_TO_LANG.has((s.match(/^what-is-(.+)-written-in$/) || [])[1] || '')).map(s => ({ loc: `${SITE}/questions/${s}`, changefreq: 'monthly', priority: '0.8' })),
-  ...AUTO_QUESTION_SLUGS.filter(s => !QUESTION_CANONICAL_TO_LANG.has(s)).map(s => ({ loc: `${SITE}/questions/what-is-${s}-written-in`, changefreq: 'monthly', priority: '0.65' })),
+  { loc: `${SITE}/questions` },
+  ...QUESTION_SLUGS.filter(s => !QUESTION_CANONICAL_TO_LANG.has((s.match(/^what-is-(.+)-written-in$/) || [])[1] || '')).map(s => ({ loc: `${SITE}/questions/${s}` })),
+  ...AUTO_QUESTION_SLUGS.filter(s => !QUESTION_CANONICAL_TO_LANG.has(s)).map(s => ({ loc: `${SITE}/questions/what-is-${s}-written-in` })),
   // Core pages
-  { loc: `${SITE}/directory`, changefreq: 'monthly', priority: '0.85' },
-  { loc: `${SITE}/how-it-works`, changefreq: 'monthly', priority: '0.8' },
-  { loc: `${SITE}/dataset`, changefreq: 'monthly', priority: '0.8' },
-  { loc: `${SITE}/languages`, changefreq: 'monthly', priority: '0.75' },
-  { loc: `${SITE}/tools`, changefreq: 'monthly', priority: '0.75' },
-  { loc: `${SITE}/guides`, changefreq: 'monthly', priority: '0.75' },
-  { loc: `${SITE}/relationships`, changefreq: 'monthly', priority: '0.75' },
-  { loc: `${SITE}/timeline`, changefreq: 'monthly', priority: '0.75' },
+  { loc: `${SITE}/directory` },
+  { loc: `${SITE}/how-it-works` },
+  { loc: `${SITE}/dataset` },
+  { loc: `${SITE}/languages` },
+  { loc: `${SITE}/tools` },
+  { loc: `${SITE}/guides` },
+  { loc: `${SITE}/relationships` },
+  { loc: `${SITE}/timeline` },
 ];
 
 for (const lang of languages) {
   const prefix = idToPrefix(lang.id);
   const slug = idToSlug(lang.id);
-  urls.push({ loc: `${SITE}/${prefix}/${slug}`, changefreq: 'monthly', priority: '0.7' });
+  urls.push({ loc: `${SITE}/${prefix}/${slug}` });
 }
 
 for (const type of relTypes) {
   const slug = type.replace(/_/g, '-');
-  urls.push({ loc: `${SITE}/relationships/${slug}`, changefreq: 'monthly', priority: '0.6' });
+  urls.push({ loc: `${SITE}/relationships/${slug}` });
 }
 
 for (const slug of GUIDE_SLUGS) {
-  urls.push({ loc: `${SITE}/guides/${slug}`, changefreq: 'monthly', priority: '0.65' });
+  urls.push({ loc: `${SITE}/guides/${slug}` });
 }
 
-const today = new Date().toISOString().split('T')[0];
+function pathOf(loc: string): string {
+  const path = loc.slice(SITE.length);
+  return path === '' ? '/' : path;
+}
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map(u => `  <url>
     <loc>${u.loc}</loc>
-    <lastmod>${today}</lastmod>
-    <changefreq>${u.changefreq}</changefreq>
-    <priority>${u.priority}</priority>
+    <lastmod>${lookupDate(pathOf(u.loc))}</lastmod>
   </url>`).join('\n')}
 </urlset>`;
 
