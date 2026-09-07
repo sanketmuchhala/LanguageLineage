@@ -54,6 +54,27 @@ if (sitemap) {
   if (urlCount < 280) warn(`sitemap.xml has only ${urlCount} URLs, expected 280+ after Phase 3 auto question pages`);
   if (sitemap.includes('https://languagelineage.org')) fail('sitemap.xml contains non-www URLs');
   else ok('sitemap.xml uses canonical www host');
+
+  // Per-URL dates come from scripts/page-dates.json and must only advance when a
+  // page's content changes. A single repeated value means the build stamp is back.
+  const lastmods = (sitemap.match(/<lastmod>([^<]*)<\/lastmod>/g) || []).map((m) =>
+    m.replace(/<\/?lastmod>/g, '')
+  );
+  const distinct = new Set(lastmods);
+  if (lastmods.length !== urlCount) fail(`sitemap.xml has ${lastmods.length} lastmod values for ${urlCount} URLs`);
+  else if (distinct.size < 5) fail(`sitemap.xml has only ${distinct.size} distinct lastmod values, expected 5+ (build-stamp regression?)`);
+  else ok(`sitemap.xml has ${distinct.size} distinct lastmod values`);
+
+  const today = new Date().toISOString().slice(0, 10);
+  const malformed = lastmods.filter((d) => !/^\d{4}-\d{2}-\d{2}$/.test(d));
+  const future = lastmods.filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d) && d > today);
+  if (malformed.length > 0) fail(`sitemap.xml has ${malformed.length} malformed lastmod values (e.g. "${malformed[0]}")`);
+  else if (future.length > 0) fail(`sitemap.xml has ${future.length} lastmod values in the future (e.g. ${future[0]})`);
+  else ok('All lastmod values are valid non-future ISO dates');
+
+  if (sitemap.includes('<changefreq>') || sitemap.includes('<priority>')) {
+    fail('sitemap.xml still contains changefreq/priority (both are ignored by Google)');
+  } else ok('sitemap.xml omits changefreq and priority');
 }
 
 // manifest.json
@@ -463,6 +484,7 @@ const DESC_MAX = 180;
 let titleLengthErrors = 0;
 let descLengthErrors = 0;
 let missingAnalytics = 0;
+let unsubstitutedTokens = 0;
 
 for (const filePath of allHtmlFiles) {
   const rel = filePath.replace(PUBLIC + '/', '');
@@ -503,6 +525,12 @@ for (const filePath of allHtmlFiles) {
   if (!html.includes('_vercel/insights')) {
     fail(`${rel}: missing Vercel Analytics beacon`);
     missingAnalytics++;
+  }
+
+  // The lastmod placeholder must always be substituted before a page is written
+  if (html.includes('__LASTMOD__')) {
+    fail(`${rel}: unsubstituted __LASTMOD__ placeholder`);
+    unsubstitutedTokens++;
   }
 
   // Heading hierarchy: exactly one h1, no skipped levels
@@ -547,6 +575,7 @@ if (dupPrefixes.length === 0) {
 }
 
 if (missingAnalytics === 0) ok(`All ${allHtmlFiles.length} pages have the Vercel Analytics beacon`);
+if (unsubstitutedTokens === 0) ok(`All ${allHtmlFiles.length} pages have a substituted lastmod`);
 if (titleLengthErrors === 0) ok(`All titles within ${TITLE_MAX} chars`);
 if (descLengthErrors === 0) ok(`All descriptions within ${DESC_MIN}-${DESC_MAX} chars`);
 

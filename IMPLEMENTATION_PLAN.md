@@ -3,7 +3,7 @@
 **Prepared:** 2026-09-03  
 **Source:** `GROWTH_MASTERPLAN.md` and `docs/GROWTH_MASTERPLAN_FULL.md`  
 **Planning horizon:** First launch plus 12 months  
-**Current state:** Stage 0 and Stage 1 items 1–2 completed. Implementation branch: `implementation-2026-09-03`.
+**Current state:** Stage 0 and Stage 1 items 1–3 completed. Implementation branch: `implementation-2026-09-03`.
 
 ## Progress log
 
@@ -29,7 +29,19 @@
 - Added SEO validation for duplicate/unrelated related-page cards and the prior Lua/Ada identical-output regression.
 - Regenerated all 152 language/tool pages. The production build, SEO validator, and internal-link audit pass with 0 validation warnings, 0 broken links, 0 over-depth pages, and 0 orphans.
 
-**Next task:** Stage 1, item 3—derive stable per-URL sitemap dates from page inputs and remove `changefreq` and `priority`.
+### 2026-09-07 — Stage 1 item 3 complete
+
+- Replaced the two build stamps—`generateSitemap.ts`'s `new Date()` and `generateSeoPages.ts`'s `BUILD_DATE`—with a single stable per-page date. Both had to go together: `BUILD_DATE` rewrote every page's bytes on every build, which would have defeated any content-based scheme.
+- Added `scripts/pageDates.ts` and a committed hash manifest at `scripts/page-dates.json` mapping each URL to its last-written content hash and the date that content first appeared. Pages render a `__LASTMOD__` placeholder, so the date is never part of its own hash; `writeFile` resolves and substitutes it at the single write choke point.
+- Added `scripts/seedPageDates.ts` (`npm run seo:seed-dates`), a one-shot pass that backdates the manifest from git history—per-node pickaxe against `dataset/v5/lineage_v5.json`, per-slug against the generator source.
+- Removed `changefreq` and `priority` from the sitemap; Google ignores both.
+- Result: 6 distinct `lastmod` values across 304 URLs, up from 1. Verified idempotent—two consecutive `seo:generate` runs leave all 307 HTML files byte-identical with an unchanged sitemap and manifest.
+- Verified targeted propagation: changing one node's `first_release_year` re-dated exactly the 4 URLs that render it, leaving 305 untouched.
+- Added four validator checks (distinct-value floor, ISO/non-future dates, no `changefreq`/`priority`, no unsubstituted placeholder) so a build-stamp regression fails the gate.
+- Known limitation: `/` and `/explore` are SPA routes with no generated file, so nothing rehashes them. They are seeded from git and pinned via `PRESERVED_URLS`; their dates will go stale if the SPA shell changes. Stage 2's static `/explore` text layer would fix this automatically.
+- The commit carries a one-time 285-file `public/` re-date as pages move off the build stamp. Type-check, SEO validator, link audit, and production build all pass.
+
+**Next task:** Stage 1, item 4—add a narrowly scoped immutable cache header for versioned `/dataset/v5/*` assets.
 
 ## 1. Executive direction
 

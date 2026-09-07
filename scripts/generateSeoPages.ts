@@ -3,6 +3,7 @@ import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { LOGO_MAP, LOGO_COLORS, getLogoPresentation } from '../src/data/logoMap.js';
 import { getAdaptiveLogoBackground, getLogoBorderColor } from '../src/utils/colorContrast.js';
+import { LASTMOD_TOKEN, filePathToUrl, resolveDate, flushManifest } from './pageDates.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -13,7 +14,6 @@ const DATASET_VERSION = '5.0';
 const DATASET_LICENSE_NAME = 'Creative Commons Attribution 4.0 International';
 const DATASET_LICENSE_URL = 'https://creativecommons.org/licenses/by/4.0/';
 const DATASET_DOWNLOAD_PATH = '/dataset/v5/lineage_v5.json';
-const BUILD_DATE = new Date().toISOString().slice(0, 10);
 
 function ogImg(filename: string): string {
   return existsSync(join(PUBLIC, 'og', filename)) ? `${SITE}/og/${filename}` : `${SITE}/og-image.png`;
@@ -215,6 +215,12 @@ function truncateMetaDescription(text: string, maxLength = 155): string {
 
 function writeFile(filePath: string, content: string) {
   mkdirSync(dirname(filePath), { recursive: true });
+  if (filePath.endsWith('.html')) {
+    // Hash the page while it still carries the placeholder, so the date it
+    // resolves to is never part of its own hash.
+    const lastmod = resolveDate(filePathToUrl(filePath), content);
+    content = content.split(LASTMOD_TOKEN).join(lastmod);
+  }
   writeFileSync(filePath, content, 'utf8');
 }
 
@@ -1977,7 +1983,7 @@ function buildNodePage(node: Language, rels: Relationship[], nodeMap: Map<string
     description,
     url,
     datePublished: publishDate,
-    dateModified: BUILD_DATE,
+    dateModified: LASTMOD_TOKEN,
     author: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
     publisher: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
     about: {
@@ -2023,7 +2029,7 @@ ${faqs.map(f => `<div class="faq-item">
   <meta property="og:image:height" content="630" />
   <meta property="og:image:type" content="image/png" />
   <meta property="article:published_time" content="${publishDate}" />
-  <meta property="article:modified_time" content="${BUILD_DATE}" />
+  <meta property="article:modified_time" content="${LASTMOD_TOKEN}" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${escapeHtml(title)}" />
   <meta name="twitter:description" content="${escapeHtml(description)}" />
@@ -2352,7 +2358,7 @@ function buildQuestionPage(q: QuestionDef, nodeMap: Map<string, Language>): stri
     description: metaDescription,
     url,
     datePublished: '2024-01-01',
-    dateModified: BUILD_DATE,
+    dateModified: LASTMOD_TOKEN,
     author: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
     publisher: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
     speakable: {
@@ -2402,7 +2408,7 @@ function buildQuestionPage(q: QuestionDef, nodeMap: Map<string, Language>): stri
   <meta property="og:image:height" content="630" />
   <meta property="og:image:type" content="image/png" />
   <meta property="article:published_time" content="2024-01-01" />
-  <meta property="article:modified_time" content="${BUILD_DATE}" />
+  <meta property="article:modified_time" content="${LASTMOD_TOKEN}" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${escapeHtml(q.titleHook ? `${q.title} ${q.titleHook}` : q.title)}" />
   <meta name="twitter:description" content="${escapeHtml(metaDescription)}" />
@@ -2600,7 +2606,7 @@ function buildAutoQuestionPage(aqn: AutoQNode, nodeMap: Map<string, Language>): 
     description: metaDescription,
     url,
     datePublished: node.first_release_year ? `${node.first_release_year}-01-01` : '2024-01-01',
-    dateModified: BUILD_DATE,
+    dateModified: LASTMOD_TOKEN,
     author: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
     publisher: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
     speakable: { '@type': 'SpeakableSpecification', cssSelector: ['.question-answer'] },
@@ -2633,7 +2639,7 @@ function buildAutoQuestionPage(aqn: AutoQNode, nodeMap: Map<string, Language>): 
   <meta property="og:url" content="${url}" />
   <meta property="og:image" content="${SITE}/og-image.png" />
   <meta property="article:published_time" content="${pubDate}" />
-  <meta property="article:modified_time" content="${BUILD_DATE}" />
+  <meta property="article:modified_time" content="${LASTMOD_TOKEN}" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${escapeHtml(pageTitleTag)}" />
   <meta name="twitter:description" content="${escapeHtml(metaDescription)}" />
@@ -3382,7 +3388,7 @@ function buildDatasetPage(languages: Language[], rels: Relationship[]): string {
     description: `Structured dataset of ${languages.length} programming languages and tools with ${rels.length} documented implementation and influence relationships.`,
     url: `${SITE}/dataset`,
     version: DATASET_VERSION,
-    dateModified: BUILD_DATE,
+    dateModified: LASTMOD_TOKEN,
     isAccessibleForFree: true,
     keywords: ['programming languages', 'compiler implementation', 'runtime implementation', 'language history', 'software engineering'],
     creator: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
@@ -4130,7 +4136,7 @@ function buildGuidePage(guide: (typeof GUIDES)[0]): string {
     description: guide.description,
     url,
     datePublished: '2024-01-01',
-    dateModified: BUILD_DATE,
+    dateModified: LASTMOD_TOKEN,
     author: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
     publisher: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
     about: ['programming languages', 'compiler implementation', 'runtime implementation'],
@@ -4165,7 +4171,7 @@ function buildGuidePage(guide: (typeof GUIDES)[0]): string {
   <meta property="og:image:height" content="630" />
   <meta property="og:image:type" content="image/png" />
   <meta property="article:published_time" content="2024-01-01" />
-  <meta property="article:modified_time" content="${BUILD_DATE}" />
+  <meta property="article:modified_time" content="${LASTMOD_TOKEN}" />
   <script type="application/ld+json">${articleJsonLd}</script>
   <script type="application/ld+json">${breadcrumbJsonLd}</script>
 </head>
@@ -5268,7 +5274,7 @@ function buildHowItWorksPage(languages: Language[], rels: Relationship[]): strin
     description,
     url,
     datePublished: '2026-07-02',
-    dateModified: BUILD_DATE,
+    dateModified: LASTMOD_TOKEN,
     author: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
     publisher: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
     about: ['data provenance', 'programming languages', 'compiler implementation', 'AI agents'],
@@ -5999,5 +6005,7 @@ for (const aqn of AUTO_QUESTION_NODES) {
   writeFile(join(PUBLIC, 'questions', `what-is-${slug}-written-in`, 'index.html'), processPage(buildAutoQuestionPage(aqn, nodeMap)));
 }
 console.log(`Generated questions index + ${QUESTIONS.length} hand-authored + ${AUTO_QUESTION_NODES.length} auto question pages`);
+
+flushManifest();
 
 console.log('SEO page generation complete.');

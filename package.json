@@ -16,6 +16,7 @@
     "logos:graph": "tsx scripts/renderGraphLogoAssets.ts",
     "content:wikipedia": "tsx scripts/harvestWikipediaContent.ts",
     "seo:generate": "tsx scripts/generateSeoPages.ts && tsx scripts/generateSitemap.ts && tsx scripts/generateLlmsTxt.ts",
+    "seo:seed-dates": "tsx scripts/seedPageDates.ts",
     "seo:validate": "tsx scripts/validateSeo.ts",
     "seo:links": "tsx scripts/auditInternalLinks.ts",
     "og:generate": "tsx scripts/generateOgImages.ts",
