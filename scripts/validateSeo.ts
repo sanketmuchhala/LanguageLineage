@@ -448,6 +448,38 @@ try {
     if (rewrite?.destination !== '/index.html') fail(`vercel.json missing ${source} SPA rewrite`);
     else ok(`vercel.json preserves ${source} as an SPA route`);
   }
+
+  // Versioned dataset assets are cached so repeat visits skip the revalidation
+  // round-trip on a 268 KB fetch. The rule must stay scoped to /dataset/vN/ and
+  // must NOT be immutable: the files are edited in place within a version, so a
+  // long browser TTL would strand returning visitors on stale data.
+  interface HeaderRule { source?: string; headers?: Array<{ key?: string; value?: string }> }
+  const headerRules: HeaderRule[] = Array.isArray(vercel.headers) ? vercel.headers : [];
+
+  const datasetRule = headerRules.find((rule) => /^\/dataset\/[^/]*v\\?d?\+?/.test(rule.source ?? '')
+    || (rule.source ?? '').startsWith('/dataset/:version'));
+
+  if (!datasetRule) {
+    fail('vercel.json missing the versioned dataset Cache-Control rule');
+  } else {
+    const cacheControl = datasetRule.headers?.find(
+      (h) => h.key?.toLowerCase() === 'cache-control'
+    )?.value ?? '';
+
+    const maxAge = cacheControl.match(/(?:^|[\s,])max-age=(\d+)/)?.[1];
+    if (!cacheControl.includes('public')) fail('dataset Cache-Control is not public');
+    else if (!maxAge || Number(maxAge) === 0) fail('dataset Cache-Control has no usable max-age');
+    else if (cacheControl.includes('immutable')) {
+      fail('dataset Cache-Control uses immutable, but v5 files are edited in place; a stale copy could not be busted without a version bump');
+    } else ok(`versioned dataset assets cached (max-age=${maxAge}, not immutable)`);
+  }
+
+  // The /dataset HTML page must keep revalidating; only vN/ subpaths are cached.
+  const bareDatasetRule = headerRules.find(
+    (rule) => rule.source === '/dataset' || rule.source === '/dataset/(.*)' || rule.source === '/dataset/:path*'
+  );
+  if (bareDatasetRule) fail('vercel.json caches the /dataset HTML page; scope the rule to versioned paths');
+  else ok('vercel.json leaves the /dataset HTML page uncached');
 } catch {
   fail('vercel.json is invalid JSON');
 }
