@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import type { Core } from 'cytoscape';
 import type { NormalizedDataset, FilterState, ValidationReport } from '../data/types';
 import { DatasetIndex } from '../data/indexDataset';
+import type { TreeController } from '../graph/tree/treeTypes';
 
 interface GraphStore {
   // Data
@@ -11,6 +12,9 @@ interface GraphStore {
 
   // Cytoscape instance
   cy: Core | null;
+
+  // Tree view imperative handle; null whenever the tree is not mounted
+  treeController: TreeController | null;
 
   // Filters
   filters: FilterState;
@@ -42,6 +46,7 @@ interface GraphStore {
   setDatasetIndex: (index: DatasetIndex) => void;
   setValidationReport: (report: ValidationReport) => void;
   setCytoscape: (cy: Core | null) => void;
+  setTreeController: (controller: TreeController | null) => void;
   updateFilters: (filters: Partial<FilterState>) => void;
   setSelectedNode: (nodeId: string | null) => void;
   setSelectedEdge: (edgeId: string | null) => void;
@@ -86,6 +91,7 @@ export const useGraphStore = create<GraphStore>((set) => ({
   datasetIndex: null,
   validationReport: null,
   cy: null,
+  treeController: null,
   filters: DEFAULT_FILTERS,
   selectedNodeId: null,
   selectedEdgeId: null,
@@ -109,6 +115,7 @@ export const useGraphStore = create<GraphStore>((set) => ({
   setDatasetIndex: (index) => set({ datasetIndex: index }),
   setValidationReport: (report) => set({ validationReport: report }),
   setCytoscape: (cy) => set({ cy }),
+  setTreeController: (treeController) => set({ treeController }),
 
   updateFilters: (newFilters) =>
     set((state) => ({

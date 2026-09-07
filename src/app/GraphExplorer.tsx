@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useGraphStore } from '../store/useGraphStore';
 import { loadDataset } from '../data/loadDataset';
@@ -13,7 +13,10 @@ import { EdgeTooltip } from '../ui/EdgeTooltip';
 import { TimelineControls } from '../ui/TimelineControls';
 import { NavigationControls } from '../ui/NavigationControls';
 import { deactivateFocusMode } from '../graph/selectors';
-import { DAG_LAYOUT, FORCE_LAYOUT, CLUSTER_LAYOUT, buildTimelineLayout } from '../graph/layouts';
+import { FORCE_LAYOUT, CLUSTER_LAYOUT, buildTimelineLayout } from '../graph/layouts';
+
+// d3 only ships to users who actually open Tree view.
+const TreeView = lazy(() => import('../graph/tree/TreeView'));
 
 const REL_LABELS: Record<string, string> = {
   compiler_written_in: 'Compiler implementation',
@@ -92,11 +95,14 @@ export function GraphExplorer() {
           }
           break;
         case 'r': {
-          const { cy, filters } = state;
+          const { cy, filters, treeController } = state;
+          if (filters.layoutMode === 'dag') {
+            treeController?.reset();
+            break;
+          }
           if (!cy) break;
           let layout;
           switch (filters.layoutMode) {
-            case 'dag': layout = DAG_LAYOUT; break;
             case 'cluster': layout = CLUSTER_LAYOUT; break;
             case 'timeline': layout = buildTimelineLayout(cy); break;
             case 'force':
@@ -156,7 +162,13 @@ export function GraphExplorer() {
         role="application"
         aria-label="Interactive programming language graph. An accessible text summary of the same data precedes this canvas."
       >
-        <GraphView />
+        {layoutMode === 'dag' ? (
+          <Suspense fallback={<div className="tree-loading" role="status">Building tree…</div>}>
+            <TreeView />
+          </Suspense>
+        ) : (
+          <GraphView />
+        )}
         <MinimalPanel onBackToLanding={handleBackToLanding} />
         <Legend />
         <EdgeTooltip />
