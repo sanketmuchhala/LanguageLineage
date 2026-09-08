@@ -3,7 +3,7 @@
 **Prepared:** 2026-09-03  
 **Source:** `GROWTH_MASTERPLAN.md` and `docs/GROWTH_MASTERPLAN_FULL.md`  
 **Planning horizon:** First launch plus 12 months  
-**Current state:** Stage 0 and Stage 1 items 1–4 completed. Work now lands directly on `main`.
+**Current state:** Stage 0 and Stage 1 items 1–4 and 9 completed. Work now lands directly on `main`.
 
 ## Progress log
 
@@ -49,7 +49,15 @@
 - Extended `validateSeo.ts` with three checks: the rule must exist, must be public with a non-zero max-age, and must not be `immutable`; no rule may cache the bare `/dataset` page. Verified each check actually fails by injecting the fault it guards against.
 - Merged to `main` as a fast-forward (`2cc03ff2`) and pushed; the header itself can only be confirmed on the live deploy since `vercel dev` hangs on this project.
 
-**Next task:** Stage 1, item 9—write the agent guardrails into `CLAUDE.md` (production-parity preflight, the closed no-database/no-rename/AI-scope decisions, and the corrected canonical-plan pointer). Pulled forward ahead of items 5–8 because it is the mitigation for Risk 1 (the stale-`main` hazard that materialized this session) and protects every session that does the remaining Stage 1 work.
+### 2026-09-07 — Stage 1 item 9 complete (pulled forward)
+
+- Rewrote `CLAUDE.md`'s canonical-plan pointer from `SITE_IMPROVEMENT_PLAN.md` to this file, noting the former's 13 phases are complete except Phase 12 (accessibility).
+- Added a production-parity preflight section: fetch and compare against `origin/main` before any deploy-intending build, and check the built sitemap's URL count against the live one. Cites the concrete number that makes it real — the stale tree would have produced 156 sitemap URLs against 304 live, deindexing 136 pages.
+- Wrote the three settled decisions (no database, no rename, AI-infrastructure scope boundary) with their reasoning and revisit triggers, not just the verdict, plus the admit/reject rule with each rejected direction's incumbent named.
+- Fixed a real contradiction: `CLAUDE.md` said "do not change the dataset schema or field names," which blocked the Stage 4 enrichment work already planned. It now distinguishes field values (enrichable with a cited source) from schema shape (needs a dedicated PR), and adds an explicit human-review requirement on `evidence_source`/`confidence`.
+- Merged to `main` as a fast-forward (`d3dde3cd`) and pushed.
+
+**Next task:** Stage 1, item 5—add explicit licenses (MIT for code, CC BY 4.0 for the dataset, plus exact attribution text in `dataset/README.md`). Requires confirming ownership before committing; this is the only remaining item marked Blocking, since the missing license currently prevents Zenodo archival and any third-party embed or reuse.
 
 ## 1. Executive direction
 
