@@ -193,6 +193,38 @@ function main() {
 
   console.log(`\nTotal historical errors: ${historicalErrors}\n`);
 
+  // 3.5 IMPLEMENTATION-LANGUAGE SCALAR CONSISTENCY
+  // Regression guard for Stage 1 item 6 of IMPLEMENTATION_PLAN.md: a node
+  // should only read "unspecified" when it genuinely has no cited
+  // compiler_written_in / runtime_written_in / bootstrap_written_in edge. If
+  // one exists, current_primary_implementation_language should already carry
+  // its implementer's name — this catches the bug class from recurring after
+  // a future dataset edit.
+  console.log('─'.repeat(80));
+  console.log('3.5 IMPLEMENTATION-LANGUAGE SCALAR CONSISTENCY');
+  console.log('─'.repeat(80));
+
+  const IMPL_TYPES = new Set(['compiler_written_in', 'runtime_written_in', 'bootstrap_written_in']);
+  const hasImplEdge = new Set<string>();
+  dataset.relationships.forEach((rel) => {
+    if (IMPL_TYPES.has(rel.relationship) && rel.from_language !== rel.to_language) {
+      hasImplEdge.add(rel.to_language);
+    }
+  });
+
+  const staleUnspecified = dataset.languages.filter(
+    (lang) => lang.current_primary_implementation_language === 'unspecified' && hasImplEdge.has(lang.id)
+  );
+
+  if (staleUnspecified.length > 0) {
+    console.log(`⚠️  ${staleUnspecified.length} node(s) read "unspecified" despite having a cited implementation edge:`);
+    staleUnspecified.forEach((lang) => console.log(`  - ${lang.id}`));
+    console.log('  Re-run: npx tsx scripts/repairImplementationScalars.ts');
+  } else {
+    console.log('✅ No node is "unspecified" while having a cited implementation edge');
+  }
+  console.log();
+
   // 4. GRAPH METRICS (excluding self-loops)
   console.log('─'.repeat(80));
   console.log('4. GRAPH METRICS');
