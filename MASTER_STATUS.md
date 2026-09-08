@@ -15,8 +15,8 @@ Every status marker below was **verified against the working tree on 2026-09-06*
 | | |
 |---|---|
 | Site-improvement phases (old plan) | **12 of 13 done** — only Phase 12 (accessibility) open |
-| Implementation Stage 1 (active plan) | **3 of 9 done** |
-| Consolidated priority items (35) | **4 done, 1 partial, 30 pending** |
+| Implementation Stage 1 (active plan) | **4 of 9 done** |
+| Consolidated priority items (35) | **5 done, 1 partial, 29 pending** |
 | The constraint | **Distribution, not SEO.** 30 clicks / 28 days |
 
 The two plans are not sequential. `SITE_IMPROVEMENT_PLAN.md` is largely complete but its *strategy* partly failed; `IMPLEMENTATION_PLAN.md` is the re-plan that replaced it. Work the second one.
@@ -73,7 +73,7 @@ Confirmed live 2026-09-03; re-verified 2026-09-06.
 | 1 | Site-wide soft 404 (`200 3153` on unknown paths) | ✅ **DONE** | `public/404.html` exists with noindex; explicit rewrites in `vercel.json` (commit `3325a623`) |
 | 2 | `buildRelatedSection` no node filter — ~1,800 links pointing at 12 nodes | ✅ **DONE** | Commit `e8ce0cfe`; validator now checks duplicate/unrelated cards |
 | 3 | Every URL claims the same `<lastmod>` | ✅ **DONE** | 6 distinct lastmod values; `changefreq`/`priority` removed. Hash manifest at `scripts/page-dates.json` |
-| 4 | `/dataset/v5/*` re-fetched every load (268 KB) | ⬜ **PENDING** | `vercel.json` has **0** `headers` blocks |
+| 4 | `/dataset/v5/*` re-fetched every load (268 KB) | ✅ **DONE** | 1-hour browser TTL, 1-year CDN TTL, not immutable (v5 is edited in place). Validator-enforced |
 | 5 | 47 `unspecified` implementation scalars (43 recoverable from existing edges) | ⬜ **PENDING** | 61 `"unspecified"` occurrences in `dataset/v5/lineage_v5.json` |
 | 6 | FAQ deflection answers in structured data | ⬜ **PENDING** | **118 files** still contain "See the implementation section above" |
 | 7 | `/explore` serves zero body text | ⬜ **PENDING** | No `public/explore/index.html` |
@@ -123,14 +123,14 @@ Confirmed live 2026-09-03; re-verified 2026-09-06.
 - ✅ Local and live sitemap URL sets: 304 each, zero difference
 - ⚠️ `npm audit` reported 10 vulnerabilities (2 low, 2 moderate, 6 high) — **deferred, not resolved**
 
-### Stage 1 — Launch blockers and integrity · **3 of 9**
+### Stage 1 — Launch blockers and integrity · **4 of 9**
 
 | # | Work | Status | Verification state on 2026-09-06 |
 |---|---|---|---|
 | 1 | Real 404 behavior | ✅ **DONE** | `3325a623`. Static noindex 404; API/static/Vercel routes preserved |
 | 2 | Fix related-page links | ✅ **DONE** | `e8ce0cfe`. Node-filtered, deduped, capped at 12, same-cluster fallback for isolated nodes |
 | 3 | Correct sitemap dates | ✅ **DONE** | 6 distinct lastmod values; idempotent across runs; `BUILD_DATE` retired |
-| 4 | Cache immutable v5 data | ⬜ **NEXT** | No `headers` block in `vercel.json` |
+| 4 | Cache dataset assets | ✅ **DONE** | `public, max-age=3600, s-maxage=31536000`. Deliberately not immutable — v5 is edited in place |
 | 5 | Add explicit licenses | ⬜ PENDING | `LICENSE`, `dataset/LICENSE`, `dataset/README.md` all **missing**. Blocks Zenodo |
 | 6 | Repair implementation display scalars | ⬜ PENDING | 43 of 47 recoverable from existing edges. Leave Machine Code, Assembly, BCPL, Lazy ML |
 | 7 | Remove FAQ deflection | ⬜ PENDING | 118 files still carry the phrase |
@@ -207,7 +207,7 @@ Pilot five nodes: **PyTorch, CUDA, ggml, llama.cpp, BLAS.** If coherent, expand 
 
 ---
 
-## 7. Consolidated priority table — 4 done, 1 partial, 30 pending
+## 7. Consolidated priority table — 5 done, 1 partial, 29 pending
 
 *"Reinforced by" counts in the source mark items where multiple independent investigations converged — highest confidence.*
 
@@ -219,7 +219,7 @@ Pilot five nodes: **PyTorch, CUDA, ggml, llama.cpp, BLAS.** If coherent, expand 
 | 4 | Fix `buildRelatedSection` filter + tiered fallback | ✅ DONE | 2–4 h | High | 1 |
 | 5 | Per-URL `lastmod`; drop changefreq/priority *(3-way)* | ✅ DONE | 2–3 h | High | 1 |
 | 6 | `LICENSE` (MIT + CC BY 4.0) + repo description/topics | ⬜ PENDING | 1–2 h | **Blocking** | 1 |
-| 7 | Immutable cache on `/dataset/v5/*` | ⬜ **NEXT** | 15 min | Medium | 1 |
+| 7 | Immutable cache on `/dataset/v5/*` | ✅ DONE (as a 1hr/1yr split, not true immutable) | 15 min | Medium | 1 |
 | 8 | Strip 92 deflection `FAQPage` answers | ⬜ PENDING | <1 h | High | 1 |
 | 9 | Backfill 47 `unspecified` impl scalars | ⬜ PENDING | 30 min | Medium | 1 |
 | 10 | Three decisions into `CLAUDE.md` *(4-way)* | ⬜ PENDING | 1–2 h | High | 1 |
@@ -342,10 +342,10 @@ Each of these was investigated and explicitly rejected. Reopening one costs week
 ## 11. Next actions, in order
 
 1. ~~**Stage 1 item 3 — sitemap dates.**~~ ✅ Done 2026-09-07. 6 distinct values, idempotent, validator-enforced.
-2. **Stage 1 item 4 — cache immutable v5 data.** Add a scoped `headers` block for `/dataset/v5/*`. 15 minutes.
+2. ~~**Stage 1 item 4 — cache dataset assets.**~~ ✅ Done 2026-09-07. Pushed to `main` (`2cc03ff2`); header only confirmable on the live deploy.
 3. **Pull Stage 1 item 9 forward.** `CLAUDE.md` still names `SITE_IMPROVEMENT_PLAN.md` as canonical, but the active plan is `IMPLEMENTATION_PLAN.md`. Every fresh agent session currently reads a stale pointer — and Risk 1's mitigation lives in this file too.
-3. Stage 1 items 4 → 8 in order (cache, licenses, scalars, FAQ deflection, evidence check).
-4. Fresh GSC baseline before Stage 2 begins.
+4. Stage 1 items 5 → 8 in order (licenses, scalars, FAQ deflection, evidence check).
+5. Fresh GSC baseline before Stage 2 begins.
 
 ### Validation gate — run before every commit
 

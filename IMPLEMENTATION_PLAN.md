@@ -3,7 +3,7 @@
 **Prepared:** 2026-09-03  
 **Source:** `GROWTH_MASTERPLAN.md` and `docs/GROWTH_MASTERPLAN_FULL.md`  
 **Planning horizon:** First launch plus 12 months  
-**Current state:** Stage 0 and Stage 1 items 1–3 completed. Implementation branch: `implementation-2026-09-03`.
+**Current state:** Stage 0 and Stage 1 items 1–4 completed. Work now lands directly on `main`.
 
 ## Progress log
 
@@ -41,7 +41,15 @@
 - Known limitation: `/` and `/explore` are SPA routes with no generated file, so nothing rehashes them. They are seeded from git and pinned via `PRESERVED_URLS`; their dates will go stale if the SPA shell changes. Stage 2's static `/explore` text layer would fix this automatically.
 - The commit carries a one-time 285-file `public/` re-date as pages move off the build stamp. Type-check, SEO validator, link audit, and production build all pass.
 
-**Next task:** Stage 1, item 4—add a narrowly scoped immutable cache header for versioned `/dataset/v5/*` assets.
+### 2026-09-07 — Stage 1 item 4 complete
+
+- Added a Cache-Control header scoped to `/dataset/:version(v\d+)/:path*` in `vercel.json`: `public, max-age=3600, s-maxage=31536000, stale-while-revalidate=86400`.
+- Deliberately not `immutable`, despite the plan's original wording. v5 files are edited in place within the version—Stage 4 alone plans ~40 enrichment edits—and a year-long browser TTL cannot be busted by a deploy the way the CDN cache can. A one-hour browser TTL removes the revalidation round-trip on the 268 KB dataset fetch while keeping edits visible within the hour, with no version-bump process required.
+- The rule covers v1–v5 and any future v6 automatically; `/dataset` (the HTML page) is untouched and still returns `max-age=0, must-revalidate`.
+- Extended `validateSeo.ts` with three checks: the rule must exist, must be public with a non-zero max-age, and must not be `immutable`; no rule may cache the bare `/dataset` page. Verified each check actually fails by injecting the fault it guards against.
+- Merged to `main` as a fast-forward (`2cc03ff2`) and pushed; the header itself can only be confirmed on the live deploy since `vercel dev` hangs on this project.
+
+**Next task:** Stage 1, item 9—write the agent guardrails into `CLAUDE.md` (production-parity preflight, the closed no-database/no-rename/AI-scope decisions, and the corrected canonical-plan pointer). Pulled forward ahead of items 5–8 because it is the mitigation for Risk 1 (the stale-`main` hazard that materialized this session) and protects every session that does the remaining Stage 1 work.
 
 ## 1. Executive direction
 
