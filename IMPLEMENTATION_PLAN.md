@@ -3,7 +3,7 @@
 **Prepared:** 2026-09-03  
 **Source:** `GROWTH_MASTERPLAN.md` and `docs/GROWTH_MASTERPLAN_FULL.md`  
 **Planning horizon:** First launch plus 12 months  
-**Current state:** Stage 0 and Stage 1 items 1–4 and 9 completed. Work now lands directly on `main`.
+**Current state:** Stage 0 and Stage 1 items 1–5 and 9 completed. Work now lands directly on `main`.
 
 ## Progress log
 
@@ -57,7 +57,24 @@
 - Fixed a real contradiction: `CLAUDE.md` said "do not change the dataset schema or field names," which blocked the Stage 4 enrichment work already planned. It now distinguishes field values (enrichable with a cited source) from schema shape (needs a dedicated PR), and adds an explicit human-review requirement on `evidence_source`/`confidence`.
 - Merged to `main` as a fast-forward (`d3dde3cd`) and pushed.
 
-**Next task:** Stage 1, item 5—add explicit licenses (MIT for code, CC BY 4.0 for the dataset, plus exact attribution text in `dataset/README.md`). Requires confirming ownership before committing; this is the only remaining item marked Blocking, since the missing license currently prevents Zenodo archival and any third-party embed or reuse.
+### 2026-09-07 — Stage 1 item 5 complete
+
+- Confirmed ownership with the user: the dataset was compiled via Claude-assisted synthesis from structured sources (Wikidata, official documentation, primary sources) with agent cross-checking, not copied prose — consistent with the Wikidata-facts-yes/Wikipedia-prose-never rule already in `SITE_IMPROVEMENT_PLAN.md` §1.8.
+- Added `LICENSE` (MIT, copyright Sanket Muchhala), `dataset/LICENSE` (CC BY 4.0 short-form notice), and `dataset/README.md`. This formalized a license that was already publicly stated in three places in agreement — the `/dataset` page's License section and JSON-LD, root `README.md`, and §1.8 — rather than deciding a new one.
+- `dataset/README.md`'s citation block is copied verbatim from `dataset/index.html` so there is exactly one canonical citation string.
+- Added `"license": "MIT"` to `package.json`.
+- Extended `validateSeo.ts` with three checks; verified each fails on the fault it guards against (missing file, wrong license text, drifted citation) before confirming the real files pass.
+- Merged to `main` as a fast-forward (`0405abe4`) and pushed.
+- **Not done here, requires `gh` CLI which isn't installed in this environment:** the paired GitHub repo description/topics update. Manual command for the user:
+  ```
+  gh repo edit sanketmuchhala/LanguageLineage \
+    --description "..." \
+    --add-topic programming-languages --add-topic compilers \
+    --add-topic dataset --add-topic data-visualization \
+    --add-topic bootstrapping --add-topic open-data
+  ```
+
+**Next task:** Stage 1, item 6—repair the 47 `unspecified` implementation-language scalars. 43 of 47 are recoverable from existing `compiler_written_in`/`runtime_written_in`/`bootstrap_written_in` edges already in `dataset/v5/lineage_v5.json`; leave Machine Code, Assembly, BCPL, and Lazy ML unchanged (they genuinely lack such edges).
 
 ## 1. Executive direction
 

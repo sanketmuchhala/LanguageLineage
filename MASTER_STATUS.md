@@ -15,8 +15,8 @@ Every status marker below was **verified against the working tree on 2026-09-06*
 | | |
 |---|---|
 | Site-improvement phases (old plan) | **12 of 13 done** — only Phase 12 (accessibility) open |
-| Implementation Stage 1 (active plan) | **5 of 9 done** |
-| Consolidated priority items (35) | **6 done, 1 partial, 28 pending** |
+| Implementation Stage 1 (active plan) | **6 of 9 done** |
+| Consolidated priority items (35) | **7 done, 1 partial, 27 pending** |
 | The constraint | **Distribution, not SEO.** 30 clicks / 28 days |
 
 The two plans are not sequential. `SITE_IMPROVEMENT_PLAN.md` is largely complete but its *strategy* partly failed; `IMPLEMENTATION_PLAN.md` is the re-plan that replaced it. Work the second one.
@@ -123,7 +123,7 @@ Confirmed live 2026-09-03; re-verified 2026-09-06.
 - ✅ Local and live sitemap URL sets: 304 each, zero difference
 - ⚠️ `npm audit` reported 10 vulnerabilities (2 low, 2 moderate, 6 high) — **deferred, not resolved**
 
-### Stage 1 — Launch blockers and integrity · **5 of 9**
+### Stage 1 — Launch blockers and integrity · **6 of 9**
 
 | # | Work | Status | Verification state on 2026-09-06 |
 |---|---|---|---|
@@ -131,7 +131,7 @@ Confirmed live 2026-09-03; re-verified 2026-09-06.
 | 2 | Fix related-page links | ✅ **DONE** | `e8ce0cfe`. Node-filtered, deduped, capped at 12, same-cluster fallback for isolated nodes |
 | 3 | Correct sitemap dates | ✅ **DONE** | 6 distinct lastmod values; idempotent across runs; `BUILD_DATE` retired |
 | 4 | Cache dataset assets | ✅ **DONE** | `public, max-age=3600, s-maxage=31536000`. Deliberately not immutable — v5 is edited in place |
-| 5 | Add explicit licenses | ⬜ PENDING | `LICENSE`, `dataset/LICENSE`, `dataset/README.md` all **missing**. Blocks Zenodo |
+| 5 | Add explicit licenses | ✅ **DONE** | MIT (code) + CC BY 4.0 (dataset), copyright Sanket Muchhala. Formalized what was already publicly stated on `/dataset`, README, and §1.8 |
 | 6 | Repair implementation display scalars | ⬜ PENDING | 43 of 47 recoverable from existing edges. Leave Machine Code, Assembly, BCPL, Lazy ML |
 | 7 | Remove FAQ deflection | ⬜ PENDING | 118 files still carry the phrase |
 | 8 | Evidence link check | ⬜ PENDING | No checker script exists. 443 unique `evidence_source` URLs unverified |
@@ -207,7 +207,7 @@ Pilot five nodes: **PyTorch, CUDA, ggml, llama.cpp, BLAS.** If coherent, expand 
 
 ---
 
-## 7. Consolidated priority table — 6 done, 1 partial, 28 pending
+## 7. Consolidated priority table — 7 done, 1 partial, 27 pending
 
 *"Reinforced by" counts in the source mark items where multiple independent investigations converged — highest confidence.*
 
@@ -218,7 +218,7 @@ Pilot five nodes: **PyTorch, CUDA, ggml, llama.cpp, BLAS.** If coherent, expand 
 | 3 | Explicit SPA rewrites + real 404 | ✅ DONE | 30 min | High | 1 |
 | 4 | Fix `buildRelatedSection` filter + tiered fallback | ✅ DONE | 2–4 h | High | 1 |
 | 5 | Per-URL `lastmod`; drop changefreq/priority *(3-way)* | ✅ DONE | 2–3 h | High | 1 |
-| 6 | `LICENSE` (MIT + CC BY 4.0) + repo description/topics | ⬜ PENDING | 1–2 h | **Blocking** | 1 |
+| 6 | `LICENSE` (MIT + CC BY 4.0) + repo description/topics | 🟡 PARTIAL — LICENSE files done; repo description/topics need `gh` CLI (not installed) | 1–2 h | **Blocking** | 1 |
 | 7 | Immutable cache on `/dataset/v5/*` | ✅ DONE (as a 1hr/1yr split, not true immutable) | 15 min | Medium | 1 |
 | 8 | Strip 92 deflection `FAQPage` answers | ⬜ PENDING | <1 h | High | 1 |
 | 9 | Backfill 47 `unspecified` impl scalars | ⬜ PENDING | 30 min | Medium | 1 |
@@ -344,9 +344,10 @@ Each of these was investigated and explicitly rejected. Reopening one costs week
 1. ~~**Stage 1 item 3 — sitemap dates.**~~ ✅ Done 2026-09-07. 6 distinct values, idempotent, validator-enforced.
 2. ~~**Stage 1 item 4 — cache dataset assets.**~~ ✅ Done 2026-09-07. Pushed to `main` (`2cc03ff2`); header only confirmable on the live deploy.
 3. ~~**Pull Stage 1 item 9 forward.**~~ ✅ Done 2026-09-07. `CLAUDE.md` now points at `IMPLEMENTATION_PLAN.md`, carries the preflight and settled decisions, and no longer contradicts the Stage 4 enrichment plan.
-4. **Stage 1 item 5 — licenses.** MIT for code, CC BY 4.0 for the dataset. The only remaining item marked Blocking; needs the user's confirmation of ownership before committing.
-5. Stage 1 items 6 → 8 in order (scalars, FAQ deflection, evidence check).
-6. Fresh GSC baseline before Stage 2 begins.
+4. ~~**Stage 1 item 5 — licenses.**~~ ✅ Done 2026-09-08 (`0405abe4`). Ownership confirmed by the user; the last Blocking item is closed. Repo description/topics still need the `gh repo edit` command run manually (see IMPLEMENTATION_PLAN.md).
+5. **Stage 1 item 6 — repair implementation scalars.** 43 of 47 `unspecified` nodes recoverable from existing edges. 30 minutes.
+6. Stage 1 items 7 → 8 in order (FAQ deflection, evidence check).
+7. Fresh GSC baseline before Stage 2 begins.
 
 ### Validation gate — run before every commit
 
