@@ -30,11 +30,45 @@ function checkFile(rel: string): string | null {
   return readFileSync(p, 'utf8');
 }
 
+// License and citation files live at the repo root and under dataset/, not
+// public/, since they document the repo and dataset rather than being served.
+function checkRootFile(rel: string): string | null {
+  const p = join(ROOT, rel);
+  if (!existsSync(p)) { fail(`Missing: ${rel}`); return null; }
+  return readFileSync(p, 'utf8');
+}
+
 // Static files
 const staticFiles = ['404.html', 'robots.txt', 'sitemap.xml', 'manifest.json', 'og-image.svg', 'seo.css', 'llms.txt', 'llms-full.txt', 'favicon.svg', 'logo-mark.svg', 'logo-banner.svg'];
 for (const f of staticFiles) {
   const content = checkFile(f);
   if (content) ok(`public/${f} exists (${content.length} bytes)`);
+}
+
+// Licenses and citation. Formalizes what dataset/index.html and README.md
+// already publicly state, so this check guards that the files exist and stay
+// consistent with the citation text actually shown on the live dataset page.
+const CITATION_TEXT =
+  'Language Lineage. Programming Language Lineage Dataset, v5.0. 152 nodes and 443 relationships. Accessed 2026. https://www.languagelineage.org/dataset';
+
+const rootLicense = checkRootFile('LICENSE');
+if (rootLicense) {
+  if (!rootLicense.includes('MIT License')) fail('LICENSE does not appear to be the MIT License');
+  else ok('LICENSE present (MIT)');
+}
+
+const datasetLicense = checkRootFile('dataset/LICENSE');
+if (datasetLicense) {
+  if (!datasetLicense.includes('CC BY 4.0') || !datasetLicense.includes('creativecommons.org/licenses/by/4.0')) {
+    fail('dataset/LICENSE does not clearly reference CC BY 4.0');
+  } else ok('dataset/LICENSE present (CC BY 4.0)');
+}
+
+const datasetReadme = checkRootFile('dataset/README.md');
+if (datasetReadme) {
+  if (!datasetReadme.includes(CITATION_TEXT)) {
+    fail('dataset/README.md citation text does not match the citation shown on /dataset');
+  } else ok('dataset/README.md citation matches the live dataset page');
 }
 
 // robots.txt content
