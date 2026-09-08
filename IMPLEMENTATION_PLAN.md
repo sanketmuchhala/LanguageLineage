@@ -3,7 +3,7 @@
 **Prepared:** 2026-09-03  
 **Source:** `GROWTH_MASTERPLAN.md` and `docs/GROWTH_MASTERPLAN_FULL.md`  
 **Planning horizon:** First launch plus 12 months  
-**Current state:** Stage 0 and Stage 1 items 1–5 and 9 completed. Work now lands directly on `main`.
+**Current state:** Stage 0 and Stage 1 items 1–6 and 9 completed. Work now lands directly on `main`.
 
 ## Progress log
 
@@ -74,7 +74,16 @@
     --add-topic bootstrapping --add-topic open-data
   ```
 
-**Next task:** Stage 1, item 6—repair the 47 `unspecified` implementation-language scalars. 43 of 47 are recoverable from existing `compiler_written_in`/`runtime_written_in`/`bootstrap_written_in` edges already in `dataset/v5/lineage_v5.json`; leave Machine Code, Assembly, BCPL, and Lazy ML unchanged (they genuinely lack such edges).
+### 2026-09-08 — Stage 1 item 6 complete
+
+- Added `scripts/repairImplementationScalars.ts` (`npm run dataset:repair-scalars`), a one-shot script that back-fills `current_primary_implementation_language` from each node's qualifying `compiler_written_in`/`runtime_written_in`/`bootstrap_written_in` edge.
+- Repaired exactly the 43 recoverable nodes; left Machine Code, Assembly, BCPL, and Lazy ML untouched (no qualifying edge exists). `lang:s` was the one node with two candidates (C and Fortran); resolved with the same tie-break rule already used in `src/graph/tree/buildHierarchy.ts` for primary-parent selection, so both places in the codebase agree.
+- Diff is exactly 43 changed values in one file — 86 lines, 43 insertions + 43 deletions, nothing else.
+- Verified empirically, not assumed: ran `npm run seo:generate` and a full `npm run build` before and after, and confirmed zero files changed under `public/`. `generateSeoPages.ts` only reads this scalar as a fallback for nodes with no implementation edges, and all 43 repaired nodes already have edges, so their generated prose was already correct.
+- Added a regression guard to `scripts/analyzeDataset.ts` (§3.5): flags any node reading "unspecified" while having a cited implementation edge. Verified it actually fails by re-introducing the bug on one node and confirming the guard caught it, before restoring the fix.
+- Merged to `main` as a fast-forward (`4c6bc492`) and pushed.
+
+**Next task:** Stage 1, item 7—remove the FAQ deflection answers ("See the implementation section above for details...") from generated structured data. 118 pages carry the phrase, all from one code site in `scripts/generateSeoPages.ts`; `buildAnswerBox` already composes a real node-specific answer that can substitute it.
 
 ## 1. Executive direction
 
