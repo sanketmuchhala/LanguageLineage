@@ -97,11 +97,19 @@
 - Deliberately not wired into `npm run seo:validate` — that gate must stay green with no network and must never fail on a source site's transient 503. This depends on the live internet and is meant to be run periodically and reviewed by a human, per the plan's own instruction to review and fix manually rather than auto-rewrite.
 - Read-only with respect to `dataset/v5/lineage_v5.json`; writes a dated report to `reports/` (already gitignored, same convention as the existing GSC exports) plus a console summary with every failure mapped to the relationships it supports.
 - Ran it against production: **207 OK, 6 benign redirects, 11 genuine failures** (10x 404, 1x 403). Spot-checked several failures with a real browser User-Agent via `curl` before trusting the result — confirmed genuinely dead, not an artifact of the checker's own bot User-Agent.
-- The 11 failures are left for manual review, per the plan's explicit instruction not to auto-rewrite evidence. Listed below for the next session or the user to action:
-  - 404: `en.wikipedia.org/wiki/Hare_(programming_language)`, `.../Odin_(programming_language)`, `.../Roc_(programming_language)`, `.../SWC_(software)`, `.../Unison_(programming_language)`, `.../Wren_(programming_language)` — six niche/newer languages whose Wikipedia articles may never have existed or were deleted for notability
-  - 404: `scala-lang.org/blog/2016/11/11/dotty-compiler-bootstraps.html`, `vlang.io/`, `wiki.haskell.org/GHC:History`, `www.adacore.com/gnat`
-  - 403: `racket-lang.org/blog/2019/01/rebuilding-racket-on-chez-scheme-experience-report.html` — blocks non-browser clients broadly, not specific to this checker
+- The 11 failures were reviewed and fixed in a follow-up (`4d4a1434`), not left open — see below.
 - Merged to `main` as a fast-forward (`e538d956`) and pushed.
+
+### 2026-09-09 — Dead evidence links fixed (9 of 10; `vlang.io` was a checker bug, not a real failure)
+
+- Researched and verified a replacement for each dead URL before using it — fetched every candidate and confirmed it explicitly states the specific claim it needs to support: Odin's FAQ (4 edges), SWC's README, Racket's real blog subdomain, the actual Dotty bootstrap post (dated 2015-10-23, not the 2016-11-11 the dataset cited — a transcription error), Wren's README, Unison's FAQ, and Hudak/Hughes/Peyton Jones/Wadler's "A History of Haskell" for GHC's 1989 Lazy ML prototype.
+- Two deliberate compromises, noted rather than hidden: Hare's bootstrap citation uses a SlackBuilds package page rather than the official repo, because the official host (`git.sr.ht`) runs a JS bot-challenge explicitly aimed at "AI companies scraping" — a citation this checker itself could never verify. GNAT's self-hosting fact uses Wikipedia after three AdaCore/GNU pages failed to state it explicitly despite it being the true source.
+- **Content correction, not a citation swap:** the dataset claimed "Roc's compiler is written in Rust," which is no longer current — Roc's compiler was rewritten to Zig starting 2025. Handled historically: the Rust edge keeps its citation and gains an `end_year`, a new Zig edge starts where it ends, and `lang:roc`'s `current_primary_implementation_language` scalar was updated to match (same defect class as item 6, triggered by this edit).
+- **Left deliberately unfixed:** Haskell's claimed influence on Roc. No reliable source confirms it, and one primary source (a Feldman interview) arguably cuts against it. Flagged rather than given a citation that doesn't support the claim — still a known dead link.
+- Fixed a real bug in `checkEvidenceLinks.ts` found while verifying `vlang.io`: it only retried GET when HEAD returned 403/405/501, missing a Cloudflare-fronted host returning a bare 404 on HEAD while GET succeeds. `vlang.io` was never actually dead — it dropped the failure count from 11 to 10 real failures.
+- Fixed a second, more concerning bug this exposed in `validateSeo.ts`'s item-5 citation check: it compared `dataset/README.md` against a citation string **hardcoded at write time** ("443 relationships"), so it silently stopped being a real check the moment this edit moved the count to 444 — it would have reported "OK" forever after that regardless of drift. Now extracts the citation dynamically from `dataset/index.html`'s own generated content.
+- Re-ran the checker after: 221 OK, 6 benign redirects, exactly the 1 expected remaining failure (Haskell→Roc, left flagged above).
+- Merged to `main` as a fast-forward (`4d4a1434`) and pushed.
 
 **Stage 1 is now fully closed (9 of 9).** Next up is Stage 2 — the reproducible flagship centrality-ranking page (`scripts/computeCentrality.ts` + `/rankings/most-influential`) and RSS/email capture, per §5 of this file.
 

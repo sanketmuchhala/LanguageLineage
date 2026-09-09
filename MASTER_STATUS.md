@@ -42,7 +42,7 @@ The two plans are not sequential. `SITE_IMPROVEMENT_PLAN.md` is largely complete
 | | Value |
 |---|---|
 | Nodes | 152 (131 languages + 21 tools) |
-| Relationships | 443, all cited |
+| Relationships | 444, all cited (443 at last full count, +1 from the Rust→Zig split on Roc, 2026-09-09) |
 | Sitemap URLs | 304 |
 | Question pages / language pages | 117 / 132 |
 | `logo_url` populated | 96 / 152 |
@@ -134,7 +134,7 @@ Confirmed live 2026-09-03; re-verified 2026-09-06.
 | 5 | Add explicit licenses | ✅ **DONE** | MIT (code) + CC BY 4.0 (dataset), copyright Sanket Muchhala. Formalized what was already publicly stated on `/dataset`, README, and §1.8 |
 | 6 | Repair implementation display scalars | ✅ **DONE** | 43 of 47 repaired; diff exactly 43 changed values, 0 files under `public/` changed |
 | 7 | Remove FAQ deflection | ✅ **DONE** | 118 pages fixed at the source; diff traced end to end, 0 files carry the phrase |
-| 8 | Evidence link check | ✅ **DONE** | `scripts/checkEvidenceLinks.ts`. 207 OK, 6 redirects, **11 genuine failures** — left for manual review, see IMPLEMENTATION_PLAN.md for the list |
+| 8 | Evidence link check | ✅ **DONE** | `scripts/checkEvidenceLinks.ts` + follow-up fix (`4d4a1434`). 9 of 10 dead links replaced with verified sources; 1 (Haskell→Roc influence) left flagged, no reliable source found. Also caught a stale Roc fact (compiler rewritten Rust→Zig, corrected historically) and a self-inflicted validator bug (hardcoded citation check) |
 | 9 | Agent guardrails in `CLAUDE.md` | ✅ **DONE** | Production-parity preflight, three settled decisions with reasoning, scope boundary, dataset schema/value distinction fixed |
 
 **Human-only checks (none done):**
@@ -223,7 +223,7 @@ Pilot five nodes: **PyTorch, CUDA, ggml, llama.cpp, BLAS.** If coherent, expand 
 | 8 | Strip 92 deflection `FAQPage` answers | ✅ DONE (118, not 92 — recount at fix time) | <1 h | High | 1 |
 | 9 | Backfill 47 `unspecified` impl scalars | ✅ DONE | 30 min | Medium | 1 |
 | 10 | Three decisions into `CLAUDE.md` *(4-way)* | ✅ DONE | 1–2 h | High | 1 |
-| 11 | Link-check all 443 evidence URLs | ✅ DONE — 11 dead links found, unfixed | 1 h | High | 1 |
+| 11 | Link-check all 443 evidence URLs | ✅ DONE — 10 real dead links found (1 was a checker false positive); 9 fixed, 1 flagged unfixed | 1 h | High | 1 |
 | 12 | `computeCentrality.ts` + `/rankings/most-influential` | ⬜ PENDING | 1–2 d | **Transformative** | 2 |
 | 13 | RSS feed + email capture | ⬜ PENDING | 3–4 h | **Transformative** | 2 |
 | 14 | Static text layer on `/explore` *(4-way)* | ⬜ PENDING | 2–4 h | High | 2 |
@@ -347,8 +347,8 @@ Each of these was investigated and explicitly rejected. Reopening one costs week
 4. ~~**Stage 1 item 5 — licenses.**~~ ✅ Done 2026-09-08 (`0405abe4`). Ownership confirmed by the user; the last Blocking item is closed. Repo description/topics also done — `gh` CLI was installed and authenticated mid-session; global git identity was also fixed at the same time.
 5. ~~**Stage 1 item 6 — repair implementation scalars.**~~ ✅ Done 2026-09-08 (`4c6bc492`). 43 of 47 repaired; regression guard added.
 6. ~~**Stage 1 item 7 — remove FAQ deflection.**~~ ✅ Done 2026-09-09 (`33d44752`). 118 pages fixed at the source.
-7. ~~**Stage 1 item 8 — evidence link check.**~~ ✅ Done 2026-09-09 (`e538d956`). **Stage 1 is now fully closed, all 9 items.** Found 11 genuine dead evidence links (10x 404, 6 of them Wikipedia pages for niche/newer languages that may never have existed); left unfixed per the plan's own instruction to review manually.
-8. **Fix the 11 dead evidence links** found above, or hand them to the user — this is a human-review task, not one to auto-fix.
+7. ~~**Stage 1 item 8 — evidence link check.**~~ ✅ Done 2026-09-09 (`e538d956`). **Stage 1 is now fully closed, all 9 items.**
+8. ~~**Fix the dead evidence links.**~~ ✅ Done 2026-09-09 (`4d4a1434`). 9 of 10 replaced with verified sources; 1 (Haskell→Roc) left flagged — no reliable source found, one primary source arguably contradicts it. Bonus: fixed a checker false-positive (`vlang.io`) and a validator bug where the item-5 citation check compared against a value hardcoded at write time instead of the live page.
 9. Move to Stage 2: `scripts/computeCentrality.ts` + `/rankings/most-influential`, then RSS/email capture.
 10. Fresh GSC baseline before Stage 2 begins.
 
