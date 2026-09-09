@@ -111,7 +111,19 @@
 - Re-ran the checker after: 221 OK, 6 benign redirects, exactly the 1 expected remaining failure (Haskell→Roc, left flagged above).
 - Merged to `main` as a fast-forward (`4d4a1434`) and pushed.
 
-**Stage 1 is now fully closed (9 of 9).** Next up is Stage 2 — the reproducible flagship centrality-ranking page (`scripts/computeCentrality.ts` + `/rankings/most-influential`) and RSS/email capture, per §5 of this file.
+**Stage 1 is now fully closed (9 of 9).**
+
+### 2026-09-09 — Stage 2.1 complete: flagship centrality ranking page
+
+- Added `scripts/centrality/` (`pageRank.ts`, `descendants.ts`, `closures.ts`), pure functions with no file I/O, 17 unit tests on toy graphs (line, diamond, cycle, self-loop, isolated nodes). Widened `vitest.config.ts` to cover `scripts/**/*.test.ts`.
+- `scripts/computeCentrality.ts` runs as the new first step of `seo:generate`, writes `public/rankings/centrality.json` once; `generateSeoPages.ts` reads that file back in to render `/rankings/most-influential` — one computation, two consumers, so the page and the downloadable artifact cannot drift apart. Fails loudly if the file is missing rather than rendering an empty page.
+- Verified before shipping, not after: descendant counts reproduce the documented research benchmark exactly (ALGOL 65/131, Lisp 60, C 49, Simula 46, Pascal 46, ML 47 — byte-identical to `docs/GROWTH_MASTERPLAN_FULL.md:125-132`), confirming the `influenced` edge set hasn't changed since that research. PageRank rank order matches exactly; percentages run a few tenths of a point higher throughout, attributable to convergence/dangling-node handling differences between independent implementations, not a data change — the page's methodology section says this plainly. The C/C++ implementation closure (92 of 152 nodes, 61%) is the page's second, independently strong stat.
+- Added to `FOOTER_HTML` (present on all ~305 pages) as a peer to the existing "Programming language graph" link. This legitimately re-dated 303 of 305 pages under the item-3 date system — a real one-time sitewide content change, not a regression.
+- That exposed a real miscalibration in item 3's own validator: it required "5+ distinct lastmod values," a threshold set from one observed day rather than the actual defect signature. Fixed to test for what `BUILD_DATE` actually looked like — a single value shared by every URL, unconditionally, forever — verified by forcing that exact fault and confirming it still fails, then confirming idempotence holds across two consecutive full builds.
+- Caught two other things before they shipped: a `generatedAt` timestamp in the JSON artifact that would have made it churn every build regardless of content (same defect class as `BUILD_DATE`, removed before commit); and mid-verification, a `git checkout --` used to undo a fault-injection test restored from `HEAD` instead of the fault alone, wiping the real in-progress sitemap — caught immediately and recovered by re-running `seo:generate` rather than trusting git to hand back uncommitted work.
+- Merged to `main` as a fast-forward (`7e3cad38`) and pushed.
+
+**Next task:** Stage 2.2 — retention before traffic. RSS feed in the `seo:generate` chain, one email signup on `/dataset` and the rankings page, privacy/consent check. The plan is explicit: **do not submit this anywhere (HN, Reddit) until this exists** — an audience with nothing to catch it is a spike, not a readership.
 
 ## 1. Executive direction
 

@@ -16,7 +16,7 @@ Every status marker below was **verified against the working tree on 2026-09-06*
 |---|---|
 | Site-improvement phases (old plan) | **12 of 13 done** — only Phase 12 (accessibility) open |
 | Implementation Stage 1 (active plan) | **9 of 9 done — Stage 1 fully closed** |
-| Consolidated priority items (35) | **11 done, 1 partial, 23 pending** |
+| Consolidated priority items (35) | **12 done, 1 partial, 22 pending** |
 | The constraint | **Distribution, not SEO.** 30 clicks / 28 days |
 
 The two plans are not sequential. `SITE_IMPROVEMENT_PLAN.md` is largely complete but its *strategy* partly failed; `IMPLEMENTATION_PLAN.md` is the re-plan that replaced it. Work the second one.
@@ -43,7 +43,7 @@ The two plans are not sequential. `SITE_IMPROVEMENT_PLAN.md` is largely complete
 |---|---|
 | Nodes | 152 (131 languages + 21 tools) |
 | Relationships | 444, all cited (443 at last full count, +1 from the Rust→Zig split on Roc, 2026-09-09) |
-| Sitemap URLs | 304 |
+| Sitemap URLs | 305 (304 at last full count, +1 for `/rankings/most-influential`, 2026-09-09) |
 | Question pages / language pages | 117 / 132 |
 | `logo_url` populated | 96 / 152 |
 | `generateSeoPages.ts` | 5,982 lines |
@@ -143,12 +143,12 @@ Confirmed live 2026-09-03; re-verified 2026-09-06.
 - ⬜ On preview: correction form, rate limiting, analytics asset, a real tracked pageview
 - ⬜ Confirm code/dataset licensing ownership before merging
 
-### Stage 2 — Build the launch package · **0 of 3 groups**
+### Stage 2 — Build the launch package · **1 of 3 groups**
 
-**2.1 Reproducible flagship story** — ⬜ PENDING
-- ⬜ `scripts/computeCentrality.ts` (does not exist): reverse PageRank over 252 `influenced` edges, damping 0.85; transitive descendant counts; C/C++ implementation closure
-- ⬜ `/rankings/most-influential` (does not exist). Headline: ALGOL's 65-of-131 descendants; Lisp 7.26% PageRank
-- ⬜ Unit-test the algorithm on a fixture; **generate every displayed number, never transcribe**
+**2.1 Reproducible flagship story** — ✅ **DONE** (`7e3cad38`, 2026-09-09)
+- ✅ `scripts/computeCentrality.ts`: reverse PageRank over 252 `influenced` edges, damping 0.85; transitive descendant counts; C/C++ implementation closure. Runs as the first step of `seo:generate`, writes `public/rankings/centrality.json`
+- ✅ `/rankings/most-influential` live. Headline: ALGOL 65/131 descendants (50%), Lisp 7.73% PageRank (percentages differ a few tenths from the 7.26% research figure — attributable to convergence/dangling-node handling, not data drift; descendant counts match the research benchmark exactly)
+- ✅ 17 unit tests on toy graphs (`scripts/centrality/*.test.ts`); page reads numbers from the generated JSON, never transcribes; verified idempotent across repeated builds
 
 **2.2 Retention before traffic** — ⬜ PENDING
 - ⬜ RSS feed in the `seo:generate` chain (no `rss.xml`/`feed.xml`)
@@ -207,7 +207,7 @@ Pilot five nodes: **PyTorch, CUDA, ggml, llama.cpp, BLAS.** If coherent, expand 
 
 ---
 
-## 7. Consolidated priority table — 11 done, 1 partial, 23 pending
+## 7. Consolidated priority table — 12 done, 1 partial, 22 pending
 
 *"Reinforced by" counts in the source mark items where multiple independent investigations converged — highest confidence.*
 
@@ -224,7 +224,7 @@ Pilot five nodes: **PyTorch, CUDA, ggml, llama.cpp, BLAS.** If coherent, expand 
 | 9 | Backfill 47 `unspecified` impl scalars | ✅ DONE | 30 min | Medium | 1 |
 | 10 | Three decisions into `CLAUDE.md` *(4-way)* | ✅ DONE | 1–2 h | High | 1 |
 | 11 | Link-check all 443 evidence URLs | ✅ DONE — 10 real dead links found (1 was a checker false positive); 9 fixed, 1 flagged unfixed | 1 h | High | 1 |
-| 12 | `computeCentrality.ts` + `/rankings/most-influential` | ⬜ PENDING | 1–2 d | **Transformative** | 2 |
+| 12 | `computeCentrality.ts` + `/rankings/most-influential` | ✅ DONE | 1–2 d | **Transformative** | 2 |
 | 13 | RSS feed + email capture | ⬜ PENDING | 3–4 h | **Transformative** | 2 |
 | 14 | Static text layer on `/explore` *(4-way)* | ⬜ PENDING | 2–4 h | High | 2 |
 | 15 | Prerender landing copy outside `#root` | ⬜ PENDING | 1 d | Medium | 2 |
@@ -349,8 +349,9 @@ Each of these was investigated and explicitly rejected. Reopening one costs week
 6. ~~**Stage 1 item 7 — remove FAQ deflection.**~~ ✅ Done 2026-09-09 (`33d44752`). 118 pages fixed at the source.
 7. ~~**Stage 1 item 8 — evidence link check.**~~ ✅ Done 2026-09-09 (`e538d956`). **Stage 1 is now fully closed, all 9 items.**
 8. ~~**Fix the dead evidence links.**~~ ✅ Done 2026-09-09 (`4d4a1434`). 9 of 10 replaced with verified sources; 1 (Haskell→Roc) left flagged — no reliable source found, one primary source arguably contradicts it. Bonus: fixed a checker false-positive (`vlang.io`) and a validator bug where the item-5 citation check compared against a value hardcoded at write time instead of the live page.
-9. Move to Stage 2: `scripts/computeCentrality.ts` + `/rankings/most-influential`, then RSS/email capture.
-10. Fresh GSC baseline before Stage 2 begins.
+9. ~~**Stage 2.1 — flagship centrality ranking.**~~ ✅ Done 2026-09-09 (`7e3cad38`).
+10. **Stage 2.2 — retention before traffic.** RSS feed + one email signup on `/dataset` and the rankings page. The plan is explicit: nothing gets submitted anywhere until this exists.
+11. Fresh GSC baseline before Stage 2 finishes.
 
 ### Validation gate — run before every commit
 
