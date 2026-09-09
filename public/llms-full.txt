@@ -8,7 +8,7 @@ Language Lineage is a structured knowledge base for programming-language impleme
 - Total nodes: 152
 - Language nodes: 131
 - Tool nodes: 21
-- Relationships: 443
+- Relationships: 444
 - Evidence coverage: every relationship has at least one source URL
 - License: Creative Commons Attribution 4.0 International (CC BY 4.0)
 - Download: https://www.languagelineage.org/dataset/v5/lineage_v5.json
@@ -19,7 +19,7 @@ Language Lineage is a structured knowledge base for programming-language impleme
 | Type | Count |
 |---|---:|
 | influenced | 252 |
-| compiler_written_in | 96 |
+| compiler_written_in | 97 |
 | runtime_written_in | 67 |
 | bootstrap_written_in | 15 |
 | transpiled_to | 11 |
@@ -31,16 +31,16 @@ Language and tool nodes include identity, release year, implementation, paradigm
 
 ## Citation
 
-Language Lineage. Programming Language Lineage Dataset, v5.0. 152 nodes and 443 relationships. https://www.languagelineage.org/dataset
+Language Lineage. Programming Language Lineage Dataset, v5.0. 152 nodes and 444 relationships. https://www.languagelineage.org/dataset
 
 ## Complete indexable page catalog
 
 - [Programming Language Lineage Graph | What Languages Are Written In](https://www.languagelineage.org/): Explore what programming languages are written in, how compilers are bootstrapped, and how languages evolved. Interactive graph of 152 languages and 443 relationships.
 - [Interactive Graph Explorer](https://www.languagelineage.org/explore): Explore implementation, bootstrap, runtime, and influence relationships across 152 language and tool nodes.
 - [Embed the Language Lineage Graph | Language Lineage](https://www.languagelineage.org/embed-kit): Put the relationship graph for any of 152 languages and tools on your own page with one iframe. Copy-paste snippet, parameters, sizing, and attribution.
-- [Programming Language Graph | Interactive Language Lineage Map](https://www.languagelineage.org/programming-language-graph): Interactive graph of 131 programming languages and 443 relationships: what languages are written in, how compilers are implemented, and how they influenced each other.
+- [Programming Language Graph | Interactive Language Lineage Map](https://www.languagelineage.org/programming-language-graph): Interactive graph of 131 programming languages and 444 relationships: what languages are written in, how compilers are implemented, and how they influenced each other.
 - [Programming Language Evolution Timeline | 1949 to 2023](https://www.languagelineage.org/programming-language-evolution): Trace the evolution of programming languages from 1949 to 2023. Decade-by-decade timeline of 130 languages with influence and implementation relationships.
-- [What Are Programming Languages Written In?](https://www.languagelineage.org/what-are-programming-languages-written-in): What are programming languages written in? Python is written in C, JavaScript engines in C++, Rust in Rust, Go in Go. Explore 163 implementation relationships with evidence.
+- [What Are Programming Languages Written In?](https://www.languagelineage.org/what-are-programming-languages-written-in): What are programming languages written in? Python is written in C, JavaScript engines in C++, Rust in Rust, Go in Go. Explore 164 implementation relationships with evidence.
 - [Programming Language Genealogy | Language Evolution and Influence](https://www.languagelineage.org/programming-language-genealogy): Explore programming language genealogy: 252 influence relationships, language families, ancestry chains, and implementation lineage across 152 languages.
 - [Compiler, Runtime, and Bootstrap Relationships Explained | Language Lineage](https://www.languagelineage.org/compiler-runtime-bootstrap): Understand compiler, runtime, and bootstrap relationships in programming language implementation. Definitions, examples, and dataset evidence for all relationship types.
 - [Programming Language Questions Answered | Language Lineage](https://www.languagelineage.org/questions): Direct answers to common programming language questions: what languages are written in, compiler bootstrapping, self-hosting compilers, and more.
@@ -162,7 +162,7 @@ Language Lineage. Programming Language Lineage Dataset, v5.0. 152 nodes and 443 
 - [What is Move written in? written in Rust | Language Lineage](https://www.languagelineage.org/questions/what-is-move-written-in): The Move compiler is written in Rust. Move is a digital currency proposed by Meta Platforms, designed by David A. Marcus, first released in 2019.
 - [Site Directory | Language Lineage](https://www.languagelineage.org/directory): A complete directory of all programming languages, tools, questions, and guides on Language Lineage.
 - [How It Works: Agents, Validation, Human Review | Language Lineage](https://www.languagelineage.org/how-it-works): How Language Lineage is built: research agents harvest cited facts, mechanical gates validate every page, and a human reviews every change before it ships.
-- [Programming Language Lineage Dataset | Language Lineage](https://www.languagelineage.org/dataset): Open dataset of 152 programming languages with 443 implementation and influence relationships, evidence sources, and confidence scores.
+- [Programming Language Lineage Dataset | Language Lineage](https://www.languagelineage.org/dataset): Open dataset of 152 programming languages with 444 implementation and influence relationships, evidence sources, and confidence scores.
 - [Programming Languages Index | Language Lineage](https://www.languagelineage.org/languages): Browse all 131 programming languages in the Language Lineage dataset. Find what each language is written in, its compiler, runtime, and lineage.
 - [Compilers, Runtimes, and Tools | Language Lineage](https://www.languagelineage.org/tools): Browse 21 compilers, runtimes, and language tools: GCC, LLVM, V8, SpiderMonkey, GHC, HotSpot JVM, and more. Find what each is written in.
 - [Programming Language Guides | Language Lineage](https://www.languagelineage.org/guides): In-depth guides on compiler bootstrapping, self-hosting, JavaScript engines, Python implementation, GCC vs LLVM, and more.
@@ -297,7 +297,7 @@ Language Lineage. Programming Language Lineage Dataset, v5.0. 152 nodes and 443 
 - [Hope: Implementation, History, and Lineage | Language Lineage](https://www.languagelineage.org/languages/hope): Hope is a functional programming language, first released in 1980. Explore the full lineage.
 - [Mesa: Implementation, History, and Lineage | Language Lineage](https://www.languagelineage.org/languages/mesa): Mesa is a programming language, first released in 1976. Explore the full lineage.
 - [ATS: Implementation, History, and Lineage | Language Lineage](https://www.languagelineage.org/languages/ats): ATS is a programming language, first released in 2008. Explore the full lineage.
-- [Roc: Implementation, History, and Lineage | Language Lineage](https://www.languagelineage.org/languages/roc): Roc's compiler is written in Rust. Roc is a functional programming language, first released in 2019. Explore the full lineage.
+- [Roc: Implementation, History, and Lineage | Language Lineage](https://www.languagelineage.org/languages/roc): Roc's compiler is written in Rust and Zig. Roc is a functional programming language, first released in 2019. Explore the full lineage.
 - [Unison: Implementation, History, and Lineage | Language Lineage](https://www.languagelineage.org/languages/unison): Unison's compiler is written in Haskell. Unison is a two or more musical parts sounding the same pitch; an interval of zero size (a frequency ratio of 1:1)...
 - [Lean: Implementation, History, and Lineage | Language Lineage](https://www.languagelineage.org/languages/lean): Lean's runtime is written in C++. Lean is a software for interactive and automated theorem proving, first released in 2013. Explore the full lineage.
 - [Coq: Implementation, History, and Lineage | Language Lineage](https://www.languagelineage.org/languages/coq): Coq's compiler is written in OCaml. Coq is a proof assistant, first released in 1989. Explore the full lineage.
@@ -322,7 +322,7 @@ Language Lineage. Programming Language Lineage Dataset, v5.0. 152 nodes and 443 
 - [Babel: Implementation, History, and Lineage | Language Lineage](https://www.languagelineage.org/tools/babel): Babel is written in JavaScript. Babel is a JavaScript compiler that compiles ES2015+ code into backwards compatible JavaScript for older versions of...
 - [252 Language Influence Relationships | Language Lineage](https://www.languagelineage.org/relationships/influenced): Conceptual influence relationships document which design ideas, syntax features, or programming paradigms one language borrowed or adapted from another.
 - [15 Bootstrap and Self-Hosting Chains | Language Lineage](https://www.languagelineage.org/relationships/bootstrap-written-in): Bootstrapping is the process of writing a compiler in the same language it compiles. These relationships show the bootstrap chains, what language was used to wr
-- [96 Compiler Implementation Relationships | Language Lineage](https://www.languagelineage.org/relationships/compiler-written-in): These relationships document what programming language each compiler is written in. For example, GCC (the GNU Compiler Collection) is written in C.
+- [97 Compiler Implementation Relationships | Language Lineage](https://www.languagelineage.org/relationships/compiler-written-in): These relationships document what programming language each compiler is written in. For example, GCC (the GNU Compiler Collection) is written in C.
 - [67 Runtime Implementation Relationships | Language Lineage](https://www.languagelineage.org/relationships/runtime-written-in): These relationships document what programming language each runtime or interpreter is written in. For example, CPython (the reference Python interpreter) is wri
 - [2 Language Rewrites | Language Lineage](https://www.languagelineage.org/relationships/rewritten-in): These relationships document cases where a language runtime or compiler was substantially rewritten in a different implementation language.
 - [11 Transpilation Relationships | Language Lineage](https://www.languagelineage.org/relationships/transpiled-to): Transpilation (source-to-source compilation) converts code from one high-level language to another. For example, CoffeeScript transpiles to JavaScript.

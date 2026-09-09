@@ -14,7 +14,7 @@
   <meta property="og:url" content="https://www.languagelineage.org/how-it-works" />
   <meta property="og:image" content="https://www.languagelineage.org/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"How Language Lineage is built","description":"How Language Lineage is built: research agents harvest cited facts, mechanical gates validate every page, and a human reviews every change before it ships.","url":"https://www.languagelineage.org/how-it-works","datePublished":"2026-07-02","dateModified":"2026-09-01","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":["data provenance","programming languages","compiler implementation","AI agents"],"inLanguage":"en"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"How Language Lineage is built","description":"How Language Lineage is built: research agents harvest cited facts, mechanical gates validate every page, and a human reviews every change before it ships.","url":"https://www.languagelineage.org/how-it-works","datePublished":"2026-07-02","dateModified":"2026-09-09","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":["data provenance","programming languages","compiler implementation","AI agents"],"inLanguage":"en"}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"How It Works","item":"https://www.languagelineage.org/how-it-works"}]}</script>
   <style>
     .seo-main h1 { text-wrap: balance; }
@@ -139,8 +139,8 @@
 
   <div class="hw-stats">
     <div class="hw-stat"><b>152</b><span>graph nodes</span></div>
-    <div class="hw-stat"><b>443</b><span>typed edges</span></div>
-    <div class="hw-stat"><b>443/443</b><span>edges with evidence</span></div>
+    <div class="hw-stat"><b>444</b><span>typed edges</span></div>
+    <div class="hw-stat"><b>444/444</b><span>edges with evidence</span></div>
     <div class="hw-stat"><b>148/152</b><span>nodes with cited facts</span></div>
     <div class="hw-stat"><b>300+</b><span>generated pages</span></div>
     <div class="hw-stat hw-stat-zero"><b>0</b><span>errors allowed at ship</span></div>
@@ -191,7 +191,7 @@
       <text class="hw-station-name" x="415" y="250" text-anchor="middle">Assembly</text>
       <text class="hw-station-sub" x="415" y="268" text-anchor="middle">npm run dataset:v5</text>
       <path d="M 580 254 H 606" stroke="rgba(255,255,255,0.14)" stroke-width="1" fill="none"/>
-      <text class="hw-anno-a" x="618" y="250" text-anchor="start">out: lineage_v5.json · 152 nodes · 443 edges</text>
+      <text class="hw-anno-a" x="618" y="250" text-anchor="start">out: lineage_v5.json · 152 nodes · 444 edges</text>
       <text class="hw-anno-b" x="618" y="268" text-anchor="start">deterministic: same inputs, same bytes</text>
     </a>
 <a href="#review" class="hw-station">
@@ -201,7 +201,7 @@
       <text class="hw-station-sub" x="415" y="368" text-anchor="middle">git diff · sign-off</text>
       <path d="M 580 354 H 606" stroke="rgba(255,255,255,0.14)" stroke-width="1" fill="none"/>
       <text class="hw-anno-a" x="618" y="350" text-anchor="start">every diff read and signed by a person</text>
-      <text class="hw-anno-b" x="618" y="368" text-anchor="start">259/443 edges score 0.9+ · 16 deep dives</text>
+      <text class="hw-anno-b" x="618" y="368" text-anchor="start">259/444 edges score 0.9+ · 16 deep dives</text>
     </a>
 <a href="#gates" class="hw-station">
       <rect class="hw-station-box" x="250" y="422" width="330" height="64" rx="10" fill="#161616" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
@@ -362,7 +362,7 @@
 <tr>
       <td><span class="hw-dot" style="background:#e3a008"></span><a href="/relationships/compiler-written-in"><code>compiler_written_in</code></a></td>
       <td data-l="meaning">what a compiler is written in</td>
-      <td data-l="edges">96</td>
+      <td data-l="edges">97</td>
       <td data-l="median confidence">0.92</td>
     </tr>
 <tr>
@@ -482,7 +482,7 @@
 <div class="hw-human"><b>Human in the loop</b><p>Every curated pin and every rejection above is a human call, written into the script where the next reviewer can see it. The agents execute those calls; they do not make them.</p></div>
 
 <h2 id="assembly"><span class="hw-idx">03</span> Assembly</h2>
-<p><code>npm run dataset:v5</code> (<code>scripts/generateV5Dataset.ts</code>) deterministically merges the base dataset, the harvested logo metadata, and a set of curated corrections into one file: <code>lineage_v5.json</code>, 152 nodes and 443 edges. Run it twice and you get the same bytes.</p>
+<p><code>npm run dataset:v5</code> (<code>scripts/generateV5Dataset.ts</code>) deterministically merges the base dataset, the harvested logo metadata, and a set of curated corrections into one file: <code>lineage_v5.json</code>, 152 nodes and 444 edges. Run it twice and you get the same bytes.</p>
 <div class="hw-fig">
   <svg viewBox="0 0 380 292" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Merge of base dataset, enrichment, and logo overrides into lineage_v5.json">
     <title>lineage_v4.json, enrichment, and logo overrides merge deterministically into lineage_v5.json.</title>
@@ -512,7 +512,7 @@
     <g class="hw-filecard">
       <rect x="85" y="218" width="210" height="58" rx="10" fill="#0e0e0e" stroke="rgba(74,222,128,0.45)"/>
       <text class="hw-file-name" x="190" y="242" text-anchor="middle">lineage_v5.json</text>
-      <text class="hw-station-sub" x="190" y="259" text-anchor="middle">152 nodes · 443 edges</text>
+      <text class="hw-station-sub" x="190" y="259" text-anchor="middle">152 nodes · 444 edges</text>
     </g>
   </svg>
   <div class="hw-plate-caption"><span>Fig. 4 &middot; Deterministic merge: same inputs, same bytes</span></div>
@@ -542,7 +542,7 @@
 </div>
 <p>This is the stage where judgment lives:</p>
 <ul>
-  <li>Every one of the 443 edges carries a hand-assigned confidence score and an evidence URL; 443 of 443 have evidence attached, which is to say all of them. 259 score 0.9 or higher, and the floor in the dataset is 0.65.</li>
+  <li>Every one of the 444 edges carries a hand-assigned confidence score and an evidence URL; 444 of 444 have evidence attached, which is to say all of them. 259 score 0.9 or higher, and the floor in the dataset is 0.65.</li>
   <li>Contested history gets adjudicated, not averaged. Self-hosting compilers create chicken-and-egg loops (rustc is written in Rust) that no scraper untangles; the <a href="/relationships/bootstrap-written-in"><code>bootstrap_written_in</code></a> edges recording how each loop actually started are curated by hand.</li>
   <li>16 languages and tools get fully hand-written deep dives instead of generated prose: <a href="/languages/python">Python</a>, <a href="/languages/javascript">JavaScript</a>, <a href="/languages/rust">Rust</a>, <a href="/languages/go">Go</a>, <a href="/languages/java">Java</a>, <a href="/languages/c">C</a>, <a href="/languages/cxx">C++</a>, <a href="/languages/typescript">TypeScript</a>, <a href="/languages/ruby">Ruby</a>, <a href="/languages/haskell">Haskell</a>, and more, plus engines like <a href="/tools/v8">V8</a> and <a href="/tools/beam">BEAM</a>.</li>
   <li>Policy is decided here too: the licensing rules, the logo standard, and what qualifies for each of the six relationship types.</li>
@@ -640,7 +640,7 @@ npm run build          # regenerate everything, then compile</code></pre>
 <p>Spot an error? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue on GitHub</a>. A correction is never a patch to one page: it becomes a dataset or generator change, re-enters the pipeline at the research or assembly stage, gets reviewed like any other diff, and has to clear every gate before it ships. The loop in the diagram is literal.</p>
 
 <h2 id="division">Agents scale, humans decide</h2>
-<p>The division of labor is strict, and it is the reason a two-person-scale project can maintain 443 sourced claims.</p>
+<p>The division of labor is strict, and it is the reason a two-person-scale project can maintain 444 sourced claims.</p>
 <div class="hw-cols">
   <div class="hw-col">
     <h3>What the agents do</h3>
@@ -657,7 +657,7 @@ npm run build          # regenerate everything, then compile</code></pre>
     <h3>What the humans do</h3>
     <ul>
       <li>Pin ambiguous names to exact articles</li>
-      <li>Assign all 443 confidence scores</li>
+      <li>Assign all 444 confidence scores</li>
       <li>Accept or reject every logo, with written reasons</li>
       <li>Untangle bootstrap loops and contested dates</li>
       <li>Write the 16 hand-authored deep dives</li>

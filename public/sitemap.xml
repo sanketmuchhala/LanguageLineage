@@ -10,11 +10,11 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/embed-kit</loc>
-    <lastmod>2026-09-01</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/programming-language-graph</loc>
-    <lastmod>2026-09-01</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/programming-language-evolution</loc>
@@ -22,7 +22,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/what-are-programming-languages-written-in</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/programming-language-genealogy</loc>
@@ -30,7 +30,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/compiler-runtime-bootstrap</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions</loc>
@@ -506,11 +506,11 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/how-it-works</loc>
-    <lastmod>2026-09-01</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/dataset</loc>
-    <lastmod>2026-09-01</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages</loc>
@@ -526,7 +526,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/relationships</loc>
-    <lastmod>2026-09-01</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/timeline</loc>
@@ -578,7 +578,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/c</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/ml</loc>
@@ -598,7 +598,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/cxx</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/objective-c</loc>
@@ -618,7 +618,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/haskell</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/python</loc>
@@ -682,7 +682,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/go</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/coffeescript</loc>
@@ -690,7 +690,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/rust</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/kotlin</loc>
@@ -810,7 +810,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools/chez-scheme</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools/femtolisp</loc>
@@ -830,7 +830,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/lazy-ml</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/newsqueak</loc>
@@ -1150,7 +1150,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/relationships/compiler-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/relationships/runtime-written-in</loc>

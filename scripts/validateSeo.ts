@@ -45,12 +45,12 @@ for (const f of staticFiles) {
   if (content) ok(`public/${f} exists (${content.length} bytes)`);
 }
 
-// Licenses and citation. Formalizes what dataset/index.html and README.md
-// already publicly state, so this check guards that the files exist and stay
-// consistent with the citation text actually shown on the live dataset page.
-const CITATION_TEXT =
-  'Language Lineage. Programming Language Lineage Dataset, v5.0. 152 nodes and 443 relationships. Accessed 2026. https://www.languagelineage.org/dataset';
-
+// Licenses. Formalizes what dataset/index.html and README.md already
+// publicly state, so this check guards that the files exist and reference
+// the right terms. The citation-text cross-check lives further below, next
+// to where dataset/index.html's own content is already read - it must
+// compare against that live text, never a value frozen at write-time,
+// because the relationship count it embeds changes as the dataset grows.
 const rootLicense = checkRootFile('LICENSE');
 if (rootLicense) {
   if (!rootLicense.includes('MIT License')) fail('LICENSE does not appear to be the MIT License');
@@ -62,13 +62,6 @@ if (datasetLicense) {
   if (!datasetLicense.includes('CC BY 4.0') || !datasetLicense.includes('creativecommons.org/licenses/by/4.0')) {
     fail('dataset/LICENSE does not clearly reference CC BY 4.0');
   } else ok('dataset/LICENSE present (CC BY 4.0)');
-}
-
-const datasetReadme = checkRootFile('dataset/README.md');
-if (datasetReadme) {
-  if (!datasetReadme.includes(CITATION_TEXT)) {
-    fail('dataset/README.md citation text does not match the citation shown on /dataset');
-  } else ok('dataset/README.md citation matches the live dataset page');
 }
 
 // robots.txt content
@@ -273,6 +266,23 @@ if (datasetPage) {
     else ok('dataset/index.html Dataset JSON-LD has version, license, and download metadata');
   } catch {
     fail('dataset/index.html Dataset JSON-LD is invalid JSON');
+  }
+
+  // dataset/README.md's citation must match the live page's own citation
+  // block verbatim - extracted dynamically, not a value frozen at write
+  // time, because the relationship count it embeds changes as the dataset
+  // grows (it drifted silently once already: the check compared against a
+  // hardcoded "443 relationships" after the count had moved to 444).
+  const citationMatch = datasetPage.match(/<pre class="citation-block"><code>([\s\S]*?)<\/code><\/pre>/);
+  const datasetReadme = checkRootFile('dataset/README.md');
+  if (!citationMatch) {
+    fail('dataset/index.html missing a citation-block to compare against');
+  } else if (datasetReadme) {
+    if (!datasetReadme.includes(citationMatch[1])) {
+      fail('dataset/README.md citation text does not match the citation shown on /dataset');
+    } else {
+      ok('dataset/README.md citation matches the live dataset page');
+    }
   }
 }
 

@@ -2962,7 +2962,7 @@
       "id": "lang:roc",
       "name": "Roc",
       "first_release_year": 2019,
-      "current_primary_implementation_language": "Rust",
+      "current_primary_implementation_language": "Zig",
       "paradigm": [
         "functional"
       ],
@@ -4811,7 +4811,7 @@
       "start_year": 2006,
       "end_year": null,
       "confidence": 0.95,
-      "evidence_source": "https://scala-lang.org/blog/2016/11/11/dotty-compiler-bootstraps.html",
+      "evidence_source": "https://www.scala-lang.org/blog/2015/10/23/dotty-compiler-bootstraps.html",
       "notes": "Scala 3 (Dotty) compiler bootstrapped itself"
     },
     {
@@ -5001,7 +5001,7 @@
       "start_year": 2019,
       "end_year": null,
       "confidence": 0.95,
-      "evidence_source": "https://racket-lang.org/blog/2019/01/rebuilding-racket-on-chez-scheme-experience-report.html",
+      "evidence_source": "https://blog.racket-lang.org/2019/01/racket-on-chez-status.html",
       "notes": "Racket migrated backend to Chez Scheme in 2019"
     },
     {
@@ -5041,7 +5041,7 @@
       "start_year": 1995,
       "end_year": null,
       "confidence": 0.9,
-      "evidence_source": "https://www.adacore.com/gnat",
+      "evidence_source": "https://en.wikipedia.org/wiki/GNAT",
       "notes": "GNAT (GCC Ada) is self-hosting"
     },
     {
@@ -5251,7 +5251,7 @@
       "start_year": 1989,
       "end_year": 1989,
       "confidence": 0.95,
-      "evidence_source": "https://wiki.haskell.org/GHC:History",
+      "evidence_source": "https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/history.pdf",
       "notes": "Original GHC prototype written in Lazy ML by Kevin Hammond in 1989 before the Haskell rewrite"
     },
     {
@@ -7421,7 +7421,7 @@
       "start_year": null,
       "end_year": null,
       "confidence": 0.9,
-      "evidence_source": "https://en.wikipedia.org/wiki/Roc_(programming_language)",
+      "evidence_source": "https://www.roc-lang.org/faq",
       "notes": "Roc is heavily influenced by Elm."
     },
     {
@@ -7439,10 +7439,10 @@
       "to_language": "lang:roc",
       "relationship": "compiler_written_in",
       "start_year": null,
-      "end_year": null,
+      "end_year": 2025,
       "confidence": 0.92,
-      "evidence_source": "https://en.wikipedia.org/wiki/Roc_(programming_language)",
-      "notes": "The Roc compiler is written in Rust."
+      "evidence_source": "https://linkedlist.org/2025/02/06/roc-zig-rewrite",
+      "notes": "Roc's compiler was originally written in Rust, from the project's start until the 2025 rewrite to Zig."
     },
     {
       "from_language": "lang:haskell",
@@ -7451,7 +7451,7 @@
       "start_year": null,
       "end_year": null,
       "confidence": 0.9,
-      "evidence_source": "https://en.wikipedia.org/wiki/Unison_(programming_language)",
+      "evidence_source": "https://www.unison-lang.org/docs/usage-topics/general-faqs/",
       "notes": "Unison is strongly influenced by Haskell."
     },
     {
@@ -7461,7 +7461,7 @@
       "start_year": null,
       "end_year": null,
       "confidence": 0.9,
-      "evidence_source": "https://en.wikipedia.org/wiki/Unison_(programming_language)",
+      "evidence_source": "https://www.unison-lang.org/docs/usage-topics/general-faqs/",
       "notes": "Unison's implementation is written in Haskell."
     },
     {
@@ -7711,7 +7711,7 @@
       "start_year": null,
       "end_year": null,
       "confidence": 0.85,
-      "evidence_source": "https://en.wikipedia.org/wiki/Odin_(programming_language)",
+      "evidence_source": "https://odin-lang.org/docs/faq/",
       "notes": "Odin is designed as a modern alternative to C."
     },
     {
@@ -7721,7 +7721,7 @@
       "start_year": null,
       "end_year": null,
       "confidence": 0.72,
-      "evidence_source": "https://en.wikipedia.org/wiki/Odin_(programming_language)",
+      "evidence_source": "https://odin-lang.org/docs/faq/",
       "notes": "Odin borrows declaration syntax from Pascal."
     },
     {
@@ -7731,7 +7731,7 @@
       "start_year": null,
       "end_year": null,
       "confidence": 0.75,
-      "evidence_source": "https://en.wikipedia.org/wiki/Odin_(programming_language)",
+      "evidence_source": "https://odin-lang.org/docs/faq/",
       "notes": "Odin draws ideas from Go."
     },
     {
@@ -7741,7 +7741,7 @@
       "start_year": null,
       "end_year": null,
       "confidence": 0.85,
-      "evidence_source": "https://en.wikipedia.org/wiki/Odin_(programming_language)",
+      "evidence_source": "https://odin-lang.org/docs/faq/",
       "notes": "The Odin compiler is written in C++ with an LLVM backend."
     },
     {
@@ -7751,7 +7751,7 @@
       "start_year": null,
       "end_year": null,
       "confidence": 0.9,
-      "evidence_source": "https://en.wikipedia.org/wiki/Hare_(programming_language)",
+      "evidence_source": "https://harelang.org/documentation/faq.html",
       "notes": "Hare is a C-like systems language."
     },
     {
@@ -7761,7 +7761,7 @@
       "start_year": null,
       "end_year": null,
       "confidence": 0.85,
-      "evidence_source": "https://en.wikipedia.org/wiki/Hare_(programming_language)",
+      "evidence_source": "https://slackbuilds.org/repository/15.0/development/harec/",
       "notes": "Hare's bootstrap compiler is written in C."
     },
     {
@@ -7771,7 +7771,7 @@
       "start_year": null,
       "end_year": null,
       "confidence": 0.85,
-      "evidence_source": "https://en.wikipedia.org/wiki/Wren_(programming_language)",
+      "evidence_source": "https://github.com/wren-lang/wren",
       "notes": "Wren is a small embeddable language like Lua."
     },
     {
@@ -7781,7 +7781,7 @@
       "start_year": null,
       "end_year": null,
       "confidence": 0.72,
-      "evidence_source": "https://en.wikipedia.org/wiki/Wren_(programming_language)",
+      "evidence_source": "https://github.com/wren-lang/wren",
       "notes": "Wren's class and method model draws on Smalltalk."
     },
     {
@@ -7791,7 +7791,7 @@
       "start_year": null,
       "end_year": null,
       "confidence": 0.92,
-      "evidence_source": "https://en.wikipedia.org/wiki/Wren_(programming_language)",
+      "evidence_source": "https://github.com/wren-lang/wren",
       "notes": "The Wren VM is written in C."
     },
     {
@@ -7911,7 +7911,7 @@
       "start_year": null,
       "end_year": null,
       "confidence": 0.95,
-      "evidence_source": "https://en.wikipedia.org/wiki/SWC_(software)",
+      "evidence_source": "https://github.com/swc-project/swc",
       "notes": "SWC is written in Rust."
     },
     {
@@ -7923,6 +7923,16 @@
       "confidence": 0.95,
       "evidence_source": "https://en.wikipedia.org/wiki/Babel_(transcompiler)",
       "notes": "Babel is written in JavaScript."
+    },
+    {
+      "from_language": "lang:zig",
+      "to_language": "lang:roc",
+      "relationship": "compiler_written_in",
+      "start_year": 2025,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://gist.github.com/rtfeldman/77fb430ee57b42f5f2ca973a3992532f",
+      "notes": "Roc's compiler was rewritten from Rust to Zig starting 2025, announced by creator Richard Feldman, for faster incremental builds and simpler memory management."
     }
   ]
 }

@@ -72,9 +72,11 @@ async function checkUrl(url: string): Promise<Omit<CheckResult, 'url' | 'relatio
         });
         clearTimeout(timer);
 
-        // A small set of hosts reject HEAD specifically; try GET before
-        // treating this as a real failure.
-        if (method === 'HEAD' && (res.status === 403 || res.status === 405 || res.status === 501)) {
+        // Some hosts (observed: Cloudflare-fronted sites returning a bare
+        // 404 for HEAD while GET succeeds) reject HEAD with a status that
+        // looks like a real failure. Never trust a non-2xx/3xx from HEAD on
+        // its own — confirm with GET before concluding the URL is dead.
+        if (method === 'HEAD' && !(res.status >= 200 && res.status < 400)) {
           continue;
         }
 

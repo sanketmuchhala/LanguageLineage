@@ -4,20 +4,20 @@
     "lastmod": "2026-07-02"
   },
   "/compiler-runtime-bootstrap": {
-    "hash": "ca9353db7fb27154",
-    "lastmod": "2026-07-02"
+    "hash": "a02c0fd1ce6fe253",
+    "lastmod": "2026-09-09"
   },
   "/dataset": {
-    "hash": "10be91834c2a0f9d",
-    "lastmod": "2026-09-01"
+    "hash": "621cad252080c5ca",
+    "lastmod": "2026-09-09"
   },
   "/directory": {
     "hash": "fe659ed3b710f153",
     "lastmod": "2026-07-02"
   },
   "/embed-kit": {
-    "hash": "029d0bd12f3e12d3",
-    "lastmod": "2026-09-01"
+    "hash": "8a9c5abbcf08719c",
+    "lastmod": "2026-09-09"
   },
   "/explore": {
     "hash": "",
@@ -80,8 +80,8 @@
     "lastmod": "2026-05-11"
   },
   "/how-it-works": {
-    "hash": "9b058098953004c0",
-    "lastmod": "2026-09-01"
+    "hash": "857bf7e32a217965",
+    "lastmod": "2026-09-09"
   },
   "/languages": {
     "hash": "46f85627c0950576",
@@ -96,7 +96,7 @@
     "lastmod": "2026-09-09"
   },
   "/languages/ada": {
-    "hash": "193cf8c3f8cf38f6",
+    "hash": "7359973401420254",
     "lastmod": "2026-09-09"
   },
   "/languages/agda": {
@@ -152,8 +152,8 @@
     "lastmod": "2026-06-25"
   },
   "/languages/c": {
-    "hash": "5cfa60afb7f36d3e",
-    "lastmod": "2026-06-30"
+    "hash": "87408f7579653b36",
+    "lastmod": "2026-09-09"
   },
   "/languages/carbon": {
     "hash": "11d3a604ced62bd0",
@@ -204,8 +204,8 @@
     "lastmod": "2026-06-30"
   },
   "/languages/cxx": {
-    "hash": "9270c613433e6ec0",
-    "lastmod": "2026-06-30"
+    "hash": "333c71b9d7ce992a",
+    "lastmod": "2026-09-09"
   },
   "/languages/cyclone": {
     "hash": "b306f368b3a4d9ef",
@@ -240,7 +240,7 @@
     "lastmod": "2026-09-09"
   },
   "/languages/elm": {
-    "hash": "f351e517e9282d38",
+    "hash": "14c9fa3fae951e54",
     "lastmod": "2026-09-09"
   },
   "/languages/erlang": {
@@ -280,8 +280,8 @@
     "lastmod": "2026-09-09"
   },
   "/languages/go": {
-    "hash": "98d24f5fc9e9b38e",
-    "lastmod": "2026-06-30"
+    "hash": "1f476e69fd5c6fa3",
+    "lastmod": "2026-09-09"
   },
   "/languages/groovy": {
     "hash": "645ada7dbf28958d",
@@ -296,12 +296,12 @@
     "lastmod": "2026-09-09"
   },
   "/languages/hare": {
-    "hash": "3bd360bdb41c993a",
+    "hash": "960cc7d4dd2a1c40",
     "lastmod": "2026-09-09"
   },
   "/languages/haskell": {
-    "hash": "611bc8f1a138250c",
-    "lastmod": "2026-06-30"
+    "hash": "fff1ee55166f8ac4",
+    "lastmod": "2026-09-09"
   },
   "/languages/haxe": {
     "hash": "ba353b56f8d2e0a7",
@@ -344,8 +344,8 @@
     "lastmod": "2026-06-25"
   },
   "/languages/lazy-ml": {
-    "hash": "a5832aa727f27706",
-    "lastmod": "2026-06-25"
+    "hash": "21f3cd9d94ca18e7",
+    "lastmod": "2026-09-09"
   },
   "/languages/lean": {
     "hash": "2e2ca8a2826d8400",
@@ -364,7 +364,7 @@
     "lastmod": "2026-06-30"
   },
   "/languages/lua": {
-    "hash": "b018c589f0a60f1c",
+    "hash": "95de2edb22c67601",
     "lastmod": "2026-09-09"
   },
   "/languages/luajit": {
@@ -448,11 +448,11 @@
     "lastmod": "2026-06-30"
   },
   "/languages/odin": {
-    "hash": "b9e896f7aafa7083",
+    "hash": "86b54de9205b5ada",
     "lastmod": "2026-09-09"
   },
   "/languages/pascal": {
-    "hash": "964468353e73987e",
+    "hash": "7f7020a8c8774259",
     "lastmod": "2026-09-09"
   },
   "/languages/perl": {
@@ -504,7 +504,7 @@
     "lastmod": "2026-09-09"
   },
   "/languages/racket": {
-    "hash": "518abbca45502d25",
+    "hash": "a6351de20f51ae89",
     "lastmod": "2026-09-09"
   },
   "/languages/raku": {
@@ -520,7 +520,7 @@
     "lastmod": "2026-09-09"
   },
   "/languages/roc": {
-    "hash": "7ad31416033fc632",
+    "hash": "b649973948f94c19",
     "lastmod": "2026-09-09"
   },
   "/languages/ruby": {
@@ -528,15 +528,15 @@
     "lastmod": "2026-06-30"
   },
   "/languages/rust": {
-    "hash": "6891dd0ac4b5b152",
-    "lastmod": "2026-06-30"
+    "hash": "39106771ce44f761",
+    "lastmod": "2026-09-09"
   },
   "/languages/s": {
     "hash": "96fc009be5901821",
     "lastmod": "2026-09-09"
   },
   "/languages/scala": {
-    "hash": "2aa023b72b8c9d3e",
+    "hash": "707e05e19e722b5d",
     "lastmod": "2026-09-09"
   },
   "/languages/scheme": {
@@ -556,7 +556,7 @@
     "lastmod": "2026-09-09"
   },
   "/languages/smalltalk": {
-    "hash": "56a060c14493b2cf",
+    "hash": "91e25f90ce4ebe66",
     "lastmod": "2026-09-09"
   },
   "/languages/sml": {
@@ -588,7 +588,7 @@
     "lastmod": "2026-06-25"
   },
   "/languages/unison": {
-    "hash": "6c6ebb4b9bfddcc2",
+    "hash": "aa985e09e82606ef",
     "lastmod": "2026-09-09"
   },
   "/languages/v": {
@@ -604,11 +604,11 @@
     "lastmod": "2026-09-09"
   },
   "/languages/wren": {
-    "hash": "d7a9a8b113b3e41e",
+    "hash": "09eb71ab35eb2ea3",
     "lastmod": "2026-09-09"
   },
   "/languages/zig": {
-    "hash": "1d3ce0344c83d1fe",
+    "hash": "b22d3046bfa62dcb",
     "lastmod": "2026-09-09"
   },
   "/programming-language-evolution": {
@@ -624,8 +624,8 @@
     "lastmod": "2026-05-11"
   },
   "/programming-language-graph": {
-    "hash": "13151f6259cf1094",
-    "lastmod": "2026-09-01"
+    "hash": "5ca45285b134665d",
+    "lastmod": "2026-09-09"
   },
   "/questions": {
     "hash": "36989d37c77785c6",
@@ -1032,8 +1032,8 @@
     "lastmod": "2026-06-30"
   },
   "/questions/what-is-roc-written-in": {
-    "hash": "9faf45bc5c7d095d",
-    "lastmod": "2026-06-30"
+    "hash": "9b1c4ca0de382f29",
+    "lastmod": "2026-09-09"
   },
   "/questions/what-is-ruby-written-in": {
     "hash": "55d07ce40abdf158",
@@ -1112,16 +1112,16 @@
     "lastmod": "2026-06-25"
   },
   "/relationships": {
-    "hash": "e0e30f17c8e24c97",
-    "lastmod": "2026-09-01"
+    "hash": "f0885d847b53f215",
+    "lastmod": "2026-09-09"
   },
   "/relationships/bootstrap-written-in": {
     "hash": "2eabc9afcefedae4",
     "lastmod": "2026-06-30"
   },
   "/relationships/compiler-written-in": {
-    "hash": "62544adf6afcfa3b",
-    "lastmod": "2026-06-30"
+    "hash": "86f3dce7349bd9cf",
+    "lastmod": "2026-09-09"
   },
   "/relationships/influenced": {
     "hash": "559fd9abe05ad613",
@@ -1156,8 +1156,8 @@
     "lastmod": "2026-06-25"
   },
   "/tools/chez-scheme": {
-    "hash": "15e870c91e4573be",
-    "lastmod": "2026-06-25"
+    "hash": "e24cf8619232e9db",
+    "lastmod": "2026-09-09"
   },
   "/tools/clang": {
     "hash": "55dec4f136ffb622",
@@ -1180,7 +1180,7 @@
     "lastmod": "2026-09-09"
   },
   "/tools/ghc": {
-    "hash": "c527b58d4c724e40",
+    "hash": "5544190b51c1ea4d",
     "lastmod": "2026-09-09"
   },
   "/tools/graalvm": {
@@ -1224,7 +1224,7 @@
     "lastmod": "2026-06-25"
   },
   "/tools/swc": {
-    "hash": "ef4939f2d84dfd99",
+    "hash": "1264557cda3f3c83",
     "lastmod": "2026-09-09"
   },
   "/tools/v8": {
@@ -1232,7 +1232,7 @@
     "lastmod": "2026-06-25"
   },
   "/what-are-programming-languages-written-in": {
-    "hash": "22e00f39898e3fb1",
-    "lastmod": "2026-07-02"
+    "hash": "2f84ade496796db8",
+    "lastmod": "2026-09-09"
   }
 }
