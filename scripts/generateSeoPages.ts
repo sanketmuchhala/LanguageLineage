@@ -6116,6 +6116,99 @@ ${FOOTER_HTML}
 </html>`;
 }
 
+// Static, crawlable content for /explore. This file wins Vercel's routing
+// over the existing /explore -> /index.html rewrite (filesystem takes
+// precedence over rewrites), so it must coexist with the real app rather
+// than replace it: everything except an empty <div id="root"> lives inside
+// #static-explore-content, which src/app/GraphExplorer.tsx removes on mount.
+// The app's actual script/link tags cannot be known here - seo:generate runs
+// before vite build computes the real hashed filenames - so a placeholder
+// stands in for them and scripts/patchExplorePage.ts splices in the real
+// tags after vite build finishes; see that script for the other half.
+function buildExplorePage(languages: Language[], rels: Relationship[]): string {
+  const url = `${SITE}/explore`;
+  const langNodes = languages.filter(l => l.id.startsWith('lang:')).sort((a, b) => a.name.localeCompare(b.name));
+  const toolNodes = languages.filter(l => l.id.startsWith('tool:')).sort((a, b) => a.name.localeCompare(b.name));
+  const relTypeCounts = new Map<string, number>();
+  for (const r of rels) relTypeCounts.set(r.relationship, (relTypeCounts.get(r.relationship) ?? 0) + 1);
+
+  const description = `Explore ${langNodes.length} programming languages and ${toolNodes.length} tools connected by ${rels.length} evidence-backed relationships. See what each language is written in, its compiler, runtime, and influence lineage.`;
+
+  const languageLinks = langNodes.map(l => `<a href="/languages/${idToSlug(l.id)}" class="related-card">${escapeHtml(l.name)}</a>`).join('\n      ');
+  const toolLinks = toolNodes.map(t => `<a href="/tools/${idToSlug(t.id)}" class="related-card">${escapeHtml(t.name)}</a>`).join('\n      ');
+  const relRows = [...relTypeCounts.entries()].sort((a, b) => b[1] - a[1]).map(([type, count]) => {
+    const slug = type.replace(/_/g, '-');
+    return `<tr><td><a href="/relationships/${slug}">${type.replace(/_/g, ' ')}</a></td><td>${count}</td></tr>`;
+  }).join('\n      ');
+
+  const breadcrumbJsonLd = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'Graph Explorer', item: url },
+    ],
+  });
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Graph Explorer | Language Lineage</title>
+  <meta name="description" content="${escapeHtml(description)}" />
+  <link rel="canonical" href="${url}" />
+  <link rel="icon" href="/favicon.svg" />
+  ${FONTS_HEAD}${ANALYTICS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  <meta property="og:title" content="Graph Explorer | Language Lineage" />
+  <meta property="og:description" content="${escapeHtml(description)}" />
+  <meta property="og:url" content="${url}" />
+  <meta property="og:image" content="${SITE}/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">${breadcrumbJsonLd}</script>
+</head>
+<body class="seo-page">
+<div id="static-explore-content">
+${SKIP_LINK}
+${NAV_HTML}
+<main class="seo-main" id="main-content">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; Graph Explorer
+  </nav>
+
+  <h1>Explore the Programming Language Graph</h1>
+  <p>${escapeHtml(description)}</p>
+
+  <div class="answer-box">The interactive graph loads with JavaScript. Every language, tool, and relationship it shows is listed below and linked to its own cited page, so the same information is reachable without it.</div>
+
+  <h2>Languages (${langNodes.length})</h2>
+  <div class="related-grid">
+      ${languageLinks}
+  </div>
+
+  <h2>Tools (${toolNodes.length})</h2>
+  <div class="related-grid">
+      ${toolLinks}
+  </div>
+
+  <h2>Relationship types</h2>
+  <table class="impl-table">
+    <thead><tr><th>Type</th><th>Count</th></tr></thead>
+    <tbody>
+      ${relRows}
+    </tbody>
+  </table>
+
+  <p><a href="/dataset">Download the full dataset</a> or <a href="/rankings/most-influential">see which languages influenced the most others</a>.</p>
+</main>
+${FOOTER_HTML}
+</div>
+<div id="root"></div>
+<!--VITE_ENTRY_TAGS-->
+</body>
+</html>`;
+}
+
 // New landing pages
 writeFile(join(PUBLIC, 'programming-language-graph', 'index.html'), buildProgrammingLanguageGraph(languages, rels));
 writeFile(join(PUBLIC, 'programming-language-family-tree', 'index.html'), buildProgrammingLanguageFamilyTree(languages));
@@ -6125,7 +6218,8 @@ writeFile(join(PUBLIC, 'programming-language-evolution', 'index.html'), buildPro
 writeFile(join(PUBLIC, 'what-are-programming-languages-written-in', 'index.html'), buildWhatAreLanguagesWrittenIn(languages, rels, nodeMap));
 writeFile(join(PUBLIC, 'compiler-runtime-bootstrap', 'index.html'), buildCompilerRuntimeBootstrap(rels));
 writeFile(join(PUBLIC, 'rankings', 'most-influential', 'index.html'), buildRankingsPage(CENTRALITY));
-console.log('Generated 7 new landing pages');
+writeFile(join(PUBLIC, 'explore', 'index.html'), buildExplorePage(languages, rels));
+console.log('Generated 8 new landing pages');
 
 // Question pages
 writeFile(join(PUBLIC, 'questions', 'index.html'), buildQuestionsIndex(AUTO_QUESTION_NODES));

@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run seo:generate && tsc && vite build",
+    "build": "npm run seo:generate && tsc && vite build && tsx scripts/patchExplorePage.ts",
     "preview": "vite preview",
     "type-check": "tsc --noEmit",
     "test": "vitest run",

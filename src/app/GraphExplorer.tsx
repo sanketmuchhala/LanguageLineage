@@ -34,6 +34,16 @@ export function GraphExplorer() {
   const dataset = useGraphStore((s) => s.dataset);
   const layoutMode = useGraphStore((s) => s.filters.layoutMode);
 
+  // /explore is served as a static, crawlable page until this component's
+  // own JS chunk actually loads (see buildExplorePage() in
+  // generateSeoPages.ts for why: the static file wins Vercel's routing over
+  // the SPA rewrite). Remove it here, not in main.tsx - this runs once the
+  // real graph is ready to take over, avoiding a flash to a blank/loading
+  // state while GraphExplorer's lazy chunk is still downloading.
+  useEffect(() => {
+    document.getElementById('static-explore-content')?.remove();
+  }, []);
+
   // Read deep link ?node= param and queue it for focus after layout
   useEffect(() => {
     const nodeId = searchParams.get('node');

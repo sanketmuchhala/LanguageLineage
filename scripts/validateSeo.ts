@@ -396,6 +396,26 @@ for (const p of NEW_LANDING_PAGES) {
 }
 if (landingErrors === 0) ok(`${NEW_LANDING_PAGES.length} new landing pages valid`);
 
+// The static /explore shell. This only checks public/ (the committed
+// source) - the patched, hashed dist/explore/index.html only exists after a
+// real vite build and is self-verified by scripts/patchExplorePage.ts
+// instead, since seo:validate must run standalone without depending on
+// dist/ existing.
+const explorePage = checkFile('explore/index.html');
+if (explorePage) {
+  if (!explorePage.includes('<!--VITE_ENTRY_TAGS-->')) {
+    fail('explore/index.html is missing the VITE_ENTRY_TAGS placeholder - patchExplorePage.ts has nothing to replace');
+  } else if (!explorePage.includes('id="static-explore-content"') || !explorePage.includes('<h1>')) {
+    fail('explore/index.html is missing its static crawlable content');
+  } else if (!explorePage.includes('id="root">')) {
+    fail('explore/index.html is missing the #root mount point the app needs');
+  } else {
+    const languageLinkCount = (explorePage.match(/<a href="\/languages\//g) || []).length;
+    if (languageLinkCount < 100) fail(`explore/index.html only links to ${languageLinkCount} language pages - expected 100+`);
+    else ok(`explore/index.html has static content and links to ${languageLinkCount} language pages`);
+  }
+}
+
 // Rankings page must actually reflect its own data source, not a stale copy
 // of it - regression guard against the page template drifting from
 // centrality.json in a future edit.
