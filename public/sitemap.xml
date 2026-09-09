@@ -9,6 +9,10 @@
     <lastmod>2026-07-02</lastmod>
   </url>
   <url>
+    <loc>https://www.languagelineage.org/rankings/most-influential</loc>
+    <lastmod>2026-09-09</lastmod>
+  </url>
+  <url>
     <loc>https://www.languagelineage.org/embed-kit</loc>
     <lastmod>2026-09-09</lastmod>
   </url>
@@ -18,7 +22,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/programming-language-evolution</loc>
-    <lastmod>2026-05-11</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/what-are-programming-languages-written-in</loc>
@@ -26,7 +30,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/programming-language-genealogy</loc>
-    <lastmod>2026-05-11</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/compiler-runtime-bootstrap</loc>
@@ -34,475 +38,475 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions</loc>
-    <lastmod>2026-09-01</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-javascript-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-go-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-java-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-c-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-cpp-written-in</loc>
-    <lastmod>2026-05-11</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-typescript-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-ruby-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-v8-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-cpython-written-in</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-compiler-bootstrapping</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-a-self-hosting-compiler</loc>
-    <lastmod>2026-05-11</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/is-javascript-written-in-c</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/is-rustc-written-in-rust</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/is-rust-compiled</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-fortran-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-lisp-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-cobol-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-algol-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-simula-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-b-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-pascal-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-smalltalk-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-ml-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-scheme-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-ada-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-objective-c-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-erlang-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-perl-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-sml-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-haskell-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-common-lisp-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-ocaml-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-php-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-r-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-racket-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-csharp-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-lua-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-d-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-scala-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-fsharp-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-clojure-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-coffeescript-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-kotlin-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-dart-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-elixir-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-elm-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-julia-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-swift-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-crystal-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-purescript-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-nim-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-zig-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-carbon-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-mojo-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-groovy-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-vb-net-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-flow-matic-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-comtran-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-planner-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-newsqueak-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-limbo-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-oberon2-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-alef-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-cyclone-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-clu-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-gleam-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-oberon-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-abc-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-modula3-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-icon-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-dylan-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-modula2-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-self-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-miranda-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-matlab-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-idris-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-agda-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-cython-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-apl-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-delphi-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-j-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-mercury-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-algol68-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-pl1-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-bash-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-tcl-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-awk-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-sh-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-angular-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-luajit-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-s-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-pharo-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-guile-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-mypy-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-freepascal-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-fortran95-written-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-raku-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-hack-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-rescript-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-forth-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-solidity-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-io-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-speedcoding-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-unison-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-lean-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-coq-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-qsharp-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-powershell-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-haxe-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-actionscript-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-chapel-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-pony-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-hare-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-factor-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-nix-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions/what-is-move-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/directory</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/how-it-works</loc>
@@ -514,15 +518,15 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages</loc>
-    <lastmod>2026-09-01</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools</loc>
-    <lastmod>2026-09-01</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides</loc>
-    <lastmod>2026-09-01</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/relationships</loc>
@@ -530,15 +534,15 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/timeline</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/machine-code</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/assembly</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/fortran</loc>
@@ -562,7 +566,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/bcpl</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/b</loc>
@@ -622,7 +626,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/python</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/common-lisp</loc>
@@ -634,15 +638,15 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/java</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/javascript</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/ruby</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/php</loc>
@@ -658,7 +662,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/csharp</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/lua</loc>
@@ -694,11 +698,11 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/kotlin</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/typescript</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/dart</loc>
@@ -718,7 +722,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/swift</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/crystal</loc>
@@ -734,7 +738,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/reasonml</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/zig</loc>
@@ -742,7 +746,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/v</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/carbon</loc>
@@ -786,11 +790,11 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools/v8</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools/spidermonkey</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools/javascriptcore</loc>
@@ -806,7 +810,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools/beam</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools/chez-scheme</loc>
@@ -814,7 +818,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools/femtolisp</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/flow-matic</loc>
@@ -994,11 +998,11 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/vala</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/eiffel</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/forth</loc>
@@ -1014,15 +1018,15 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/clean</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/occam</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/snobol</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/speedcoding</loc>
@@ -1030,23 +1034,23 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/basic</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/logo</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/hope</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/mesa</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/ats</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/roc</loc>
@@ -1142,11 +1146,11 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/relationships/influenced</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/relationships/bootstrap-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/relationships/compiler-written-in</loc>
@@ -1154,66 +1158,66 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/relationships/runtime-written-in</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/relationships/rewritten-in</loc>
-    <lastmod>2026-06-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/relationships/transpiled-to</loc>
-    <lastmod>2026-06-30</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides/what-is-compiler-bootstrapping</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides/what-is-self-hosting</loc>
-    <lastmod>2026-05-11</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides/compiler-vs-interpreter-vs-runtime</loc>
-    <lastmod>2026-05-11</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides/programming-language-family-tree</loc>
-    <lastmod>2026-09-01</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides/how-javascript-engines-work</loc>
-    <lastmod>2026-05-09</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides/how-python-is-implemented</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides/how-rust-is-bootstrapped</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides/gcc-vs-llvm</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides/how-programming-languages-are-made</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides/v8-vs-spidermonkey-vs-javascriptcore</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides/typescript-vs-javascript-implementation</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides/graalvm-vs-hotspot</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides/the-c-bootstrap-chain</loc>
-    <lastmod>2026-07-02</lastmod>
+    <lastmod>2026-09-09</lastmod>
   </url>
 </urlset>

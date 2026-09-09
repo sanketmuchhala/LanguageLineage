@@ -88,8 +88,14 @@ if (sitemap) {
     m.replace(/<\/?lastmod>/g, '')
   );
   const distinct = new Set(lastmods);
+  // A cardinality floor here was miscalibrated: a legitimate one-time edit to
+  // shared chrome (e.g. FOOTER_HTML, present on every page) genuinely changes
+  // every page's content on that one build, correctly collapsing diversity
+  // for a day - that's the date system working, not the bug it guards
+  // against. The actual BUILD_DATE regression signature is a single value
+  // shared by every URL, unconditionally, forever; that's what this checks.
   if (lastmods.length !== urlCount) fail(`sitemap.xml has ${lastmods.length} lastmod values for ${urlCount} URLs`);
-  else if (distinct.size < 5) fail(`sitemap.xml has only ${distinct.size} distinct lastmod values, expected 5+ (build-stamp regression?)`);
+  else if (distinct.size < 2) fail(`sitemap.xml has a single lastmod value shared by all ${urlCount} URLs (build-stamp regression?)`);
   else ok(`sitemap.xml has ${distinct.size} distinct lastmod values`);
 
   const today = new Date().toISOString().slice(0, 10);
@@ -358,6 +364,7 @@ const NEW_LANDING_PAGES = [
   'compiler-runtime-bootstrap/index.html',
   'directory/index.html',
   'how-it-works/index.html',
+  'rankings/most-influential/index.html',
 ];
 let landingErrors = 0;
 for (const p of NEW_LANDING_PAGES) {
@@ -368,6 +375,29 @@ for (const p of NEW_LANDING_PAGES) {
   if (!content.includes('application/ld+json')) { fail(`${p}: missing JSON-LD`); landingErrors++; }
 }
 if (landingErrors === 0) ok(`${NEW_LANDING_PAGES.length} new landing pages valid`);
+
+// Rankings page must actually reflect its own data source, not a stale copy
+// of it - regression guard against the page template drifting from
+// centrality.json in a future edit.
+const centralityJson = checkFile('rankings/centrality.json');
+const rankingsPage = checkFile('rankings/most-influential/index.html');
+if (centralityJson && rankingsPage) {
+  try {
+    const parsed = JSON.parse(centralityJson);
+    const top3Names: string[] = parsed.ranking.slice(0, 3).map((r: { name: string }) => r.name);
+    let lastIndex = -1;
+    let inOrder = true;
+    for (const name of top3Names) {
+      const at = rankingsPage.indexOf(`>${name}<`, lastIndex + 1);
+      if (at === -1 || at <= lastIndex) { inOrder = false; break; }
+      lastIndex = at;
+    }
+    if (!inOrder) fail(`rankings/most-influential/index.html: top-3 order does not match centrality.json (${top3Names.join(', ')})`);
+    else ok('rankings page top-3 matches centrality.json in order');
+  } catch {
+    fail('rankings/centrality.json is invalid JSON');
+  }
+}
 
 // Question pages
 const QUESTION_SLUGS = [

@@ -1,0 +1,942 @@
+{
+  "method": {
+    "algorithm": "reverse-pagerank",
+    "damping": 0.85,
+    "edgeType": "influenced",
+    "nodeScope": "lang: prefixed nodes only"
+  },
+  "languageCount": 131,
+  "influenceEdgeCount": 252,
+  "ranking": [
+    {
+      "id": "lang:lisp",
+      "name": "Lisp",
+      "pageRank": 0.07727183981569499,
+      "descendantCount": 60,
+      "descendantPercent": 45.80152671755725
+    },
+    {
+      "id": "lang:algol",
+      "name": "ALGOL",
+      "pageRank": 0.06413466773769227,
+      "descendantCount": 65,
+      "descendantPercent": 49.61832061068702
+    },
+    {
+      "id": "lang:ml",
+      "name": "ML",
+      "pageRank": 0.04732531667371147,
+      "descendantCount": 47,
+      "descendantPercent": 35.87786259541985
+    },
+    {
+      "id": "lang:haskell",
+      "name": "Haskell",
+      "pageRank": 0.029424265751400374,
+      "descendantCount": 36,
+      "descendantPercent": 27.480916030534353
+    },
+    {
+      "id": "lang:c",
+      "name": "C",
+      "pageRank": 0.02894543748506066,
+      "descendantCount": 49,
+      "descendantPercent": 37.404580152671755
+    },
+    {
+      "id": "lang:simula",
+      "name": "Simula",
+      "pageRank": 0.02780269521530436,
+      "descendantCount": 46,
+      "descendantPercent": 35.11450381679389
+    },
+    {
+      "id": "lang:pascal",
+      "name": "Pascal",
+      "pageRank": 0.02389188331252721,
+      "descendantCount": 46,
+      "descendantPercent": 35.11450381679389
+    },
+    {
+      "id": "lang:smalltalk",
+      "name": "Smalltalk",
+      "pageRank": 0.0208298524045942,
+      "descendantCount": 44,
+      "descendantPercent": 33.587786259541986
+    },
+    {
+      "id": "lang:hope",
+      "name": "Hope",
+      "pageRank": 0.02082257553151303,
+      "descendantCount": 39,
+      "descendantPercent": 29.770992366412212
+    },
+    {
+      "id": "lang:speedcoding",
+      "name": "Speedcoding",
+      "pageRank": 0.019070891941910285,
+      "descendantCount": 57,
+      "descendantPercent": 43.51145038167939
+    },
+    {
+      "id": "lang:fortran",
+      "name": "Fortran",
+      "pageRank": 0.018798495859495532,
+      "descendantCount": 56,
+      "descendantPercent": 42.74809160305343
+    },
+    {
+      "id": "lang:python",
+      "name": "Python",
+      "pageRank": 0.018116003947853433,
+      "descendantCount": 21,
+      "descendantPercent": 16.030534351145036
+    },
+    {
+      "id": "lang:bcpl",
+      "name": "BCPL",
+      "pageRank": 0.015347334140882237,
+      "descendantCount": 51,
+      "descendantPercent": 38.93129770992366
+    },
+    {
+      "id": "lang:miranda",
+      "name": "Miranda",
+      "pageRank": 0.014974446928443297,
+      "descendantCount": 38,
+      "descendantPercent": 29.00763358778626
+    },
+    {
+      "id": "lang:java",
+      "name": "Java",
+      "pageRank": 0.014368230028360997,
+      "descendantCount": 19,
+      "descendantPercent": 14.50381679389313
+    },
+    {
+      "id": "lang:javascript",
+      "name": "JavaScript",
+      "pageRank": 0.012407462834780149,
+      "descendantCount": 9,
+      "descendantPercent": 6.870229007633588
+    },
+    {
+      "id": "lang:planner",
+      "name": "Planner",
+      "pageRank": 0.012080895191667416,
+      "descendantCount": 11,
+      "descendantPercent": 8.396946564885496
+    },
+    {
+      "id": "lang:scheme",
+      "name": "Scheme",
+      "pageRank": 0.011716342838427565,
+      "descendantCount": 22,
+      "descendantPercent": 16.793893129770993
+    },
+    {
+      "id": "lang:rust",
+      "name": "Rust",
+      "pageRank": 0.011383150396796809,
+      "descendantCount": 6,
+      "descendantPercent": 4.580152671755725
+    },
+    {
+      "id": "lang:prolog",
+      "name": "Prolog",
+      "pageRank": 0.01057497027527908,
+      "descendantCount": 10,
+      "descendantPercent": 7.633587786259542
+    },
+    {
+      "id": "lang:ada",
+      "name": "Ada",
+      "pageRank": 0.010069049563679797,
+      "descendantCount": 37,
+      "descendantPercent": 28.24427480916031
+    },
+    {
+      "id": "lang:modula2",
+      "name": "Modula-2",
+      "pageRank": 0.010021713403548627,
+      "descendantCount": 27,
+      "descendantPercent": 20.610687022900763
+    },
+    {
+      "id": "lang:mesa",
+      "name": "Mesa",
+      "pageRank": 0.009793997764728675,
+      "descendantCount": 42,
+      "descendantPercent": 32.06106870229007
+    },
+    {
+      "id": "lang:cxx",
+      "name": "C++",
+      "pageRank": 0.009431935613890758,
+      "descendantCount": 27,
+      "descendantPercent": 20.610687022900763
+    },
+    {
+      "id": "lang:perl",
+      "name": "Perl",
+      "pageRank": 0.00922706038732114,
+      "descendantCount": 26,
+      "descendantPercent": 19.84732824427481
+    },
+    {
+      "id": "lang:algol68",
+      "name": "ALGOL 68",
+      "pageRank": 0.009112795078532347,
+      "descendantCount": 50,
+      "descendantPercent": 38.16793893129771
+    },
+    {
+      "id": "lang:snobol",
+      "name": "SNOBOL",
+      "pageRank": 0.0090806948625272,
+      "descendantCount": 29,
+      "descendantPercent": 22.137404580152673
+    },
+    {
+      "id": "lang:apl",
+      "name": "APL",
+      "pageRank": 0.008669643973533842,
+      "descendantCount": 24,
+      "descendantPercent": 18.3206106870229
+    },
+    {
+      "id": "lang:sh",
+      "name": "Bourne Shell",
+      "pageRank": 0.008334849135141664,
+      "descendantCount": 28,
+      "descendantPercent": 21.374045801526716
+    },
+    {
+      "id": "lang:clean",
+      "name": "Clean",
+      "pageRank": 0.00809429564150689,
+      "descendantCount": 37,
+      "descendantPercent": 28.24427480916031
+    },
+    {
+      "id": "lang:csharp",
+      "name": "C#",
+      "pageRank": 0.008015936569777678,
+      "descendantCount": 5,
+      "descendantPercent": 3.816793893129771
+    },
+    {
+      "id": "lang:b",
+      "name": "B",
+      "pageRank": 0.008012894838357095,
+      "descendantCount": 50,
+      "descendantPercent": 38.16793893129771
+    },
+    {
+      "id": "lang:lua",
+      "name": "Lua",
+      "pageRank": 0.007910802773341198,
+      "descendantCount": 3,
+      "descendantPercent": 2.2900763358778624
+    },
+    {
+      "id": "lang:ocaml",
+      "name": "OCaml",
+      "pageRank": 0.0075275024766114865,
+      "descendantCount": 4,
+      "descendantPercent": 3.0534351145038165
+    },
+    {
+      "id": "lang:sml",
+      "name": "Standard ML",
+      "pageRank": 0.007391259256897401,
+      "descendantCount": 27,
+      "descendantPercent": 20.610687022900763
+    },
+    {
+      "id": "lang:erlang",
+      "name": "Erlang",
+      "pageRank": 0.00725720866063409,
+      "descendantCount": 8,
+      "descendantPercent": 6.106870229007633
+    },
+    {
+      "id": "lang:ruby",
+      "name": "Ruby",
+      "pageRank": 0.007199350486827286,
+      "descendantCount": 7,
+      "descendantPercent": 5.343511450381679
+    },
+    {
+      "id": "lang:coq",
+      "name": "Coq",
+      "pageRank": 0.007034687807976379,
+      "descendantCount": 3,
+      "descendantPercent": 2.2900763358778624
+    },
+    {
+      "id": "lang:occam",
+      "name": "occam",
+      "pageRank": 0.006913138260725535,
+      "descendantCount": 11,
+      "descendantPercent": 8.396946564885496
+    },
+    {
+      "id": "lang:oberon",
+      "name": "Oberon",
+      "pageRank": 0.006688950939353737,
+      "descendantCount": 5,
+      "descendantPercent": 3.816793893129771
+    },
+    {
+      "id": "lang:typescript",
+      "name": "TypeScript",
+      "pageRank": 0.0062461843391480405,
+      "descendantCount": 2,
+      "descendantPercent": 1.5267175572519083
+    },
+    {
+      "id": "lang:go",
+      "name": "Go",
+      "pageRank": 0.006158572842611559,
+      "descendantCount": 3,
+      "descendantPercent": 2.2900763358778624
+    },
+    {
+      "id": "lang:self",
+      "name": "Self",
+      "pageRank": 0.006077554110497934,
+      "descendantCount": 11,
+      "descendantPercent": 8.396946564885496
+    },
+    {
+      "id": "lang:eiffel",
+      "name": "Eiffel",
+      "pageRank": 0.006019446568662194,
+      "descendantCount": 14,
+      "descendantPercent": 10.687022900763358
+    },
+    {
+      "id": "lang:objective_c",
+      "name": "Objective-C",
+      "pageRank": 0.005940459508107638,
+      "descendantCount": 28,
+      "descendantPercent": 21.374045801526716
+    },
+    {
+      "id": "lang:php",
+      "name": "PHP",
+      "pageRank": 0.00572051535992915,
+      "descendantCount": 1,
+      "descendantPercent": 0.7633587786259541
+    },
+    {
+      "id": "lang:basic",
+      "name": "BASIC",
+      "pageRank": 0.00572051535992915,
+      "descendantCount": 1,
+      "descendantPercent": 0.7633587786259541
+    },
+    {
+      "id": "lang:awk",
+      "name": "AWK",
+      "pageRank": 0.005706504239047206,
+      "descendantCount": 27,
+      "descendantPercent": 20.610687022900763
+    },
+    {
+      "id": "lang:common_lisp",
+      "name": "Common Lisp",
+      "pageRank": 0.005442035960329742,
+      "descendantCount": 3,
+      "descendantPercent": 2.2900763358778624
+    },
+    {
+      "id": "lang:elm",
+      "name": "Elm",
+      "pageRank": 0.005285949988563246,
+      "descendantCount": 8,
+      "descendantPercent": 6.106870229007633
+    },
+    {
+      "id": "lang:clu",
+      "name": "CLU",
+      "pageRank": 0.005071677780691267,
+      "descendantCount": 22,
+      "descendantPercent": 16.793893129770993
+    },
+    {
+      "id": "lang:delphi",
+      "name": "Delphi",
+      "pageRank": 0.004795556985181878,
+      "descendantCount": 6,
+      "descendantPercent": 4.580152671755725
+    },
+    {
+      "id": "lang:limbo",
+      "name": "Limbo",
+      "pageRank": 0.004495256232494367,
+      "descendantCount": 10,
+      "descendantPercent": 7.633587786259542
+    },
+    {
+      "id": "lang:alef",
+      "name": "Alef",
+      "pageRank": 0.004495256232494367,
+      "descendantCount": 10,
+      "descendantPercent": 7.633587786259542
+    },
+    {
+      "id": "lang:cobol",
+      "name": "COBOL",
+      "pageRank": 0.0044063429118819195,
+      "descendantCount": 1,
+      "descendantPercent": 0.7633587786259541
+    },
+    {
+      "id": "lang:fsharp",
+      "name": "F#",
+      "pageRank": 0.0044063429118819195,
+      "descendantCount": 1,
+      "descendantPercent": 0.7633587786259541
+    },
+    {
+      "id": "lang:reasonml",
+      "name": "ReasonML",
+      "pageRank": 0.0044063429118819195,
+      "descendantCount": 1,
+      "descendantPercent": 0.7633587786259541
+    },
+    {
+      "id": "lang:s",
+      "name": "S",
+      "pageRank": 0.0044063429118819195,
+      "descendantCount": 1,
+      "descendantPercent": 0.7633587786259541
+    },
+    {
+      "id": "lang:forth",
+      "name": "Forth",
+      "pageRank": 0.0044063429118819195,
+      "descendantCount": 1,
+      "descendantPercent": 0.7633587786259541
+    },
+    {
+      "id": "lang:actionscript",
+      "name": "ActionScript",
+      "pageRank": 0.0044063429118819195,
+      "descendantCount": 1,
+      "descendantPercent": 0.7633587786259541
+    },
+    {
+      "id": "lang:flow_matic",
+      "name": "FLOW-MATIC",
+      "pageRank": 0.004340634289726517,
+      "descendantCount": 2,
+      "descendantPercent": 1.5267175572519083
+    },
+    {
+      "id": "lang:comtran",
+      "name": "COMTRAN",
+      "pageRank": 0.004340634289726517,
+      "descendantCount": 2,
+      "descendantPercent": 1.5267175572519083
+    },
+    {
+      "id": "lang:abc",
+      "name": "ABC",
+      "pageRank": 0.0041920707040099415,
+      "descendantCount": 22,
+      "descendantPercent": 16.793893129770993
+    },
+    {
+      "id": "lang:modula3",
+      "name": "Modula-3",
+      "pageRank": 0.0041920707040099415,
+      "descendantCount": 22,
+      "descendantPercent": 16.793893129770993
+    },
+    {
+      "id": "lang:icon",
+      "name": "Icon",
+      "pageRank": 0.0041920707040099415,
+      "descendantCount": 22,
+      "descendantPercent": 16.793893129770993
+    },
+    {
+      "id": "lang:dylan",
+      "name": "Dylan",
+      "pageRank": 0.0041920707040099415,
+      "descendantCount": 22,
+      "descendantPercent": 16.793893129770993
+    },
+    {
+      "id": "lang:swift",
+      "name": "Swift",
+      "pageRank": 0.003971777540516017,
+      "descendantCount": 6,
+      "descendantPercent": 4.580152671755725
+    },
+    {
+      "id": "lang:cyclone",
+      "name": "Cyclone",
+      "pageRank": 0.003971777540516017,
+      "descendantCount": 7,
+      "descendantPercent": 5.343511450381679
+    },
+    {
+      "id": "lang:scala",
+      "name": "Scala",
+      "pageRank": 0.0037492566878583053,
+      "descendantCount": 1,
+      "descendantPercent": 0.7633587786259541
+    },
+    {
+      "id": "lang:groovy",
+      "name": "Groovy",
+      "pageRank": 0.0037492566878583053,
+      "descendantCount": 1,
+      "descendantPercent": 0.7633587786259541
+    },
+    {
+      "id": "lang:newsqueak",
+      "name": "Newsqueak",
+      "pageRank": 0.0036156491558130416,
+      "descendantCount": 4,
+      "descendantPercent": 3.0534351145038165
+    },
+    {
+      "id": "lang:oberon2",
+      "name": "Oberon-2",
+      "pageRank": 0.0036156491558130416,
+      "descendantCount": 4,
+      "descendantPercent": 3.0534351145038165
+    },
+    {
+      "id": "lang:racket",
+      "name": "Racket",
+      "pageRank": 0.003467648306133899,
+      "descendantCount": 1,
+      "descendantPercent": 0.7633587786259541
+    },
+    {
+      "id": "lang:matlab",
+      "name": "MATLAB",
+      "pageRank": 0.003467648306133899,
+      "descendantCount": 1,
+      "descendantPercent": 0.7633587786259541
+    },
+    {
+      "id": "lang:machine_code",
+      "name": "Machine Code",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:assembly",
+      "name": "Assembly",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:r",
+      "name": "R",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:d",
+      "name": "D",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:clojure",
+      "name": "Clojure",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:coffeescript",
+      "name": "CoffeeScript",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:kotlin",
+      "name": "Kotlin",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:dart",
+      "name": "Dart",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:elixir",
+      "name": "Elixir",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:julia",
+      "name": "Julia",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:crystal",
+      "name": "Crystal",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:purescript",
+      "name": "PureScript",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:nim",
+      "name": "Nim",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:zig",
+      "name": "Zig",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:v",
+      "name": "V",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:carbon",
+      "name": "Carbon",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:mojo",
+      "name": "Mojo",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:vb_net",
+      "name": "Visual Basic .NET",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:lazy_ml",
+      "name": "Lazy ML",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:gleam",
+      "name": "Gleam",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:idris",
+      "name": "Idris",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:agda",
+      "name": "Agda",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:cython",
+      "name": "Cython",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:j",
+      "name": "J",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:mercury",
+      "name": "Mercury",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:pl1",
+      "name": "PL/I",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:bash",
+      "name": "Bash",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:tcl",
+      "name": "Tcl",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:angular",
+      "name": "Angular",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:luajit",
+      "name": "LuaJIT",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:pharo",
+      "name": "Pharo",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:guile",
+      "name": "GNU Guile",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:mypy",
+      "name": "mypy",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:freepascal",
+      "name": "Free Pascal",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:fortran95",
+      "name": "Fortran 95",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:raku",
+      "name": "Raku",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:hack",
+      "name": "Hack",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:rescript",
+      "name": "ReScript",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:vala",
+      "name": "Vala",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:solidity",
+      "name": "Solidity",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:io",
+      "name": "Io",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:logo",
+      "name": "Logo",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:ats",
+      "name": "ATS",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:roc",
+      "name": "Roc",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:unison",
+      "name": "Unison",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:lean",
+      "name": "Lean",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:qsharp",
+      "name": "Q#",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:powershell",
+      "name": "PowerShell",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:haxe",
+      "name": "Haxe",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:chapel",
+      "name": "Chapel",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:pony",
+      "name": "Pony",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:odin",
+      "name": "Odin",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:hare",
+      "name": "Hare",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:wren",
+      "name": "Wren",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:factor",
+      "name": "Factor",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:nix",
+      "name": "Nix",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    },
+    {
+      "id": "lang:move",
+      "name": "Move",
+      "pageRank": 0.0030921704638346907,
+      "descendantCount": 0,
+      "descendantPercent": 0
+    }
+  ],
+  "implementationClosure": {
+    "roots": [
+      "lang:c",
+      "lang:cxx"
+    ],
+    "rootNames": [
+      "C",
+      "C++"
+    ],
+    "memberCount": 92,
+    "totalNodeCount": 152,
+    "percent": 60.526315789473685
+  }
+}

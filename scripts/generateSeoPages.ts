@@ -46,6 +46,7 @@ const FOOTER_HTML = `<footer class="seo-footer-rich">
     <div class="footer-col">
       <span class="footer-col-head">Explore</span>
       <a href="/programming-language-graph">Programming language graph</a>
+      <a href="/rankings/most-influential">Most influential languages</a>
       <a href="/embed-kit">Embed the graph</a>
       <a href="/guides/programming-language-family-tree">Language family tree</a>
       <a href="/programming-language-evolution">Evolution timeline</a>
@@ -148,6 +149,17 @@ const ENRICHMENT: Record<string, EnrichedNode> = (() => {
     return {};
   }
 })();
+
+// Written by computeCentrality.ts, which must run before this script (see
+// the `seo:generate` chain in package.json). Loaded eagerly and required,
+// not defaulted to empty on failure: a missing file means the pipeline order
+// broke, and rendering the rankings page with silently-empty data would be
+// worse than a loud build failure.
+const CENTRALITY_PATH = join(PUBLIC, 'rankings', 'centrality.json');
+if (!existsSync(CENTRALITY_PATH)) {
+  throw new Error(`Missing ${CENTRALITY_PATH} - run "npm run rankings:compute" (or the full seo:generate chain) before generateSeoPages.ts.`);
+}
+const CENTRALITY = JSON.parse(readFileSync(CENTRALITY_PATH, 'utf8'));
 
 function idToSlug(id: string): string {
   return id.replace(/^(lang|tool):/, '').replace(/_/g, '-');
@@ -5985,6 +5997,120 @@ writeFile(join(PUBLIC, 'how-it-works', 'index.html'), processPage(buildHowItWork
 console.log('Generated how-it-works page');
 
 
+// Rankings: the flagship story. Every number comes from
+// public/rankings/centrality.json, written by computeCentrality.ts as the
+// first step of `seo:generate` - this page never recomputes or transcribes,
+// only renders what that file already says, so the two can't drift.
+interface CentralityRankedEntry {
+  id: string;
+  name: string;
+  pageRank: number;
+  descendantCount: number;
+  descendantPercent: number;
+}
+interface CentralityData {
+  method: { algorithm: string; damping: number; edgeType: string; nodeScope: string };
+  languageCount: number;
+  influenceEdgeCount: number;
+  ranking: CentralityRankedEntry[];
+  implementationClosure: { rootNames: string[]; memberCount: number; totalNodeCount: number; percent: number };
+}
+
+function buildRankingsPage(centrality: CentralityData): string {
+  const url = `${SITE}/rankings/most-influential`;
+  const top = centrality.ranking.slice(0, 15);
+  const closure = centrality.implementationClosure;
+
+  const articleJsonLd = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    headline: 'The Most Influential Programming Languages',
+    description: `Reverse PageRank over ${centrality.influenceEdgeCount} cited influence relationships across ${centrality.languageCount} programming languages.`,
+    url,
+    datePublished: '2026-09-09',
+    dateModified: LASTMOD_TOKEN,
+    author: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
+    publisher: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
+    about: ['programming languages', 'PageRank', 'language influence', 'compiler implementation'],
+    inLanguage: 'en',
+  });
+  const breadcrumbJsonLd = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'Most Influential Languages', item: url },
+    ],
+  });
+
+  const description = `Reverse PageRank over ${centrality.influenceEdgeCount} cited influence relationships across ${centrality.languageCount} languages. Generated, not hand-ranked.`;
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Most Influential Programming Languages | Language Lineage</title>
+  <meta name="description" content="${escapeHtml(description)}" />
+  <link rel="canonical" href="${url}" />
+  <link rel="icon" href="/favicon.svg" />
+  ${FONTS_HEAD}${ANALYTICS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="The Most Influential Programming Languages" />
+  <meta property="og:description" content="${escapeHtml(description)}" />
+  <meta property="og:url" content="${url}" />
+  <meta property="og:image" content="${ogImg('rankings-most-influential.png')}" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="article:published_time" content="2026-09-09" />
+  <meta property="article:modified_time" content="${LASTMOD_TOKEN}" />
+  <script type="application/ld+json">${articleJsonLd}</script>
+  <script type="application/ld+json">${breadcrumbJsonLd}</script>
+</head>
+<body class="seo-page">
+${SKIP_LINK}
+${NAV_HTML}
+<main class="seo-main" id="main-content">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; Most Influential Languages
+  </nav>
+
+  <h1>The Most Influential Programming Languages</h1>
+
+  <div class="answer-box">This ranking is PageRank over a curated ${centrality.influenceEdgeCount}-edge influence subgraph, so it partly measures curation as much as history. The dataset covers ${centrality.languageCount} languages with a documented influence relationship &mdash; a real graph, not an exhaustive one. Read the method below before trusting the order.</div>
+
+  <h2>Method</h2>
+  <p>Every language in the dataset that has a cited <a href="/relationships/influenced">influence relationship</a> is a node. An edge means one language's design influenced another's. Standard PageRank rewards languages that were influenced by many things; that's backwards for this question, so the edges are reversed before scoring &mdash; rank flows from a descendant back to its influences, and accumulates on root ancestors. The result is a reverse PageRank with damping ${centrality.method.damping}, computed by <a href="https://github.com/sanketmuchhala/LanguageLineage/blob/main/scripts/computeCentrality.ts">scripts/computeCentrality.ts</a> directly from the dataset on every build. Descendant counts are computed separately, by simple forward reachability: everything downstream of a language, however many hops away.</p>
+  <p>Independent PageRank implementations commonly differ by a few tenths of a percent depending on convergence tolerance and how dangling nodes are handled &mdash; the rank <em>order</em> and the descendant counts are what the claim rests on, and those are exact.</p>
+
+  <h2>Ranking</h2>
+  <table class="impl-table">
+    <thead><tr><th>Rank</th><th>Language</th><th>PageRank</th><th>Descendants</th></tr></thead>
+    <tbody>
+      ${top.map((entry, i) => `<tr><td>${i + 1}</td><td>${linkNode(entry.id, nodeMap)}</td><td>${(entry.pageRank * 100).toFixed(2)}%</td><td>${entry.descendantCount} (${entry.descendantPercent.toFixed(0)}%)</td></tr>`).join('\n      ')}
+    </tbody>
+  </table>
+
+  <h2>The C/C++ implementation closure</h2>
+  <p>A different graph, a different question: not who influenced whom, but what was actually built with what. Following <a href="/relationships/compiler-written-in">compiler</a>, <a href="/relationships/runtime-written-in">runtime</a>, and <a href="/relationships/bootstrap-written-in">bootstrap</a> chains back to their root, <strong>${closure.memberCount} of ${closure.totalNodeCount} nodes (${closure.percent.toFixed(0)}%)</strong> in the dataset trace their implementation lineage back to ${closure.rootNames.join(' or ')}.</p>
+
+  <h2>The calculation</h2>
+  <p>Nothing on this page is hand-transcribed. The script that produced it is public: <a href="https://github.com/sanketmuchhala/LanguageLineage/blob/main/scripts/computeCentrality.ts">scripts/computeCentrality.ts</a>. Its output, the exact numbers behind this table, is downloadable as <a href="/rankings/centrality.json">centrality.json</a>.</p>
+
+  <section class="discover-more" data-nosnippet>
+    <h2>Related Pages</h2>
+    <div class="discover-links">
+      <a href="/dataset" class="discover-link">Dataset</a>
+      <a href="/relationships/influenced" class="discover-link">Influence relationships</a>
+      <a href="/guides/programming-language-family-tree" class="discover-link">Programming language family tree</a>
+      <a href="/explore" class="discover-link">Interactive graph</a>
+    </div>
+  </section>
+</main>
+${FOOTER_HTML}
+</body>
+</html>`;
+}
+
 // New landing pages
 writeFile(join(PUBLIC, 'programming-language-graph', 'index.html'), buildProgrammingLanguageGraph(languages, rels));
 writeFile(join(PUBLIC, 'programming-language-family-tree', 'index.html'), buildProgrammingLanguageFamilyTree(languages));
@@ -5993,7 +6119,8 @@ writeFile(join(PUBLIC, 'programming-language-genealogy', 'index.html'), buildPro
 writeFile(join(PUBLIC, 'programming-language-evolution', 'index.html'), buildProgrammingLanguageEvolution(languages));
 writeFile(join(PUBLIC, 'what-are-programming-languages-written-in', 'index.html'), buildWhatAreLanguagesWrittenIn(languages, rels, nodeMap));
 writeFile(join(PUBLIC, 'compiler-runtime-bootstrap', 'index.html'), buildCompilerRuntimeBootstrap(rels));
-console.log('Generated 6 new landing pages');
+writeFile(join(PUBLIC, 'rankings', 'most-influential', 'index.html'), buildRankingsPage(CENTRALITY));
+console.log('Generated 7 new landing pages');
 
 // Question pages
 writeFile(join(PUBLIC, 'questions', 'index.html'), buildQuestionsIndex(AUTO_QUESTION_NODES));

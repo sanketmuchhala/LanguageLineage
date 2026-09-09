@@ -90,6 +90,7 @@ const urls: Array<{ loc: string }> = [
   { loc: `${SITE}/` },
   { loc: `${SITE}/explore` },
   // New keyword landing pages
+  { loc: `${SITE}/rankings/most-influential` },
   { loc: `${SITE}/embed-kit` },
   { loc: `${SITE}/programming-language-graph` },
   { loc: `${SITE}/programming-language-evolution` },
