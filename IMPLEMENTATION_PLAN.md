@@ -123,7 +123,19 @@
 - Caught two other things before they shipped: a `generatedAt` timestamp in the JSON artifact that would have made it churn every build regardless of content (same defect class as `BUILD_DATE`, removed before commit); and mid-verification, a `git checkout --` used to undo a fault-injection test restored from `HEAD` instead of the fault alone, wiping the real in-progress sitemap — caught immediately and recovered by re-running `seo:generate` rather than trusting git to hand back uncommitted work.
 - Merged to `main` as a fast-forward (`7e3cad38`) and pushed.
 
-**Next task:** Stage 2.2 — retention before traffic. RSS feed in the `seo:generate` chain, one email signup on `/dataset` and the rankings page, privacy/consent check. The plan is explicit: **do not submit this anywhere (HN, Reddit) until this exists** — an audience with nothing to catch it is a spike, not a readership.
+### 2026-09-09 — Stage 2.2, RSS half complete; email capture dropped by user decision
+
+- Added `scripts/generateRss.ts`, wired into `seo:generate` after `generateSitemap.ts`. Modeled on the existing `generateLlmsTxt.ts`: reads title/description from the already-written HTML rather than a third hand-maintained copy; `pubDate` comes from the same per-page manifest the sitemap's `lastmod` uses (`pageDates.ts`'s `lookupDate`), so an item's date can never disagree with its own page.
+- Scoped to the 13 guides + the rankings page (14 items), not all 305 URLs — a feed of 152 language reference pages isn't what an RSS reader wants.
+- Discovery: `<link rel="alternate">` in `index.html` for the SPA, and the same tag folded into the existing `ANALYTICS_HEAD` constant (already interpolated into all 305 pages) rather than editing every page-builder function. Added a visible "RSS feed" footer link alongside the rankings link.
+- **Asked the user how email capture should work before building anything**, since it touches account creation (Buttondown), the closed no-database decision, and PII storage — none of which I should decide unilaterally. User's answer: **no newsletter, drop it entirely** — not a mailto placeholder, not deferred, dropped. Scope reduced accordingly rather than defaulting to something nobody asked for.
+- Added three validator checks (item count, atom:link self-reference, every item link resolves to a real page), each verified to actually fail on its target fault before being trusted.
+- Verified byte-for-byte idempotent across repeated full builds.
+- Merged to `main` as a fast-forward (`c8e917ca`) and pushed.
+
+**Stage 2.2 is now closed** (email capture and its UTM/privacy sub-items are out of scope per the user's decision, not outstanding work).
+
+**Next task:** Stage 2.3 — product-surface readiness. Static indexable text layer on `/explore` (do not migrate off Cytoscape), verify the embed's attribution anchor/CSP/UTM, CSV + GraphML exports, an `/api` docs page, and a Zenodo DOI now that licensing is in place. The plan still holds: **do not submit anywhere until this stage closes.**
 
 ## 1. Executive direction
 
