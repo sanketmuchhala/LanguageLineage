@@ -551,6 +551,7 @@ let titleLengthErrors = 0;
 let descLengthErrors = 0;
 let missingAnalytics = 0;
 let unsubstitutedTokens = 0;
+let faqDeflections = 0;
 
 for (const filePath of allHtmlFiles) {
   const rel = filePath.replace(PUBLIC + '/', '');
@@ -599,6 +600,13 @@ for (const filePath of allHtmlFiles) {
     unsubstitutedTokens++;
   }
 
+  // FAQPage structured data must answer the question, not point elsewhere on
+  // the same page — a non-answer published as schema is worse than no answer.
+  if (html.includes('See the implementation section above')) {
+    fail(`${rel}: FAQ answer deflects to the page instead of answering`);
+    faqDeflections++;
+  }
+
   // Heading hierarchy: exactly one h1, no skipped levels
   const h1Count = (html.match(/<h1[\s>]/gi) || []).length;
   if (h1Count === 0) fail(`${rel}: missing <h1>`);
@@ -642,6 +650,7 @@ if (dupPrefixes.length === 0) {
 
 if (missingAnalytics === 0) ok(`All ${allHtmlFiles.length} pages have the Vercel Analytics beacon`);
 if (unsubstitutedTokens === 0) ok(`All ${allHtmlFiles.length} pages have a substituted lastmod`);
+if (faqDeflections === 0) ok(`No FAQ answers deflect to "the implementation section above"`);
 if (titleLengthErrors === 0) ok(`All titles within ${TITLE_MAX} chars`);
 if (descLengthErrors === 0) ok(`All descriptions within ${DESC_MIN}-${DESC_MAX} chars`);
 

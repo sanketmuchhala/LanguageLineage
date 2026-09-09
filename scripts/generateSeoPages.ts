@@ -1650,7 +1650,7 @@ function buildFaqs(node: Language, rels: Relationship[], nodeMap: Map<string, La
     const names = [...new Set(implRels.map(r => nameFromId(r.from_language, nodeMap)))];
     faqs.push({
       q: `What language is ${node.name} written in?`,
-      a: priority?.faqAnswer ?? `${node.name} is primarily implemented in ${names.join(' and ')}. See the implementation section above for details and source references.`,
+      a: priority?.faqAnswer ?? `${node.name} is primarily implemented in ${names.join(' and ')}.`,
     });
   }
 
