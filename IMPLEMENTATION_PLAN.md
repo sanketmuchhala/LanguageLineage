@@ -3,7 +3,7 @@
 **Prepared:** 2026-09-03  
 **Source:** `GROWTH_MASTERPLAN.md` and `docs/GROWTH_MASTERPLAN_FULL.md`  
 **Planning horizon:** First launch plus 12 months  
-**Current state:** Stage 0 and Stage 1 items 1–6 and 9 completed. Work now lands directly on `main`.
+**Current state:** Stage 0 and Stage 1 items 1–7 and 9 completed. Work now lands directly on `main`.
 
 ## Progress log
 
@@ -83,7 +83,15 @@
 - Added a regression guard to `scripts/analyzeDataset.ts` (§3.5): flags any node reading "unspecified" while having a cited implementation edge. Verified it actually fails by re-introducing the bug on one node and confirming the guard caught it, before restoring the fix.
 - Merged to `main` as a fast-forward (`4c6bc492`) and pushed.
 
-**Next task:** Stage 1, item 7—remove the FAQ deflection answers ("See the implementation section above for details...") from generated structured data. 118 pages carry the phrase, all from one code site in `scripts/generateSeoPages.ts`; `buildAnswerBox` already composes a real node-specific answer that can substitute it.
+### 2026-09-09 — Stage 1 item 7 complete
+
+- Removed the deflection clause at its single source (`generateSeoPages.ts:1653`). The remaining sentence — "{Name} is primarily implemented in X." — was already a complete, correct answer sourced from the same edges the implementation section renders from; nothing needed to be added, only the "see above" filler removed. The 16 hand-authored `PRIORITY_CONTENT` overrides were never affected.
+- Regenerated and traced the full diff: 118 HTML pages + `sitemap.xml` (lastmod correctly advances for genuinely changed content) + the `page-dates.json` hash manifest. Confirmed exactly 118 sitemap `lastmod` lines changed, matching the 118 pages fixed, nothing else moved.
+- Added a `validateSeo.ts` check so the phrase can't reappear silently. Verified it actually fails by reintroducing the phrase on one page and confirming the check caught it, before restoring the fix.
+- Merged to `main` as a fast-forward (`33d44752`) and pushed.
+- **Not done, deliberately out of scope:** the sibling deflection "See the influence section above for the full list." (same code file, different FAQ entry) is the same defect class but wasn't named by item 7's text, so it was left untouched rather than assumed into scope.
+
+**Next task:** Stage 1, item 8—add a deterministic evidence-link checker for all 218 unique `evidence_source` URLs (timeout/retry/report; review and fix failures manually, never auto-rewrite a citation). This is the last item before Stage 1 is fully closed.
 
 ## 1. Executive direction
 

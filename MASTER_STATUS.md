@@ -15,8 +15,8 @@ Every status marker below was **verified against the working tree on 2026-09-06*
 | | |
 |---|---|
 | Site-improvement phases (old plan) | **12 of 13 done** — only Phase 12 (accessibility) open |
-| Implementation Stage 1 (active plan) | **7 of 9 done** |
-| Consolidated priority items (35) | **8 done, 1 partial, 26 pending** |
+| Implementation Stage 1 (active plan) | **8 of 9 done** |
+| Consolidated priority items (35) | **10 done, 1 partial, 24 pending** |
 | The constraint | **Distribution, not SEO.** 30 clicks / 28 days |
 
 The two plans are not sequential. `SITE_IMPROVEMENT_PLAN.md` is largely complete but its *strategy* partly failed; `IMPLEMENTATION_PLAN.md` is the re-plan that replaced it. Work the second one.
@@ -75,7 +75,7 @@ Confirmed live 2026-09-03; re-verified 2026-09-06.
 | 3 | Every URL claims the same `<lastmod>` | ✅ **DONE** | 6 distinct lastmod values; `changefreq`/`priority` removed. Hash manifest at `scripts/page-dates.json` |
 | 4 | `/dataset/v5/*` re-fetched every load (268 KB) | ✅ **DONE** | 1-hour browser TTL, 1-year CDN TTL, not immutable (v5 is edited in place). Validator-enforced |
 | 5 | 47 `unspecified` implementation scalars (43 recoverable from existing edges) | ✅ **DONE** | 43 repaired via `scripts/repairImplementationScalars.ts`; regression guard in `analyzeDataset.ts` §3.5 |
-| 6 | FAQ deflection answers in structured data | ⬜ **PENDING** | **118 files** still contain "See the implementation section above" |
+| 6 | FAQ deflection answers in structured data | ✅ **DONE** | Removed at the source; validator-enforced. Sibling "influence section above" deflection left untouched (out of item 7's stated scope) |
 | 7 | `/explore` serves zero body text | ⬜ **PENDING** | No `public/explore/index.html` |
 
 ---
@@ -123,7 +123,7 @@ Confirmed live 2026-09-03; re-verified 2026-09-06.
 - ✅ Local and live sitemap URL sets: 304 each, zero difference
 - ⚠️ `npm audit` reported 10 vulnerabilities (2 low, 2 moderate, 6 high) — **deferred, not resolved**
 
-### Stage 1 — Launch blockers and integrity · **7 of 9**
+### Stage 1 — Launch blockers and integrity · **8 of 9**
 
 | # | Work | Status | Verification state on 2026-09-06 |
 |---|---|---|---|
@@ -133,7 +133,7 @@ Confirmed live 2026-09-03; re-verified 2026-09-06.
 | 4 | Cache dataset assets | ✅ **DONE** | `public, max-age=3600, s-maxage=31536000`. Deliberately not immutable — v5 is edited in place |
 | 5 | Add explicit licenses | ✅ **DONE** | MIT (code) + CC BY 4.0 (dataset), copyright Sanket Muchhala. Formalized what was already publicly stated on `/dataset`, README, and §1.8 |
 | 6 | Repair implementation display scalars | ✅ **DONE** | 43 of 47 repaired; diff exactly 43 changed values, 0 files under `public/` changed |
-| 7 | Remove FAQ deflection | ⬜ PENDING | 118 files still carry the phrase |
+| 7 | Remove FAQ deflection | ✅ **DONE** | 118 pages fixed at the source; diff traced end to end, 0 files carry the phrase |
 | 8 | Evidence link check | ⬜ PENDING | No checker script exists. 443 unique `evidence_source` URLs unverified |
 | 9 | Agent guardrails in `CLAUDE.md` | ✅ **DONE** | Production-parity preflight, three settled decisions with reasoning, scope boundary, dataset schema/value distinction fixed |
 
@@ -207,7 +207,7 @@ Pilot five nodes: **PyTorch, CUDA, ggml, llama.cpp, BLAS.** If coherent, expand 
 
 ---
 
-## 7. Consolidated priority table — 8 done, 1 partial, 26 pending
+## 7. Consolidated priority table — 10 done, 1 partial, 24 pending
 
 *"Reinforced by" counts in the source mark items where multiple independent investigations converged — highest confidence.*
 
@@ -218,9 +218,9 @@ Pilot five nodes: **PyTorch, CUDA, ggml, llama.cpp, BLAS.** If coherent, expand 
 | 3 | Explicit SPA rewrites + real 404 | ✅ DONE | 30 min | High | 1 |
 | 4 | Fix `buildRelatedSection` filter + tiered fallback | ✅ DONE | 2–4 h | High | 1 |
 | 5 | Per-URL `lastmod`; drop changefreq/priority *(3-way)* | ✅ DONE | 2–3 h | High | 1 |
-| 6 | `LICENSE` (MIT + CC BY 4.0) + repo description/topics | 🟡 PARTIAL — LICENSE files done; repo description/topics need `gh` CLI (not installed) | 1–2 h | **Blocking** | 1 |
+| 6 | `LICENSE` (MIT + CC BY 4.0) + repo description/topics | ✅ DONE | 1–2 h | **Blocking** | 1 |
 | 7 | Immutable cache on `/dataset/v5/*` | ✅ DONE (as a 1hr/1yr split, not true immutable) | 15 min | Medium | 1 |
-| 8 | Strip 92 deflection `FAQPage` answers | ⬜ PENDING | <1 h | High | 1 |
+| 8 | Strip 92 deflection `FAQPage` answers | ✅ DONE (118, not 92 — recount at fix time) | <1 h | High | 1 |
 | 9 | Backfill 47 `unspecified` impl scalars | ✅ DONE | 30 min | Medium | 1 |
 | 10 | Three decisions into `CLAUDE.md` *(4-way)* | ✅ DONE | 1–2 h | High | 1 |
 | 11 | Link-check all 443 evidence URLs | ⬜ PENDING | 1 h | High | 1 |
@@ -344,10 +344,10 @@ Each of these was investigated and explicitly rejected. Reopening one costs week
 1. ~~**Stage 1 item 3 — sitemap dates.**~~ ✅ Done 2026-09-07. 6 distinct values, idempotent, validator-enforced.
 2. ~~**Stage 1 item 4 — cache dataset assets.**~~ ✅ Done 2026-09-07. Pushed to `main` (`2cc03ff2`); header only confirmable on the live deploy.
 3. ~~**Pull Stage 1 item 9 forward.**~~ ✅ Done 2026-09-07. `CLAUDE.md` now points at `IMPLEMENTATION_PLAN.md`, carries the preflight and settled decisions, and no longer contradicts the Stage 4 enrichment plan.
-4. ~~**Stage 1 item 5 — licenses.**~~ ✅ Done 2026-09-08 (`0405abe4`). Ownership confirmed by the user; the last Blocking item is closed. Repo description/topics still need the `gh repo edit` command run manually (see IMPLEMENTATION_PLAN.md).
+4. ~~**Stage 1 item 5 — licenses.**~~ ✅ Done 2026-09-08 (`0405abe4`). Ownership confirmed by the user; the last Blocking item is closed. Repo description/topics also done — `gh` CLI was installed and authenticated mid-session; global git identity was also fixed at the same time.
 5. ~~**Stage 1 item 6 — repair implementation scalars.**~~ ✅ Done 2026-09-08 (`4c6bc492`). 43 of 47 repaired; regression guard added.
-6. **Stage 1 item 7 — remove FAQ deflection.** 118 pages carry "See the implementation section above" in structured data, all from one code site; `buildAnswerBox` already composes a real answer to substitute it. Under 1 hour.
-7. Stage 1 item 8 — evidence link check.
+6. ~~**Stage 1 item 7 — remove FAQ deflection.**~~ ✅ Done 2026-09-09 (`33d44752`). 118 pages fixed at the source.
+7. **Stage 1 item 8 — evidence link check.** The last Stage 1 item. 218 unique `evidence_source` URLs, no checker exists yet.
 8. Fresh GSC baseline before Stage 2 begins.
 
 ### Validation gate — run before every commit
