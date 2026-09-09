@@ -202,6 +202,13 @@ for (const lang of languages) {
     if (!content.includes('class="embed-kit"') || !content.includes(expectedEmbed)) {
       fail(`${relPath}: missing portable embed kit`);
       embedKitErrors++;
+    } else if (!content.includes('utm_source=embed')) {
+      // The pasted snippet must carry its own attribution link - iframes
+      // pass zero link equity, so a request in prose on this site (easy to
+      // skip) is not enough. utm_source=embed only appears if the
+      // attribution anchor is actually baked into the copy-pasted snippet.
+      fail(`${relPath}: embed-kit snippet is missing its baked-in attribution link`);
+      embedKitErrors++;
     }
   }
 

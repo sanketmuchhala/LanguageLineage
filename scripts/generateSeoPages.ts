@@ -1777,13 +1777,20 @@ function buildGraphSection(node: Language): string {
 function buildEmbedKit(node: Language): string {
   const slug = idToSlug(node.id);
   const pagePath = `/${idToPrefix(node.id)}/${slug}`;
-  const snippet = `<iframe src="${SITE}/embed?lang=${encodeURIComponent(slug)}" width="100%" height="500" loading="lazy" style="border:0" title="${node.name} relationship graph"></iframe>`;
+  // Iframes pass zero link equity - an <a href> asked of the adopter in prose
+  // on THIS site is easy to skip; one baked into the pasted snippet itself
+  // ships automatically with every embed. Inline styles only: this HTML
+  // lands on arbitrary third-party pages with unknown existing CSS, so it
+  // can't depend on any stylesheet of ours. utm_source/utm_medium make
+  // attribution-line clicks countable, distinct from clicks on a graph node
+  // (which carry the same params - see src/app/EmbedGraph.tsx).
+  const snippet = `<div><iframe src="${SITE}/embed?lang=${encodeURIComponent(slug)}" width="100%" height="500" loading="lazy" style="border:0" title="${node.name} relationship graph"></iframe><p style="font:12px system-ui,sans-serif;margin:4px 0 0;color:#71717a">Graph via <a href="${SITE}/?utm_source=embed&utm_medium=attribution" target="_blank" rel="noopener noreferrer">Language Lineage</a></p></div>`;
 
   return `<section class="embed-kit" data-nosnippet>
   <h2>Embed this graph</h2>
-  <p>Paste this iframe into any HTML page to show the ${escapeHtml(node.name)} relationship graph.</p>
+  <p>Paste this snippet into any HTML page to show the ${escapeHtml(node.name)} relationship graph. The attribution line is part of the snippet, not a separate step - please keep it.</p>
   <pre class="embed-code"><code>${escapeHtml(snippet)}</code></pre>
-  <p class="embed-attribution">Please attribute the visualization to <a href="${SITE}">Language Lineage</a> and link to the <a href="${pagePath}">${escapeHtml(node.name)} source record</a>. See the <a href="/embed-kit">embed guide</a> for parameters and sizing.</p>
+  <p class="embed-attribution">Want to link the specific record instead of the homepage? Swap the attribution link's <code>href</code> for <a href="${pagePath}">${pagePath}</a>. See the <a href="/embed-kit">embed guide</a> for parameters and sizing.</p>
 </section>`;
 }
 
@@ -5140,17 +5147,17 @@ function buildEmbedKitPage(languages: Language[], rels: Relationship[]): string 
   const toolCount = languages.filter(l => l.id.startsWith('tool:')).length;
   const title = 'Embed the Language Lineage Graph | Language Lineage';
   const description = `Put the relationship graph for any of ${langCount + toolCount} languages and tools on your own page with one iframe. Copy-paste snippet, parameters, sizing, and attribution.`;
-  const snippet = `<iframe
+  const snippet = `<div><iframe
   src="${SITE}/embed?lang=rust"
   width="100%"
   height="480"
   style="border:1px solid #262626;border-radius:8px"
   loading="lazy"
   title="Rust implementation and influence graph, from Language Lineage"
-></iframe>`;
+></iframe><p style="font:12px system-ui,sans-serif;margin:4px 0 0;color:#71717a">Graph via <a href="${SITE}/?utm_source=embed&utm_medium=attribution" target="_blank" rel="noopener noreferrer">Language Lineage</a></p></div>`;
 
   const faqs = [
-    { q: 'Is the embed free to use?', a: 'Yes. The embed is free for any site, commercial or not. It renders from the same public dataset that powers Language Lineage. A visible credit linking back to languagelineage.org is appreciated but not required.' },
+    { q: 'Is the embed free to use?', a: 'Yes. The embed is free for any site, commercial or not. It renders from the same public dataset that powers Language Lineage. The snippet includes a small attribution line; you can remove it, but it costs nothing to keep.' },
     { q: 'What parameters does the embed take?', a: 'One: lang. Pass the slug of any language or tool page, for example lang=rust for /languages/rust or lang=v8 for /tools/v8. The embed shows an error if the parameter is missing or the slug is unknown.' },
     { q: 'How tall should the iframe be?', a: 'Between 400 and 600 pixels works for most layouts. Use 480 as a starting point. The graph fits itself to whatever box you give it, so width can be 100%.' },
     { q: 'Does the embed track my visitors?', a: 'The embed loads Vercel Web Analytics, which records anonymous page-level metrics. It sets no advertising cookies and does not identify individual visitors.' },
@@ -5212,8 +5219,7 @@ ${NAV_HTML}
   <p>The graph fits itself to the box it is given, so <code>width="100%"</code> is almost always right. For height, 400 to 600 pixels suits most article layouts; below about 320 pixels the labels start to crowd. Keep <code>loading="lazy"</code> so the embed costs your readers nothing until they scroll to it.</p>
 
   <h2>Attribution</h2>
-  <p>Use it freely, on commercial sites included. If you want to credit it, a line under the frame is plenty:</p>
-  <pre><code>${escapeHtml('Graph: <a href="https://www.languagelineage.org">Language Lineage</a>')}</code></pre>
+  <p>Use it freely, on commercial sites included. The snippet above already includes a small credit line below the frame - nothing else to add. It links to the homepage by default; swap the <code>href</code> for a specific <a href="/languages/rust">language or tool page</a> if you'd rather credit that record directly.</p>
   <p>If you would rather host the data yourself, or cite it in something written, the <a href="/dataset">dataset page</a> has the raw JSON and a citation block. Every relationship in it carries a confidence score and a source URL, so the numbers are checkable rather than asserted.</p>
 
   <h2>Frequently asked questions</h2>

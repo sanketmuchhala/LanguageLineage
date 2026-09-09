@@ -18,6 +18,8 @@ function idToPrefix(id: string): string {
   return id.startsWith('tool:') ? 'tools' : 'languages';
 }
 
+const SITE = 'https://www.languagelineage.org';
+
 export function EmbedGraph() {
   const [searchParams] = useSearchParams();
   const slug = searchParams.get('lang') ?? '';
@@ -124,7 +126,23 @@ export function EmbedGraph() {
 
         cy.on('tap', 'node', evt => {
           const id = evt.target.id() as string;
-          window.parent.location.href = `/${idToPrefix(id)}/${idToSlug(id)}`;
+          // Confirmed via a real cross-origin test that the previous
+          // window.parent.location.href assignment resolved correctly (a
+          // relative-path assignment on a cross-origin window resolves
+          // against the calling script's own origin, not the target
+          // window's) - so this was never a broken-URL bug. It was still a
+          // full takeover of the host page on every click, though, which is
+          // not how embeds like this behave elsewhere (YouTube, CodePen,
+          // Twitter all open through in a new tab) and risks a site owner
+          // removing the embed the first time a visitor's click hijacks
+          // their page. utm_source/utm_medium here is what makes
+          // embed-driven traffic countable in analytics, separate from
+          // organic or direct visits.
+          window.open(
+            `${SITE}/${idToPrefix(id)}/${idToSlug(id)}?utm_source=embed&utm_medium=iframe`,
+            '_blank',
+            'noopener,noreferrer'
+          );
         });
         cy.on('mouseover', 'node', () => { container.style.cursor = 'pointer'; });
         cy.on('mouseout', 'node', () => { container.style.cursor = 'default'; });
