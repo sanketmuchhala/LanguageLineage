@@ -3,7 +3,7 @@
 **Prepared:** 2026-09-03  
 **Source:** `GROWTH_MASTERPLAN.md` and `docs/GROWTH_MASTERPLAN_FULL.md`  
 **Planning horizon:** First launch plus 12 months  
-**Current state:** Stage 0 and Stage 1 items 1–7 and 9 completed. Work now lands directly on `main`.
+**Current state:** Stage 0 and Stage 1 (all 9 items) complete. Work now lands directly on `main`.
 
 ## Progress log
 
@@ -91,7 +91,19 @@
 - Merged to `main` as a fast-forward (`33d44752`) and pushed.
 - **Not done, deliberately out of scope:** the sibling deflection "See the influence section above for the full list." (same code file, different FAQ entry) is the same defect class but wasn't named by item 7's text, so it was left untouched rather than assumed into scope.
 
-**Next task:** Stage 1, item 8—add a deterministic evidence-link checker for all 218 unique `evidence_source` URLs (timeout/retry/report; review and fix failures manually, never auto-rewrite a citation). This is the last item before Stage 1 is fully closed.
+### 2026-09-09 — Stage 1 item 8 complete — Stage 1 fully closed
+
+- Added `scripts/checkEvidenceLinks.ts` (`npm run check:evidence-links`): HEAD each of the 218 unique `evidence_source` URLs with a 10s timeout, GET fallback for hosts that reject HEAD, retry with backoff on transient/5xx failures, 8-way concurrency (~15s for the full set).
+- Deliberately not wired into `npm run seo:validate` — that gate must stay green with no network and must never fail on a source site's transient 503. This depends on the live internet and is meant to be run periodically and reviewed by a human, per the plan's own instruction to review and fix manually rather than auto-rewrite.
+- Read-only with respect to `dataset/v5/lineage_v5.json`; writes a dated report to `reports/` (already gitignored, same convention as the existing GSC exports) plus a console summary with every failure mapped to the relationships it supports.
+- Ran it against production: **207 OK, 6 benign redirects, 11 genuine failures** (10x 404, 1x 403). Spot-checked several failures with a real browser User-Agent via `curl` before trusting the result — confirmed genuinely dead, not an artifact of the checker's own bot User-Agent.
+- The 11 failures are left for manual review, per the plan's explicit instruction not to auto-rewrite evidence. Listed below for the next session or the user to action:
+  - 404: `en.wikipedia.org/wiki/Hare_(programming_language)`, `.../Odin_(programming_language)`, `.../Roc_(programming_language)`, `.../SWC_(software)`, `.../Unison_(programming_language)`, `.../Wren_(programming_language)` — six niche/newer languages whose Wikipedia articles may never have existed or were deleted for notability
+  - 404: `scala-lang.org/blog/2016/11/11/dotty-compiler-bootstraps.html`, `vlang.io/`, `wiki.haskell.org/GHC:History`, `www.adacore.com/gnat`
+  - 403: `racket-lang.org/blog/2019/01/rebuilding-racket-on-chez-scheme-experience-report.html` — blocks non-browser clients broadly, not specific to this checker
+- Merged to `main` as a fast-forward (`e538d956`) and pushed.
+
+**Stage 1 is now fully closed (9 of 9).** Next up is Stage 2 — the reproducible flagship centrality-ranking page (`scripts/computeCentrality.ts` + `/rankings/most-influential`) and RSS/email capture, per §5 of this file.
 
 ## 1. Executive direction
 

@@ -15,8 +15,8 @@ Every status marker below was **verified against the working tree on 2026-09-06*
 | | |
 |---|---|
 | Site-improvement phases (old plan) | **12 of 13 done** — only Phase 12 (accessibility) open |
-| Implementation Stage 1 (active plan) | **8 of 9 done** |
-| Consolidated priority items (35) | **10 done, 1 partial, 24 pending** |
+| Implementation Stage 1 (active plan) | **9 of 9 done — Stage 1 fully closed** |
+| Consolidated priority items (35) | **11 done, 1 partial, 23 pending** |
 | The constraint | **Distribution, not SEO.** 30 clicks / 28 days |
 
 The two plans are not sequential. `SITE_IMPROVEMENT_PLAN.md` is largely complete but its *strategy* partly failed; `IMPLEMENTATION_PLAN.md` is the re-plan that replaced it. Work the second one.
@@ -123,7 +123,7 @@ Confirmed live 2026-09-03; re-verified 2026-09-06.
 - ✅ Local and live sitemap URL sets: 304 each, zero difference
 - ⚠️ `npm audit` reported 10 vulnerabilities (2 low, 2 moderate, 6 high) — **deferred, not resolved**
 
-### Stage 1 — Launch blockers and integrity · **8 of 9**
+### Stage 1 — Launch blockers and integrity · **9 of 9 — CLOSED**
 
 | # | Work | Status | Verification state on 2026-09-06 |
 |---|---|---|---|
@@ -134,7 +134,7 @@ Confirmed live 2026-09-03; re-verified 2026-09-06.
 | 5 | Add explicit licenses | ✅ **DONE** | MIT (code) + CC BY 4.0 (dataset), copyright Sanket Muchhala. Formalized what was already publicly stated on `/dataset`, README, and §1.8 |
 | 6 | Repair implementation display scalars | ✅ **DONE** | 43 of 47 repaired; diff exactly 43 changed values, 0 files under `public/` changed |
 | 7 | Remove FAQ deflection | ✅ **DONE** | 118 pages fixed at the source; diff traced end to end, 0 files carry the phrase |
-| 8 | Evidence link check | ⬜ PENDING | No checker script exists. 443 unique `evidence_source` URLs unverified |
+| 8 | Evidence link check | ✅ **DONE** | `scripts/checkEvidenceLinks.ts`. 207 OK, 6 redirects, **11 genuine failures** — left for manual review, see IMPLEMENTATION_PLAN.md for the list |
 | 9 | Agent guardrails in `CLAUDE.md` | ✅ **DONE** | Production-parity preflight, three settled decisions with reasoning, scope boundary, dataset schema/value distinction fixed |
 
 **Human-only checks (none done):**
@@ -207,7 +207,7 @@ Pilot five nodes: **PyTorch, CUDA, ggml, llama.cpp, BLAS.** If coherent, expand 
 
 ---
 
-## 7. Consolidated priority table — 10 done, 1 partial, 24 pending
+## 7. Consolidated priority table — 11 done, 1 partial, 23 pending
 
 *"Reinforced by" counts in the source mark items where multiple independent investigations converged — highest confidence.*
 
@@ -223,7 +223,7 @@ Pilot five nodes: **PyTorch, CUDA, ggml, llama.cpp, BLAS.** If coherent, expand 
 | 8 | Strip 92 deflection `FAQPage` answers | ✅ DONE (118, not 92 — recount at fix time) | <1 h | High | 1 |
 | 9 | Backfill 47 `unspecified` impl scalars | ✅ DONE | 30 min | Medium | 1 |
 | 10 | Three decisions into `CLAUDE.md` *(4-way)* | ✅ DONE | 1–2 h | High | 1 |
-| 11 | Link-check all 443 evidence URLs | ⬜ PENDING | 1 h | High | 1 |
+| 11 | Link-check all 443 evidence URLs | ✅ DONE — 11 dead links found, unfixed | 1 h | High | 1 |
 | 12 | `computeCentrality.ts` + `/rankings/most-influential` | ⬜ PENDING | 1–2 d | **Transformative** | 2 |
 | 13 | RSS feed + email capture | ⬜ PENDING | 3–4 h | **Transformative** | 2 |
 | 14 | Static text layer on `/explore` *(4-way)* | ⬜ PENDING | 2–4 h | High | 2 |
@@ -332,7 +332,7 @@ Each of these was investigated and explicitly rejected. Reopening one costs week
 |---|---|---|---|
 | 1 | **Deploying from the stale tree deletes 148 indexed URLs.** Local build produced 156 sitemap URLs against 304 live | Reconciliation done; the `CLAUDE.md` warning makes it survive across agent sessions | ✅ Both done — reconciled and the preflight is written (`d3dde3cd`) |
 | 2 | **Launch flops with no plan B.** Median Show HN gets <10 points; the whole Stage 2 exit routes through one submission | Write the day-3 branch now. Rehearse on r/PL first. Ship the AI guide as an independent second shot | ⬜ Branch not written |
-| 3 | **Evidence moat erodes unwatched.** 70.4% of evidence URLs are Wikipedia, *up from 62%* on v4 — concentration is growing. Confidence scores cluster at 0.887 mean, 0.65 floor, no low tail — assigned by feel | Link-check before launch; cap Wikipedia confidence at 0.90; derive confidence mechanically from source type (Wikipedia ≤0.85, primary docs 0.95, source commit 0.99); no new node without a non-Wikipedia source | ⬜ None done |
+| 3 | **Evidence moat erodes unwatched.** 61.5% of evidence URLs are Wikipedia (verified 2026-09-06, revising the 70.4% figure carried from earlier research). Confidence scores cluster at 0.887 mean, 0.65 floor, no low tail — assigned by feel | Link-check before launch; cap Wikipedia confidence at 0.90; derive confidence mechanically from source type (Wikipedia ≤0.85, primary docs 0.95, source commit 0.99); no new node without a non-Wikipedia source | 🟡 Link-check done (2026-09-09, 11 dead links found and awaiting fix). Confidence-scoring mechanization not started |
 | 4 | **Review capacity collapses into an unreviewed agent backlog.** Sustainable rate is ~1 substantive prose PR/week; corpus already at 0.295 mean Jaccard | WIP limit of 2 **enforced in CI, not willpower**; `contentQuality.ts` as a deterministic gate with no LLM in the path | ⬜ None done |
 | 5 | Scope creep reopens settled questions | §3 of this file + `CLAUDE.md` scope boundary | ✅ Written into `CLAUDE.md` 2026-09-07 (`d3dde3cd`) |
 | 6 | 10 npm vulnerabilities (6 high) carried from Stage 0 | Separate reviewed task; **do not `--force`** | ⬜ Deferred |
@@ -347,8 +347,10 @@ Each of these was investigated and explicitly rejected. Reopening one costs week
 4. ~~**Stage 1 item 5 — licenses.**~~ ✅ Done 2026-09-08 (`0405abe4`). Ownership confirmed by the user; the last Blocking item is closed. Repo description/topics also done — `gh` CLI was installed and authenticated mid-session; global git identity was also fixed at the same time.
 5. ~~**Stage 1 item 6 — repair implementation scalars.**~~ ✅ Done 2026-09-08 (`4c6bc492`). 43 of 47 repaired; regression guard added.
 6. ~~**Stage 1 item 7 — remove FAQ deflection.**~~ ✅ Done 2026-09-09 (`33d44752`). 118 pages fixed at the source.
-7. **Stage 1 item 8 — evidence link check.** The last Stage 1 item. 218 unique `evidence_source` URLs, no checker exists yet.
-8. Fresh GSC baseline before Stage 2 begins.
+7. ~~**Stage 1 item 8 — evidence link check.**~~ ✅ Done 2026-09-09 (`e538d956`). **Stage 1 is now fully closed, all 9 items.** Found 11 genuine dead evidence links (10x 404, 6 of them Wikipedia pages for niche/newer languages that may never have existed); left unfixed per the plan's own instruction to review manually.
+8. **Fix the 11 dead evidence links** found above, or hand them to the user — this is a human-review task, not one to auto-fix.
+9. Move to Stage 2: `scripts/computeCentrality.ts` + `/rankings/most-influential`, then RSS/email capture.
+10. Fresh GSC baseline before Stage 2 begins.
 
 ### Validation gate — run before every commit
 
