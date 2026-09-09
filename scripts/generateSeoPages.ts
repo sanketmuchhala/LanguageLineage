@@ -21,8 +21,12 @@ function ogImg(filename: string): string {
 
 const FONTS_HEAD = `<link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><script defer src="/fx.js"></script>`;
 
-// Vercel Analytics; the SPA gets these via <Analytics /> in src/app/App.tsx
-const ANALYTICS_HEAD = `<script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script>`;
+// Vercel Analytics beacons plus the RSS discovery link, bundled here so both
+// reach every generated page through the one shared interpolation point
+// (${FONTS_HEAD}${ANALYTICS_HEAD}) rather than editing every page-builder
+// function individually. The SPA gets Analytics via <Analytics /> in
+// src/app/App.tsx and its own <link rel="alternate"> in index.html directly.
+const ANALYTICS_HEAD = `<script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script><link rel="alternate" type="application/rss+xml" title="Language Lineage" href="/rss.xml" />`;
 
 const BRAND_MARK = `<img class="nav-logo-mark" src="/logo-mark.svg" width="22" height="22" alt="" aria-hidden="true">`;
 
@@ -47,6 +51,7 @@ const FOOTER_HTML = `<footer class="seo-footer-rich">
       <span class="footer-col-head">Explore</span>
       <a href="/programming-language-graph">Programming language graph</a>
       <a href="/rankings/most-influential">Most influential languages</a>
+      <a href="/rss.xml">RSS feed</a>
       <a href="/embed-kit">Embed the graph</a>
       <a href="/guides/programming-language-family-tree">Language family tree</a>
       <a href="/programming-language-evolution">Evolution timeline</a>

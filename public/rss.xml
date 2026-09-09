@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Language Lineage</title>
+    <link>https://www.languagelineage.org</link>
+    <description>Guides and data stories on what programming languages are written in, how compilers are bootstrapped, and how languages influenced each other.</description>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 09 Sep 2026 00:00:00 GMT</lastBuildDate>
+    <atom:link href="https://www.languagelineage.org/rss.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>How Modern Languages Trace Their Toolchains Back to C | Language Lineage</title>
+      <link>https://www.languagelineage.org/guides/the-c-bootstrap-chain</link>
+      <guid isPermaLink="true">https://www.languagelineage.org/guides/the-c-bootstrap-chain</guid>
+      <description>How Python, Rust, Go, JavaScript, Java, Ruby, and Haskell trace their compiler or runtime implementation back to C or C++. 7 chains computed from the Language Lineage dataset.</description>
+      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>GraalVM vs HotSpot: Two JVM Implementations Compared | Language Lineage</title>
+      <link>https://www.languagelineage.org/guides/graalvm-vs-hotspot</link>
+      <guid isPermaLink="true">https://www.languagelineage.org/guides/graalvm-vs-hotspot</guid>
+      <description>HotSpot (C and C++) is the standard JVM in OpenJDK. GraalVM replaces the C2 JIT with a Java-written compiler and adds polyglot and Native Image support. Both run the same bytecode.</description>
+      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>TypeScript vs JavaScript Compilers: tsc, swc, esbuild | Language Lineage</title>
+      <link>https://www.languagelineage.org/guides/typescript-vs-javascript-implementation</link>
+      <guid isPermaLink="true">https://www.languagelineage.org/guides/typescript-vs-javascript-implementation</guid>
+      <description>TypeScript adds types to JavaScript. The official compiler tsc is self-hosting TypeScript; swc is written in Rust; esbuild is written in Go. All three transpile to JavaScript.</description>
+      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>V8 vs SpiderMonkey vs JavaScriptCore | Language Lineage</title>
+      <link>https://www.languagelineage.org/guides/v8-vs-spidermonkey-vs-javascriptcore</link>
+      <guid isPermaLink="true">https://www.languagelineage.org/guides/v8-vs-spidermonkey-vs-javascriptcore</guid>
+      <description>All three major JavaScript engines are written in C++. V8 powers Chrome and Node.js, SpiderMonkey powers Firefox, and JavaScriptCore powers Safari.</description>
+      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>How Are Programming Languages Made? | Language Lineage</title>
+      <link>https://www.languagelineage.org/guides/how-programming-languages-are-made</link>
+      <guid isPermaLink="true">https://www.languagelineage.org/guides/how-programming-languages-are-made</guid>
+      <description>Learn how programming languages are designed and implemented. Languages are built using other languages, compilers and interpreters are programs written in existing languages.</description>
+      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>GCC vs LLVM: Compiler Infrastructure | Language Lineage</title>
+      <link>https://www.languagelineage.org/guides/gcc-vs-llvm</link>
+      <guid isPermaLink="true">https://www.languagelineage.org/guides/gcc-vs-llvm</guid>
+      <description>GCC and LLVM are the two dominant open-source compiler infrastructures. Both are written in C++. Learn how they differ and which languages use each.</description>
+      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>How Rust is Bootstrapped | Language Lineage</title>
+      <link>https://www.languagelineage.org/guides/how-rust-is-bootstrapped</link>
+      <guid isPermaLink="true">https://www.languagelineage.org/guides/how-rust-is-bootstrapped</guid>
+      <description>Rust is a self-hosting language. The Rust compiler (rustc) is written in Rust itself. Learn how the Rust bootstrap process works.</description>
+      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>How Python is Implemented | Language Lineage</title>
+      <link>https://www.languagelineage.org/guides/how-python-is-implemented</link>
+      <guid isPermaLink="true">https://www.languagelineage.org/guides/how-python-is-implemented</guid>
+      <description>CPython is the reference Python implementation, written in C. PyPy uses RPython. Learn how Python interpreters work and what language each is written in.</description>
+      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>How JavaScript Engines Work | Language Lineage</title>
+      <link>https://www.languagelineage.org/guides/how-javascript-engines-work</link>
+      <guid isPermaLink="true">https://www.languagelineage.org/guides/how-javascript-engines-work</guid>
+      <description>JavaScript engines like V8, SpiderMonkey, and JavaScriptCore are written in C++. Learn how they parse, compile, and execute JavaScript code.</description>
+      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Programming Language Family Tree | Language Lineage</title>
+      <link>https://www.languagelineage.org/guides/programming-language-family-tree</link>
+      <guid isPermaLink="true">https://www.languagelineage.org/guides/programming-language-family-tree</guid>
+      <description>The programming language family tree: how Fortran, LISP, and C influenced and implemented the languages that followed, across 75+ years of compiler and runtime history.</description>
+      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Compiler vs Interpreter vs Runtime | Language Lineage</title>
+      <link>https://www.languagelineage.org/guides/compiler-vs-interpreter-vs-runtime</link>
+      <guid isPermaLink="true">https://www.languagelineage.org/guides/compiler-vs-interpreter-vs-runtime</guid>
+      <description>Understand the difference between a compiler, interpreter, and runtime, and how these determine what language an implementation is written in.</description>
+      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>What is a Self-Hosting Compiler? | Language Lineage</title>
+      <link>https://www.languagelineage.org/guides/what-is-self-hosting</link>
+      <guid isPermaLink="true">https://www.languagelineage.org/guides/what-is-self-hosting</guid>
+      <description>A self-hosting compiler is a compiler that can compile its own source code. Learn which languages are self-hosting and why it matters.</description>
+      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>What is Compiler Bootstrapping? | Language Lineage</title>
+      <link>https://www.languagelineage.org/guides/what-is-compiler-bootstrapping</link>
+      <guid isPermaLink="true">https://www.languagelineage.org/guides/what-is-compiler-bootstrapping</guid>
+      <description>Compiler bootstrapping is the process of writing a compiler for a language in that same language. Learn how it works and which languages use it.</description>
+      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>The Most Influential Programming Languages | Language Lineage</title>
+      <link>https://www.languagelineage.org/rankings/most-influential</link>
+      <guid isPermaLink="true">https://www.languagelineage.org/rankings/most-influential</guid>
+      <description>Reverse PageRank over 252 cited influence relationships across 131 languages. Generated, not hand-ranked.</description>
+      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>

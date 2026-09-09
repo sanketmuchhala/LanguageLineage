@@ -39,7 +39,7 @@ function checkRootFile(rel: string): string | null {
 }
 
 // Static files
-const staticFiles = ['404.html', 'robots.txt', 'sitemap.xml', 'manifest.json', 'og-image.svg', 'seo.css', 'llms.txt', 'llms-full.txt', 'favicon.svg', 'logo-mark.svg', 'logo-banner.svg'];
+const staticFiles = ['404.html', 'robots.txt', 'sitemap.xml', 'rss.xml', 'manifest.json', 'og-image.svg', 'seo.css', 'llms.txt', 'llms-full.txt', 'favicon.svg', 'logo-mark.svg', 'logo-banner.svg'];
 for (const f of staticFiles) {
   const content = checkFile(f);
   if (content) ok(`public/${f} exists (${content.length} bytes)`);
@@ -108,6 +108,26 @@ if (sitemap) {
   if (sitemap.includes('<changefreq>') || sitemap.includes('<priority>')) {
     fail('sitemap.xml still contains changefreq/priority (both are ignored by Google)');
   } else ok('sitemap.xml omits changefreq and priority');
+}
+
+// rss.xml - the Stage 2.2 retention feed. Story-page items only, not all 305 URLs.
+const rssXml = checkFile('rss.xml');
+if (rssXml) {
+  const itemCount = (rssXml.match(/<item>/g) || []).length;
+  if (itemCount === 0) fail('rss.xml has zero items');
+  else ok(`rss.xml has ${itemCount} items`);
+
+  if (!rssXml.includes(`<atom:link href="${SITE}/rss.xml" rel="self"`)) {
+    fail('rss.xml missing a correct atom:link self-reference');
+  } else ok('rss.xml has a correct self-reference');
+
+  const itemLinks = [...rssXml.matchAll(/<link>([^<]+)<\/link>/g)].map((m) => m[1]).slice(1); // [0] is the channel link
+  const brokenItemLinks = itemLinks.filter((url) => {
+    const path = url.replace(SITE, '');
+    return !existsSync(join(PUBLIC, path.replace(/^\//, ''), 'index.html'));
+  });
+  if (brokenItemLinks.length > 0) fail(`rss.xml has ${brokenItemLinks.length} item(s) linking to a page that does not exist: ${brokenItemLinks[0]}`);
+  else ok(`All ${itemLinks.length} rss.xml item links resolve to a real page`);
 }
 
 // manifest.json
