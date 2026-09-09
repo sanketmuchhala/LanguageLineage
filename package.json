@@ -25,6 +25,7 @@
     "seo:links": "tsx scripts/auditInternalLinks.ts",
     "og:generate": "tsx scripts/generateOgImages.ts",
     "gsc:analyze": "tsx scripts/analyzeGsc.ts",
+    "check:evidence-links": "tsx scripts/checkEvidenceLinks.ts",
     "test:embed": "playwright test --config=playwright.embed.config.ts"
   },
   "dependencies": {
