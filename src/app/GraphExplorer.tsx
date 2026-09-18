@@ -57,7 +57,7 @@ export function GraphExplorer() {
       }
     }
     initializeDataset();
-  }, [setDataset, setDatasetIndex, setValidationReport]);
+  }, [setDataset, setDatasetIndex]);
 
   // Keyboard shortcuts
   useEffect(() => {

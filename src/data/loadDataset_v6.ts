@@ -9,8 +9,8 @@ export async function loadDatasetV6(): Promise<NormalizedDataset> {
 
   try {
     const [entitiesRes, relationshipsRes] = await Promise.all([
-      fetch(entitiesPath),
-      fetch(relationshipsPath)
+      fetch(`${entitiesPath}?t=${Date.now()}`),
+      fetch(`${relationshipsPath}?t=${Date.now()}`)
     ]);
 
     if (!entitiesRes.ok || !relationshipsRes.ok) {

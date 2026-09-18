@@ -38,7 +38,7 @@ export function EmbedGraph() {
         const raw = await loadDatasetV6();
         if (cancelled) return;
 
-        const dataset = normalizeDataset(raw);
+        const dataset = raw;
 
         const nodeId = [...dataset.entityMap.keys()].find(
           id => idToSlug(id) === slug
@@ -46,12 +46,12 @@ export function EmbedGraph() {
         if (!nodeId) { setError(`Language "${slug}" not found in dataset`); return; }
 
         const connectedEdges = dataset.relationships.filter(
-          e => e.data().from === nodeId || e.data().to === nodeId
+          e => e.from === nodeId || e.to === nodeId
         );
         const nodeIds = new Set([nodeId]);
         connectedEdges.forEach(e => {
-          nodeIds.add(e.data().from);
-          nodeIds.add(e.data().to);
+          nodeIds.add(e.from);
+          nodeIds.add(e.to);
         });
 
         const elements: cytoscape.ElementDefinition[] = [];
@@ -84,8 +84,8 @@ export function EmbedGraph() {
             group: 'edges',
             data: {
               id: e.id,
-              source: e.data().from,
-              target: e.data().to,
+              source: e.from,
+              target: e.to,
               relationship: e.relationship,
               confidence: e.confidence,
             },

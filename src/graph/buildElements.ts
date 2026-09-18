@@ -106,7 +106,7 @@ export function buildCytoscapeElements(
           degree: lang.degree,
           cluster: lang.cluster,
           parent: isClusterLayout ? `cluster:${lang.cluster}` : undefined,
-          logoUrl,
+
           logoColor,
           logoKind,
           logoSize: logoPresentation.size,
