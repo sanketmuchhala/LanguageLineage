@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useGraphStore } from '../store/useGraphStore';
+import { useGraphStoreV6 } from '../store/useGraphStoreV6';
 import { deactivateFocusMode } from '../graph/selectors';
 import { SearchBox } from './SearchBox';
 import { Slider } from './Slider';
 import { Toggle } from './Toggle';
 import { RelationshipFilters } from './RelationshipFilters';
-import type { RelationshipType } from '../data/types';
+import type { RelationshipType } from '../data/types_v6';
 import './MinimalPanel.css';
 
 const DECADES = [1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020];
@@ -16,7 +16,7 @@ interface MinimalPanelProps {
 
 export function MinimalPanel({ onBackToLanding }: MinimalPanelProps) {
   const [collapsed, setCollapsed] = useState(() => window.matchMedia('(max-width: 1024px)').matches);
-  const { dataset, filters, updateFilters, attributeFilters, setAttributeFilters, resetAttributeFilters, isDarkMode, toggleDarkMode } = useGraphStore();
+  const { dataset, filters, updateFilters, attributeFilters, setAttributeFilters, resetAttributeFilters, isDarkMode, toggleDarkMode } = useGraphStoreV6();
 
   useEffect(() => {
     const compactViewport = window.matchMedia('(max-width: 1024px)');
@@ -51,18 +51,18 @@ export function MinimalPanel({ onBackToLanding }: MinimalPanelProps) {
   const uniqueParadigms = useMemo(() => {
     if (!dataset) return [];
     const set = new Set<string>();
-    dataset.languages.forEach((l) => l.paradigm?.forEach((p) => set.add(p)));
+    dataset.entities.forEach((l) => l.language_metadata?.paradigm?.forEach((p) => set.add(p)));
     return [...set].sort();
   }, [dataset]);
 
   const uniqueTyping = useMemo(() => {
     if (!dataset) return [];
     const set = new Set<string>();
-    dataset.languages.forEach((l) => { if (l.typing) set.add(l.typing); });
+    dataset.entities.forEach((l) => { if (l.language_metadata?.typing) set.add(l.language_metadata?.typing); });
     return [...set].sort();
   }, [dataset]);
 
-  const { traceMode, setTraceMode, clearTrace, cy } = useGraphStore();
+  const { traceMode, setTraceMode, clearTrace, cy } = useGraphStoreV6();
 
   const handleTraceToggle = () => {
     if (traceMode) {
@@ -165,7 +165,7 @@ export function MinimalPanel({ onBackToLanding }: MinimalPanelProps) {
             <SearchBox
               value={filters.searchQuery}
               onChange={(value) => updateFilters({ searchQuery: value })}
-              placeholder="Search languages..."
+              placeholder="Search entities..."
             />
           </section>
 
@@ -183,7 +183,7 @@ export function MinimalPanel({ onBackToLanding }: MinimalPanelProps) {
           {filters.graphMode === 'influence' ? (
             <section className="panel-section">
               <div className="influence-mode-note">
-                Showing 189 documented conceptual influence relationships between languages.
+                Showing 189 documented conceptual influence relationships between entities.
               </div>
             </section>
           ) : (

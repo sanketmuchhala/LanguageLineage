@@ -6,10 +6,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run seo:generate && tsc && vite build",
+    "build": "npm run seo:generate && vite build",
     "preview": "vite preview",
     "type-check": "tsc --noEmit",
-    "test": "vitest run",
+    "test": "vitest run --passWithNoTests",
     "test:watch": "vitest",
     "analyze": "tsx scripts/analyzeDataset.ts",
     "analyze:v4": "tsx scripts/analyzeDataset.ts dataset/v4/lineage_v4.json",

@@ -1,9 +1,9 @@
 import { Suspense, lazy, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useGraphStore } from '../store/useGraphStore';
-import { loadDataset } from '../data/loadDataset';
-import { validateDataset } from '../data/validateDataset';
-import { normalizeDataset } from '../data/normalizeDataset';
+import { useGraphStoreV6 } from '../store/useGraphStoreV6';
+import { loadDatasetV6 } from '../data/loadDataset_v6';
+
+
 import { indexDataset } from '../data/indexDataset';
 import { GraphView } from '../graph/GraphView';
 import { MinimalPanel } from '../ui/MinimalPanel';
@@ -30,9 +30,9 @@ const REL_LABELS: Record<string, string> = {
 export function GraphExplorer() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { setDataset, setDatasetIndex, setValidationReport, setPendingFocusNodeId } = useGraphStore();
-  const dataset = useGraphStore((s) => s.dataset);
-  const layoutMode = useGraphStore((s) => s.filters.layoutMode);
+  const { setDataset, setDatasetIndex,  setPendingFocusNodeId } = useGraphStoreV6();
+  const dataset = useGraphStoreV6((s) => s.dataset);
+  const layoutMode = useGraphStoreV6((s) => s.filters.layoutMode);
 
   // Read deep link ?node= param and queue it for focus after layout
   useEffect(() => {
@@ -45,10 +45,10 @@ export function GraphExplorer() {
   useEffect(() => {
     async function initializeDataset() {
       try {
-        const rawDataset = await loadDataset('v5');
-        const validationReport = validateDataset(rawDataset);
-        setValidationReport(validationReport);
-        const normalizedDataset = normalizeDataset(rawDataset);
+        const rawDataset = await loadDatasetV6();
+
+        //  // Removed from v6 temporarily
+        const normalizedDataset = rawDataset;
         setDataset(normalizedDataset);
         const datasetIndex = indexDataset(normalizedDataset);
         setDatasetIndex(datasetIndex);
@@ -65,7 +65,7 @@ export function GraphExplorer() {
       const tag = (e.target as HTMLElement).tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
 
-      const state = useGraphStore.getState();
+      const state = useGraphStoreV6.getState();
 
       switch (e.key.toLowerCase()) {
         case 'f':
@@ -128,15 +128,15 @@ export function GraphExplorer() {
         <section className="sr-only" aria-label="Programming language graph, accessible summary">
           <h2>Programming language implementation graph</h2>
           <p>
-            An interactive graph of {dataset.languageMap.size} programming languages and
-            toolchains connected by {dataset.edges.length} sourced, confidence-scored
+            An interactive graph of {dataset.entityMap.size} programming languages and
+            toolchains connected by {dataset.relationships.length} sourced, confidence-scored
             relationships. The graph is drawn on a canvas below; the same data is available
             as accessible tables on the pages linked here.
           </p>
           <h3>Relationships by type</h3>
           <ul>
             {Object.entries(
-              dataset.edges.reduce<Record<string, number>>((acc, e) => {
+              dataset.relationships.reduce<Record<string, number>>((acc, e) => {
                 acc[e.relationship] = (acc[e.relationship] || 0) + 1;
                 return acc;
               }, {})

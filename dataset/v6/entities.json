@@ -1,0 +1,3786 @@
+[
+  {
+    "id": "lang:machine_code",
+    "name": "Machine Code",
+    "entity_type": "language",
+    "first_release_year": 0,
+    "notes": "Root node: binary instructions executed directly by CPU. Foundation of all bootstrap chains.",
+    "cluster_hint": "roots",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "unspecified",
+      "paradigm": [
+        "low-level"
+      ],
+      "typing": "untyped",
+      "runtime_model": "native",
+      "self_hosting": false,
+      "garbage_collected": false,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:assembly",
+    "name": "Assembly",
+    "entity_type": "language",
+    "first_release_year": 1949,
+    "notes": "Low-level language with direct CPU instruction correspondence. First assembler ~1949.",
+    "cluster_hint": "roots",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "unspecified",
+      "paradigm": [
+        "low-level",
+        "imperative"
+      ],
+      "typing": "untyped",
+      "runtime_model": "native",
+      "self_hosting": false,
+      "garbage_collected": false,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:fortran",
+    "name": "Fortran",
+    "entity_type": "language",
+    "first_release_year": 1957,
+    "notes": "Oldest high-level language still in use. IBM. First compiler written in assembly, modern compilers self-hosting.",
+    "cluster_hint": "historical",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/fortran/fortran-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/fortran",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "Fortran",
+      "paradigm": [
+        "imperative",
+        "procedural"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": true,
+      "garbage_collected": false,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:lisp",
+    "name": "Lisp",
+    "entity_type": "language",
+    "first_release_year": 1958,
+    "notes": "John McCarthy. Second-oldest high-level language still used. Eval written in Lisp itself early on.",
+    "cluster_hint": "functional",
+    "company": null,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/4/48/Lisp_logo.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Lisp_logo.svg",
+    "logo_license": "CC BY-SA 4.0",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "functional",
+        "multi-paradigm"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "interpreted",
+      "self_hosting": true,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:cobol",
+    "name": "COBOL",
+    "entity_type": "language",
+    "first_release_year": 1959,
+    "notes": "English-like business language. First compiler 1960. Still runs massive financial systems.",
+    "cluster_hint": "historical",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cobol/cobol-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/cobol",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "imperative",
+        "procedural"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": 1980,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:algol",
+    "name": "ALGOL",
+    "entity_type": "language",
+    "first_release_year": 1958,
+    "notes": "ALGOL 58/60. Hugely influential. Inspired Pascal, C, and most imperative languages.",
+    "cluster_hint": "historical",
+    "company": null,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/c/cd/1965_ALGOL_Logotype.jpg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:1965_ALGOL_Logotype.jpg",
+    "logo_license": "CC BY-SA 3.0",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "Assembly",
+      "paradigm": [
+        "imperative",
+        "procedural"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:simula",
+    "name": "Simula",
+    "entity_type": "language",
+    "first_release_year": 1962,
+    "notes": "First OOP language. Introduced classes, objects, inheritance. Inspired Smalltalk and C++.",
+    "cluster_hint": "historical",
+    "company": null,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/d/d9/Simula_-_logo.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Simula_-_logo.svg",
+    "logo_license": "Public domain",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "ALGOL",
+      "paradigm": [
+        "object-oriented",
+        "imperative"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:bcpl",
+    "name": "BCPL",
+    "entity_type": "language",
+    "first_release_year": 1967,
+    "notes": "Basic Combined Programming Language. Martin Richards. Direct ancestor of B and C.",
+    "cluster_hint": "historical",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "unspecified",
+      "paradigm": [
+        "imperative",
+        "procedural"
+      ],
+      "typing": "untyped",
+      "runtime_model": "compiled",
+      "self_hosting": false,
+      "garbage_collected": false,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:b",
+    "name": "B",
+    "entity_type": "language",
+    "first_release_year": 1969,
+    "notes": "Ken Thompson at Bell Labs. Derived from BCPL. Direct predecessor of C.",
+    "cluster_hint": "historical",
+    "company": "Bell Labs",
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "BCPL",
+      "paradigm": [
+        "imperative",
+        "procedural"
+      ],
+      "typing": "untyped",
+      "runtime_model": "compiled",
+      "self_hosting": false,
+      "garbage_collected": false,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:pascal",
+    "name": "Pascal",
+    "entity_type": "language",
+    "first_release_year": 1970,
+    "notes": "Niklaus Wirth. P-code portable compiler bootstrapped itself. Influenced Ada and Delphi.",
+    "cluster_hint": "historical",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "imperative",
+        "procedural"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": true,
+      "garbage_collected": null,
+      "peak_year": 1985,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:smalltalk",
+    "name": "Smalltalk",
+    "entity_type": "language",
+    "first_release_year": 1972,
+    "notes": "Xerox PARC. Alan Kay, Dan Ingalls, Adele Goldberg. Smalltalk-80 partially self-hosting.",
+    "cluster_hint": "historical",
+    "company": "Xerox PARC",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/b/bf/Smalltalk_Balloon.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Smalltalk_Balloon.svg",
+    "logo_license": "CC BY-SA 4.0",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "object-oriented"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "vm",
+      "self_hosting": true,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:c",
+    "name": "C",
+    "entity_type": "language",
+    "first_release_year": 1972,
+    "notes": "Dennis Ritchie at Bell Labs. Bootstrapped from B. Self-hosting within first year. Foundation for dozens of languages.",
+    "cluster_hint": "systems",
+    "company": "Bell Labs",
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/c/c-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/c",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "imperative",
+        "procedural"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": true,
+      "garbage_collected": false,
+      "peak_year": null,
+      "current_users_estimate": "dominant"
+    }
+  },
+  {
+    "id": "lang:ml",
+    "name": "ML",
+    "entity_type": "language",
+    "first_release_year": 1973,
+    "notes": "Robin Milner at Edinburgh. First language with Hindley-Milner type inference. Ancestor of OCaml, SML, Haskell, F#.",
+    "cluster_hint": "functional",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "functional",
+        "imperative"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:scheme",
+    "name": "Scheme",
+    "entity_type": "language",
+    "first_release_year": 1975,
+    "notes": "Sussman and Steele. Minimalist Lisp dialect. Proper tail calls, first-class continuations.",
+    "cluster_hint": "functional",
+    "company": null,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/3/39/Lambda_lc.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Lambda_lc.svg",
+    "logo_license": "Public domain",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "functional",
+        "multi-paradigm"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "interpreted",
+      "self_hosting": true,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:prolog",
+    "name": "Prolog",
+    "entity_type": "language",
+    "first_release_year": 1972,
+    "notes": "Colmerauer and Roussel. SWI-Prolog written in C.",
+    "cluster_hint": "historical",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/prolog/prolog-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/prolog",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "logic",
+        "declarative"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "interpreted",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:ada",
+    "name": "Ada",
+    "entity_type": "language",
+    "first_release_year": 1980,
+    "notes": "DoD-commissioned. GNAT compiler (GCC-based) is self-hosting. Safety-critical systems.",
+    "cluster_hint": "systems",
+    "company": "U.S. Department of Defense",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/3/31/Ada_horizon_green_logo_with_slogan.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Ada_horizon_green_logo_with_slogan.svg",
+    "logo_license": "Public domain",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "Ada",
+      "paradigm": [
+        "imperative",
+        "object-oriented"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": true,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:cxx",
+    "name": "C++",
+    "entity_type": "language",
+    "first_release_year": 1983,
+    "notes": "Bjarne Stroustrup. First compiler (Cfront) translated C++ to C. GCC and Clang now primary implementations.",
+    "cluster_hint": "systems",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cplusplus/cplusplus-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/cplusplus",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "C++",
+      "paradigm": [
+        "object-oriented",
+        "imperative",
+        "generic"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": true,
+      "garbage_collected": false,
+      "peak_year": null,
+      "current_users_estimate": "dominant"
+    }
+  },
+  {
+    "id": "lang:objective_c",
+    "name": "Objective-C",
+    "entity_type": "language",
+    "first_release_year": 1984,
+    "notes": "Brad Cox and Tom Love. Smalltalk messaging added to C. Apple platform language until Swift.",
+    "cluster_hint": "systems",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/objectivec/objectivec-plain.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/objectivec",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "C++",
+      "paradigm": [
+        "object-oriented",
+        "imperative"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": "large"
+    }
+  },
+  {
+    "id": "lang:erlang",
+    "name": "Erlang",
+    "entity_type": "language",
+    "first_release_year": 1986,
+    "notes": "Ericsson. BEAM VM. Compiler self-hosting since ~1991. BEAM VM written in C.",
+    "cluster_hint": "functional",
+    "company": "Ericsson",
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/erlang/erlang-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/erlang",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "functional",
+        "concurrent"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "vm",
+      "self_hosting": true,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "moderate"
+    }
+  },
+  {
+    "id": "lang:perl",
+    "name": "Perl",
+    "entity_type": "language",
+    "first_release_year": 1987,
+    "notes": "Larry Wall. First release Dec 18 1987. Text processing and sysadmin. Influenced PHP and Ruby.",
+    "cluster_hint": "dynamic",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/perl/perl-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/perl",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "imperative",
+        "multi-paradigm"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "interpreted",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": 2000,
+      "current_users_estimate": "large"
+    }
+  },
+  {
+    "id": "lang:sml",
+    "name": "Standard ML",
+    "entity_type": "language",
+    "first_release_year": 1983,
+    "notes": "Standardized ML dialect. SML/NJ self-hosting. MLton whole-program compiler also in SML.",
+    "cluster_hint": "functional",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "functional",
+        "imperative"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": true,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:haskell",
+    "name": "Haskell",
+    "entity_type": "language",
+    "first_release_year": 1990,
+    "notes": "Pure lazy functional. GHC self-hosting written in Haskell. RTS written in C. Named after Haskell Curry.",
+    "cluster_hint": "functional",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/haskell/haskell-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/haskell",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "Haskell",
+      "paradigm": [
+        "functional"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": true,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "moderate"
+    }
+  },
+  {
+    "id": "lang:python",
+    "name": "Python",
+    "entity_type": "language",
+    "first_release_year": 1991,
+    "notes": "Guido van Rossum. CPython in C. PyPy alternative in RPython. Not self-hosting in standard distribution.",
+    "cluster_hint": "dynamic",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/python",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "imperative",
+        "object-oriented",
+        "functional"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "interpreted",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "dominant"
+    }
+  },
+  {
+    "id": "lang:common_lisp",
+    "name": "Common Lisp",
+    "entity_type": "language",
+    "first_release_year": 1984,
+    "notes": "ANSI standardized Lisp. SBCL self-hosting. CLOS object system included.",
+    "cluster_hint": "functional",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "Common Lisp",
+      "paradigm": [
+        "functional",
+        "multi-paradigm"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "compiled",
+      "self_hosting": true,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "moderate"
+    }
+  },
+  {
+    "id": "lang:ocaml",
+    "name": "OCaml",
+    "entity_type": "language",
+    "first_release_year": 1996,
+    "notes": "INRIA. Self-hosting compiler. Runtime in C and Assembly. Original Rust compiler (rustboot) written in OCaml.",
+    "cluster_hint": "functional",
+    "company": "INRIA",
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/ocaml/ocaml-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/ocaml",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "OCaml",
+      "paradigm": [
+        "functional",
+        "imperative",
+        "object-oriented"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": true,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "moderate"
+    }
+  },
+  {
+    "id": "lang:java",
+    "name": "Java",
+    "entity_type": "language",
+    "first_release_year": 1995,
+    "notes": "Sun Microsystems. javac self-hosting. HotSpot JVM in C++. Write-once-run-anywhere via JVM bytecode.",
+    "cluster_hint": "jvm",
+    "company": "Sun Microsystems",
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/java",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "Java",
+      "paradigm": [
+        "object-oriented",
+        "imperative"
+      ],
+      "typing": "static",
+      "runtime_model": "vm",
+      "self_hosting": true,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "dominant"
+    }
+  },
+  {
+    "id": "lang:javascript",
+    "name": "JavaScript",
+    "entity_type": "language",
+    "first_release_year": 1995,
+    "notes": "Brendan Eich at Netscape. Influenced by Self and Scheme. V8/SpiderMonkey/JavaScriptCore in C++.",
+    "cluster_hint": "dynamic",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/javascript",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "C++",
+      "paradigm": [
+        "imperative",
+        "object-oriented",
+        "functional"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "vm",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "dominant"
+    }
+  },
+  {
+    "id": "lang:ruby",
+    "name": "Ruby",
+    "entity_type": "language",
+    "first_release_year": 1995,
+    "notes": "Yukihiro Matsumoto. MRI/CRuby in C. JRuby on JVM. Influenced by Smalltalk, Perl, Python.",
+    "cluster_hint": "dynamic",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/ruby/ruby-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/ruby",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "object-oriented",
+        "imperative",
+        "functional"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "interpreted",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "large"
+    }
+  },
+  {
+    "id": "lang:php",
+    "name": "PHP",
+    "entity_type": "language",
+    "first_release_year": 1995,
+    "notes": "Rasmus Lerdorf. Zend Engine in C. Influenced by Perl and C.",
+    "cluster_hint": "dynamic",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/php/php-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/php",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "imperative",
+        "object-oriented"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "interpreted",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "dominant"
+    }
+  },
+  {
+    "id": "lang:r",
+    "name": "R",
+    "entity_type": "language",
+    "first_release_year": 1993,
+    "notes": "Ross Ihaka and Robert Gentleman. Statistical computing. C and Fortran implementation.",
+    "cluster_hint": "scientific",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/r/r-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/r",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "functional",
+        "imperative"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "interpreted",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "large"
+    }
+  },
+  {
+    "id": "lang:racket",
+    "name": "Racket",
+    "entity_type": "language",
+    "first_release_year": 1994,
+    "notes": "Originally PLT Scheme. Transitioned backend to Chez Scheme in 2019. Self-hosting.",
+    "cluster_hint": "functional",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/racket/racket-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/racket",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "Racket",
+      "paradigm": [
+        "functional",
+        "multi-paradigm"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "vm",
+      "self_hosting": true,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:csharp",
+    "name": "C#",
+    "entity_type": "language",
+    "first_release_year": 2000,
+    "notes": "Microsoft. Anders Hejlsberg. Roslyn (self-hosting since 2014) replaced earlier C++ compiler.",
+    "cluster_hint": "clr",
+    "company": "Microsoft",
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/csharp",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "C#",
+      "paradigm": [
+        "object-oriented",
+        "imperative",
+        "functional"
+      ],
+      "typing": "static",
+      "runtime_model": "vm",
+      "self_hosting": true,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "dominant"
+    }
+  },
+  {
+    "id": "lang:lua",
+    "name": "Lua",
+    "entity_type": "language",
+    "first_release_year": 1993,
+    "notes": "PUC-Rio. Written in ANSI C. LuaJIT JIT implementation also in C. Designed for embedding.",
+    "cluster_hint": "dynamic",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/lua/lua-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/lua",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "imperative",
+        "multi-paradigm"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "interpreted",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "moderate"
+    }
+  },
+  {
+    "id": "lang:d",
+    "name": "D",
+    "entity_type": "language",
+    "first_release_year": 2001,
+    "notes": "Walter Bright. DMD reference compiler now written in D (bootstrapped from C++). Influenced by C++, Java, Python.",
+    "cluster_hint": "systems",
+    "company": null,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/2/24/D_Programming_Language_logo.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:D_Programming_Language_logo.svg",
+    "logo_license": "Public domain",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "D",
+      "paradigm": [
+        "imperative",
+        "object-oriented",
+        "functional"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": true,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:scala",
+    "name": "Scala",
+    "entity_type": "language",
+    "first_release_year": 2003,
+    "notes": "Martin Odersky at EPFL. Scala 3 (Dotty) bootstrapped. Runs on JVM. Combines OOP and FP.",
+    "cluster_hint": "jvm",
+    "company": "École Polytechnique Fédérale de Lausanne",
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/scala/scala-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/scala",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "Scala",
+      "paradigm": [
+        "object-oriented",
+        "functional"
+      ],
+      "typing": "static",
+      "runtime_model": "vm",
+      "self_hosting": true,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "large"
+    }
+  },
+  {
+    "id": "lang:fsharp",
+    "name": "F#",
+    "entity_type": "language",
+    "first_release_year": 2005,
+    "notes": "Don Syme at Microsoft Research. Derived from OCaml. Initial compiler in OCaml, rewritten in F# for self-hosting. Runs on .NET.",
+    "cluster_hint": "clr",
+    "company": "Microsoft",
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/fsharp/fsharp-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/fsharp",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "F#",
+      "paradigm": [
+        "functional",
+        "object-oriented",
+        "imperative"
+      ],
+      "typing": "static",
+      "runtime_model": "vm",
+      "self_hosting": true,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "moderate"
+    }
+  },
+  {
+    "id": "lang:clojure",
+    "name": "Clojure",
+    "entity_type": "language",
+    "first_release_year": 2007,
+    "notes": "Rich Hickey. Lisp dialect for JVM. Compiler in Java (intentional). ClojureScript compiles to JS.",
+    "cluster_hint": "jvm",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/clojure/clojure-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/clojure",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "Java",
+      "paradigm": [
+        "functional",
+        "multi-paradigm"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "vm",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "moderate"
+    }
+  },
+  {
+    "id": "lang:go",
+    "name": "Go",
+    "entity_type": "language",
+    "first_release_year": 2009,
+    "notes": "Google. Rob Pike, Ken Thompson, Robert Griesemer. Original compiler in C, rewritten in Go in version 1.5 (2015).",
+    "cluster_hint": "systems",
+    "company": "Google",
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/go/go-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/go",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "Go",
+      "paradigm": [
+        "imperative",
+        "concurrent"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": true,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "large"
+    }
+  },
+  {
+    "id": "lang:coffeescript",
+    "name": "CoffeeScript",
+    "entity_type": "language",
+    "first_release_year": 2009,
+    "notes": "Jeremy Ashkenas. Transpiles to JavaScript. Self-hosting compiler. Influenced by Python, Ruby, Haskell.",
+    "cluster_hint": "dynamic",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/coffeescript/coffeescript-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/coffeescript",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "CoffeeScript",
+      "paradigm": [
+        "imperative",
+        "object-oriented",
+        "functional"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "transpiled",
+      "self_hosting": true,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:rust",
+    "name": "Rust",
+    "entity_type": "language",
+    "first_release_year": 2010,
+    "notes": "Mozilla. Graydon Hoare. First appeared publicly in 2010; 1.0 released in 2015. Original compiler (rustboot) in OCaml. Rewritten in Rust ~2011. LLVM backend.",
+    "cluster_hint": "systems",
+    "company": "Mozilla",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/d/d5/Rust_programming_language_black_logo.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Rust_programming_language_black_logo.svg",
+    "logo_license": "CC BY 4.0; trademark retained by Rust Foundation",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "Rust",
+      "paradigm": [
+        "systems",
+        "imperative",
+        "functional"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": true,
+      "garbage_collected": false,
+      "peak_year": null,
+      "current_users_estimate": "large"
+    }
+  },
+  {
+    "id": "lang:kotlin",
+    "name": "Kotlin",
+    "entity_type": "language",
+    "first_release_year": 2016,
+    "notes": "JetBrains. First compiler in Java, self-hosting. K2 compiler frontend released 2024. JVM, JS, Native targets.",
+    "cluster_hint": "jvm",
+    "company": "JetBrains",
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kotlin/kotlin-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/kotlin",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "Kotlin",
+      "paradigm": [
+        "object-oriented",
+        "functional"
+      ],
+      "typing": "static",
+      "runtime_model": "vm",
+      "self_hosting": true,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "large"
+    }
+  },
+  {
+    "id": "lang:typescript",
+    "name": "TypeScript",
+    "entity_type": "language",
+    "first_release_year": 2012,
+    "notes": "Microsoft. Self-hosting tsc. TypeScript 7.0 will rewrite compiler in Go for 10x performance.",
+    "cluster_hint": "dynamic",
+    "company": "Microsoft",
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/typescript",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "TypeScript",
+      "paradigm": [
+        "object-oriented",
+        "functional",
+        "imperative"
+      ],
+      "typing": "static",
+      "runtime_model": "transpiled",
+      "self_hosting": true,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "dominant"
+    }
+  },
+  {
+    "id": "lang:dart",
+    "name": "Dart",
+    "entity_type": "language",
+    "first_release_year": 2011,
+    "notes": "Google. Dart SDK and VM in C++. Native, JS, WASM targets. Primary language for Flutter.",
+    "cluster_hint": "dynamic",
+    "company": "Google",
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/dart/dart-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/dart",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "C++",
+      "paradigm": [
+        "object-oriented",
+        "imperative"
+      ],
+      "typing": "static",
+      "runtime_model": "vm",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "large"
+    }
+  },
+  {
+    "id": "lang:elixir",
+    "name": "Elixir",
+    "entity_type": "language",
+    "first_release_year": 2012,
+    "notes": "José Valim. Runs on BEAM. Bootstrap compiler in Erlang, then self-hosting. Deliberately keeps Erlang bootstrap.",
+    "cluster_hint": "functional",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/elixir/elixir-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/elixir",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "Elixir",
+      "paradigm": [
+        "functional",
+        "concurrent"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "vm",
+      "self_hosting": true,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "moderate"
+    }
+  },
+  {
+    "id": "lang:elm",
+    "name": "Elm",
+    "entity_type": "language",
+    "first_release_year": 2012,
+    "notes": "Evan Czaplicki. Compiler written in Haskell. Compiles to JavaScript.",
+    "cluster_hint": "functional",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/elm/elm-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/elm",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "Haskell",
+      "paradigm": [
+        "functional"
+      ],
+      "typing": "static",
+      "runtime_model": "transpiled",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:julia",
+    "name": "Julia",
+    "entity_type": "language",
+    "first_release_year": 2012,
+    "notes": "MIT. Jeff Bezanson et al. LLVM JIT. Parser originally in FemtoLisp, transitioning to Julia as of v1.10.",
+    "cluster_hint": "scientific",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/julia/julia-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/julia",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "Julia",
+      "paradigm": [
+        "imperative",
+        "functional",
+        "scientific"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "jit",
+      "self_hosting": true,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "moderate"
+    }
+  },
+  {
+    "id": "lang:swift",
+    "name": "Swift",
+    "entity_type": "language",
+    "first_release_year": 2014,
+    "notes": "Apple. Chris Lattner. Original compiler in C++/LLVM. Significant parts now in Swift. Contested self-hosting status.",
+    "cluster_hint": "systems",
+    "company": "Apple",
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/swift/swift-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/swift",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "Swift",
+      "paradigm": [
+        "object-oriented",
+        "functional",
+        "imperative"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": true,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "large"
+    }
+  },
+  {
+    "id": "lang:crystal",
+    "name": "Crystal",
+    "entity_type": "language",
+    "first_release_year": 2014,
+    "notes": "Ruby-inspired syntax with static typing. Bootstrapped from Ruby. Fully self-hosting.",
+    "cluster_hint": "systems",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/crystal/crystal-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/crystal",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "Crystal",
+      "paradigm": [
+        "object-oriented",
+        "imperative"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": true,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:purescript",
+    "name": "PureScript",
+    "entity_type": "language",
+    "first_release_year": 2013,
+    "notes": "Phil Freeman. Compiler in Haskell. Compiles to JavaScript.",
+    "cluster_hint": "functional",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/purescript/purescript-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/purescript",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "Haskell",
+      "paradigm": [
+        "functional"
+      ],
+      "typing": "static",
+      "runtime_model": "transpiled",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:nim",
+    "name": "Nim",
+    "entity_type": "language",
+    "first_release_year": 2008,
+    "notes": "Andreas Rumpf. Self-hosting from first release year (2008). Transpiles to C/C++/JS. Influenced by Python, Ada, Modula.",
+    "cluster_hint": "systems",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nim/nim-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/nim",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "Nim",
+      "paradigm": [
+        "imperative",
+        "functional",
+        "object-oriented"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": true,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:reasonml",
+    "name": "ReasonML",
+    "entity_type": "language",
+    "first_release_year": 2016,
+    "notes": "Facebook/Meta. Alternative syntax for OCaml. Tooling in OCaml. Influenced by JavaScript and OCaml.",
+    "cluster_hint": "functional",
+    "company": null,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/a/af/Reason-logo.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Reason-logo.svg",
+    "logo_license": "MIT",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "OCaml",
+      "paradigm": [
+        "functional",
+        "object-oriented"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:zig",
+    "name": "Zig",
+    "entity_type": "language",
+    "first_release_year": 2016,
+    "notes": "Andrew Kelley. Original compiler in C++. Self-hosting 2022. Dropped C++ implementation. Own codegen option.",
+    "cluster_hint": "systems",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/zig/zig-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/zig",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "Zig",
+      "paradigm": [
+        "imperative",
+        "systems"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": true,
+      "garbage_collected": false,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:v",
+    "name": "V",
+    "entity_type": "language",
+    "first_release_year": 2019,
+    "notes": "Alexander Medvednikov. Influenced by Go. Self-hosting compiler. Transpiles to C.",
+    "cluster_hint": "systems",
+    "company": null,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/e/e8/V_Logo_SVG.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:V_Logo_SVG.svg",
+    "logo_license": "MIT",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "V",
+      "paradigm": [
+        "imperative",
+        "systems"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": true,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:carbon",
+    "name": "Carbon",
+    "entity_type": "language",
+    "first_release_year": 2022,
+    "notes": "Google. Experimental C++ successor. Compiler in C++. LLVM backend. Not yet self-hosting.",
+    "cluster_hint": "systems",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/carbon/carbon-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/carbon",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "C++",
+      "paradigm": [
+        "imperative",
+        "systems"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:mojo",
+    "name": "Mojo",
+    "entity_type": "language",
+    "first_release_year": 2023,
+    "notes": "Modular AI. Python-superset for AI/ML. MLIR/LLVM backend. Not yet self-hosting.",
+    "cluster_hint": "scientific",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "C++",
+      "paradigm": [
+        "imperative",
+        "systems",
+        "scientific"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:groovy",
+    "name": "Groovy",
+    "entity_type": "language",
+    "first_release_year": 2003,
+    "notes": "Apache. JVM language. Compiler intentionally in Java. Influenced by Python, Ruby, Smalltalk.",
+    "cluster_hint": "jvm",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/groovy/groovy-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/groovy",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "Java",
+      "paradigm": [
+        "object-oriented",
+        "functional"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "vm",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "moderate"
+    }
+  },
+  {
+    "id": "lang:vb_net",
+    "name": "Visual Basic .NET",
+    "entity_type": "language",
+    "first_release_year": 2002,
+    "notes": "Microsoft. Roslyn handles both C# and VB.NET. Runs on .NET CLR.",
+    "cluster_hint": "clr",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/visualbasic/visualbasic-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/visualbasic",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "C#",
+      "paradigm": [
+        "object-oriented",
+        "imperative"
+      ],
+      "typing": "static",
+      "runtime_model": "vm",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "tool:gcc",
+    "name": "GCC",
+    "entity_type": "compiler",
+    "first_release_year": 1987,
+    "notes": "GNU Compiler Collection. Originally in C. Switched to C++ in 2012. Self-hosting.",
+    "cluster_hint": "tools",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/gcc/gcc-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/gcc",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon"
+  },
+  {
+    "id": "tool:llvm",
+    "name": "LLVM",
+    "entity_type": "virtual_machine",
+    "first_release_year": 2003,
+    "notes": "Low Level Virtual Machine. Chris Lattner. Backend for Rust, Swift, Crystal, Zig, Julia, Clang.",
+    "cluster_hint": "tools",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/llvm/llvm-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/llvm",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon"
+  },
+  {
+    "id": "tool:clang",
+    "name": "Clang",
+    "entity_type": "virtual_machine",
+    "first_release_year": 2007,
+    "notes": "LLVM C/C++/Objective-C frontend. Written in C++. Apple-backed.",
+    "cluster_hint": "tools",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/llvm/llvm-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/llvm",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "proxy"
+  },
+  {
+    "id": "tool:hotspot",
+    "name": "HotSpot JVM",
+    "entity_type": "compiler",
+    "first_release_year": 1999,
+    "notes": "Sun/Oracle JVM. C++. JIT compiler. OpenJDK primary JVM.",
+    "cluster_hint": "tools",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/java",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "proxy"
+  },
+  {
+    "id": "tool:dotnet_runtime",
+    "name": ".NET Runtime",
+    "entity_type": "runtime",
+    "first_release_year": 2002,
+    "notes": "CoreCLR. Microsoft. C++ and Assembly. Open-sourced 2014.",
+    "cluster_hint": "tools",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/dotnetcore/dotnetcore-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/dotnetcore",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon"
+  },
+  {
+    "id": "tool:roslyn",
+    "name": "Roslyn",
+    "entity_type": "compiler",
+    "first_release_year": 2014,
+    "notes": ".NET Compiler Platform. Handles C# and VB.NET. Rewrote C++ compiler in C#. Open-sourced 2014.",
+    "cluster_hint": "tools",
+    "company": null,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/2/2a/Roslyn.png",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Roslyn.png",
+    "logo_license": "MIT",
+    "logo_kind": "wikimedia"
+  },
+  {
+    "id": "tool:v8",
+    "name": "V8",
+    "entity_type": "virtual_machine",
+    "first_release_year": 2008,
+    "notes": "Google JavaScript engine. Powers Chrome and Node.js. Written in C++.",
+    "cluster_hint": "tools",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/v8/v8-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/v8",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon"
+  },
+  {
+    "id": "tool:spidermonkey",
+    "name": "SpiderMonkey",
+    "entity_type": "virtual_machine",
+    "first_release_year": 1996,
+    "notes": "Mozilla JavaScript engine. Original C by Brendan Eich. Now C++ and Rust.",
+    "cluster_hint": "tools",
+    "company": null,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/a/ae/SpiderMonkey_Logo.png",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:SpiderMonkey_Logo.png",
+    "logo_license": "MPL 2",
+    "logo_kind": "wikimedia"
+  },
+  {
+    "id": "tool:javascriptcore",
+    "name": "JavaScriptCore",
+    "entity_type": "virtual_machine",
+    "first_release_year": 2001,
+    "notes": "Apple/WebKit JavaScript engine. C++ and Assembly. Powers Safari.",
+    "cluster_hint": "tools",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/apple/apple-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/apple",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "proxy"
+  },
+  {
+    "id": "tool:ghc",
+    "name": "GHC",
+    "entity_type": "compiler",
+    "first_release_year": 1992,
+    "notes": "Glasgow Haskell Compiler. Primary Haskell implementation. Self-hosting. RTS in C.",
+    "cluster_hint": "tools",
+    "company": null,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/2/2b/Haskell-logo.png",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Haskell-logo.png",
+    "logo_license": "Public domain",
+    "logo_kind": "wikimedia"
+  },
+  {
+    "id": "tool:mrustc",
+    "name": "mrustc",
+    "entity_type": "compiler",
+    "first_release_year": 2016,
+    "notes": "Alternative Rust compiler in C++. Used for bootstrapping Rust from non-Rust sources.",
+    "cluster_hint": "tools",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none"
+  },
+  {
+    "id": "tool:beam",
+    "name": "BEAM VM",
+    "entity_type": "virtual_machine",
+    "first_release_year": 1986,
+    "notes": "Bogdan/Björn's Erlang Abstract Machine. Written in C. Runs Erlang, Elixir, Gleam, LFE.",
+    "cluster_hint": "tools",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/erlang/erlang-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/erlang",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "proxy"
+  },
+  {
+    "id": "tool:chez_scheme",
+    "name": "Chez Scheme",
+    "entity_type": "compiler",
+    "first_release_year": 1985,
+    "notes": "R. Kent Dybvig. Self-hosting Scheme compiler using nanopass framework. Now powers Racket backend.",
+    "cluster_hint": "tools",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none"
+  },
+  {
+    "id": "tool:femtolisp",
+    "name": "FemtoLisp",
+    "entity_type": "toolchain",
+    "first_release_year": 2009,
+    "notes": "Lightweight Scheme-like Lisp by Jeff Bezanson. Used as Julia's parser frontend until v1.10.",
+    "cluster_hint": "tools",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none"
+  },
+  {
+    "id": "lang:flow_matic",
+    "name": "FLOW-MATIC",
+    "entity_type": "language",
+    "first_release_year": 1955,
+    "notes": "First English-like data processing language, direct predecessor to COBOL",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "Assembly",
+      "paradigm": [
+        "imperative"
+      ],
+      "typing": "static",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:comtran",
+    "name": "COMTRAN",
+    "entity_type": "language",
+    "first_release_year": 1957,
+    "notes": "IBM's Commercial Translator, co-predecessor to COBOL",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "Assembly",
+      "paradigm": [
+        "imperative"
+      ],
+      "typing": "static",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:planner",
+    "name": "Planner",
+    "entity_type": "language",
+    "first_release_year": 1969,
+    "notes": "Logic programming precursor that directly influenced Prolog's design",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "Lisp",
+      "paradigm": [
+        "logic",
+        "procedural"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:lazy_ml",
+    "name": "Lazy ML",
+    "entity_type": "language",
+    "first_release_year": 1984,
+    "notes": "Lazy functional language used as initial implementation language for GHC prototype (1989)",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "unspecified",
+      "paradigm": [
+        "functional"
+      ],
+      "typing": "static",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:newsqueak",
+    "name": "Newsqueak",
+    "entity_type": "language",
+    "first_release_year": 1988,
+    "notes": "Concurrent programming language by Rob Pike, influenced Go's concurrency model",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "concurrent",
+        "imperative"
+      ],
+      "typing": "static",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:limbo",
+    "name": "Limbo",
+    "entity_type": "language",
+    "first_release_year": 1995,
+    "notes": "Systems programming language for the Inferno OS, influenced Go",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "concurrent",
+        "imperative"
+      ],
+      "typing": "static",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:oberon2",
+    "name": "Oberon-2",
+    "entity_type": "language",
+    "first_release_year": 1991,
+    "notes": "Extension of Oberon with type-bound procedures, influenced Go",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/9/97/Oberon_programming_language_logo.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Oberon_programming_language_logo.svg",
+    "logo_license": "Public domain",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "Oberon",
+      "paradigm": [
+        "imperative",
+        "object-oriented"
+      ],
+      "typing": "static",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:alef",
+    "name": "Alef",
+    "entity_type": "language",
+    "first_release_year": 1992,
+    "notes": "Concurrent systems language for Plan 9, influenced Go and Rust",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "concurrent",
+        "imperative"
+      ],
+      "typing": "static",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:cyclone",
+    "name": "Cyclone",
+    "entity_type": "language",
+    "first_release_year": 2002,
+    "notes": "Safe dialect of C, influenced Rust's ownership and region-based memory system",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "imperative",
+        "functional"
+      ],
+      "typing": "static",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:clu",
+    "name": "CLU",
+    "entity_type": "language",
+    "first_release_year": 1975,
+    "notes": "Pioneer in data abstraction, influenced iterators and exception handling in many languages including Rust",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "Assembly",
+      "paradigm": [
+        "imperative",
+        "object-oriented"
+      ],
+      "typing": "static",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:gleam",
+    "name": "Gleam",
+    "entity_type": "language",
+    "first_release_year": 2019,
+    "notes": "Functional language for Erlang VM, influenced by Rust",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/gleam/gleam-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/gleam",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "Rust",
+      "paradigm": [
+        "functional"
+      ],
+      "typing": "static",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:oberon",
+    "name": "Oberon",
+    "entity_type": "language",
+    "first_release_year": 1987,
+    "notes": "Successor to Modula-2 by Niklaus Wirth, influenced Go",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/9/97/Oberon_programming_language_logo.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Oberon_programming_language_logo.svg",
+    "logo_license": "Public domain",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "Modula-2",
+      "paradigm": [
+        "imperative",
+        "object-oriented"
+      ],
+      "typing": "static",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:abc",
+    "name": "ABC",
+    "entity_type": "language",
+    "first_release_year": 1987,
+    "notes": "Teaching language developed at CWI, primary inspiration for Python",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "imperative",
+        "procedural"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:modula3",
+    "name": "Modula-3",
+    "entity_type": "language",
+    "first_release_year": 1988,
+    "notes": "Systems programming language, influenced Python's module and exception system",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/e/ed/M3Logo.gif",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:M3Logo.gif",
+    "logo_license": "Public domain",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "imperative",
+        "object-oriented",
+        "concurrent"
+      ],
+      "typing": "static",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:icon",
+    "name": "Icon",
+    "entity_type": "language",
+    "first_release_year": 1977,
+    "notes": "High-level language with goal-directed evaluation, influenced Python's generators",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "imperative",
+        "functional"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:dylan",
+    "name": "Dylan",
+    "entity_type": "language",
+    "first_release_year": 1992,
+    "notes": "Dynamic language influenced Python's object model",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "object-oriented",
+        "functional"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:modula2",
+    "name": "Modula-2",
+    "entity_type": "language",
+    "first_release_year": 1978,
+    "notes": "Successor to Pascal with modules, influenced Go and many systems languages",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "Pascal",
+      "paradigm": [
+        "imperative",
+        "modular"
+      ],
+      "typing": "static",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:self",
+    "name": "Self",
+    "entity_type": "language",
+    "first_release_year": 1987,
+    "notes": "Prototype-based OOP language, directly influenced JavaScript's object model",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/8/88/Self-logo.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Self-logo.svg",
+    "logo_license": "CC BY-SA 3.0",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "C++",
+      "paradigm": [
+        "object-oriented",
+        "prototype-based"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:miranda",
+    "name": "Miranda",
+    "entity_type": "language",
+    "first_release_year": 1985,
+    "notes": "Lazy functional language that directly inspired Haskell",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "functional"
+      ],
+      "typing": "static",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:matlab",
+    "name": "MATLAB",
+    "entity_type": "language",
+    "first_release_year": 1984,
+    "notes": "Matrix-oriented language for scientific computing, influenced Julia",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/matlab/matlab-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/matlab",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "imperative",
+        "array"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:idris",
+    "name": "Idris",
+    "entity_type": "language",
+    "first_release_year": 2011,
+    "notes": "Dependently typed functional language inspired by Haskell",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "Haskell",
+      "paradigm": [
+        "functional",
+        "dependent-typed"
+      ],
+      "typing": "static",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:agda",
+    "name": "Agda",
+    "entity_type": "language",
+    "first_release_year": 2007,
+    "notes": "Dependently typed proof assistant and programming language",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "Haskell",
+      "paradigm": [
+        "functional",
+        "proof-assistant"
+      ],
+      "typing": "static",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:cython",
+    "name": "Cython",
+    "entity_type": "language",
+    "first_release_year": 2007,
+    "notes": "Superset of Python that compiles to C for performance",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/5/58/Cython_logo.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Cython_logo.svg",
+    "logo_license": "Apache License 2.0",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "imperative"
+      ],
+      "typing": "static",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:apl",
+    "name": "APL",
+    "entity_type": "language",
+    "first_release_year": 1966,
+    "notes": "Array programming language with concise notation, influenced many scientific languages",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/apl/apl-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/apl",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "array",
+        "functional"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:delphi",
+    "name": "Delphi",
+    "entity_type": "language",
+    "first_release_year": 1995,
+    "notes": "Object Pascal dialect for RAD, predecessor to C# design patterns",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/delphi/delphi-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/delphi",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "Pascal",
+      "paradigm": [
+        "imperative",
+        "object-oriented"
+      ],
+      "typing": "static",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:j",
+    "name": "J",
+    "entity_type": "language",
+    "first_release_year": 1990,
+    "notes": "Successor to APL by its creator, using ASCII characters",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "array",
+        "functional"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:mercury",
+    "name": "Mercury",
+    "entity_type": "language",
+    "first_release_year": 1995,
+    "notes": "Purely declarative logic language, statically typed descendant of Prolog",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "Prolog",
+      "paradigm": [
+        "logic",
+        "functional"
+      ],
+      "typing": "static",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:algol68",
+    "name": "ALGOL 68",
+    "entity_type": "language",
+    "first_release_year": 1968,
+    "notes": "Revision of ALGOL 60, influenced C and Python",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "Assembly",
+      "paradigm": [
+        "imperative"
+      ],
+      "typing": "static",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:pl1",
+    "name": "PL/I",
+    "entity_type": "language",
+    "first_release_year": 1964,
+    "notes": "General-purpose IBM language combining Fortran and COBOL features",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "Assembly",
+      "paradigm": [
+        "imperative",
+        "procedural"
+      ],
+      "typing": "static",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:bash",
+    "name": "Bash",
+    "entity_type": "language",
+    "first_release_year": 1989,
+    "notes": "Unix shell and scripting language, GNU replacement for Bourne shell",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bash/bash-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/bash",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "scripting",
+        "imperative"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:tcl",
+    "name": "Tcl",
+    "entity_type": "language",
+    "first_release_year": 1988,
+    "notes": "Scripting language for embedding in applications",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "scripting",
+        "imperative"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:awk",
+    "name": "AWK",
+    "entity_type": "language",
+    "first_release_year": 1977,
+    "notes": "Text processing language, influenced Perl",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/awk/awk-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/awk",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "data-driven",
+        "scripting"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:sh",
+    "name": "Bourne Shell",
+    "entity_type": "language",
+    "first_release_year": 1979,
+    "notes": "Original Unix shell, predecessor to Bash",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bash/bash-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/bash",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "proxy",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "scripting"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:angular",
+    "name": "Angular",
+    "entity_type": "language",
+    "first_release_year": 2016,
+    "notes": "TypeScript-based web framework by Google",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/angular/angular-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/angular",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "TypeScript",
+      "paradigm": [
+        "declarative",
+        "object-oriented"
+      ],
+      "typing": "static",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:luajit",
+    "name": "LuaJIT",
+    "entity_type": "language",
+    "first_release_year": 2005,
+    "notes": "JIT compiler for Lua, significantly faster than standard Lua",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/lua/lua-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/lua",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "proxy",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "scripting",
+        "imperative"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:s",
+    "name": "S",
+    "entity_type": "language",
+    "first_release_year": 1976,
+    "notes": "Statistical computing language, inspired R",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "statistical",
+        "functional"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:pharo",
+    "name": "Pharo",
+    "entity_type": "language",
+    "first_release_year": 2008,
+    "notes": "Modern Smalltalk dialect focused on live programming",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/6/6c/Pharo_Logo_v3.0.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Pharo_Logo_v3.0.svg",
+    "logo_license": "MIT",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "object-oriented"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:guile",
+    "name": "GNU Guile",
+    "entity_type": "language",
+    "first_release_year": 1993,
+    "notes": "GNU's official scripting language, a Scheme dialect",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/b/b3/GNU-Guile-logo.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:GNU-Guile-logo.svg",
+    "logo_license": "CC BY-SA 4.0",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "functional",
+        "scripting"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:mypy",
+    "name": "mypy",
+    "entity_type": "language",
+    "first_release_year": 2012,
+    "notes": "Optional static type checker for Python",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "Python",
+      "paradigm": [
+        "static-analysis"
+      ],
+      "typing": "static",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:freepascal",
+    "name": "Free Pascal",
+    "entity_type": "language",
+    "first_release_year": 1993,
+    "notes": "Open-source Pascal and Object Pascal compiler",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/8/8f/FPClogogif.gif",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:FPClogogif.gif",
+    "logo_license": "GPL",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "Pascal",
+      "paradigm": [
+        "imperative",
+        "object-oriented"
+      ],
+      "typing": "static",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:fortran95",
+    "name": "Fortran 95",
+    "entity_type": "language",
+    "first_release_year": 1997,
+    "notes": "Revised Fortran standard with improved features",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/b/b8/Fortran_logo.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Fortran_logo.svg",
+    "logo_license": "Public domain",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "imperative",
+        "array"
+      ],
+      "typing": "static",
+      "runtime_model": "none",
+      "self_hosting": false,
+      "garbage_collected": null,
+      "peak_year": null,
+      "current_users_estimate": null
+    }
+  },
+  {
+    "id": "lang:raku",
+    "name": "Raku",
+    "entity_type": "language",
+    "first_release_year": 2015,
+    "notes": "Formerly Perl 6. Reference implementation Rakudo runs on the MoarVM virtual machine.",
+    "cluster_hint": "dynamic",
+    "company": null,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/8/85/Camelia.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Camelia.svg",
+    "logo_license": "Artistic 2.0",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "Rakudo / MoarVM",
+      "paradigm": [
+        "multi-paradigm",
+        "functional",
+        "object-oriented",
+        "concurrent"
+      ],
+      "typing": "gradual",
+      "runtime_model": "vm",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:hack",
+    "name": "Hack",
+    "entity_type": "language",
+    "first_release_year": 2014,
+    "notes": "Facebook/Meta dialect of PHP for HHVM, adding gradual static typing.",
+    "cluster_hint": "dynamic",
+    "company": "Meta",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/5/52/Webysther_20160330_-_Hack_%28language%29.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Webysther_20160330_-_Hack_(language).svg",
+    "logo_license": "Public domain",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "HHVM (C++)",
+      "paradigm": [
+        "multi-paradigm",
+        "object-oriented",
+        "functional"
+      ],
+      "typing": "gradual",
+      "runtime_model": "jit",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "moderate"
+    }
+  },
+  {
+    "id": "lang:rescript",
+    "name": "ReScript",
+    "entity_type": "language",
+    "first_release_year": 2020,
+    "notes": "Typed language that compiles to JavaScript; evolved from BuckleScript and ReasonML, built on OCaml.",
+    "cluster_hint": "functional",
+    "company": null,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/9/92/Rescript-logo.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Rescript-logo.svg",
+    "logo_license": "MIT",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "OCaml",
+      "paradigm": [
+        "functional"
+      ],
+      "typing": "static",
+      "runtime_model": "transpiled",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:vala",
+    "name": "Vala",
+    "entity_type": "language",
+    "first_release_year": 2006,
+    "notes": "GNOME language that compiles to C using GObject; syntax strongly influenced by C#.",
+    "cluster_hint": "systems",
+    "company": null,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/e/e4/Vala_Logo_New.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Vala_Logo_New.svg",
+    "logo_license": "MIT",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "Vala / C",
+      "paradigm": [
+        "object-oriented",
+        "imperative"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": true,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:eiffel",
+    "name": "Eiffel",
+    "entity_type": "language",
+    "first_release_year": 1986,
+    "notes": "Introduced Design by Contract; influenced C#, Ada 2012, and D.",
+    "cluster_hint": "other",
+    "company": "Eiffel Software",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Eiffel_logo.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Eiffel_logo.svg",
+    "logo_license": "Public domain",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "Eiffel / C",
+      "paradigm": [
+        "object-oriented"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": true,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:forth",
+    "name": "Forth",
+    "entity_type": "language",
+    "first_release_year": 1970,
+    "notes": "Stack-based, concatenative language; influenced PostScript, RPL, and Factor.",
+    "cluster_hint": "historical",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "Assembly",
+      "paradigm": [
+        "imperative",
+        "procedural",
+        "concurrent"
+      ],
+      "typing": "none",
+      "runtime_model": "interpreted",
+      "self_hosting": true,
+      "garbage_collected": false,
+      "peak_year": 1985,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:solidity",
+    "name": "Solidity",
+    "entity_type": "language",
+    "first_release_year": 2014,
+    "notes": "Smart-contract language compiling to Ethereum Virtual Machine bytecode; influenced by C++, Python, and JavaScript.",
+    "cluster_hint": "other",
+    "company": "Ethereum Foundation",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/9/98/Solidity_logo.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Solidity_logo.svg",
+    "logo_license": "CC BY-SA 3.0",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "C++",
+      "paradigm": [
+        "object-oriented",
+        "imperative"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": false,
+      "garbage_collected": false,
+      "peak_year": null,
+      "current_users_estimate": "moderate"
+    }
+  },
+  {
+    "id": "lang:io",
+    "name": "Io",
+    "entity_type": "language",
+    "first_release_year": 2002,
+    "notes": "Prototype-based language inspired by Smalltalk, Self, NewtonScript, and Lua.",
+    "cluster_hint": "dynamic",
+    "company": null,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/2/26/Io-logo.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Io-logo.svg",
+    "logo_license": "Public domain",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "prototype-based",
+        "object-oriented",
+        "concurrent"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "interpreted",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:clean",
+    "name": "Clean",
+    "entity_type": "language",
+    "first_release_year": 1987,
+    "notes": "Lazy functional language with uniqueness types; influenced by Miranda; parallels Haskell.",
+    "cluster_hint": "functional",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "Clean / C",
+      "paradigm": [
+        "functional"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": true,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:occam",
+    "name": "occam",
+    "entity_type": "language",
+    "first_release_year": 1983,
+    "notes": "Based on Hoare's CSP for the transputer; its concurrency model influenced later languages.",
+    "cluster_hint": "historical",
+    "company": "Inmos",
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "Assembly",
+      "paradigm": [
+        "concurrent",
+        "imperative"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": false,
+      "garbage_collected": false,
+      "peak_year": 1990,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:snobol",
+    "name": "SNOBOL",
+    "entity_type": "language",
+    "first_release_year": 1962,
+    "notes": "String-processing language from Bell Labs; influenced Icon and later pattern-matching features.",
+    "cluster_hint": "historical",
+    "company": "Bell Labs",
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "Assembly",
+      "paradigm": [
+        "imperative",
+        "scripting"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "interpreted",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": 1975,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:speedcoding",
+    "name": "Speedcoding",
+    "entity_type": "language",
+    "first_release_year": 1953,
+    "notes": "Early high-level interpretive system by John Backus for the IBM 701; informed the later design of Fortran.",
+    "cluster_hint": "roots",
+    "company": "IBM",
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "Machine code",
+      "paradigm": [
+        "imperative"
+      ],
+      "typing": "none",
+      "runtime_model": "interpreted",
+      "self_hosting": false,
+      "garbage_collected": false,
+      "peak_year": 1955,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:basic",
+    "name": "BASIC",
+    "entity_type": "language",
+    "first_release_year": 1964,
+    "notes": "Dartmouth BASIC, designed for accessibility; influenced by FORTRAN and ALGOL; spawned many dialects including Visual Basic.",
+    "cluster_hint": "historical",
+    "company": "Dartmouth College",
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "FORTRAN / Assembly",
+      "paradigm": [
+        "imperative",
+        "procedural"
+      ],
+      "typing": "weak",
+      "runtime_model": "interpreted",
+      "self_hosting": false,
+      "garbage_collected": false,
+      "peak_year": 1985,
+      "current_users_estimate": "moderate"
+    }
+  },
+  {
+    "id": "lang:logo",
+    "name": "Logo",
+    "entity_type": "language",
+    "first_release_year": 1967,
+    "notes": "Educational language with turtle graphics; a Lisp dialect that influenced Scratch.",
+    "cluster_hint": "historical",
+    "company": "BBN",
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "Lisp",
+      "paradigm": [
+        "functional",
+        "imperative"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "interpreted",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": 1985,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:hope",
+    "name": "Hope",
+    "entity_type": "language",
+    "first_release_year": 1980,
+    "notes": "Early functional language with algebraic data types; influenced Miranda and Haskell.",
+    "cluster_hint": "functional",
+    "company": "University of Edinburgh",
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "Hope / Lisp",
+      "paradigm": [
+        "functional"
+      ],
+      "typing": "static",
+      "runtime_model": "interpreted",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:mesa",
+    "name": "Mesa",
+    "entity_type": "language",
+    "first_release_year": 1976,
+    "notes": "Xerox PARC systems language; pioneered modules and monitors; influenced Modula-2, Cedar, and Java.",
+    "cluster_hint": "historical",
+    "company": "Xerox PARC",
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "Mesa / BCPL",
+      "paradigm": [
+        "imperative",
+        "modular",
+        "concurrent"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": true,
+      "garbage_collected": false,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:ats",
+    "name": "ATS",
+    "entity_type": "language",
+    "first_release_year": 2008,
+    "notes": "Combines dependent and linear types with low-level programming; influenced by ML and Dependent ML; compiles to C.",
+    "cluster_hint": "functional",
+    "company": null,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/2/23/The_ATS_Logo.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:The_ATS_Logo.svg",
+    "logo_license": "CC BY-SA 4.0",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "ATS / C",
+      "paradigm": [
+        "functional",
+        "imperative",
+        "dependent-typed"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": true,
+      "garbage_collected": false,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:roc",
+    "name": "Roc",
+    "entity_type": "language",
+    "first_release_year": 2019,
+    "notes": "Fast, friendly functional language influenced by Elm; compiler written in Rust with an LLVM backend.",
+    "cluster_hint": "functional",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "Zig",
+      "paradigm": [
+        "functional"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:unison",
+    "name": "Unison",
+    "entity_type": "language",
+    "first_release_year": 2020,
+    "notes": "Content-addressed functional language influenced by Haskell; implemented in Haskell.",
+    "cluster_hint": "functional",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "Haskell",
+      "paradigm": [
+        "functional"
+      ],
+      "typing": "static",
+      "runtime_model": "interpreted",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:lean",
+    "name": "Lean",
+    "entity_type": "language",
+    "first_release_year": 2013,
+    "notes": "Theorem prover and functional language; Lean 4 is self-hosting with a C backend.",
+    "cluster_hint": "functional",
+    "company": null,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/d/dc/Lean_logo2.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Lean_logo2.svg",
+    "logo_license": "Public domain",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "Lean / C++",
+      "paradigm": [
+        "functional",
+        "proof-assistant",
+        "dependent-typed"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": true,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:coq",
+    "name": "Coq",
+    "entity_type": "language",
+    "first_release_year": 1989,
+    "notes": "Proof assistant based on the Calculus of Inductive Constructions; written in OCaml; renamed Rocq in 2025.",
+    "cluster_hint": "functional",
+    "company": "INRIA",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/8/81/Rocq_logo.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Rocq_logo.svg",
+    "logo_license": "Public domain",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "OCaml",
+      "paradigm": [
+        "proof-assistant",
+        "functional",
+        "dependent-typed"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:qsharp",
+    "name": "Q#",
+    "entity_type": "language",
+    "first_release_year": 2017,
+    "notes": "Microsoft's quantum programming language; runs on .NET; influenced by C#, F#, and Python.",
+    "cluster_hint": "clr",
+    "company": "Microsoft",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/f/f8/Q_mini.png",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Q_mini.png",
+    "logo_license": "CC BY-SA 4.0",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "C#",
+      "paradigm": [
+        "functional",
+        "imperative"
+      ],
+      "typing": "static",
+      "runtime_model": "jit",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:powershell",
+    "name": "PowerShell",
+    "entity_type": "language",
+    "first_release_year": 2006,
+    "notes": "Task-automation shell and scripting language on .NET; influenced by ksh, Perl, Tcl, and C#.",
+    "cluster_hint": "clr",
+    "company": "Microsoft",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/0/0c/Ps_black_128.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Ps_black_128.svg",
+    "logo_license": "MIT",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "C#",
+      "paradigm": [
+        "scripting",
+        "imperative",
+        "object-oriented"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "interpreted",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "large"
+    }
+  },
+  {
+    "id": "lang:haxe",
+    "name": "Haxe",
+    "entity_type": "language",
+    "first_release_year": 2005,
+    "notes": "Cross-platform toolkit compiling to many targets; compiler written in OCaml; grew out of ActionScript tooling.",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/haxe/haxe-original.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/haxe",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "OCaml",
+      "paradigm": [
+        "multi-paradigm",
+        "object-oriented",
+        "functional",
+        "generic"
+      ],
+      "typing": "static",
+      "runtime_model": "transpiled",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:actionscript",
+    "name": "ActionScript",
+    "entity_type": "language",
+    "first_release_year": 1998,
+    "notes": "Scripting language for Adobe Flash based on ECMAScript; ActionScript 3 ran on the Tamarin/AVM2 virtual machine.",
+    "cluster_hint": "dynamic",
+    "company": "Macromedia / Adobe",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/4/45/Farm-Fresh_page_white_actionscript.png",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Farm-Fresh_page_white_actionscript.png",
+    "logo_license": "CC BY 3.0 us",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "C++ (Tamarin)",
+      "paradigm": [
+        "object-oriented",
+        "prototype-based",
+        "scripting"
+      ],
+      "typing": "gradual",
+      "runtime_model": "jit",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": 2009,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:chapel",
+    "name": "Chapel",
+    "entity_type": "language",
+    "first_release_year": 2009,
+    "notes": "Parallel programming language for high-performance computing; influenced by C, Fortran, ZPL, and Java.",
+    "cluster_hint": "scientific",
+    "company": "Cray / HPE",
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "C / C++",
+      "paradigm": [
+        "concurrent",
+        "imperative",
+        "object-oriented",
+        "scientific"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": false,
+      "garbage_collected": false,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:pony",
+    "name": "Pony",
+    "entity_type": "language",
+    "first_release_year": 2015,
+    "notes": "Actor-model language with reference capabilities for data-race freedom; influenced by Erlang; LLVM backend.",
+    "cluster_hint": "systems",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "C++",
+      "paradigm": [
+        "object-oriented",
+        "concurrent",
+        "functional"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:odin",
+    "name": "Odin",
+    "entity_type": "language",
+    "first_release_year": 2016,
+    "notes": "Systems language designed as a C alternative; influenced by C, Pascal, Go, and Oberon; LLVM backend.",
+    "cluster_hint": "systems",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "C++",
+      "paradigm": [
+        "imperative",
+        "procedural",
+        "systems"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": false,
+      "garbage_collected": false,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:hare",
+    "name": "Hare",
+    "entity_type": "language",
+    "first_release_year": 2022,
+    "notes": "Systems language influenced by C; uses the QBE backend; bootstrap compiler written in C.",
+    "cluster_hint": "systems",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "systems",
+        "imperative",
+        "procedural"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": false,
+      "garbage_collected": false,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:wren",
+    "name": "Wren",
+    "entity_type": "language",
+    "first_release_year": 2013,
+    "notes": "Small, embeddable scripting language influenced by Lua, Smalltalk, and Ruby; written in C.",
+    "cluster_hint": "dynamic",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "C",
+      "paradigm": [
+        "object-oriented",
+        "scripting",
+        "concurrent"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "interpreted",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:factor",
+    "name": "Factor",
+    "entity_type": "language",
+    "first_release_year": 2003,
+    "notes": "Concatenative, stack-based language influenced by Forth and Lisp; self-hosting with a C++ VM.",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none",
+    "language_metadata": {
+      "current_primary_implementation_language": "Factor / C++",
+      "paradigm": [
+        "concurrent",
+        "functional",
+        "object-oriented",
+        "declarative"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "compiled",
+      "self_hosting": true,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "lang:nix",
+    "name": "Nix",
+    "entity_type": "language",
+    "first_release_year": 2003,
+    "notes": "Purely functional, lazy language driving the Nix package manager; implemented in C++.",
+    "cluster_hint": "other",
+    "company": null,
+    "logo_url": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nixos/nixos-plain.svg",
+    "logo_source": "https://github.com/devicons/devicon/tree/master/icons/nixos",
+    "logo_license": "Devicon MIT; trademarks retained by owners",
+    "logo_kind": "devicon",
+    "language_metadata": {
+      "current_primary_implementation_language": "C++",
+      "paradigm": [
+        "functional",
+        "declarative"
+      ],
+      "typing": "dynamic",
+      "runtime_model": "interpreted",
+      "self_hosting": false,
+      "garbage_collected": true,
+      "peak_year": null,
+      "current_users_estimate": "moderate"
+    }
+  },
+  {
+    "id": "lang:move",
+    "name": "Move",
+    "entity_type": "language",
+    "first_release_year": 2019,
+    "notes": "Resource-oriented smart-contract language from the Diem project; influenced by Rust; toolchain in Rust.",
+    "cluster_hint": "other",
+    "company": "Meta",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/d/db/Diem_logo.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Diem_logo.svg",
+    "logo_license": "Public domain",
+    "logo_kind": "wikimedia",
+    "language_metadata": {
+      "current_primary_implementation_language": "Rust",
+      "paradigm": [
+        "imperative",
+        "procedural"
+      ],
+      "typing": "static",
+      "runtime_model": "compiled",
+      "self_hosting": false,
+      "garbage_collected": false,
+      "peak_year": null,
+      "current_users_estimate": "niche"
+    }
+  },
+  {
+    "id": "tool:hhvm",
+    "name": "HHVM",
+    "entity_type": "compiler",
+    "first_release_year": 2011,
+    "notes": "Virtual machine and JIT compiler for Hack and PHP, written in C++.",
+    "cluster_hint": "tools",
+    "company": "Meta",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/4/47/Webysther_20160330_-_HHVM.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Webysther_20160330_-_HHVM.svg",
+    "logo_license": "Public domain",
+    "logo_kind": "wikimedia"
+  },
+  {
+    "id": "tool:moarvm",
+    "name": "MoarVM",
+    "entity_type": "virtual_machine",
+    "first_release_year": 2013,
+    "notes": "Virtual machine built for Raku (NQP/Rakudo), written in C.",
+    "cluster_hint": "tools",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none"
+  },
+  {
+    "id": "tool:graalvm",
+    "name": "GraalVM",
+    "entity_type": "compiler",
+    "first_release_year": 2019,
+    "notes": "Polyglot JIT compiler and virtual machine written in Java using the Truffle framework.",
+    "cluster_hint": "tools",
+    "company": "Oracle",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/9/9c/GraalVM-logo-rabbit.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:GraalVM-logo-rabbit.svg",
+    "logo_license": "Public domain",
+    "logo_kind": "wikimedia"
+  },
+  {
+    "id": "tool:quickjs",
+    "name": "QuickJS",
+    "entity_type": "virtual_machine",
+    "first_release_year": 2019,
+    "notes": "Small, embeddable JavaScript engine by Fabrice Bellard, written in C.",
+    "cluster_hint": "tools",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none"
+  },
+  {
+    "id": "tool:esbuild",
+    "name": "esbuild",
+    "entity_type": "toolchain",
+    "first_release_year": 2020,
+    "notes": "Fast JavaScript and TypeScript bundler and transpiler written in Go.",
+    "cluster_hint": "tools",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none"
+  },
+  {
+    "id": "tool:swc",
+    "name": "SWC",
+    "entity_type": "toolchain",
+    "first_release_year": 2019,
+    "notes": "Rust-based platform for compiling TypeScript/JavaScript, used by Next.js and others.",
+    "cluster_hint": "tools",
+    "company": null,
+    "logo_url": null,
+    "logo_source": null,
+    "logo_license": null,
+    "logo_kind": "none"
+  },
+  {
+    "id": "tool:babel",
+    "name": "Babel",
+    "entity_type": "toolchain",
+    "first_release_year": 2014,
+    "notes": "JavaScript transpiler letting modern JS run in older environments; written in JavaScript.",
+    "cluster_hint": "tools",
+    "company": null,
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/0/02/Babel_Logo.svg",
+    "logo_source": "https://commons.wikimedia.org/wiki/File:Babel_Logo.svg",
+    "logo_license": "CC BY-SA 4.0",
+    "logo_kind": "wikimedia"
+  },
+  {
+    "id": "ai:pytorch",
+    "name": "PyTorch",
+    "entity_type": "ai_framework",
+    "first_release_year": 2016,
+    "notes": "Deep learning framework originally developed by Meta AI.",
+    "cluster_hint": "ai_ecosystem",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/9/96/PyTorch_logo_icon.svg",
+    "logo_kind": "wikimedia"
+  },
+  {
+    "id": "ai:tensorflow",
+    "name": "TensorFlow",
+    "entity_type": "ai_framework",
+    "first_release_year": 2015,
+    "notes": "Open source machine learning framework developed by Google.",
+    "cluster_hint": "ai_ecosystem",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/2/2d/Tensorflow_logo.svg",
+    "logo_kind": "wikimedia"
+  },
+  {
+    "id": "infra:llvm",
+    "name": "LLVM",
+    "entity_type": "compiler_infrastructure",
+    "first_release_year": 2003,
+    "notes": "Collection of modular and reusable compiler and toolchain technologies.",
+    "cluster_hint": "ai_ecosystem",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/5/52/LLVM_Logo.svg",
+    "logo_kind": "wikimedia"
+  },
+  {
+    "id": "infra:cuda",
+    "name": "CUDA",
+    "entity_type": "gpu_runtime",
+    "first_release_year": 2007,
+    "notes": "Parallel computing platform and API model created by Nvidia.",
+    "cluster_hint": "ai_ecosystem"
+  },
+  {
+    "id": "ai:jax",
+    "name": "JAX",
+    "entity_type": "ai_framework",
+    "first_release_year": 2018,
+    "notes": "Machine learning framework for transforming numerical functions.",
+    "cluster_hint": "ai_ecosystem",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/3/36/JAX_logo.png",
+    "logo_kind": "wikimedia"
+  },
+  {
+    "id": "ai:scikit-learn",
+    "name": "scikit-learn",
+    "entity_type": "ai_framework",
+    "first_release_year": 2007,
+    "notes": "Machine learning library for Python.",
+    "cluster_hint": "ai_ecosystem"
+  },
+  {
+    "id": "ai:mlir",
+    "name": "MLIR",
+    "entity_type": "compiler_infrastructure",
+    "first_release_year": 2019,
+    "notes": "Multi-Level Intermediate Representation. Novel approach to building reusable and extensible compiler infrastructure.",
+    "cluster_hint": "ai_ecosystem"
+  },
+  {
+    "id": "ai:triton",
+    "name": "Triton",
+    "entity_type": "ai_compiler",
+    "first_release_year": 2021,
+    "notes": "Language and compiler for writing highly efficient custom Deep-Learning primitives. OpenAI.",
+    "cluster_hint": "ai_ecosystem",
+    "logo_url": "https://upload.wikimedia.org/wikipedia/commons/4/41/OpenAI_Logo.svg",
+    "logo_kind": "wikimedia"
+  },
+  {
+    "id": "ai:onnx",
+    "name": "ONNX Runtime",
+    "entity_type": "ai_framework",
+    "first_release_year": 2017,
+    "notes": "Cross-platform, high performance ML inferencing and training accelerator.",
+    "cluster_hint": "ai_ecosystem"
+  },
+  {
+    "id": "ai:llama-cpp",
+    "name": "llama.cpp",
+    "entity_type": "ai_framework",
+    "first_release_year": 2023,
+    "notes": "Port of Facebook's LLaMA model in C/C++.",
+    "cluster_hint": "ai_ecosystem"
+  }
+]

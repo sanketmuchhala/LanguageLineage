@@ -1,16 +1,16 @@
-import { useGraphStore } from '../store/useGraphStore';
+import { useGraphStoreV6 } from '../store/useGraphStoreV6';
 import { DAG_LAYOUT, FORCE_LAYOUT, CLUSTER_LAYOUT, buildTimelineLayout } from '../graph/layouts';
 import './NavigationControls.css';
 
 /** True when the tree is the mounted view, in which case Cytoscape is absent
  *  and these controls drive the tree controller instead. */
 function isTreeMode(): boolean {
-  return useGraphStore.getState().filters.layoutMode === 'dag';
+  return useGraphStoreV6.getState().filters.layoutMode === 'dag';
 }
 
 export function NavigationControls() {
   const handleFit = () => {
-    const { cy, treeController } = useGraphStore.getState();
+    const { cy, treeController } = useGraphStoreV6.getState();
     if (isTreeMode()) {
       treeController?.fit();
       return;
@@ -20,7 +20,7 @@ export function NavigationControls() {
   };
 
   const handleCenter = () => {
-    const { cy, selectedNodeId, treeController } = useGraphStore.getState();
+    const { cy, selectedNodeId, treeController } = useGraphStoreV6.getState();
     if (!selectedNodeId) return;
     if (isTreeMode()) {
       treeController?.centerOnNode(selectedNodeId);
@@ -33,7 +33,7 @@ export function NavigationControls() {
   };
 
   const handleReset = () => {
-    const { cy, filters, treeController } = useGraphStore.getState();
+    const { cy, filters, treeController } = useGraphStoreV6.getState();
     if (isTreeMode()) {
       treeController?.reset();
       return;
