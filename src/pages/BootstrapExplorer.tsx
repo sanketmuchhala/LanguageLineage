@@ -15,7 +15,7 @@ export function BootstrapExplorer() {
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: '#000', color: '#fff' }}>
-      <Seo title="Bootstrap Explorer | Language Lineage" description="Explore compiler bootstrapping sequences." />
+      <Seo title="Bootstrap Explorer | Language Lineage" description="Explore compiler bootstrapping sequences." canonical="https://www.languagelineage.org/bootstrap" />
       <p>Entering bootstrap mode...</p>
     </div>
   );

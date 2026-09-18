@@ -40,7 +40,7 @@ export function StoryViewer() {
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: '#000', color: '#fff' }}>
-      <Seo title="Loading Story..." description="Preparing the atlas story view." />
+      <Seo title="Loading Story..." description="Preparing the atlas story view." canonical="https://www.languagelineage.org/stories" />
       <p>Loading story environment...</p>
     </div>
   );

@@ -8,6 +8,7 @@ export function StoriesIndex() {
       <Seo
         title="Historical Stories | Language Lineage"
         description="Guided explorations of programming language history, self-hosting paths, and the AI ecosystem."
+        canonical="https://www.languagelineage.org/stories"
       />
 
       <header style={{ marginBottom: '3rem' }}>
