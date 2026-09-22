@@ -51,6 +51,18 @@ async function main() {
     deviceScaleFactor: 1,
   });
 
+  // Wikimedia rejects headless Chromium's user agent, so fetch Commons files from Node.
+  await page.route('https://upload.wikimedia.org/**', async (route) => {
+    const response = await fetch(route.request().url(), {
+      headers: { 'User-Agent': 'LanguageLineageLogoRender/0.1 (https://www.languagelineage.org)' },
+    });
+    await route.fulfill({
+      status: response.status,
+      contentType: response.headers.get('content-type') ?? undefined,
+      body: Buffer.from(await response.arrayBuffer()),
+    });
+  });
+
   await page.setContent(`
     <!doctype html>
     <html>

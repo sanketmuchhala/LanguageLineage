@@ -295,6 +295,12 @@ function processPage(html: string): string {
   return insertPageToc(wrapped);
 }
 
+// Edges that still hold (end_year null), falling back to all edges when every one has ended.
+function currentRels(rels: Relationship[]): Relationship[] {
+  const current = rels.filter(r => r.end_year == null);
+  return current.length > 0 ? current : rels;
+}
+
 function nameFromId(id: string, nodeMap: Map<string, Language>): string {
   return nodeMap.get(id)?.name ?? id.replace(/^(lang|tool):/, '').replace(/_/g, ' ');
 }
@@ -856,7 +862,7 @@ ${sections}`;
 
 // Linked impl-language names for a given relationship type (deduped).
 function implLinks(rels: Relationship[], id: string, type: string, nodeMap: Map<string, Language>): string[] {
-  return [...new Set(rels.filter(r => r.to_language === id && r.relationship === type).map(r => r.from_language))]
+  return [...new Set(currentRels(rels.filter(r => r.to_language === id && r.relationship === type)).map(r => r.from_language))]
     .map(fid => linkNode(fid, nodeMap));
 }
 
@@ -1664,7 +1670,7 @@ function buildFaqs(node: Language, rels: Relationship[], nodeMap: Map<string, La
   const implRels = rels.filter(r => r.to_language === id && implTypes.has(r.relationship));
 
   if (implRels.length > 0) {
-    const names = [...new Set(implRels.map(r => nameFromId(r.from_language, nodeMap)))];
+    const names = [...new Set(currentRels(implRels).map(r => nameFromId(r.from_language, nodeMap)))];
     faqs.push({
       q: `What language is ${node.name} written in?`,
       a: priority?.faqAnswer ?? `${node.name} is primarily implemented in ${names.join(' and ')}.`,
@@ -1945,7 +1951,7 @@ function buildNodePage(node: Language, rels: Relationship[], nodeMap: Map<string
   const url = `${SITE}/${prefix}/${slug}`;
   const priorityOverride = PRIORITY_TITLES[slug];
   const implRels = rels.filter(r => r.to_language === node.id && ['compiler_written_in', 'runtime_written_in', 'bootstrap_written_in'].includes(r.relationship));
-  const implLangs = [...new Set(implRels.map(r => nameFromId(r.from_language, nodeMap)))];
+  const implLangs = [...new Set(currentRels(implRels).map(r => nameFromId(r.from_language, nodeMap)))];
   const enrich = ENRICHMENT[node.id];
 
   // Language/tool pages target brand queries ("X language", "X release date").
@@ -2487,8 +2493,8 @@ function buildAutoQuestionPage(aqn: AutoQNode, nodeMap: Map<string, Language>): 
   const title = `What is ${node.name} written in?`;
   const enrich = ENRICHMENT[node.id];
 
-  const compilerEdges = implEdges.filter(e => e.relationship === 'compiler_written_in');
-  const runtimeEdges  = implEdges.filter(e => e.relationship === 'runtime_written_in');
+  const compilerEdges = currentRels(implEdges.filter(e => e.relationship === 'compiler_written_in'));
+  const runtimeEdges  = currentRels(implEdges.filter(e => e.relationship === 'runtime_written_in'));
   const bootstrapEdges = implEdges.filter(e => e.relationship === 'bootstrap_written_in');
   const isSelfHosting = implEdges.some(e => e.from_language === node.id);
 
@@ -5097,7 +5103,7 @@ console.log(`Generated ${relTypes.length} relationship pages`);
 <h2>Why C is at the center</h2>
 <p>When a new programming language is designed, its first compiler or runtime almost always gets written in C or C++. The reasons are practical: C runs everywhere, has no runtime dependency, can be compiled by GCC or Clang on any system, and gives the implementer direct control over memory layout and calling conventions. Every major operating system exposes its API in C. Every CPU architecture has a C compiler.</p>
 <p>This creates a pattern: the first implementation of Language X is written in C. Once X matures, the community rewrites the implementation in X itself (self-hosting), or in a higher-level systems language like C++ or Rust. But the historical chain from X back to C remains encoded in the dataset as bootstrap or implementation edges.</p>
-<p>The Language Lineage dataset records <code>compiler_written_in</code>, <code>runtime_written_in</code>, <code>bootstrap_written_in</code>, and <code>rewritten_in</code> edges for 152 languages and tools. The chains below are computed at generation time by following those edges backward until reaching C or C++.</p>
+<p>The Language Lineage dataset records <code>compiler_written_in</code>, <code>runtime_written_in</code>, <code>bootstrap_written_in</code>, and <code>rewritten_in</code> edges for ${nodeMap.size} languages and tools. The chains below are computed at generation time by following those edges backward until reaching C or C++.</p>
 
 <h2>Implementation chains from the dataset</h2>
 <p>${chainCount} out of ${chainTargets.length} target languages have traceable chains to C or C++ in the current dataset. Chains read from root (C or C++) to target language.</p>

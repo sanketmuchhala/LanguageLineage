@@ -14,7 +14,7 @@
   <meta property="og:url" content="https://www.languagelineage.org/how-it-works" />
   <meta property="og:image" content="https://www.languagelineage.org/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"How Language Lineage is built","description":"How Language Lineage is built: research agents harvest cited facts, mechanical gates validate every page, and a human reviews every change before it ships.","url":"https://www.languagelineage.org/how-it-works","datePublished":"2026-07-02","dateModified":"2026-09-09","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":["data provenance","programming languages","compiler implementation","AI agents"],"inLanguage":"en"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"How Language Lineage is built","description":"How Language Lineage is built: research agents harvest cited facts, mechanical gates validate every page, and a human reviews every change before it ships.","url":"https://www.languagelineage.org/how-it-works","datePublished":"2026-07-02","dateModified":"2026-09-22","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":["data provenance","programming languages","compiler implementation","AI agents"],"inLanguage":"en"}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"How It Works","item":"https://www.languagelineage.org/how-it-works"}]}</script>
   <style>
     .seo-main h1 { text-wrap: balance; }
@@ -138,10 +138,10 @@
   <p class="hw-lede">Every claim on this site is a typed record with a confidence score and an evidence URL. Research agents gather the raw facts, a person reviews every change, and a set of mechanical gates rebuilds and checks the whole site before anything ships. This page follows one fact through the machine.</p>
 
   <div class="hw-stats">
-    <div class="hw-stat"><b>152</b><span>graph nodes</span></div>
-    <div class="hw-stat"><b>444</b><span>typed edges</span></div>
-    <div class="hw-stat"><b>444/444</b><span>edges with evidence</span></div>
-    <div class="hw-stat"><b>148/152</b><span>nodes with cited facts</span></div>
+    <div class="hw-stat"><b>171</b><span>graph nodes</span></div>
+    <div class="hw-stat"><b>490</b><span>typed edges</span></div>
+    <div class="hw-stat"><b>490/490</b><span>edges with evidence</span></div>
+    <div class="hw-stat"><b>148/171</b><span>nodes with cited facts</span></div>
     <div class="hw-stat"><b>300+</b><span>generated pages</span></div>
     <div class="hw-stat hw-stat-zero"><b>0</b><span>errors allowed at ship</span></div>
   </div>
@@ -182,7 +182,7 @@
       <text class="hw-station-name" x="415" y="150" text-anchor="middle">Research agents</text>
       <text class="hw-station-sub" x="415" y="168" text-anchor="middle">2 harvesters · audits</text>
       <path d="M 580 154 H 606" stroke="rgba(255,255,255,0.14)" stroke-width="1" fill="none"/>
-      <text class="hw-anno-a" x="618" y="150" text-anchor="start">out: enrichment_v5.json · 148/152 cited</text>
+      <text class="hw-anno-a" x="618" y="150" text-anchor="start">out: enrichment_v5.json · 148/171 cited</text>
       <text class="hw-anno-b" x="618" y="168" text-anchor="start">audit report on every run, with reasons</text>
     </a>
 <a href="#assembly" class="hw-station">
@@ -191,7 +191,7 @@
       <text class="hw-station-name" x="415" y="250" text-anchor="middle">Assembly</text>
       <text class="hw-station-sub" x="415" y="268" text-anchor="middle">npm run dataset:v5</text>
       <path d="M 580 254 H 606" stroke="rgba(255,255,255,0.14)" stroke-width="1" fill="none"/>
-      <text class="hw-anno-a" x="618" y="250" text-anchor="start">out: lineage_v5.json · 152 nodes · 444 edges</text>
+      <text class="hw-anno-a" x="618" y="250" text-anchor="start">out: lineage_v5.json · 171 nodes · 490 edges</text>
       <text class="hw-anno-b" x="618" y="268" text-anchor="start">deterministic: same inputs, same bytes</text>
     </a>
 <a href="#review" class="hw-station">
@@ -201,7 +201,7 @@
       <text class="hw-station-sub" x="415" y="368" text-anchor="middle">git diff · sign-off</text>
       <path d="M 580 354 H 606" stroke="rgba(255,255,255,0.14)" stroke-width="1" fill="none"/>
       <text class="hw-anno-a" x="618" y="350" text-anchor="start">every diff read and signed by a person</text>
-      <text class="hw-anno-b" x="618" y="368" text-anchor="start">259/444 edges score 0.9+ · 16 deep dives</text>
+      <text class="hw-anno-b" x="618" y="368" text-anchor="start">292/490 edges score 0.9+ · 16 deep dives</text>
     </a>
 <a href="#gates" class="hw-station">
       <rect class="hw-station-box" x="250" y="422" width="330" height="64" rx="10" fill="#161616" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
@@ -362,13 +362,13 @@
 <tr>
       <td><span class="hw-dot" style="background:#e3a008"></span><a href="/relationships/compiler-written-in"><code>compiler_written_in</code></a></td>
       <td data-l="meaning">what a compiler is written in</td>
-      <td data-l="edges">97</td>
+      <td data-l="edges">102</td>
       <td data-l="median confidence">0.92</td>
     </tr>
 <tr>
       <td><span class="hw-dot" style="background:#34d399"></span><a href="/relationships/runtime-written-in"><code>runtime_written_in</code></a></td>
       <td data-l="meaning">what a runtime or VM is written in</td>
-      <td data-l="edges">67</td>
+      <td data-l="edges">93</td>
       <td data-l="median confidence">0.92</td>
     </tr>
 <tr>
@@ -380,19 +380,19 @@
 <tr>
       <td><span class="hw-dot" style="background:#60a5fa"></span><a href="/relationships/influenced"><code>influenced</code></a></td>
       <td data-l="meaning">design ideas that shaped another language</td>
-      <td data-l="edges">252</td>
+      <td data-l="edges">263</td>
       <td data-l="median confidence">0.85</td>
     </tr>
 <tr>
       <td><span class="hw-dot" style="background:#22d3ee"></span><a href="/relationships/transpiled-to"><code>transpiled_to</code></a></td>
       <td data-l="meaning">compiles to another language as its output</td>
-      <td data-l="edges">11</td>
+      <td data-l="edges">13</td>
       <td data-l="median confidence">0.95</td>
     </tr>
 <tr>
       <td><span class="hw-dot" style="background:#fb7185"></span><a href="/relationships/rewritten-in"><code>rewritten_in</code></a></td>
       <td data-l="meaning">an implementation ported to a new language</td>
-      <td data-l="edges">2</td>
+      <td data-l="edges">4</td>
       <td data-l="median confidence">0.95</td>
     </tr>
   </tbody>
@@ -440,7 +440,7 @@
     <g class="hw-filecard">
       <rect x="30" y="228" width="166" height="56" rx="8" fill="#0e0e0e" stroke="rgba(74,222,128,0.35)"/>
       <text class="hw-file-name" x="113" y="252" text-anchor="middle">enrichment_v5.json</text>
-      <text class="hw-station-sub" x="113" y="268" text-anchor="middle">148/152 nodes cited</text>
+      <text class="hw-station-sub" x="113" y="268" text-anchor="middle">148/171 nodes cited</text>
       <rect x="204" y="228" width="146" height="56" rx="8" fill="#0e0e0e" stroke="rgba(255,255,255,0.14)"/>
       <text class="hw-file-name" x="277" y="252" text-anchor="middle">audit report</text>
       <text class="hw-station-sub" x="277" y="268" text-anchor="middle">per run, with reasons</text>
@@ -449,7 +449,7 @@
   <div class="hw-plate-caption"><span>Fig. 3 &middot; Three sources in, cited facts and receipts out</span></div>
 </div>
 <h3>The fact harvester</h3>
-<p><code>scripts/harvestWikipediaContent.ts</code>, run with <code>npm run content:wikipedia</code>. For each of the 152 nodes it:</p>
+<p><code>scripts/harvestWikipediaContent.ts</code>, run with <code>npm run content:wikipedia</code>. For each of the 171 nodes it:</p>
 <ul>
   <li>Resolves the node to a Wikipedia article and its Wikidata item, following redirects. Roughly 150 ambiguous names (Io, Hack, Raku, Nix) are pinned to exact article titles in a curated map, so the agent never lands on a disambiguation page.</li>
   <li>Pulls the structured claims below from the Wikidata item, plus the English description tagline.</li>
@@ -469,7 +469,7 @@
     <tr><td><code>P1195</code> file extension</td><td>File extensions</td></tr>
   </tbody>
 </table></div>
-<p>Current coverage: 148 of 152 nodes carry cited facts. The remaining 4 (mrustc, Odin, Wren, SWC) have no Wikipedia article with a Wikidata item to cite, so their pages fall back to dataset facts alone rather than invented prose.</p>
+<p>Current coverage: 148 of 171 nodes carry cited facts. The remaining 23 (mrustc, Odin, Wren, SWC, Emacs Lisp, Scratch, ClojureScript, Rebol, Red, GDScript, fish, Luau, Jakt, Nushell, Node.js, Deno, Bun, PyPy, BLAS, CUDA, ggml, llama.cpp, PyTorch) have no Wikipedia article with a Wikidata item to cite, so their pages fall back to dataset facts alone rather than invented prose.</p>
 <h3>The logo harvester</h3>
 <p><code>scripts/harvestWikimediaLogos.ts</code>, run with <code>npm run logos:wikimedia</code>. Its policy is strict:</p>
 <ul>
@@ -478,11 +478,11 @@
   <li>Only fills gaps or upgrades stand-ins. It never overwrites a curated mark.</li>
   <li>Rejections are written down with reasons. Wikidata claims Icon's logo is an unrelated magazine's mark and FemtoLisp's is Julia branding; both are refused by name in the script.</li>
 </ul>
-<p>96 of 152 nodes currently have a logo (51 from Devicon, 39 from Commons, 6 stand-ins). 56 have none, because the standing policy is that no logo beats a wrong logo.</p>
+<p>108 of 171 nodes currently have a logo (56 from Devicon, 44 from Commons, 8 stand-ins). 63 have none, because the standing policy is that no logo beats a wrong logo.</p>
 <div class="hw-human"><b>Human in the loop</b><p>Every curated pin and every rejection above is a human call, written into the script where the next reviewer can see it. The agents execute those calls; they do not make them.</p></div>
 
 <h2 id="assembly"><span class="hw-idx">03</span> Assembly</h2>
-<p><code>npm run dataset:v5</code> (<code>scripts/generateV5Dataset.ts</code>) deterministically merges the base dataset, the harvested logo metadata, and a set of curated corrections into one file: <code>lineage_v5.json</code>, 152 nodes and 444 edges. Run it twice and you get the same bytes.</p>
+<p><code>npm run dataset:v5</code> (<code>scripts/generateV5Dataset.ts</code>) deterministically merges the base dataset, the harvested logo metadata, and a set of curated corrections into one file: <code>lineage_v5.json</code>, 171 nodes and 490 edges. Run it twice and you get the same bytes.</p>
 <div class="hw-fig">
   <svg viewBox="0 0 380 292" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Merge of base dataset, enrichment, and logo overrides into lineage_v5.json">
     <title>lineage_v4.json, enrichment, and logo overrides merge deterministically into lineage_v5.json.</title>
@@ -512,7 +512,7 @@
     <g class="hw-filecard">
       <rect x="85" y="218" width="210" height="58" rx="10" fill="#0e0e0e" stroke="rgba(74,222,128,0.45)"/>
       <text class="hw-file-name" x="190" y="242" text-anchor="middle">lineage_v5.json</text>
-      <text class="hw-station-sub" x="190" y="259" text-anchor="middle">152 nodes · 444 edges</text>
+      <text class="hw-station-sub" x="190" y="259" text-anchor="middle">171 nodes · 490 edges</text>
     </g>
   </svg>
   <div class="hw-plate-caption"><span>Fig. 4 &middot; Deterministic merge: same inputs, same bytes</span></div>
@@ -542,7 +542,7 @@
 </div>
 <p>This is the stage where judgment lives:</p>
 <ul>
-  <li>Every one of the 444 edges carries a hand-assigned confidence score and an evidence URL; 444 of 444 have evidence attached, which is to say all of them. 259 score 0.9 or higher, and the floor in the dataset is 0.65.</li>
+  <li>Every one of the 490 edges carries a hand-assigned confidence score and an evidence URL; 490 of 490 have evidence attached, which is to say all of them. 292 score 0.9 or higher, and the floor in the dataset is 0.65.</li>
   <li>Contested history gets adjudicated, not averaged. Self-hosting compilers create chicken-and-egg loops (rustc is written in Rust) that no scraper untangles; the <a href="/relationships/bootstrap-written-in"><code>bootstrap_written_in</code></a> edges recording how each loop actually started are curated by hand.</li>
   <li>16 languages and tools get fully hand-written deep dives instead of generated prose: <a href="/languages/python">Python</a>, <a href="/languages/javascript">JavaScript</a>, <a href="/languages/rust">Rust</a>, <a href="/languages/go">Go</a>, <a href="/languages/java">Java</a>, <a href="/languages/c">C</a>, <a href="/languages/cxx">C++</a>, <a href="/languages/typescript">TypeScript</a>, <a href="/languages/ruby">Ruby</a>, <a href="/languages/haskell">Haskell</a>, and more, plus engines like <a href="/tools/v8">V8</a> and <a href="/tools/beam">BEAM</a>.</li>
   <li>Policy is decided here too: the licensing rules, the logo standard, and what qualifies for each of the six relationship types.</li>
@@ -579,7 +579,7 @@ npm run build          # regenerate everything, then compile</code></pre>
     <span class="hw-term-line hw-term-cmd">$ npm run seo:validate</span>
     <span class="hw-term-line">OK:   robots.txt has Sitemap directive</span>
     <span class="hw-term-line">OK:   sitemap.xml uses canonical www host</span>
-    <span class="hw-term-line">OK:   All 152 language/tool pages valid</span>
+    <span class="hw-term-line">OK:   All 171 language/tool pages valid</span>
     <span class="hw-term-line">OK:   llms.txt lists every indexable page</span>
     <span class="hw-term-line">OK:   All pages have unique titles</span>
     <span class="hw-term-line">OK:   All pages have unique descriptions</span>
@@ -591,7 +591,7 @@ npm run build          # regenerate everything, then compile</code></pre>
 <div class="hw-human"><b>Human in the loop</b><p>Gates judge form, not truth. A person can be wrong about what rustc was written in and every gate will pass. That is exactly why stage 04 exists, and why every claim carries a source you can check yourself.</p></div>
 
 <h2 id="publication"><span class="hw-idx">06</span> Publication</h2>
-<p><code>npm run build</code> regenerates the entire site from the dataset: 131 language pages, 21 tool pages, 120 question pages, 13 guides, 6 relationship pages, the timeline, the directory, and this page. Over 300 static HTML documents, plus the sitemap and the <code>llms.txt</code> index for AI crawlers, both derived from the rendered pages rather than maintained by hand.</p>
+<p><code>npm run build</code> regenerates the entire site from the dataset: 141 language pages, 30 tool pages, 120 question pages, 13 guides, 6 relationship pages, the timeline, the directory, and this page. Over 300 static HTML documents, plus the sitemap and the <code>llms.txt</code> index for AI crawlers, both derived from the rendered pages rather than maintained by hand.</p>
 <div class="hw-fig">
   <svg viewBox="0 0 380 282" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="lineage_v5.json fanning out to static pages, sitemap and llms.txt, the live graph, and the dataset download">
     <title>lineage_v5.json fans out to static pages, sitemap and llms.txt, the live graph at explore, and the dataset download.</title>
@@ -640,7 +640,7 @@ npm run build          # regenerate everything, then compile</code></pre>
 <p>Spot an error? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue on GitHub</a>. A correction is never a patch to one page: it becomes a dataset or generator change, re-enters the pipeline at the research or assembly stage, gets reviewed like any other diff, and has to clear every gate before it ships. The loop in the diagram is literal.</p>
 
 <h2 id="division">Agents scale, humans decide</h2>
-<p>The division of labor is strict, and it is the reason a two-person-scale project can maintain 444 sourced claims.</p>
+<p>The division of labor is strict, and it is the reason a two-person-scale project can maintain 490 sourced claims.</p>
 <div class="hw-cols">
   <div class="hw-col">
     <h3>What the agents do</h3>
@@ -657,7 +657,7 @@ npm run build          # regenerate everything, then compile</code></pre>
     <h3>What the humans do</h3>
     <ul>
       <li>Pin ambiguous names to exact articles</li>
-      <li>Assign all 444 confidence scores</li>
+      <li>Assign all 490 confidence scores</li>
       <li>Accept or reject every logo, with written reasons</li>
       <li>Untangle bootstrap loops and contested dates</li>
       <li>Write the 16 hand-authored deep dives</li>
@@ -668,8 +668,8 @@ npm run build          # regenerate everything, then compile</code></pre>
 
 <h2 id="limits">Known limits</h2>
 <ul>
-  <li>4 nodes (mrustc, Odin, Wren, SWC) have no Wikipedia article with a Wikidata item, so their pages carry dataset facts only.</li>
-  <li>56 nodes have no logo. The bar is a <code>P154</code> claim with a recorded Commons license; nothing else ships.</li>
+  <li>23 nodes (mrustc, Odin, Wren, SWC, Emacs Lisp, Scratch, ClojureScript, Rebol, Red, GDScript, fish, Luau, Jakt, Nushell, Node.js, Deno, Bun, PyPy, BLAS, CUDA, ggml, llama.cpp, PyTorch) have no Wikipedia article with a Wikidata item, so their pages carry dataset facts only.</li>
+  <li>63 nodes have no logo. The bar is a <code>P154</code> claim with a recorded Commons license; nothing else ships.</li>
   <li>Influence is soft by nature. The median influence edge scores 0.85 against 0.92 for implementation edges, and both numbers are printed rather than hidden.</li>
   <li>History is contested. Where sources disagree, as with Rust's 2010 public debut against its 2015 stable release, the dataset picks one value and records the disagreement in the notes field.</li>
 </ul>

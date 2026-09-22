@@ -4,20 +4,20 @@
     "lastmod": "2026-07-02"
   },
   "/compiler-runtime-bootstrap": {
-    "hash": "d50c4aa07a1c8319",
-    "lastmod": "2026-09-09"
+    "hash": "f95c52d25d1e5276",
+    "lastmod": "2026-09-22"
   },
   "/dataset": {
-    "hash": "58b6f82009cf4897",
-    "lastmod": "2026-09-09"
+    "hash": "6ecb849894e64a02",
+    "lastmod": "2026-09-22"
   },
   "/directory": {
-    "hash": "d9d68f6ecd003085",
-    "lastmod": "2026-09-09"
+    "hash": "7745287a6ee7a8cd",
+    "lastmod": "2026-09-22"
   },
   "/embed-kit": {
-    "hash": "af7da1dfb1f3b603",
-    "lastmod": "2026-09-09"
+    "hash": "12c052528636d9dd",
+    "lastmod": "2026-09-22"
   },
   "/explore": {
     "hash": "",
@@ -60,8 +60,8 @@
     "lastmod": "2026-09-09"
   },
   "/guides/the-c-bootstrap-chain": {
-    "hash": "88c9f3cc15410fc6",
-    "lastmod": "2026-09-09"
+    "hash": "fec82a6a4088827b",
+    "lastmod": "2026-09-22"
   },
   "/guides/typescript-vs-javascript-implementation": {
     "hash": "83fd60c05ab22551",
@@ -80,20 +80,20 @@
     "lastmod": "2026-09-09"
   },
   "/how-it-works": {
-    "hash": "199055db9590a2e5",
-    "lastmod": "2026-09-09"
+    "hash": "f0613f9c2aa3d215",
+    "lastmod": "2026-09-22"
   },
   "/languages": {
-    "hash": "e452b5779859ee1d",
-    "lastmod": "2026-09-09"
+    "hash": "2139499fd4972b02",
+    "lastmod": "2026-09-22"
   },
   "/languages/abc": {
     "hash": "24612243c7954944",
     "lastmod": "2026-09-09"
   },
   "/languages/actionscript": {
-    "hash": "9ce359e59aa02cf7",
-    "lastmod": "2026-09-09"
+    "hash": "a0cd34545630c197",
+    "lastmod": "2026-09-22"
   },
   "/languages/ada": {
     "hash": "0054db74c43916bd",
@@ -152,8 +152,8 @@
     "lastmod": "2026-09-09"
   },
   "/languages/c": {
-    "hash": "e647520f754db111",
-    "lastmod": "2026-09-09"
+    "hash": "e891e7bf0f5fa2ce",
+    "lastmod": "2026-09-22"
   },
   "/languages/carbon": {
     "hash": "9e895f4bdc897ea8",
@@ -168,8 +168,12 @@
     "lastmod": "2026-09-09"
   },
   "/languages/clojure": {
-    "hash": "59681b9d3811902e",
-    "lastmod": "2026-09-09"
+    "hash": "af518e1abf2b71f3",
+    "lastmod": "2026-09-22"
+  },
+  "/languages/clojurescript": {
+    "hash": "c125021dafcec206",
+    "lastmod": "2026-09-22"
   },
   "/languages/clu": {
     "hash": "5b8e51c17b0589f3",
@@ -196,16 +200,16 @@
     "lastmod": "2026-09-09"
   },
   "/languages/crystal": {
-    "hash": "05275933e1642d10",
-    "lastmod": "2026-09-09"
+    "hash": "abb0d437b7991791",
+    "lastmod": "2026-09-22"
   },
   "/languages/csharp": {
     "hash": "2a6da22438882bb0",
     "lastmod": "2026-09-09"
   },
   "/languages/cxx": {
-    "hash": "770bfbca0dcaa8fb",
-    "lastmod": "2026-09-09"
+    "hash": "ad5ec97adbcec57e",
+    "lastmod": "2026-09-22"
   },
   "/languages/cyclone": {
     "hash": "8674c624cbb8f7be",
@@ -236,12 +240,16 @@
     "lastmod": "2026-09-09"
   },
   "/languages/elixir": {
-    "hash": "f0dbb48cec0af740",
-    "lastmod": "2026-09-09"
+    "hash": "acb0e3392f5f2baf",
+    "lastmod": "2026-09-22"
   },
   "/languages/elm": {
     "hash": "5c9dbcbb7791f611",
     "lastmod": "2026-09-09"
+  },
+  "/languages/emacs-lisp": {
+    "hash": "d633e4a629bdb74a",
+    "lastmod": "2026-09-22"
   },
   "/languages/erlang": {
     "hash": "54393e30aea824f7",
@@ -251,17 +259,21 @@
     "hash": "13415b3c5f67889d",
     "lastmod": "2026-09-09"
   },
+  "/languages/fish": {
+    "hash": "86b61fe819e3c8d8",
+    "lastmod": "2026-09-22"
+  },
   "/languages/flow-matic": {
     "hash": "481a73d6c6e61f3b",
     "lastmod": "2026-09-09"
   },
   "/languages/forth": {
-    "hash": "c9e5a38ced9fb225",
-    "lastmod": "2026-09-09"
+    "hash": "b4557722ddb14b1f",
+    "lastmod": "2026-09-22"
   },
   "/languages/fortran": {
-    "hash": "840438710e25222a",
-    "lastmod": "2026-09-09"
+    "hash": "e366931b1fd5e664",
+    "lastmod": "2026-09-22"
   },
   "/languages/fortran95": {
     "hash": "dec14d1b9eaecdef",
@@ -272,8 +284,12 @@
     "lastmod": "2026-09-09"
   },
   "/languages/fsharp": {
-    "hash": "8ec9e36d32f787eb",
-    "lastmod": "2026-09-09"
+    "hash": "dd541882cf4d80b1",
+    "lastmod": "2026-09-22"
+  },
+  "/languages/gdscript": {
+    "hash": "f0c54df142b65450",
+    "lastmod": "2026-09-22"
   },
   "/languages/gleam": {
     "hash": "6d9dea132679bd2f",
@@ -327,21 +343,25 @@
     "hash": "ed1ab48e47a5d38d",
     "lastmod": "2026-09-09"
   },
+  "/languages/jakt": {
+    "hash": "1184cc0831d8edf8",
+    "lastmod": "2026-09-22"
+  },
   "/languages/java": {
     "hash": "d78ac7b3ec0a0bd0",
     "lastmod": "2026-09-09"
   },
   "/languages/javascript": {
-    "hash": "312bb288c355bf15",
-    "lastmod": "2026-09-09"
+    "hash": "70359324ab220df3",
+    "lastmod": "2026-09-22"
   },
   "/languages/julia": {
-    "hash": "a6a6c136ac709283",
-    "lastmod": "2026-09-09"
+    "hash": "cb806bae2e6342f8",
+    "lastmod": "2026-09-22"
   },
   "/languages/kotlin": {
-    "hash": "364c6e2893ef4433",
-    "lastmod": "2026-09-09"
+    "hash": "16ce3b552d4cd521",
+    "lastmod": "2026-09-22"
   },
   "/languages/lazy-ml": {
     "hash": "a9d954db108f6381",
@@ -356,20 +376,24 @@
     "lastmod": "2026-09-09"
   },
   "/languages/lisp": {
-    "hash": "af0946e0fc285434",
-    "lastmod": "2026-09-09"
+    "hash": "ea987476dd74416f",
+    "lastmod": "2026-09-22"
   },
   "/languages/logo": {
-    "hash": "dea97a22b12a49e5",
-    "lastmod": "2026-09-09"
+    "hash": "ce43fb95f7b93681",
+    "lastmod": "2026-09-22"
   },
   "/languages/lua": {
-    "hash": "1f2fd03f8d9e911d",
-    "lastmod": "2026-09-09"
+    "hash": "123976eef5a6ba5d",
+    "lastmod": "2026-09-22"
   },
   "/languages/luajit": {
     "hash": "7cc2243fc10ecb98",
     "lastmod": "2026-09-09"
+  },
+  "/languages/luau": {
+    "hash": "96a9bcaee133a7f6",
+    "lastmod": "2026-09-22"
   },
   "/languages/machine-code": {
     "hash": "9446849c961edc92",
@@ -427,6 +451,10 @@
     "hash": "99d45f3e1215dd43",
     "lastmod": "2026-09-09"
   },
+  "/languages/nushell": {
+    "hash": "4a6490e5d15e377f",
+    "lastmod": "2026-09-22"
+  },
   "/languages/oberon": {
     "hash": "d4aad1470905a558",
     "lastmod": "2026-09-09"
@@ -480,8 +508,8 @@
     "lastmod": "2026-09-09"
   },
   "/languages/powershell": {
-    "hash": "90e1bd7e6ba1b089",
-    "lastmod": "2026-09-09"
+    "hash": "a9d87b1d78bdde36",
+    "lastmod": "2026-09-22"
   },
   "/languages/prolog": {
     "hash": "a6b31fd22a497fe2",
@@ -492,8 +520,8 @@
     "lastmod": "2026-09-09"
   },
   "/languages/python": {
-    "hash": "2468623fa40290c4",
-    "lastmod": "2026-09-09"
+    "hash": "d4705845cd975b74",
+    "lastmod": "2026-09-22"
   },
   "/languages/qsharp": {
     "hash": "e950b98f517b0357",
@@ -515,21 +543,29 @@
     "hash": "4070c9827dccc693",
     "lastmod": "2026-09-09"
   },
+  "/languages/rebol": {
+    "hash": "0771c4549c917b2b",
+    "lastmod": "2026-09-22"
+  },
+  "/languages/red": {
+    "hash": "168f1e67dfbdbb20",
+    "lastmod": "2026-09-22"
+  },
   "/languages/rescript": {
     "hash": "364aa678a659b221",
     "lastmod": "2026-09-09"
   },
   "/languages/roc": {
-    "hash": "80d29f13b116661f",
-    "lastmod": "2026-09-09"
+    "hash": "20123eccfab4f0cf",
+    "lastmod": "2026-09-22"
   },
   "/languages/ruby": {
     "hash": "e900eb9b09c2b9d8",
     "lastmod": "2026-09-09"
   },
   "/languages/rust": {
-    "hash": "e0435b344529b1ab",
-    "lastmod": "2026-09-09"
+    "hash": "ad5365e011ccc6af",
+    "lastmod": "2026-09-22"
   },
   "/languages/s": {
     "hash": "0f71ed49553aa663",
@@ -542,6 +578,10 @@
   "/languages/scheme": {
     "hash": "6e75f6b992d56a51",
     "lastmod": "2026-09-09"
+  },
+  "/languages/scratch": {
+    "hash": "aad5396d42dbe540",
+    "lastmod": "2026-09-22"
   },
   "/languages/self": {
     "hash": "60086e67219c518a",
@@ -556,8 +596,8 @@
     "lastmod": "2026-09-09"
   },
   "/languages/smalltalk": {
-    "hash": "0c0de7a9634f1934",
-    "lastmod": "2026-09-09"
+    "hash": "9e749c0c4aa986c5",
+    "lastmod": "2026-09-22"
   },
   "/languages/sml": {
     "hash": "647f276636c7d160",
@@ -576,8 +616,8 @@
     "lastmod": "2026-09-09"
   },
   "/languages/swift": {
-    "hash": "a08b12ad2cb4d461",
-    "lastmod": "2026-09-09"
+    "hash": "1409e3703d7e6e0b",
+    "lastmod": "2026-09-22"
   },
   "/languages/tcl": {
     "hash": "dbb07829ceaf9a9b",
@@ -608,24 +648,24 @@
     "lastmod": "2026-09-09"
   },
   "/languages/zig": {
-    "hash": "ad913e3a164f7ed8",
-    "lastmod": "2026-09-09"
+    "hash": "fb70866b94a3d326",
+    "lastmod": "2026-09-22"
   },
   "/programming-language-evolution": {
-    "hash": "3cfff549513b45e5",
-    "lastmod": "2026-09-09"
+    "hash": "06748bc0bda62473",
+    "lastmod": "2026-09-22"
   },
   "/programming-language-family-tree": {
-    "hash": "b7f8eda884caa545",
-    "lastmod": "2026-09-09"
+    "hash": "2bfa39fb55140208",
+    "lastmod": "2026-09-22"
   },
   "/programming-language-genealogy": {
-    "hash": "0e93d5d3668e4b74",
-    "lastmod": "2026-09-09"
+    "hash": "f1826f50eaeb6549",
+    "lastmod": "2026-09-22"
   },
   "/programming-language-graph": {
-    "hash": "a1dd5bec7e510d08",
-    "lastmod": "2026-09-09"
+    "hash": "a9b2191149d1112d",
+    "lastmod": "2026-09-22"
   },
   "/questions": {
     "hash": "abba2b91184fc812",
@@ -880,8 +920,8 @@
     "lastmod": "2026-09-09"
   },
   "/questions/what-is-kotlin-written-in": {
-    "hash": "8722f4cb99bf9854",
-    "lastmod": "2026-09-09"
+    "hash": "73c229f97fc8f351",
+    "lastmod": "2026-09-22"
   },
   "/questions/what-is-lean-written-in": {
     "hash": "2af9641ca68785cc",
@@ -1032,8 +1072,8 @@
     "lastmod": "2026-09-09"
   },
   "/questions/what-is-roc-written-in": {
-    "hash": "ca18848cca83340a",
-    "lastmod": "2026-09-09"
+    "hash": "700a5c199ed06c86",
+    "lastmod": "2026-09-22"
   },
   "/questions/what-is-ruby-written-in": {
     "hash": "6e8e89c6d67d95db",
@@ -1084,8 +1124,8 @@
     "lastmod": "2026-09-09"
   },
   "/questions/what-is-swift-written-in": {
-    "hash": "70d099abf87e7e6e",
-    "lastmod": "2026-09-09"
+    "hash": "6f925244671d11dc",
+    "lastmod": "2026-09-22"
   },
   "/questions/what-is-tcl-written-in": {
     "hash": "5bac3d4a89a3805d",
@@ -1108,48 +1148,48 @@
     "lastmod": "2026-09-09"
   },
   "/questions/what-is-zig-written-in": {
-    "hash": "426e794a400f4a14",
-    "lastmod": "2026-09-09"
+    "hash": "b145896764d255b9",
+    "lastmod": "2026-09-22"
   },
   "/rankings/most-influential": {
-    "hash": "2994116a19984ff6",
-    "lastmod": "2026-09-09"
+    "hash": "7bca15531c5c62f3",
+    "lastmod": "2026-09-22"
   },
   "/relationships": {
-    "hash": "6a83664163d1cffa",
-    "lastmod": "2026-09-09"
+    "hash": "a875ec17850a7f7f",
+    "lastmod": "2026-09-22"
   },
   "/relationships/bootstrap-written-in": {
     "hash": "b10ac9711bf074e2",
     "lastmod": "2026-09-09"
   },
   "/relationships/compiler-written-in": {
-    "hash": "f7c38387ccc7f44f",
-    "lastmod": "2026-09-09"
+    "hash": "82f130df3ebc0148",
+    "lastmod": "2026-09-22"
   },
   "/relationships/influenced": {
-    "hash": "c5d2ff1618ea6c3b",
-    "lastmod": "2026-09-09"
+    "hash": "69fd5141ab6464b1",
+    "lastmod": "2026-09-22"
   },
   "/relationships/rewritten-in": {
-    "hash": "480bb3e4c59227d3",
-    "lastmod": "2026-09-09"
+    "hash": "ca29224a10c07ca7",
+    "lastmod": "2026-09-22"
   },
   "/relationships/runtime-written-in": {
-    "hash": "bf96eab36c87025c",
-    "lastmod": "2026-09-09"
+    "hash": "dd594af2b50c5785",
+    "lastmod": "2026-09-22"
   },
   "/relationships/transpiled-to": {
-    "hash": "83fd0d8c0f8e8d3b",
-    "lastmod": "2026-09-09"
+    "hash": "ae47e1f1cb89908e",
+    "lastmod": "2026-09-22"
   },
   "/timeline": {
-    "hash": "e142ab9018371f78",
-    "lastmod": "2026-09-09"
+    "hash": "0fdf4d7cda34c1b5",
+    "lastmod": "2026-09-22"
   },
   "/tools": {
-    "hash": "ff5b6092a25e0e4a",
-    "lastmod": "2026-09-09"
+    "hash": "e958936d55ed3a62",
+    "lastmod": "2026-09-22"
   },
   "/tools/babel": {
     "hash": "de7d515449c40e76",
@@ -1159,6 +1199,14 @@
     "hash": "288f519965b011c7",
     "lastmod": "2026-09-09"
   },
+  "/tools/blas": {
+    "hash": "aeb9d32e25f79a67",
+    "lastmod": "2026-09-22"
+  },
+  "/tools/bun": {
+    "hash": "9cc827a16d8af6ca",
+    "lastmod": "2026-09-22"
+  },
   "/tools/chez-scheme": {
     "hash": "fc23fffd5e859a33",
     "lastmod": "2026-09-09"
@@ -1166,6 +1214,14 @@
   "/tools/clang": {
     "hash": "2f38418baa5784ed",
     "lastmod": "2026-09-09"
+  },
+  "/tools/cuda": {
+    "hash": "4c7763e0dd24009c",
+    "lastmod": "2026-09-22"
+  },
+  "/tools/deno": {
+    "hash": "d9c805fceb14a9ab",
+    "lastmod": "2026-09-22"
   },
   "/tools/dotnet-runtime": {
     "hash": "a406e304821aea2a",
@@ -1180,12 +1236,16 @@
     "lastmod": "2026-09-09"
   },
   "/tools/gcc": {
-    "hash": "341d3d9e1bcdfc1b",
-    "lastmod": "2026-09-09"
+    "hash": "f2c98b66a3f1878e",
+    "lastmod": "2026-09-22"
+  },
+  "/tools/ggml": {
+    "hash": "cbc07d77aa9930f1",
+    "lastmod": "2026-09-22"
   },
   "/tools/ghc": {
-    "hash": "d31278257277c15e",
-    "lastmod": "2026-09-09"
+    "hash": "037f48e4d654d113",
+    "lastmod": "2026-09-22"
   },
   "/tools/graalvm": {
     "hash": "36e0af1c3db198fa",
@@ -1203,9 +1263,13 @@
     "hash": "4298a1e626f478cd",
     "lastmod": "2026-09-09"
   },
+  "/tools/llama-cpp": {
+    "hash": "d10ec65e980bee2a",
+    "lastmod": "2026-09-22"
+  },
   "/tools/llvm": {
-    "hash": "b54ca66067f387ad",
-    "lastmod": "2026-09-09"
+    "hash": "ee6f08308edf64af",
+    "lastmod": "2026-09-22"
   },
   "/tools/moarvm": {
     "hash": "4d0ef98283519ba3",
@@ -1214,6 +1278,18 @@
   "/tools/mrustc": {
     "hash": "55ea7586865030f8",
     "lastmod": "2026-09-09"
+  },
+  "/tools/nodejs": {
+    "hash": "20df3c2c964acf33",
+    "lastmod": "2026-09-22"
+  },
+  "/tools/pypy": {
+    "hash": "f23bdf669df139d2",
+    "lastmod": "2026-09-22"
+  },
+  "/tools/pytorch": {
+    "hash": "2a0f1f6846f5e1c8",
+    "lastmod": "2026-09-22"
   },
   "/tools/quickjs": {
     "hash": "1d948e425f9ead64",
@@ -1236,7 +1312,7 @@
     "lastmod": "2026-09-09"
   },
   "/what-are-programming-languages-written-in": {
-    "hash": "61561fcc4537ba63",
-    "lastmod": "2026-09-09"
+    "hash": "c8c80d20c1952fb2",
+    "lastmod": "2026-09-22"
   }
 }

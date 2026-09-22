@@ -37,6 +37,14 @@
       "wikidata_item": "Q732089",
       "commons_file": "Eiffel logo.svg"
     },
+    "lang:fish": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/3/39/Fish_icon.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Fish_icon.png",
+      "license": "GPLv2",
+      "kind": "wikimedia",
+      "wikidata_item": "Q307263",
+      "commons_file": "Fish icon.png"
+    },
     "lang:hack": {
       "url": "https://upload.wikimedia.org/wikipedia/commons/5/52/Webysther_20160330_-_Hack_%28language%29.svg",
       "source": "https://commons.wikimedia.org/wiki/File:Webysther_20160330_-_Hack_(language).svg",
@@ -93,6 +101,14 @@
       "wikidata_item": "Q2052676",
       "commons_file": "Camelia.svg"
     },
+    "lang:rebol": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Rebol_logo.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Rebol_logo.png",
+      "license": "Public domain",
+      "kind": "wikimedia",
+      "wikidata_item": "Q1359171",
+      "commons_file": "Rebol logo.png"
+    },
     "lang:rescript": {
       "url": "https://upload.wikimedia.org/wikipedia/commons/9/92/Rescript-logo.svg",
       "source": "https://commons.wikimedia.org/wiki/File:Rescript-logo.svg",
@@ -100,6 +116,14 @@
       "kind": "wikimedia",
       "wikidata_item": "Q116885321",
       "commons_file": "Rescript-logo.svg"
+    },
+    "lang:scratch": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/f/f1/Scratchlogo.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:Scratchlogo.svg",
+      "license": "Public domain",
+      "kind": "wikimedia",
+      "wikidata_item": "Q275131",
+      "commons_file": "Scratchlogo.svg"
     },
     "lang:solidity": {
       "url": "https://upload.wikimedia.org/wikipedia/commons/9/98/Solidity_logo.svg",
@@ -140,6 +164,22 @@
       "kind": "wikimedia",
       "wikidata_item": "Q18150679",
       "commons_file": "Webysther 20160330 - HHVM.svg"
+    },
+    "tool:llama_cpp": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/1/17/Llama1-logo.svg",
+      "source": "https://commons.wikimedia.org/wiki/File:Llama1-logo.svg",
+      "license": "MIT",
+      "kind": "wikimedia",
+      "wikidata_item": "Q125998452",
+      "commons_file": "Llama1-logo.svg"
+    },
+    "tool:pypy": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/f/f6/Pypy_logo_%282011%29.png",
+      "source": "https://commons.wikimedia.org/wiki/File:Pypy_logo_(2011).png",
+      "license": "MIT",
+      "kind": "wikimedia",
+      "wikidata_item": "Q1143023",
+      "commons_file": "Pypy logo (2011).png"
     }
   }
 }

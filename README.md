@@ -14,14 +14,14 @@
 
 # Language Lineage
 
-An interactive, evidence-backed atlas mapping implementation, bootstrapping, runtime, and influence relationships across 152 nodes: 131 programming languages and 21 compiler/runtime tools. 304 indexable pages, 443 sourced relationships.
+An interactive, evidence-backed atlas mapping implementation, bootstrapping, runtime, and influence relationships across 171 nodes: 141 programming languages and 30 compiler/runtime tools. 324 indexable pages, 490 sourced relationships.
 
 ## Live Site
 
 **[languagelineage.org](https://www.languagelineage.org)**
 
 - Interactive graph explorer: [/explore](https://www.languagelineage.org/explore) (deep-linkable via `?node=lang:rust`, trace mode for shortest paths)
-- Language pages: [/languages/python](https://www.languagelineage.org/languages/python) (152 pages with relationship maps, Quick Facts, implementation tables)
+- Language pages: [/languages/python](https://www.languagelineage.org/languages/python) (171 pages with relationship maps, Quick Facts, implementation tables)
 - Question pages: [/questions/what-is-rust-written-in](https://www.languagelineage.org/questions/what-is-rust-written-in) (120 pages, answer-first format)
 - Guides: [/guides](https://www.languagelineage.org/guides) (13 guides including comparisons and bootstrap chain analysis)
 - Dataset: [/dataset](https://www.languagelineage.org/dataset) (JSON-LD, download, citation block, embed kit)
@@ -29,7 +29,7 @@ An interactive, evidence-backed atlas mapping implementation, bootstrapping, run
 - Embed guide: [/embed-kit](https://www.languagelineage.org/embed-kit) (live example, snippet, parameters, sizing, attribution)
 
 <p align="center">
-  <img src="public/og-image.png" alt="Language Lineage: what programming languages are written in. 152 languages and tools, 443 sourced relationships." width="900">
+  <img src="public/og-image.png" alt="Language Lineage: what programming languages are written in. 171 languages and tools, 490 sourced relationships." width="900">
 </p>
 
 ## What You Can Explore
@@ -104,13 +104,13 @@ LanguageLineage/
 │   ├── v2/                            67 languages, 128 edges
 │   ├── v3/                            71 languages, 169 edges
 │   ├── v4/                            112 nodes, 347 relationships
-│   └── v5/                            152 nodes, 443 relationships (current)
+│   └── v5/                            171 nodes, 490 relationships (current)
 │       ├── lineage_v5.json            Primary dataset
-│       └── enrichment_v5.json         Wikidata-sourced facts (148/152 nodes)
+│       └── enrichment_v5.json         Wikidata-sourced facts (148/171 nodes)
 ├── api/
 │   └── propose.ts                     Serverless endpoint: correction form to GitHub issue
 ├── scripts/                           Build and data tooling
-│   ├── generateSeoPages.ts            Static page generator (152 node pages, 120 question pages, 13 guides, 6 relationship pages, etc.)
+│   ├── generateSeoPages.ts            Static page generator (171 node pages, 120 question pages, 13 guides, 6 relationship pages, etc.)
 │   ├── generateSitemap.ts             Sitemap generator (304 URLs, canonical only)
 │   ├── generateLlmsTxt.ts             LLM-readable site index
 │   ├── generateOgImages.ts            Per-page OG social cards (satori + resvg)
@@ -165,11 +165,11 @@ LanguageLineage/
 
 ### Scale
 
-- 152 nodes: 131 languages + 21 tools (compilers, runtimes, engines)
-- 443 relationships, each with confidence score and evidence source URL
+- 171 nodes: 141 languages + 30 tools (compilers, runtimes, engines)
+- 490 relationships, each with confidence score and evidence source URL
 - 100% evidence coverage: every relationship has at least one source
 - 96 logo URLs: 51 Devicon assets + 39 Wikimedia P154 logos + 6 proxy logos
-- 148/152 nodes enriched with Wikidata-sourced facts (designers, developers, license, website, file extensions)
+- 148/171 nodes enriched with Wikidata-sourced facts (designers, developers, license, website, file extensions)
 
 ### Relationship Types
 
@@ -341,7 +341,7 @@ rules. Log each run in the measurement table in `SITE_IMPROVEMENT_PLAN.md`.
 
 ```
 Language Lineage. Programming Language Lineage Dataset, v5.0.
-152 nodes and 443 relationships. Accessed 2026. https://www.languagelineage.org/dataset
+171 nodes and 490 relationships. Accessed 2026. https://www.languagelineage.org/dataset
 ```
 
 ## Contributing
