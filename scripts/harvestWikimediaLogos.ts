@@ -143,6 +143,17 @@ const TARGETS: Target[] = [
   { id: 'tool:quickjs', qid: 'Q138809058' },
   { id: 'tool:esbuild', qid: 'Q113365550' },
   { id: 'tool:babel', qid: 'Q55604651' },
+  { id: 'lang:scratch', title: 'Scratch (programming language)' },
+  { id: 'lang:rebol', title: 'Rebol' },
+  { id: 'lang:red', title: 'Red (programming language)' },
+  { id: 'lang:fish', title: 'Fish (Unix shell)' },
+  { id: 'lang:luau', title: 'Luau (programming language)' },
+  { id: 'lang:nushell', title: 'Nushell' },
+  { id: 'tool:pypy', title: 'PyPy' },
+  { id: 'tool:blas', title: 'Basic Linear Algebra Subprograms' },
+  { id: 'tool:cuda', title: 'CUDA' },
+  { id: 'tool:ggml', title: 'Ggml' },
+  { id: 'tool:llama_cpp', title: 'Llama.cpp' },
 ];
 
 const targetById = new Map(TARGETS.map((target) => [target.id, target]));

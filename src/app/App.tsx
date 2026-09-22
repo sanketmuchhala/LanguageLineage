@@ -27,7 +27,7 @@ function LandingPageWrapper() {
     <>
       <Seo
         title="Programming Language Lineage Graph | What Languages Are Written In"
-        description="Explore what programming languages are written in, how compilers are bootstrapped, and how languages evolved. Interactive graph of 152 languages and 444 relationships."
+        description="Explore what programming languages are written in, how compilers are bootstrapped, and how languages evolved. Interactive graph of 171 languages and 490 relationships."
         canonical="https://www.languagelineage.org/"
         ogImage="https://www.languagelineage.org/og-image.png"
       />
@@ -41,7 +41,7 @@ function GraphExplorerWrapper() {
     <>
       <Seo
         title="Graph Explorer | Language Lineage"
-        description="Explore the interactive programming language graph. See implementation and influence relationships between 152 languages."
+        description="Explore the interactive programming language graph. See implementation and influence relationships between 171 languages."
         canonical="https://www.languagelineage.org/explore"
         ogImage="https://www.languagelineage.org/og-image.png"
       />

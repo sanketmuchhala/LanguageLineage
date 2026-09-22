@@ -34,6 +34,7 @@ interface Relationship {
   from_language: string;
   to_language: string;
   relationship: string;
+  end_year?: number | null;
 }
 
 const nodeMap = new Map<string, Language>(nodes.map(n => [n.id, n]));
@@ -66,7 +67,9 @@ const REL_PRIORITY = ['runtime_written_in', 'compiler_written_in', 'bootstrap_wr
 
 function getPrimaryRel(nodeId: string): { fromName: string; toName: string; type: string; color: string; label: string } | null {
   const implementedBy = rels.filter(r => r.to_language === nodeId && REL_PRIORITY.slice(0, 4).includes(r.relationship));
-  implementedBy.sort((a, b) => REL_PRIORITY.indexOf(a.relationship) - REL_PRIORITY.indexOf(b.relationship));
+  implementedBy.sort((a, b) =>
+    Number(a.end_year != null) - Number(b.end_year != null) ||
+    REL_PRIORITY.indexOf(a.relationship) - REL_PRIORITY.indexOf(b.relationship));
   const r = implementedBy[0];
   if (!r) return null;
   const from = nodeMap.get(r.from_language);

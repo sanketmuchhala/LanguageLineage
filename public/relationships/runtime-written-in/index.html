@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>67 Runtime Implementation Relationships | Language Lineage</title>
+  <title>93 Runtime Implementation Relationships | Language Lineage</title>
   <meta name="description" content="These relationships document what programming language each runtime or interpreter is written in. For example, CPython (the reference Python interpreter) is wri" />
   <link rel="canonical" href="https://www.languagelineage.org/relationships/runtime-written-in" />
   <link rel="icon" href="/favicon.svg" />
   <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><script defer src="/fx.js"></script><script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script><link rel="alternate" type="application/rss+xml" title="Language Lineage" href="/rss.xml" /><link rel="stylesheet" href="/seo.css" />
-  <meta property="og:title" content="67 Runtime Implementation Relationships | Language Lineage" />
+  <meta property="og:title" content="93 Runtime Implementation Relationships | Language Lineage" />
   <meta property="og:url" content="https://www.languagelineage.org/relationships/runtime-written-in" />
   <meta property="og:image" content="https://www.languagelineage.org/og/relationships-runtime-written-in.png" />
   <meta property="og:image:width" content="1200" />
@@ -38,7 +38,7 @@
 
   <div class="answer-box" style="border-left:3px solid #34d399">These relationships document what programming language each runtime or interpreter is written in. For example, CPython (the reference Python interpreter) is written in C.</div>
 
-  <h2>All 67 Relationships</h2>
+  <h2>All 93 Relationships</h2>
   <table>
     <thead><tr><th>From</th><th>To</th><th>Confidence</th><th>Notes</th></tr></thead>
     <tbody><tr>
@@ -100,6 +100,30 @@
       <td><a href="/languages/kotlin">Kotlin</a></td>
       <td class="confidence-high">97%</td>
       <td>Kotlin runs on JVM</td>
+    </tr>
+<tr>
+      <td><a href="/languages/cxx">C++</a></td>
+      <td><a href="/languages/gdscript">GDScript</a></td>
+      <td class="confidence-high">97%</td>
+      <td>GDScript parser, compiler, and VM are a C++ module of the Godot engine</td>
+    </tr>
+<tr>
+      <td><a href="/languages/rust">Rust</a></td>
+      <td><a href="/languages/fish">fish</a></td>
+      <td class="confidence-high">97%</td>
+      <td>fish 4.0 is written in Rust</td>
+    </tr>
+<tr>
+      <td><a href="/languages/rust">Rust</a></td>
+      <td><a href="/languages/nushell">Nushell</a></td>
+      <td class="confidence-high">97%</td>
+      <td>Nushell is written in Rust</td>
+    </tr>
+<tr>
+      <td><a href="/languages/cxx">C++</a></td>
+      <td><a href="/tools/nodejs">Node.js</a></td>
+      <td class="confidence-high">97%</td>
+      <td>Node.js native core is written in C++ on top of V8</td>
     </tr>
 <tr>
       <td><a href="/languages/c">C</a></td>
@@ -234,6 +258,48 @@
       <td>QuickJS is written in C.</td>
     </tr>
 <tr>
+      <td><a href="/languages/c">C</a></td>
+      <td><a href="/languages/emacs-lisp">Emacs Lisp</a></td>
+      <td class="confidence-high">95%</td>
+      <td>Emacs Lisp evaluator, byte-code interpreter, and primitives are written in C</td>
+    </tr>
+<tr>
+      <td><a href="/languages/javascript">JavaScript</a></td>
+      <td><a href="/languages/scratch">Scratch</a></td>
+      <td class="confidence-high">95%</td>
+      <td>Scratch 3.0 virtual machine is written in JavaScript</td>
+    </tr>
+<tr>
+      <td><a href="/languages/cxx">C++</a></td>
+      <td><a href="/languages/luau">Luau</a></td>
+      <td class="confidence-high">95%</td>
+      <td>Luau VM is a heavily modified Lua 5.1 runtime written in C++</td>
+    </tr>
+<tr>
+      <td><a href="/languages/rust">Rust</a></td>
+      <td><a href="/tools/deno">Deno</a></td>
+      <td class="confidence-high">95%</td>
+      <td>Deno is built on V8, Rust, and Tokio</td>
+    </tr>
+<tr>
+      <td><a href="/languages/zig">Zig</a></td>
+      <td><a href="/tools/bun">Bun</a></td>
+      <td class="confidence-high">95%</td>
+      <td>Bun was written in Zig until the 2026 Rust rewrite</td>
+    </tr>
+<tr>
+      <td><a href="/languages/fortran">Fortran</a></td>
+      <td><a href="/tools/blas">BLAS</a></td>
+      <td class="confidence-high">95%</td>
+      <td>Netlib reference BLAS is written in Fortran</td>
+    </tr>
+<tr>
+      <td><a href="/languages/cxx">C++</a></td>
+      <td><a href="/tools/llama-cpp">llama.cpp</a></td>
+      <td class="confidence-high">95%</td>
+      <td>llama.cpp is LLM inference in C/C++ built on ggml</td>
+    </tr>
+<tr>
       <td><a href="/languages/cxx">C++</a></td>
       <td><a href="/tools/spidermonkey">SpiderMonkey</a></td>
       <td class="confidence-high">92%</td>
@@ -268,6 +334,24 @@
       <td><a href="/tools/moarvm">MoarVM</a></td>
       <td class="confidence-high">92%</td>
       <td>MoarVM is written in C.</td>
+    </tr>
+<tr>
+      <td><a href="/languages/actionscript">ActionScript</a></td>
+      <td><a href="/languages/scratch">Scratch</a></td>
+      <td class="confidence-high">92%</td>
+      <td>Scratch 2.0 editor and player were written in ActionScript for Flash</td>
+    </tr>
+<tr>
+      <td><a href="/languages/rust">Rust</a></td>
+      <td><a href="/tools/bun">Bun</a></td>
+      <td class="confidence-high">92%</td>
+      <td>Bun is written in Rust since Bun 1.4</td>
+    </tr>
+<tr>
+      <td><a href="/languages/cxx">C++</a></td>
+      <td><a href="/tools/pytorch">PyTorch</a></td>
+      <td class="confidence-high">92%</td>
+      <td>PyTorch tensor core (ATen) is written in C++</td>
     </tr>
 <tr>
       <td><a href="/languages/c">C</a></td>
@@ -372,10 +456,58 @@
       <td>The Nix evaluator is implemented in C++.</td>
     </tr>
 <tr>
+      <td><a href="/languages/smalltalk">Smalltalk</a></td>
+      <td><a href="/languages/scratch">Scratch</a></td>
+      <td class="confidence-high">90%</td>
+      <td>Scratch 1.x was implemented in Squeak Smalltalk</td>
+    </tr>
+<tr>
+      <td><a href="/languages/c">C</a></td>
+      <td><a href="/languages/rebol">Rebol</a></td>
+      <td class="confidence-high">90%</td>
+      <td>Rebol interpreter is written in C</td>
+    </tr>
+<tr>
+      <td><a href="/languages/python">Python</a></td>
+      <td><a href="/tools/pypy">PyPy</a></td>
+      <td class="confidence-high">90%</td>
+      <td>PyPy is written in RPython, a restricted subset of Python translated to C</td>
+    </tr>
+<tr>
+      <td><a href="/languages/c">C</a></td>
+      <td><a href="/tools/ggml">ggml</a></td>
+      <td class="confidence-high">90%</td>
+      <td>ggml core tensor library is written in C</td>
+    </tr>
+<tr>
+      <td><a href="/tools/cuda">CUDA</a></td>
+      <td><a href="/tools/pytorch">PyTorch</a></td>
+      <td class="confidence-high">90%</td>
+      <td>PyTorch GPU kernels are written in CUDA</td>
+    </tr>
+<tr>
       <td><a href="/languages/rust">Rust</a></td>
       <td><a href="/tools/spidermonkey">SpiderMonkey</a></td>
       <td class="confidence-mid">88%</td>
       <td>Parts of SpiderMonkey rewritten in Rust</td>
+    </tr>
+<tr>
+      <td><a href="/languages/cxx">C++</a></td>
+      <td><a href="/languages/fish">fish</a></td>
+      <td class="confidence-mid">88%</td>
+      <td>fish was written in C++ until the 4.0 Rust port</td>
+    </tr>
+<tr>
+      <td><a href="/tools/cuda">CUDA</a></td>
+      <td><a href="/tools/ggml">ggml</a></td>
+      <td class="confidence-mid">88%</td>
+      <td>ggml CUDA backend kernels are written in CUDA</td>
+    </tr>
+<tr>
+      <td><a href="/languages/python">Python</a></td>
+      <td><a href="/tools/pytorch">PyTorch</a></td>
+      <td class="confidence-mid">88%</td>
+      <td>PyTorch front end is written in Python</td>
     </tr>
 <tr>
       <td><a href="/languages/c">C</a></td>
@@ -438,10 +570,34 @@
       <td>Factor's VM is written in C++.</td>
     </tr>
 <tr>
+      <td><a href="/languages/javascript">JavaScript</a></td>
+      <td><a href="/tools/nodejs">Node.js</a></td>
+      <td class="confidence-mid">85%</td>
+      <td>Node.js standard library modules are written in JavaScript</td>
+    </tr>
+<tr>
+      <td><a href="/languages/cxx">C++</a></td>
+      <td><a href="/tools/ggml">ggml</a></td>
+      <td class="confidence-mid">85%</td>
+      <td>ggml CPU and GPU backends are largely C++</td>
+    </tr>
+<tr>
+      <td><a href="/languages/c">C</a></td>
+      <td><a href="/tools/llama-cpp">llama.cpp</a></td>
+      <td class="confidence-mid">82%</td>
+      <td>llama.cpp public API and bundled ggml core are C</td>
+    </tr>
+<tr>
       <td><a href="/languages/cxx">C++</a></td>
       <td><a href="/languages/actionscript">ActionScript</a></td>
       <td class="confidence-mid">80%</td>
       <td>ActionScript 3 ran on the Tamarin VM, written in C++.</td>
+    </tr>
+<tr>
+      <td><a href="/languages/c">C</a></td>
+      <td><a href="/languages/fish">fish</a></td>
+      <td class="confidence-mid">80%</td>
+      <td>fish was originally written in C before being ported to C++</td>
     </tr></tbody>
   </table>
 

@@ -4,19 +4,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Most Influential Programming Languages | Language Lineage</title>
-  <meta name="description" content="Reverse PageRank over 252 cited influence relationships across 131 languages. Generated, not hand-ranked." />
+  <meta name="description" content="Reverse PageRank over 262 cited influence relationships across 141 languages. Generated, not hand-ranked." />
   <link rel="canonical" href="https://www.languagelineage.org/rankings/most-influential" />
   <link rel="icon" href="/favicon.svg" />
   <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><script defer src="/fx.js"></script><script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script><link rel="alternate" type="application/rss+xml" title="Language Lineage" href="/rss.xml" /><link rel="stylesheet" href="/seo.css" />
   <meta property="og:type" content="article" />
   <meta property="og:title" content="The Most Influential Programming Languages" />
-  <meta property="og:description" content="Reverse PageRank over 252 cited influence relationships across 131 languages. Generated, not hand-ranked." />
+  <meta property="og:description" content="Reverse PageRank over 262 cited influence relationships across 141 languages. Generated, not hand-ranked." />
   <meta property="og:url" content="https://www.languagelineage.org/rankings/most-influential" />
   <meta property="og:image" content="https://www.languagelineage.org/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta property="article:published_time" content="2026-09-09" />
-  <meta property="article:modified_time" content="2026-09-09" />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"The Most Influential Programming Languages","description":"Reverse PageRank over 252 cited influence relationships across 131 programming languages.","url":"https://www.languagelineage.org/rankings/most-influential","datePublished":"2026-09-09","dateModified":"2026-09-09","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":["programming languages","PageRank","language influence","compiler implementation"],"inLanguage":"en"}</script>
+  <meta property="article:modified_time" content="2026-09-22" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"The Most Influential Programming Languages","description":"Reverse PageRank over 262 cited influence relationships across 141 programming languages.","url":"https://www.languagelineage.org/rankings/most-influential","datePublished":"2026-09-09","dateModified":"2026-09-22","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":["programming languages","PageRank","language influence","compiler implementation"],"inLanguage":"en"}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"Most Influential Languages","item":"https://www.languagelineage.org/rankings/most-influential"}]}</script>
 </head>
 <body class="seo-page">
@@ -39,7 +39,7 @@
 
   <h1>The Most Influential Programming Languages</h1>
 
-  <div class="answer-box">This ranking is PageRank over a curated 252-edge influence subgraph, so it partly measures curation as much as history. The dataset covers 131 languages with a documented influence relationship &mdash; a real graph, not an exhaustive one. Read the method below before trusting the order.</div>
+  <div class="answer-box">This ranking is PageRank over a curated 262-edge influence subgraph, so it partly measures curation as much as history. The dataset covers 141 languages with a documented influence relationship &mdash; a real graph, not an exhaustive one. Read the method below before trusting the order.</div>
 
   <h2>Method</h2>
   <p>Every language in the dataset that has a cited <a href="/relationships/influenced">influence relationship</a> is a node. An edge means one language's design influenced another's. Standard PageRank rewards languages that were influenced by many things; that's backwards for this question, so the edges are reversed before scoring &mdash; rank flows from a descendant back to its influences, and accumulates on root ancestors. The result is a reverse PageRank with damping 0.85, computed by <a href="https://github.com/sanketmuchhala/LanguageLineage/blob/main/scripts/computeCentrality.ts">scripts/computeCentrality.ts</a> directly from the dataset on every build. Descendant counts are computed separately, by simple forward reachability: everything downstream of a language, however many hops away.</p>
@@ -49,26 +49,26 @@
   <table class="impl-table">
     <thead><tr><th>Rank</th><th>Language</th><th>PageRank</th><th>Descendants</th></tr></thead>
     <tbody>
-      <tr><td>1</td><td><a href="/languages/lisp">Lisp</a></td><td>7.73%</td><td>60 (46%)</td></tr>
-      <tr><td>2</td><td><a href="/languages/algol">ALGOL</a></td><td>6.41%</td><td>65 (50%)</td></tr>
-      <tr><td>3</td><td><a href="/languages/ml">ML</a></td><td>4.73%</td><td>47 (36%)</td></tr>
-      <tr><td>4</td><td><a href="/languages/haskell">Haskell</a></td><td>2.94%</td><td>36 (27%)</td></tr>
-      <tr><td>5</td><td><a href="/languages/c">C</a></td><td>2.89%</td><td>49 (37%)</td></tr>
-      <tr><td>6</td><td><a href="/languages/simula">Simula</a></td><td>2.78%</td><td>46 (35%)</td></tr>
-      <tr><td>7</td><td><a href="/languages/pascal">Pascal</a></td><td>2.39%</td><td>46 (35%)</td></tr>
-      <tr><td>8</td><td><a href="/languages/smalltalk">Smalltalk</a></td><td>2.08%</td><td>44 (34%)</td></tr>
-      <tr><td>9</td><td><a href="/languages/hope">Hope</a></td><td>2.08%</td><td>39 (30%)</td></tr>
-      <tr><td>10</td><td><a href="/languages/speedcoding">Speedcoding</a></td><td>1.91%</td><td>57 (44%)</td></tr>
-      <tr><td>11</td><td><a href="/languages/fortran">Fortran</a></td><td>1.88%</td><td>56 (43%)</td></tr>
-      <tr><td>12</td><td><a href="/languages/python">Python</a></td><td>1.81%</td><td>21 (16%)</td></tr>
-      <tr><td>13</td><td><a href="/languages/bcpl">BCPL</a></td><td>1.53%</td><td>51 (39%)</td></tr>
-      <tr><td>14</td><td><a href="/languages/miranda">Miranda</a></td><td>1.50%</td><td>38 (29%)</td></tr>
-      <tr><td>15</td><td><a href="/languages/java">Java</a></td><td>1.44%</td><td>19 (15%)</td></tr>
+      <tr><td>1</td><td><a href="/languages/lisp">Lisp</a></td><td>8.18%</td><td>66 (47%)</td></tr>
+      <tr><td>2</td><td><a href="/languages/algol">ALGOL</a></td><td>6.05%</td><td>67 (48%)</td></tr>
+      <tr><td>3</td><td><a href="/languages/ml">ML</a></td><td>4.44%</td><td>48 (34%)</td></tr>
+      <tr><td>4</td><td><a href="/languages/c">C</a></td><td>2.78%</td><td>51 (36%)</td></tr>
+      <tr><td>5</td><td><a href="/languages/haskell">Haskell</a></td><td>2.77%</td><td>37 (26%)</td></tr>
+      <tr><td>6</td><td><a href="/languages/simula">Simula</a></td><td>2.61%</td><td>47 (33%)</td></tr>
+      <tr><td>7</td><td><a href="/languages/pascal">Pascal</a></td><td>2.25%</td><td>47 (33%)</td></tr>
+      <tr><td>8</td><td><a href="/languages/smalltalk">Smalltalk</a></td><td>1.96%</td><td>45 (32%)</td></tr>
+      <tr><td>9</td><td><a href="/languages/hope">Hope</a></td><td>1.95%</td><td>40 (28%)</td></tr>
+      <tr><td>10</td><td><a href="/languages/python">Python</a></td><td>1.94%</td><td>22 (16%)</td></tr>
+      <tr><td>11</td><td><a href="/languages/speedcoding">Speedcoding</a></td><td>1.79%</td><td>59 (42%)</td></tr>
+      <tr><td>12</td><td><a href="/languages/fortran">Fortran</a></td><td>1.77%</td><td>58 (41%)</td></tr>
+      <tr><td>13</td><td><a href="/languages/bcpl">BCPL</a></td><td>1.46%</td><td>53 (38%)</td></tr>
+      <tr><td>14</td><td><a href="/languages/miranda">Miranda</a></td><td>1.40%</td><td>39 (28%)</td></tr>
+      <tr><td>15</td><td><a href="/languages/java">Java</a></td><td>1.34%</td><td>19 (13%)</td></tr>
     </tbody>
   </table>
 
   <h2>The C/C++ implementation closure</h2>
-  <p>A different graph, a different question: not who influenced whom, but what was actually built with what. Following <a href="/relationships/compiler-written-in">compiler</a>, <a href="/relationships/runtime-written-in">runtime</a>, and <a href="/relationships/bootstrap-written-in">bootstrap</a> chains back to their root, <strong>92 of 152 nodes (61%)</strong> in the dataset trace their implementation lineage back to C or C++.</p>
+  <p>A different graph, a different question: not who influenced whom, but what was actually built with what. Following <a href="/relationships/compiler-written-in">compiler</a>, <a href="/relationships/runtime-written-in">runtime</a>, and <a href="/relationships/bootstrap-written-in">bootstrap</a> chains back to their root, <strong>108 of 171 nodes (63%)</strong> in the dataset trace their implementation lineage back to C or C++.</p>
 
   <h2>The calculation</h2>
   <p>Nothing on this page is hand-transcribed. The script that produced it is public: <a href="https://github.com/sanketmuchhala/LanguageLineage/blob/main/scripts/computeCentrality.ts">scripts/computeCentrality.ts</a>. Its output, the exact numbers behind this table, is downloadable as <a href="/rankings/centrality.json">centrality.json</a>.</p>

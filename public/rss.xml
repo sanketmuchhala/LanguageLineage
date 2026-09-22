@@ -5,14 +5,21 @@
     <link>https://www.languagelineage.org</link>
     <description>Guides and data stories on what programming languages are written in, how compilers are bootstrapped, and how languages influenced each other.</description>
     <language>en-us</language>
-    <lastBuildDate>Wed, 09 Sep 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 22 Sep 2026 00:00:00 GMT</lastBuildDate>
     <atom:link href="https://www.languagelineage.org/rss.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>How Modern Languages Trace Their Toolchains Back to C | Language Lineage</title>
       <link>https://www.languagelineage.org/guides/the-c-bootstrap-chain</link>
       <guid isPermaLink="true">https://www.languagelineage.org/guides/the-c-bootstrap-chain</guid>
       <description>How Python, Rust, Go, JavaScript, Java, Ruby, and Haskell trace their compiler or runtime implementation back to C or C++. 7 chains computed from the Language Lineage dataset.</description>
-      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
+      <pubDate>Tue, 22 Sep 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>The Most Influential Programming Languages | Language Lineage</title>
+      <link>https://www.languagelineage.org/rankings/most-influential</link>
+      <guid isPermaLink="true">https://www.languagelineage.org/rankings/most-influential</guid>
+      <description>Reverse PageRank over 262 cited influence relationships across 141 languages. Generated, not hand-ranked.</description>
+      <pubDate>Tue, 22 Sep 2026 00:00:00 GMT</pubDate>
     </item>
     <item>
       <title>GraalVM vs HotSpot: Two JVM Implementations Compared | Language Lineage</title>
@@ -96,13 +103,6 @@
       <link>https://www.languagelineage.org/guides/what-is-compiler-bootstrapping</link>
       <guid isPermaLink="true">https://www.languagelineage.org/guides/what-is-compiler-bootstrapping</guid>
       <description>Compiler bootstrapping is the process of writing a compiler for a language in that same language. Learn how it works and which languages use it.</description>
-      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
-    </item>
-    <item>
-      <title>The Most Influential Programming Languages | Language Lineage</title>
-      <link>https://www.languagelineage.org/rankings/most-influential</link>
-      <guid isPermaLink="true">https://www.languagelineage.org/rankings/most-influential</guid>
-      <description>Reverse PageRank over 252 cited influence relationships across 131 languages. Generated, not hand-ranked.</description>
       <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
     </item>
   </channel>
