@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import cytoscape from 'cytoscape';
 import coseBilkent from 'cytoscape-cose-bilkent';
-import { loadDataset } from '../data/loadDataset';
-import { normalizeDataset } from '../data/normalizeDataset';
+import { loadDatasetV6 } from '../data/loadDataset_v6';
+
 import { getCytoscapeStyle } from '../graph/style';
 import { LOGO_MAP, LOGO_COLORS, getLetterAbbreviation, getLogoPresentation } from '../data/logoMap';
 import { getGraphLogoUrl } from '../data/graphLogoAssets';
@@ -35,28 +35,28 @@ export function EmbedGraph() {
 
     (async () => {
       try {
-        const raw = await loadDataset('v5');
+        const raw = await loadDatasetV6();
         if (cancelled) return;
 
-        const dataset = normalizeDataset(raw);
+        const dataset = raw;
 
-        const nodeId = [...dataset.languageMap.keys()].find(
+        const nodeId = [...dataset.entityMap.keys()].find(
           id => idToSlug(id) === slug
         );
         if (!nodeId) { setError(`Language "${slug}" not found in dataset`); return; }
 
-        const connectedEdges = dataset.edges.filter(
-          e => e.from_language === nodeId || e.to_language === nodeId
+        const connectedEdges = dataset.relationships.filter(
+          e => e.from === nodeId || e.to === nodeId
         );
         const nodeIds = new Set([nodeId]);
         connectedEdges.forEach(e => {
-          nodeIds.add(e.from_language);
-          nodeIds.add(e.to_language);
+          nodeIds.add(e.from);
+          nodeIds.add(e.to);
         });
 
         const elements: cytoscape.ElementDefinition[] = [];
         nodeIds.forEach(id => {
-          const lang = dataset.languageMap.get(id);
+          const lang = dataset.entityMap.get(id);
           if (!lang) return;
           const canonicalLogoUrl = lang.logo_url ?? LOGO_MAP[id] ?? null;
           const logoUrl = getGraphLogoUrl(id, canonicalLogoUrl);
@@ -84,8 +84,8 @@ export function EmbedGraph() {
             group: 'edges',
             data: {
               id: e.id,
-              source: e.from_language,
-              target: e.to_language,
+              source: e.from,
+              target: e.to,
               relationship: e.relationship,
               confidence: e.confidence,
             },

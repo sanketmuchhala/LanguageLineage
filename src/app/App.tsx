@@ -6,6 +6,9 @@ import { SpeedInsights } from '@vercel/speed-insights/react';
 import { LandingPage } from '../ui/LandingPage';
 import { NotFound } from '../pages/NotFound';
 import { Seo } from '../seo/Seo';
+import { StoriesIndex } from '../pages/StoriesIndex';
+import { StoryViewer } from '../pages/StoryViewer';
+import { BootstrapExplorer } from '../pages/BootstrapExplorer';
 
 import '../styles/tokens.css';
 import './App.css';
@@ -59,6 +62,9 @@ function App() {
         <Routes>
           <Route path="/" element={<LandingPageWrapper />} />
           <Route path="/explore" element={<GraphExplorerWrapper />} />
+          <Route path="/stories" element={<StoriesIndex />} />
+          <Route path="/stories/:slug" element={<StoryViewer />} />
+          <Route path="/bootstrap" element={<BootstrapExplorer />} />
           <Route path="/embed" element={<Suspense fallback={null}><EmbedGraph /></Suspense>} />
           <Route path="*" element={<NotFound />} />
         </Routes>

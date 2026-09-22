@@ -1,0 +1,4599 @@
+[
+  {
+    "from": "lang:bcpl",
+    "to": "lang:b",
+    "relationship": "influenced",
+    "start_year": 1969,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://en.wikipedia.org/wiki/B_(programming_language)",
+    "notes": "BCPL directly inspired B; Ken Thompson acknowledged this lineage"
+  },
+  {
+    "from": "lang:bcpl",
+    "to": "lang:b",
+    "relationship": "bootstrap_written_in",
+    "start_year": 1969,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/BCPL",
+    "notes": "B compiler bootstrapped using BCPL"
+  },
+  {
+    "from": "lang:b",
+    "to": "lang:c",
+    "relationship": "influenced",
+    "start_year": 1972,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://en.wikipedia.org/wiki/C_(programming_language)",
+    "notes": "C evolved directly from B at Bell Labs"
+  },
+  {
+    "from": "lang:b",
+    "to": "lang:c",
+    "relationship": "bootstrap_written_in",
+    "start_year": 1972,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/B_(programming_language)",
+    "notes": "Early C compiler bootstrapped from B"
+  },
+  {
+    "from": "lang:algol",
+    "to": "lang:simula",
+    "relationship": "influenced",
+    "start_year": 1962,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/Simula",
+    "notes": "Simula directly extended ALGOL 60"
+  },
+  {
+    "from": "lang:algol",
+    "to": "lang:pascal",
+    "relationship": "influenced",
+    "start_year": 1970,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/Pascal_(programming_language)",
+    "notes": "Wirth based Pascal on ALGOL"
+  },
+  {
+    "from": "lang:algol",
+    "to": "lang:c",
+    "relationship": "influenced",
+    "start_year": 1972,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/C_(programming_language)",
+    "notes": "C adopted block structure and control flow from ALGOL"
+  },
+  {
+    "from": "lang:simula",
+    "to": "lang:cxx",
+    "relationship": "influenced",
+    "start_year": 1983,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/C%2B%2B",
+    "notes": "Stroustrup acknowledged Simula's class system as C++ inspiration"
+  },
+  {
+    "from": "lang:simula",
+    "to": "lang:smalltalk",
+    "relationship": "influenced",
+    "start_year": 1972,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Smalltalk",
+    "notes": "Alan Kay cited Simula as major influence"
+  },
+  {
+    "from": "lang:lisp",
+    "to": "lang:scheme",
+    "relationship": "influenced",
+    "start_year": 1975,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://en.wikipedia.org/wiki/Scheme_(programming_language)",
+    "notes": "Scheme is a minimalist Lisp dialect"
+  },
+  {
+    "from": "lang:lisp",
+    "to": "lang:common_lisp",
+    "relationship": "influenced",
+    "start_year": 1984,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://en.wikipedia.org/wiki/Common_Lisp",
+    "notes": "Common Lisp standardized multiple Lisp dialects"
+  },
+  {
+    "from": "lang:lisp",
+    "to": "lang:ml",
+    "relationship": "influenced",
+    "start_year": 1973,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/ML_(programming_language)",
+    "notes": "ML influenced by Lisp in interactive style"
+  },
+  {
+    "from": "lang:scheme",
+    "to": "lang:racket",
+    "relationship": "influenced",
+    "start_year": 1994,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://racket-lang.org/",
+    "notes": "Racket was originally PLT Scheme"
+  },
+  {
+    "from": "lang:scheme",
+    "to": "lang:clojure",
+    "relationship": "influenced",
+    "start_year": 2007,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://clojure.org/about/rationale",
+    "notes": "Rich Hickey cited Scheme as influence"
+  },
+  {
+    "from": "lang:scheme",
+    "to": "lang:elixir",
+    "relationship": "influenced",
+    "start_year": 2012,
+    "end_year": null,
+    "confidence": 0.75,
+    "evidence_source": "https://en.wikipedia.org/wiki/Elixir_(programming_language)",
+    "notes": "Partial influence via macro system design"
+  },
+  {
+    "from": "lang:ml",
+    "to": "lang:sml",
+    "relationship": "influenced",
+    "start_year": 1983,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://en.wikipedia.org/wiki/Standard_ML",
+    "notes": "SML is a direct standardization of ML"
+  },
+  {
+    "from": "lang:ml",
+    "to": "lang:haskell",
+    "relationship": "influenced",
+    "start_year": 1990,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/Haskell",
+    "notes": "Haskell drew heavily from ML's type system"
+  },
+  {
+    "from": "lang:ml",
+    "to": "lang:ocaml",
+    "relationship": "influenced",
+    "start_year": 1996,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://en.wikipedia.org/wiki/OCaml",
+    "notes": "OCaml is an ML dialect with objects added"
+  },
+  {
+    "from": "lang:ml",
+    "to": "lang:fsharp",
+    "relationship": "influenced",
+    "start_year": 2005,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://fsharp.org/history/hopl-final/hopl-fsharp.pdf",
+    "notes": "F# is strongly derived from ML/OCaml"
+  },
+  {
+    "from": "lang:sml",
+    "to": "lang:ocaml",
+    "relationship": "influenced",
+    "start_year": 1996,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/OCaml",
+    "notes": "OCaml shares SML heritage"
+  },
+  {
+    "from": "lang:sml",
+    "to": "lang:sml",
+    "relationship": "compiler_written_in",
+    "start_year": 1990,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://www.smlnj.org/",
+    "notes": "SML/NJ is self-hosting"
+  },
+  {
+    "from": "lang:haskell",
+    "to": "lang:elm",
+    "relationship": "influenced",
+    "start_year": 2012,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/Elm_(programming_language)",
+    "notes": "Elm inspired directly by Haskell"
+  },
+  {
+    "from": "lang:haskell",
+    "to": "lang:purescript",
+    "relationship": "influenced",
+    "start_year": 2013,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/PureScript",
+    "notes": "PureScript is Haskell-inspired"
+  },
+  {
+    "from": "lang:haskell",
+    "to": "lang:coffeescript",
+    "relationship": "influenced",
+    "start_year": 2009,
+    "end_year": null,
+    "confidence": 0.7,
+    "evidence_source": "https://en.wikipedia.org/wiki/CoffeeScript",
+    "notes": "Partial influence, lower confidence"
+  },
+  {
+    "from": "lang:haskell",
+    "to": "lang:rust",
+    "relationship": "influenced",
+    "start_year": 2015,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://doc.rust-lang.org/reference/influences.html",
+    "notes": "Rust adopted algebraic types and type classes from Haskell"
+  },
+  {
+    "from": "lang:haskell",
+    "to": "lang:haskell",
+    "relationship": "compiler_written_in",
+    "start_year": 1992,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://www.haskell.org/ghc/",
+    "notes": "GHC is self-hosting, written in Haskell"
+  },
+  {
+    "from": "lang:haskell",
+    "to": "lang:elm",
+    "relationship": "compiler_written_in",
+    "start_year": 2012,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://github.com/elm/compiler",
+    "notes": "Elm compiler written in Haskell"
+  },
+  {
+    "from": "lang:haskell",
+    "to": "lang:purescript",
+    "relationship": "compiler_written_in",
+    "start_year": 2013,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://github.com/purescript/purescript",
+    "notes": "PureScript compiler written in Haskell"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:cxx",
+    "relationship": "influenced",
+    "start_year": 1983,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://en.wikipedia.org/wiki/C%2B%2B",
+    "notes": "C++ is a superset extension of C"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:objective_c",
+    "relationship": "influenced",
+    "start_year": 1984,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://en.wikipedia.org/wiki/Objective-C",
+    "notes": "Objective-C adds Smalltalk messaging to C"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:perl",
+    "relationship": "runtime_written_in",
+    "start_year": 1987,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://www.perl.org/get.html",
+    "notes": "Perl interpreter written in C"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:lua",
+    "relationship": "runtime_written_in",
+    "start_year": 1993,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://www.lua.org/about.html",
+    "notes": "Lua written in ANSI C"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:python",
+    "relationship": "runtime_written_in",
+    "start_year": 1991,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://github.com/python/cpython",
+    "notes": "CPython reference implementation in C"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:php",
+    "relationship": "runtime_written_in",
+    "start_year": 1995,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://github.com/php/php-src",
+    "notes": "PHP Zend Engine written in C"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:ruby",
+    "relationship": "runtime_written_in",
+    "start_year": 1995,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://github.com/ruby/ruby",
+    "notes": "MRI/CRuby written in C"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:r",
+    "relationship": "runtime_written_in",
+    "start_year": 1993,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://www.r-project.org/",
+    "notes": "R runtime core in C"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:go",
+    "relationship": "compiler_written_in",
+    "start_year": 2009,
+    "end_year": 2015,
+    "confidence": 0.98,
+    "evidence_source": "https://go.dev/doc/faq#history",
+    "notes": "Original Go compiler in C, rewritten in Go in 1.5 (2015)"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:rust",
+    "relationship": "compiler_written_in",
+    "start_year": 2006,
+    "end_year": 2010,
+    "confidence": 0.85,
+    "evidence_source": "https://github.com/iohub/rustboot",
+    "notes": "Early Rust had C components before OCaml bootstrap compiler"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:ocaml",
+    "relationship": "runtime_written_in",
+    "start_year": 1996,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://github.com/ocaml/ocaml",
+    "notes": "OCaml runtime/GC written in C"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:haskell",
+    "relationship": "runtime_written_in",
+    "start_year": 1992,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://gitlab.haskell.org/ghc/ghc",
+    "notes": "GHC RTS (runtime system) written in C"
+  },
+  {
+    "from": "lang:c",
+    "to": "tool:gcc",
+    "relationship": "compiler_written_in",
+    "start_year": 1987,
+    "end_year": 2012,
+    "confidence": 0.95,
+    "evidence_source": "https://gcc.gnu.org/wiki/History",
+    "notes": "GCC originally written in C, switched to C++ in 2012"
+  },
+  {
+    "from": "lang:c",
+    "to": "tool:beam",
+    "relationship": "runtime_written_in",
+    "start_year": 1986,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://github.com/erlang/otp",
+    "notes": "BEAM VM written in C"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:javascript",
+    "relationship": "runtime_written_in",
+    "start_year": 1995,
+    "end_year": 1998,
+    "confidence": 0.85,
+    "evidence_source": "https://spidermonkey.dev/",
+    "notes": "Original SpiderMonkey JS engine written in C by Brendan Eich"
+  },
+  {
+    "from": "lang:c",
+    "to": "tool:javascriptcore",
+    "relationship": "runtime_written_in",
+    "start_year": 2001,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://webkit.org/",
+    "notes": "JavaScriptCore has C components"
+  },
+  {
+    "from": "lang:c",
+    "to": "tool:dotnet_runtime",
+    "relationship": "runtime_written_in",
+    "start_year": 2002,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://github.com/dotnet/runtime",
+    "notes": "CoreCLR has C components alongside C++"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:swift",
+    "relationship": "compiler_written_in",
+    "start_year": 2014,
+    "end_year": 2019,
+    "confidence": 0.85,
+    "evidence_source": "https://github.com/swiftlang/swift",
+    "notes": "Early Swift compiler had significant C components"
+  },
+  {
+    "from": "lang:cxx",
+    "to": "lang:cxx",
+    "relationship": "compiler_written_in",
+    "start_year": 1987,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://gcc.gnu.org/",
+    "notes": "GCC and Clang (C++ compilers) written in C++"
+  },
+  {
+    "from": "lang:cxx",
+    "to": "tool:llvm",
+    "relationship": "compiler_written_in",
+    "start_year": 2003,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://github.com/llvm/llvm-project",
+    "notes": "LLVM infrastructure written in C++"
+  },
+  {
+    "from": "lang:cxx",
+    "to": "tool:clang",
+    "relationship": "compiler_written_in",
+    "start_year": 2007,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://github.com/llvm/llvm-project",
+    "notes": "Clang frontend written in C++"
+  },
+  {
+    "from": "lang:cxx",
+    "to": "tool:gcc",
+    "relationship": "compiler_written_in",
+    "start_year": 2012,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://lwn.net/Articles/542457/",
+    "notes": "GCC switched from C to C++ in 2012"
+  },
+  {
+    "from": "lang:cxx",
+    "to": "tool:v8",
+    "relationship": "runtime_written_in",
+    "start_year": 2008,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://github.com/v8/v8",
+    "notes": "V8 JavaScript engine written in C++"
+  },
+  {
+    "from": "lang:cxx",
+    "to": "tool:spidermonkey",
+    "relationship": "runtime_written_in",
+    "start_year": 2000,
+    "end_year": null,
+    "confidence": 0.92,
+    "evidence_source": "https://spidermonkey.dev/",
+    "notes": "SpiderMonkey rewritten in C++ (originally C)"
+  },
+  {
+    "from": "lang:cxx",
+    "to": "tool:javascriptcore",
+    "relationship": "runtime_written_in",
+    "start_year": 2001,
+    "end_year": null,
+    "confidence": 0.92,
+    "evidence_source": "https://webkit.org/",
+    "notes": "JavaScriptCore written in C++ and Assembly"
+  },
+  {
+    "from": "lang:cxx",
+    "to": "tool:hotspot",
+    "relationship": "runtime_written_in",
+    "start_year": 1999,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://github.com/openjdk/jdk",
+    "notes": "HotSpot JVM written in C++"
+  },
+  {
+    "from": "lang:cxx",
+    "to": "tool:dotnet_runtime",
+    "relationship": "runtime_written_in",
+    "start_year": 2002,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://github.com/dotnet/runtime",
+    "notes": "CoreCLR primarily in C++"
+  },
+  {
+    "from": "lang:cxx",
+    "to": "tool:mrustc",
+    "relationship": "compiler_written_in",
+    "start_year": 2016,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://github.com/thepowersgang/mrustc",
+    "notes": "mrustc alternative Rust compiler in C++"
+  },
+  {
+    "from": "lang:cxx",
+    "to": "lang:java",
+    "relationship": "influenced",
+    "start_year": 1995,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Java_(programming_language)",
+    "notes": "Java adopted C++ syntax and OOP concepts"
+  },
+  {
+    "from": "lang:cxx",
+    "to": "lang:d",
+    "relationship": "influenced",
+    "start_year": 2001,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://dlang.org/overview.html",
+    "notes": "D designed as C++ successor"
+  },
+  {
+    "from": "lang:cxx",
+    "to": "lang:rust",
+    "relationship": "influenced",
+    "start_year": 2015,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://doc.rust-lang.org/reference/influences.html",
+    "notes": "Rust influenced by C++'s systems programming model"
+  },
+  {
+    "from": "lang:cxx",
+    "to": "lang:swift",
+    "relationship": "compiler_written_in",
+    "start_year": 2014,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://github.com/swiftlang/swift",
+    "notes": "Swift compiler primarily in C++"
+  },
+  {
+    "from": "lang:cxx",
+    "to": "lang:carbon",
+    "relationship": "compiler_written_in",
+    "start_year": 2022,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://github.com/carbon-language/carbon-lang",
+    "notes": "Carbon toolchain written in C++"
+  },
+  {
+    "from": "lang:cxx",
+    "to": "lang:dart",
+    "relationship": "runtime_written_in",
+    "start_year": 2011,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://github.com/dart-lang/sdk",
+    "notes": "Dart SDK/VM written in C++"
+  },
+  {
+    "from": "lang:cxx",
+    "to": "lang:mojo",
+    "relationship": "compiler_written_in",
+    "start_year": 2023,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://docs.modular.com/mojo/",
+    "notes": "Mojo toolchain written in C++"
+  },
+  {
+    "from": "lang:cxx",
+    "to": "lang:zig",
+    "relationship": "compiler_written_in",
+    "start_year": 2016,
+    "end_year": 2022,
+    "confidence": 0.95,
+    "evidence_source": "https://ziglang.org/news/goodbye-cpp/",
+    "notes": "Zig originally written in C++ before self-hosting"
+  },
+  {
+    "from": "lang:pascal",
+    "to": "lang:ada",
+    "relationship": "influenced",
+    "start_year": 1980,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/Ada_(programming_language)",
+    "notes": "Ada designed as Pascal successor for DoD"
+  },
+  {
+    "from": "lang:pascal",
+    "to": "lang:d",
+    "relationship": "influenced",
+    "start_year": 2001,
+    "end_year": null,
+    "confidence": 0.75,
+    "evidence_source": "https://dlang.org/overview.html",
+    "notes": "Pascal influenced D's module system"
+  },
+  {
+    "from": "lang:pascal",
+    "to": "lang:pascal",
+    "relationship": "compiler_written_in",
+    "start_year": 1974,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Pascal_(programming_language)",
+    "notes": "Pascal P-compiler bootstrapped itself"
+  },
+  {
+    "from": "lang:smalltalk",
+    "to": "lang:objective_c",
+    "relationship": "influenced",
+    "start_year": 1984,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://en.wikipedia.org/wiki/Objective-C",
+    "notes": "Objective-C directly adds Smalltalk message passing to C"
+  },
+  {
+    "from": "lang:smalltalk",
+    "to": "lang:ruby",
+    "relationship": "influenced",
+    "start_year": 1995,
+    "end_year": null,
+    "confidence": 0.92,
+    "evidence_source": "https://en.wikipedia.org/wiki/Ruby_(programming_language)",
+    "notes": "Matz cited Smalltalk as major influence"
+  },
+  {
+    "from": "lang:smalltalk",
+    "to": "lang:python",
+    "relationship": "influenced",
+    "start_year": 1991,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Python_(programming_language)",
+    "notes": "Python influenced by Smalltalk OOP model"
+  },
+  {
+    "from": "lang:smalltalk",
+    "to": "lang:scala",
+    "relationship": "influenced",
+    "start_year": 2003,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://en.wikipedia.org/wiki/Scala_(programming_language)",
+    "notes": "Scala influenced by Smalltalk's uniform object model"
+  },
+  {
+    "from": "lang:smalltalk",
+    "to": "lang:javascript",
+    "relationship": "influenced",
+    "start_year": 1995,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://auth0.com/blog/a-brief-history-of-javascript/",
+    "notes": "Brendan Eich cited Self (Smalltalk descendant) as influence"
+  },
+  {
+    "from": "lang:ocaml",
+    "to": "lang:rust",
+    "relationship": "compiler_written_in",
+    "start_year": 2010,
+    "end_year": 2011,
+    "confidence": 0.95,
+    "evidence_source": "https://github.com/iohub/rustboot",
+    "notes": "Original Rust compiler (rustboot) written in OCaml"
+  },
+  {
+    "from": "lang:ocaml",
+    "to": "lang:ocaml",
+    "relationship": "compiler_written_in",
+    "start_year": 1996,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://github.com/ocaml/ocaml",
+    "notes": "OCaml compiler is self-hosting"
+  },
+  {
+    "from": "lang:ocaml",
+    "to": "lang:reasonml",
+    "relationship": "influenced",
+    "start_year": 2016,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://reasonml.github.io/",
+    "notes": "ReasonML is OCaml with JS-friendly syntax"
+  },
+  {
+    "from": "lang:ocaml",
+    "to": "lang:fsharp",
+    "relationship": "influenced",
+    "start_year": 2005,
+    "end_year": null,
+    "confidence": 0.92,
+    "evidence_source": "https://fsharp.org/history/hopl-final/hopl-fsharp.pdf",
+    "notes": "F# initially derived from OCaml"
+  },
+  {
+    "from": "lang:ocaml",
+    "to": "lang:fsharp",
+    "relationship": "bootstrap_written_in",
+    "start_year": 2005,
+    "end_year": 2010,
+    "confidence": 0.9,
+    "evidence_source": "https://fsharp.org/history/hopl-final/hopl-fsharp.pdf",
+    "notes": "F# initial compiler written in OCaml before self-hosting"
+  },
+  {
+    "from": "lang:java",
+    "to": "lang:java",
+    "relationship": "compiler_written_in",
+    "start_year": 1997,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://openjdk.org/groups/compiler/",
+    "notes": "javac compiler is self-hosting"
+  },
+  {
+    "from": "lang:java",
+    "to": "lang:kotlin",
+    "relationship": "influenced",
+    "start_year": 2016,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://kotlinlang.org/docs/faq.html",
+    "notes": "Kotlin designed to interoperate with Java"
+  },
+  {
+    "from": "lang:java",
+    "to": "lang:kotlin",
+    "relationship": "compiler_written_in",
+    "start_year": 2016,
+    "end_year": 2017,
+    "confidence": 0.9,
+    "evidence_source": "https://github.com/JetBrains/kotlin",
+    "notes": "Early Kotlin compiler written in Java before self-hosting"
+  },
+  {
+    "from": "lang:java",
+    "to": "lang:scala",
+    "relationship": "influenced",
+    "start_year": 2003,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://en.wikipedia.org/wiki/Scala_(programming_language)",
+    "notes": "Scala runs on JVM and adopts Java interop"
+  },
+  {
+    "from": "lang:java",
+    "to": "lang:clojure",
+    "relationship": "compiler_written_in",
+    "start_year": 2007,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://github.com/clojure/clojure/blob/master/src/jvm/clojure/lang/Compiler.java",
+    "notes": "Clojure compiler written in Java by design"
+  },
+  {
+    "from": "lang:java",
+    "to": "lang:groovy",
+    "relationship": "influenced",
+    "start_year": 2003,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Apache_Groovy",
+    "notes": "Groovy runs on JVM, Java syntax compatible"
+  },
+  {
+    "from": "lang:java",
+    "to": "lang:groovy",
+    "relationship": "compiler_written_in",
+    "start_year": 2003,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://github.com/apache/groovy",
+    "notes": "Groovy compiler written in Java (intentional)"
+  },
+  {
+    "from": "lang:java",
+    "to": "lang:csharp",
+    "relationship": "influenced",
+    "start_year": 2000,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/C_Sharp_(programming_language)",
+    "notes": "C# influenced by Java's design"
+  },
+  {
+    "from": "lang:java",
+    "to": "lang:d",
+    "relationship": "influenced",
+    "start_year": 2001,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://dlang.org/overview.html",
+    "notes": "D influenced by Java's GC and module system"
+  },
+  {
+    "from": "lang:javascript",
+    "to": "lang:typescript",
+    "relationship": "influenced",
+    "start_year": 2012,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://www.typescriptlang.org/",
+    "notes": "TypeScript is a typed superset of JavaScript"
+  },
+  {
+    "from": "lang:javascript",
+    "to": "lang:coffeescript",
+    "relationship": "influenced",
+    "start_year": 2009,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://en.wikipedia.org/wiki/CoffeeScript",
+    "notes": "CoffeeScript transpiles to JavaScript"
+  },
+  {
+    "from": "lang:javascript",
+    "to": "lang:dart",
+    "relationship": "influenced",
+    "start_year": 2011,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Dart_(programming_language)",
+    "notes": "Dart influenced by JavaScript ecosystem"
+  },
+  {
+    "from": "lang:javascript",
+    "to": "lang:reasonml",
+    "relationship": "influenced",
+    "start_year": 2016,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://reasonml.github.io/",
+    "notes": "ReasonML targets JS ecosystem"
+  },
+  {
+    "from": "lang:python",
+    "to": "lang:ruby",
+    "relationship": "influenced",
+    "start_year": 1995,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Ruby_(programming_language)",
+    "notes": "Matz cited Python as one influence"
+  },
+  {
+    "from": "lang:python",
+    "to": "lang:coffeescript",
+    "relationship": "influenced",
+    "start_year": 2009,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://en.wikipedia.org/wiki/CoffeeScript",
+    "notes": "CoffeeScript indentation inspired by Python"
+  },
+  {
+    "from": "lang:python",
+    "to": "lang:groovy",
+    "relationship": "influenced",
+    "start_year": 2003,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://en.wikipedia.org/wiki/Apache_Groovy",
+    "notes": "Groovy influenced by Python syntax"
+  },
+  {
+    "from": "lang:python",
+    "to": "lang:d",
+    "relationship": "influenced",
+    "start_year": 2001,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://dlang.org/overview.html",
+    "notes": "D influenced by Python's expressiveness"
+  },
+  {
+    "from": "lang:python",
+    "to": "lang:mojo",
+    "relationship": "influenced",
+    "start_year": 2023,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://docs.modular.com/mojo/",
+    "notes": "Mojo is a Python superset for AI/ML"
+  },
+  {
+    "from": "lang:python",
+    "to": "lang:julia",
+    "relationship": "influenced",
+    "start_year": 2012,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://julialang.org/blog/2012/02/why-we-created-julia/",
+    "notes": "Julia creators cited Python as key influence"
+  },
+  {
+    "from": "lang:python",
+    "to": "lang:nim",
+    "relationship": "influenced",
+    "start_year": 2008,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://nim-lang.org/documentation.html",
+    "notes": "Nim syntax inspired by Python"
+  },
+  {
+    "from": "lang:ruby",
+    "to": "lang:crystal",
+    "relationship": "influenced",
+    "start_year": 2014,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://crystal-lang.org/",
+    "notes": "Crystal uses Ruby-like syntax"
+  },
+  {
+    "from": "lang:ruby",
+    "to": "lang:crystal",
+    "relationship": "bootstrap_written_in",
+    "start_year": 2014,
+    "end_year": 2015,
+    "confidence": 0.92,
+    "evidence_source": "https://github.com/crystal-lang/crystal",
+    "notes": "Crystal compiler bootstrapped from Ruby"
+  },
+  {
+    "from": "lang:ruby",
+    "to": "lang:elixir",
+    "relationship": "influenced",
+    "start_year": 2012,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Elixir_(programming_language)",
+    "notes": "Elixir syntax inspired by Ruby"
+  },
+  {
+    "from": "lang:ruby",
+    "to": "lang:coffeescript",
+    "relationship": "influenced",
+    "start_year": 2009,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/CoffeeScript",
+    "notes": "CoffeeScript inspired by Ruby syntax"
+  },
+  {
+    "from": "lang:ruby",
+    "to": "lang:groovy",
+    "relationship": "influenced",
+    "start_year": 2003,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://en.wikipedia.org/wiki/Apache_Groovy",
+    "notes": "Groovy influenced by Ruby"
+  },
+  {
+    "from": "lang:ruby",
+    "to": "lang:d",
+    "relationship": "influenced",
+    "start_year": 2001,
+    "end_year": null,
+    "confidence": 0.75,
+    "evidence_source": "https://dlang.org/overview.html",
+    "notes": "D influenced by Ruby's expressiveness"
+  },
+  {
+    "from": "lang:erlang",
+    "to": "lang:erlang",
+    "relationship": "compiler_written_in",
+    "start_year": 1991,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://github.com/erlang/otp",
+    "notes": "Erlang compiler is self-hosting"
+  },
+  {
+    "from": "lang:erlang",
+    "to": "lang:elixir",
+    "relationship": "influenced",
+    "start_year": 2012,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://elixir-lang.org/",
+    "notes": "Elixir runs on BEAM and uses Erlang semantics"
+  },
+  {
+    "from": "lang:erlang",
+    "to": "lang:elixir",
+    "relationship": "bootstrap_written_in",
+    "start_year": 2012,
+    "end_year": 2013,
+    "confidence": 0.92,
+    "evidence_source": "https://elixir-lang.org/blog/2013/08/08/elixir-design-goals/",
+    "notes": "Elixir bootstrap compiler written in Erlang"
+  },
+  {
+    "from": "lang:erlang",
+    "to": "tool:beam",
+    "relationship": "runtime_written_in",
+    "start_year": 1986,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://github.com/erlang/otp",
+    "notes": "BEAM VM created for Erlang"
+  },
+  {
+    "from": "lang:rust",
+    "to": "lang:rust",
+    "relationship": "compiler_written_in",
+    "start_year": 2011,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://github.com/rust-lang/rust",
+    "notes": "rustc is self-hosting since ~2011"
+  },
+  {
+    "from": "lang:rust",
+    "to": "tool:spidermonkey",
+    "relationship": "runtime_written_in",
+    "start_year": 2015,
+    "end_year": null,
+    "confidence": 0.88,
+    "evidence_source": "https://spidermonkey.dev/",
+    "notes": "Parts of SpiderMonkey rewritten in Rust"
+  },
+  {
+    "from": "lang:rust",
+    "to": "lang:v",
+    "relationship": "influenced",
+    "start_year": 2019,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://vlang.io/",
+    "notes": "V influenced by Rust's safety concepts"
+  },
+  {
+    "from": "lang:go",
+    "to": "lang:go",
+    "relationship": "compiler_written_in",
+    "start_year": 2015,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://go.dev/doc/go1.5",
+    "notes": "Go compiler rewritten in Go in version 1.5"
+  },
+  {
+    "from": "lang:go",
+    "to": "lang:go",
+    "relationship": "runtime_written_in",
+    "start_year": 2015,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://go.dev/doc/go1.5",
+    "notes": "Go runtime also written in Go since 1.5"
+  },
+  {
+    "from": "lang:go",
+    "to": "lang:v",
+    "relationship": "influenced",
+    "start_year": 2019,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://vlang.io/",
+    "notes": "V's syntax heavily influenced by Go"
+  },
+  {
+    "from": "lang:go",
+    "to": "lang:typescript",
+    "relationship": "rewritten_in",
+    "start_year": 2025,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://devblogs.microsoft.com/typescript/typescript-native-port/",
+    "notes": "TypeScript 7.0 compiler being rewritten in Go for 10x speedup"
+  },
+  {
+    "from": "lang:typescript",
+    "to": "lang:typescript",
+    "relationship": "compiler_written_in",
+    "start_year": 2012,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://github.com/microsoft/TypeScript",
+    "notes": "tsc is self-hosting, written in TypeScript"
+  },
+  {
+    "from": "lang:kotlin",
+    "to": "lang:kotlin",
+    "relationship": "compiler_written_in",
+    "start_year": 2017,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://github.com/JetBrains/kotlin",
+    "notes": "Kotlin compiler became self-hosting; K2 frontend in 2024"
+  },
+  {
+    "from": "lang:csharp",
+    "to": "tool:roslyn",
+    "relationship": "compiler_written_in",
+    "start_year": 2014,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://github.com/dotnet/roslyn",
+    "notes": "Roslyn is self-hosting C# compiler platform"
+  },
+  {
+    "from": "lang:csharp",
+    "to": "lang:csharp",
+    "relationship": "compiler_written_in",
+    "start_year": 2014,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://github.com/dotnet/roslyn",
+    "notes": "C# Roslyn compiler written in C# (self-hosting)"
+  },
+  {
+    "from": "lang:csharp",
+    "to": "tool:dotnet_runtime",
+    "relationship": "runtime_written_in",
+    "start_year": 2014,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://github.com/dotnet/runtime",
+    "notes": "Managed parts of CoreCLR written in C#"
+  },
+  {
+    "from": "lang:csharp",
+    "to": "lang:vb_net",
+    "relationship": "compiler_written_in",
+    "start_year": 2014,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://github.com/dotnet/roslyn",
+    "notes": "Roslyn handles both C# and VB.NET"
+  },
+  {
+    "from": "lang:fsharp",
+    "to": "lang:fsharp",
+    "relationship": "compiler_written_in",
+    "start_year": 2010,
+    "end_year": null,
+    "confidence": 0.92,
+    "evidence_source": "https://github.com/dotnet/fsharp",
+    "notes": "F# compiler became self-hosting"
+  },
+  {
+    "from": "lang:elixir",
+    "to": "lang:elixir",
+    "relationship": "compiler_written_in",
+    "start_year": 2013,
+    "end_year": null,
+    "confidence": 0.92,
+    "evidence_source": "https://github.com/elixir-lang/elixir",
+    "notes": "Elixir compiler is self-hosting"
+  },
+  {
+    "from": "lang:swift",
+    "to": "lang:swift",
+    "relationship": "compiler_written_in",
+    "start_year": 2019,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://forums.swift.org/t/self-hosting-swift/",
+    "notes": "Swift compiler increasingly written in Swift"
+  },
+  {
+    "from": "lang:objective_c",
+    "to": "lang:swift",
+    "relationship": "influenced",
+    "start_year": 2014,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Swift_(programming_language)",
+    "notes": "Swift designed as Objective-C successor for Apple"
+  },
+  {
+    "from": "lang:objective_c",
+    "to": "lang:cxx",
+    "relationship": "influenced",
+    "start_year": 1986,
+    "end_year": null,
+    "confidence": 0.75,
+    "evidence_source": "https://en.wikipedia.org/wiki/C%2B%2B",
+    "notes": "Minor influence on C++ OOP model"
+  },
+  {
+    "from": "lang:crystal",
+    "to": "lang:crystal",
+    "relationship": "compiler_written_in",
+    "start_year": 2015,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://github.com/crystal-lang/crystal",
+    "notes": "Crystal compiler is self-hosting"
+  },
+  {
+    "from": "lang:nim",
+    "to": "lang:nim",
+    "relationship": "compiler_written_in",
+    "start_year": 2008,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://github.com/nim-lang/Nim",
+    "notes": "Nim compiler self-hosting from first release year"
+  },
+  {
+    "from": "lang:nim",
+    "to": "lang:c",
+    "relationship": "transpiled_to",
+    "start_year": 2008,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://nim-lang.org/docs/backends.html",
+    "notes": "Nim primarily transpiles to C"
+  },
+  {
+    "from": "lang:zig",
+    "to": "lang:zig",
+    "relationship": "compiler_written_in",
+    "start_year": 2022,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://ziglang.org/news/goodbye-cpp/",
+    "notes": "Zig became self-hosting in 2022, dropped C++ compiler"
+  },
+  {
+    "from": "lang:zig",
+    "to": "lang:zig",
+    "relationship": "rewritten_in",
+    "start_year": 2022,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://ziglang.org/news/goodbye-cpp/",
+    "notes": "Zig compiler rewritten from C++ to Zig"
+  },
+  {
+    "from": "lang:d",
+    "to": "lang:d",
+    "relationship": "compiler_written_in",
+    "start_year": 2017,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://github.com/dlang/dmd",
+    "notes": "DMD reference compiler bootstrapped to D"
+  },
+  {
+    "from": "lang:scala",
+    "to": "lang:scala",
+    "relationship": "compiler_written_in",
+    "start_year": 2006,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://www.scala-lang.org/blog/2015/10/23/dotty-compiler-bootstraps.html",
+    "notes": "Scala 3 (Dotty) compiler bootstrapped itself"
+  },
+  {
+    "from": "lang:fortran",
+    "to": "lang:r",
+    "relationship": "runtime_written_in",
+    "start_year": 1993,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://cran.r-project.org/doc/FAQ/R-FAQ.html",
+    "notes": "R has Fortran components for numerical routines"
+  },
+  {
+    "from": "lang:fortran",
+    "to": "lang:julia",
+    "relationship": "influenced",
+    "start_year": 2012,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://julialang.org/blog/2012/02/why-we-created-julia/",
+    "notes": "Julia creators cited Fortran's numeric performance"
+  },
+  {
+    "from": "lang:julia",
+    "to": "lang:julia",
+    "relationship": "compiler_written_in",
+    "start_year": 2018,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://github.com/JuliaLang/julia",
+    "notes": "Julia increasingly self-hosting, parser moving from FemtoLisp"
+  },
+  {
+    "from": "lang:machine_code",
+    "to": "lang:rust",
+    "relationship": "bootstrap_written_in",
+    "start_year": 2015,
+    "end_year": null,
+    "confidence": 0.88,
+    "evidence_source": "https://rustc-dev-guide.rust-lang.org/building/bootstrapping/what-bootstrapping-does.html",
+    "notes": "Rust bootstrap chain starts at machine code level"
+  },
+  {
+    "from": "lang:machine_code",
+    "to": "lang:swift",
+    "relationship": "bootstrap_written_in",
+    "start_year": 2022,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://github.com/apple/swift/blob/main/SwiftCompilerSources/README.md",
+    "notes": "Swift bootstrap chain via LLVM"
+  },
+  {
+    "from": "lang:assembly",
+    "to": "lang:go",
+    "relationship": "runtime_written_in",
+    "start_year": 2015,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://go.dev/doc/go1.5",
+    "notes": "Go runtime has assembly components"
+  },
+  {
+    "from": "lang:assembly",
+    "to": "lang:ocaml",
+    "relationship": "runtime_written_in",
+    "start_year": 1996,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://github.com/ocaml/ocaml",
+    "notes": "OCaml runtime has assembly components"
+  },
+  {
+    "from": "lang:assembly",
+    "to": "tool:javascriptcore",
+    "relationship": "runtime_written_in",
+    "start_year": 2001,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://webkit.org/",
+    "notes": "JavaScriptCore JIT uses assembly"
+  },
+  {
+    "from": "lang:assembly",
+    "to": "tool:dotnet_runtime",
+    "relationship": "runtime_written_in",
+    "start_year": 2002,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://github.com/dotnet/runtime",
+    "notes": "CoreCLR JIT generates and uses assembly"
+  },
+  {
+    "from": "lang:perl",
+    "to": "lang:php",
+    "relationship": "influenced",
+    "start_year": 1995,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://www.php.net/manual/en/history.php",
+    "notes": "PHP originally scripting layer inspired by Perl"
+  },
+  {
+    "from": "lang:perl",
+    "to": "lang:ruby",
+    "relationship": "influenced",
+    "start_year": 1995,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Ruby_(programming_language)",
+    "notes": "Matz cited Perl as major influence on Ruby"
+  },
+  {
+    "from": "tool:llvm",
+    "to": "lang:swift",
+    "relationship": "compiler_written_in",
+    "start_year": 2014,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/Swift_(programming_language)",
+    "notes": "Swift uses LLVM as compiler backend"
+  },
+  {
+    "from": "tool:llvm",
+    "to": "lang:julia",
+    "relationship": "runtime_written_in",
+    "start_year": 2012,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://julialang.org/",
+    "notes": "Julia uses LLVM for JIT compilation"
+  },
+  {
+    "from": "tool:llvm",
+    "to": "lang:rust",
+    "relationship": "compiler_written_in",
+    "start_year": 2011,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://github.com/rust-lang/rust",
+    "notes": "rustc uses LLVM as backend"
+  },
+  {
+    "from": "tool:llvm",
+    "to": "lang:crystal",
+    "relationship": "compiler_written_in",
+    "start_year": 2014,
+    "end_year": null,
+    "confidence": 0.92,
+    "evidence_source": "https://crystal-lang.org/",
+    "notes": "Crystal compiler uses LLVM backend"
+  },
+  {
+    "from": "tool:llvm",
+    "to": "lang:zig",
+    "relationship": "compiler_written_in",
+    "start_year": 2016,
+    "end_year": 2022,
+    "confidence": 0.92,
+    "evidence_source": "https://en.wikipedia.org/wiki/Zig_(programming_language)",
+    "notes": "Early Zig used LLVM, now has own backend option"
+  },
+  {
+    "from": "tool:llvm",
+    "to": "lang:mojo",
+    "relationship": "compiler_written_in",
+    "start_year": 2023,
+    "end_year": null,
+    "confidence": 0.92,
+    "evidence_source": "https://docs.modular.com/mojo/",
+    "notes": "Mojo uses MLIR/LLVM backend"
+  },
+  {
+    "from": "tool:beam",
+    "to": "lang:elixir",
+    "relationship": "runtime_written_in",
+    "start_year": 2012,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://elixir-lang.org/",
+    "notes": "Elixir runs on BEAM VM"
+  },
+  {
+    "from": "tool:chez_scheme",
+    "to": "lang:racket",
+    "relationship": "runtime_written_in",
+    "start_year": 2019,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://blog.racket-lang.org/2019/01/racket-on-chez-status.html",
+    "notes": "Racket migrated backend to Chez Scheme in 2019"
+  },
+  {
+    "from": "tool:femtolisp",
+    "to": "lang:julia",
+    "relationship": "bootstrap_written_in",
+    "start_year": 2012,
+    "end_year": 2024,
+    "confidence": 0.9,
+    "evidence_source": "https://discourse.julialang.org/t/the-role-of-femtolisp-in-julia/",
+    "notes": "Julia parser frontend was FemtoLisp until v1.10"
+  },
+  {
+    "from": "lang:common_lisp",
+    "to": "lang:common_lisp",
+    "relationship": "compiler_written_in",
+    "start_year": 1999,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://www.sbcl.org/",
+    "notes": "SBCL is self-hosting Common Lisp implementation"
+  },
+  {
+    "from": "lang:racket",
+    "to": "lang:racket",
+    "relationship": "compiler_written_in",
+    "start_year": 2010,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://github.com/racket/racket",
+    "notes": "Racket compiler is self-hosting"
+  },
+  {
+    "from": "lang:ada",
+    "to": "lang:ada",
+    "relationship": "compiler_written_in",
+    "start_year": 1995,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/GNAT",
+    "notes": "GNAT (GCC Ada) is self-hosting"
+  },
+  {
+    "from": "lang:fortran",
+    "to": "lang:fortran",
+    "relationship": "compiler_written_in",
+    "start_year": 1970,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Fortran",
+    "notes": "Modern Fortran compilers (gfortran) are self-hosting"
+  },
+  {
+    "from": "lang:coffeescript",
+    "to": "lang:coffeescript",
+    "relationship": "compiler_written_in",
+    "start_year": 2010,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://github.com/jashkenas/coffeescript",
+    "notes": "CoffeeScript compiler is self-hosting"
+  },
+  {
+    "from": "lang:coffeescript",
+    "to": "lang:javascript",
+    "relationship": "transpiled_to",
+    "start_year": 2009,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://coffeescript.org/",
+    "notes": "CoffeeScript compiles to JavaScript"
+  },
+  {
+    "from": "lang:elm",
+    "to": "lang:javascript",
+    "relationship": "transpiled_to",
+    "start_year": 2012,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://elm-lang.org/",
+    "notes": "Elm compiles to JavaScript"
+  },
+  {
+    "from": "lang:purescript",
+    "to": "lang:javascript",
+    "relationship": "transpiled_to",
+    "start_year": 2013,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://www.purescript.org/",
+    "notes": "PureScript compiles to JavaScript"
+  },
+  {
+    "from": "lang:reasonml",
+    "to": "lang:javascript",
+    "relationship": "transpiled_to",
+    "start_year": 2016,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://reasonml.github.io/",
+    "notes": "ReasonML compiles to JS via BuckleScript/Melange"
+  },
+  {
+    "from": "lang:nim",
+    "to": "lang:javascript",
+    "relationship": "transpiled_to",
+    "start_year": 2014,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://nim-lang.org/docs/backends.html",
+    "notes": "Nim also supports JS backend"
+  },
+  {
+    "from": "lang:dart",
+    "to": "lang:javascript",
+    "relationship": "transpiled_to",
+    "start_year": 2013,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://dart.dev/web",
+    "notes": "Dart2JS compiles Dart to JavaScript"
+  },
+  {
+    "from": "lang:v",
+    "to": "lang:c",
+    "relationship": "transpiled_to",
+    "start_year": 2019,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://vlang.io/",
+    "notes": "V primarily transpiles to C"
+  },
+  {
+    "from": "lang:haskell",
+    "to": "lang:fsharp",
+    "relationship": "influenced",
+    "start_year": 2005,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://fsharp.org/history/hopl-final/hopl-fsharp.pdf",
+    "notes": "F# influenced by Haskell's functional patterns"
+  },
+  {
+    "from": "lang:cxx",
+    "to": "lang:csharp",
+    "relationship": "influenced",
+    "start_year": 2000,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/C_Sharp_(programming_language)",
+    "notes": "C# influenced by C++ syntax"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:ada",
+    "relationship": "influenced",
+    "start_year": 1980,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://en.wikipedia.org/wiki/Ada_(programming_language)",
+    "notes": "Ada influenced by C's systems programming"
+  },
+  {
+    "from": "lang:lisp",
+    "to": "lang:julia",
+    "relationship": "influenced",
+    "start_year": 2012,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://julialang.org/blog/2012/02/why-we-created-julia/",
+    "notes": "Julia uses Lisp-style macros"
+  },
+  {
+    "from": "lang:flow_matic",
+    "to": "lang:cobol",
+    "relationship": "influenced",
+    "start_year": 1959,
+    "end_year": null,
+    "confidence": 0.97,
+    "evidence_source": "https://en.wikipedia.org/wiki/COBOL",
+    "notes": "FLOW-MATIC was the primary inspiration for COBOL's English-like syntax; Grace Hopper served on the CODASYL committee"
+  },
+  {
+    "from": "lang:comtran",
+    "to": "lang:cobol",
+    "relationship": "influenced",
+    "start_year": 1959,
+    "end_year": null,
+    "confidence": 0.92,
+    "evidence_source": "https://en.wikipedia.org/wiki/COBOL",
+    "notes": "IBM's COMTRAN contributed data description concepts to COBOL design"
+  },
+  {
+    "from": "lang:fortran",
+    "to": "lang:cobol",
+    "relationship": "influenced",
+    "start_year": 1959,
+    "end_year": null,
+    "confidence": 0.82,
+    "evidence_source": "https://en.wikipedia.org/wiki/COBOL",
+    "notes": "FORTRAN influenced COBOL's arithmetic and data handling capabilities"
+  },
+  {
+    "from": "lang:fortran",
+    "to": "lang:prolog",
+    "relationship": "compiler_written_in",
+    "start_year": 1972,
+    "end_year": 1977,
+    "confidence": 0.91,
+    "evidence_source": "https://en.wikipedia.org/wiki/Prolog",
+    "notes": "First Prolog interpreter (1972) written in Fortran by Gerard Battani and Henri Meloni at Aix-Marseille"
+  },
+  {
+    "from": "lang:haskell",
+    "to": "tool:ghc",
+    "relationship": "compiler_written_in",
+    "start_year": 1990,
+    "end_year": null,
+    "confidence": 0.99,
+    "evidence_source": "https://en.wikipedia.org/wiki/Glasgow_Haskell_Compiler",
+    "notes": "GHC is written in Haskell; start year normalized to Haskell first-release year for dataset chronology."
+  },
+  {
+    "from": "lang:c",
+    "to": "tool:ghc",
+    "relationship": "runtime_written_in",
+    "start_year": 1989,
+    "end_year": null,
+    "confidence": 0.97,
+    "evidence_source": "https://en.wikipedia.org/wiki/Glasgow_Haskell_Compiler",
+    "notes": "GHC's runtime system (RTS) is written in C and C--"
+  },
+  {
+    "from": "lang:planner",
+    "to": "lang:prolog",
+    "relationship": "influenced",
+    "start_year": 1972,
+    "end_year": null,
+    "confidence": 0.93,
+    "evidence_source": "https://en.wikipedia.org/wiki/Prolog",
+    "notes": "Planner (Carl Hewitt, 1969) directly inspired Prolog's logic programming paradigm; listed as influence on Wikipedia"
+  },
+  {
+    "from": "lang:lazy_ml",
+    "to": "tool:ghc",
+    "relationship": "bootstrap_written_in",
+    "start_year": 1989,
+    "end_year": 1989,
+    "confidence": 0.95,
+    "evidence_source": "https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/history.pdf",
+    "notes": "Original GHC prototype written in Lazy ML by Kevin Hammond in 1989 before the Haskell rewrite"
+  },
+  {
+    "from": "lang:newsqueak",
+    "to": "lang:go",
+    "relationship": "influenced",
+    "start_year": 2007,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/Go_(programming_language)",
+    "notes": "Go's channel-based concurrency directly from Newsqueak"
+  },
+  {
+    "from": "lang:limbo",
+    "to": "lang:go",
+    "relationship": "influenced",
+    "start_year": 2007,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/Go_(programming_language)",
+    "notes": "Limbo's concurrency model influenced Go"
+  },
+  {
+    "from": "lang:alef",
+    "to": "lang:go",
+    "relationship": "influenced",
+    "start_year": 2007,
+    "end_year": null,
+    "confidence": 0.92,
+    "evidence_source": "https://en.wikipedia.org/wiki/Go_(programming_language)",
+    "notes": "Alef's CSP-style concurrency influenced Go"
+  },
+  {
+    "from": "lang:oberon2",
+    "to": "lang:go",
+    "relationship": "influenced",
+    "start_year": 2007,
+    "end_year": null,
+    "confidence": 0.88,
+    "evidence_source": "https://en.wikipedia.org/wiki/Go_(programming_language)",
+    "notes": "Oberon-2 influenced Go's package system and declarations"
+  },
+  {
+    "from": "lang:oberon",
+    "to": "lang:go",
+    "relationship": "influenced",
+    "start_year": 2007,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Go_(programming_language)",
+    "notes": "Oberon influenced Go's module/package design"
+  },
+  {
+    "from": "lang:pascal",
+    "to": "lang:go",
+    "relationship": "influenced",
+    "start_year": 2007,
+    "end_year": null,
+    "confidence": 0.82,
+    "evidence_source": "https://en.wikipedia.org/wiki/Go_(programming_language)",
+    "notes": "Pascal influenced Go's declaration syntax"
+  },
+  {
+    "from": "lang:smalltalk",
+    "to": "lang:go",
+    "relationship": "influenced",
+    "start_year": 2007,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://en.wikipedia.org/wiki/Go_(programming_language)",
+    "notes": "Smalltalk influenced Go's interface system"
+  },
+  {
+    "from": "lang:bcpl",
+    "to": "lang:go",
+    "relationship": "influenced",
+    "start_year": 2007,
+    "end_year": null,
+    "confidence": 0.83,
+    "evidence_source": "https://en.wikipedia.org/wiki/Go_(programming_language)",
+    "notes": "BCPL influenced Go via C lineage"
+  },
+  {
+    "from": "lang:cyclone",
+    "to": "lang:rust",
+    "relationship": "influenced",
+    "start_year": 2006,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/Rust_(programming_language)",
+    "notes": "Cyclone's region-based memory directly inspired Rust's ownership system"
+  },
+  {
+    "from": "lang:clu",
+    "to": "lang:rust",
+    "relationship": "influenced",
+    "start_year": 2006,
+    "end_year": null,
+    "confidence": 0.87,
+    "evidence_source": "https://en.wikipedia.org/wiki/Rust_(programming_language)",
+    "notes": "CLU influenced Rust's iterator protocol and exception handling"
+  },
+  {
+    "from": "lang:alef",
+    "to": "lang:rust",
+    "relationship": "influenced",
+    "start_year": 2006,
+    "end_year": null,
+    "confidence": 0.83,
+    "evidence_source": "https://en.wikipedia.org/wiki/Rust_(programming_language)",
+    "notes": "Alef influenced Rust's concurrency model"
+  },
+  {
+    "from": "lang:limbo",
+    "to": "lang:rust",
+    "relationship": "influenced",
+    "start_year": 2006,
+    "end_year": null,
+    "confidence": 0.82,
+    "evidence_source": "https://en.wikipedia.org/wiki/Rust_(programming_language)",
+    "notes": "Limbo influenced Rust's concurrency design"
+  },
+  {
+    "from": "lang:ml",
+    "to": "lang:rust",
+    "relationship": "influenced",
+    "start_year": 2006,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Rust_(programming_language)",
+    "notes": "ML family influenced Rust's type system and pattern matching"
+  },
+  {
+    "from": "lang:erlang",
+    "to": "lang:rust",
+    "relationship": "influenced",
+    "start_year": 2006,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Rust_(programming_language)",
+    "notes": "Erlang influenced Rust's actor-style concurrency model"
+  },
+  {
+    "from": "lang:scheme",
+    "to": "lang:rust",
+    "relationship": "influenced",
+    "start_year": 2006,
+    "end_year": null,
+    "confidence": 0.82,
+    "evidence_source": "https://en.wikipedia.org/wiki/Rust_(programming_language)",
+    "notes": "Scheme influenced Rust's macro and metaprogramming system"
+  },
+  {
+    "from": "lang:swift",
+    "to": "lang:rust",
+    "relationship": "influenced",
+    "start_year": 2014,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://en.wikipedia.org/wiki/Rust_(programming_language)",
+    "notes": "Swift and Rust mutually influenced each other"
+  },
+  {
+    "from": "lang:elm",
+    "to": "lang:rust",
+    "relationship": "influenced",
+    "start_year": 2012,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://en.wikipedia.org/wiki/Rust_(programming_language)",
+    "notes": "Elm influenced Rust's functional style and error handling"
+  },
+  {
+    "from": "lang:rust",
+    "to": "lang:gleam",
+    "relationship": "influenced",
+    "start_year": 2019,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://gleam.run/",
+    "notes": "Gleam's type system and tooling heavily inspired by Rust"
+  },
+  {
+    "from": "lang:rust",
+    "to": "lang:zig",
+    "relationship": "influenced",
+    "start_year": 2016,
+    "end_year": null,
+    "confidence": 0.88,
+    "evidence_source": "https://ziglang.org/",
+    "notes": "Zig influenced by Rust's safety and systems programming approach"
+  },
+  {
+    "from": "lang:rust",
+    "to": "lang:swift",
+    "relationship": "influenced",
+    "start_year": 2014,
+    "end_year": null,
+    "confidence": 0.83,
+    "evidence_source": "https://en.wikipedia.org/wiki/Rust_(programming_language)",
+    "notes": "Rust influenced Swift's memory safety features"
+  },
+  {
+    "from": "lang:abc",
+    "to": "lang:python",
+    "relationship": "influenced",
+    "start_year": 1989,
+    "end_year": null,
+    "confidence": 0.99,
+    "evidence_source": "https://en.wikipedia.org/wiki/Python_(programming_language)",
+    "notes": "Python's primary inspiration - Guido worked on ABC before Python"
+  },
+  {
+    "from": "lang:modula3",
+    "to": "lang:python",
+    "relationship": "influenced",
+    "start_year": 1989,
+    "end_year": null,
+    "confidence": 0.92,
+    "evidence_source": "https://en.wikipedia.org/wiki/Python_(programming_language)",
+    "notes": "Modula-3 influenced Python's module system and exception handling"
+  },
+  {
+    "from": "lang:clu",
+    "to": "lang:python",
+    "relationship": "influenced",
+    "start_year": 1989,
+    "end_year": null,
+    "confidence": 0.88,
+    "evidence_source": "https://en.wikipedia.org/wiki/Python_(programming_language)",
+    "notes": "CLU influenced Python's iterators and call-by-object semantics"
+  },
+  {
+    "from": "lang:icon",
+    "to": "lang:python",
+    "relationship": "influenced",
+    "start_year": 1989,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Python_(programming_language)",
+    "notes": "Icon influenced Python's generators and string handling"
+  },
+  {
+    "from": "lang:dylan",
+    "to": "lang:python",
+    "relationship": "influenced",
+    "start_year": 1992,
+    "end_year": null,
+    "confidence": 0.82,
+    "evidence_source": "https://en.wikipedia.org/wiki/Python_(programming_language)",
+    "notes": "Dylan influenced Python's object model"
+  },
+  {
+    "from": "lang:haskell",
+    "to": "lang:python",
+    "relationship": "influenced",
+    "start_year": 2000,
+    "end_year": null,
+    "confidence": 0.87,
+    "evidence_source": "https://en.wikipedia.org/wiki/Python_(programming_language)",
+    "notes": "Haskell influenced Python list comprehensions and functional features; start year aligned with Python 2.0 list comprehensions."
+  },
+  {
+    "from": "lang:sml",
+    "to": "lang:python",
+    "relationship": "influenced",
+    "start_year": 1989,
+    "end_year": null,
+    "confidence": 0.83,
+    "evidence_source": "https://en.wikipedia.org/wiki/Python_(programming_language)",
+    "notes": "Standard ML influenced Python's type concepts"
+  },
+  {
+    "from": "lang:perl",
+    "to": "lang:python",
+    "relationship": "influenced",
+    "start_year": 1989,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Python_(programming_language)",
+    "notes": "Perl influenced Python's regex and string processing"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:python",
+    "relationship": "influenced",
+    "start_year": 1989,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Python_(programming_language)",
+    "notes": "C influenced Python's syntax and CPython implementation"
+  },
+  {
+    "from": "lang:python",
+    "to": "lang:elixir",
+    "relationship": "influenced",
+    "start_year": 2012,
+    "end_year": null,
+    "confidence": 0.82,
+    "evidence_source": "https://en.wikipedia.org/wiki/Elixir_(programming_language)",
+    "notes": "Elixir influenced by Python's readability"
+  },
+  {
+    "from": "lang:pascal",
+    "to": "lang:modula2",
+    "relationship": "influenced",
+    "start_year": 1978,
+    "end_year": null,
+    "confidence": 0.97,
+    "evidence_source": "https://en.wikipedia.org/wiki/Modula-2",
+    "notes": "Modula-2 is direct successor to Pascal by Niklaus Wirth"
+  },
+  {
+    "from": "lang:modula2",
+    "to": "lang:modula3",
+    "relationship": "influenced",
+    "start_year": 1988,
+    "end_year": null,
+    "confidence": 0.97,
+    "evidence_source": "https://en.wikipedia.org/wiki/Modula-3",
+    "notes": "Modula-3 extends Modula-2"
+  },
+  {
+    "from": "lang:modula2",
+    "to": "lang:oberon",
+    "relationship": "influenced",
+    "start_year": 1987,
+    "end_year": null,
+    "confidence": 0.97,
+    "evidence_source": "https://en.wikipedia.org/wiki/Oberon_(programming_language)",
+    "notes": "Oberon designed as successor to Modula-2"
+  },
+  {
+    "from": "lang:oberon",
+    "to": "lang:oberon2",
+    "relationship": "influenced",
+    "start_year": 1991,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://en.wikipedia.org/wiki/Oberon-2",
+    "notes": "Oberon-2 extends Oberon with type-bound procedures"
+  },
+  {
+    "from": "lang:modula2",
+    "to": "lang:go",
+    "relationship": "influenced",
+    "start_year": 2007,
+    "end_year": null,
+    "confidence": 0.87,
+    "evidence_source": "https://en.wikipedia.org/wiki/Go_(programming_language)",
+    "notes": "Go's package system influenced by Modula-2"
+  },
+  {
+    "from": "lang:java",
+    "to": "lang:javascript",
+    "relationship": "influenced",
+    "start_year": 1995,
+    "end_year": null,
+    "confidence": 0.87,
+    "evidence_source": "https://en.wikipedia.org/wiki/JavaScript",
+    "notes": "Java influenced JavaScript's name and some syntax by Netscape mandate"
+  },
+  {
+    "from": "lang:scheme",
+    "to": "lang:javascript",
+    "relationship": "influenced",
+    "start_year": 1995,
+    "end_year": null,
+    "confidence": 0.92,
+    "evidence_source": "https://en.wikipedia.org/wiki/JavaScript",
+    "notes": "Scheme influenced JavaScript's first-class functions and closures"
+  },
+  {
+    "from": "lang:csharp",
+    "to": "lang:typescript",
+    "relationship": "influenced",
+    "start_year": 2012,
+    "end_year": null,
+    "confidence": 0.93,
+    "evidence_source": "https://en.wikipedia.org/wiki/TypeScript",
+    "notes": "TypeScript designed by Anders Hejlsberg, who created C#"
+  },
+  {
+    "from": "lang:java",
+    "to": "lang:dart",
+    "relationship": "influenced",
+    "start_year": 2011,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Dart_(programming_language)",
+    "notes": "Dart influenced by Java's class-based OOP"
+  },
+  {
+    "from": "lang:python",
+    "to": "lang:dart",
+    "relationship": "influenced",
+    "start_year": 2011,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://en.wikipedia.org/wiki/Dart_(programming_language)",
+    "notes": "Dart influenced by Python's optional typing"
+  },
+  {
+    "from": "lang:self",
+    "to": "lang:javascript",
+    "relationship": "influenced",
+    "start_year": 1995,
+    "end_year": null,
+    "confidence": 0.93,
+    "evidence_source": "https://en.wikipedia.org/wiki/JavaScript",
+    "notes": "Self's prototype-based inheritance directly used in JavaScript"
+  },
+  {
+    "from": "lang:miranda",
+    "to": "lang:haskell",
+    "relationship": "influenced",
+    "start_year": 1990,
+    "end_year": null,
+    "confidence": 0.97,
+    "evidence_source": "https://en.wikipedia.org/wiki/Haskell",
+    "notes": "Miranda's lazy evaluation and type classes directly inspired Haskell"
+  },
+  {
+    "from": "lang:simula",
+    "to": "lang:java",
+    "relationship": "influenced",
+    "start_year": 1995,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Java_(programming_language)",
+    "notes": "Java's OOP model traces through Simula lineage"
+  },
+  {
+    "from": "lang:ada",
+    "to": "lang:python",
+    "relationship": "influenced",
+    "start_year": 1989,
+    "end_year": null,
+    "confidence": 0.82,
+    "evidence_source": "https://en.wikipedia.org/wiki/Python_(programming_language)",
+    "notes": "Ada influenced Python's exception handling model"
+  },
+  {
+    "from": "lang:ada",
+    "to": "lang:java",
+    "relationship": "influenced",
+    "start_year": 1995,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://en.wikipedia.org/wiki/Java_(programming_language)",
+    "notes": "Java's checked exceptions influenced by Ada"
+  },
+  {
+    "from": "lang:smalltalk",
+    "to": "lang:java",
+    "relationship": "influenced",
+    "start_year": 1995,
+    "end_year": null,
+    "confidence": 0.87,
+    "evidence_source": "https://en.wikipedia.org/wiki/Java_(programming_language)",
+    "notes": "Smalltalk influenced Java's OOP design"
+  },
+  {
+    "from": "lang:lisp",
+    "to": "lang:clojure",
+    "relationship": "influenced",
+    "start_year": 2007,
+    "end_year": null,
+    "confidence": 0.97,
+    "evidence_source": "https://en.wikipedia.org/wiki/Clojure",
+    "notes": "Clojure is a Lisp dialect on the JVM"
+  },
+  {
+    "from": "lang:lisp",
+    "to": "lang:ruby",
+    "relationship": "influenced",
+    "start_year": 1993,
+    "end_year": null,
+    "confidence": 0.87,
+    "evidence_source": "https://en.wikipedia.org/wiki/Ruby_(programming_language)",
+    "notes": "Ruby influenced by Lisp's expression-oriented style"
+  },
+  {
+    "from": "lang:lisp",
+    "to": "lang:python",
+    "relationship": "influenced",
+    "start_year": 1989,
+    "end_year": null,
+    "confidence": 0.87,
+    "evidence_source": "https://en.wikipedia.org/wiki/Python_(programming_language)",
+    "notes": "Lisp influenced Python's functional features (map, filter, reduce)"
+  },
+  {
+    "from": "lang:lisp",
+    "to": "lang:haskell",
+    "relationship": "influenced",
+    "start_year": 1990,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Haskell",
+    "notes": "Lisp influenced Haskell's functional paradigm"
+  },
+  {
+    "from": "lang:lisp",
+    "to": "lang:javascript",
+    "relationship": "influenced",
+    "start_year": 1995,
+    "end_year": null,
+    "confidence": 0.88,
+    "evidence_source": "https://en.wikipedia.org/wiki/JavaScript",
+    "notes": "Brendan Eich originally aimed for Scheme in the browser"
+  },
+  {
+    "from": "lang:common_lisp",
+    "to": "lang:clojure",
+    "relationship": "influenced",
+    "start_year": 2007,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Clojure",
+    "notes": "Clojure influenced by Common Lisp's pragmatic Lisp approach"
+  },
+  {
+    "from": "lang:fortran",
+    "to": "lang:c",
+    "relationship": "influenced",
+    "start_year": 1972,
+    "end_year": null,
+    "confidence": 0.83,
+    "evidence_source": "https://en.wikipedia.org/wiki/C_(programming_language)",
+    "notes": "BCPL and Fortran both influenced C's design"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:d",
+    "relationship": "influenced",
+    "start_year": 2001,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/D_(programming_language)",
+    "notes": "D designed as improved C/C++"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:zig",
+    "relationship": "influenced",
+    "start_year": 2016,
+    "end_year": null,
+    "confidence": 0.93,
+    "evidence_source": "https://ziglang.org/",
+    "notes": "Zig designed as modern C replacement"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:go",
+    "relationship": "influenced",
+    "start_year": 2007,
+    "end_year": null,
+    "confidence": 0.93,
+    "evidence_source": "https://en.wikipedia.org/wiki/Go_(programming_language)",
+    "notes": "Go's syntax influenced by C"
+  },
+  {
+    "from": "lang:haskell",
+    "to": "lang:scala",
+    "relationship": "influenced",
+    "start_year": 2004,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Scala_(programming_language)",
+    "notes": "Scala's type system influenced by Haskell"
+  },
+  {
+    "from": "lang:scala",
+    "to": "lang:kotlin",
+    "relationship": "influenced",
+    "start_year": 2011,
+    "end_year": null,
+    "confidence": 0.87,
+    "evidence_source": "https://en.wikipedia.org/wiki/Kotlin_(programming_language)",
+    "notes": "Kotlin influenced by Scala's features on JVM"
+  },
+  {
+    "from": "lang:erlang",
+    "to": "lang:gleam",
+    "relationship": "influenced",
+    "start_year": 2019,
+    "end_year": null,
+    "confidence": 0.92,
+    "evidence_source": "https://gleam.run/",
+    "notes": "Gleam runs on Erlang VM"
+  },
+  {
+    "from": "lang:smalltalk",
+    "to": "lang:coffeescript",
+    "relationship": "influenced",
+    "start_year": 2009,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://en.wikipedia.org/wiki/CoffeeScript",
+    "notes": "CoffeeScript influenced by Ruby and Smalltalk's expressiveness"
+  },
+  {
+    "from": "lang:haskell",
+    "to": "lang:swift",
+    "relationship": "influenced",
+    "start_year": 2014,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Swift_(programming_language)",
+    "notes": "Swift influenced by Haskell's type system"
+  },
+  {
+    "from": "lang:python",
+    "to": "lang:swift",
+    "relationship": "influenced",
+    "start_year": 2014,
+    "end_year": null,
+    "confidence": 0.82,
+    "evidence_source": "https://en.wikipedia.org/wiki/Swift_(programming_language)",
+    "notes": "Swift influenced by Python's readability"
+  },
+  {
+    "from": "lang:groovy",
+    "to": "lang:kotlin",
+    "relationship": "influenced",
+    "start_year": 2011,
+    "end_year": null,
+    "confidence": 0.83,
+    "evidence_source": "https://en.wikipedia.org/wiki/Kotlin_(programming_language)",
+    "notes": "Kotlin influenced by Groovy's scripting capabilities"
+  },
+  {
+    "from": "lang:csharp",
+    "to": "lang:dart",
+    "relationship": "influenced",
+    "start_year": 2011,
+    "end_year": null,
+    "confidence": 0.87,
+    "evidence_source": "https://en.wikipedia.org/wiki/Dart_(programming_language)",
+    "notes": "Dart influenced by C#'s class-based design"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:v",
+    "relationship": "influenced",
+    "start_year": 2019,
+    "end_year": null,
+    "confidence": 0.88,
+    "evidence_source": "https://vlang.io/",
+    "notes": "V influenced by C and Go for systems programming"
+  },
+  {
+    "from": "lang:ruby",
+    "to": "lang:julia",
+    "relationship": "influenced",
+    "start_year": 2012,
+    "end_year": null,
+    "confidence": 0.82,
+    "evidence_source": "https://en.wikipedia.org/wiki/Julia_(programming_language)",
+    "notes": "Julia influenced by Ruby's syntax expressiveness"
+  },
+  {
+    "from": "lang:prolog",
+    "to": "lang:erlang",
+    "relationship": "influenced",
+    "start_year": 1986,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Erlang_(programming_language)",
+    "notes": "Erlang originally implemented in Prolog, shares its sequential subset"
+  },
+  {
+    "from": "lang:haskell",
+    "to": "lang:idris",
+    "relationship": "influenced",
+    "start_year": 2011,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/Idris_(programming_language)",
+    "notes": "Idris extends Haskell with dependent types"
+  },
+  {
+    "from": "lang:haskell",
+    "to": "lang:agda",
+    "relationship": "influenced",
+    "start_year": 2007,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Agda_(programming_language)",
+    "notes": "Agda influenced by Haskell's type theory"
+  },
+  {
+    "from": "lang:matlab",
+    "to": "lang:julia",
+    "relationship": "influenced",
+    "start_year": 2012,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Julia_(programming_language)",
+    "notes": "Julia influenced by MATLAB's scientific computing"
+  },
+  {
+    "from": "lang:pascal",
+    "to": "lang:oberon",
+    "relationship": "influenced",
+    "start_year": 1987,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/Oberon_(programming_language)",
+    "notes": "Oberon designed by Pascal's creator Wirth as successor"
+  },
+  {
+    "from": "lang:typescript",
+    "to": "lang:dart",
+    "relationship": "influenced",
+    "start_year": 2012,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://en.wikipedia.org/wiki/Dart_(programming_language)",
+    "notes": "Dart and TypeScript are contemporaries in typed JS space"
+  },
+  {
+    "from": "lang:common_lisp",
+    "to": "lang:racket",
+    "relationship": "influenced",
+    "start_year": 1994,
+    "end_year": null,
+    "confidence": 0.82,
+    "evidence_source": "https://en.wikipedia.org/wiki/Racket_(programming_language)",
+    "notes": "Racket influenced by Common Lisp's practical features"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:julia",
+    "relationship": "runtime_written_in",
+    "start_year": 2012,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Julia_(programming_language)",
+    "notes": "Julia runtime partially written in C"
+  },
+  {
+    "from": "lang:cxx",
+    "to": "lang:julia",
+    "relationship": "runtime_written_in",
+    "start_year": 2012,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Julia_(programming_language)",
+    "notes": "Julia runtime includes C++ components"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:erlang",
+    "relationship": "runtime_written_in",
+    "start_year": 1986,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/Erlang_(programming_language)",
+    "notes": "Erlang VM (BEAM) written in C"
+  },
+  {
+    "from": "lang:erlang",
+    "to": "lang:elixir",
+    "relationship": "runtime_written_in",
+    "start_year": 2012,
+    "end_year": null,
+    "confidence": 0.99,
+    "evidence_source": "https://en.wikipedia.org/wiki/Elixir_(programming_language)",
+    "notes": "Elixir runs on BEAM (Erlang VM)"
+  },
+  {
+    "from": "lang:java",
+    "to": "lang:kotlin",
+    "relationship": "runtime_written_in",
+    "start_year": 2011,
+    "end_year": null,
+    "confidence": 0.97,
+    "evidence_source": "https://en.wikipedia.org/wiki/Kotlin_(programming_language)",
+    "notes": "Kotlin runs on JVM"
+  },
+  {
+    "from": "lang:python",
+    "to": "lang:cython",
+    "relationship": "influenced",
+    "start_year": 2007,
+    "end_year": null,
+    "confidence": 0.97,
+    "evidence_source": "https://en.wikipedia.org/wiki/Cython",
+    "notes": "Cython is superset of Python with C extensions"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:cython",
+    "relationship": "runtime_written_in",
+    "start_year": 2007,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Cython",
+    "notes": "Cython compiles to C"
+  },
+  {
+    "from": "lang:pascal",
+    "to": "lang:delphi",
+    "relationship": "influenced",
+    "start_year": 1995,
+    "end_year": null,
+    "confidence": 0.99,
+    "evidence_source": "https://en.wikipedia.org/wiki/Delphi_(software)",
+    "notes": "Delphi is Object Pascal, direct extension of Pascal"
+  },
+  {
+    "from": "lang:delphi",
+    "to": "lang:csharp",
+    "relationship": "influenced",
+    "start_year": 2000,
+    "end_year": null,
+    "confidence": 0.88,
+    "evidence_source": "https://en.wikipedia.org/wiki/C_Sharp_(programming_language)",
+    "notes": "Anders Hejlsberg created both Delphi and C#"
+  },
+  {
+    "from": "lang:apl",
+    "to": "lang:j",
+    "relationship": "influenced",
+    "start_year": 1990,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://en.wikipedia.org/wiki/J_(programming_language)",
+    "notes": "J is successor to APL by Kenneth Iverson"
+  },
+  {
+    "from": "lang:apl",
+    "to": "lang:matlab",
+    "relationship": "influenced",
+    "start_year": 1984,
+    "end_year": null,
+    "confidence": 0.87,
+    "evidence_source": "https://en.wikipedia.org/wiki/MATLAB",
+    "notes": "MATLAB's matrix operations inspired by APL"
+  },
+  {
+    "from": "lang:apl",
+    "to": "lang:julia",
+    "relationship": "influenced",
+    "start_year": 2012,
+    "end_year": null,
+    "confidence": 0.83,
+    "evidence_source": "https://en.wikipedia.org/wiki/Julia_(programming_language)",
+    "notes": "Julia's array operations influenced by APL"
+  },
+  {
+    "from": "lang:apl",
+    "to": "lang:python",
+    "relationship": "influenced",
+    "start_year": 1989,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://en.wikipedia.org/wiki/Python_(programming_language)",
+    "notes": "APL influenced Python's list comprehensions concept"
+  },
+  {
+    "from": "lang:prolog",
+    "to": "lang:mercury",
+    "relationship": "influenced",
+    "start_year": 1995,
+    "end_year": null,
+    "confidence": 0.97,
+    "evidence_source": "https://en.wikipedia.org/wiki/Mercury_(programming_language)",
+    "notes": "Mercury is statically-typed descendant of Prolog"
+  },
+  {
+    "from": "lang:ml",
+    "to": "lang:mercury",
+    "relationship": "influenced",
+    "start_year": 1995,
+    "end_year": null,
+    "confidence": 0.87,
+    "evidence_source": "https://en.wikipedia.org/wiki/Mercury_(programming_language)",
+    "notes": "Mercury influenced by ML's static type system"
+  },
+  {
+    "from": "lang:fortran",
+    "to": "lang:matlab",
+    "relationship": "influenced",
+    "start_year": 1984,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/MATLAB",
+    "notes": "MATLAB's numerical computing tradition from Fortran"
+  },
+  {
+    "from": "lang:bcpl",
+    "to": "lang:c",
+    "relationship": "influenced",
+    "start_year": 1972,
+    "end_year": null,
+    "confidence": 0.97,
+    "evidence_source": "https://en.wikipedia.org/wiki/C_(programming_language)",
+    "notes": "C directly descended from BCPL via B language"
+  },
+  {
+    "from": "lang:algol",
+    "to": "lang:cxx",
+    "relationship": "influenced",
+    "start_year": 1979,
+    "end_year": null,
+    "confidence": 0.82,
+    "evidence_source": "https://en.wikipedia.org/wiki/C%2B%2B",
+    "notes": "C++ traces structured programming lineage to ALGOL"
+  },
+  {
+    "from": "lang:haskell",
+    "to": "lang:kotlin",
+    "relationship": "influenced",
+    "start_year": 2011,
+    "end_year": null,
+    "confidence": 0.83,
+    "evidence_source": "https://en.wikipedia.org/wiki/Kotlin_(programming_language)",
+    "notes": "Kotlin's functional features influenced by Haskell"
+  },
+  {
+    "from": "lang:haskell",
+    "to": "lang:typescript",
+    "relationship": "influenced",
+    "start_year": 2012,
+    "end_year": null,
+    "confidence": 0.82,
+    "evidence_source": "https://en.wikipedia.org/wiki/TypeScript",
+    "notes": "TypeScript's algebraic types influenced by Haskell/ML"
+  },
+  {
+    "from": "lang:go",
+    "to": "lang:crystal",
+    "relationship": "influenced",
+    "start_year": 2014,
+    "end_year": null,
+    "confidence": 0.82,
+    "evidence_source": "https://en.wikipedia.org/wiki/Crystal_(programming_language)",
+    "notes": "Crystal influenced by Go's concurrency model"
+  },
+  {
+    "from": "lang:racket",
+    "to": "lang:julia",
+    "relationship": "influenced",
+    "start_year": 2012,
+    "end_year": null,
+    "confidence": 0.82,
+    "evidence_source": "https://en.wikipedia.org/wiki/Julia_(programming_language)",
+    "notes": "Julia influenced by Racket's macro system"
+  },
+  {
+    "from": "lang:pascal",
+    "to": "lang:nim",
+    "relationship": "influenced",
+    "start_year": 2008,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Nim_(programming_language)",
+    "notes": "Nim influenced by Pascal's syntax"
+  },
+  {
+    "from": "lang:ada",
+    "to": "lang:nim",
+    "relationship": "influenced",
+    "start_year": 2008,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://en.wikipedia.org/wiki/Nim_(programming_language)",
+    "notes": "Nim influenced by Ada's systems programming features"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:perl",
+    "relationship": "influenced",
+    "start_year": 1987,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Perl",
+    "notes": "Perl influenced by C's syntax and operators"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:php",
+    "relationship": "influenced",
+    "start_year": 1994,
+    "end_year": null,
+    "confidence": 0.87,
+    "evidence_source": "https://en.wikipedia.org/wiki/PHP",
+    "notes": "PHP influenced by C's syntax"
+  },
+  {
+    "from": "lang:java",
+    "to": "lang:php",
+    "relationship": "influenced",
+    "start_year": 2004,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://en.wikipedia.org/wiki/PHP",
+    "notes": "PHP 5 object model drew influence from Java-style object-oriented programming."
+  },
+  {
+    "from": "lang:lisp",
+    "to": "lang:r",
+    "relationship": "influenced",
+    "start_year": 1993,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/R_(programming_language)",
+    "notes": "R's functional programming influenced by Lisp/Scheme"
+  },
+  {
+    "from": "lang:algol",
+    "to": "lang:algol68",
+    "relationship": "influenced",
+    "start_year": 1968,
+    "end_year": null,
+    "confidence": 0.99,
+    "evidence_source": "https://en.wikipedia.org/wiki/ALGOL_68",
+    "notes": "ALGOL 68 is revision of ALGOL 60"
+  },
+  {
+    "from": "lang:algol68",
+    "to": "lang:c",
+    "relationship": "influenced",
+    "start_year": 1972,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/C_(programming_language)",
+    "notes": "ALGOL 68 influenced C's structured programming"
+  },
+  {
+    "from": "lang:algol68",
+    "to": "lang:python",
+    "relationship": "influenced",
+    "start_year": 1989,
+    "end_year": null,
+    "confidence": 0.82,
+    "evidence_source": "https://en.wikipedia.org/wiki/Python_(programming_language)",
+    "notes": "ALGOL 68 influenced Python via Guido's Dutch computing tradition"
+  },
+  {
+    "from": "lang:cobol",
+    "to": "lang:pl1",
+    "relationship": "influenced",
+    "start_year": 1964,
+    "end_year": null,
+    "confidence": 0.82,
+    "evidence_source": "https://en.wikipedia.org/wiki/PL/I",
+    "notes": "PL/I incorporated COBOL's data processing features"
+  },
+  {
+    "from": "lang:fortran",
+    "to": "lang:pl1",
+    "relationship": "influenced",
+    "start_year": 1964,
+    "end_year": null,
+    "confidence": 0.87,
+    "evidence_source": "https://en.wikipedia.org/wiki/PL/I",
+    "notes": "PL/I incorporated Fortran's scientific computing features"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:bash",
+    "relationship": "influenced",
+    "start_year": 1989,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Bash_(Unix_shell)",
+    "notes": "Bash influenced by C's operators and syntax"
+  },
+  {
+    "from": "lang:sh",
+    "to": "lang:bash",
+    "relationship": "influenced",
+    "start_year": 1989,
+    "end_year": null,
+    "confidence": 0.97,
+    "evidence_source": "https://en.wikipedia.org/wiki/Bash_(Unix_shell)",
+    "notes": "Bash is GNU replacement and superset of Bourne Shell"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:bash",
+    "relationship": "runtime_written_in",
+    "start_year": 1989,
+    "end_year": null,
+    "confidence": 0.99,
+    "evidence_source": "https://en.wikipedia.org/wiki/Bash_(Unix_shell)",
+    "notes": "Bash interpreter written in C"
+  },
+  {
+    "from": "lang:lisp",
+    "to": "lang:tcl",
+    "relationship": "influenced",
+    "start_year": 1988,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://en.wikipedia.org/wiki/Tcl",
+    "notes": "Tcl influenced by Lisp's command structure"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:awk",
+    "relationship": "influenced",
+    "start_year": 1977,
+    "end_year": null,
+    "confidence": 0.88,
+    "evidence_source": "https://en.wikipedia.org/wiki/AWK",
+    "notes": "AWK influenced by C syntax"
+  },
+  {
+    "from": "lang:awk",
+    "to": "lang:perl",
+    "relationship": "influenced",
+    "start_year": 1987,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Perl",
+    "notes": "Perl influenced by AWK's text processing paradigm"
+  },
+  {
+    "from": "lang:sh",
+    "to": "lang:perl",
+    "relationship": "influenced",
+    "start_year": 1987,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Perl",
+    "notes": "Perl influenced by shell scripting"
+  },
+  {
+    "from": "lang:lua",
+    "to": "lang:luajit",
+    "relationship": "influenced",
+    "start_year": 2005,
+    "end_year": null,
+    "confidence": 0.99,
+    "evidence_source": "https://en.wikipedia.org/wiki/LuaJIT",
+    "notes": "LuaJIT is JIT implementation of Lua"
+  },
+  {
+    "from": "lang:s",
+    "to": "lang:r",
+    "relationship": "influenced",
+    "start_year": 1993,
+    "end_year": null,
+    "confidence": 0.99,
+    "evidence_source": "https://en.wikipedia.org/wiki/R_(programming_language)",
+    "notes": "R designed as open-source implementation of S"
+  },
+  {
+    "from": "lang:typescript",
+    "to": "lang:angular",
+    "relationship": "influenced",
+    "start_year": 2016,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Angular_(web_framework)",
+    "notes": "Angular 2+ written in TypeScript"
+  },
+  {
+    "from": "lang:lisp",
+    "to": "lang:scala",
+    "relationship": "influenced",
+    "start_year": 2004,
+    "end_year": null,
+    "confidence": 0.82,
+    "evidence_source": "https://en.wikipedia.org/wiki/Scala_(programming_language)",
+    "notes": "Scala's S-expressions and macros influenced by Lisp"
+  },
+  {
+    "from": "lang:smalltalk",
+    "to": "lang:pharo",
+    "relationship": "influenced",
+    "start_year": 2008,
+    "end_year": null,
+    "confidence": 0.99,
+    "evidence_source": "https://en.wikipedia.org/wiki/Pharo",
+    "notes": "Pharo is Smalltalk dialect"
+  },
+  {
+    "from": "lang:smalltalk",
+    "to": "lang:groovy",
+    "relationship": "influenced",
+    "start_year": 2003,
+    "end_year": null,
+    "confidence": 0.83,
+    "evidence_source": "https://en.wikipedia.org/wiki/Apache_Groovy",
+    "notes": "Groovy influenced by Smalltalk's dynamic dispatch"
+  },
+  {
+    "from": "lang:scheme",
+    "to": "lang:guile",
+    "relationship": "influenced",
+    "start_year": 1993,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://en.wikipedia.org/wiki/GNU_Guile",
+    "notes": "GNU Guile is Scheme implementation"
+  },
+  {
+    "from": "lang:python",
+    "to": "lang:mypy",
+    "relationship": "influenced",
+    "start_year": 2012,
+    "end_year": null,
+    "confidence": 0.97,
+    "evidence_source": "https://mypy-lang.org/",
+    "notes": "Mypy is optional static type checker for Python"
+  },
+  {
+    "from": "lang:pascal",
+    "to": "lang:freepascal",
+    "relationship": "influenced",
+    "start_year": 1993,
+    "end_year": null,
+    "confidence": 0.99,
+    "evidence_source": "https://en.wikipedia.org/wiki/Free_Pascal",
+    "notes": "Free Pascal is open-source Pascal compiler"
+  },
+  {
+    "from": "lang:fortran",
+    "to": "lang:fortran95",
+    "relationship": "influenced",
+    "start_year": 1997,
+    "end_year": null,
+    "confidence": 0.99,
+    "evidence_source": "https://en.wikipedia.org/wiki/Fortran_95",
+    "notes": "Fortran 95 is revision of Fortran 90"
+  },
+  {
+    "from": "lang:ruby",
+    "to": "lang:crystal",
+    "relationship": "compiler_written_in",
+    "start_year": 2014,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Crystal_(programming_language)",
+    "notes": "Crystal compiler bootstrapped from Ruby initially"
+  },
+  {
+    "from": "lang:assembly",
+    "to": "lang:flow_matic",
+    "relationship": "compiler_written_in",
+    "start_year": 1955,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/FLOW-MATIC",
+    "notes": "FLOW-MATIC compiler written in assembly for UNIVAC I"
+  },
+  {
+    "from": "lang:assembly",
+    "to": "lang:comtran",
+    "relationship": "compiler_written_in",
+    "start_year": 1957,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/COMTRAN",
+    "notes": "COMTRAN compiler written in assembly for IBM 702"
+  },
+  {
+    "from": "lang:assembly",
+    "to": "lang:algol",
+    "relationship": "compiler_written_in",
+    "start_year": 1960,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/ALGOL_60",
+    "notes": "Early ALGOL 60 compilers written in assembly"
+  },
+  {
+    "from": "lang:assembly",
+    "to": "lang:lisp",
+    "relationship": "compiler_written_in",
+    "start_year": 1958,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/Lisp_(programming_language)",
+    "notes": "Original Lisp interpreter written in IBM 704 assembly by Steve Russell"
+  },
+  {
+    "from": "lang:assembly",
+    "to": "lang:cobol",
+    "relationship": "compiler_written_in",
+    "start_year": 1959,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/COBOL",
+    "notes": "Early COBOL compilers written in assembly; GnuCOBOL later written in C"
+  },
+  {
+    "from": "lang:algol",
+    "to": "lang:simula",
+    "relationship": "compiler_written_in",
+    "start_year": 1962,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Simula",
+    "notes": "Simula 67 compiler implemented in ALGOL"
+  },
+  {
+    "from": "lang:assembly",
+    "to": "lang:pl1",
+    "relationship": "compiler_written_in",
+    "start_year": 1964,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/PL/I",
+    "notes": "Early PL/I compilers for IBM System/360 written in assembly"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:apl",
+    "relationship": "runtime_written_in",
+    "start_year": 1973,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Dyalog_APL",
+    "notes": "Dyalog APL runtime written in C"
+  },
+  {
+    "from": "lang:assembly",
+    "to": "lang:algol68",
+    "relationship": "compiler_written_in",
+    "start_year": 1968,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/ALGOL_68",
+    "notes": "Early ALGOL 68 compilers written in assembly"
+  },
+  {
+    "from": "lang:lisp",
+    "to": "lang:planner",
+    "relationship": "runtime_written_in",
+    "start_year": 1969,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Planner_(programming_language)",
+    "notes": "Planner was implemented as a Lisp system at MIT"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:smalltalk",
+    "relationship": "runtime_written_in",
+    "start_year": 1995,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/Squeak",
+    "notes": "Squeak and Pharo VMs (primary Smalltalk implementations) written in C"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:ml",
+    "relationship": "runtime_written_in",
+    "start_year": 1984,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Standard_ML",
+    "notes": "Standard ML of New Jersey (SML/NJ) runtime written in C"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:scheme",
+    "relationship": "runtime_written_in",
+    "start_year": 1984,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/MIT_Scheme",
+    "notes": "MIT Scheme runtime written in C"
+  },
+  {
+    "from": "lang:assembly",
+    "to": "lang:clu",
+    "relationship": "compiler_written_in",
+    "start_year": 1975,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/CLU_(programming_language)",
+    "notes": "CLU compiler at MIT written in assembly and PDP-10 machine code"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:s",
+    "relationship": "runtime_written_in",
+    "start_year": 1976,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/S_(programming_language)",
+    "notes": "S statistical language runtime written in C and Fortran at Bell Labs"
+  },
+  {
+    "from": "lang:fortran",
+    "to": "lang:s",
+    "relationship": "runtime_written_in",
+    "start_year": 1976,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/S_(programming_language)",
+    "notes": "S statistical language uses Fortran for numerical computation"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:icon",
+    "relationship": "compiler_written_in",
+    "start_year": 1977,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Icon_(programming_language)",
+    "notes": "Icon compiler and runtime written in C"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:awk",
+    "relationship": "runtime_written_in",
+    "start_year": 1977,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/AWK",
+    "notes": "AWK runtime (gawk, nawk, mawk) written in C"
+  },
+  {
+    "from": "lang:pascal",
+    "to": "lang:modula2",
+    "relationship": "compiler_written_in",
+    "start_year": 1978,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Modula-2",
+    "notes": "Early Modula-2 compilers written in Pascal"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:sh",
+    "relationship": "runtime_written_in",
+    "start_year": 1979,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/Bourne_shell",
+    "notes": "Bourne shell written in C by Steve Bourne at Bell Labs"
+  },
+  {
+    "from": "lang:cxx",
+    "to": "lang:objective_c",
+    "relationship": "compiler_written_in",
+    "start_year": 2007,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/Clang",
+    "notes": "Clang (written in C++) is the primary Objective-C compiler"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:matlab",
+    "relationship": "runtime_written_in",
+    "start_year": 1984,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/MATLAB",
+    "notes": "MATLAB runtime engine written in C and C++"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:miranda",
+    "relationship": "compiler_written_in",
+    "start_year": 1985,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Miranda_(programming_language)",
+    "notes": "Miranda compiler written in C"
+  },
+  {
+    "from": "lang:modula2",
+    "to": "lang:oberon",
+    "relationship": "bootstrap_written_in",
+    "start_year": 1987,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Oberon_(programming_language)",
+    "notes": "Oberon compiler bootstrapped from Modula-2"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:abc",
+    "relationship": "runtime_written_in",
+    "start_year": 1987,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/ABC_(programming_language)",
+    "notes": "ABC interpreter written in C at CWI"
+  },
+  {
+    "from": "lang:cxx",
+    "to": "lang:self",
+    "relationship": "runtime_written_in",
+    "start_year": 1987,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/Self_(programming_language)",
+    "notes": "Self VM written in C++ at Stanford/Sun"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:newsqueak",
+    "relationship": "compiler_written_in",
+    "start_year": 1988,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Newsqueak",
+    "notes": "Newsqueak compiler written in C at Bell Labs"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:modula3",
+    "relationship": "compiler_written_in",
+    "start_year": 1988,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Modula-3",
+    "notes": "Modula-3 compiler (m3cg) written in C"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:tcl",
+    "relationship": "runtime_written_in",
+    "start_year": 1988,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/Tcl",
+    "notes": "Tcl interpreter written in C by John Ousterhout"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:j",
+    "relationship": "runtime_written_in",
+    "start_year": 1990,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/J_(programming_language)",
+    "notes": "J interpreter written in C by Ken Iverson and Roger Hui"
+  },
+  {
+    "from": "lang:oberon",
+    "to": "lang:oberon2",
+    "relationship": "compiler_written_in",
+    "start_year": 1991,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Oberon-2",
+    "notes": "Oberon-2 compiler derived from Oberon compiler"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:alef",
+    "relationship": "compiler_written_in",
+    "start_year": 1992,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Alef_(programming_language)",
+    "notes": "Alef compiler written in C at Bell Labs"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:dylan",
+    "relationship": "runtime_written_in",
+    "start_year": 1992,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Dylan_(programming_language)",
+    "notes": "Open Dylan runtime written in C"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:guile",
+    "relationship": "runtime_written_in",
+    "start_year": 1993,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/GNU_Guile",
+    "notes": "GNU Guile interpreter written in C"
+  },
+  {
+    "from": "lang:pascal",
+    "to": "lang:freepascal",
+    "relationship": "bootstrap_written_in",
+    "start_year": 1993,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Free_Pascal",
+    "notes": "Free Pascal compiler initially written in Turbo Pascal then self-hosted"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:limbo",
+    "relationship": "compiler_written_in",
+    "start_year": 1995,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Limbo_(programming_language)",
+    "notes": "Limbo compiler written in C as part of Plan 9"
+  },
+  {
+    "from": "lang:pascal",
+    "to": "lang:delphi",
+    "relationship": "bootstrap_written_in",
+    "start_year": 1995,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Delphi_(software)",
+    "notes": "Delphi compiler bootstrapped from Turbo Pascal, now self-hosted"
+  },
+  {
+    "from": "lang:prolog",
+    "to": "lang:mercury",
+    "relationship": "bootstrap_written_in",
+    "start_year": 1995,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Mercury_(programming_language)",
+    "notes": "Mercury compiler initially written in Prolog, then self-hosted"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:fortran95",
+    "relationship": "compiler_written_in",
+    "start_year": 1997,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/GNU_Fortran",
+    "notes": "GNU Fortran (gfortran) compiler written in C as part of GCC"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:cyclone",
+    "relationship": "compiler_written_in",
+    "start_year": 2002,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Cyclone_(programming_language)",
+    "notes": "Cyclone compiler written in C at Cornell/AT&T"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:luajit",
+    "relationship": "runtime_written_in",
+    "start_year": 2005,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://luajit.org/",
+    "notes": "LuaJIT runtime written in C and assembly by Mike Pall"
+  },
+  {
+    "from": "lang:haskell",
+    "to": "lang:agda",
+    "relationship": "compiler_written_in",
+    "start_year": 2007,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/Agda_(programming_language)",
+    "notes": "Agda proof assistant and compiler written in Haskell"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:pharo",
+    "relationship": "runtime_written_in",
+    "start_year": 2008,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Pharo",
+    "notes": "Pharo VM (based on Squeak) written in C"
+  },
+  {
+    "from": "lang:haskell",
+    "to": "lang:idris",
+    "relationship": "bootstrap_written_in",
+    "start_year": 2011,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Idris_(programming_language)",
+    "notes": "Idris compiler initially written in Haskell, later self-hosted"
+  },
+  {
+    "from": "lang:python",
+    "to": "lang:mypy",
+    "relationship": "compiler_written_in",
+    "start_year": 2012,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://mypy-lang.org/",
+    "notes": "mypy type checker written in Python"
+  },
+  {
+    "from": "lang:typescript",
+    "to": "lang:angular",
+    "relationship": "compiler_written_in",
+    "start_year": 2016,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://angular.io/",
+    "notes": "Angular framework and AOT compiler written in TypeScript"
+  },
+  {
+    "from": "lang:rust",
+    "to": "lang:gleam",
+    "relationship": "compiler_written_in",
+    "start_year": 2019,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://gleam.run/",
+    "notes": "Gleam compiler written in Rust"
+  },
+  {
+    "from": "lang:perl",
+    "to": "lang:raku",
+    "relationship": "influenced",
+    "start_year": 2000,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://en.wikipedia.org/wiki/Raku_(programming_language)",
+    "notes": "Raku began as Perl 6, a redesign of Perl."
+  },
+  {
+    "from": "lang:haskell",
+    "to": "lang:raku",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://en.wikipedia.org/wiki/Raku_(programming_language)",
+    "notes": "Raku adopted Haskell-inspired functional features and types."
+  },
+  {
+    "from": "lang:smalltalk",
+    "to": "lang:raku",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.72,
+    "evidence_source": "https://en.wikipedia.org/wiki/Raku_(programming_language)",
+    "notes": "Object and metaobject model influenced by Smalltalk."
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:raku",
+    "relationship": "runtime_written_in",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/MoarVM",
+    "notes": "Reference implementation runs on MoarVM, written in C."
+  },
+  {
+    "from": "lang:php",
+    "to": "lang:hack",
+    "relationship": "influenced",
+    "start_year": 2014,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://en.wikipedia.org/wiki/Hack_(programming_language)",
+    "notes": "Hack is a dialect of PHP."
+  },
+  {
+    "from": "lang:cxx",
+    "to": "lang:hack",
+    "relationship": "runtime_written_in",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.92,
+    "evidence_source": "https://en.wikipedia.org/wiki/HHVM",
+    "notes": "Hack runs on HHVM, written in C++."
+  },
+  {
+    "from": "lang:ocaml",
+    "to": "lang:rescript",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/ReScript",
+    "notes": "ReScript is built on the OCaml compiler and type system."
+  },
+  {
+    "from": "lang:reasonml",
+    "to": "lang:rescript",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/ReScript",
+    "notes": "ReScript evolved from ReasonML/BuckleScript."
+  },
+  {
+    "from": "lang:rescript",
+    "to": "lang:javascript",
+    "relationship": "transpiled_to",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.98,
+    "evidence_source": "https://en.wikipedia.org/wiki/ReScript",
+    "notes": "ReScript compiles to JavaScript."
+  },
+  {
+    "from": "lang:ocaml",
+    "to": "lang:rescript",
+    "relationship": "compiler_written_in",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/ReScript",
+    "notes": "The ReScript compiler is based on OCaml."
+  },
+  {
+    "from": "lang:csharp",
+    "to": "lang:vala",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Vala_(programming_language)",
+    "notes": "Vala's syntax is modeled closely on C#."
+  },
+  {
+    "from": "lang:java",
+    "to": "lang:vala",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.7,
+    "evidence_source": "https://en.wikipedia.org/wiki/Vala_(programming_language)",
+    "notes": "Vala draws object-model ideas from Java."
+  },
+  {
+    "from": "lang:vala",
+    "to": "lang:c",
+    "relationship": "transpiled_to",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/Vala_(programming_language)",
+    "notes": "Vala compiles to C using GObject."
+  },
+  {
+    "from": "lang:simula",
+    "to": "lang:eiffel",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Eiffel_(programming_language)",
+    "notes": "Eiffel's class model descends from Simula."
+  },
+  {
+    "from": "lang:ada",
+    "to": "lang:eiffel",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.78,
+    "evidence_source": "https://en.wikipedia.org/wiki/Eiffel_(programming_language)",
+    "notes": "Ada informed Eiffel's emphasis on reliability."
+  },
+  {
+    "from": "lang:eiffel",
+    "to": "lang:csharp",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://en.wikipedia.org/wiki/Design_by_contract",
+    "notes": "Design by Contract influenced C# (Code Contracts)."
+  },
+  {
+    "from": "lang:eiffel",
+    "to": "lang:ruby",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.7,
+    "evidence_source": "https://en.wikipedia.org/wiki/Eiffel_(programming_language)",
+    "notes": "Eiffel influenced Ruby's object model and DbC libraries."
+  },
+  {
+    "from": "lang:forth",
+    "to": "lang:factor",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Factor_(programming_language)",
+    "notes": "Factor is a modern concatenative descendant of Forth."
+  },
+  {
+    "from": "lang:assembly",
+    "to": "lang:forth",
+    "relationship": "compiler_written_in",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://en.wikipedia.org/wiki/Forth_(programming_language)",
+    "notes": "Classic Forth systems were bootstrapped in assembly."
+  },
+  {
+    "from": "lang:cxx",
+    "to": "lang:solidity",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Solidity",
+    "notes": "Solidity's syntax draws on C++."
+  },
+  {
+    "from": "lang:javascript",
+    "to": "lang:solidity",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://en.wikipedia.org/wiki/Solidity",
+    "notes": "Solidity borrows syntax from JavaScript."
+  },
+  {
+    "from": "lang:python",
+    "to": "lang:solidity",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.75,
+    "evidence_source": "https://en.wikipedia.org/wiki/Solidity",
+    "notes": "Solidity also takes ideas from Python."
+  },
+  {
+    "from": "lang:cxx",
+    "to": "lang:solidity",
+    "relationship": "compiler_written_in",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.92,
+    "evidence_source": "https://en.wikipedia.org/wiki/Solidity",
+    "notes": "The reference compiler solc is written in C++."
+  },
+  {
+    "from": "lang:self",
+    "to": "lang:io",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Io_(programming_language)",
+    "notes": "Io's prototype model comes from Self."
+  },
+  {
+    "from": "lang:smalltalk",
+    "to": "lang:io",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.82,
+    "evidence_source": "https://en.wikipedia.org/wiki/Io_(programming_language)",
+    "notes": "Io draws message passing from Smalltalk."
+  },
+  {
+    "from": "lang:lua",
+    "to": "lang:io",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.75,
+    "evidence_source": "https://en.wikipedia.org/wiki/Io_(programming_language)",
+    "notes": "Io shares minimalist embedding goals with Lua."
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:io",
+    "relationship": "runtime_written_in",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Io_(programming_language)",
+    "notes": "The Io interpreter is written in C."
+  },
+  {
+    "from": "lang:miranda",
+    "to": "lang:clean",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://en.wikipedia.org/wiki/Clean_(programming_language)",
+    "notes": "Clean follows the lazy functional tradition of Miranda."
+  },
+  {
+    "from": "lang:clean",
+    "to": "lang:haskell",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.72,
+    "evidence_source": "https://en.wikipedia.org/wiki/Clean_(programming_language)",
+    "notes": "Clean's uniqueness types informed Haskell research."
+  },
+  {
+    "from": "lang:occam",
+    "to": "lang:limbo",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.72,
+    "evidence_source": "https://en.wikipedia.org/wiki/Occam_(programming_language)",
+    "notes": "occam's channel concurrency influenced Limbo."
+  },
+  {
+    "from": "lang:snobol",
+    "to": "lang:icon",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.92,
+    "evidence_source": "https://en.wikipedia.org/wiki/Icon_(programming_language)",
+    "notes": "Ralph Griswold designed Icon as a successor to SNOBOL."
+  },
+  {
+    "from": "lang:snobol",
+    "to": "lang:awk",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.65,
+    "evidence_source": "https://en.wikipedia.org/wiki/SNOBOL",
+    "notes": "String/pattern processing ideas carried into later text languages."
+  },
+  {
+    "from": "lang:speedcoding",
+    "to": "lang:fortran",
+    "relationship": "influenced",
+    "start_year": 1954,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Speedcoding",
+    "notes": "Backus's Speedcoding experience led to Fortran."
+  },
+  {
+    "from": "lang:machine_code",
+    "to": "lang:speedcoding",
+    "relationship": "compiler_written_in",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://en.wikipedia.org/wiki/Speedcoding",
+    "notes": "Speedcoding was implemented in IBM 701 machine code."
+  },
+  {
+    "from": "lang:fortran",
+    "to": "lang:basic",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/BASIC",
+    "notes": "BASIC simplified concepts from FORTRAN."
+  },
+  {
+    "from": "lang:algol",
+    "to": "lang:basic",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.7,
+    "evidence_source": "https://en.wikipedia.org/wiki/BASIC",
+    "notes": "ALGOL influenced BASIC's control structures."
+  },
+  {
+    "from": "lang:basic",
+    "to": "lang:vb_net",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Visual_Basic_.NET",
+    "notes": "Visual Basic descends from the BASIC family."
+  },
+  {
+    "from": "lang:lisp",
+    "to": "lang:logo",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Logo_(programming_language)",
+    "notes": "Logo is a dialect of Lisp."
+  },
+  {
+    "from": "lang:hope",
+    "to": "lang:miranda",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://en.wikipedia.org/wiki/Hope_(programming_language)",
+    "notes": "Hope's algebraic data types influenced Miranda."
+  },
+  {
+    "from": "lang:hope",
+    "to": "lang:haskell",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.7,
+    "evidence_source": "https://en.wikipedia.org/wiki/Hope_(programming_language)",
+    "notes": "Hope contributed ideas to the Haskell lineage."
+  },
+  {
+    "from": "lang:ml",
+    "to": "lang:hope",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.65,
+    "evidence_source": "https://en.wikipedia.org/wiki/Hope_(programming_language)",
+    "notes": "Hope developed alongside the ML tradition at Edinburgh."
+  },
+  {
+    "from": "lang:mesa",
+    "to": "lang:modula2",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.82,
+    "evidence_source": "https://en.wikipedia.org/wiki/Mesa_(programming_language)",
+    "notes": "Mesa's module system influenced Modula-2."
+  },
+  {
+    "from": "lang:mesa",
+    "to": "lang:java",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.7,
+    "evidence_source": "https://en.wikipedia.org/wiki/Mesa_(programming_language)",
+    "notes": "Mesa's exceptions and monitors influenced Java."
+  },
+  {
+    "from": "lang:ml",
+    "to": "lang:ats",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.82,
+    "evidence_source": "https://en.wikipedia.org/wiki/ATS_(programming_language)",
+    "notes": "ATS descends from the ML family and Dependent ML."
+  },
+  {
+    "from": "lang:ats",
+    "to": "lang:c",
+    "relationship": "transpiled_to",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/ATS_(programming_language)",
+    "notes": "ATS compiles to C."
+  },
+  {
+    "from": "lang:elm",
+    "to": "lang:roc",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://www.roc-lang.org/faq",
+    "notes": "Roc is heavily influenced by Elm."
+  },
+  {
+    "from": "lang:haskell",
+    "to": "lang:roc",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.72,
+    "evidence_source": "https://en.wikipedia.org/wiki/Roc_(programming_language)",
+    "notes": "Roc draws from Haskell's pure functional model."
+  },
+  {
+    "from": "lang:rust",
+    "to": "lang:roc",
+    "relationship": "compiler_written_in",
+    "start_year": null,
+    "end_year": 2025,
+    "confidence": 0.92,
+    "evidence_source": "https://linkedlist.org/2025/02/06/roc-zig-rewrite",
+    "notes": "Roc's compiler was originally written in Rust, from the project's start until the 2025 rewrite to Zig."
+  },
+  {
+    "from": "lang:haskell",
+    "to": "lang:unison",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://www.unison-lang.org/docs/usage-topics/general-faqs/",
+    "notes": "Unison is strongly influenced by Haskell."
+  },
+  {
+    "from": "lang:haskell",
+    "to": "lang:unison",
+    "relationship": "compiler_written_in",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://www.unison-lang.org/docs/usage-topics/general-faqs/",
+    "notes": "Unison's implementation is written in Haskell."
+  },
+  {
+    "from": "lang:coq",
+    "to": "lang:lean",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.82,
+    "evidence_source": "https://en.wikipedia.org/wiki/Lean_(proof_assistant)",
+    "notes": "Lean follows in the tradition of Coq."
+  },
+  {
+    "from": "lang:haskell",
+    "to": "lang:lean",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.7,
+    "evidence_source": "https://en.wikipedia.org/wiki/Lean_(proof_assistant)",
+    "notes": "Lean 4's functional core draws on Haskell."
+  },
+  {
+    "from": "lang:cxx",
+    "to": "lang:lean",
+    "relationship": "runtime_written_in",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Lean_(proof_assistant)",
+    "notes": "Lean 4 compiles via a C backend and a C++ runtime."
+  },
+  {
+    "from": "lang:ml",
+    "to": "lang:coq",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://en.wikipedia.org/wiki/Coq",
+    "notes": "Coq's tactic language and core descend from ML."
+  },
+  {
+    "from": "lang:ocaml",
+    "to": "lang:coq",
+    "relationship": "compiler_written_in",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/Coq",
+    "notes": "Coq is implemented in OCaml."
+  },
+  {
+    "from": "lang:coq",
+    "to": "lang:agda",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.75,
+    "evidence_source": "https://en.wikipedia.org/wiki/Agda_(programming_language)",
+    "notes": "Coq influenced dependently typed Agda."
+  },
+  {
+    "from": "lang:coq",
+    "to": "lang:idris",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.72,
+    "evidence_source": "https://en.wikipedia.org/wiki/Idris_(programming_language)",
+    "notes": "Coq influenced Idris's proof features."
+  },
+  {
+    "from": "lang:csharp",
+    "to": "lang:qsharp",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.88,
+    "evidence_source": "https://en.wikipedia.org/wiki/Q_Sharp",
+    "notes": "Q# borrows syntax and tooling from C#."
+  },
+  {
+    "from": "lang:fsharp",
+    "to": "lang:qsharp",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://en.wikipedia.org/wiki/Q_Sharp",
+    "notes": "Q#'s functional features draw on F#."
+  },
+  {
+    "from": "lang:csharp",
+    "to": "lang:qsharp",
+    "relationship": "compiler_written_in",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Q_Sharp",
+    "notes": "The Q# compiler is implemented on .NET in C#."
+  },
+  {
+    "from": "lang:perl",
+    "to": "lang:powershell",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.78,
+    "evidence_source": "https://en.wikipedia.org/wiki/PowerShell",
+    "notes": "PowerShell borrows scripting idioms from Perl."
+  },
+  {
+    "from": "lang:sh",
+    "to": "lang:powershell",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.72,
+    "evidence_source": "https://en.wikipedia.org/wiki/PowerShell",
+    "notes": "PowerShell draws on Unix shell concepts."
+  },
+  {
+    "from": "lang:csharp",
+    "to": "lang:powershell",
+    "relationship": "compiler_written_in",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/PowerShell",
+    "notes": "PowerShell is implemented in C# on .NET."
+  },
+  {
+    "from": "lang:actionscript",
+    "to": "lang:haxe",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Haxe",
+    "notes": "Haxe grew from ActionScript/MTASC tooling."
+  },
+  {
+    "from": "lang:ocaml",
+    "to": "lang:haxe",
+    "relationship": "compiler_written_in",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.92,
+    "evidence_source": "https://en.wikipedia.org/wiki/Haxe",
+    "notes": "The Haxe compiler is written in OCaml."
+  },
+  {
+    "from": "lang:java",
+    "to": "lang:haxe",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.68,
+    "evidence_source": "https://en.wikipedia.org/wiki/Haxe",
+    "notes": "Haxe's class model draws on Java."
+  },
+  {
+    "from": "lang:javascript",
+    "to": "lang:actionscript",
+    "relationship": "influenced",
+    "start_year": 1998,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/ActionScript",
+    "notes": "ActionScript is an ECMAScript dialect, like JavaScript."
+  },
+  {
+    "from": "lang:cxx",
+    "to": "lang:actionscript",
+    "relationship": "runtime_written_in",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.8,
+    "evidence_source": "https://en.wikipedia.org/wiki/Tamarin_(software)",
+    "notes": "ActionScript 3 ran on the Tamarin VM, written in C++."
+  },
+  {
+    "from": "lang:fortran",
+    "to": "lang:chapel",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.75,
+    "evidence_source": "https://en.wikipedia.org/wiki/Chapel_(programming_language)",
+    "notes": "Chapel targets HPC workloads historically served by Fortran."
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:chapel",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.7,
+    "evidence_source": "https://en.wikipedia.org/wiki/Chapel_(programming_language)",
+    "notes": "Chapel borrows imperative syntax from C."
+  },
+  {
+    "from": "lang:cxx",
+    "to": "lang:chapel",
+    "relationship": "compiler_written_in",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Chapel_(programming_language)",
+    "notes": "The Chapel compiler is written in C/C++."
+  },
+  {
+    "from": "lang:erlang",
+    "to": "lang:pony",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Pony_(programming_language)",
+    "notes": "Pony's actor model is inspired by Erlang."
+  },
+  {
+    "from": "lang:rust",
+    "to": "lang:pony",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.7,
+    "evidence_source": "https://en.wikipedia.org/wiki/Pony_(programming_language)",
+    "notes": "Pony shares safety goals with Rust."
+  },
+  {
+    "from": "lang:cxx",
+    "to": "lang:pony",
+    "relationship": "compiler_written_in",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Pony_(programming_language)",
+    "notes": "The Pony compiler is written in C/C++ with an LLVM backend."
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:odin",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://odin-lang.org/docs/faq/",
+    "notes": "Odin is designed as a modern alternative to C."
+  },
+  {
+    "from": "lang:pascal",
+    "to": "lang:odin",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.72,
+    "evidence_source": "https://odin-lang.org/docs/faq/",
+    "notes": "Odin borrows declaration syntax from Pascal."
+  },
+  {
+    "from": "lang:go",
+    "to": "lang:odin",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.75,
+    "evidence_source": "https://odin-lang.org/docs/faq/",
+    "notes": "Odin draws ideas from Go."
+  },
+  {
+    "from": "lang:cxx",
+    "to": "lang:odin",
+    "relationship": "compiler_written_in",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://odin-lang.org/docs/faq/",
+    "notes": "The Odin compiler is written in C++ with an LLVM backend."
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:hare",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://harelang.org/documentation/faq.html",
+    "notes": "Hare is a C-like systems language."
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:hare",
+    "relationship": "bootstrap_written_in",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://slackbuilds.org/repository/15.0/development/harec/",
+    "notes": "Hare's bootstrap compiler is written in C."
+  },
+  {
+    "from": "lang:lua",
+    "to": "lang:wren",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://github.com/wren-lang/wren",
+    "notes": "Wren is a small embeddable language like Lua."
+  },
+  {
+    "from": "lang:smalltalk",
+    "to": "lang:wren",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.72,
+    "evidence_source": "https://github.com/wren-lang/wren",
+    "notes": "Wren's class and method model draws on Smalltalk."
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:wren",
+    "relationship": "runtime_written_in",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.92,
+    "evidence_source": "https://github.com/wren-lang/wren",
+    "notes": "The Wren VM is written in C."
+  },
+  {
+    "from": "lang:lisp",
+    "to": "lang:factor",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.75,
+    "evidence_source": "https://en.wikipedia.org/wiki/Factor_(programming_language)",
+    "notes": "Factor borrows interactive and metaprogramming ideas from Lisp."
+  },
+  {
+    "from": "lang:cxx",
+    "to": "lang:factor",
+    "relationship": "runtime_written_in",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Factor_(programming_language)",
+    "notes": "Factor's VM is written in C++."
+  },
+  {
+    "from": "lang:haskell",
+    "to": "lang:nix",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.72,
+    "evidence_source": "https://en.wikipedia.org/wiki/Nix_(package_manager)",
+    "notes": "The Nix language is a lazy, purely functional language in the Haskell spirit."
+  },
+  {
+    "from": "lang:cxx",
+    "to": "lang:nix",
+    "relationship": "runtime_written_in",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Nix_(package_manager)",
+    "notes": "The Nix evaluator is implemented in C++."
+  },
+  {
+    "from": "lang:rust",
+    "to": "lang:move",
+    "relationship": "influenced",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://en.wikipedia.org/wiki/Move_(programming_language)",
+    "notes": "Move's safety model is influenced by Rust."
+  },
+  {
+    "from": "lang:rust",
+    "to": "lang:move",
+    "relationship": "compiler_written_in",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/Move_(programming_language)",
+    "notes": "The Move toolchain is written in Rust."
+  },
+  {
+    "from": "lang:cxx",
+    "to": "tool:hhvm",
+    "relationship": "runtime_written_in",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.92,
+    "evidence_source": "https://en.wikipedia.org/wiki/HHVM",
+    "notes": "HHVM is written in C++."
+  },
+  {
+    "from": "lang:c",
+    "to": "tool:moarvm",
+    "relationship": "runtime_written_in",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.92,
+    "evidence_source": "https://en.wikipedia.org/wiki/MoarVM",
+    "notes": "MoarVM is written in C."
+  },
+  {
+    "from": "lang:java",
+    "to": "tool:graalvm",
+    "relationship": "compiler_written_in",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.9,
+    "evidence_source": "https://en.wikipedia.org/wiki/GraalVM",
+    "notes": "GraalVM's compiler is written in Java."
+  },
+  {
+    "from": "lang:c",
+    "to": "tool:quickjs",
+    "relationship": "runtime_written_in",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/QuickJS",
+    "notes": "QuickJS is written in C."
+  },
+  {
+    "from": "lang:go",
+    "to": "tool:esbuild",
+    "relationship": "compiler_written_in",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/Esbuild",
+    "notes": "esbuild is written in Go."
+  },
+  {
+    "from": "lang:rust",
+    "to": "tool:swc",
+    "relationship": "compiler_written_in",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://github.com/swc-project/swc",
+    "notes": "SWC is written in Rust."
+  },
+  {
+    "from": "lang:javascript",
+    "to": "tool:babel",
+    "relationship": "compiler_written_in",
+    "start_year": null,
+    "end_year": null,
+    "confidence": 0.95,
+    "evidence_source": "https://en.wikipedia.org/wiki/Babel_(transcompiler)",
+    "notes": "Babel is written in JavaScript."
+  },
+  {
+    "from": "lang:zig",
+    "to": "lang:roc",
+    "relationship": "compiler_written_in",
+    "start_year": 2025,
+    "end_year": null,
+    "confidence": 0.85,
+    "evidence_source": "https://gist.github.com/rtfeldman/77fb430ee57b42f5f2ca973a3992532f",
+    "notes": "Roc's compiler was rewritten from Rust to Zig starting 2025, announced by creator Richard Feldman, for faster incremental builds and simpler memory management."
+  },
+  {
+    "from": "lang:python",
+    "to": "ai:pytorch",
+    "relationship": "influenced",
+    "confidence": 1,
+    "evidence_source": "https://pytorch.org/"
+  },
+  {
+    "from": "ai:pytorch",
+    "to": "lang:cxx",
+    "relationship": "runs_on",
+    "confidence": 1,
+    "evidence_source": "https://github.com/pytorch/pytorch"
+  },
+  {
+    "from": "ai:pytorch",
+    "to": "infra:cuda",
+    "relationship": "targets_runtime",
+    "confidence": 1,
+    "evidence_source": "https://pytorch.org/docs/stable/notes/cuda.html"
+  },
+  {
+    "from": "lang:python",
+    "to": "ai:tensorflow",
+    "relationship": "influenced",
+    "confidence": 1,
+    "evidence_source": "https://www.tensorflow.org/"
+  },
+  {
+    "from": "ai:tensorflow",
+    "to": "lang:cxx",
+    "relationship": "runs_on",
+    "confidence": 1,
+    "evidence_source": "https://github.com/tensorflow/tensorflow"
+  },
+  {
+    "from": "ai:tensorflow",
+    "to": "infra:cuda",
+    "relationship": "targets_runtime",
+    "confidence": 1,
+    "evidence_source": "https://www.tensorflow.org/install/gpu"
+  },
+  {
+    "from": "lang:cxx",
+    "to": "infra:llvm",
+    "relationship": "compiler_written_in",
+    "confidence": 1,
+    "evidence_source": "https://github.com/llvm/llvm-project"
+  },
+  {
+    "from": "lang:rust",
+    "to": "infra:llvm",
+    "relationship": "compiles_to",
+    "confidence": 1,
+    "evidence_source": "https://rustc-dev-guide.rust-lang.org/backend/codegen.html"
+  },
+  {
+    "from": "lang:julia",
+    "to": "infra:llvm",
+    "relationship": "compiles_to",
+    "confidence": 1,
+    "evidence_source": "https://docs.julialang.org/en/v1/devdocs/llvm/"
+  },
+  {
+    "from": "lang:zig",
+    "to": "lang:cxx",
+    "relationship": "bootstrap_written_in",
+    "confidence": 1,
+    "start_year": 2015,
+    "end_year": 2022,
+    "evidence_source": "https://ziglang.org/news/goodbye-cpp/"
+  },
+  {
+    "from": "lang:zig",
+    "to": "lang:zig",
+    "relationship": "bootstrap_written_in",
+    "confidence": 1,
+    "start_year": 2022,
+    "evidence_source": "https://ziglang.org/news/goodbye-cpp/"
+  },
+  {
+    "from": "lang:c",
+    "to": "lang:zig",
+    "relationship": "influenced",
+    "confidence": 1,
+    "evidence_source": "https://ziglang.org/learn/why_zig_rust_d_cpp/"
+  },
+  {
+    "from": "lang:bcpl",
+    "to": "lang:b",
+    "relationship": "influenced",
+    "confidence": 1,
+    "evidence_source": "https://www.bell-labs.com/usr/dmr/www/chist.html"
+  },
+  {
+    "from": "lang:b",
+    "to": "lang:c",
+    "relationship": "influenced",
+    "confidence": 1,
+    "evidence_source": "https://www.bell-labs.com/usr/dmr/www/chist.html"
+  },
+  {
+    "from": "lang:cxx",
+    "to": "ai:mlir",
+    "relationship": "runs_on",
+    "confidence": 1,
+    "evidence_source": "https://mlir.llvm.org/"
+  },
+  {
+    "from": "ai:mlir",
+    "to": "infra:llvm",
+    "relationship": "runs_on",
+    "confidence": 1,
+    "evidence_source": "https://mlir.llvm.org/"
+  },
+  {
+    "from": "lang:python",
+    "to": "ai:triton",
+    "relationship": "runs_on",
+    "confidence": 1,
+    "evidence_source": "https://triton-lang.org/main/index.html"
+  },
+  {
+    "from": "ai:triton",
+    "to": "ai:mlir",
+    "relationship": "runs_on",
+    "confidence": 1,
+    "evidence_source": "https://github.com/triton-lang/triton"
+  },
+  {
+    "from": "ai:pytorch",
+    "to": "ai:triton",
+    "relationship": "runs_on",
+    "confidence": 1,
+    "evidence_source": "https://pytorch.org/docs/stable/torch.compiler.html"
+  },
+  {
+    "from": "lang:cxx",
+    "to": "ai:onnx",
+    "relationship": "runs_on",
+    "confidence": 1,
+    "evidence_source": "https://github.com/microsoft/onnxruntime"
+  },
+  {
+    "from": "lang:c",
+    "to": "ai:llama-cpp",
+    "relationship": "runs_on",
+    "confidence": 1,
+    "evidence_source": "https://github.com/ggerganov/llama.cpp"
+  },
+  {
+    "from": "lang:cxx",
+    "to": "ai:llama-cpp",
+    "relationship": "runs_on",
+    "confidence": 1,
+    "evidence_source": "https://github.com/ggerganov/llama.cpp"
+  }
+]

@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useGraphStore } from '../store/useGraphStore';
+import { useGraphStoreV6 } from '../store/useGraphStoreV6';
 import { activateFocusMode } from '../graph/selectors';
 import './YearsPanel.css';
 
@@ -13,7 +13,7 @@ interface LanguageYearItem {
 }
 
 export function YearsPanel() {
-  const { cy, dataset, filters } = useGraphStore();
+  const { cy, dataset, filters } = useGraphStoreV6();
   const [sortMode, setSortMode] = useState<SortMode>('year_asc');
 
   // Compute visible languages based on current filters
@@ -29,7 +29,7 @@ export function YearsPanel() {
     // Build list with years
     const items: LanguageYearItem[] = [];
     for (const nodeId of visibleNodeIds) {
-      const lang = dataset.languageMap.get(nodeId);
+      const lang = dataset.entityMap.get(nodeId);
       if (!lang) continue;
 
       const year = lang.first_release_year;

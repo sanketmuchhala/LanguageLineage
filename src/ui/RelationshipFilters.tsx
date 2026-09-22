@@ -1,4 +1,4 @@
-import type { RelationshipType } from '../data/types';
+import type { RelationshipType } from '../data/types_v6';
 import { Toggle } from './Toggle';
 
 interface RelationshipFiltersProps {

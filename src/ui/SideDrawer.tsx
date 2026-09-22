@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useGraphStore } from '../store/useGraphStore';
+import { useGraphStoreV6 } from '../store/useGraphStoreV6';
 import { LOGO_MAP, LOGO_COLORS, getLogoPresentation } from '../data/logoMap';
 import { getAdaptiveLogoBackground, getLogoBorderColor } from '../utils/colorContrast';
 import './SideDrawer.css';
@@ -17,7 +17,7 @@ const REL_TYPE_LABELS: Record<string, string> = {
 export function SideDrawer() {
   const [copyFeedback, setCopyFeedback] = useState(false);
   const { dataset, datasetIndex, selectedNodeId, selectedEdgeId, sideDrawerOpen, setSideDrawerOpen, explorationMode, setExplorationMode, isDarkMode, traceMode, traceNodeA, traceNodeB, tracePath, traceEdgeIds } =
-    useGraphStore();
+    useGraphStoreV6();
 
   if (!dataset) return null;
   if (!sideDrawerOpen) return null;
@@ -35,10 +35,10 @@ export function SideDrawer() {
 
   // Trace mode: show trace result when both nodes picked
   if (traceMode && traceNodeA && traceNodeB) {
-    const nodeA = dataset.languageMap.get(traceNodeA);
-    const nodeB = dataset.languageMap.get(traceNodeB);
-    const pathNodes = tracePath?.map((id) => dataset.languageMap.get(id));
-    const pathEdges = traceEdgeIds?.map((id) => dataset.edgeMap.get(id));
+    const nodeA = dataset.entityMap.get(traceNodeA);
+    const nodeB = dataset.entityMap.get(traceNodeB);
+    const pathNodes = tracePath?.map((id) => dataset.entityMap.get(id));
+    const pathEdges = traceEdgeIds?.map((id) => dataset.relationshipMap.get(id));
 
     return (
       <>
@@ -82,7 +82,7 @@ export function SideDrawer() {
 
   // Show node details
   if (selectedNodeId) {
-    const node = dataset.languageMap.get(selectedNodeId);
+    const node = dataset.entityMap.get(selectedNodeId);
 
     if (!node) {
       return null;
@@ -158,7 +158,7 @@ export function SideDrawer() {
               <strong>First Release:</strong> {node.first_release_year || 'N/A'}
             </p>
             <p>
-              <strong>Implementation:</strong> {node.current_primary_implementation_language}
+              <strong>Implementation:</strong> {node.language_metadata?.current_primary_implementation_language}
             </p>
             {node.notes && (
               <p>
@@ -170,16 +170,16 @@ export function SideDrawer() {
           <section className="drawer-section">
             <h3>Attributes</h3>
             <p>
-              <strong>Paradigm:</strong> {node.paradigm?.join(', ') || 'N/A'}
+              <strong>Paradigm:</strong> {node.language_metadata?.paradigm?.join(', ') || 'N/A'}
             </p>
             <p>
-              <strong>Typing:</strong> {node.typing || 'N/A'}
+              <strong>Typing:</strong> {node.language_metadata?.typing || 'N/A'}
             </p>
             <p>
-              <strong>Runtime:</strong> {node.runtime_model || 'N/A'}
+              <strong>Runtime:</strong> {node.language_metadata?.runtime_model || 'N/A'}
             </p>
             <p>
-              <strong>Self-hosting:</strong> {node.self_hosting === true ? 'Yes' : node.self_hosting === false ? 'No' : 'N/A'}
+              <strong>Self-hosting:</strong> {node.language_metadata?.self_hosting === true ? 'Yes' : node.language_metadata?.self_hosting === false ? 'No' : 'N/A'}
             </p>
             {node.company && (
               <p>
@@ -245,12 +245,12 @@ export function SideDrawer() {
                 </thead>
                 <tbody>
                   {outgoing.map((edge) => {
-                    const targetNode = dataset.languageMap.get(edge.to_language);
-                    const prefix = edge.to_language.startsWith('tool:') ? 'tools' : 'languages';
-                    const tSlug = edge.to_language.replace(/^(lang|tool):/, '').replace(/_/g, '-');
+                    const targetNode = dataset.entityMap.get(edge.to);
+                    const prefix = edge.to.startsWith('tool:') ? 'tools' : 'languages';
+                    const tSlug = edge.to.replace(/^(lang|tool):/, '').replace(/_/g, '-');
                     return (
                       <tr key={edge.id}>
-                        <td><a href={`/${prefix}/${tSlug}`}>{targetNode?.name ?? edge.to_language}</a></td>
+                        <td><a href={`/${prefix}/${tSlug}`}>{targetNode?.name ?? edge.to}</a></td>
                         <td>{REL_TYPE_LABELS[edge.relationship] ?? edge.relationship}</td>
                       </tr>
                     );
@@ -272,12 +272,12 @@ export function SideDrawer() {
                 </thead>
                 <tbody>
                   {incoming.map((edge) => {
-                    const sourceNode = dataset.languageMap.get(edge.from_language);
-                    const prefix = edge.from_language.startsWith('tool:') ? 'tools' : 'languages';
-                    const sSlug = edge.from_language.replace(/^(lang|tool):/, '').replace(/_/g, '-');
+                    const sourceNode = dataset.entityMap.get(edge.from);
+                    const prefix = edge.from.startsWith('tool:') ? 'tools' : 'languages';
+                    const sSlug = edge.from.replace(/^(lang|tool):/, '').replace(/_/g, '-');
                     return (
                       <tr key={edge.id}>
-                        <td><a href={`/${prefix}/${sSlug}`}>{sourceNode?.name ?? edge.from_language}</a></td>
+                        <td><a href={`/${prefix}/${sSlug}`}>{sourceNode?.name ?? edge.from}</a></td>
                         <td>{REL_TYPE_LABELS[edge.relationship] ?? edge.relationship}</td>
                       </tr>
                     );
@@ -294,14 +294,14 @@ export function SideDrawer() {
 
   // Show edge details
   if (selectedEdgeId) {
-    const edge = dataset.edgeMap.get(selectedEdgeId);
+    const edge = dataset.relationshipMap.get(selectedEdgeId);
 
     if (!edge) {
       return null;
     }
 
-    const sourceNode = dataset.languageMap.get(edge.from_language);
-    const targetNode = dataset.languageMap.get(edge.to_language);
+    const sourceNode = dataset.entityMap.get(edge.from);
+    const targetNode = dataset.entityMap.get(edge.to);
 
     return (
       <>
@@ -318,10 +318,10 @@ export function SideDrawer() {
           <section className="drawer-section">
             <h3>Relationship</h3>
             <p>
-              <strong>From:</strong> {sourceNode?.name || edge.from_language}
+              <strong>From:</strong> {sourceNode?.name || edge.from}
             </p>
             <p>
-              <strong>To:</strong> {targetNode?.name || edge.to_language}
+              <strong>To:</strong> {targetNode?.name || edge.to}
             </p>
             <p>
               <strong>Type:</strong> {edge.relationship.replace(/_/g, ' ')}
