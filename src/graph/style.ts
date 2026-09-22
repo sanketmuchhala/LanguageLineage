@@ -1,6 +1,5 @@
 import type { StylesheetStyle } from 'cytoscape';
-import type { RelationshipType } from '../data/types_v6';
-export type ClusterType = string;
+import type { ClusterType, RelationshipType } from '../data/types';
 import { getAdaptiveLogoBackground, getLogoBorderColor } from '../utils/colorContrast';
 
 const MIN_NODE_SIZE = 58;

@@ -4,7 +4,7 @@ import { select, type BaseType, type Selection } from 'd3-selection';
 import { linkHorizontal } from 'd3-shape';
 import { zoom as d3zoom, zoomIdentity, type ZoomBehavior } from 'd3-zoom';
 import 'd3-transition';
-import { useGraphStoreV6 } from '../../store/useGraphStoreV6';
+import { useGraphStore } from '../../store/useGraphStore';
 import { buildHierarchy } from './buildHierarchy';
 import {
   RELATIONSHIP_COLOR_VAR,
@@ -43,14 +43,14 @@ export function TreeView() {
   const didInitialFit = useRef(false);
   const fitFrameRef = useRef<number | null>(null);
 
-  const dataset = useGraphStoreV6((s) => s.dataset);
-  const relationshipFilters = useGraphStoreV6((s) => s.filters.relationshipFilters);
-  const confidenceThreshold = useGraphStoreV6((s) => s.filters.confidenceThreshold);
-  const graphMode = useGraphStoreV6((s) => s.filters.graphMode) as any;
-  const searchQuery = useGraphStoreV6((s) => s.filters.searchQuery);
-  const selectedNodeId = useGraphStoreV6((s) => s.selectedNodeId);
-  const setSelectedNode = useGraphStoreV6((s) => s.setSelectedNode);
-  const setTreeController = useGraphStoreV6((s) => s.setTreeController);
+  const dataset = useGraphStore((s) => s.dataset);
+  const relationshipFilters = useGraphStore((s) => s.filters.relationshipFilters);
+  const confidenceThreshold = useGraphStore((s) => s.filters.confidenceThreshold);
+  const graphMode = useGraphStore((s) => s.filters.graphMode);
+  const searchQuery = useGraphStore((s) => s.filters.searchQuery);
+  const selectedNodeId = useGraphStore((s) => s.selectedNodeId);
+  const setSelectedNode = useGraphStore((s) => s.setSelectedNode);
+  const setTreeController = useGraphStore((s) => s.setTreeController);
 
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
   const [revealedSecondary, setRevealedSecondary] = useState<Set<string>>(new Set());

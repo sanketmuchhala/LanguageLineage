@@ -1,6 +1,6 @@
 import type { Core } from 'cytoscape';
 import type { DatasetIndex } from '../data/indexDataset';
-import type { NormalizedDataset } from '../data/types_v6';
+import type { NormalizedDataset } from '../data/types';
 
 // Focus mode: Highlight selected node and its 1-hop neighbors, fade everything else
 export function activateFocusMode(cy: Core, nodeId: string): void {
@@ -75,9 +75,9 @@ export function getAncestors(index: DatasetIndex, nodeId: string): Set<string> {
     const current = queue.shift()!;
     const incoming = index.incomingEdges.get(current) || [];
     for (const edge of incoming) {
-      if (!visited.has(edge.from)) {
-        visited.add(edge.from);
-        queue.push(edge.from);
+      if (!visited.has(edge.from_language)) {
+        visited.add(edge.from_language);
+        queue.push(edge.from_language);
       }
     }
   }
@@ -94,9 +94,9 @@ export function getDescendants(index: DatasetIndex, nodeId: string): Set<string>
     const current = queue.shift()!;
     const outgoing = index.outgoingEdges.get(current) || [];
     for (const edge of outgoing) {
-      if (!visited.has(edge.to)) {
-        visited.add(edge.to);
-        queue.push(edge.to);
+      if (!visited.has(edge.to_language)) {
+        visited.add(edge.to_language);
+        queue.push(edge.to_language);
       }
     }
   }
@@ -146,7 +146,7 @@ export function applyAttributeFilters(
     cy.nodes().forEach((node: any) => {
       if (node.isParent()) return;
 
-      const lang = dataset.entityMap.get(node.id());
+      const lang = dataset.languageMap.get(node.id());
       if (!lang) return;
 
       let matches = true;
@@ -203,18 +203,18 @@ export function findShortestPath(
     const current = queue.shift()!;
     for (const edge of index.outgoingEdges.get(current) || []) {
       if (!activeRelTypes.has(edge.relationship)) continue;
-      if (!visited.has(edge.to)) {
-        visited.set(edge.to, { nodeId: current, edgeId: edge.id });
-        if (edge.to === toId) { found = true; break outer; }
-        queue.push(edge.to);
+      if (!visited.has(edge.to_language)) {
+        visited.set(edge.to_language, { nodeId: current, edgeId: edge.id });
+        if (edge.to_language === toId) { found = true; break outer; }
+        queue.push(edge.to_language);
       }
     }
     for (const edge of index.incomingEdges.get(current) || []) {
       if (!activeRelTypes.has(edge.relationship)) continue;
-      if (!visited.has(edge.from)) {
-        visited.set(edge.from, { nodeId: current, edgeId: edge.id });
-        if (edge.from === toId) { found = true; break outer; }
-        queue.push(edge.from);
+      if (!visited.has(edge.from_language)) {
+        visited.set(edge.from_language, { nodeId: current, edgeId: edge.id });
+        if (edge.from_language === toId) { found = true; break outer; }
+        queue.push(edge.from_language);
       }
     }
   }

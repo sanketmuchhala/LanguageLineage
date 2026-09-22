@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useGraphStoreV6 } from '../store/useGraphStoreV6';
+import { useGraphStore } from '../store/useGraphStore';
 import { activateFocusMode } from '../graph/selectors';
 
 interface SearchBoxProps {
@@ -13,7 +13,7 @@ export function SearchBox({ value, onChange, placeholder = 'Search...' }: Search
   const [showDropdown, setShowDropdown] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const dataset = useGraphStoreV6((s) => s.dataset);
+  const dataset = useGraphStore((s) => s.dataset);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
@@ -23,9 +23,9 @@ export function SearchBox({ value, onChange, placeholder = 'Search...' }: Search
   };
 
   const handleNavigate = (langId: string) => {
-    const state = useGraphStoreV6.getState();
+    const state = useGraphStore.getState();
     const cy = state.cy;
-    const lang = state.dataset?.entityMap.get(langId);
+    const lang = state.dataset?.languageMap.get(langId);
     if (!cy || !lang) return;
 
     setLocalValue('');
@@ -62,7 +62,7 @@ export function SearchBox({ value, onChange, placeholder = 'Search...' }: Search
   }, []);
 
   const matches = dataset && localValue.length > 0
-    ? dataset.entities
+    ? dataset.languages
         .filter((l) => l.name.toLowerCase().includes(localValue.toLowerCase()))
         .slice(0, 10)
     : [];

@@ -70,12 +70,12 @@ export function LandingGraphGlimpse({ onOpen }: Props) {
         // Build the visible edges first (trim weaker influence edges to reduce clutter),
         // then only render nodes that still have a connection, so the teaser never shows
         // stranded, disconnected nodes.
-        const keptEdges = dataset.relationships.filter((e) =>
+        const keptEdges = dataset.edges.filter((e) =>
           !((e.relationship === 'influenced' || e.relationship === 'influenced_by') && e.confidence < 0.88));
         const connected = new Set<string>();
-        keptEdges.forEach((e) => { connected.add(e.from); connected.add(e.to); });
+        keptEdges.forEach((e) => { connected.add(e.from_language); connected.add(e.to_language); });
 
-        dataset.entityMap.forEach((lang, id) => {
+        dataset.languageMap.forEach((lang, id) => {
           if (!connected.has(id)) return;
           const canonicalLogoUrl = lang.logo_url ?? logoMod.LOGO_MAP[id] ?? null;
           const logoUrl = graphLogoMod.getGraphLogoUrl(id, canonicalLogoUrl);
@@ -99,7 +99,7 @@ export function LandingGraphGlimpse({ onOpen }: Props) {
           });
         });
         keptEdges.forEach((e) => {
-          elements.push({ group: 'edges', data: { id: e.id, source: e.from, target: e.to, relationship: e.relationship, confidence: e.confidence } });
+          elements.push({ group: 'edges', data: { id: e.id, source: e.from_language, target: e.to_language, relationship: e.relationship, confidence: e.confidence } });
         });
 
         const instance = cytoscape({

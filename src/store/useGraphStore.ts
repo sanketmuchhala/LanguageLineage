@@ -1,14 +1,14 @@
 import { create } from 'zustand';
 import type { Core } from 'cytoscape';
-import type { NormalizedDataset, FilterState } from '../data/types_v6';
+import type { NormalizedDataset, FilterState, ValidationReport } from '../data/types';
 import { DatasetIndex } from '../data/indexDataset';
 import type { TreeController } from '../graph/tree/treeTypes';
-import { RelationshipTypeEnum } from '../../scripts/schema_v6';
 
 interface GraphStore {
   // Data
   dataset: NormalizedDataset | null;
   datasetIndex: DatasetIndex | null;
+  validationReport: ValidationReport | null;
 
   // Cytoscape instance
   cy: Core | null;
@@ -25,6 +25,7 @@ interface GraphStore {
   sideDrawerOpen: boolean;
   hoveredEdgeId: string | null;
   hoveredEdgePosition: { x: number; y: number } | null;
+  timelineYear: number;
   isTimelinePlaying: boolean;
   explorationMode: 'none' | 'ancestors' | 'descendants' | 'focus';
   attributeFilters: { paradigms: string[]; typing: string | null; decade: number | null };
@@ -43,6 +44,7 @@ interface GraphStore {
   // Actions
   setDataset: (dataset: NormalizedDataset) => void;
   setDatasetIndex: (index: DatasetIndex) => void;
+  setValidationReport: (report: ValidationReport) => void;
   setCytoscape: (cy: Core | null) => void;
   setTreeController: (controller: TreeController | null) => void;
   updateFilters: (filters: Partial<FilterState>) => void;
@@ -50,7 +52,7 @@ interface GraphStore {
   setSelectedEdge: (edgeId: string | null) => void;
   setSideDrawerOpen: (open: boolean) => void;
   setHoveredEdge: (edgeId: string | null, position?: { x: number; y: number }) => void;
-  setTimelineYear: (year: number | null) => void;
+  setTimelineYear: (year: number) => void;
   setIsTimelinePlaying: (playing: boolean) => void;
   setExplorationMode: (mode: 'none' | 'ancestors' | 'descendants' | 'focus') => void;
   setAttributeFilters: (filters: Partial<{ paradigms: string[]; typing: string | null; decade: number | null }>) => void;
@@ -64,27 +66,30 @@ interface GraphStore {
   clearTrace: () => void;
 }
 
-const ALL_RELATIONSHIPS: Record<string, boolean> = {};
-RelationshipTypeEnum.options.forEach(opt => {
-  ALL_RELATIONSHIPS[opt] = true;
-});
-
 const DEFAULT_FILTERS: FilterState = {
   searchQuery: '',
   confidenceThreshold: 0.0,
-  relationshipFilters: ALL_RELATIONSHIPS as Record<string, boolean>,
+  relationshipFilters: {
+    compiler_written_in: true,
+    runtime_written_in: true,
+    bootstrap_written_in: true,
+    rewritten_in: true,
+    influenced: false,
+    influenced_by: false,
+    transpiled_to: true,
+  },
   showSelfLoops: false,
   clusterColoring: true,
   showAllLabels: false, // Progressive disclosure by default; toggle on for all labels
   layoutMode: 'force',
   graphMode: 'implementation',
-  timelineYear: 2023
 };
 
-export const useGraphStoreV6 = create<GraphStore>((set) => ({
+export const useGraphStore = create<GraphStore>((set) => ({
   // Initial state
   dataset: null,
   datasetIndex: null,
+  validationReport: null,
   cy: null,
   treeController: null,
   filters: DEFAULT_FILTERS,
@@ -93,6 +98,7 @@ export const useGraphStoreV6 = create<GraphStore>((set) => ({
   sideDrawerOpen: false,
   hoveredEdgeId: null,
   hoveredEdgePosition: null,
+  timelineYear: 2023,
   isTimelinePlaying: false,
   explorationMode: 'none',
   attributeFilters: { paradigms: [], typing: null, decade: null },
@@ -107,6 +113,7 @@ export const useGraphStoreV6 = create<GraphStore>((set) => ({
   // Actions
   setDataset: (dataset) => set({ dataset }),
   setDatasetIndex: (index) => set({ datasetIndex: index }),
+  setValidationReport: (report) => set({ validationReport: report }),
   setCytoscape: (cy) => set({ cy }),
   setTreeController: (treeController) => set({ treeController }),
 
@@ -131,7 +138,6 @@ export const useGraphStoreV6 = create<GraphStore>((set) => ({
     }),
 
   setSideDrawerOpen: (open) => set({ sideDrawerOpen: open }),
-
 
   setHoveredEdge: (edgeId, position) =>
     set({

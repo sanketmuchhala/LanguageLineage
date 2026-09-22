@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import cytoscape from 'cytoscape';
 import coseBilkent from 'cytoscape-cose-bilkent';
-import { useGraphStoreV6 } from '../store/useGraphStoreV6';
+import { useGraphStore } from '../store/useGraphStore';
 import { buildCytoscapeElements } from './buildElements';
 import { getCytoscapeStyle } from './style';
 import { BASE_CYTOSCAPE_CONFIG } from './cytoscapeConfig';
@@ -31,7 +31,7 @@ export function GraphView() {
     setCytoscape,
     setSelectedNode,
     setSelectedEdge,
-  } = useGraphStoreV6();
+  } = useGraphStore();
 
   // Initialize Cytoscape instance
   useEffect(() => {
@@ -40,7 +40,7 @@ export function GraphView() {
     }
 
     const elements = buildCytoscapeElements(dataset, filters);
-    const { isDarkMode } = useGraphStoreV6.getState();
+    const { isDarkMode } = useGraphStore.getState();
     const style = getCytoscapeStyle(filters.clusterColoring, filters.showAllLabels, isDarkMode);
 
     const instance = cytoscape({
@@ -66,7 +66,7 @@ export function GraphView() {
 
     instance.on('layoutstop', () => {
       // Deep link: focus the pending node once after layout settles
-      const { pendingFocusNodeId, setPendingFocusNodeId, setSelectedNode } = useGraphStoreV6.getState();
+      const { pendingFocusNodeId, setPendingFocusNodeId, setSelectedNode } = useGraphStore.getState();
       if (pendingFocusNodeId) {
         const target = instance.getElementById(pendingFocusNodeId);
         if (target && target.length > 0) {
@@ -103,7 +103,7 @@ export function GraphView() {
     // In trace mode: first tap sets A, second tap sets B and computes path.
     instance.on('tap', 'node', (evt) => {
       const node = evt.target;
-      const state = useGraphStoreV6.getState();
+      const state = useGraphStore.getState();
 
       if (state.traceMode) {
         if (!state.traceNodeA) {
@@ -113,7 +113,7 @@ export function GraphView() {
           state.setSideDrawerOpen(true);
         } else if (node.id() !== state.traceNodeA) {
           // Second node: compute path
-          const { datasetIndex, filters: currentFilters } = useGraphStoreV6.getState();
+          const { datasetIndex, filters: currentFilters } = useGraphStore.getState();
           if (datasetIndex) {
             const activeRelTypes = new Set(
               Object.entries(currentFilters.relationshipFilters)
@@ -155,7 +155,7 @@ export function GraphView() {
     // Background tap: clear selection and URL param
     instance.on('tap', (evt) => {
       if (evt.target === instance) {
-        const state = useGraphStoreV6.getState();
+        const state = useGraphStore.getState();
         if (state.traceMode) {
           state.clearTrace();
           deactivateFocusMode(instance);
@@ -170,7 +170,7 @@ export function GraphView() {
 
     // Node hover: highlight neighbors (only when no click selection is active)
     instance.on('mouseover', 'node', (evt) => {
-      const { selectedNodeId } = useGraphStoreV6.getState();
+      const { selectedNodeId } = useGraphStore.getState();
       if (selectedNodeId) return;
       const nodeId = evt.target.id();
       evt.target.addClass('hovered');
@@ -178,7 +178,7 @@ export function GraphView() {
     });
 
     instance.on('mouseout', 'node', (evt) => {
-      const { selectedNodeId } = useGraphStoreV6.getState();
+      const { selectedNodeId } = useGraphStore.getState();
       if (selectedNodeId) return;
       evt.target.removeClass('hovered');
       deactivateFocusMode(instance);
@@ -188,16 +188,16 @@ export function GraphView() {
     instance.on('mouseover', 'edge', (evt) => {
       const edge = evt.target;
       const midpoint = edge.renderedMidpoint();
-      useGraphStoreV6.getState().setHoveredEdge(edge.id(), { x: midpoint.x, y: midpoint.y });
+      useGraphStore.getState().setHoveredEdge(edge.id(), { x: midpoint.x, y: midpoint.y });
     });
 
     instance.on('mouseout', 'edge', () => {
-      useGraphStoreV6.getState().setHoveredEdge(null);
+      useGraphStore.getState().setHoveredEdge(null);
     });
 
     // Zoom-dependent label visibility
     instance.on('zoom', () => {
-      const { filters: currentFilters } = useGraphStoreV6.getState();
+      const { filters: currentFilters } = useGraphStore.getState();
       if (currentFilters.showAllLabels) {
         instance.batch(() => {
           instance.nodes().removeClass('labels-hidden');
@@ -226,9 +226,9 @@ export function GraphView() {
 
     // Hide edge tooltip on viewport changes
     instance.on('pan zoom', () => {
-      const { hoveredEdgeId } = useGraphStoreV6.getState();
+      const { hoveredEdgeId } = useGraphStore.getState();
       if (hoveredEdgeId) {
-        useGraphStoreV6.getState().setHoveredEdge(null);
+        useGraphStore.getState().setHoveredEdge(null);
       }
     });
 
@@ -248,7 +248,7 @@ export function GraphView() {
   }, [cy]);
 
   // Update graph when filters or theme change
-  const isDarkMode = useGraphStoreV6((s) => s.isDarkMode);
+  const isDarkMode = useGraphStore((s) => s.isDarkMode);
   useEffect(() => {
     if (!cy || !dataset) {
       return;
@@ -275,7 +275,7 @@ export function GraphView() {
   }, [cy, filters.layoutMode]);
 
   // Timeline year visibility (lightweight class toggling, no relayout)
-  const timelineYear = (useGraphStoreV6((s) => s) as any).timelineYear;
+  const timelineYear = useGraphStore((s) => s.timelineYear);
   useEffect(() => {
     if (!cy) return;
     if (filters.layoutMode === 'timeline') {
@@ -286,9 +286,9 @@ export function GraphView() {
   }, [cy, timelineYear, filters.layoutMode]);
 
   // Exploration mode: ancestor/descendant/full lineage highlighting
-  const explorationMode = useGraphStoreV6((s) => s.explorationMode);
-  const selectedNodeId = useGraphStoreV6((s) => s.selectedNodeId);
-  const datasetIndex = useGraphStoreV6((s) => s.datasetIndex);
+  const explorationMode = useGraphStore((s) => s.explorationMode);
+  const selectedNodeId = useGraphStore((s) => s.selectedNodeId);
+  const datasetIndex = useGraphStore((s) => s.datasetIndex);
   useEffect(() => {
     if (!cy || !selectedNodeId || !datasetIndex) return;
 
@@ -313,7 +313,7 @@ export function GraphView() {
   }, [cy, explorationMode, selectedNodeId, datasetIndex]);
 
   // Attribute filters: fade nodes that don't match paradigm/typing/decade
-  const attributeFilters = useGraphStoreV6((s) => s.attributeFilters);
+  const attributeFilters = useGraphStore((s) => s.attributeFilters);
   useEffect(() => {
     if (!cy || !dataset) return;
     applyAttributeFilters(cy, attributeFilters, dataset);
