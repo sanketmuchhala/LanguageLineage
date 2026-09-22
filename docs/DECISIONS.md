@@ -1,5 +1,7 @@
 # DECISIONS.md
 
+Part of the agent contract: start at [AGENTS.md](../AGENTS.md).
+
 Questions that are already answered. Each was researched with sources and
 numbers, not opinion. Do not reopen one without new evidence of the kind named
 in its revisit trigger: re-deriving these from an empty context wastes a session

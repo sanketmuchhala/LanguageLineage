@@ -1,5 +1,7 @@
 # ARCHITECTURE.md
 
+Part of the agent contract: start at [AGENTS.md](../AGENTS.md).
+
 The code map, and the invariants that look like bugs but are not.
 
 ## The shape of the thing
@@ -74,7 +76,7 @@ Things that are deliberate. Changing them needs a reason and approval.
 - **The graph uses local PNG logos**, not the remote SVG URLs, because
   Cytoscape's canvas misrenders remote SVGs. `getGraphLogoUrl()` falls back to
   the canonical URL when a node has no rendered asset.
-- **Edge direction is implementation-language first.** See `DATASET.md`.
+- **Edge direction is implementation-language first.** See `docs/DATASET.md`.
 - **The sitemap lists canonical URLs only.** If you make a page canonicalize
   elsewhere, remove it from `generateSitemap.ts` too.
 - **Do not consolidate a `/languages/{slug}` and `/questions/what-is-{slug}-written-in`

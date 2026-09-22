@@ -86,7 +86,7 @@ Breaking one of these is worse than not doing the task at all.
    Go.
 7. **Never push to `main`, and never merge your own work.** Open a pull request
    and let a person review it.
-8. **Do not relitigate settled decisions.** See `DECISIONS.md`. No database, no
+8. **Do not relitigate settled decisions.** See `docs/DECISIONS.md`. No database, no
    domain rename, no AI-model-lineage features, no mass-generated pages.
 9. **Keep the hand-written counts in sync.** Node and relationship totals appear
    in the landing page, `index.html`, `README.md`, `dataset/index.html`,
@@ -110,12 +110,15 @@ A URL that exists live and is missing locally is a stop-work signal.
 
 ## The four documents
 
+They live in `docs/`. This file stays at the repository root because that is
+where agentic tools look for it.
+
 | File | Read it when |
 |---|---|
-| `DATASET.md` | Adding or changing any node, edge, logo, or enrichment record |
-| `ARCHITECTURE.md` | Changing code: the app, the graph, the generators |
-| `TESTING.md` | Anything. It defines the gate and what each test protects |
-| `DECISIONS.md` | You are about to propose a direction, a rename, or a new feature |
+| [docs/DATASET.md](docs/DATASET.md) | Adding or changing any node, edge, logo, or enrichment record |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Changing code: the app, the graph, the generators |
+| [docs/TESTING.md](docs/TESTING.md) | Anything. It defines the gate and what each test protects |
+| [docs/DECISIONS.md](docs/DECISIONS.md) | You are about to propose a direction, a rename, or a new feature |
 
 Also useful: `PIPELINE.md` (how the data pipeline works end to end),
 `IMPLEMENTATION_PLAN.md` (the canonical list of requested work),

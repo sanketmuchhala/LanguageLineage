@@ -1,5 +1,7 @@
 # TESTING.md
 
+Part of the agent contract: start at [AGENTS.md](../AGENTS.md).
+
 What the checks are, what each one protects, and the rules for changing them.
 
 ## The gate
@@ -41,7 +43,7 @@ Vitest, configured in `vitest.config.ts` to pick up `src/**/*.test.ts(x)` and
 ### Dataset integrity — `scripts/dataset.test.ts`
 
 The build-time counterpart to the browser-side checks in
-`src/data/validateDataset.ts`. It enforces what `DATASET.md` describes:
+`src/data/validateDataset.ts`. It enforces what `docs/DATASET.md` describes:
 
 - the file parses against the Zod schema, and each node and edge is valid alone
 - the JSON stays 2-space formatted with a trailing newline, so diffs stay readable
