@@ -268,11 +268,19 @@ npm run analyze:v5
 
 ## Adding a New Language
 
-1. Edit `dataset/v5/lineage_v5.json`: add the language node and relationships
-2. Run `npm run content:wikipedia` to harvest Wikidata enrichment
-3. Run `npm run seo:generate` to regenerate all static pages
-4. Run `npm run seo:validate` to confirm 0 errors
-5. Commit and push (Vercel deploys `main` automatically)
+**[DATASET.md](DATASET.md) is the full manual**, including the schema, edge
+direction, the confidence rubric, evidence rules, and the logo procedure. The
+short version:
+
+1. Edit `dataset/v5/lineage_v5.json`: add the node and its relationships, each
+   with a verified `evidence_source` and a hand-assigned `confidence`
+2. Run `npm run analyze:v5` to confirm the schema and graph integrity
+3. Attach logos: Devicon, then `npm run logos:wikimedia`, then
+   `npx tsx scripts/applyLogoOverrides.ts`, then `npm run logos:graph`
+4. Run `npm run content:wikipedia` to harvest Wikidata enrichment
+5. Run `npm run seo:generate` and `npm run og:generate` to rebuild pages and cards
+6. Run `npm run verify` — the whole gate must be green
+7. Open a pull request: a person reviews sources and confidence before merge
 
 ## Controls
 
@@ -308,7 +316,7 @@ npm run analyze:v5
 | v2 | 67 | 128 | Extended with more languages, implementations array |
 | v3 | 71 | 169 | Added influence relationships |
 | v4 | 112 | 347 | Full enrichment: 5 new metadata fields, influence edges, 41 data fixes |
-| v5 | 152 | 443 | 40 new nodes, sourced logo URLs (96), Wikidata enrichment (148/152), logo metadata |
+| v5 | 152 | 444 | 40 new nodes, sourced logo URLs (96), Wikidata enrichment (148/152), logo metadata |
 
 The app loads v5 by default. Previous versions remain available in `dataset/`.
 
@@ -349,8 +357,13 @@ Language Lineage. Programming Language Lineage Dataset, v5.0.
 1. Fork the repository
 2. Create a feature branch
 3. Make changes with evidence sources
-4. Run `npm run analyze:v5` and `npm run seo:validate` to validate
+4. Run `npm run verify` (type-check, tests, SEO validation, link audit, build)
 5. Submit a pull request
+
+**Working with an AI coding agent?** Point it at [AGENTS.md](AGENTS.md), which
+every agentic tool reads by convention. It links to [DATASET.md](DATASET.md),
+[ARCHITECTURE.md](ARCHITECTURE.md), [TESTING.md](TESTING.md) and
+[DECISIONS.md](DECISIONS.md).
 
 ### Proposing a correction without a pull request
 
