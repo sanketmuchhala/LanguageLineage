@@ -1,0 +1,42 @@
+name: verify
+
+# The gate, enforced for every pull request regardless of which human or agent
+# opened it. AGENTS.md asks agents to run `npm run verify` locally; this makes
+# skipping it visible instead of silent.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - run: npm ci
+
+      - name: Type check
+        run: npm run type-check
+
+      - name: Tests (dataset integrity, logos, counts, graph logic)
+        run: npm test
+
+      - name: SEO validation
+        run: npm run seo:validate
+
+      - name: Internal link audit
+        run: npm run seo:links
+
+      - name: Build
+        run: npm run build
+
+      - name: API function compiles
+        # api/ is outside tsconfig's include, so type-check does not cover it.
+        run: npx esbuild api/propose.ts --bundle --platform=node --format=esm --outfile=/dev/null
