@@ -1,5 +1,7 @@
 # DATASET.md
 
+Part of the agent contract: start at [AGENTS.md](../AGENTS.md).
+
 How to add to and change the dataset without breaking it.
 
 `PIPELINE.md` explains how the pipeline works end to end. This document is the
@@ -146,7 +148,7 @@ Admit a node when it has an implementation-provenance edge terminating in a node
 already in the dataset, and its implementation-language fact is stable year over
 year. A language or tool with no such edge is out, however famous.
 
-For AI infrastructure specifically, the scope boundary in `DECISIONS.md` is
+For AI infrastructure specifically, the scope boundary in `docs/DECISIONS.md` is
 narrow and deliberate: implementation provenance only, using `tool:` nodes and
 the existing six edge types. Model lineage, benchmark trackers, and AI tutorial
 content are all rejected, each with an incumbent already owning that space.

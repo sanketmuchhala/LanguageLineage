@@ -4,7 +4,7 @@
  * Two real regressions motivated this file: a graph that rendered no logos at
  * all because the logo field was dropped from every node, and a rendering run
  * that silently dropped entries from the manifest after Wikimedia refused the
- * headless browser's user agent. See DATASET.md, "Logos".
+ * headless browser's user agent. See docs/DATASET.md, "Logos".
  *
  * Partial coverage is fine: a node with no logo renders a letter badge. What is
  * not fine is a node claiming a logo the graph cannot draw.

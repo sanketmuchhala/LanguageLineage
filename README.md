@@ -268,7 +268,7 @@ npm run analyze:v5
 
 ## Adding a New Language
 
-**[DATASET.md](DATASET.md) is the full manual**, including the schema, edge
+**[docs/DATASET.md](docs/DATASET.md) is the full manual**, including the schema, edge
 direction, the confidence rubric, evidence rules, and the logo procedure. The
 short version:
 
@@ -361,9 +361,9 @@ Language Lineage. Programming Language Lineage Dataset, v5.0.
 5. Submit a pull request
 
 **Working with an AI coding agent?** Point it at [AGENTS.md](AGENTS.md), which
-every agentic tool reads by convention. It links to [DATASET.md](DATASET.md),
-[ARCHITECTURE.md](ARCHITECTURE.md), [TESTING.md](TESTING.md) and
-[DECISIONS.md](DECISIONS.md).
+every agentic tool reads by convention. It links to [docs/DATASET.md](docs/DATASET.md),
+[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), [docs/TESTING.md](docs/TESTING.md) and
+[docs/DECISIONS.md](docs/DECISIONS.md).
 
 ### Proposing a correction without a pull request
 

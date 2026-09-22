@@ -6,9 +6,9 @@ the same rules automatically; it does not restate them, to stop the two files
 drifting apart.
 
 `AGENTS.md` covers: the commands, the ten hard rules, the pre-deploy preflight,
-pull request expectations, and the known traps. It links to `DATASET.md` (how to
-change data), `ARCHITECTURE.md` (the code map and invariants), `TESTING.md` (the
-gate and what each test protects), and `DECISIONS.md` (settled questions).
+pull request expectations, and the known traps. It links to `docs/DATASET.md` (how to
+change data), `docs/ARCHITECTURE.md` (the code map and invariants), `docs/TESTING.md` (the
+gate and what each test protects), and `docs/DECISIONS.md` (settled questions).
 
 The four rules worth repeating here, because breaking one is expensive:
 

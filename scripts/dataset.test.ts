@@ -6,7 +6,7 @@
  * confidence, and missing evidence. `src/data/validateDataset.ts` checks a
  * subset of this in the browser; this file is the build-time gate.
  *
- * See DATASET.md for what each rule means and why it exists.
+ * See docs/DATASET.md for what each rule means and why it exists.
  */
 import { readFileSync } from 'fs';
 import { join, dirname } from 'path';
@@ -93,7 +93,7 @@ describe('relationship records', () => {
 
   it('keeps confidence inside the hand-scored range, never 1.0', () => {
     // A batch of 1.0 scores is the signature of machine-generated edges and
-    // destroys the calibration of the hand-scored corpus. See DATASET.md.
+    // destroys the calibration of the hand-scored corpus. See docs/DATASET.md.
     const bad = edges.filter((e) => !(e.confidence > 0 && e.confidence <= 0.99)).map((e) => `${edgeKey(e)} @ ${e.confidence}`);
     expect(bad).toEqual([]);
   });
