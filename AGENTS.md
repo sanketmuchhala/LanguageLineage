@@ -64,7 +64,7 @@ Breaking one of these is worse than not doing the task at all.
    `public/tools/`, `public/questions/`, `public/guides/`, `public/relationships/`,
    `public/timeline/`, `public/embed-kit/`, `public/sitemap.xml`, `public/llms.txt`
    and `public/rss.xml` is output. Edit the generator in `scripts/`, then run
-   `npm run seo:generate`. (`public/seo.css` and `public/fx.js` are hand-maintained.)
+   `npm run seo:generate`. (`public/seo.css`, `public/fx.js` and `public/hw-fx.js` are hand-maintained.)
 2. **Never delete or skip a test to make the suite pass, and never disable
    validation.** If a test fails, either the code is wrong or the test is wrong;
    say which, and fix that. A previous agent deleted 28 tests and turned off

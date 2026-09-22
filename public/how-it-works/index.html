@@ -23,6 +23,45 @@
     .hw-stat b { display: block; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 26px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
     .hw-stat span { font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-tertiary); }
     .hw-stat-zero b { color: var(--accent); }
+
+    /* --- Motion layer. Behaviour lives in /hw-fx.js; these are its styles. --- */
+    /* Hero waveform: one bar per sampled edge, drawn from real confidence data. */
+    .hw-wavefig { margin: 0 0 40px; }
+    .hw-wave { display: block; width: 100%; height: 132px; cursor: crosshair; }
+    .hw-wavefig .hw-plate-caption { margin-top: 6px; }
+    /* Ambient constellation, fixed behind the article and never interactive. */
+    .hw-particles { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: 0.55; }
+    .seo-main, .seo-footer { position: relative; z-index: 1; }
+    /* Particles injected into Fig. 1 by the flow animation. */
+    .hw-particle { filter: drop-shadow(0 0 5px rgba(74,222,128,0.9)); pointer-events: none; }
+    .hw-station-box { transition: fill 340ms ease, stroke 340ms ease, filter 340ms ease; }
+    .hw-station-box.is-lit { fill: #1d2a21; stroke: rgba(74,222,128,0.65); filter: drop-shadow(0 0 8px rgba(74,222,128,0.35)); }
+    .hw-station:hover .hw-station-box { stroke: rgba(74,222,128,0.8); filter: drop-shadow(0 0 10px rgba(74,222,128,0.45)); }
+    /* Fixed station rail: progress through the six numbered sections. */
+    .hw-rail { display: none; }
+    body.hw-js .hw-rail.is-ready { display: block; position: fixed; left: 22px; top: 50%; transform: translateY(-50%); z-index: 5; opacity: 0; transition: opacity 400ms ease; }
+    body.hw-js .hw-rail.is-ready.is-visible { opacity: 1; }
+    .hw-rail ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+    .hw-rail a { display: flex; align-items: center; gap: 9px; text-decoration: none; color: var(--text-tertiary); font-size: 11px; }
+    .hw-rail i { font-style: normal; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; width: 20px; height: 20px; display: grid; place-items: center; border: 1px solid var(--border); border-radius: 50%; transition: all 260ms ease; }
+    .hw-rail em { font-style: normal; opacity: 0; transform: translateX(-4px); transition: all 260ms ease; white-space: nowrap; }
+    .hw-rail a:hover em, .hw-rail a.is-active em { opacity: 1; transform: none; }
+    .hw-rail a.is-active { color: var(--accent); }
+    .hw-rail a.is-active i { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 10px rgba(74,222,128,0.35); }
+    .hw-rail a.is-done i { border-color: rgba(74,222,128,0.4); color: rgba(74,222,128,0.6); }
+    /* Typing terminal: a caret rides the line currently being written. */
+    .hw-term-line.is-cursor::after { content: '\258B'; color: var(--accent); animation: hw-blink 1s step-end infinite; }
+    @keyframes hw-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+    /* Glass treatment on the agents/humans split. */
+    .hw-cols .hw-col { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); background: rgba(255,255,255,0.025); transition: transform 300ms ease, box-shadow 300ms ease, border-color 300ms ease; }
+    .hw-cols .hw-col:hover { transform: translateY(-3px); border-color: rgba(74,222,128,0.35); box-shadow: 0 10px 34px rgba(0,0,0,0.42), 0 0 0 1px rgba(74,222,128,0.12); }
+    @media (max-width: 1280px) { body.hw-js .hw-rail.is-ready { display: none; } }
+    @media (prefers-reduced-motion: reduce) {
+      .hw-particles { display: none; }
+      .hw-station-box, .hw-cols .hw-col { transition: none; }
+      .hw-cols .hw-col:hover { transform: none; }
+      .hw-term-line.is-cursor::after { animation: none; }
+    }
     /* Numbered stations read as one continuous specimen sheet: each section
        opens on a hairline rule, and anchor jumps from Fig. 1 land cleanly. */
     .seo-main > h2 { margin-top: 64px; padding-top: 30px; border-top: 1px solid var(--border); scroll-margin-top: 28px; }
@@ -145,6 +184,24 @@
     <div class="hw-stat"><b>300+</b><span>generated pages</span></div>
     <div class="hw-stat hw-stat-zero"><b>0</b><span>errors allowed at ship</span></div>
   </div>
+
+  <canvas class="hw-particles" data-hw-particles aria-hidden="true"></canvas>
+
+  <figure class="hw-wavefig">
+    <canvas class="hw-wave" data-hw-wave data-values="0.65,0.70,0.70,0.72,0.72,0.75,0.75,0.75,0.78,0.80,0.80,0.80,0.80,0.80,0.80,0.80,0.80,0.82,0.82,0.82,0.82,0.82,0.82,0.83,0.83,0.85,0.85,0.85,0.85,0.85,0.85,0.85,0.85,0.85,0.85,0.85,0.85,0.85,0.85,0.85,0.85,0.85,0.87,0.87,0.87,0.88,0.88,0.88,0.88,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.90,0.91,0.92,0.92,0.92,0.92,0.92,0.92,0.93,0.93,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.97,0.97,0.97,0.97,0.97,0.98,0.98,0.98,0.98,0.98,0.98,0.98,0.98,0.98,0.98,0.98,0.99,0.99,0.99" aria-hidden="true"></canvas>
+    <figcaption class="hw-plate-caption"><span>Every edge in the dataset, lowest confidence to highest. Hover to read the curve.</span><span>490/490 carry an evidence URL</span></figcaption>
+  </figure>
+
+  <nav class="hw-rail" aria-label="Pipeline progress">
+    <ol>
+      <li><a href="#sources"><i>01</i><em>Sources</em></a></li>
+      <li><a href="#research"><i>02</i><em>Research agents</em></a></li>
+      <li><a href="#assembly"><i>03</i><em>Assembly</em></a></li>
+      <li><a href="#review"><i>04</i><em>Human review</em></a></li>
+      <li><a href="#gates"><i>05</i><em>Validation gates</em></a></li>
+      <li><a href="#publication"><i>06</i><em>Publication</em></a></li>
+    </ol>
+  </nav>
 
   <div class="hw-plate">
     <div class="hw-plate-art"><svg class="hw-svg-wide" viewBox="0 0 1080 620" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Pipeline diagram">
@@ -727,6 +784,7 @@ npm run build          # regenerate everything, then compile</code></pre>
   <div class="footer-bottom">Made with <span style="color:#fb7185">❤️</span> by <a href="https://github.com/sanketmuchhala" rel="noopener noreferrer">Sanket Muchhala</a> &middot; <a href="/">Language Lineage</a></div>
   </div>
 </footer>
+<script src="/hw-fx.js" defer></script>
 <script>
 (function () {
   document.body.classList.add('hw-js');

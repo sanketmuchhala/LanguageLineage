@@ -5287,6 +5287,13 @@ function buildHowItWorksPage(languages: Language[], rels: Relationship[]): strin
   const implMedian = median(rels.filter(r => ['compiler_written_in', 'runtime_written_in', 'bootstrap_written_in'].includes(r.relationship)).map(r => r.confidence));
   const inflMedian = median(rels.filter(r => r.relationship === 'influenced').map(r => r.confidence));
 
+  // 120 real confidence scores sampled evenly across the sorted distribution,
+  // drawn as a waveform by /hw-fx.js. Every bar is one edge in the dataset.
+  const sortedConf = rels.map(r => r.confidence).sort((a, b) => a - b);
+  const waveValues = Array.from({ length: 120 }, (_, i) =>
+    sortedConf[Math.min(sortedConf.length - 1, Math.round((i / 119) * (sortedConf.length - 1)))].toFixed(2)
+  ).join(',');
+
   const specimen = rels.find(r => r.from_language === 'lang:c' && r.to_language === 'lang:python' && r.relationship === 'runtime_written_in');
   const specimenJson = specimen ? JSON.stringify(specimen, null, 2) : '';
 
@@ -5732,6 +5739,45 @@ npm run build          # regenerate everything, then compile</code></pre>
     .hw-stat b { display: block; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 26px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
     .hw-stat span { font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-tertiary); }
     .hw-stat-zero b { color: var(--accent); }
+
+    /* --- Motion layer. Behaviour lives in /hw-fx.js; these are its styles. --- */
+    /* Hero waveform: one bar per sampled edge, drawn from real confidence data. */
+    .hw-wavefig { margin: 0 0 40px; }
+    .hw-wave { display: block; width: 100%; height: 132px; cursor: crosshair; }
+    .hw-wavefig .hw-plate-caption { margin-top: 6px; }
+    /* Ambient constellation, fixed behind the article and never interactive. */
+    .hw-particles { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: 0.55; }
+    .seo-main, .seo-footer { position: relative; z-index: 1; }
+    /* Particles injected into Fig. 1 by the flow animation. */
+    .hw-particle { filter: drop-shadow(0 0 5px rgba(74,222,128,0.9)); pointer-events: none; }
+    .hw-station-box { transition: fill 340ms ease, stroke 340ms ease, filter 340ms ease; }
+    .hw-station-box.is-lit { fill: #1d2a21; stroke: rgba(74,222,128,0.65); filter: drop-shadow(0 0 8px rgba(74,222,128,0.35)); }
+    .hw-station:hover .hw-station-box { stroke: rgba(74,222,128,0.8); filter: drop-shadow(0 0 10px rgba(74,222,128,0.45)); }
+    /* Fixed station rail: progress through the six numbered sections. */
+    .hw-rail { display: none; }
+    body.hw-js .hw-rail.is-ready { display: block; position: fixed; left: 22px; top: 50%; transform: translateY(-50%); z-index: 5; opacity: 0; transition: opacity 400ms ease; }
+    body.hw-js .hw-rail.is-ready.is-visible { opacity: 1; }
+    .hw-rail ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+    .hw-rail a { display: flex; align-items: center; gap: 9px; text-decoration: none; color: var(--text-tertiary); font-size: 11px; }
+    .hw-rail i { font-style: normal; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; width: 20px; height: 20px; display: grid; place-items: center; border: 1px solid var(--border); border-radius: 50%; transition: all 260ms ease; }
+    .hw-rail em { font-style: normal; opacity: 0; transform: translateX(-4px); transition: all 260ms ease; white-space: nowrap; }
+    .hw-rail a:hover em, .hw-rail a.is-active em { opacity: 1; transform: none; }
+    .hw-rail a.is-active { color: var(--accent); }
+    .hw-rail a.is-active i { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 10px rgba(74,222,128,0.35); }
+    .hw-rail a.is-done i { border-color: rgba(74,222,128,0.4); color: rgba(74,222,128,0.6); }
+    /* Typing terminal: a caret rides the line currently being written. */
+    .hw-term-line.is-cursor::after { content: '\\258B'; color: var(--accent); animation: hw-blink 1s step-end infinite; }
+    @keyframes hw-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+    /* Glass treatment on the agents/humans split. */
+    .hw-cols .hw-col { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); background: rgba(255,255,255,0.025); transition: transform 300ms ease, box-shadow 300ms ease, border-color 300ms ease; }
+    .hw-cols .hw-col:hover { transform: translateY(-3px); border-color: rgba(74,222,128,0.35); box-shadow: 0 10px 34px rgba(0,0,0,0.42), 0 0 0 1px rgba(74,222,128,0.12); }
+    @media (max-width: 1280px) { body.hw-js .hw-rail.is-ready { display: none; } }
+    @media (prefers-reduced-motion: reduce) {
+      .hw-particles { display: none; }
+      .hw-station-box, .hw-cols .hw-col { transition: none; }
+      .hw-cols .hw-col:hover { transform: none; }
+      .hw-term-line.is-cursor::after { animation: none; }
+    }
     /* Numbered stations read as one continuous specimen sheet: each section
        opens on a hairline rule, and anchor jumps from Fig. 1 land cleanly. */
     .seo-main > h2 { margin-top: 64px; padding-top: 30px; border-top: 1px solid var(--border); scroll-margin-top: 28px; }
@@ -5845,6 +5891,19 @@ ${NAV_HTML}
     <div class="hw-stat hw-stat-zero"><b>0</b><span>errors allowed at ship</span></div>
   </div>
 
+  <canvas class="hw-particles" data-hw-particles aria-hidden="true"></canvas>
+
+  <figure class="hw-wavefig">
+    <canvas class="hw-wave" data-hw-wave data-values="${waveValues}" aria-hidden="true"></canvas>
+    <figcaption class="hw-plate-caption"><span>Every edge in the dataset, lowest confidence to highest. Hover to read the curve.</span><span>${evidenceCount}/${edgeCount} carry an evidence URL</span></figcaption>
+  </figure>
+
+  <nav class="hw-rail" aria-label="Pipeline progress">
+    <ol>
+${stations.map(st => `      <li><a href="${st.href}"><i>${st.idx}</i><em>${st.name}</em></a></li>`).join('\n')}
+    </ol>
+  </nav>
+
   <div class="hw-plate">
     <div class="hw-plate-art">${diagramSvgWide}${diagramSvgCompact}</div>
     <div class="hw-plate-caption"><span>Fig. 1 &middot; One fact's path from public claim to published page. Click a station.</span><span>Rebuilt in full on every deploy</span></div>
@@ -5854,6 +5913,7 @@ ${NAV_HTML}
 ${content}
 </main>
 ${FOOTER_HTML}
+<script src="/hw-fx.js" defer></script>
 <script>
 (function () {
   document.body.classList.add('hw-js');
