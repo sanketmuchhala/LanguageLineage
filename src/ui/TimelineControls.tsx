@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback } from 'react';
-import { useGraphStoreV6 } from '../store/useGraphStoreV6';
+import { useGraphStore } from '../store/useGraphStore';
 import './TimelineControls.css';
 
 const MIN_YEAR = 1940;
@@ -18,11 +18,11 @@ const DECADES = [
 ];
 
 export function TimelineControls() {
-  const filters = useGraphStoreV6((s) => s.filters);
-  const timelineYear = useGraphStoreV6((s) => s.timelineYear);
-  const isTimelinePlaying = useGraphStoreV6((s) => s.isTimelinePlaying);
-  const setTimelineYear = useGraphStoreV6((s) => s.setTimelineYear);
-  const setIsTimelinePlaying = useGraphStoreV6((s) => s.setIsTimelinePlaying);
+  const filters = useGraphStore((s) => s.filters);
+  const timelineYear = useGraphStore((s) => s.timelineYear);
+  const isTimelinePlaying = useGraphStore((s) => s.isTimelinePlaying);
+  const setTimelineYear = useGraphStore((s) => s.setTimelineYear);
+  const setIsTimelinePlaying = useGraphStore((s) => s.setIsTimelinePlaying);
 
   const intervalRef = useRef<number | null>(null);
 
@@ -38,7 +38,7 @@ export function TimelineControls() {
     stopPlayback();
     setIsTimelinePlaying(true);
     intervalRef.current = window.setInterval(() => {
-      const current = (useGraphStoreV6.getState() as any).timelineYear;
+      const current = useGraphStore.getState().timelineYear;
       if (current >= MAX_YEAR) {
         stopPlayback();
         return;

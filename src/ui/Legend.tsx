@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { CLUSTER_COLORS, RELATIONSHIP_COLORS } from '../graph/style';
-import { useGraphStoreV6 } from '../store/useGraphStoreV6';
+import { useGraphStore } from '../store/useGraphStore';
 
 export function Legend() {
   const [collapsed, setCollapsed] = useState(true);
-  const { filters } = useGraphStoreV6();
+  const { filters } = useGraphStore();
   const isInfluenceMode = filters.graphMode === 'influence';
 
   return (

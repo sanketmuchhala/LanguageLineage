@@ -1,4 +1,4 @@
-import type { NormalizedDataset, NormalizedRelationship } from '../../data/types';
+import type { NormalizedDataset, NormalizedEdge } from '../../data/types';
 import {
   OUTPUT_RELATIONSHIPS,
   VIRTUAL_ROOT_ID,
@@ -19,18 +19,18 @@ import {
  * this keeps exactly one parent per node for the tree's shape and preserves
  * everything else as secondary relationships hanging off the node.
  *
- * Edge direction: `from` is the implementing language and
- * `to` is the thing built with it, so `from` is the parent and the
+ * Edge direction: `from_language` is the implementing language and
+ * `to_language` is the thing built with it, so `from` is the parent and the
  * tree reads left (implementation) to right (implemented).
  */
 
-function toRelationship(edge: NormalizedRelationship): TreeRelationship {
+function toRelationship(edge: NormalizedEdge): TreeRelationship {
   return {
     id: edge.id,
     relationship: edge.relationship,
     confidence: edge.confidence,
-    start_year: edge.start_year ?? null,
-    end_year: edge.end_year ?? null,
+    start_year: edge.start_year,
+    end_year: edge.end_year,
     evidence_source: edge.evidence_source,
     notes: edge.notes ?? null,
   };
@@ -41,7 +41,7 @@ function toRelationship(edge: NormalizedRelationship): TreeRelationship {
  * Order, as specified: highest confidence, then still-active, then most recent.
  * Ties break on parent id so the same dataset always yields the same tree.
  */
-function compareCandidates(a: NormalizedRelationship, b: NormalizedRelationship): number {
+function compareCandidates(a: NormalizedEdge, b: NormalizedEdge): number {
   if (a.confidence !== b.confidence) return b.confidence - a.confidence;
 
   const aActive = a.end_year === null ? 1 : 0;
@@ -52,7 +52,7 @@ function compareCandidates(a: NormalizedRelationship, b: NormalizedRelationship)
   const bStart = b.start_year ?? -Infinity;
   if (aStart !== bStart) return bStart - aStart;
 
-  return a.from.localeCompare(b.from);
+  return a.from_language.localeCompare(b.from_language);
 }
 
 /** Walks up `parentOf` from `startId`; true when `startId` is reachable from itself. */
@@ -88,7 +88,7 @@ export function buildHierarchy(
     children: [],
   };
 
-  if (!dataset || dataset.entities.length === 0) {
+  if (!dataset || dataset.languages.length === 0) {
     return { root: emptyRoot, nodeCount: 0, cycleBreaks: [] };
   }
 
@@ -100,43 +100,43 @@ export function buildHierarchy(
 
   // 1. Keep only implementation edges that pass the active filters.
   const selfHostEdges = new Map<string, TreeRelationship[]>();
-  const candidatesByChild = new Map<string, NormalizedRelationship[]>();
-  const outputEdgesBySource = new Map<string, NormalizedRelationship[]>();
+  const candidatesByChild = new Map<string, NormalizedEdge[]>();
+  const outputEdgesBySource = new Map<string, NormalizedEdge[]>();
   const outputTypes = new Set<string>(OUTPUT_RELATIONSHIPS);
 
-  for (const edge of dataset.relationships) {
+  for (const edge of dataset.edges) {
     if (edge.relationship === 'influenced' || edge.relationship === 'influenced_by') continue;
     if (!options.relationshipFilters[edge.relationship]) continue;
     if (edge.confidence < options.confidenceThreshold) continue;
-    if (!dataset.entityMap.has(edge.from)) continue;
-    if (!dataset.entityMap.has(edge.to)) continue;
+    if (!dataset.languageMap.has(edge.from_language)) continue;
+    if (!dataset.languageMap.has(edge.to_language)) continue;
 
     // 2. Self-hosting becomes a badge, never a child of itself.
-    if (edge.from === edge.to) {
-      const list = selfHostEdges.get(edge.to) ?? [];
+    if (edge.from_language === edge.to_language) {
+      const list = selfHostEdges.get(edge.to_language) ?? [];
       list.push(toRelationship(edge));
-      selfHostEdges.set(edge.to, list);
+      selfHostEdges.set(edge.to_language, list);
       continue;
     }
 
     // 3. Transpilation points source -> output, the opposite of "built with",
     //    so it is recorded on the source and never used to pick a parent.
     if (outputTypes.has(edge.relationship)) {
-      const list = outputEdgesBySource.get(edge.from) ?? [];
+      const list = outputEdgesBySource.get(edge.from_language) ?? [];
       list.push(edge);
-      outputEdgesBySource.set(edge.from, list);
+      outputEdgesBySource.set(edge.from_language, list);
       continue;
     }
 
-    const list = candidatesByChild.get(edge.to) ?? [];
+    const list = candidatesByChild.get(edge.to_language) ?? [];
     list.push(edge);
-    candidatesByChild.set(edge.to, list);
+    candidatesByChild.set(edge.to_language, list);
   }
 
   // 3. Pick one primary parent per child, rejecting any choice that would close
   //    a cycle. Children are processed in id order so the result is stable.
   const parentOf = new Map<string, string>();
-  const primaryEdgesOf = new Map<string, NormalizedRelationship[]>();
+  const primaryEdgesOf = new Map<string, NormalizedEdge[]>();
   const cycleBreaks: HierarchyResult['cycleBreaks'] = [];
   const cycleRejected = new Map<string, Set<string>>();
 
@@ -146,11 +146,11 @@ export function buildHierarchy(
     const candidates = [...candidatesByChild.get(childId)!].sort(compareCandidates);
 
     // Group by parent first: several edges to the same parent are one candidate.
-    const byParent = new Map<string, NormalizedRelationship[]>();
+    const byParent = new Map<string, NormalizedEdge[]>();
     for (const edge of candidates) {
-      const list = byParent.get(edge.from) ?? [];
+      const list = byParent.get(edge.from_language) ?? [];
       list.push(edge);
-      byParent.set(edge.from, list);
+      byParent.set(edge.from_language, list);
     }
 
     // Map preserves insertion order, which is already best-first.
@@ -170,13 +170,13 @@ export function buildHierarchy(
 
   // 4. Materialise one datum per language.
   const data = new Map<string, TreeNodeDatum>();
-  for (const lang of dataset.entities) {
+  for (const lang of dataset.languages) {
     const selfRels = selfHostEdges.get(lang.id) ?? [];
     data.set(lang.id, {
       id: lang.id,
       name: lang.name,
       isVirtualRoot: false,
-      selfHosted: selfRels.length > 0 || lang.language_metadata?.self_hosting === true,
+      selfHosted: selfRels.length > 0 || lang.self_hosting === true,
       selfHostRelationships: selfRels,
       primaryRelationships: (primaryEdgesOf.get(lang.id) ?? []).map(toRelationship),
       secondaryParents: [],
@@ -192,11 +192,11 @@ export function buildHierarchy(
   for (const [sourceId, edges] of outputEdgesBySource) {
     const datum = data.get(sourceId);
     if (!datum) continue;
-    const byTarget = new Map<string, NormalizedRelationship[]>();
+    const byTarget = new Map<string, NormalizedEdge[]>();
     for (const edge of edges) {
-      const list = byTarget.get(edge.to) ?? [];
+      const list = byTarget.get(edge.to_language) ?? [];
       list.push(edge);
-      byTarget.set(edge.to, list);
+      byTarget.set(edge.to_language, list);
     }
     const targets: TranspileTarget[] = [];
     for (const [targetId, targetEdges] of byTarget) {
@@ -220,12 +220,12 @@ export function buildHierarchy(
     const primaryParentId = parentOf.get(childId);
     const rejected = cycleRejected.get(childId);
 
-    const byParent = new Map<string, NormalizedRelationship[]>();
+    const byParent = new Map<string, NormalizedEdge[]>();
     for (const edge of candidates) {
-      if (edge.from === primaryParentId) continue;
-      const list = byParent.get(edge.from) ?? [];
+      if (edge.from_language === primaryParentId) continue;
+      const list = byParent.get(edge.from_language) ?? [];
       list.push(edge);
-      byParent.set(edge.from, list);
+      byParent.set(edge.from_language, list);
     }
 
     const secondaries: SecondaryParent[] = [];
@@ -245,7 +245,7 @@ export function buildHierarchy(
 
   // 6. Link children to parents; anything without a parent is a root.
   const roots: TreeNodeDatum[] = [];
-  const sortedLanguages = [...dataset.entities].sort((a, b) => a.id.localeCompare(b.id));
+  const sortedLanguages = [...dataset.languages].sort((a, b) => a.id.localeCompare(b.id));
 
   for (const lang of sortedLanguages) {
     const datum = data.get(lang.id)!;

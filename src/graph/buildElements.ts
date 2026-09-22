@@ -4,7 +4,7 @@ import type {
   CytoscapeElement,
   CytoscapeNode,
   CytoscapeEdge,
-} from '../data/types_v6';
+} from '../data/types';
 import { LOGO_MAP, LOGO_COLORS, getLetterAbbreviation, getLogoPresentation } from '../data/logoMap';
 import { getGraphLogoUrl } from '../data/graphLogoAssets';
 
@@ -18,7 +18,7 @@ export function buildCytoscapeElements(
   const visibleNodes = new Set<string>();
   const searchLower = filters.searchQuery.toLowerCase();
 
-  for (const lang of dataset.entities) {
+  for (const lang of dataset.languages) {
     const matchesSearch =
       !searchLower ||
       lang.id.toLowerCase().includes(searchLower) ||
@@ -32,7 +32,7 @@ export function buildCytoscapeElements(
   // Filter edges based on filters
   const visibleEdges: CytoscapeEdge[] = [];
 
-  for (const edge of dataset.relationships) {
+  for (const edge of dataset.edges) {
     // Filter by relationship type, split by graphMode
     const isInfluenceEdge = edge.relationship === 'influenced' || edge.relationship === 'influenced_by';
 
@@ -49,20 +49,20 @@ export function buildCytoscapeElements(
     }
 
     // Filter self-loops if disabled
-    if (!filters.showSelfLoops && edge.from === edge.to) {
+    if (!filters.showSelfLoops && edge.from_language === edge.to_language) {
       continue;
     }
 
     // Only include edges where both nodes are visible
-    if (!visibleNodes.has(edge.from) || !visibleNodes.has(edge.to)) {
+    if (!visibleNodes.has(edge.from_language) || !visibleNodes.has(edge.to_language)) {
       continue;
     }
 
     visibleEdges.push({
       data: {
         id: edge.id,
-        source: edge.from,
-        target: edge.to,
+        source: edge.from_language,
+        target: edge.to_language,
         relationship: edge.relationship,
         start_year: edge.start_year,
         end_year: edge.end_year,
@@ -86,7 +86,7 @@ export function buildCytoscapeElements(
   const isClusterLayout = filters.layoutMode === 'cluster';
   const clusterSet = new Set<string>();
 
-  for (const lang of dataset.entities) {
+  for (const lang of dataset.languages) {
     // Include node if it matches search OR has visible edges
     if (visibleNodes.has(lang.id) || nodesWithEdges.has(lang.id)) {
       const canonicalLogoUrl = lang.logo_url ?? LOGO_MAP[lang.id] ?? null;
@@ -101,12 +101,12 @@ export function buildCytoscapeElements(
           label: lang.name,
           name: lang.name,
           first_release_year: lang.first_release_year,
-          current_primary_implementation_language: lang.language_metadata?.current_primary_implementation_language ?? 'unspecified',
+          current_primary_implementation_language: lang.current_primary_implementation_language,
           notes: lang.notes,
           degree: lang.degree,
           cluster: lang.cluster,
           parent: isClusterLayout ? `cluster:${lang.cluster}` : undefined,
-
+          logoUrl,
           logoColor,
           logoKind,
           logoSize: logoPresentation.size,

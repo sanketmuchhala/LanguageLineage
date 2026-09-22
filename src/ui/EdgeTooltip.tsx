@@ -1,16 +1,16 @@
-import { useGraphStoreV6 } from '../store/useGraphStoreV6';
+import { useGraphStore } from '../store/useGraphStore';
 import './EdgeTooltip.css';
 
 export function EdgeTooltip() {
-  const { dataset, hoveredEdgeId, hoveredEdgePosition } = useGraphStoreV6();
+  const { dataset, hoveredEdgeId, hoveredEdgePosition } = useGraphStore();
 
   if (!hoveredEdgeId || !hoveredEdgePosition || !dataset) return null;
 
-  const edge = dataset.relationshipMap.get(hoveredEdgeId);
+  const edge = dataset.edgeMap.get(hoveredEdgeId);
   if (!edge) return null;
 
-  const sourceName = dataset.entityMap.get(edge.from)?.name || edge.from;
-  const targetName = dataset.entityMap.get(edge.to)?.name || edge.to;
+  const sourceName = dataset.languageMap.get(edge.from_language)?.name || edge.from_language;
+  const targetName = dataset.languageMap.get(edge.to_language)?.name || edge.to_language;
   const relationship = edge.relationship.replace(/_/g, ' ');
   const confidence = (edge.confidence * 100).toFixed(0);
 

@@ -1,29 +1,29 @@
-import type { NormalizedDataset, NormalizedRelationship } from './types_v6';
+import type { NormalizedDataset, NormalizedEdge } from './types';
 
 export interface DatasetIndex {
-  incomingEdges: Map<string, NormalizedRelationship[]>;
-  outgoingEdges: Map<string, NormalizedRelationship[]>;
+  incomingEdges: Map<string, NormalizedEdge[]>;
+  outgoingEdges: Map<string, NormalizedEdge[]>;
 }
 
 export function indexDataset(dataset: NormalizedDataset): DatasetIndex {
-  const incomingEdges = new Map<string, NormalizedRelationship[]>();
-  const outgoingEdges = new Map<string, NormalizedRelationship[]>();
+  const incomingEdges = new Map<string, NormalizedEdge[]>();
+  const outgoingEdges = new Map<string, NormalizedEdge[]>();
 
   // Initialize maps for all languages
-  for (const lang of dataset.entities) {
+  for (const lang of dataset.languages) {
     incomingEdges.set(lang.id, []);
     outgoingEdges.set(lang.id, []);
   }
 
   // Build edge indexes
-  for (const edge of dataset.relationships) {
-    const incoming = incomingEdges.get(edge.to) || [];
+  for (const edge of dataset.edges) {
+    const incoming = incomingEdges.get(edge.to_language) || [];
     incoming.push(edge);
-    incomingEdges.set(edge.to, incoming);
+    incomingEdges.set(edge.to_language, incoming);
 
-    const outgoing = outgoingEdges.get(edge.from) || [];
+    const outgoing = outgoingEdges.get(edge.from_language) || [];
     outgoing.push(edge);
-    outgoingEdges.set(edge.from, outgoing);
+    outgoingEdges.set(edge.from_language, outgoing);
   }
 
   return {
