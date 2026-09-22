@@ -9,6 +9,7 @@
     "build": "npm run seo:generate && tsc && vite build",
     "preview": "vite preview",
     "type-check": "tsc --noEmit",
+    "verify": "npm run type-check && npm test && npm run seo:validate && npm run seo:links && npm run build",
     "test": "vitest run",
     "test:watch": "vitest",
     "analyze": "tsx scripts/analyzeDataset.ts",
