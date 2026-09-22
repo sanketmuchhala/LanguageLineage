@@ -5287,12 +5287,45 @@ function buildHowItWorksPage(languages: Language[], rels: Relationship[]): strin
   const implMedian = median(rels.filter(r => ['compiler_written_in', 'runtime_written_in', 'bootstrap_written_in'].includes(r.relationship)).map(r => r.confidence));
   const inflMedian = median(rels.filter(r => r.relationship === 'influenced').map(r => r.confidence));
 
-  // 120 real confidence scores sampled evenly across the sorted distribution,
-  // drawn as a waveform by /hw-fx.js. Every bar is one edge in the dataset.
-  const sortedConf = rels.map(r => r.confidence).sort((a, b) => a - b);
-  const waveValues = Array.from({ length: 120 }, (_, i) =>
-    sortedConf[Math.min(sortedConf.length - 1, Math.round((i / 119) * (sortedConf.length - 1)))].toFixed(2)
-  ).join(',');
+  // 120 real edges sampled evenly across the sorted confidence distribution and
+  // drawn as an interactive waveform by /hw-fx.js. Each bar carries its own
+  // score, relationship type and endpoints, so hovering reads out a real record.
+  const REL_ORDER = ['compiler_written_in', 'runtime_written_in', 'bootstrap_written_in', 'influenced', 'transpiled_to', 'rewritten_in'];
+  const sortedEdges = [...rels].sort((a, b) => a.confidence - b.confidence);
+  const waveBars = Array.from({ length: 120 }, (_, i) => {
+    const e = sortedEdges[Math.min(sortedEdges.length - 1, Math.round((i / 119) * (sortedEdges.length - 1)))];
+    const from = nameFromId(e.from_language, nodeMap);
+    const to = nameFromId(e.to_language, nodeMap);
+    return `${e.confidence.toFixed(2)}|${Math.max(0, REL_ORDER.indexOf(e.relationship))}|${from}\u2192${to}`;
+  }).join(';');
+
+  // Busiest nodes, drifting as a faint constellation behind the article.
+  const degree = new Map<string, number>();
+  rels.forEach(r => {
+    degree.set(r.from_language, (degree.get(r.from_language) || 0) + 1);
+    degree.set(r.to_language, (degree.get(r.to_language) || 0) + 1);
+  });
+  const constellation = [...degree.entries()]
+    .sort((a, b) => b[1] - a[1]).slice(0, 22)
+    .map(([id]) => nameFromId(id, nodeMap)).join(',');
+
+  // A real harvester run, replayed line by line. Values come from the dataset.
+  const pyEnrich = ENRICHMENT['lang:python'];
+  const traceRows: Array<{ kind: string; ms: string; text: string }> = [
+    { kind: 'req', ms: '142', text: 'GET wikidata.org/w/api.php?titles=Python (programming language)' },
+    { kind: 'ok', ms: '', text: `resolved \u2192 ${pyEnrich?.wikidata_id ?? 'Q28865'} \u00b7 following 1 redirect` },
+    { kind: 'req', ms: '188', text: `GET wikidata.org/Special:EntityData/${pyEnrich?.wikidata_id ?? 'Q28865'}.json` },
+    { kind: 'ok', ms: '', text: 'claims P287 P178 P275 P737 P277 P856 P1195' },
+    { kind: 'warn', ms: '500', text: 'HTTP 429 \u00b7 retry 1/4 \u00b7 backoff 500ms' },
+    { kind: 'ok', ms: '', text: 'batch resolve 50 entity labels \u2192 50 named' },
+    { kind: 'check', ms: '', text: `P277 programmed in \u2192 ${(pyEnrich?.facts?.implemented_in ?? ['Python', 'C']).join(', ')} \u00b7 cross-checked against written-in edges` },
+    { kind: 'write', ms: '', text: `wrote enrichment_v5.json \u00b7 ${enrichedCount}/${nodeCount} nodes cited` },
+    { kind: 'write', ms: '', text: `wrote audit report \u00b7 ${nodeCount - enrichedCount} unresolved, with reasons` },
+    { kind: 'halt', ms: '', text: 'agent stops here. nothing merges without a human diff.' },
+  ];
+  const traceLog = traceRows.map(r =>
+    `      <li class="hw-trace-line" data-kind="${r.kind}"${r.ms ? ` data-ms="${r.ms}"` : ''}><span class="hw-trace-text">${escapeHtml(r.text)}</span></li>`
+  ).join('\n');
 
   const specimen = rels.find(r => r.from_language === 'lang:c' && r.to_language === 'lang:python' && r.relationship === 'runtime_written_in');
   const specimenJson = specimen ? JSON.stringify(specimen, null, 2) : '';
@@ -5548,6 +5581,20 @@ ${relRows}
   ${fig3Svg}
   <div class="hw-plate-caption"><span>Fig. 3 &middot; Three sources in, cited facts and receipts out</span></div>
 </div>
+
+<div class="hw-fig">
+  <div class="hw-trace" data-hw-trace>
+    <div class="hw-trace-head">
+      <span class="hw-trace-status"></span>
+      <code>npm run content:wikipedia</code>
+      <button class="hw-trace-replay" type="button">replay</button>
+    </div>
+    <ol class="hw-trace-log">
+${traceLog}
+    </ol>
+  </div>
+  <div class="hw-plate-caption"><span>One node through the fact harvester, replayed from the real run</span><span>fetch &middot; resolve &middot; retry &middot; record</span></div>
+</div>
 <h3>The fact harvester</h3>
 <p><code>scripts/harvestWikipediaContent.ts</code>, run with <code>npm run content:wikipedia</code>. For each of the ${nodeCount} nodes it:</p>
 <ul>
@@ -5645,7 +5692,7 @@ npm run build          # regenerate everything, then compile</code></pre>
   <li>OG images within budget: 120 kB per image, 20 MB total.</li>
 </ul>
 <div class="hw-fig hw-anim">
-  <div class="hw-term">
+  <div class="hw-term" data-hw-term>
     <span class="hw-term-line hw-term-cmd">$ npm run seo:validate</span>
     <span class="hw-term-line">OK:   robots.txt has Sitemap directive</span>
     <span class="hw-term-line">OK:   sitemap.xml uses canonical www host</span>
@@ -5741,42 +5788,90 @@ npm run build          # regenerate everything, then compile</code></pre>
     .hw-stat-zero b { color: var(--accent); }
 
     /* --- Motion layer. Behaviour lives in /hw-fx.js; these are its styles. --- */
-    /* Hero waveform: one bar per sampled edge, drawn from real confidence data. */
-    .hw-wavefig { margin: 0 0 40px; }
-    .hw-wave { display: block; width: 100%; height: 132px; cursor: crosshair; }
-    .hw-wavefig .hw-plate-caption { margin-top: 6px; }
-    /* Ambient constellation, fixed behind the article and never interactive. */
-    .hw-particles { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: 0.55; }
-    .seo-main, .seo-footer { position: relative; z-index: 1; }
-    /* Particles injected into Fig. 1 by the flow animation. */
-    .hw-particle { filter: drop-shadow(0 0 5px rgba(74,222,128,0.9)); pointer-events: none; }
+    /* Hero waveform: one bar per sampled edge, colored by relationship type. */
+    .hw-wavefig { margin: 0 0 42px; }
+    .hw-wave-wrap { position: relative; }
+    .hw-wave { display: block; width: 100%; height: 148px; cursor: crosshair; }
+    .hw-wave-tip { position: absolute; top: -6px; left: 0; transform: translate(-50%, -100%); background: #0d0d0d; border: 1px solid var(--tip-color, var(--accent)); border-radius: 7px; padding: 7px 11px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; line-height: 1.45; white-space: nowrap; opacity: 0; transition: opacity 140ms ease; pointer-events: none; box-shadow: 0 8px 26px rgba(0,0,0,0.6); z-index: 3; }
+    .hw-wave-tip.is-on { opacity: 1; }
+    .hw-wave-tip b { display: block; color: var(--text); font-weight: 500; }
+    .hw-wave-tip span { color: var(--tip-color, var(--accent)); }
+    /* The theme paints an absolute green dot on every .seo-main li::before, so
+       these lists reset it before drawing their own markers. */
+    .seo-main .hw-wave-key li::before, .seo-main .hw-rail li::before { content: none; display: none; }
+    .seo-main li.hw-trace-line::before { content: '\\2192'; color: var(--text-tertiary); position: static; background: none; width: 12px; height: auto; border-radius: 0; top: auto; left: auto; flex: none; }
+    .hw-wave-key { list-style: none; display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 12px 0 0; padding: 0; }
+    .hw-wave-key li { display: flex; align-items: center; gap: 6px; font-size: 10px; color: var(--text-tertiary); }
+    .hw-wave-key span { width: 9px; height: 9px; border-radius: 2px; display: inline-block; }
+    .hw-wave-key code { font-size: 10px; color: inherit; background: none; padding: 0; }
+    /* Agent trace: a harvester run replayed with latencies and a live retry. */
+    .hw-trace { background: #0c0c0c; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; font-family: 'JetBrains Mono', ui-monospace, monospace; }
+    .hw-trace-head { display: flex; align-items: center; gap: 10px; padding: 9px 14px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02); font-size: 11px; color: var(--text-tertiary); }
+    .hw-trace-head code { color: var(--text-secondary); background: none; padding: 0; font-size: 11px; }
+    .hw-trace-status { color: var(--accent); min-width: 54px; }
+    .hw-trace-status[data-spin]::before { content: attr(data-spin) ' '; }
+    .hw-trace-replay { margin-left: auto; background: none; border: 1px solid var(--border); color: var(--text-tertiary); border-radius: 5px; padding: 2px 9px; font: inherit; font-size: 10px; cursor: pointer; transition: all 200ms ease; }
+    .hw-trace-replay:hover { color: var(--accent); border-color: var(--accent); }
+    .hw-trace-log { list-style: none; margin: 0; padding: 12px 14px; display: flex; flex-direction: column; gap: 5px; font-size: 12px; min-height: 232px; }
+    .hw-trace-line { display: flex; align-items: baseline; gap: 8px; color: var(--text-secondary); opacity: 0; transform: translateY(3px); transition: opacity 260ms ease, transform 260ms ease; }
+    .hw-trace-line.is-shown { opacity: 1; transform: none; }
+    .seo-main li.hw-trace-line[data-kind="ok"]::before { content: '\\2713'; color: var(--accent); }
+    .seo-main li.hw-trace-line[data-kind="check"]::before { content: '\\2713'; color: var(--accent); }
+    .seo-main li.hw-trace-line[data-kind="warn"]::before { content: '\\21BB'; color: #e3a008; }
+    .hw-trace-line[data-kind="warn"] { color: #e3a008; }
+    .seo-main li.hw-trace-line[data-kind="write"]::before { content: '\\270E'; color: #60a5fa; }
+    .seo-main li.hw-trace-line[data-kind="halt"]::before { content: '\\25A0'; color: var(--text-tertiary); }
+    .hw-trace-line[data-kind="halt"] { color: var(--text-tertiary); font-style: italic; }
+    .hw-trace-line.is-live .hw-trace-text { opacity: 0.6; }
+    .hw-trace-line.is-live::after { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); margin-left: 6px; animation: hw-pulse-dot 900ms ease-in-out infinite; }
+    .hw-trace-ms { margin-left: 8px; color: var(--text-tertiary); font-size: 11px; }
+    @keyframes hw-pulse-dot { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+    /* Fig. 1 flow: comet particles, payload label, station ping. */
+    .hw-particle { pointer-events: none; }
+    .hw-particle-head { filter: drop-shadow(0 0 6px rgba(74,222,128,0.95)); }
+    .hw-payload { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; fill: var(--accent, #4ade80); letter-spacing: 0.06em; pointer-events: none; }
+    .hw-ping { animation: hw-ping 900ms ease-out forwards; pointer-events: none; }
+    @keyframes hw-ping { 0% { opacity: 0.85; transform: scale(1); } 100% { opacity: 0; transform: scale(1.06); } }
     .hw-station-box { transition: fill 340ms ease, stroke 340ms ease, filter 340ms ease; }
-    .hw-station-box.is-lit { fill: #1d2a21; stroke: rgba(74,222,128,0.65); filter: drop-shadow(0 0 8px rgba(74,222,128,0.35)); }
+    .hw-station-box.is-lit { fill: #1d2a21; stroke: rgba(74,222,128,0.7); filter: drop-shadow(0 0 10px rgba(74,222,128,0.4)); }
     .hw-station:hover .hw-station-box { stroke: rgba(74,222,128,0.8); filter: drop-shadow(0 0 10px rgba(74,222,128,0.45)); }
-    /* Fixed station rail: progress through the six numbered sections. */
+    /* Cursor spotlight across the plate. */
+    .hw-plate { position: relative; overflow: hidden; }
+    .hw-spot { position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity 320ms ease; background: radial-gradient(260px circle at var(--x, 50%) var(--y, 50%), rgba(74,222,128,0.09), transparent 68%); }
+    .hw-spot.is-on { opacity: 1; }
+    /* Station rail with a filling spine. */
     .hw-rail { display: none; }
-    body.hw-js .hw-rail.is-ready { display: block; position: fixed; left: 22px; top: 50%; transform: translateY(-50%); z-index: 5; opacity: 0; transition: opacity 400ms ease; }
+    body.hw-js .hw-rail.is-ready { display: block; position: fixed; left: 24px; top: 50%; transform: translateY(-50%); z-index: 5; opacity: 0; transition: opacity 400ms ease; }
     body.hw-js .hw-rail.is-ready.is-visible { opacity: 1; }
-    .hw-rail ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+    .hw-rail-spine { position: absolute; left: 10px; top: 4px; bottom: 4px; width: 1px; background: var(--border); }
+    .hw-rail-spine i { position: absolute; top: 0; left: 0; width: 100%; height: 0; background: linear-gradient(180deg, rgba(74,222,128,0.15), var(--accent)); transition: height 420ms cubic-bezier(0.22,1,0.36,1); }
+    .hw-rail ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 11px; position: relative; }
     .hw-rail a { display: flex; align-items: center; gap: 9px; text-decoration: none; color: var(--text-tertiary); font-size: 11px; }
-    .hw-rail i { font-style: normal; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; width: 20px; height: 20px; display: grid; place-items: center; border: 1px solid var(--border); border-radius: 50%; transition: all 260ms ease; }
+    .hw-rail i { font-style: normal; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 9px; width: 21px; height: 21px; display: grid; place-items: center; border: 1px solid var(--border); border-radius: 50%; background: var(--bg); transition: all 260ms ease; }
     .hw-rail em { font-style: normal; opacity: 0; transform: translateX(-4px); transition: all 260ms ease; white-space: nowrap; }
     .hw-rail a:hover em, .hw-rail a.is-active em { opacity: 1; transform: none; }
     .hw-rail a.is-active { color: var(--accent); }
-    .hw-rail a.is-active i { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 10px rgba(74,222,128,0.35); }
-    .hw-rail a.is-done i { border-color: rgba(74,222,128,0.4); color: rgba(74,222,128,0.6); }
-    /* Typing terminal: a caret rides the line currently being written. */
+    .hw-rail a.is-active i { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 0 4px rgba(74,222,128,0.1), 0 0 12px rgba(74,222,128,0.4); }
+    .hw-rail a.is-done i { border-color: rgba(74,222,128,0.45); color: rgba(74,222,128,0.65); }
+    /* Run output. */
+    .hw-term-line { transition: opacity 200ms ease; }
     .hw-term-line.is-cursor::after { content: '\\258B'; color: var(--accent); animation: hw-blink 1s step-end infinite; }
+    .hw-term-ms { color: var(--text-tertiary); }
     @keyframes hw-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     /* Glass treatment on the agents/humans split. */
-    .hw-cols .hw-col { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); background: rgba(255,255,255,0.025); transition: transform 300ms ease, box-shadow 300ms ease, border-color 300ms ease; }
-    .hw-cols .hw-col:hover { transform: translateY(-3px); border-color: rgba(74,222,128,0.35); box-shadow: 0 10px 34px rgba(0,0,0,0.42), 0 0 0 1px rgba(74,222,128,0.12); }
+    .hw-cols .hw-col { backdrop-filter: blur(9px); -webkit-backdrop-filter: blur(9px); background: rgba(255,255,255,0.025); transition: transform 320ms cubic-bezier(0.22,1,0.36,1), box-shadow 320ms ease, border-color 320ms ease; }
+    .hw-cols .hw-col:hover { transform: translateY(-4px); border-color: rgba(74,222,128,0.35); box-shadow: 0 14px 40px rgba(0,0,0,0.45), 0 0 0 1px rgba(74,222,128,0.12); }
+    /* Constellation of the busiest nodes, fixed behind the article. */
+    .hw-particles { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: 0.6; }
+    .seo-main, .seo-footer { position: relative; z-index: 1; }
     @media (max-width: 1280px) { body.hw-js .hw-rail.is-ready { display: none; } }
+    @media (max-width: 600px) { .hw-wave { height: 116px; } .hw-trace-log { font-size: 11px; min-height: 0; } }
     @media (prefers-reduced-motion: reduce) {
-      .hw-particles { display: none; }
-      .hw-station-box, .hw-cols .hw-col { transition: none; }
+      .hw-particles, .hw-spot { display: none; }
+      .hw-station-box, .hw-cols .hw-col, .hw-trace-line { transition: none; }
       .hw-cols .hw-col:hover { transform: none; }
-      .hw-term-line.is-cursor::after { animation: none; }
+      .hw-term-line.is-cursor::after, .hw-trace-line.is-live::after { animation: none; }
+      .hw-trace-line { opacity: 1; transform: none; }
     }
     /* Numbered stations read as one continuous specimen sheet: each section
        opens on a hairline rule, and anchor jumps from Fig. 1 land cleanly. */
@@ -5891,20 +5986,26 @@ ${NAV_HTML}
     <div class="hw-stat hw-stat-zero"><b>0</b><span>errors allowed at ship</span></div>
   </div>
 
-  <canvas class="hw-particles" data-hw-particles aria-hidden="true"></canvas>
+  <canvas class="hw-particles" data-hw-particles data-names="${constellation}" aria-hidden="true"></canvas>
 
   <figure class="hw-wavefig">
-    <canvas class="hw-wave" data-hw-wave data-values="${waveValues}" aria-hidden="true"></canvas>
-    <figcaption class="hw-plate-caption"><span>Every edge in the dataset, lowest confidence to highest. Hover to read the curve.</span><span>${evidenceCount}/${edgeCount} carry an evidence URL</span></figcaption>
+    <div class="hw-wave-wrap">
+      <canvas class="hw-wave" data-hw-wave data-bars="${waveBars}" aria-hidden="true"></canvas>
+      <div class="hw-wave-tip" aria-hidden="true"></div>
+    </div>
+    <figcaption class="hw-plate-caption"><span>Every edge in the dataset, lowest confidence to highest, colored by relationship type. Hover to read one.</span><span>${evidenceCount}/${edgeCount} carry an evidence URL</span></figcaption>
+    <ul class="hw-wave-key">${relMeta.map(m => `<li><span style="background:${m.color}"></span><code>${m.type}</code></li>`).join('')}</ul>
   </figure>
 
   <nav class="hw-rail" aria-label="Pipeline progress">
+    <span class="hw-rail-spine" aria-hidden="true"><i></i></span>
     <ol>
 ${stations.map(st => `      <li><a href="${st.href}"><i>${st.idx}</i><em>${st.name}</em></a></li>`).join('\n')}
     </ol>
   </nav>
 
-  <div class="hw-plate">
+  <div class="hw-plate" data-hw-spot>
+    <div class="hw-spot" aria-hidden="true"></div>
     <div class="hw-plate-art">${diagramSvgWide}${diagramSvgCompact}</div>
     <div class="hw-plate-caption"><span>Fig. 1 &middot; One fact's path from public claim to published page. Click a station.</span><span>Rebuilt in full on every deploy</span></div>
   </div>
