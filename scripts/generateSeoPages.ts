@@ -1449,8 +1449,93 @@ function buildFamilyTreeFigure(nodeMap: Map<string, Language>, rels: Relationshi
 <svg class="ft-compact" viewBox="0 0 ${CW} ${CH}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${escapeHtml(label)}">
   ${SVG_STYLE}${compactHeads}${compactEdges}${compactNodes}
 </svg>
-<figcaption>${edges.length} dated <strong>influence</strong> relationships between ${placed.size} languages, straight from the dataset. In the wide view, horizontal position is the first release year. A few mutual-influence pairs (Swift and Rust, Elm and Rust) run both ways and are left out here; <a href="/explore">the full graph</a> has all 252.</figcaption>
+<figcaption>${edges.length} dated <strong>influence</strong> relationships between ${placed.size} languages, straight from the dataset. In the wide view, horizontal position is the first release year. A few mutual-influence pairs (Swift and Rust, Elm and Rust) run both ways and are left out here; <a href="/explore">the full graph</a> has all ${rels.filter(r => r.relationship === 'influenced').length}.</figcaption>
 </figure>`;
+}
+
+// What each edge type means in one line, for the family-tree guide's relationship table.
+const RELATIONSHIP_KIND_ROWS: Array<{ type: string; meaning: string }> = [
+  { type: 'compiler_written_in', meaning: 'The language a compiler is written in.' },
+  { type: 'runtime_written_in', meaning: 'The language an interpreter, runtime or virtual machine is written in.' },
+  { type: 'bootstrap_written_in', meaning: 'The language of the first compiler, before a language could compile itself.' },
+  { type: 'rewritten_in', meaning: 'An implementation moved to a different language.' },
+  { type: 'transpiled_to', meaning: 'A language that compiles to another high-level language.' },
+  { type: 'influenced', meaning: 'Design ideas borrowed from an earlier language, with no code dependency.' },
+];
+
+function buildRelationshipKindsTable(rels: Relationship[]): string {
+  const rows = RELATIONSHIP_KIND_ROWS.map(({ type, meaning }) => {
+    const count = rels.filter(r => r.relationship === type).length;
+    const slug = type.replace(/_/g, '-');
+    return `<tr><td>${relBadge(type)}</td><td>${escapeHtml(meaning)}</td><td>${count}</td><td><a href="/relationships/${slug}">Browse all</a></td></tr>`;
+  }).join('\n');
+  return `<table class="impl-table" id="relationship-kinds">
+  <thead><tr><th>Relationship</th><th>What it means</th><th>Edges</th><th>List</th></tr></thead>
+  <tbody>
+${rows}
+  </tbody>
+</table>
+<p>The dataset does not record "runs on" or compilation targets (Kotlin running on the JVM, Rust emitting machine code through LLVM) as edges of their own; those appear in each language page's text. Every row above links to the full list, with a source for each edge.</p>`;
+}
+
+// Languages whose compiler was once written in another language and is now self-hosting:
+// a self-loop compiler_written_in edge with a start year, plus at least one earlier
+// compiler_written_in edge from another language that has an end year.
+interface SelfHostingTransition {
+  id: string;
+  selfHostedSince: number;
+  earlier: Relationship[];
+  stillUses: Relationship[];
+  selfEdge: Relationship;
+}
+
+function findSelfHostingTransitions(rels: Relationship[]): SelfHostingTransition[] {
+  const out: SelfHostingTransition[] = [];
+  for (const selfEdge of rels) {
+    if (selfEdge.relationship !== 'compiler_written_in') continue;
+    if (selfEdge.from_language !== selfEdge.to_language || selfEdge.start_year == null) continue;
+    const id = selfEdge.to_language;
+    const others = rels.filter(r => r.relationship === 'compiler_written_in' && r.to_language === id && r.from_language !== id);
+    const earlier = others.filter(r => r.end_year != null).sort((a, b) => (a.start_year ?? 0) - (b.start_year ?? 0));
+    if (earlier.length === 0) continue;
+    const stillUses = others.filter(r => r.end_year == null);
+    out.push({ id, selfHostedSince: selfEdge.start_year, earlier, stillUses, selfEdge });
+  }
+  return out.sort((a, b) => a.selfHostedSince - b.selfHostedSince || a.id.localeCompare(b.id));
+}
+
+function sourceLink(url: string | undefined, n: number): string {
+  if (!url) return '';
+  let host = url;
+  try { host = new URL(url).hostname.replace(/^www\./, ''); } catch { /* keep raw url */ }
+  return `<a href="${escapeHtml(url)}" rel="noopener noreferrer" target="_blank" title="${escapeHtml(url)}">[${n}] ${escapeHtml(host)}</a>`;
+}
+
+function yearSpan(r: Relationship): string {
+  if (r.start_year == null) return r.end_year != null ? `until ${r.end_year}` : '';
+  return r.end_year != null ? `${r.start_year}&ndash;${r.end_year}` : `since ${r.start_year}`;
+}
+
+function buildSelfHostingTable(nodeMap: Map<string, Language>, rels: Relationship[]): string {
+  const transitions = findSelfHostingTransitions(rels);
+  if (transitions.length === 0) return '';
+  const rows = transitions.map(t => {
+    const edges = [...t.earlier, t.selfEdge, ...t.stillUses];
+    const urls = [...new Set(edges.map(e => e.evidence_source).filter((u): u is string => !!u))];
+    const earlier = t.earlier.map(r => `${linkNode(r.from_language, nodeMap)} (${yearSpan(r)})`).join(', ');
+    const still = t.stillUses.length
+      ? t.stillUses.map(r => linkNode(r.from_language, nodeMap)).join(', ')
+      : '&mdash;';
+    const sources = urls.map((u, i) => sourceLink(u, i + 1)).join(' ');
+    return `<tr><td>${linkNode(t.id, nodeMap)}</td><td>${earlier}</td><td>${t.selfHostedSince}</td><td>${still}</td><td>${sources}</td></tr>`;
+  }).join('\n');
+  return `<table class="impl-table" id="self-hosting-transitions">
+  <thead><tr><th>Language</th><th>Earlier compiler written in</th><th>Compiles itself since</th><th>Also uses today</th><th>Sources</th></tr></thead>
+  <tbody>
+${rows}
+  </tbody>
+</table>
+<p>${transitions.length} languages in the dataset have a dated move from a compiler written in another language to a self-hosting one. "Also uses today" lists other components the current compiler is recorded as written in or built on, such as the LLVM backend. A language is only listed when both the earlier and the current compiler edges carry a year and a source.</p>`;
 }
 
 // The integrated page header: logo, name, tagline, a horizontal spec rail of key data
@@ -3827,7 +3912,7 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
     title: 'Programming Language Family Tree | Language Lineage',
     h1: 'Programming Language Family Tree',
     description: 'The programming language family tree: how Fortran, LISP, and C influenced and implemented the languages that followed, across 75+ years of compiler and runtime history.',
-    content: `<div class="answer-box">The programming language family tree traces how languages influenced, implemented, and descended from each other over 75+ years, from <a href="/languages/fortran">Fortran</a> (1957) and <a href="/languages/lisp">Lisp</a> (1958) to <a href="/languages/rust">Rust</a> and beyond. It maps two different kinds of ancestry: <strong>influence</strong> (where a language borrowed ideas) and <strong>implementation</strong> (what a language is actually written in).</div>
+    content: `<div class="answer-box">The programming language family tree traces how languages influenced, implemented, and descended from each other over 75+ years, from <a href="/languages/fortran">Fortran</a> (1957) and <a href="/languages/lisp">Lisp</a> (1958) to <a href="/languages/rust">Rust</a> and beyond. It maps two different kinds of ancestry: <strong>influence</strong> (where a language borrowed ideas) and <strong>implementation</strong> (what a language is actually written in). The two trees disagree more than you might expect: Rust's design borrows from ML, while its compiler was written in OCaml until 2011, and <a href="/languages/go">Go</a>'s compiler was written in C until Go 1.5 (<a href="#compilers-that-learned-to-compile-themselves">see every dated transition</a>).</div>
 
 {{FAMILY_TREE_FIGURE}}
 
@@ -3838,6 +3923,13 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
 <li><strong>Implementation</strong>, what a language is built in. Python's reference interpreter, CPython, is written in <a href="/languages/c">C</a>. That is a concrete dependency, not just inspiration.</li>
 </ul>
 <p>Most "family tree" diagrams only show influence. This atlas tracks both, which is why C sits at the center of so much of the graph: dozens of languages were <em>inspired</em> by others but are <em>implemented</em> in C.</p>
+<p>In the dataset, implementation is split into several kinds of edge, and influence is kept as its own type:</p>
+{{RELATIONSHIP_KINDS_TABLE}}
+
+<h2>Compilers that learned to compile themselves</h2>
+<p>"What is X written in?" often has two true answers from different years. A new language's first compiler has to be written in something that already exists; once the language is capable enough, its compiler is rewritten in the language itself and builds each new version from the previous one. These are the transitions the dataset records with dates and sources:</p>
+{{SELF_HOSTING_TABLE}}
+<p>For how the chicken-and-egg problem is solved in practice, see <a href="/guides/what-is-compiler-bootstrapping">what compiler bootstrapping is</a> and <a href="/guides/how-rust-is-bootstrapped">how Rust is bootstrapped</a>.</p>
 
 <h2>The roots (1950s)</h2>
 <p>The first high-level languages established the paradigms everything else descends from. <a href="/languages/fortran">Fortran</a> (1957, John Backus at IBM) pioneered imperative scientific computing and proved a compiler could match hand-written assembly. <a href="/languages/lisp">Lisp</a> (1958, John McCarthy) introduced functional programming, garbage collection, the REPL, and the radical idea of treating code as data. <a href="/languages/cobol">COBOL</a> (1959, Grace Hopper and CODASYL) brought English-like syntax to business computing, and still runs much of the world's banking.</p>
@@ -6140,11 +6232,15 @@ function buildDirectoryPage(languages: Language[], rels: Relationship[]): string
 }
 
 // Guide pages
-const familyTreeFigure = buildFamilyTreeFigure(nodeMap, rels);
+const GUIDE_PLACEHOLDERS: Record<string, string> = {
+  '{{FAMILY_TREE_FIGURE}}': buildFamilyTreeFigure(nodeMap, rels),
+  '{{RELATIONSHIP_KINDS_TABLE}}': buildRelationshipKindsTable(rels),
+  '{{SELF_HOSTING_TABLE}}': buildSelfHostingTable(nodeMap, rels),
+};
 for (const guide of GUIDES) {
-  const g = guide.content.includes('{{FAMILY_TREE_FIGURE}}')
-    ? { ...guide, content: guide.content.replace('{{FAMILY_TREE_FIGURE}}', familyTreeFigure) }
-    : guide;
+  let content = guide.content;
+  for (const [placeholder, html] of Object.entries(GUIDE_PLACEHOLDERS)) content = content.replace(placeholder, html);
+  const g = content === guide.content ? guide : { ...guide, content };
   writeFile(join(PUBLIC, 'guides', g.slug, 'index.html'), processPage(buildGuidePage(g)));
 }
 console.log(`Generated ${GUIDES.length} guide pages`);

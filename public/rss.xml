@@ -5,8 +5,15 @@
     <link>https://www.languagelineage.org</link>
     <description>Guides and data stories on what programming languages are written in, how compilers are bootstrapped, and how languages influenced each other.</description>
     <language>en-us</language>
-    <lastBuildDate>Tue, 22 Sep 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 10 Nov 2026 00:00:00 GMT</lastBuildDate>
     <atom:link href="https://www.languagelineage.org/rss.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Programming Language Family Tree | Language Lineage</title>
+      <link>https://www.languagelineage.org/guides/programming-language-family-tree</link>
+      <guid isPermaLink="true">https://www.languagelineage.org/guides/programming-language-family-tree</guid>
+      <description>The programming language family tree: how Fortran, LISP, and C influenced and implemented the languages that followed, across 75+ years of compiler and runtime history.</description>
+      <pubDate>Tue, 10 Nov 2026 00:00:00 GMT</pubDate>
+    </item>
     <item>
       <title>How Modern Languages Trace Their Toolchains Back to C | Language Lineage</title>
       <link>https://www.languagelineage.org/guides/the-c-bootstrap-chain</link>
@@ -75,13 +82,6 @@
       <link>https://www.languagelineage.org/guides/how-javascript-engines-work</link>
       <guid isPermaLink="true">https://www.languagelineage.org/guides/how-javascript-engines-work</guid>
       <description>JavaScript engines like V8, SpiderMonkey, and JavaScriptCore are written in C++. Learn how they parse, compile, and execute JavaScript code.</description>
-      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
-    </item>
-    <item>
-      <title>Programming Language Family Tree | Language Lineage</title>
-      <link>https://www.languagelineage.org/guides/programming-language-family-tree</link>
-      <guid isPermaLink="true">https://www.languagelineage.org/guides/programming-language-family-tree</guid>
-      <description>The programming language family tree: how Fortran, LISP, and C influenced and implemented the languages that followed, across 75+ years of compiler and runtime history.</description>
       <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
     </item>
     <item>

@@ -43,9 +43,51 @@
       }
     }
     </script>
+    <!-- Static fallback for crawlers and readers without JavaScript. React replaces #root on load. -->
+    <script>document.documentElement.classList.add('js');</script>
+    <style>
+      .js #static-home { display: none; }
+      #static-home { max-width: 760px; margin: 0 auto; padding: 48px 16px 64px; background: #000; color: #e5e5e5; font: 16px/1.6 system-ui, -apple-system, sans-serif; }
+      #static-home h1 { font-size: 2rem; line-height: 1.2; color: #fafafa; }
+      #static-home h2 { font-size: 1.25rem; margin-top: 2rem; color: #fafafa; }
+      #static-home a { color: #4ade80; }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <main id="static-home">
+        <h1>Programming Language Lineage Graph</h1>
+        <p>An evidence-cited atlas of what programming languages are written in: their compilers, runtimes, virtual machines and bootstrap chains, mapped separately from which languages influenced which. Every relationship links to the source that supports it.</p>
+        <p><a href="/explore">Open the interactive graph</a> &middot; <a href="/guides/programming-language-family-tree">Read the programming language family tree</a></p>
+
+        <h2>Answers that changed over time</h2>
+        <ul>
+          <li><a href="/languages/rust">Rust</a>: rustc was written in OCaml until Rust began compiling itself in 2011.</li>
+          <li><a href="/languages/go">Go</a>: the compiler was written in C until Go 1.5 (2015) translated it to Go.</li>
+          <li><a href="/languages/zig">Zig</a>: the compiler was C++ until 2022, when the self-hosted Zig compiler replaced it.</li>
+          <li><a href="/languages/python">Python</a>: CPython, the reference implementation, is written in C.</li>
+          <li><a href="/languages/java">Java</a>: javac is written in Java, while the HotSpot JVM is written in C++.</li>
+        </ul>
+
+        <h2>Kinds of relationship, kept apart</h2>
+        <ul>
+          <li><a href="/relationships/compiler-written-in">Compiler written in</a> and <a href="/relationships/runtime-written-in">runtime written in</a>: what an implementation is built from.</li>
+          <li><a href="/relationships/bootstrap-written-in">Bootstrap chains</a>: what the first compiler was written in before a language could compile itself.</li>
+          <li><a href="/relationships/transpiled-to">Transpiled to</a>: languages that compile to another high-level language.</li>
+          <li><a href="/relationships/rewritten-in">Rewritten in</a>: implementations moved to a different language.</li>
+          <li><a href="/relationships/influenced">Influenced</a>: design ideas borrowed from earlier languages, with no code dependency.</li>
+        </ul>
+
+        <h2>Explore</h2>
+        <ul>
+          <li><a href="/languages">Language pages</a> and <a href="/tools">compilers, runtimes and engines</a></li>
+          <li><a href="/questions">What is X written in? questions</a></li>
+          <li><a href="/guides/what-is-compiler-bootstrapping">How compiler bootstrapping works</a></li>
+          <li><a href="/timeline">Timeline of programming languages</a></li>
+          <li><a href="/dataset">Download the open dataset</a> and read <a href="/how-it-works">how it works</a></li>
+        </ul>
+      </main>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
