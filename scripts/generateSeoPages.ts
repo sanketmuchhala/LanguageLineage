@@ -1538,6 +1538,63 @@ ${rows}
 <p>${transitions.length} languages in the dataset have a dated move from a compiler written in another language to a self-hosting one. "Also uses today" lists other components the current compiler is recorded as written in or built on, such as the LLVM backend. A language is only listed when both the earlier and the current compiler edges carry a year and a source.</p>`;
 }
 
+// One row per self-hosting transition: earlier compiler edges grouped by identical year
+// span (so parallel components such as C++ and LLVM share a box), then the self-hosting box.
+function buildSelfHostingDiagram(nodeMap: Map<string, Language>, rels: Relationship[]): string {
+  const transitions = findSelfHostingTransitions(rels);
+  if (transitions.length === 0) return '';
+  const BOX_W = 128, BOX_H = 44, GAP = 36, LABEL_W = 72, ROW_H = 68, PAD = 12;
+  const color = RELATIONSHIP_DEFS.compiler_written_in.color;
+  const rows = transitions.map(t => {
+    const groups = new Map<string, Relationship[]>();
+    for (const r of t.earlier) {
+      const key = `${r.start_year ?? ''}-${r.end_year ?? ''}`;
+      groups.set(key, [...(groups.get(key) ?? []), r]);
+    }
+    const boxes = [...groups.values()].map(g => ({
+      name: g.map(r => nameFromId(r.from_language, nodeMap)).join(' + '),
+      years: yearSpan(g[0]).replace('&ndash;', '–'),
+      self: false,
+    }));
+    boxes.push({ name: nameFromId(t.id, nodeMap), years: `since ${t.selfHostedSince}`, self: true });
+    return { label: nameFromId(t.id, nodeMap), boxes };
+  });
+  const maxBoxes = Math.max(...rows.map(r => r.boxes.length));
+  const W = LABEL_W + maxBoxes * BOX_W + (maxBoxes - 1) * GAP + PAD;
+  const H = rows.length * ROW_H + PAD;
+  const svgRows = rows.map((row, i) => {
+    const y = PAD + i * ROW_H;
+    const cy = y + BOX_H / 2;
+    const parts = [`<text x="4" y="${cy}" class="sh-lbl">${escapeHtml(row.label.toUpperCase())}</text>`];
+    row.boxes.forEach((b, j) => {
+      const x = LABEL_W + j * (BOX_W + GAP);
+      parts.push(`<rect x="${x}" y="${y}" width="${BOX_W}" height="${BOX_H}" rx="5" fill="#161616" stroke="${b.self ? '#4ade80' : '#5a5a5a'}" stroke-width="${b.self ? 2 : 1.5}"/>`);
+      parts.push(`<text x="${x + BOX_W / 2}" y="${y + 17}" class="${b.self ? 'sh-self' : 'sh-node'}">${escapeHtml(b.name)}</text>`);
+      parts.push(`<text x="${x + BOX_W / 2}" y="${y + 33}" class="sh-year">${escapeHtml(b.years)}</text>`);
+      if (j < row.boxes.length - 1) {
+        const x1 = x + BOX_W, x2 = x + BOX_W + GAP - 8;
+        parts.push(`<line x1="${x1}" y1="${cy}" x2="${x2}" y2="${cy}" stroke="${color}" stroke-width="2"/><polygon points="${x2},${cy - 4} ${x2 + 8},${cy} ${x2},${cy + 4}" fill="${color}"/>`);
+      }
+    });
+    return parts.join('');
+  }).join('\n');
+  const summary = rows.map(r => `${r.label}: ${r.boxes.map(b => `${b.name} (${b.years})`).join(' then ')}`).join('; ');
+  return `<figure class="bootstrap-diagram-wrap">
+<div style="overflow-x:auto">
+<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${escapeHtml(`Compiler implementation language over time. ${summary}.`)}" style="width:100%;min-width:${Math.round(W * 0.8)}px;max-width:${W}px;display:block;margin:0 auto 0.5rem;font-family:inherit">
+  <style>
+    .sh-lbl{font-size:11px;fill:#9a9a9a;font-weight:600;letter-spacing:.04em;dominant-baseline:middle}
+    .sh-node{font-size:12px;fill:#fafafa;text-anchor:middle;dominant-baseline:middle}
+    .sh-self{font-size:12px;fill:#4ade80;text-anchor:middle;dominant-baseline:middle;font-weight:600}
+    .sh-year{font-size:10px;fill:#9a9a9a;text-anchor:middle;dominant-baseline:middle}
+  </style>
+${svgRows}
+</svg>
+</div>
+<figcaption>What each language's compiler was written in, over time, generated from dated <code>compiler_written_in</code> edges in the dataset. Green border: the self-hosting compiler. Components recorded for the same years share a box. Sources are in the table below.</figcaption>
+</figure>`;
+}
+
 // The integrated page header: logo, name, tagline, a horizontal spec rail of key data
 // (written in, released, developer, typing, license), and the curated succession notes ,
 // woven into the top of the article rather than boxed into a card.
@@ -3711,9 +3768,9 @@ ${FOOTER_HTML}
 const GUIDES: Array<{ slug: string; title: string; h1: string; description: string; content: string }> = [
   {
     slug: 'what-is-compiler-bootstrapping',
-    title: 'What is Compiler Bootstrapping? | Language Lineage',
+    title: 'What is Compiler Bootstrapping? Real Self-Hosting Chains | Language Lineage',
     h1: 'What is Compiler Bootstrapping?',
-    description: 'Compiler bootstrapping is the process of writing a compiler for a language in that same language. Learn how it works and which languages use it.',
+    description: 'How a language comes to compile itself, with dated, sourced examples: Rust from OCaml, Go from C at 1.5, Zig from C++, plus the three bootstrap stages.',
     content: `<div class="answer-box">Compiler bootstrapping is the process of building a compiler for a programming language that is <strong>written in that same language</strong>. Because you cannot compile the compiler without already having a compiler, the first version is written in a different, already-working language, and each later version is compiled by the version before it. A language whose compiler can compile its own source code is called <em>self-hosting</em>.</div>
 
 <h2>The chicken-and-egg problem</h2>
@@ -3729,61 +3786,7 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
 </ul>
 
 <h2>Bootstrap chain diagram</h2>
-<figure class="bootstrap-diagram-wrap" aria-label="Bootstrap chains for Rust and Go">
-<svg viewBox="0 0 540 185" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:540px;display:block;margin:0 auto 0.5rem;font-family:inherit">
-  <style>
-    .bd-lbl{font-size:11px;fill:#9a9a9a;font-weight:600;letter-spacing:.04em}
-    .bd-node{font-size:12px;fill:#fafafa;text-anchor:middle;dominant-baseline:middle}
-    .bd-node-self{font-size:12px;fill:#4ade80;text-anchor:middle;dominant-baseline:middle;font-weight:600}
-    .bd-etype{font-size:10px;fill:#8b5cf6;text-anchor:middle}
-    .bd-year{font-size:10px;fill:#5a5a5a;text-anchor:middle}
-  </style>
-  <!-- Row labels -->
-  <text x="4" y="54" class="bd-lbl">RUST</text>
-  <text x="4" y="134" class="bd-lbl">GO</text>
-  <!-- === RUST CHAIN === -->
-  <!-- OCaml node -->
-  <rect x="58" y="34" width="88" height="40" rx="5" fill="#161616" stroke="#5a5a5a" stroke-width="1.5"/>
-  <text x="102" y="54" class="bd-node">OCaml</text>
-  <!-- arrow 1 -->
-  <line x1="146" y1="54" x2="192" y2="54" stroke="#8b5cf6" stroke-width="2"/>
-  <polygon points="192,50 200,54 192,58" fill="#8b5cf6"/>
-  <text x="169" y="47" class="bd-etype">bootstrap</text>
-  <!-- rustboot node -->
-  <rect x="200" y="34" width="100" height="40" rx="5" fill="#161616" stroke="#5a5a5a" stroke-width="1.5"/>
-  <text x="250" y="50" class="bd-node">rustboot</text>
-  <text x="250" y="64" class="bd-node" style="font-size:10px;fill:#9a9a9a">(in OCaml)</text>
-  <!-- arrow 2 -->
-  <line x1="300" y1="54" x2="346" y2="54" stroke="#8b5cf6" stroke-width="2"/>
-  <polygon points="346,50 354,54 346,58" fill="#8b5cf6"/>
-  <text x="323" y="47" class="bd-etype">bootstrap</text>
-  <!-- rustc self-hosting node -->
-  <rect x="354" y="34" width="100" height="40" rx="5" fill="#161616" stroke="#4ade80" stroke-width="2"/>
-  <text x="404" y="54" class="bd-node-self">rustc (Rust)</text>
-  <text x="404" y="84" class="bd-year">self-hosting 2011</text>
-  <!-- === GO CHAIN === -->
-  <!-- C node -->
-  <rect x="58" y="114" width="88" height="40" rx="5" fill="#161616" stroke="#5a5a5a" stroke-width="1.5"/>
-  <text x="102" y="134" class="bd-node">C compiler</text>
-  <!-- arrow 1 -->
-  <line x1="146" y1="134" x2="192" y2="134" stroke="#8b5cf6" stroke-width="2"/>
-  <polygon points="192,130 200,134 192,138" fill="#8b5cf6"/>
-  <text x="169" y="127" class="bd-etype">bootstrap</text>
-  <!-- early gc node -->
-  <rect x="200" y="114" width="100" height="40" rx="5" fill="#161616" stroke="#5a5a5a" stroke-width="1.5"/>
-  <text x="250" y="130" class="bd-node">gc compiler</text>
-  <text x="250" y="144" class="bd-node" style="font-size:10px;fill:#9a9a9a">(in C)</text>
-  <!-- arrow 2 -->
-  <line x1="300" y1="134" x2="346" y2="134" stroke="#8b5cf6" stroke-width="2"/>
-  <polygon points="346,130 354,134 346,138" fill="#8b5cf6"/>
-  <text x="323" y="127" class="bd-etype">bootstrap</text>
-  <!-- go self-hosting node -->
-  <rect x="354" y="114" width="100" height="40" rx="5" fill="#161616" stroke="#4ade80" stroke-width="2"/>
-  <text x="404" y="134" class="bd-node-self">gc (Go 1.5)</text>
-  <text x="404" y="164" class="bd-year">self-hosting 2015</text>
-</svg>
-<figcaption>Simplified bootstrap chains. Green border = self-hosting. Violet arrows = bootstrap_written_in edges from the dataset.</figcaption>
-</figure>
+{{SELF_HOSTING_DIAGRAM}}
 
 <h2>Why languages bootstrap</h2>
 <p>Self-hosting is a milestone of maturity. It proves the language is expressive and complete enough to build a large, performance-sensitive systems program, a compiler. It also lets the compiler team write the compiler in the language they are designing, so every improvement to the language immediately benefits the tool that builds it. Finally, it removes the long-term dependency on a foreign implementation language.</p>
@@ -3796,6 +3799,10 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
 <p><a href="/languages/go">Go</a>'s original toolchain was written in <a href="/languages/c">C</a>. The Go team at Google designed the language starting in 2007 and open-sourced it in November 2009, with a Plan 9-style C compiler as the implementation. In 2013, Russ Cox ran an automated translation of the C compiler sources to Go, producing a Go-syntax compiler that was still structurally C. That translated compiler was refined and shipped as the default compiler in Go 1.5 (August 2015), removing the C toolchain requirement entirely. From Go 1.5 onward, the build tool only needs a previous Go binary as seed.</p>
 <p>Other examples: <a href="/languages/haskell">Haskell</a>'s <a href="/tools/ghc">GHC</a> is written in Haskell with a C runtime. <a href="/tools/gcc">GCC</a> is bootstrapped from an earlier C/C++ compiler through exactly the stage 0/1/2 process. <a href="/languages/typescript">TypeScript</a>'s tsc is written in TypeScript and compiles itself.</p>
 <p>See <a href="/relationships/bootstrap-written-in">every bootstrap relationship in the dataset</a> for the full list, each with a source and confidence score.</p>
+
+<h2>Every dated self-hosting transition</h2>
+<p>The dataset records when each of these compilers stopped depending on another language. The years and sources come straight from its <code>compiler_written_in</code> edges:</p>
+{{SELF_HOSTING_TABLE}}
 
 <h2>Glossary</h2>
 <dl class="quick-facts">
@@ -6236,6 +6243,7 @@ const GUIDE_PLACEHOLDERS: Record<string, string> = {
   '{{FAMILY_TREE_FIGURE}}': buildFamilyTreeFigure(nodeMap, rels),
   '{{RELATIONSHIP_KINDS_TABLE}}': buildRelationshipKindsTable(rels),
   '{{SELF_HOSTING_TABLE}}': buildSelfHostingTable(nodeMap, rels),
+  '{{SELF_HOSTING_DIAGRAM}}': buildSelfHostingDiagram(nodeMap, rels),
 };
 for (const guide of GUIDES) {
   let content = guide.content;

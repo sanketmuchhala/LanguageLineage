@@ -44,3 +44,13 @@ No commits pushed, no deploys, no posts, no outreach, no third-party uploads.
 1. WP-03 data review (1h, owner).
 2. WP-11 bootstrapping guide upgrade (4h), reusing `buildSelfHostingTable`.
 3. WP-07 dataset release package (5h).
+
+## 2026-11-10 — session 2, Phase 1: bootstrapping guide (WP-11) — done
+
+Owner asked for a phased session (bootstrapping guide, dataset release, source labels, poster + guides), one PR at the end, merged by the owner.
+
+- **Behavior:** `/guides/what-is-compiler-bootstrapping` replaces its hand-drawn Rust/Go figure with a diagram generated from dated `compiler_written_in` edges (Rust, Go, Kotlin, Swift, Zig), and adds the same self-hosting table as the family-tree guide under "Every dated self-hosting transition". The old figure's caption claimed its arrows were `bootstrap_written_in` edges; they were not. Title and description now advertise the real chains: "What is Compiler Bootstrapping? Real Self-Hosting Chains | Language Lineage" (75 chars, at the validator limit).
+- **Growth mechanism:** the page has 1,293 impressions at position 11.4; a results-page definition cannot show five dated, sourced chains.
+- **Files:** `scripts/generateSeoPages.ts` (`buildSelfHostingDiagram`, placeholder), regenerated guide, guides index, directory, llms.txt, llms-full.txt, rss.xml, sitemap lastmod; `scripts/growthPages.test.ts` (+3 tests).
+- **Checks:** `npm run verify` exit 0, 127 tests, seo:validate 0/0, seo:links 0/0/0, sitemap 324. Headless Chromium at 320px and 1280px: no page errors, no horizontal page scroll; the diagram has a minimum width and scrolls inside its own box on phones.
+- **Data finding (confirmed):** the `lang:c → lang:rust` compiler edge (2006–2010) cites `https://github.com/iohub/rustboot`, whose GitHub description is "bootstrap rust compiler in ocaml" and whose language breakdown is OCaml 1,132,587 bytes, Rust 172,219, no C. The edge is not supported by its source. The new diagram now shows it, contradicting the guide's prose ("rustboot, was written in OCaml"). A separate data PR proposes the fix (see below).

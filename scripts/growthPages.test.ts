@@ -122,3 +122,35 @@ describe('family-tree guide data tables', () => {
     expect(missing).toEqual([]);
   });
 });
+
+describe('compiler bootstrapping guide', () => {
+  const html = readFileSync(join(ROOT, 'public/guides/what-is-compiler-bootstrapping/index.html'), 'utf8');
+  const familyTree = readFileSync(join(ROOT, 'public/guides/programming-language-family-tree/index.html'), 'utf8');
+  const tableOf = (page: string) => page.match(/<table[^>]*id="self-hosting-transitions"[\s\S]*?<\/table>/)?.[0] ?? '';
+
+  it('carries the same generated self-hosting table as the family-tree guide', () => {
+    expect(tableOf(html)).not.toBe('');
+    expect(tableOf(html)).toBe(tableOf(familyTree));
+  });
+
+  it('draws only compiler edges that exist in the dataset, with their years', () => {
+    const svg = html.match(/<svg[^>]*aria-label="Compiler implementation language over time[\s\S]*?<\/svg>/)?.[0] ?? '';
+    expect(svg).not.toBe('');
+    const compiler = rels.filter((r) => r.relationship === 'compiler_written_in');
+    const boxes = [...svg.matchAll(/class="sh-(?:node|self)">([^<]+)<\/text><text[^>]*class="sh-year">([^<]+)<\/text>/g)]
+      .map((m) => ({ names: m[1].replace(/&amp;/g, '&').split(' + '), years: m[2] }));
+    expect(boxes.length).toBeGreaterThan(0);
+    for (const box of boxes) {
+      for (const name of box.names) {
+        const ids = nodes.filter((n) => n.name === name).map((n) => n.id);
+        const match = compiler.some((r) => ids.includes(r.from_language) && (
+          box.years === `since ${r.start_year}` || box.years === `${r.start_year}–${r.end_year}`));
+        expect(match, `${name} ${box.years} is not a dataset compiler edge`).toBe(true);
+      }
+    }
+  });
+
+  it('no longer ships the hand-drawn Rust/Go figure that mislabeled its edges', () => {
+    expect(html).not.toContain('Bootstrap chains for Rust and Go');
+  });
+});

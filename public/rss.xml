@@ -15,6 +15,13 @@
       <pubDate>Tue, 10 Nov 2026 00:00:00 GMT</pubDate>
     </item>
     <item>
+      <title>What is Compiler Bootstrapping? Real Self-Hosting Chains | Language Lineage</title>
+      <link>https://www.languagelineage.org/guides/what-is-compiler-bootstrapping</link>
+      <guid isPermaLink="true">https://www.languagelineage.org/guides/what-is-compiler-bootstrapping</guid>
+      <description>How a language comes to compile itself, with dated, sourced examples: Rust from OCaml, Go from C at 1.5, Zig from C++, plus the three bootstrap stages.</description>
+      <pubDate>Tue, 10 Nov 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
       <title>How Modern Languages Trace Their Toolchains Back to C | Language Lineage</title>
       <link>https://www.languagelineage.org/guides/the-c-bootstrap-chain</link>
       <guid isPermaLink="true">https://www.languagelineage.org/guides/the-c-bootstrap-chain</guid>
@@ -96,13 +103,6 @@
       <link>https://www.languagelineage.org/guides/what-is-self-hosting</link>
       <guid isPermaLink="true">https://www.languagelineage.org/guides/what-is-self-hosting</guid>
       <description>A self-hosting compiler is a compiler that can compile its own source code. Learn which languages are self-hosting and why it matters.</description>
-      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
-    </item>
-    <item>
-      <title>What is Compiler Bootstrapping? | Language Lineage</title>
-      <link>https://www.languagelineage.org/guides/what-is-compiler-bootstrapping</link>
-      <guid isPermaLink="true">https://www.languagelineage.org/guides/what-is-compiler-bootstrapping</guid>
-      <description>Compiler bootstrapping is the process of writing a compiler for a language in that same language. Learn how it works and which languages use it.</description>
       <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
     </item>
   </channel>
