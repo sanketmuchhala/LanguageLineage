@@ -37,6 +37,10 @@
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
+    <loc>https://www.languagelineage.org/posters/programming-language-implementation-family-tree</loc>
+    <lastmod>2026-11-10</lastmod>
+  </url>
+  <url>
     <loc>https://www.languagelineage.org/questions</loc>
     <lastmod>2026-09-09</lastmod>
   </url>
@@ -1270,7 +1274,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides/how-rust-is-bootstrapped</loc>
-    <lastmod>2026-09-09</lastmod>
+    <lastmod>2026-11-10</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides/gcc-vs-llvm</loc>
@@ -1282,7 +1286,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides/v8-vs-spidermonkey-vs-javascriptcore</loc>
-    <lastmod>2026-09-09</lastmod>
+    <lastmod>2026-11-10</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides/typescript-vs-javascript-implementation</loc>

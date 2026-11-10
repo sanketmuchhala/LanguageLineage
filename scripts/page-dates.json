@@ -8,11 +8,11 @@
     "lastmod": "2026-09-22"
   },
   "/dataset": {
-    "hash": "619d25f8bfe078cb",
+    "hash": "54fc423b1bb66da1",
     "lastmod": "2026-11-10"
   },
   "/directory": {
-    "hash": "195c4a11d15daf12",
+    "hash": "9eb5c0b718147abe",
     "lastmod": "2026-11-10"
   },
   "/embed-kit": {
@@ -24,7 +24,7 @@
     "lastmod": "2026-07-02"
   },
   "/guides": {
-    "hash": "93eba65c2c4a8de4",
+    "hash": "4845cce823e950d1",
     "lastmod": "2026-11-10"
   },
   "/guides/compiler-vs-interpreter-vs-runtime": {
@@ -52,11 +52,11 @@
     "lastmod": "2026-09-09"
   },
   "/guides/how-rust-is-bootstrapped": {
-    "hash": "f35ea876558048b1",
-    "lastmod": "2026-09-09"
+    "hash": "510abd56a69a9c23",
+    "lastmod": "2026-11-10"
   },
   "/guides/programming-language-family-tree": {
-    "hash": "80d730a151d52dc1",
+    "hash": "38619008fdf205ac",
     "lastmod": "2026-11-10"
   },
   "/guides/the-c-bootstrap-chain": {
@@ -68,8 +68,8 @@
     "lastmod": "2026-09-09"
   },
   "/guides/v8-vs-spidermonkey-vs-javascriptcore": {
-    "hash": "383dfd7dd8d7bf1a",
-    "lastmod": "2026-09-09"
+    "hash": "a05f80ca5ebdbeec",
+    "lastmod": "2026-11-10"
   },
   "/guides/what-is-compiler-bootstrapping": {
     "hash": "c9642f9a86b2264e",
@@ -649,6 +649,10 @@
   },
   "/languages/zig": {
     "hash": "a2c6b2303fdc6927",
+    "lastmod": "2026-11-10"
+  },
+  "/posters/programming-language-implementation-family-tree": {
+    "hash": "5cc007f68b6cc879",
     "lastmod": "2026-11-10"
   },
   "/programming-language-evolution": {
