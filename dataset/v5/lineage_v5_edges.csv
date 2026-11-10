@@ -1,0 +1,491 @@
+from_id,from_name,to_id,to_name,relationship,start_year,end_year,confidence,evidence_source,source_type,notes
+lang:bcpl,BCPL,lang:b,B,influenced,1969,,0.98,https://en.wikipedia.org/wiki/B_(programming_language),wikipedia,BCPL directly inspired B; Ken Thompson acknowledged this lineage
+lang:bcpl,BCPL,lang:b,B,bootstrap_written_in,1969,,0.9,https://en.wikipedia.org/wiki/BCPL,wikipedia,B compiler bootstrapped using BCPL
+lang:b,B,lang:c,C,influenced,1972,,0.98,https://en.wikipedia.org/wiki/C_(programming_language),wikipedia,C evolved directly from B at Bell Labs
+lang:b,B,lang:c,C,bootstrap_written_in,1972,,0.85,https://en.wikipedia.org/wiki/B_(programming_language),wikipedia,Early C compiler bootstrapped from B
+lang:algol,ALGOL,lang:simula,Simula,influenced,1962,,0.95,https://en.wikipedia.org/wiki/Simula,wikipedia,Simula directly extended ALGOL 60
+lang:algol,ALGOL,lang:pascal,Pascal,influenced,1970,,0.95,https://en.wikipedia.org/wiki/Pascal_(programming_language),wikipedia,Wirth based Pascal on ALGOL
+lang:algol,ALGOL,lang:c,C,influenced,1972,,0.85,https://en.wikipedia.org/wiki/C_(programming_language),wikipedia,C adopted block structure and control flow from ALGOL
+lang:simula,Simula,lang:cxx,C++,influenced,1983,,0.95,https://en.wikipedia.org/wiki/C%2B%2B,wikipedia,Stroustrup acknowledged Simula's class system as C++ inspiration
+lang:simula,Simula,lang:smalltalk,Smalltalk,influenced,1972,,0.9,https://en.wikipedia.org/wiki/Smalltalk,wikipedia,Alan Kay cited Simula as major influence
+lang:lisp,Lisp,lang:scheme,Scheme,influenced,1975,,0.98,https://en.wikipedia.org/wiki/Scheme_(programming_language),wikipedia,Scheme is a minimalist Lisp dialect
+lang:lisp,Lisp,lang:common_lisp,Common Lisp,influenced,1984,,0.98,https://en.wikipedia.org/wiki/Common_Lisp,wikipedia,Common Lisp standardized multiple Lisp dialects
+lang:lisp,Lisp,lang:ml,ML,influenced,1973,,0.85,https://en.wikipedia.org/wiki/ML_(programming_language),wikipedia,ML influenced by Lisp in interactive style
+lang:scheme,Scheme,lang:racket,Racket,influenced,1994,,0.98,https://racket-lang.org/,docs,Racket was originally PLT Scheme
+lang:scheme,Scheme,lang:clojure,Clojure,influenced,2007,,0.9,https://clojure.org/about/rationale,docs,Rich Hickey cited Scheme as influence
+lang:scheme,Scheme,lang:elixir,Elixir,influenced,2012,,0.75,https://en.wikipedia.org/wiki/Elixir_(programming_language),wikipedia,Partial influence via macro system design
+lang:ml,ML,lang:sml,Standard ML,influenced,1983,,0.98,https://en.wikipedia.org/wiki/Standard_ML,wikipedia,SML is a direct standardization of ML
+lang:ml,ML,lang:haskell,Haskell,influenced,1990,,0.95,https://en.wikipedia.org/wiki/Haskell,wikipedia,Haskell drew heavily from ML's type system
+lang:ml,ML,lang:ocaml,OCaml,influenced,1996,,0.98,https://en.wikipedia.org/wiki/OCaml,wikipedia,OCaml is an ML dialect with objects added
+lang:ml,ML,lang:fsharp,F#,influenced,2005,,0.95,https://fsharp.org/history/hopl-final/hopl-fsharp.pdf,paper,F# is strongly derived from ML/OCaml
+lang:sml,Standard ML,lang:ocaml,OCaml,influenced,1996,,0.9,https://en.wikipedia.org/wiki/OCaml,wikipedia,OCaml shares SML heritage
+lang:sml,Standard ML,lang:sml,Standard ML,compiler_written_in,1990,,0.9,https://www.smlnj.org/,docs,SML/NJ is self-hosting
+lang:haskell,Haskell,lang:elm,Elm,influenced,2012,,0.95,https://en.wikipedia.org/wiki/Elm_(programming_language),wikipedia,Elm inspired directly by Haskell
+lang:haskell,Haskell,lang:purescript,PureScript,influenced,2013,,0.95,https://en.wikipedia.org/wiki/PureScript,wikipedia,PureScript is Haskell-inspired
+lang:haskell,Haskell,lang:coffeescript,CoffeeScript,influenced,2009,,0.7,https://en.wikipedia.org/wiki/CoffeeScript,wikipedia,"Partial influence, lower confidence"
+lang:haskell,Haskell,lang:rust,Rust,influenced,2015,,0.85,https://doc.rust-lang.org/reference/influences.html,docs,Rust adopted algebraic types and type classes from Haskell
+lang:haskell,Haskell,lang:haskell,Haskell,compiler_written_in,1992,,0.98,https://www.haskell.org/ghc/,docs,"GHC is self-hosting, written in Haskell"
+lang:haskell,Haskell,lang:elm,Elm,compiler_written_in,2012,,0.95,https://github.com/elm/compiler,repository,Elm compiler written in Haskell
+lang:haskell,Haskell,lang:purescript,PureScript,compiler_written_in,2013,,0.95,https://github.com/purescript/purescript,repository,PureScript compiler written in Haskell
+lang:c,C,lang:cxx,C++,influenced,1983,,0.98,https://en.wikipedia.org/wiki/C%2B%2B,wikipedia,C++ is a superset extension of C
+lang:c,C,lang:objective_c,Objective-C,influenced,1984,,0.98,https://en.wikipedia.org/wiki/Objective-C,wikipedia,Objective-C adds Smalltalk messaging to C
+lang:c,C,lang:perl,Perl,runtime_written_in,1987,,0.95,https://www.perl.org/get.html,docs,Perl interpreter written in C
+lang:c,C,lang:lua,Lua,runtime_written_in,1993,,0.98,https://www.lua.org/about.html,docs,Lua written in ANSI C
+lang:c,C,lang:python,Python,runtime_written_in,1991,,0.98,https://github.com/python/cpython,repository,CPython reference implementation in C
+lang:c,C,lang:php,PHP,runtime_written_in,1995,,0.95,https://github.com/php/php-src,repository,PHP Zend Engine written in C
+lang:c,C,lang:ruby,Ruby,runtime_written_in,1995,,0.95,https://github.com/ruby/ruby,repository,MRI/CRuby written in C
+lang:c,C,lang:r,R,runtime_written_in,1993,,0.9,https://www.r-project.org/,docs,R runtime core in C
+lang:c,C,lang:go,Go,compiler_written_in,2009,2015,0.98,https://go.dev/doc/faq#history,docs,"Original Go compiler in C, rewritten in Go in 1.5 (2015)"
+lang:c,C,lang:rust,Rust,compiler_written_in,2006,2010,0.85,https://github.com/iohub/rustboot,repository,Early Rust had C components before OCaml bootstrap compiler
+lang:c,C,lang:ocaml,OCaml,runtime_written_in,1996,,0.95,https://github.com/ocaml/ocaml,repository,OCaml runtime/GC written in C
+lang:c,C,lang:haskell,Haskell,runtime_written_in,1992,,0.9,https://gitlab.haskell.org/ghc/ghc,repository,GHC RTS (runtime system) written in C
+lang:c,C,tool:gcc,GCC,compiler_written_in,1987,2012,0.95,https://gcc.gnu.org/wiki/History,docs,"GCC originally written in C, switched to C++ in 2012"
+lang:c,C,tool:beam,BEAM VM,runtime_written_in,1986,,0.95,https://github.com/erlang/otp,repository,BEAM VM written in C
+lang:c,C,lang:javascript,JavaScript,runtime_written_in,1995,1998,0.85,https://spidermonkey.dev/,docs,Original SpiderMonkey JS engine written in C by Brendan Eich
+lang:c,C,tool:javascriptcore,JavaScriptCore,runtime_written_in,2001,,0.85,https://webkit.org/,docs,JavaScriptCore has C components
+lang:c,C,tool:dotnet_runtime,.NET Runtime,runtime_written_in,2002,,0.9,https://github.com/dotnet/runtime,repository,CoreCLR has C components alongside C++
+lang:c,C,lang:swift,Swift,compiler_written_in,2014,2019,0.85,https://github.com/swiftlang/swift,repository,Early Swift compiler had significant C components
+lang:cxx,C++,lang:cxx,C++,compiler_written_in,1987,,0.95,https://gcc.gnu.org/,docs,GCC and Clang (C++ compilers) written in C++
+lang:cxx,C++,tool:llvm,LLVM,compiler_written_in,2003,,0.98,https://github.com/llvm/llvm-project,repository,LLVM infrastructure written in C++
+lang:cxx,C++,tool:clang,Clang,compiler_written_in,2007,,0.98,https://github.com/llvm/llvm-project,repository,Clang frontend written in C++
+lang:cxx,C++,tool:gcc,GCC,compiler_written_in,2012,,0.95,https://lwn.net/Articles/542457/,article,GCC switched from C to C++ in 2012
+lang:cxx,C++,tool:v8,V8,runtime_written_in,2008,,0.98,https://github.com/v8/v8,repository,V8 JavaScript engine written in C++
+lang:cxx,C++,tool:spidermonkey,SpiderMonkey,runtime_written_in,2000,,0.92,https://spidermonkey.dev/,docs,SpiderMonkey rewritten in C++ (originally C)
+lang:cxx,C++,tool:javascriptcore,JavaScriptCore,runtime_written_in,2001,,0.92,https://webkit.org/,docs,JavaScriptCore written in C++ and Assembly
+lang:cxx,C++,tool:hotspot,HotSpot JVM,runtime_written_in,1999,,0.98,https://github.com/openjdk/jdk,repository,HotSpot JVM written in C++
+lang:cxx,C++,tool:dotnet_runtime,.NET Runtime,runtime_written_in,2002,,0.95,https://github.com/dotnet/runtime,repository,CoreCLR primarily in C++
+lang:cxx,C++,tool:mrustc,mrustc,compiler_written_in,2016,,0.98,https://github.com/thepowersgang/mrustc,repository,mrustc alternative Rust compiler in C++
+lang:cxx,C++,lang:java,Java,influenced,1995,,0.9,https://en.wikipedia.org/wiki/Java_(programming_language),wikipedia,Java adopted C++ syntax and OOP concepts
+lang:cxx,C++,lang:d,D,influenced,2001,,0.95,https://dlang.org/overview.html,docs,D designed as C++ successor
+lang:cxx,C++,lang:rust,Rust,influenced,2015,,0.85,https://doc.rust-lang.org/reference/influences.html,docs,Rust influenced by C++'s systems programming model
+lang:cxx,C++,lang:swift,Swift,compiler_written_in,2014,,0.95,https://github.com/swiftlang/swift,repository,Swift compiler primarily in C++
+lang:cxx,C++,lang:carbon,Carbon,compiler_written_in,2022,,0.9,https://github.com/carbon-language/carbon-lang,repository,Carbon toolchain written in C++
+lang:cxx,C++,lang:dart,Dart,runtime_written_in,2011,,0.95,https://github.com/dart-lang/sdk,repository,Dart SDK/VM written in C++
+lang:cxx,C++,lang:mojo,Mojo,compiler_written_in,2023,,0.9,https://docs.modular.com/mojo/,docs,Mojo toolchain written in C++
+lang:cxx,C++,lang:zig,Zig,compiler_written_in,2016,2022,0.95,https://ziglang.org/news/goodbye-cpp/,docs,Zig originally written in C++ before self-hosting
+lang:pascal,Pascal,lang:ada,Ada,influenced,1980,,0.95,https://en.wikipedia.org/wiki/Ada_(programming_language),wikipedia,Ada designed as Pascal successor for DoD
+lang:pascal,Pascal,lang:d,D,influenced,2001,,0.75,https://dlang.org/overview.html,docs,Pascal influenced D's module system
+lang:pascal,Pascal,lang:pascal,Pascal,compiler_written_in,1974,,0.9,https://en.wikipedia.org/wiki/Pascal_(programming_language),wikipedia,Pascal P-compiler bootstrapped itself
+lang:smalltalk,Smalltalk,lang:objective_c,Objective-C,influenced,1984,,0.98,https://en.wikipedia.org/wiki/Objective-C,wikipedia,Objective-C directly adds Smalltalk message passing to C
+lang:smalltalk,Smalltalk,lang:ruby,Ruby,influenced,1995,,0.92,https://en.wikipedia.org/wiki/Ruby_(programming_language),wikipedia,Matz cited Smalltalk as major influence
+lang:smalltalk,Smalltalk,lang:python,Python,influenced,1991,,0.85,https://en.wikipedia.org/wiki/Python_(programming_language),wikipedia,Python influenced by Smalltalk OOP model
+lang:smalltalk,Smalltalk,lang:scala,Scala,influenced,2003,,0.8,https://en.wikipedia.org/wiki/Scala_(programming_language),wikipedia,Scala influenced by Smalltalk's uniform object model
+lang:smalltalk,Smalltalk,lang:javascript,JavaScript,influenced,1995,,0.85,https://auth0.com/blog/a-brief-history-of-javascript/,article,Brendan Eich cited Self (Smalltalk descendant) as influence
+lang:ocaml,OCaml,lang:rust,Rust,compiler_written_in,2010,2011,0.95,https://github.com/iohub/rustboot,repository,Original Rust compiler (rustboot) written in OCaml
+lang:ocaml,OCaml,lang:ocaml,OCaml,compiler_written_in,1996,,0.98,https://github.com/ocaml/ocaml,repository,OCaml compiler is self-hosting
+lang:ocaml,OCaml,lang:reasonml,ReasonML,influenced,2016,,0.98,https://reasonml.github.io/,docs,ReasonML is OCaml with JS-friendly syntax
+lang:ocaml,OCaml,lang:fsharp,F#,influenced,2005,,0.92,https://fsharp.org/history/hopl-final/hopl-fsharp.pdf,paper,F# initially derived from OCaml
+lang:ocaml,OCaml,lang:fsharp,F#,bootstrap_written_in,2005,2010,0.9,https://fsharp.org/history/hopl-final/hopl-fsharp.pdf,paper,F# initial compiler written in OCaml before self-hosting
+lang:java,Java,lang:java,Java,compiler_written_in,1997,,0.95,https://openjdk.org/groups/compiler/,docs,javac compiler is self-hosting
+lang:java,Java,lang:kotlin,Kotlin,influenced,2016,,0.98,https://kotlinlang.org/docs/faq.html,docs,Kotlin designed to interoperate with Java
+lang:java,Java,lang:kotlin,Kotlin,compiler_written_in,2016,2017,0.9,https://github.com/JetBrains/kotlin,repository,Early Kotlin compiler written in Java before self-hosting
+lang:java,Java,lang:scala,Scala,influenced,2003,,0.98,https://en.wikipedia.org/wiki/Scala_(programming_language),wikipedia,Scala runs on JVM and adopts Java interop
+lang:java,Java,lang:clojure,Clojure,compiler_written_in,2007,,0.95,https://github.com/clojure/clojure/blob/master/src/jvm/clojure/lang/Compiler.java,repository,Clojure compiler written in Java by design
+lang:java,Java,lang:groovy,Groovy,influenced,2003,,0.9,https://en.wikipedia.org/wiki/Apache_Groovy,wikipedia,"Groovy runs on JVM, Java syntax compatible"
+lang:java,Java,lang:groovy,Groovy,compiler_written_in,2003,,0.9,https://github.com/apache/groovy,repository,Groovy compiler written in Java (intentional)
+lang:java,Java,lang:csharp,C#,influenced,2000,,0.85,https://en.wikipedia.org/wiki/C_Sharp_(programming_language),wikipedia,C# influenced by Java's design
+lang:java,Java,lang:d,D,influenced,2001,,0.85,https://dlang.org/overview.html,docs,D influenced by Java's GC and module system
+lang:javascript,JavaScript,lang:typescript,TypeScript,influenced,2012,,0.98,https://www.typescriptlang.org/,docs,TypeScript is a typed superset of JavaScript
+lang:javascript,JavaScript,lang:coffeescript,CoffeeScript,influenced,2009,,0.98,https://en.wikipedia.org/wiki/CoffeeScript,wikipedia,CoffeeScript transpiles to JavaScript
+lang:javascript,JavaScript,lang:dart,Dart,influenced,2011,,0.85,https://en.wikipedia.org/wiki/Dart_(programming_language),wikipedia,Dart influenced by JavaScript ecosystem
+lang:javascript,JavaScript,lang:reasonml,ReasonML,influenced,2016,,0.8,https://reasonml.github.io/,docs,ReasonML targets JS ecosystem
+lang:python,Python,lang:ruby,Ruby,influenced,1995,,0.85,https://en.wikipedia.org/wiki/Ruby_(programming_language),wikipedia,Matz cited Python as one influence
+lang:python,Python,lang:coffeescript,CoffeeScript,influenced,2009,,0.8,https://en.wikipedia.org/wiki/CoffeeScript,wikipedia,CoffeeScript indentation inspired by Python
+lang:python,Python,lang:groovy,Groovy,influenced,2003,,0.8,https://en.wikipedia.org/wiki/Apache_Groovy,wikipedia,Groovy influenced by Python syntax
+lang:python,Python,lang:d,D,influenced,2001,,0.8,https://dlang.org/overview.html,docs,D influenced by Python's expressiveness
+lang:python,Python,lang:mojo,Mojo,influenced,2023,,0.98,https://docs.modular.com/mojo/,docs,Mojo is a Python superset for AI/ML
+lang:python,Python,lang:julia,Julia,influenced,2012,,0.85,https://julialang.org/blog/2012/02/why-we-created-julia/,docs,Julia creators cited Python as key influence
+lang:python,Python,lang:nim,Nim,influenced,2008,,0.85,https://nim-lang.org/documentation.html,docs,Nim syntax inspired by Python
+lang:ruby,Ruby,lang:crystal,Crystal,influenced,2014,,0.98,https://crystal-lang.org/,docs,Crystal uses Ruby-like syntax
+lang:ruby,Ruby,lang:crystal,Crystal,bootstrap_written_in,2014,2015,0.92,https://github.com/crystal-lang/crystal,repository,Crystal compiler bootstrapped from Ruby
+lang:ruby,Ruby,lang:elixir,Elixir,influenced,2012,,0.85,https://en.wikipedia.org/wiki/Elixir_(programming_language),wikipedia,Elixir syntax inspired by Ruby
+lang:ruby,Ruby,lang:coffeescript,CoffeeScript,influenced,2009,,0.85,https://en.wikipedia.org/wiki/CoffeeScript,wikipedia,CoffeeScript inspired by Ruby syntax
+lang:ruby,Ruby,lang:groovy,Groovy,influenced,2003,,0.8,https://en.wikipedia.org/wiki/Apache_Groovy,wikipedia,Groovy influenced by Ruby
+lang:ruby,Ruby,lang:d,D,influenced,2001,,0.75,https://dlang.org/overview.html,docs,D influenced by Ruby's expressiveness
+lang:erlang,Erlang,lang:erlang,Erlang,compiler_written_in,1991,,0.95,https://github.com/erlang/otp,repository,Erlang compiler is self-hosting
+lang:erlang,Erlang,lang:elixir,Elixir,influenced,2012,,0.98,https://elixir-lang.org/,docs,Elixir runs on BEAM and uses Erlang semantics
+lang:erlang,Erlang,lang:elixir,Elixir,bootstrap_written_in,2012,2013,0.92,https://elixir-lang.org/blog/2013/08/08/elixir-design-goals/,docs,Elixir bootstrap compiler written in Erlang
+lang:erlang,Erlang,tool:beam,BEAM VM,runtime_written_in,1986,,0.98,https://github.com/erlang/otp,repository,BEAM VM created for Erlang
+lang:rust,Rust,lang:rust,Rust,compiler_written_in,2011,,0.98,https://github.com/rust-lang/rust,repository,rustc is self-hosting since ~2011
+lang:rust,Rust,tool:spidermonkey,SpiderMonkey,runtime_written_in,2015,,0.88,https://spidermonkey.dev/,docs,Parts of SpiderMonkey rewritten in Rust
+lang:rust,Rust,lang:v,V,influenced,2019,,0.8,https://vlang.io/,docs,V influenced by Rust's safety concepts
+lang:go,Go,lang:go,Go,compiler_written_in,2015,,0.98,https://go.dev/doc/go1.5,docs,Go compiler rewritten in Go in version 1.5
+lang:go,Go,lang:go,Go,runtime_written_in,2015,,0.95,https://go.dev/doc/go1.5,docs,Go runtime also written in Go since 1.5
+lang:go,Go,lang:v,V,influenced,2019,,0.95,https://vlang.io/,docs,V's syntax heavily influenced by Go
+lang:go,Go,lang:typescript,TypeScript,rewritten_in,2025,,0.95,https://devblogs.microsoft.com/typescript/typescript-native-port/,docs,TypeScript 7.0 compiler being rewritten in Go for 10x speedup
+lang:typescript,TypeScript,lang:typescript,TypeScript,compiler_written_in,2012,,0.98,https://github.com/microsoft/TypeScript,repository,"tsc is self-hosting, written in TypeScript"
+lang:kotlin,Kotlin,lang:kotlin,Kotlin,compiler_written_in,2017,,0.95,https://github.com/JetBrains/kotlin,repository,Kotlin compiler became self-hosting; K2 frontend in 2024
+lang:csharp,C#,tool:roslyn,Roslyn,compiler_written_in,2014,,0.98,https://github.com/dotnet/roslyn,repository,Roslyn is self-hosting C# compiler platform
+lang:csharp,C#,lang:csharp,C#,compiler_written_in,2014,,0.95,https://github.com/dotnet/roslyn,repository,C# Roslyn compiler written in C# (self-hosting)
+lang:csharp,C#,tool:dotnet_runtime,.NET Runtime,runtime_written_in,2014,,0.9,https://github.com/dotnet/runtime,repository,Managed parts of CoreCLR written in C#
+lang:csharp,C#,lang:vb_net,Visual Basic .NET,compiler_written_in,2014,,0.9,https://github.com/dotnet/roslyn,repository,Roslyn handles both C# and VB.NET
+lang:fsharp,F#,lang:fsharp,F#,compiler_written_in,2010,,0.92,https://github.com/dotnet/fsharp,repository,F# compiler became self-hosting
+lang:elixir,Elixir,lang:elixir,Elixir,compiler_written_in,2013,,0.92,https://github.com/elixir-lang/elixir,repository,Elixir compiler is self-hosting
+lang:swift,Swift,lang:swift,Swift,compiler_written_in,2019,,0.9,https://forums.swift.org/t/self-hosting-swift/,forum,Swift compiler increasingly written in Swift
+lang:objective_c,Objective-C,lang:swift,Swift,influenced,2014,,0.9,https://en.wikipedia.org/wiki/Swift_(programming_language),wikipedia,Swift designed as Objective-C successor for Apple
+lang:objective_c,Objective-C,lang:cxx,C++,influenced,1986,,0.75,https://en.wikipedia.org/wiki/C%2B%2B,wikipedia,Minor influence on C++ OOP model
+lang:crystal,Crystal,lang:crystal,Crystal,compiler_written_in,2015,,0.95,https://github.com/crystal-lang/crystal,repository,Crystal compiler is self-hosting
+lang:nim,Nim,lang:nim,Nim,compiler_written_in,2008,,0.95,https://github.com/nim-lang/Nim,repository,Nim compiler self-hosting from first release year
+lang:nim,Nim,lang:c,C,transpiled_to,2008,,0.95,https://nim-lang.org/docs/backends.html,docs,Nim primarily transpiles to C
+lang:zig,Zig,lang:zig,Zig,compiler_written_in,2022,,0.95,https://ziglang.org/news/goodbye-cpp/,docs,"Zig became self-hosting in 2022, dropped C++ compiler"
+lang:zig,Zig,lang:zig,Zig,rewritten_in,2022,,0.95,https://ziglang.org/news/goodbye-cpp/,docs,Zig compiler rewritten from C++ to Zig
+lang:d,D,lang:d,D,compiler_written_in,2017,,0.9,https://github.com/dlang/dmd,repository,DMD reference compiler bootstrapped to D
+lang:scala,Scala,lang:scala,Scala,compiler_written_in,2006,,0.95,https://www.scala-lang.org/blog/2015/10/23/dotty-compiler-bootstraps.html,docs,Scala 3 (Dotty) compiler bootstrapped itself
+lang:fortran,Fortran,lang:r,R,runtime_written_in,1993,,0.85,https://cran.r-project.org/doc/FAQ/R-FAQ.html,docs,R has Fortran components for numerical routines
+lang:fortran,Fortran,lang:julia,Julia,influenced,2012,,0.85,https://julialang.org/blog/2012/02/why-we-created-julia/,docs,Julia creators cited Fortran's numeric performance
+lang:julia,Julia,lang:julia,Julia,compiler_written_in,2018,,0.85,https://github.com/JuliaLang/julia,repository,"Julia increasingly self-hosting, parser moving from FemtoLisp"
+lang:machine_code,Machine Code,lang:rust,Rust,bootstrap_written_in,2015,,0.88,https://rustc-dev-guide.rust-lang.org/building/bootstrapping/what-bootstrapping-does.html,docs,Rust bootstrap chain starts at machine code level
+lang:machine_code,Machine Code,lang:swift,Swift,bootstrap_written_in,2022,,0.8,https://github.com/apple/swift/blob/main/SwiftCompilerSources/README.md,repository,Swift bootstrap chain via LLVM
+lang:assembly,Assembly,lang:go,Go,runtime_written_in,2015,,0.95,https://go.dev/doc/go1.5,docs,Go runtime has assembly components
+lang:assembly,Assembly,lang:ocaml,OCaml,runtime_written_in,1996,,0.85,https://github.com/ocaml/ocaml,repository,OCaml runtime has assembly components
+lang:assembly,Assembly,tool:javascriptcore,JavaScriptCore,runtime_written_in,2001,,0.85,https://webkit.org/,docs,JavaScriptCore JIT uses assembly
+lang:assembly,Assembly,tool:dotnet_runtime,.NET Runtime,runtime_written_in,2002,,0.85,https://github.com/dotnet/runtime,repository,CoreCLR JIT generates and uses assembly
+lang:perl,Perl,lang:php,PHP,influenced,1995,,0.9,https://www.php.net/manual/en/history.php,docs,PHP originally scripting layer inspired by Perl
+lang:perl,Perl,lang:ruby,Ruby,influenced,1995,,0.9,https://en.wikipedia.org/wiki/Ruby_(programming_language),wikipedia,Matz cited Perl as major influence on Ruby
+tool:llvm,LLVM,lang:swift,Swift,compiler_written_in,2014,,0.95,https://en.wikipedia.org/wiki/Swift_(programming_language),wikipedia,Swift uses LLVM as compiler backend
+tool:llvm,LLVM,lang:julia,Julia,runtime_written_in,2012,,0.95,https://julialang.org/,docs,Julia uses LLVM for JIT compilation
+tool:llvm,LLVM,lang:rust,Rust,compiler_written_in,2011,,0.95,https://github.com/rust-lang/rust,repository,rustc uses LLVM as backend
+tool:llvm,LLVM,lang:crystal,Crystal,compiler_written_in,2014,,0.92,https://crystal-lang.org/,docs,Crystal compiler uses LLVM backend
+tool:llvm,LLVM,lang:zig,Zig,compiler_written_in,2016,2022,0.92,https://en.wikipedia.org/wiki/Zig_(programming_language),wikipedia,"Early Zig used LLVM, now has own backend option"
+tool:llvm,LLVM,lang:mojo,Mojo,compiler_written_in,2023,,0.92,https://docs.modular.com/mojo/,docs,Mojo uses MLIR/LLVM backend
+tool:beam,BEAM VM,lang:elixir,Elixir,runtime_written_in,2012,,0.98,https://elixir-lang.org/,docs,Elixir runs on BEAM VM
+tool:chez_scheme,Chez Scheme,lang:racket,Racket,runtime_written_in,2019,,0.95,https://blog.racket-lang.org/2019/01/racket-on-chez-status.html,docs,Racket migrated backend to Chez Scheme in 2019
+tool:femtolisp,FemtoLisp,lang:julia,Julia,bootstrap_written_in,2012,2024,0.9,https://discourse.julialang.org/t/the-role-of-femtolisp-in-julia/,forum,Julia parser frontend was FemtoLisp until v1.10
+lang:common_lisp,Common Lisp,lang:common_lisp,Common Lisp,compiler_written_in,1999,,0.95,https://www.sbcl.org/,docs,SBCL is self-hosting Common Lisp implementation
+lang:racket,Racket,lang:racket,Racket,compiler_written_in,2010,,0.9,https://github.com/racket/racket,repository,Racket compiler is self-hosting
+lang:ada,Ada,lang:ada,Ada,compiler_written_in,1995,,0.9,https://en.wikipedia.org/wiki/GNAT,wikipedia,GNAT (GCC Ada) is self-hosting
+lang:fortran,Fortran,lang:fortran,Fortran,compiler_written_in,1970,,0.85,https://en.wikipedia.org/wiki/Fortran,wikipedia,Modern Fortran compilers (gfortran) are self-hosting
+lang:coffeescript,CoffeeScript,lang:coffeescript,CoffeeScript,compiler_written_in,2010,,0.9,https://github.com/jashkenas/coffeescript,repository,CoffeeScript compiler is self-hosting
+lang:coffeescript,CoffeeScript,lang:javascript,JavaScript,transpiled_to,2009,,0.98,https://coffeescript.org/,docs,CoffeeScript compiles to JavaScript
+lang:elm,Elm,lang:javascript,JavaScript,transpiled_to,2012,,0.98,https://elm-lang.org/,docs,Elm compiles to JavaScript
+lang:purescript,PureScript,lang:javascript,JavaScript,transpiled_to,2013,,0.98,https://www.purescript.org/,docs,PureScript compiles to JavaScript
+lang:reasonml,ReasonML,lang:javascript,JavaScript,transpiled_to,2016,,0.9,https://reasonml.github.io/,docs,ReasonML compiles to JS via BuckleScript/Melange
+lang:nim,Nim,lang:javascript,JavaScript,transpiled_to,2014,,0.85,https://nim-lang.org/docs/backends.html,docs,Nim also supports JS backend
+lang:dart,Dart,lang:javascript,JavaScript,transpiled_to,2013,,0.9,https://dart.dev/web,docs,Dart2JS compiles Dart to JavaScript
+lang:v,V,lang:c,C,transpiled_to,2019,,0.95,https://vlang.io/,docs,V primarily transpiles to C
+lang:haskell,Haskell,lang:fsharp,F#,influenced,2005,,0.8,https://fsharp.org/history/hopl-final/hopl-fsharp.pdf,paper,F# influenced by Haskell's functional patterns
+lang:cxx,C++,lang:csharp,C#,influenced,2000,,0.85,https://en.wikipedia.org/wiki/C_Sharp_(programming_language),wikipedia,C# influenced by C++ syntax
+lang:c,C,lang:ada,Ada,influenced,1980,,0.8,https://en.wikipedia.org/wiki/Ada_(programming_language),wikipedia,Ada influenced by C's systems programming
+lang:lisp,Lisp,lang:julia,Julia,influenced,2012,,0.8,https://julialang.org/blog/2012/02/why-we-created-julia/,docs,Julia uses Lisp-style macros
+lang:flow_matic,FLOW-MATIC,lang:cobol,COBOL,influenced,1959,,0.97,https://en.wikipedia.org/wiki/COBOL,wikipedia,FLOW-MATIC was the primary inspiration for COBOL's English-like syntax; Grace Hopper served on the CODASYL committee
+lang:comtran,COMTRAN,lang:cobol,COBOL,influenced,1959,,0.92,https://en.wikipedia.org/wiki/COBOL,wikipedia,IBM's COMTRAN contributed data description concepts to COBOL design
+lang:fortran,Fortran,lang:cobol,COBOL,influenced,1959,,0.82,https://en.wikipedia.org/wiki/COBOL,wikipedia,FORTRAN influenced COBOL's arithmetic and data handling capabilities
+lang:fortran,Fortran,lang:prolog,Prolog,compiler_written_in,1972,1977,0.91,https://en.wikipedia.org/wiki/Prolog,wikipedia,First Prolog interpreter (1972) written in Fortran by Gerard Battani and Henri Meloni at Aix-Marseille
+lang:haskell,Haskell,tool:ghc,GHC,compiler_written_in,1990,,0.99,https://en.wikipedia.org/wiki/Glasgow_Haskell_Compiler,wikipedia,GHC is written in Haskell; start year normalized to Haskell first-release year for dataset chronology.
+lang:c,C,tool:ghc,GHC,runtime_written_in,1989,,0.97,https://en.wikipedia.org/wiki/Glasgow_Haskell_Compiler,wikipedia,GHC's runtime system (RTS) is written in C and C--
+lang:planner,Planner,lang:prolog,Prolog,influenced,1972,,0.93,https://en.wikipedia.org/wiki/Prolog,wikipedia,"Planner (Carl Hewitt, 1969) directly inspired Prolog's logic programming paradigm; listed as influence on Wikipedia"
+lang:lazy_ml,Lazy ML,tool:ghc,GHC,bootstrap_written_in,1989,1989,0.95,https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/history.pdf,paper,Original GHC prototype written in Lazy ML by Kevin Hammond in 1989 before the Haskell rewrite
+lang:newsqueak,Newsqueak,lang:go,Go,influenced,2007,,0.95,https://en.wikipedia.org/wiki/Go_(programming_language),wikipedia,Go's channel-based concurrency directly from Newsqueak
+lang:limbo,Limbo,lang:go,Go,influenced,2007,,0.95,https://en.wikipedia.org/wiki/Go_(programming_language),wikipedia,Limbo's concurrency model influenced Go
+lang:alef,Alef,lang:go,Go,influenced,2007,,0.92,https://en.wikipedia.org/wiki/Go_(programming_language),wikipedia,Alef's CSP-style concurrency influenced Go
+lang:oberon2,Oberon-2,lang:go,Go,influenced,2007,,0.88,https://en.wikipedia.org/wiki/Go_(programming_language),wikipedia,Oberon-2 influenced Go's package system and declarations
+lang:oberon,Oberon,lang:go,Go,influenced,2007,,0.85,https://en.wikipedia.org/wiki/Go_(programming_language),wikipedia,Oberon influenced Go's module/package design
+lang:pascal,Pascal,lang:go,Go,influenced,2007,,0.82,https://en.wikipedia.org/wiki/Go_(programming_language),wikipedia,Pascal influenced Go's declaration syntax
+lang:smalltalk,Smalltalk,lang:go,Go,influenced,2007,,0.8,https://en.wikipedia.org/wiki/Go_(programming_language),wikipedia,Smalltalk influenced Go's interface system
+lang:bcpl,BCPL,lang:go,Go,influenced,2007,,0.83,https://en.wikipedia.org/wiki/Go_(programming_language),wikipedia,BCPL influenced Go via C lineage
+lang:cyclone,Cyclone,lang:rust,Rust,influenced,2006,,0.95,https://en.wikipedia.org/wiki/Rust_(programming_language),wikipedia,Cyclone's region-based memory directly inspired Rust's ownership system
+lang:clu,CLU,lang:rust,Rust,influenced,2006,,0.87,https://en.wikipedia.org/wiki/Rust_(programming_language),wikipedia,CLU influenced Rust's iterator protocol and exception handling
+lang:alef,Alef,lang:rust,Rust,influenced,2006,,0.83,https://en.wikipedia.org/wiki/Rust_(programming_language),wikipedia,Alef influenced Rust's concurrency model
+lang:limbo,Limbo,lang:rust,Rust,influenced,2006,,0.82,https://en.wikipedia.org/wiki/Rust_(programming_language),wikipedia,Limbo influenced Rust's concurrency design
+lang:ml,ML,lang:rust,Rust,influenced,2006,,0.9,https://en.wikipedia.org/wiki/Rust_(programming_language),wikipedia,ML family influenced Rust's type system and pattern matching
+lang:erlang,Erlang,lang:rust,Rust,influenced,2006,,0.85,https://en.wikipedia.org/wiki/Rust_(programming_language),wikipedia,Erlang influenced Rust's actor-style concurrency model
+lang:scheme,Scheme,lang:rust,Rust,influenced,2006,,0.82,https://en.wikipedia.org/wiki/Rust_(programming_language),wikipedia,Scheme influenced Rust's macro and metaprogramming system
+lang:swift,Swift,lang:rust,Rust,influenced,2014,,0.8,https://en.wikipedia.org/wiki/Rust_(programming_language),wikipedia,Swift and Rust mutually influenced each other
+lang:elm,Elm,lang:rust,Rust,influenced,2012,,0.8,https://en.wikipedia.org/wiki/Rust_(programming_language),wikipedia,Elm influenced Rust's functional style and error handling
+lang:rust,Rust,lang:gleam,Gleam,influenced,2019,,0.9,https://gleam.run/,docs,Gleam's type system and tooling heavily inspired by Rust
+lang:rust,Rust,lang:zig,Zig,influenced,2016,,0.88,https://ziglang.org/,docs,Zig influenced by Rust's safety and systems programming approach
+lang:rust,Rust,lang:swift,Swift,influenced,2014,,0.83,https://en.wikipedia.org/wiki/Rust_(programming_language),wikipedia,Rust influenced Swift's memory safety features
+lang:abc,ABC,lang:python,Python,influenced,1989,,0.99,https://en.wikipedia.org/wiki/Python_(programming_language),wikipedia,Python's primary inspiration - Guido worked on ABC before Python
+lang:modula3,Modula-3,lang:python,Python,influenced,1989,,0.92,https://en.wikipedia.org/wiki/Python_(programming_language),wikipedia,Modula-3 influenced Python's module system and exception handling
+lang:clu,CLU,lang:python,Python,influenced,1989,,0.88,https://en.wikipedia.org/wiki/Python_(programming_language),wikipedia,CLU influenced Python's iterators and call-by-object semantics
+lang:icon,Icon,lang:python,Python,influenced,1989,,0.85,https://en.wikipedia.org/wiki/Python_(programming_language),wikipedia,Icon influenced Python's generators and string handling
+lang:dylan,Dylan,lang:python,Python,influenced,1992,,0.82,https://en.wikipedia.org/wiki/Python_(programming_language),wikipedia,Dylan influenced Python's object model
+lang:haskell,Haskell,lang:python,Python,influenced,2000,,0.87,https://en.wikipedia.org/wiki/Python_(programming_language),wikipedia,Haskell influenced Python list comprehensions and functional features; start year aligned with Python 2.0 list comprehensions.
+lang:sml,Standard ML,lang:python,Python,influenced,1989,,0.83,https://en.wikipedia.org/wiki/Python_(programming_language),wikipedia,Standard ML influenced Python's type concepts
+lang:perl,Perl,lang:python,Python,influenced,1989,,0.85,https://en.wikipedia.org/wiki/Python_(programming_language),wikipedia,Perl influenced Python's regex and string processing
+lang:c,C,lang:python,Python,influenced,1989,,0.9,https://en.wikipedia.org/wiki/Python_(programming_language),wikipedia,C influenced Python's syntax and CPython implementation
+lang:python,Python,lang:elixir,Elixir,influenced,2012,,0.82,https://en.wikipedia.org/wiki/Elixir_(programming_language),wikipedia,Elixir influenced by Python's readability
+lang:pascal,Pascal,lang:modula2,Modula-2,influenced,1978,,0.97,https://en.wikipedia.org/wiki/Modula-2,wikipedia,Modula-2 is direct successor to Pascal by Niklaus Wirth
+lang:modula2,Modula-2,lang:modula3,Modula-3,influenced,1988,,0.97,https://en.wikipedia.org/wiki/Modula-3,wikipedia,Modula-3 extends Modula-2
+lang:modula2,Modula-2,lang:oberon,Oberon,influenced,1987,,0.97,https://en.wikipedia.org/wiki/Oberon_(programming_language),wikipedia,Oberon designed as successor to Modula-2
+lang:oberon,Oberon,lang:oberon2,Oberon-2,influenced,1991,,0.98,https://en.wikipedia.org/wiki/Oberon-2,wikipedia,Oberon-2 extends Oberon with type-bound procedures
+lang:modula2,Modula-2,lang:go,Go,influenced,2007,,0.87,https://en.wikipedia.org/wiki/Go_(programming_language),wikipedia,Go's package system influenced by Modula-2
+lang:java,Java,lang:javascript,JavaScript,influenced,1995,,0.87,https://en.wikipedia.org/wiki/JavaScript,wikipedia,Java influenced JavaScript's name and some syntax by Netscape mandate
+lang:scheme,Scheme,lang:javascript,JavaScript,influenced,1995,,0.92,https://en.wikipedia.org/wiki/JavaScript,wikipedia,Scheme influenced JavaScript's first-class functions and closures
+lang:csharp,C#,lang:typescript,TypeScript,influenced,2012,,0.93,https://en.wikipedia.org/wiki/TypeScript,wikipedia,"TypeScript designed by Anders Hejlsberg, who created C#"
+lang:java,Java,lang:dart,Dart,influenced,2011,,0.85,https://en.wikipedia.org/wiki/Dart_(programming_language),wikipedia,Dart influenced by Java's class-based OOP
+lang:python,Python,lang:dart,Dart,influenced,2011,,0.8,https://en.wikipedia.org/wiki/Dart_(programming_language),wikipedia,Dart influenced by Python's optional typing
+lang:self,Self,lang:javascript,JavaScript,influenced,1995,,0.93,https://en.wikipedia.org/wiki/JavaScript,wikipedia,Self's prototype-based inheritance directly used in JavaScript
+lang:miranda,Miranda,lang:haskell,Haskell,influenced,1990,,0.97,https://en.wikipedia.org/wiki/Haskell,wikipedia,Miranda's lazy evaluation and type classes directly inspired Haskell
+lang:simula,Simula,lang:java,Java,influenced,1995,,0.85,https://en.wikipedia.org/wiki/Java_(programming_language),wikipedia,Java's OOP model traces through Simula lineage
+lang:ada,Ada,lang:python,Python,influenced,1989,,0.82,https://en.wikipedia.org/wiki/Python_(programming_language),wikipedia,Ada influenced Python's exception handling model
+lang:ada,Ada,lang:java,Java,influenced,1995,,0.8,https://en.wikipedia.org/wiki/Java_(programming_language),wikipedia,Java's checked exceptions influenced by Ada
+lang:smalltalk,Smalltalk,lang:java,Java,influenced,1995,,0.87,https://en.wikipedia.org/wiki/Java_(programming_language),wikipedia,Smalltalk influenced Java's OOP design
+lang:lisp,Lisp,lang:clojure,Clojure,influenced,2007,,0.97,https://en.wikipedia.org/wiki/Clojure,wikipedia,Clojure is a Lisp dialect on the JVM
+lang:lisp,Lisp,lang:ruby,Ruby,influenced,1993,,0.87,https://en.wikipedia.org/wiki/Ruby_(programming_language),wikipedia,Ruby influenced by Lisp's expression-oriented style
+lang:lisp,Lisp,lang:python,Python,influenced,1989,,0.87,https://en.wikipedia.org/wiki/Python_(programming_language),wikipedia,"Lisp influenced Python's functional features (map, filter, reduce)"
+lang:lisp,Lisp,lang:haskell,Haskell,influenced,1990,,0.85,https://en.wikipedia.org/wiki/Haskell,wikipedia,Lisp influenced Haskell's functional paradigm
+lang:lisp,Lisp,lang:javascript,JavaScript,influenced,1995,,0.88,https://en.wikipedia.org/wiki/JavaScript,wikipedia,Brendan Eich originally aimed for Scheme in the browser
+lang:common_lisp,Common Lisp,lang:clojure,Clojure,influenced,2007,,0.9,https://en.wikipedia.org/wiki/Clojure,wikipedia,Clojure influenced by Common Lisp's pragmatic Lisp approach
+lang:fortran,Fortran,lang:c,C,influenced,1972,,0.83,https://en.wikipedia.org/wiki/C_(programming_language),wikipedia,BCPL and Fortran both influenced C's design
+lang:c,C,lang:d,D,influenced,2001,,0.9,https://en.wikipedia.org/wiki/D_(programming_language),wikipedia,D designed as improved C/C++
+lang:c,C,lang:zig,Zig,influenced,2016,,0.93,https://ziglang.org/,docs,Zig designed as modern C replacement
+lang:c,C,lang:go,Go,influenced,2007,,0.93,https://en.wikipedia.org/wiki/Go_(programming_language),wikipedia,Go's syntax influenced by C
+lang:haskell,Haskell,lang:scala,Scala,influenced,2004,,0.9,https://en.wikipedia.org/wiki/Scala_(programming_language),wikipedia,Scala's type system influenced by Haskell
+lang:scala,Scala,lang:kotlin,Kotlin,influenced,2011,,0.87,https://en.wikipedia.org/wiki/Kotlin_(programming_language),wikipedia,Kotlin influenced by Scala's features on JVM
+lang:erlang,Erlang,lang:gleam,Gleam,influenced,2019,,0.92,https://gleam.run/,docs,Gleam runs on Erlang VM
+lang:smalltalk,Smalltalk,lang:coffeescript,CoffeeScript,influenced,2009,,0.8,https://en.wikipedia.org/wiki/CoffeeScript,wikipedia,CoffeeScript influenced by Ruby and Smalltalk's expressiveness
+lang:haskell,Haskell,lang:swift,Swift,influenced,2014,,0.85,https://en.wikipedia.org/wiki/Swift_(programming_language),wikipedia,Swift influenced by Haskell's type system
+lang:python,Python,lang:swift,Swift,influenced,2014,,0.82,https://en.wikipedia.org/wiki/Swift_(programming_language),wikipedia,Swift influenced by Python's readability
+lang:groovy,Groovy,lang:kotlin,Kotlin,influenced,2011,,0.83,https://en.wikipedia.org/wiki/Kotlin_(programming_language),wikipedia,Kotlin influenced by Groovy's scripting capabilities
+lang:csharp,C#,lang:dart,Dart,influenced,2011,,0.87,https://en.wikipedia.org/wiki/Dart_(programming_language),wikipedia,Dart influenced by C#'s class-based design
+lang:c,C,lang:v,V,influenced,2019,,0.88,https://vlang.io/,docs,V influenced by C and Go for systems programming
+lang:ruby,Ruby,lang:julia,Julia,influenced,2012,,0.82,https://en.wikipedia.org/wiki/Julia_(programming_language),wikipedia,Julia influenced by Ruby's syntax expressiveness
+lang:prolog,Prolog,lang:erlang,Erlang,influenced,1986,,0.9,https://en.wikipedia.org/wiki/Erlang_(programming_language),wikipedia,"Erlang originally implemented in Prolog, shares its sequential subset"
+lang:haskell,Haskell,lang:idris,Idris,influenced,2011,,0.95,https://en.wikipedia.org/wiki/Idris_(programming_language),wikipedia,Idris extends Haskell with dependent types
+lang:haskell,Haskell,lang:agda,Agda,influenced,2007,,0.9,https://en.wikipedia.org/wiki/Agda_(programming_language),wikipedia,Agda influenced by Haskell's type theory
+lang:matlab,MATLAB,lang:julia,Julia,influenced,2012,,0.9,https://en.wikipedia.org/wiki/Julia_(programming_language),wikipedia,Julia influenced by MATLAB's scientific computing
+lang:pascal,Pascal,lang:oberon,Oberon,influenced,1987,,0.95,https://en.wikipedia.org/wiki/Oberon_(programming_language),wikipedia,Oberon designed by Pascal's creator Wirth as successor
+lang:typescript,TypeScript,lang:dart,Dart,influenced,2012,,0.8,https://en.wikipedia.org/wiki/Dart_(programming_language),wikipedia,Dart and TypeScript are contemporaries in typed JS space
+lang:common_lisp,Common Lisp,lang:racket,Racket,influenced,1994,,0.82,https://en.wikipedia.org/wiki/Racket_(programming_language),wikipedia,Racket influenced by Common Lisp's practical features
+lang:c,C,lang:julia,Julia,runtime_written_in,2012,,0.9,https://en.wikipedia.org/wiki/Julia_(programming_language),wikipedia,Julia runtime partially written in C
+lang:cxx,C++,lang:julia,Julia,runtime_written_in,2012,,0.9,https://en.wikipedia.org/wiki/Julia_(programming_language),wikipedia,Julia runtime includes C++ components
+lang:c,C,lang:erlang,Erlang,runtime_written_in,1986,,0.95,https://en.wikipedia.org/wiki/Erlang_(programming_language),wikipedia,Erlang VM (BEAM) written in C
+lang:erlang,Erlang,lang:elixir,Elixir,runtime_written_in,2012,,0.99,https://en.wikipedia.org/wiki/Elixir_(programming_language),wikipedia,Elixir runs on BEAM (Erlang VM)
+lang:java,Java,lang:kotlin,Kotlin,runtime_written_in,2011,,0.97,https://en.wikipedia.org/wiki/Kotlin_(programming_language),wikipedia,Kotlin runs on JVM
+lang:python,Python,lang:cython,Cython,influenced,2007,,0.97,https://en.wikipedia.org/wiki/Cython,wikipedia,Cython is superset of Python with C extensions
+lang:c,C,lang:cython,Cython,runtime_written_in,2007,,0.9,https://en.wikipedia.org/wiki/Cython,wikipedia,Cython compiles to C
+lang:pascal,Pascal,lang:delphi,Delphi,influenced,1995,,0.99,https://en.wikipedia.org/wiki/Delphi_(software),wikipedia,"Delphi is Object Pascal, direct extension of Pascal"
+lang:delphi,Delphi,lang:csharp,C#,influenced,2000,,0.88,https://en.wikipedia.org/wiki/C_Sharp_(programming_language),wikipedia,Anders Hejlsberg created both Delphi and C#
+lang:apl,APL,lang:j,J,influenced,1990,,0.98,https://en.wikipedia.org/wiki/J_(programming_language),wikipedia,J is successor to APL by Kenneth Iverson
+lang:apl,APL,lang:matlab,MATLAB,influenced,1984,,0.87,https://en.wikipedia.org/wiki/MATLAB,wikipedia,MATLAB's matrix operations inspired by APL
+lang:apl,APL,lang:julia,Julia,influenced,2012,,0.83,https://en.wikipedia.org/wiki/Julia_(programming_language),wikipedia,Julia's array operations influenced by APL
+lang:apl,APL,lang:python,Python,influenced,1989,,0.8,https://en.wikipedia.org/wiki/Python_(programming_language),wikipedia,APL influenced Python's list comprehensions concept
+lang:prolog,Prolog,lang:mercury,Mercury,influenced,1995,,0.97,https://en.wikipedia.org/wiki/Mercury_(programming_language),wikipedia,Mercury is statically-typed descendant of Prolog
+lang:ml,ML,lang:mercury,Mercury,influenced,1995,,0.87,https://en.wikipedia.org/wiki/Mercury_(programming_language),wikipedia,Mercury influenced by ML's static type system
+lang:fortran,Fortran,lang:matlab,MATLAB,influenced,1984,,0.9,https://en.wikipedia.org/wiki/MATLAB,wikipedia,MATLAB's numerical computing tradition from Fortran
+lang:bcpl,BCPL,lang:c,C,influenced,1972,,0.97,https://en.wikipedia.org/wiki/C_(programming_language),wikipedia,C directly descended from BCPL via B language
+lang:algol,ALGOL,lang:cxx,C++,influenced,1979,,0.82,https://en.wikipedia.org/wiki/C%2B%2B,wikipedia,C++ traces structured programming lineage to ALGOL
+lang:haskell,Haskell,lang:kotlin,Kotlin,influenced,2011,,0.83,https://en.wikipedia.org/wiki/Kotlin_(programming_language),wikipedia,Kotlin's functional features influenced by Haskell
+lang:haskell,Haskell,lang:typescript,TypeScript,influenced,2012,,0.82,https://en.wikipedia.org/wiki/TypeScript,wikipedia,TypeScript's algebraic types influenced by Haskell/ML
+lang:go,Go,lang:crystal,Crystal,influenced,2014,,0.82,https://en.wikipedia.org/wiki/Crystal_(programming_language),wikipedia,Crystal influenced by Go's concurrency model
+lang:racket,Racket,lang:julia,Julia,influenced,2012,,0.82,https://en.wikipedia.org/wiki/Julia_(programming_language),wikipedia,Julia influenced by Racket's macro system
+lang:pascal,Pascal,lang:nim,Nim,influenced,2008,,0.85,https://en.wikipedia.org/wiki/Nim_(programming_language),wikipedia,Nim influenced by Pascal's syntax
+lang:ada,Ada,lang:nim,Nim,influenced,2008,,0.8,https://en.wikipedia.org/wiki/Nim_(programming_language),wikipedia,Nim influenced by Ada's systems programming features
+lang:c,C,lang:perl,Perl,influenced,1987,,0.9,https://en.wikipedia.org/wiki/Perl,wikipedia,Perl influenced by C's syntax and operators
+lang:c,C,lang:php,PHP,influenced,1994,,0.87,https://en.wikipedia.org/wiki/PHP,wikipedia,PHP influenced by C's syntax
+lang:java,Java,lang:php,PHP,influenced,2004,,0.8,https://en.wikipedia.org/wiki/PHP,wikipedia,PHP 5 object model drew influence from Java-style object-oriented programming.
+lang:lisp,Lisp,lang:r,R,influenced,1993,,0.85,https://en.wikipedia.org/wiki/R_(programming_language),wikipedia,R's functional programming influenced by Lisp/Scheme
+lang:algol,ALGOL,lang:algol68,ALGOL 68,influenced,1968,,0.99,https://en.wikipedia.org/wiki/ALGOL_68,wikipedia,ALGOL 68 is revision of ALGOL 60
+lang:algol68,ALGOL 68,lang:c,C,influenced,1972,,0.85,https://en.wikipedia.org/wiki/C_(programming_language),wikipedia,ALGOL 68 influenced C's structured programming
+lang:algol68,ALGOL 68,lang:python,Python,influenced,1989,,0.82,https://en.wikipedia.org/wiki/Python_(programming_language),wikipedia,ALGOL 68 influenced Python via Guido's Dutch computing tradition
+lang:cobol,COBOL,lang:pl1,PL/I,influenced,1964,,0.82,https://en.wikipedia.org/wiki/PL/I,wikipedia,PL/I incorporated COBOL's data processing features
+lang:fortran,Fortran,lang:pl1,PL/I,influenced,1964,,0.87,https://en.wikipedia.org/wiki/PL/I,wikipedia,PL/I incorporated Fortran's scientific computing features
+lang:c,C,lang:bash,Bash,influenced,1989,,0.85,https://en.wikipedia.org/wiki/Bash_(Unix_shell),wikipedia,Bash influenced by C's operators and syntax
+lang:sh,Bourne Shell,lang:bash,Bash,influenced,1989,,0.97,https://en.wikipedia.org/wiki/Bash_(Unix_shell),wikipedia,Bash is GNU replacement and superset of Bourne Shell
+lang:c,C,lang:bash,Bash,runtime_written_in,1989,,0.99,https://en.wikipedia.org/wiki/Bash_(Unix_shell),wikipedia,Bash interpreter written in C
+lang:lisp,Lisp,lang:tcl,Tcl,influenced,1988,,0.8,https://en.wikipedia.org/wiki/Tcl,wikipedia,Tcl influenced by Lisp's command structure
+lang:c,C,lang:awk,AWK,influenced,1977,,0.88,https://en.wikipedia.org/wiki/AWK,wikipedia,AWK influenced by C syntax
+lang:awk,AWK,lang:perl,Perl,influenced,1987,,0.9,https://en.wikipedia.org/wiki/Perl,wikipedia,Perl influenced by AWK's text processing paradigm
+lang:sh,Bourne Shell,lang:perl,Perl,influenced,1987,,0.85,https://en.wikipedia.org/wiki/Perl,wikipedia,Perl influenced by shell scripting
+lang:lua,Lua,lang:luajit,LuaJIT,influenced,2005,,0.99,https://en.wikipedia.org/wiki/LuaJIT,wikipedia,LuaJIT is JIT implementation of Lua
+lang:s,S,lang:r,R,influenced,1993,,0.99,https://en.wikipedia.org/wiki/R_(programming_language),wikipedia,R designed as open-source implementation of S
+lang:typescript,TypeScript,lang:angular,Angular,influenced,2016,,0.9,https://en.wikipedia.org/wiki/Angular_(web_framework),wikipedia,Angular 2+ written in TypeScript
+lang:lisp,Lisp,lang:scala,Scala,influenced,2004,,0.82,https://en.wikipedia.org/wiki/Scala_(programming_language),wikipedia,Scala's S-expressions and macros influenced by Lisp
+lang:smalltalk,Smalltalk,lang:pharo,Pharo,influenced,2008,,0.99,https://en.wikipedia.org/wiki/Pharo,wikipedia,Pharo is Smalltalk dialect
+lang:smalltalk,Smalltalk,lang:groovy,Groovy,influenced,2003,,0.83,https://en.wikipedia.org/wiki/Apache_Groovy,wikipedia,Groovy influenced by Smalltalk's dynamic dispatch
+lang:scheme,Scheme,lang:guile,GNU Guile,influenced,1993,,0.98,https://en.wikipedia.org/wiki/GNU_Guile,wikipedia,GNU Guile is Scheme implementation
+lang:python,Python,lang:mypy,mypy,influenced,2012,,0.97,https://mypy-lang.org/,docs,Mypy is optional static type checker for Python
+lang:pascal,Pascal,lang:freepascal,Free Pascal,influenced,1993,,0.99,https://en.wikipedia.org/wiki/Free_Pascal,wikipedia,Free Pascal is open-source Pascal compiler
+lang:fortran,Fortran,lang:fortran95,Fortran 95,influenced,1997,,0.99,https://en.wikipedia.org/wiki/Fortran_95,wikipedia,Fortran 95 is revision of Fortran 90
+lang:ruby,Ruby,lang:crystal,Crystal,compiler_written_in,2014,,0.9,https://en.wikipedia.org/wiki/Crystal_(programming_language),wikipedia,Crystal compiler bootstrapped from Ruby initially
+lang:assembly,Assembly,lang:flow_matic,FLOW-MATIC,compiler_written_in,1955,,0.9,https://en.wikipedia.org/wiki/FLOW-MATIC,wikipedia,FLOW-MATIC compiler written in assembly for UNIVAC I
+lang:assembly,Assembly,lang:comtran,COMTRAN,compiler_written_in,1957,,0.85,https://en.wikipedia.org/wiki/COMTRAN,wikipedia,COMTRAN compiler written in assembly for IBM 702
+lang:assembly,Assembly,lang:algol,ALGOL,compiler_written_in,1960,,0.9,https://en.wikipedia.org/wiki/ALGOL_60,wikipedia,Early ALGOL 60 compilers written in assembly
+lang:assembly,Assembly,lang:lisp,Lisp,compiler_written_in,1958,,0.95,https://en.wikipedia.org/wiki/Lisp_(programming_language),wikipedia,Original Lisp interpreter written in IBM 704 assembly by Steve Russell
+lang:assembly,Assembly,lang:cobol,COBOL,compiler_written_in,1959,,0.9,https://en.wikipedia.org/wiki/COBOL,wikipedia,Early COBOL compilers written in assembly; GnuCOBOL later written in C
+lang:algol,ALGOL,lang:simula,Simula,compiler_written_in,1962,,0.9,https://en.wikipedia.org/wiki/Simula,wikipedia,Simula 67 compiler implemented in ALGOL
+lang:assembly,Assembly,lang:pl1,PL/I,compiler_written_in,1964,,0.85,https://en.wikipedia.org/wiki/PL/I,wikipedia,Early PL/I compilers for IBM System/360 written in assembly
+lang:c,C,lang:apl,APL,runtime_written_in,1973,,0.9,https://en.wikipedia.org/wiki/Dyalog_APL,wikipedia,Dyalog APL runtime written in C
+lang:assembly,Assembly,lang:algol68,ALGOL 68,compiler_written_in,1968,,0.85,https://en.wikipedia.org/wiki/ALGOL_68,wikipedia,Early ALGOL 68 compilers written in assembly
+lang:lisp,Lisp,lang:planner,Planner,runtime_written_in,1969,,0.9,https://en.wikipedia.org/wiki/Planner_(programming_language),wikipedia,Planner was implemented as a Lisp system at MIT
+lang:c,C,lang:smalltalk,Smalltalk,runtime_written_in,1995,,0.95,https://en.wikipedia.org/wiki/Squeak,wikipedia,Squeak and Pharo VMs (primary Smalltalk implementations) written in C
+lang:c,C,lang:ml,ML,runtime_written_in,1984,,0.9,https://en.wikipedia.org/wiki/Standard_ML,wikipedia,Standard ML of New Jersey (SML/NJ) runtime written in C
+lang:c,C,lang:scheme,Scheme,runtime_written_in,1984,,0.95,https://en.wikipedia.org/wiki/MIT_Scheme,wikipedia,MIT Scheme runtime written in C
+lang:assembly,Assembly,lang:clu,CLU,compiler_written_in,1975,,0.85,https://en.wikipedia.org/wiki/CLU_(programming_language),wikipedia,CLU compiler at MIT written in assembly and PDP-10 machine code
+lang:c,C,lang:s,S,runtime_written_in,1976,,0.9,https://en.wikipedia.org/wiki/S_(programming_language),wikipedia,S statistical language runtime written in C and Fortran at Bell Labs
+lang:fortran,Fortran,lang:s,S,runtime_written_in,1976,,0.85,https://en.wikipedia.org/wiki/S_(programming_language),wikipedia,S statistical language uses Fortran for numerical computation
+lang:c,C,lang:icon,Icon,compiler_written_in,1977,,0.9,https://en.wikipedia.org/wiki/Icon_(programming_language),wikipedia,Icon compiler and runtime written in C
+lang:c,C,lang:awk,AWK,runtime_written_in,1977,,0.95,https://en.wikipedia.org/wiki/AWK,wikipedia,"AWK runtime (gawk, nawk, mawk) written in C"
+lang:pascal,Pascal,lang:modula2,Modula-2,compiler_written_in,1978,,0.9,https://en.wikipedia.org/wiki/Modula-2,wikipedia,Early Modula-2 compilers written in Pascal
+lang:c,C,lang:sh,Bourne Shell,runtime_written_in,1979,,0.95,https://en.wikipedia.org/wiki/Bourne_shell,wikipedia,Bourne shell written in C by Steve Bourne at Bell Labs
+lang:cxx,C++,lang:objective_c,Objective-C,compiler_written_in,2007,,0.95,https://en.wikipedia.org/wiki/Clang,wikipedia,Clang (written in C++) is the primary Objective-C compiler
+lang:c,C,lang:matlab,MATLAB,runtime_written_in,1984,,0.9,https://en.wikipedia.org/wiki/MATLAB,wikipedia,MATLAB runtime engine written in C and C++
+lang:c,C,lang:miranda,Miranda,compiler_written_in,1985,,0.9,https://en.wikipedia.org/wiki/Miranda_(programming_language),wikipedia,Miranda compiler written in C
+lang:modula2,Modula-2,lang:oberon,Oberon,bootstrap_written_in,1987,,0.9,https://en.wikipedia.org/wiki/Oberon_(programming_language),wikipedia,Oberon compiler bootstrapped from Modula-2
+lang:c,C,lang:abc,ABC,runtime_written_in,1987,,0.9,https://en.wikipedia.org/wiki/ABC_(programming_language),wikipedia,ABC interpreter written in C at CWI
+lang:cxx,C++,lang:self,Self,runtime_written_in,1987,,0.95,https://en.wikipedia.org/wiki/Self_(programming_language),wikipedia,Self VM written in C++ at Stanford/Sun
+lang:c,C,lang:newsqueak,Newsqueak,compiler_written_in,1988,,0.85,https://en.wikipedia.org/wiki/Newsqueak,wikipedia,Newsqueak compiler written in C at Bell Labs
+lang:c,C,lang:modula3,Modula-3,compiler_written_in,1988,,0.9,https://en.wikipedia.org/wiki/Modula-3,wikipedia,Modula-3 compiler (m3cg) written in C
+lang:c,C,lang:tcl,Tcl,runtime_written_in,1988,,0.95,https://en.wikipedia.org/wiki/Tcl,wikipedia,Tcl interpreter written in C by John Ousterhout
+lang:c,C,lang:j,J,runtime_written_in,1990,,0.95,https://en.wikipedia.org/wiki/J_(programming_language),wikipedia,J interpreter written in C by Ken Iverson and Roger Hui
+lang:oberon,Oberon,lang:oberon2,Oberon-2,compiler_written_in,1991,,0.9,https://en.wikipedia.org/wiki/Oberon-2,wikipedia,Oberon-2 compiler derived from Oberon compiler
+lang:c,C,lang:alef,Alef,compiler_written_in,1992,,0.85,https://en.wikipedia.org/wiki/Alef_(programming_language),wikipedia,Alef compiler written in C at Bell Labs
+lang:c,C,lang:dylan,Dylan,runtime_written_in,1992,,0.85,https://en.wikipedia.org/wiki/Dylan_(programming_language),wikipedia,Open Dylan runtime written in C
+lang:c,C,lang:guile,GNU Guile,runtime_written_in,1993,,0.95,https://en.wikipedia.org/wiki/GNU_Guile,wikipedia,GNU Guile interpreter written in C
+lang:pascal,Pascal,lang:freepascal,Free Pascal,bootstrap_written_in,1993,,0.9,https://en.wikipedia.org/wiki/Free_Pascal,wikipedia,Free Pascal compiler initially written in Turbo Pascal then self-hosted
+lang:c,C,lang:limbo,Limbo,compiler_written_in,1995,,0.9,https://en.wikipedia.org/wiki/Limbo_(programming_language),wikipedia,Limbo compiler written in C as part of Plan 9
+lang:pascal,Pascal,lang:delphi,Delphi,bootstrap_written_in,1995,,0.9,https://en.wikipedia.org/wiki/Delphi_(software),wikipedia,"Delphi compiler bootstrapped from Turbo Pascal, now self-hosted"
+lang:prolog,Prolog,lang:mercury,Mercury,bootstrap_written_in,1995,,0.9,https://en.wikipedia.org/wiki/Mercury_(programming_language),wikipedia,"Mercury compiler initially written in Prolog, then self-hosted"
+lang:c,C,lang:fortran95,Fortran 95,compiler_written_in,1997,,0.9,https://en.wikipedia.org/wiki/GNU_Fortran,wikipedia,GNU Fortran (gfortran) compiler written in C as part of GCC
+lang:c,C,lang:cyclone,Cyclone,compiler_written_in,2002,,0.9,https://en.wikipedia.org/wiki/Cyclone_(programming_language),wikipedia,Cyclone compiler written in C at Cornell/AT&T
+lang:c,C,lang:luajit,LuaJIT,runtime_written_in,2005,,0.95,https://luajit.org/,docs,LuaJIT runtime written in C and assembly by Mike Pall
+lang:haskell,Haskell,lang:agda,Agda,compiler_written_in,2007,,0.95,https://en.wikipedia.org/wiki/Agda_(programming_language),wikipedia,Agda proof assistant and compiler written in Haskell
+lang:c,C,lang:pharo,Pharo,runtime_written_in,2008,,0.9,https://en.wikipedia.org/wiki/Pharo,wikipedia,Pharo VM (based on Squeak) written in C
+lang:haskell,Haskell,lang:idris,Idris,bootstrap_written_in,2011,,0.9,https://en.wikipedia.org/wiki/Idris_(programming_language),wikipedia,"Idris compiler initially written in Haskell, later self-hosted"
+lang:python,Python,lang:mypy,mypy,compiler_written_in,2012,,0.95,https://mypy-lang.org/,docs,mypy type checker written in Python
+lang:typescript,TypeScript,lang:angular,Angular,compiler_written_in,2016,,0.95,https://angular.io/,docs,Angular framework and AOT compiler written in TypeScript
+lang:rust,Rust,lang:gleam,Gleam,compiler_written_in,2019,,0.95,https://gleam.run/,docs,Gleam compiler written in Rust
+lang:perl,Perl,lang:raku,Raku,influenced,2000,,0.98,https://en.wikipedia.org/wiki/Raku_(programming_language),wikipedia,"Raku began as Perl 6, a redesign of Perl."
+lang:haskell,Haskell,lang:raku,Raku,influenced,,,0.8,https://en.wikipedia.org/wiki/Raku_(programming_language),wikipedia,Raku adopted Haskell-inspired functional features and types.
+lang:smalltalk,Smalltalk,lang:raku,Raku,influenced,,,0.72,https://en.wikipedia.org/wiki/Raku_(programming_language),wikipedia,Object and metaobject model influenced by Smalltalk.
+lang:c,C,lang:raku,Raku,runtime_written_in,,,0.9,https://en.wikipedia.org/wiki/MoarVM,wikipedia,"Reference implementation runs on MoarVM, written in C."
+lang:php,PHP,lang:hack,Hack,influenced,2014,,0.98,https://en.wikipedia.org/wiki/Hack_(programming_language),wikipedia,Hack is a dialect of PHP.
+lang:cxx,C++,lang:hack,Hack,runtime_written_in,,,0.92,https://en.wikipedia.org/wiki/HHVM,wikipedia,"Hack runs on HHVM, written in C++."
+lang:ocaml,OCaml,lang:rescript,ReScript,influenced,,,0.95,https://en.wikipedia.org/wiki/ReScript,wikipedia,ReScript is built on the OCaml compiler and type system.
+lang:reasonml,ReasonML,lang:rescript,ReScript,influenced,,,0.9,https://en.wikipedia.org/wiki/ReScript,wikipedia,ReScript evolved from ReasonML/BuckleScript.
+lang:rescript,ReScript,lang:javascript,JavaScript,transpiled_to,,,0.98,https://en.wikipedia.org/wiki/ReScript,wikipedia,ReScript compiles to JavaScript.
+lang:ocaml,OCaml,lang:rescript,ReScript,compiler_written_in,,,0.9,https://en.wikipedia.org/wiki/ReScript,wikipedia,The ReScript compiler is based on OCaml.
+lang:csharp,C#,lang:vala,Vala,influenced,,,0.9,https://en.wikipedia.org/wiki/Vala_(programming_language),wikipedia,Vala's syntax is modeled closely on C#.
+lang:java,Java,lang:vala,Vala,influenced,,,0.7,https://en.wikipedia.org/wiki/Vala_(programming_language),wikipedia,Vala draws object-model ideas from Java.
+lang:vala,Vala,lang:c,C,transpiled_to,,,0.95,https://en.wikipedia.org/wiki/Vala_(programming_language),wikipedia,Vala compiles to C using GObject.
+lang:simula,Simula,lang:eiffel,Eiffel,influenced,,,0.9,https://en.wikipedia.org/wiki/Eiffel_(programming_language),wikipedia,Eiffel's class model descends from Simula.
+lang:ada,Ada,lang:eiffel,Eiffel,influenced,,,0.78,https://en.wikipedia.org/wiki/Eiffel_(programming_language),wikipedia,Ada informed Eiffel's emphasis on reliability.
+lang:eiffel,Eiffel,lang:csharp,C#,influenced,,,0.8,https://en.wikipedia.org/wiki/Design_by_contract,wikipedia,Design by Contract influenced C# (Code Contracts).
+lang:eiffel,Eiffel,lang:ruby,Ruby,influenced,,,0.7,https://en.wikipedia.org/wiki/Eiffel_(programming_language),wikipedia,Eiffel influenced Ruby's object model and DbC libraries.
+lang:forth,Forth,lang:factor,Factor,influenced,,,0.9,https://en.wikipedia.org/wiki/Factor_(programming_language),wikipedia,Factor is a modern concatenative descendant of Forth.
+lang:assembly,Assembly,lang:forth,Forth,compiler_written_in,,,0.8,https://en.wikipedia.org/wiki/Forth_(programming_language),wikipedia,Classic Forth systems were bootstrapped in assembly.
+lang:cxx,C++,lang:solidity,Solidity,influenced,,,0.85,https://en.wikipedia.org/wiki/Solidity,wikipedia,Solidity's syntax draws on C++.
+lang:javascript,JavaScript,lang:solidity,Solidity,influenced,,,0.8,https://en.wikipedia.org/wiki/Solidity,wikipedia,Solidity borrows syntax from JavaScript.
+lang:python,Python,lang:solidity,Solidity,influenced,,,0.75,https://en.wikipedia.org/wiki/Solidity,wikipedia,Solidity also takes ideas from Python.
+lang:cxx,C++,lang:solidity,Solidity,compiler_written_in,,,0.92,https://en.wikipedia.org/wiki/Solidity,wikipedia,The reference compiler solc is written in C++.
+lang:self,Self,lang:io,Io,influenced,,,0.9,https://en.wikipedia.org/wiki/Io_(programming_language),wikipedia,Io's prototype model comes from Self.
+lang:smalltalk,Smalltalk,lang:io,Io,influenced,,,0.82,https://en.wikipedia.org/wiki/Io_(programming_language),wikipedia,Io draws message passing from Smalltalk.
+lang:lua,Lua,lang:io,Io,influenced,,,0.75,https://en.wikipedia.org/wiki/Io_(programming_language),wikipedia,Io shares minimalist embedding goals with Lua.
+lang:c,C,lang:io,Io,runtime_written_in,,,0.9,https://en.wikipedia.org/wiki/Io_(programming_language),wikipedia,The Io interpreter is written in C.
+lang:miranda,Miranda,lang:clean,Clean,influenced,,,0.8,https://en.wikipedia.org/wiki/Clean_(programming_language),wikipedia,Clean follows the lazy functional tradition of Miranda.
+lang:clean,Clean,lang:haskell,Haskell,influenced,,,0.72,https://en.wikipedia.org/wiki/Clean_(programming_language),wikipedia,Clean's uniqueness types informed Haskell research.
+lang:occam,occam,lang:limbo,Limbo,influenced,,,0.72,https://en.wikipedia.org/wiki/Occam_(programming_language),wikipedia,occam's channel concurrency influenced Limbo.
+lang:snobol,SNOBOL,lang:icon,Icon,influenced,,,0.92,https://en.wikipedia.org/wiki/Icon_(programming_language),wikipedia,Ralph Griswold designed Icon as a successor to SNOBOL.
+lang:snobol,SNOBOL,lang:awk,AWK,influenced,,,0.65,https://en.wikipedia.org/wiki/SNOBOL,wikipedia,String/pattern processing ideas carried into later text languages.
+lang:speedcoding,Speedcoding,lang:fortran,Fortran,influenced,1954,,0.85,https://en.wikipedia.org/wiki/Speedcoding,wikipedia,Backus's Speedcoding experience led to Fortran.
+lang:machine_code,Machine Code,lang:speedcoding,Speedcoding,compiler_written_in,,,0.8,https://en.wikipedia.org/wiki/Speedcoding,wikipedia,Speedcoding was implemented in IBM 701 machine code.
+lang:fortran,Fortran,lang:basic,BASIC,influenced,,,0.85,https://en.wikipedia.org/wiki/BASIC,wikipedia,BASIC simplified concepts from FORTRAN.
+lang:algol,ALGOL,lang:basic,BASIC,influenced,,,0.7,https://en.wikipedia.org/wiki/BASIC,wikipedia,ALGOL influenced BASIC's control structures.
+lang:basic,BASIC,lang:vb_net,Visual Basic .NET,influenced,,,0.85,https://en.wikipedia.org/wiki/Visual_Basic_.NET,wikipedia,Visual Basic descends from the BASIC family.
+lang:lisp,Lisp,lang:logo,Logo,influenced,,,0.9,https://en.wikipedia.org/wiki/Logo_(programming_language),wikipedia,Logo is a dialect of Lisp.
+lang:hope,Hope,lang:miranda,Miranda,influenced,,,0.8,https://en.wikipedia.org/wiki/Hope_(programming_language),wikipedia,Hope's algebraic data types influenced Miranda.
+lang:hope,Hope,lang:haskell,Haskell,influenced,,,0.7,https://en.wikipedia.org/wiki/Hope_(programming_language),wikipedia,Hope contributed ideas to the Haskell lineage.
+lang:ml,ML,lang:hope,Hope,influenced,,,0.65,https://en.wikipedia.org/wiki/Hope_(programming_language),wikipedia,Hope developed alongside the ML tradition at Edinburgh.
+lang:mesa,Mesa,lang:modula2,Modula-2,influenced,,,0.82,https://en.wikipedia.org/wiki/Mesa_(programming_language),wikipedia,Mesa's module system influenced Modula-2.
+lang:mesa,Mesa,lang:java,Java,influenced,,,0.7,https://en.wikipedia.org/wiki/Mesa_(programming_language),wikipedia,Mesa's exceptions and monitors influenced Java.
+lang:ml,ML,lang:ats,ATS,influenced,,,0.82,https://en.wikipedia.org/wiki/ATS_(programming_language),wikipedia,ATS descends from the ML family and Dependent ML.
+lang:ats,ATS,lang:c,C,transpiled_to,,,0.85,https://en.wikipedia.org/wiki/ATS_(programming_language),wikipedia,ATS compiles to C.
+lang:elm,Elm,lang:roc,Roc,influenced,,,0.9,https://www.roc-lang.org/faq,docs,Roc is heavily influenced by Elm.
+lang:haskell,Haskell,lang:roc,Roc,influenced,,,0.72,https://en.wikipedia.org/wiki/Roc_(programming_language),wikipedia,Roc draws from Haskell's pure functional model.
+lang:rust,Rust,lang:roc,Roc,compiler_written_in,,2025,0.92,https://linkedlist.org/2025/02/06/roc-zig-rewrite,article,"Roc's compiler was originally written in Rust, from the project's start until the 2025 rewrite to Zig."
+lang:haskell,Haskell,lang:unison,Unison,influenced,,,0.9,https://www.unison-lang.org/docs/usage-topics/general-faqs/,docs,Unison is strongly influenced by Haskell.
+lang:haskell,Haskell,lang:unison,Unison,compiler_written_in,,,0.9,https://www.unison-lang.org/docs/usage-topics/general-faqs/,docs,Unison's implementation is written in Haskell.
+lang:coq,Coq,lang:lean,Lean,influenced,,,0.82,https://en.wikipedia.org/wiki/Lean_(proof_assistant),wikipedia,Lean follows in the tradition of Coq.
+lang:haskell,Haskell,lang:lean,Lean,influenced,,,0.7,https://en.wikipedia.org/wiki/Lean_(proof_assistant),wikipedia,Lean 4's functional core draws on Haskell.
+lang:cxx,C++,lang:lean,Lean,runtime_written_in,,,0.85,https://en.wikipedia.org/wiki/Lean_(proof_assistant),wikipedia,Lean 4 compiles via a C backend and a C++ runtime.
+lang:ml,ML,lang:coq,Coq,influenced,,,0.8,https://en.wikipedia.org/wiki/Coq,wikipedia,Coq's tactic language and core descend from ML.
+lang:ocaml,OCaml,lang:coq,Coq,compiler_written_in,,,0.95,https://en.wikipedia.org/wiki/Coq,wikipedia,Coq is implemented in OCaml.
+lang:coq,Coq,lang:agda,Agda,influenced,,,0.75,https://en.wikipedia.org/wiki/Agda_(programming_language),wikipedia,Coq influenced dependently typed Agda.
+lang:coq,Coq,lang:idris,Idris,influenced,,,0.72,https://en.wikipedia.org/wiki/Idris_(programming_language),wikipedia,Coq influenced Idris's proof features.
+lang:csharp,C#,lang:qsharp,Q#,influenced,,,0.88,https://en.wikipedia.org/wiki/Q_Sharp,wikipedia,Q# borrows syntax and tooling from C#.
+lang:fsharp,F#,lang:qsharp,Q#,influenced,,,0.8,https://en.wikipedia.org/wiki/Q_Sharp,wikipedia,Q#'s functional features draw on F#.
+lang:csharp,C#,lang:qsharp,Q#,compiler_written_in,,,0.85,https://en.wikipedia.org/wiki/Q_Sharp,wikipedia,The Q# compiler is implemented on .NET in C#.
+lang:perl,Perl,lang:powershell,PowerShell,influenced,,,0.78,https://en.wikipedia.org/wiki/PowerShell,wikipedia,PowerShell borrows scripting idioms from Perl.
+lang:sh,Bourne Shell,lang:powershell,PowerShell,influenced,,,0.72,https://en.wikipedia.org/wiki/PowerShell,wikipedia,PowerShell draws on Unix shell concepts.
+lang:csharp,C#,lang:powershell,PowerShell,compiler_written_in,,,0.9,https://en.wikipedia.org/wiki/PowerShell,wikipedia,PowerShell is implemented in C# on .NET.
+lang:actionscript,ActionScript,lang:haxe,Haxe,influenced,,,0.85,https://en.wikipedia.org/wiki/Haxe,wikipedia,Haxe grew from ActionScript/MTASC tooling.
+lang:ocaml,OCaml,lang:haxe,Haxe,compiler_written_in,,,0.92,https://en.wikipedia.org/wiki/Haxe,wikipedia,The Haxe compiler is written in OCaml.
+lang:java,Java,lang:haxe,Haxe,influenced,,,0.68,https://en.wikipedia.org/wiki/Haxe,wikipedia,Haxe's class model draws on Java.
+lang:javascript,JavaScript,lang:actionscript,ActionScript,influenced,1998,,0.9,https://en.wikipedia.org/wiki/ActionScript,wikipedia,"ActionScript is an ECMAScript dialect, like JavaScript."
+lang:cxx,C++,lang:actionscript,ActionScript,runtime_written_in,,,0.8,https://en.wikipedia.org/wiki/Tamarin_(software),wikipedia,"ActionScript 3 ran on the Tamarin VM, written in C++."
+lang:fortran,Fortran,lang:chapel,Chapel,influenced,,,0.75,https://en.wikipedia.org/wiki/Chapel_(programming_language),wikipedia,Chapel targets HPC workloads historically served by Fortran.
+lang:c,C,lang:chapel,Chapel,influenced,,,0.7,https://en.wikipedia.org/wiki/Chapel_(programming_language),wikipedia,Chapel borrows imperative syntax from C.
+lang:cxx,C++,lang:chapel,Chapel,compiler_written_in,,,0.85,https://en.wikipedia.org/wiki/Chapel_(programming_language),wikipedia,The Chapel compiler is written in C/C++.
+lang:erlang,Erlang,lang:pony,Pony,influenced,,,0.85,https://en.wikipedia.org/wiki/Pony_(programming_language),wikipedia,Pony's actor model is inspired by Erlang.
+lang:rust,Rust,lang:pony,Pony,influenced,,,0.7,https://en.wikipedia.org/wiki/Pony_(programming_language),wikipedia,Pony shares safety goals with Rust.
+lang:cxx,C++,lang:pony,Pony,compiler_written_in,,,0.85,https://en.wikipedia.org/wiki/Pony_(programming_language),wikipedia,The Pony compiler is written in C/C++ with an LLVM backend.
+lang:c,C,lang:odin,Odin,influenced,,,0.85,https://odin-lang.org/docs/faq/,docs,Odin is designed as a modern alternative to C.
+lang:pascal,Pascal,lang:odin,Odin,influenced,,,0.72,https://odin-lang.org/docs/faq/,docs,Odin borrows declaration syntax from Pascal.
+lang:go,Go,lang:odin,Odin,influenced,,,0.75,https://odin-lang.org/docs/faq/,docs,Odin draws ideas from Go.
+lang:cxx,C++,lang:odin,Odin,compiler_written_in,,,0.85,https://odin-lang.org/docs/faq/,docs,The Odin compiler is written in C++ with an LLVM backend.
+lang:c,C,lang:hare,Hare,influenced,,,0.9,https://harelang.org/documentation/faq.html,docs,Hare is a C-like systems language.
+lang:c,C,lang:hare,Hare,bootstrap_written_in,,,0.85,https://slackbuilds.org/repository/15.0/development/harec/,article,Hare's bootstrap compiler is written in C.
+lang:lua,Lua,lang:wren,Wren,influenced,,,0.85,https://github.com/wren-lang/wren,repository,Wren is a small embeddable language like Lua.
+lang:smalltalk,Smalltalk,lang:wren,Wren,influenced,,,0.72,https://github.com/wren-lang/wren,repository,Wren's class and method model draws on Smalltalk.
+lang:c,C,lang:wren,Wren,runtime_written_in,,,0.92,https://github.com/wren-lang/wren,repository,The Wren VM is written in C.
+lang:lisp,Lisp,lang:factor,Factor,influenced,,,0.75,https://en.wikipedia.org/wiki/Factor_(programming_language),wikipedia,Factor borrows interactive and metaprogramming ideas from Lisp.
+lang:cxx,C++,lang:factor,Factor,runtime_written_in,,,0.85,https://en.wikipedia.org/wiki/Factor_(programming_language),wikipedia,Factor's VM is written in C++.
+lang:haskell,Haskell,lang:nix,Nix,influenced,,,0.72,https://en.wikipedia.org/wiki/Nix_(package_manager),wikipedia,"The Nix language is a lazy, purely functional language in the Haskell spirit."
+lang:cxx,C++,lang:nix,Nix,runtime_written_in,,,0.9,https://en.wikipedia.org/wiki/Nix_(package_manager),wikipedia,The Nix evaluator is implemented in C++.
+lang:rust,Rust,lang:move,Move,influenced,,,0.85,https://en.wikipedia.org/wiki/Move_(programming_language),wikipedia,Move's safety model is influenced by Rust.
+lang:rust,Rust,lang:move,Move,compiler_written_in,,,0.9,https://en.wikipedia.org/wiki/Move_(programming_language),wikipedia,The Move toolchain is written in Rust.
+lang:cxx,C++,tool:hhvm,HHVM,runtime_written_in,,,0.92,https://en.wikipedia.org/wiki/HHVM,wikipedia,HHVM is written in C++.
+lang:c,C,tool:moarvm,MoarVM,runtime_written_in,,,0.92,https://en.wikipedia.org/wiki/MoarVM,wikipedia,MoarVM is written in C.
+lang:java,Java,tool:graalvm,GraalVM,compiler_written_in,,,0.9,https://en.wikipedia.org/wiki/GraalVM,wikipedia,GraalVM's compiler is written in Java.
+lang:c,C,tool:quickjs,QuickJS,runtime_written_in,,,0.95,https://en.wikipedia.org/wiki/QuickJS,wikipedia,QuickJS is written in C.
+lang:go,Go,tool:esbuild,esbuild,compiler_written_in,,,0.95,https://en.wikipedia.org/wiki/Esbuild,wikipedia,esbuild is written in Go.
+lang:rust,Rust,tool:swc,SWC,compiler_written_in,,,0.95,https://github.com/swc-project/swc,repository,SWC is written in Rust.
+lang:javascript,JavaScript,tool:babel,Babel,compiler_written_in,,,0.95,https://en.wikipedia.org/wiki/Babel_(transcompiler),wikipedia,Babel is written in JavaScript.
+lang:zig,Zig,lang:roc,Roc,compiler_written_in,2025,,0.85,https://gist.github.com/rtfeldman/77fb430ee57b42f5f2ca973a3992532f,other,"Roc's compiler was rewritten from Rust to Zig starting 2025, announced by creator Richard Feldman, for faster incremental builds and simpler memory management."
+lang:c,C,lang:emacs_lisp,Emacs Lisp,runtime_written_in,1985,,0.95,https://github.com/emacs-mirror/emacs/tree/master/src,repository,"Emacs Lisp evaluator, byte-code interpreter, and primitives are written in C"
+lang:lisp,Lisp,lang:emacs_lisp,Emacs Lisp,influenced,1985,,0.9,https://www.gnu.org/software/emacs/manual/html_node/elisp/Lisp-History.html,docs,Emacs Lisp descends from Maclisp
+lang:smalltalk,Smalltalk,lang:scratch,Scratch,runtime_written_in,2007,2013,0.9,https://github.com/scratchfoundation/Scratch_1.4,repository,Scratch 1.x was implemented in Squeak Smalltalk
+lang:actionscript,ActionScript,lang:scratch,Scratch,runtime_written_in,2013,2019,0.92,https://github.com/scratchfoundation/scratch-flash,repository,Scratch 2.0 editor and player were written in ActionScript for Flash
+lang:javascript,JavaScript,lang:scratch,Scratch,runtime_written_in,2019,,0.95,https://github.com/scratchfoundation/scratch-vm,repository,Scratch 3.0 virtual machine is written in JavaScript
+lang:logo,Logo,lang:scratch,Scratch,influenced,2007,,0.9,https://web.media.mit.edu/~mres/papers/Scratch-CACM-final.pdf,paper,Scratch builds on the Logo tradition of programming for learners
+lang:clojure,Clojure,lang:clojurescript,ClojureScript,compiler_written_in,2011,,0.95,https://github.com/clojure/clojurescript,repository,ClojureScript compiler is written in Clojure and runs on the JVM
+lang:clojure,Clojure,lang:clojurescript,ClojureScript,influenced,2011,,0.97,https://clojurescript.org/about/rationale,docs,ClojureScript is Clojure targeting JavaScript
+lang:clojurescript,ClojureScript,lang:javascript,JavaScript,transpiled_to,2011,,0.98,https://clojurescript.org/about/rationale,docs,ClojureScript compiles to JavaScript
+lang:c,C,lang:rebol,Rebol,runtime_written_in,1997,,0.9,https://github.com/rebol/rebol,repository,Rebol interpreter is written in C
+lang:lisp,Lisp,lang:rebol,Rebol,influenced,1997,,0.78,https://en.wikipedia.org/wiki/Rebol,wikipedia,Rebol lists Lisp among its influences
+lang:logo,Logo,lang:rebol,Rebol,influenced,1997,,0.78,https://en.wikipedia.org/wiki/Rebol,wikipedia,Rebol lists Logo among its influences
+lang:forth,Forth,lang:rebol,Rebol,influenced,1997,,0.75,https://en.wikipedia.org/wiki/Rebol,wikipedia,Rebol lists Forth among its influences
+lang:rebol,Rebol,lang:red,Red,compiler_written_in,2011,,0.9,https://github.com/red/red,repository,Red toolchain is bootstrapped from Rebol 2 sources
+lang:rebol,Rebol,lang:red,Red,influenced,2011,,0.97,https://www.red-lang.org/p/about.html,docs,Red is strongly inspired by Rebol
+lang:cxx,C++,lang:gdscript,GDScript,runtime_written_in,2014,,0.97,https://github.com/godotengine/godot/tree/master/modules/gdscript,repository,"GDScript parser, compiler, and VM are a C++ module of the Godot engine"
+lang:python,Python,lang:gdscript,GDScript,influenced,2014,,0.88,https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html,docs,GDScript uses indentation-based syntax similar to Python
+lang:c,C,lang:fish,fish,runtime_written_in,2005,2012,0.8,https://fishshell.com/blog/rustport/,docs,fish was originally written in C before being ported to C++
+lang:cxx,C++,lang:fish,fish,runtime_written_in,2012,2025,0.88,https://fishshell.com/blog/rustport/,docs,fish was written in C++ until the 4.0 Rust port
+lang:rust,Rust,lang:fish,fish,runtime_written_in,2025,,0.97,https://fishshell.com/blog/rustport/,docs,fish 4.0 is written in Rust
+lang:rust,Rust,lang:fish,fish,rewritten_in,2025,,0.97,https://fishshell.com/blog/rustport/,docs,fish rewritten from C++ to Rust for fish 4.0
+lang:cxx,C++,lang:luau,Luau,compiler_written_in,2021,,0.95,https://github.com/luau-lang/luau,repository,Luau bytecode compiler and type checker are written in C++
+lang:cxx,C++,lang:luau,Luau,runtime_written_in,2021,,0.95,https://github.com/luau-lang/luau,repository,Luau VM is a heavily modified Lua 5.1 runtime written in C++
+lang:lua,Lua,lang:luau,Luau,influenced,2021,,0.98,https://github.com/luau-lang/luau,repository,Luau is derived from Lua and backwards compatible with Lua 5.1
+lang:jakt,Jakt,lang:jakt,Jakt,compiler_written_in,2022,,0.9,https://github.com/SerenityOS/jakt/tree/main/selfhost,repository,Jakt compiler is self-hosted
+lang:jakt,Jakt,lang:cxx,C++,transpiled_to,2022,,0.95,https://github.com/SerenityOS/jakt,repository,Jakt currently transpiles to C++
+lang:rust,Rust,lang:nushell,Nushell,runtime_written_in,2019,,0.97,https://github.com/nushell/nushell,repository,Nushell is written in Rust
+lang:powershell,PowerShell,lang:nushell,Nushell,influenced,2019,,0.85,https://www.nushell.sh/blog/2019-08-23-introducing-nushell.html,docs,Nushell draws on the structured-data approach of PowerShell
+lang:cxx,C++,tool:nodejs,Node.js,runtime_written_in,2009,,0.97,https://github.com/nodejs/node,repository,Node.js native core is written in C++ on top of V8
+lang:javascript,JavaScript,tool:nodejs,Node.js,runtime_written_in,2009,,0.85,https://github.com/nodejs/node,repository,Node.js standard library modules are written in JavaScript
+lang:rust,Rust,tool:deno,Deno,runtime_written_in,2018,,0.95,https://github.com/denoland/deno,repository,"Deno is built on V8, Rust, and Tokio"
+lang:zig,Zig,tool:bun,Bun,runtime_written_in,2022,2026,0.95,https://bun.com/blog/bun-in-rust,docs,Bun was written in Zig until the 2026 Rust rewrite
+lang:rust,Rust,tool:bun,Bun,runtime_written_in,2026,,0.92,https://bun.com/blog/bun-in-rust,docs,Bun is written in Rust since Bun 1.4
+lang:rust,Rust,tool:bun,Bun,rewritten_in,2026,,0.92,https://bun.com/blog/bun-in-rust,docs,"Bun rewritten from Zig to Rust, shipped in Bun 1.4"
+lang:python,Python,tool:pypy,PyPy,runtime_written_in,2007,,0.9,https://doc.pypy.org/en/latest/architecture.html,docs,"PyPy is written in RPython, a restricted subset of Python translated to C"
+lang:fortran,Fortran,tool:blas,BLAS,runtime_written_in,1979,,0.95,https://www.netlib.org/blas/,docs,Netlib reference BLAS is written in Fortran
+tool:llvm,LLVM,tool:cuda,CUDA,compiler_written_in,2012,,0.85,https://docs.nvidia.com/cuda/nvvm-ir-spec/index.html,docs,CUDA NVVM compiler IR is based on LLVM IR
+lang:cxx,C++,tool:cuda,CUDA,influenced,2007,,0.9,https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html,docs,CUDA C++ extends C++ for GPU kernels
+lang:c,C,tool:ggml,ggml,runtime_written_in,2022,,0.9,https://github.com/ggml-org/ggml,repository,ggml core tensor library is written in C
+lang:cxx,C++,tool:ggml,ggml,runtime_written_in,2023,,0.85,https://github.com/ggml-org/ggml,repository,ggml CPU and GPU backends are largely C++
+tool:cuda,CUDA,tool:ggml,ggml,runtime_written_in,2023,,0.88,https://github.com/ggml-org/ggml/tree/master/src/ggml-cuda,repository,ggml CUDA backend kernels are written in CUDA
+lang:cxx,C++,tool:llama_cpp,llama.cpp,runtime_written_in,2023,,0.95,https://github.com/ggml-org/llama.cpp,repository,llama.cpp is LLM inference in C/C++ built on ggml
+lang:c,C,tool:llama_cpp,llama.cpp,runtime_written_in,2023,,0.82,https://github.com/ggml-org/llama.cpp,repository,llama.cpp public API and bundled ggml core are C
+lang:cxx,C++,tool:pytorch,PyTorch,runtime_written_in,2016,,0.92,https://github.com/pytorch/pytorch/tree/main/aten,repository,PyTorch tensor core (ATen) is written in C++
+lang:python,Python,tool:pytorch,PyTorch,runtime_written_in,2016,,0.88,https://github.com/pytorch/pytorch,repository,PyTorch front end is written in Python
+tool:cuda,CUDA,tool:pytorch,PyTorch,runtime_written_in,2016,,0.9,https://github.com/pytorch/pytorch/tree/main/aten/src/ATen/native/cuda,repository,PyTorch GPU kernels are written in CUDA

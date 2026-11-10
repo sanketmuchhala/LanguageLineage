@@ -698,6 +698,13 @@ td a { color: var(--accent); }
   word-break: break-all;
 }
 
+/* Source type label beside an evidence link (scripts/sourceType.ts) */
+.src-type {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+
 /* Footer */
 .seo-footer {
   border-top: 1px solid var(--border);

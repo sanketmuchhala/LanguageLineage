@@ -97,6 +97,7 @@ const urls: Array<{ loc: string }> = [
   { loc: `${SITE}/what-are-programming-languages-written-in` },
   { loc: `${SITE}/programming-language-genealogy` },
   { loc: `${SITE}/compiler-runtime-bootstrap` },
+  { loc: `${SITE}/posters/programming-language-implementation-family-tree` },
   // Questions
   { loc: `${SITE}/questions` },
   ...QUESTION_SLUGS.filter(s => !QUESTION_CANONICAL_TO_LANG.has((s.match(/^what-is-(.+)-written-in$/) || [])[1] || '')).map(s => ({ loc: `${SITE}/questions/${s}` })),

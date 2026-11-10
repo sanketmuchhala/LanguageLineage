@@ -5,8 +5,36 @@
     <link>https://www.languagelineage.org</link>
     <description>Guides and data stories on what programming languages are written in, how compilers are bootstrapped, and how languages influenced each other.</description>
     <language>en-us</language>
-    <lastBuildDate>Tue, 22 Sep 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 10 Nov 2026 00:00:00 GMT</lastBuildDate>
     <atom:link href="https://www.languagelineage.org/rss.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>V8 vs SpiderMonkey vs JavaScriptCore | Language Lineage</title>
+      <link>https://www.languagelineage.org/guides/v8-vs-spidermonkey-vs-javascriptcore</link>
+      <guid isPermaLink="true">https://www.languagelineage.org/guides/v8-vs-spidermonkey-vs-javascriptcore</guid>
+      <description>All three major JavaScript engines are written in C++. V8 powers Chrome and Node.js, SpiderMonkey powers Firefox, and JavaScriptCore powers Safari.</description>
+      <pubDate>Tue, 10 Nov 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>How Rust is Bootstrapped: OCaml to Self-Hosted rustc | Language Lineage</title>
+      <link>https://www.languagelineage.org/guides/how-rust-is-bootstrapped</link>
+      <guid isPermaLink="true">https://www.languagelineage.org/guides/how-rust-is-bootstrapped</guid>
+      <description>rustc is written in Rust and built from the previous release. See the stage 0/1/2 bootstrap, the dated OCaml-to-Rust history with sources, and mrustc.</description>
+      <pubDate>Tue, 10 Nov 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Programming Language Family Tree | Language Lineage</title>
+      <link>https://www.languagelineage.org/guides/programming-language-family-tree</link>
+      <guid isPermaLink="true">https://www.languagelineage.org/guides/programming-language-family-tree</guid>
+      <description>The programming language family tree: how Fortran, LISP, and C influenced and implemented the languages that followed, across 75+ years of compiler and runtime history.</description>
+      <pubDate>Tue, 10 Nov 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>What is Compiler Bootstrapping? Real Self-Hosting Chains | Language Lineage</title>
+      <link>https://www.languagelineage.org/guides/what-is-compiler-bootstrapping</link>
+      <guid isPermaLink="true">https://www.languagelineage.org/guides/what-is-compiler-bootstrapping</guid>
+      <description>How a language comes to compile itself, with dated, sourced examples: Rust from OCaml, Go from C at 1.5, Zig from C++, plus the three bootstrap stages.</description>
+      <pubDate>Tue, 10 Nov 2026 00:00:00 GMT</pubDate>
+    </item>
     <item>
       <title>How Modern Languages Trace Their Toolchains Back to C | Language Lineage</title>
       <link>https://www.languagelineage.org/guides/the-c-bootstrap-chain</link>
@@ -36,13 +64,6 @@
       <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
     </item>
     <item>
-      <title>V8 vs SpiderMonkey vs JavaScriptCore | Language Lineage</title>
-      <link>https://www.languagelineage.org/guides/v8-vs-spidermonkey-vs-javascriptcore</link>
-      <guid isPermaLink="true">https://www.languagelineage.org/guides/v8-vs-spidermonkey-vs-javascriptcore</guid>
-      <description>All three major JavaScript engines are written in C++. V8 powers Chrome and Node.js, SpiderMonkey powers Firefox, and JavaScriptCore powers Safari.</description>
-      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
-    </item>
-    <item>
       <title>How Are Programming Languages Made? | Language Lineage</title>
       <link>https://www.languagelineage.org/guides/how-programming-languages-are-made</link>
       <guid isPermaLink="true">https://www.languagelineage.org/guides/how-programming-languages-are-made</guid>
@@ -54,13 +75,6 @@
       <link>https://www.languagelineage.org/guides/gcc-vs-llvm</link>
       <guid isPermaLink="true">https://www.languagelineage.org/guides/gcc-vs-llvm</guid>
       <description>GCC and LLVM are the two dominant open-source compiler infrastructures. Both are written in C++. Learn how they differ and which languages use each.</description>
-      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
-    </item>
-    <item>
-      <title>How Rust is Bootstrapped | Language Lineage</title>
-      <link>https://www.languagelineage.org/guides/how-rust-is-bootstrapped</link>
-      <guid isPermaLink="true">https://www.languagelineage.org/guides/how-rust-is-bootstrapped</guid>
-      <description>Rust is a self-hosting language. The Rust compiler (rustc) is written in Rust itself. Learn how the Rust bootstrap process works.</description>
       <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
     </item>
     <item>
@@ -78,13 +92,6 @@
       <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
     </item>
     <item>
-      <title>Programming Language Family Tree | Language Lineage</title>
-      <link>https://www.languagelineage.org/guides/programming-language-family-tree</link>
-      <guid isPermaLink="true">https://www.languagelineage.org/guides/programming-language-family-tree</guid>
-      <description>The programming language family tree: how Fortran, LISP, and C influenced and implemented the languages that followed, across 75+ years of compiler and runtime history.</description>
-      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
-    </item>
-    <item>
       <title>Compiler vs Interpreter vs Runtime | Language Lineage</title>
       <link>https://www.languagelineage.org/guides/compiler-vs-interpreter-vs-runtime</link>
       <guid isPermaLink="true">https://www.languagelineage.org/guides/compiler-vs-interpreter-vs-runtime</guid>
@@ -96,13 +103,6 @@
       <link>https://www.languagelineage.org/guides/what-is-self-hosting</link>
       <guid isPermaLink="true">https://www.languagelineage.org/guides/what-is-self-hosting</guid>
       <description>A self-hosting compiler is a compiler that can compile its own source code. Learn which languages are self-hosting and why it matters.</description>
-      <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
-    </item>
-    <item>
-      <title>What is Compiler Bootstrapping? | Language Lineage</title>
-      <link>https://www.languagelineage.org/guides/what-is-compiler-bootstrapping</link>
-      <guid isPermaLink="true">https://www.languagelineage.org/guides/what-is-compiler-bootstrapping</guid>
-      <description>Compiler bootstrapping is the process of writing a compiler for a language in that same language. Learn how it works and which languages use it.</description>
       <pubDate>Wed, 09 Sep 2026 00:00:00 GMT</pubDate>
     </item>
   </channel>

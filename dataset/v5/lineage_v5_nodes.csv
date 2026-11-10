@@ -1,0 +1,172 @@
+id,name,kind,first_release_year,current_primary_implementation_language,paradigm,typing,runtime_model,self_hosting,garbage_collected,company,cluster_hint,notes
+lang:machine_code,Machine Code,language,0,unspecified,low-level,untyped,native,false,false,,roots,Root node: binary instructions executed directly by CPU. Foundation of all bootstrap chains.
+lang:assembly,Assembly,language,1949,unspecified,low-level;imperative,untyped,native,false,false,,roots,Low-level language with direct CPU instruction correspondence. First assembler ~1949.
+lang:fortran,Fortran,language,1957,Fortran,imperative;procedural,static,compiled,true,false,,historical,"Oldest high-level language still in use. IBM. First compiler written in assembly, modern compilers self-hosting."
+lang:lisp,Lisp,language,1958,C,functional;multi-paradigm,dynamic,interpreted,true,true,,functional,John McCarthy. Second-oldest high-level language still used. Eval written in Lisp itself early on.
+lang:cobol,COBOL,language,1959,C,imperative;procedural,static,compiled,false,,,historical,English-like business language. First compiler 1960. Still runs massive financial systems.
+lang:algol,ALGOL,language,1958,Assembly,imperative;procedural,static,compiled,false,,,historical,"ALGOL 58/60. Hugely influential. Inspired Pascal, C, and most imperative languages."
+lang:simula,Simula,language,1962,ALGOL,object-oriented;imperative,static,compiled,false,,,historical,"First OOP language. Introduced classes, objects, inheritance. Inspired Smalltalk and C++."
+lang:bcpl,BCPL,language,1967,unspecified,imperative;procedural,untyped,compiled,false,false,,historical,Basic Combined Programming Language. Martin Richards. Direct ancestor of B and C.
+lang:b,B,language,1969,BCPL,imperative;procedural,untyped,compiled,false,false,Bell Labs,historical,Ken Thompson at Bell Labs. Derived from BCPL. Direct predecessor of C.
+lang:pascal,Pascal,language,1970,C,imperative;procedural,static,compiled,true,,,historical,Niklaus Wirth. P-code portable compiler bootstrapped itself. Influenced Ada and Delphi.
+lang:smalltalk,Smalltalk,language,1972,C,object-oriented,dynamic,vm,true,true,Xerox PARC,historical,"Xerox PARC. Alan Kay, Dan Ingalls, Adele Goldberg. Smalltalk-80 partially self-hosting."
+lang:c,C,language,1972,C,imperative;procedural,static,compiled,true,false,Bell Labs,systems,Dennis Ritchie at Bell Labs. Bootstrapped from B. Self-hosting within first year. Foundation for dozens of languages.
+lang:ml,ML,language,1973,C,functional;imperative,static,compiled,false,,,functional,"Robin Milner at Edinburgh. First language with Hindley-Milner type inference. Ancestor of OCaml, SML, Haskell, F#."
+lang:scheme,Scheme,language,1975,C,functional;multi-paradigm,dynamic,interpreted,true,true,,functional,"Sussman and Steele. Minimalist Lisp dialect. Proper tail calls, first-class continuations."
+lang:prolog,Prolog,language,1972,C,logic;declarative,dynamic,interpreted,false,,,historical,Colmerauer and Roussel. SWI-Prolog written in C.
+lang:ada,Ada,language,1980,Ada,imperative;object-oriented,static,compiled,true,,U.S. Department of Defense,systems,DoD-commissioned. GNAT compiler (GCC-based) is self-hosting. Safety-critical systems.
+lang:cxx,C++,language,1983,C++,object-oriented;imperative;generic,static,compiled,true,false,,systems,Bjarne Stroustrup. First compiler (Cfront) translated C++ to C. GCC and Clang now primary implementations.
+lang:objective_c,Objective-C,language,1984,C++,object-oriented;imperative,static,compiled,false,,,systems,Brad Cox and Tom Love. Smalltalk messaging added to C. Apple platform language until Swift.
+lang:erlang,Erlang,language,1986,C,functional;concurrent,dynamic,vm,true,true,Ericsson,functional,Ericsson. BEAM VM. Compiler self-hosting since ~1991. BEAM VM written in C.
+lang:perl,Perl,language,1987,C,imperative;multi-paradigm,dynamic,interpreted,false,true,,dynamic,Larry Wall. First release Dec 18 1987. Text processing and sysadmin. Influenced PHP and Ruby.
+lang:sml,Standard ML,language,1983,C,functional;imperative,static,compiled,true,,,functional,Standardized ML dialect. SML/NJ self-hosting. MLton whole-program compiler also in SML.
+lang:haskell,Haskell,language,1990,Haskell,functional,static,compiled,true,true,,functional,Pure lazy functional. GHC self-hosting written in Haskell. RTS written in C. Named after Haskell Curry.
+lang:python,Python,language,1991,C,imperative;object-oriented;functional,dynamic,interpreted,false,true,,dynamic,Guido van Rossum. CPython in C. PyPy alternative in RPython. Not self-hosting in standard distribution.
+lang:common_lisp,Common Lisp,language,1984,Common Lisp,functional;multi-paradigm,dynamic,compiled,true,true,,functional,ANSI standardized Lisp. SBCL self-hosting. CLOS object system included.
+lang:ocaml,OCaml,language,1996,OCaml,functional;imperative;object-oriented,static,compiled,true,true,INRIA,functional,INRIA. Self-hosting compiler. Runtime in C and Assembly. Original Rust compiler (rustboot) written in OCaml.
+lang:java,Java,language,1995,Java,object-oriented;imperative,static,vm,true,true,Sun Microsystems,jvm,Sun Microsystems. javac self-hosting. HotSpot JVM in C++. Write-once-run-anywhere via JVM bytecode.
+lang:javascript,JavaScript,language,1995,C++,imperative;object-oriented;functional,dynamic,vm,false,true,,dynamic,Brendan Eich at Netscape. Influenced by Self and Scheme. V8/SpiderMonkey/JavaScriptCore in C++.
+lang:ruby,Ruby,language,1995,C,object-oriented;imperative;functional,dynamic,interpreted,false,true,,dynamic,"Yukihiro Matsumoto. MRI/CRuby in C. JRuby on JVM. Influenced by Smalltalk, Perl, Python."
+lang:php,PHP,language,1995,C,imperative;object-oriented,dynamic,interpreted,false,true,,dynamic,Rasmus Lerdorf. Zend Engine in C. Influenced by Perl and C.
+lang:r,R,language,1993,C,functional;imperative,dynamic,interpreted,false,true,,scientific,Ross Ihaka and Robert Gentleman. Statistical computing. C and Fortran implementation.
+lang:racket,Racket,language,1994,Racket,functional;multi-paradigm,dynamic,vm,true,true,,functional,Originally PLT Scheme. Transitioned backend to Chez Scheme in 2019. Self-hosting.
+lang:csharp,C#,language,2000,C#,object-oriented;imperative;functional,static,vm,true,true,Microsoft,clr,Microsoft. Anders Hejlsberg. Roslyn (self-hosting since 2014) replaced earlier C++ compiler.
+lang:lua,Lua,language,1993,C,imperative;multi-paradigm,dynamic,interpreted,false,true,,dynamic,PUC-Rio. Written in ANSI C. LuaJIT JIT implementation also in C. Designed for embedding.
+lang:d,D,language,2001,D,imperative;object-oriented;functional,static,compiled,true,true,,systems,"Walter Bright. DMD reference compiler now written in D (bootstrapped from C++). Influenced by C++, Java, Python."
+lang:scala,Scala,language,2003,Scala,object-oriented;functional,static,vm,true,true,École Polytechnique Fédérale de Lausanne,jvm,Martin Odersky at EPFL. Scala 3 (Dotty) bootstrapped. Runs on JVM. Combines OOP and FP.
+lang:fsharp,F#,language,2005,F#,functional;object-oriented;imperative,static,vm,true,true,Microsoft,clr,"Don Syme at Microsoft Research. Derived from OCaml. Initial compiler in OCaml, rewritten in F# for self-hosting. Runs on .NET."
+lang:clojure,Clojure,language,2007,Java,functional;multi-paradigm,dynamic,vm,false,true,,jvm,Rich Hickey. Lisp dialect for JVM. Compiler in Java (intentional). ClojureScript compiles to JS.
+lang:go,Go,language,2009,Go,imperative;concurrent,static,compiled,true,true,Google,systems,"Google. Rob Pike, Ken Thompson, Robert Griesemer. Original compiler in C, rewritten in Go in version 1.5 (2015)."
+lang:coffeescript,CoffeeScript,language,2009,CoffeeScript,imperative;object-oriented;functional,dynamic,transpiled,true,,,dynamic,"Jeremy Ashkenas. Transpiles to JavaScript. Self-hosting compiler. Influenced by Python, Ruby, Haskell."
+lang:rust,Rust,language,2010,Rust,systems;imperative;functional,static,compiled,true,false,Mozilla,systems,Mozilla. Graydon Hoare. First appeared publicly in 2010; 1.0 released in 2015. Original compiler (rustboot) in OCaml. Rewritten in Rust ~2011. LLVM backend.
+lang:kotlin,Kotlin,language,2016,Kotlin,object-oriented;functional,static,vm,true,true,JetBrains,jvm,"JetBrains. First compiler in Java, self-hosting. K2 compiler frontend released 2024. JVM, JS, Native targets."
+lang:typescript,TypeScript,language,2012,TypeScript,object-oriented;functional;imperative,static,transpiled,true,true,Microsoft,dynamic,Microsoft. Self-hosting tsc. TypeScript 7.0 will rewrite compiler in Go for 10x performance.
+lang:dart,Dart,language,2011,C++,object-oriented;imperative,static,vm,false,true,Google,dynamic,"Google. Dart SDK and VM in C++. Native, JS, WASM targets. Primary language for Flutter."
+lang:elixir,Elixir,language,2012,Elixir,functional;concurrent,dynamic,vm,true,true,,functional,"José Valim. Runs on BEAM. Bootstrap compiler in Erlang, then self-hosting. Deliberately keeps Erlang bootstrap."
+lang:elm,Elm,language,2012,Haskell,functional,static,transpiled,false,true,,functional,Evan Czaplicki. Compiler written in Haskell. Compiles to JavaScript.
+lang:julia,Julia,language,2012,Julia,imperative;functional;scientific,dynamic,jit,true,true,,scientific,"MIT. Jeff Bezanson et al. LLVM JIT. Parser originally in FemtoLisp, transitioning to Julia as of v1.10."
+lang:swift,Swift,language,2014,Swift,object-oriented;functional;imperative,static,compiled,true,true,Apple,systems,Apple. Chris Lattner. Original compiler in C++/LLVM. Significant parts now in Swift. Contested self-hosting status.
+lang:crystal,Crystal,language,2014,Crystal,object-oriented;imperative,static,compiled,true,true,,systems,Ruby-inspired syntax with static typing. Bootstrapped from Ruby. Fully self-hosting.
+lang:purescript,PureScript,language,2013,Haskell,functional,static,transpiled,false,true,,functional,Phil Freeman. Compiler in Haskell. Compiles to JavaScript.
+lang:nim,Nim,language,2008,Nim,imperative;functional;object-oriented,static,compiled,true,true,,systems,"Andreas Rumpf. Self-hosting from first release year (2008). Transpiles to C/C++/JS. Influenced by Python, Ada, Modula."
+lang:reasonml,ReasonML,language,2016,OCaml,functional;object-oriented,static,compiled,false,,,functional,Facebook/Meta. Alternative syntax for OCaml. Tooling in OCaml. Influenced by JavaScript and OCaml.
+lang:zig,Zig,language,2016,Zig,imperative;systems,static,compiled,true,false,,systems,Andrew Kelley. Original compiler in C++. Self-hosting 2022. Dropped C++ implementation. Own codegen option.
+lang:v,V,language,2019,V,imperative;systems,static,compiled,true,,,systems,Alexander Medvednikov. Influenced by Go. Self-hosting compiler. Transpiles to C.
+lang:carbon,Carbon,language,2022,C++,imperative;systems,static,compiled,false,,,systems,Google. Experimental C++ successor. Compiler in C++. LLVM backend. Not yet self-hosting.
+lang:mojo,Mojo,language,2023,C++,imperative;systems;scientific,static,compiled,false,,,scientific,Modular AI. Python-superset for AI/ML. MLIR/LLVM backend. Not yet self-hosting.
+lang:groovy,Groovy,language,2003,Java,object-oriented;functional,dynamic,vm,false,true,,jvm,"Apache. JVM language. Compiler intentionally in Java. Influenced by Python, Ruby, Smalltalk."
+lang:vb_net,Visual Basic .NET,language,2002,C#,object-oriented;imperative,static,vm,false,,,clr,Microsoft. Roslyn handles both C# and VB.NET. Runs on .NET CLR.
+tool:gcc,GCC,tool,1987,C++,tool,unspecified,tool,true,,,tools,GNU Compiler Collection. Originally in C. Switched to C++ in 2012. Self-hosting.
+tool:llvm,LLVM,tool,2003,C++,tool,unspecified,tool,false,,,tools,"Low Level Virtual Machine. Chris Lattner. Backend for Rust, Swift, Crystal, Zig, Julia, Clang."
+tool:clang,Clang,tool,2007,C++,tool,unspecified,tool,false,,,tools,LLVM C/C++/Objective-C frontend. Written in C++. Apple-backed.
+tool:hotspot,HotSpot JVM,tool,1999,C++,tool,unspecified,tool,false,,,tools,Sun/Oracle JVM. C++. JIT compiler. OpenJDK primary JVM.
+tool:dotnet_runtime,.NET Runtime,tool,2002,C++,tool,unspecified,tool,false,,,tools,CoreCLR. Microsoft. C++ and Assembly. Open-sourced 2014.
+tool:roslyn,Roslyn,tool,2014,C#,tool,unspecified,tool,true,,,tools,.NET Compiler Platform. Handles C# and VB.NET. Rewrote C++ compiler in C#. Open-sourced 2014.
+tool:v8,V8,tool,2008,C++,tool,unspecified,tool,false,,,tools,Google JavaScript engine. Powers Chrome and Node.js. Written in C++.
+tool:spidermonkey,SpiderMonkey,tool,1996,C++,tool,unspecified,tool,false,,,tools,Mozilla JavaScript engine. Original C by Brendan Eich. Now C++ and Rust.
+tool:javascriptcore,JavaScriptCore,tool,2001,C++,tool,unspecified,tool,false,,,tools,Apple/WebKit JavaScript engine. C++ and Assembly. Powers Safari.
+tool:ghc,GHC,tool,1992,Haskell,tool,unspecified,tool,true,,,tools,Glasgow Haskell Compiler. Primary Haskell implementation. Self-hosting. RTS in C.
+tool:mrustc,mrustc,tool,2016,C++,tool,unspecified,tool,false,,,tools,Alternative Rust compiler in C++. Used for bootstrapping Rust from non-Rust sources.
+tool:beam,BEAM VM,tool,1986,C,tool,unspecified,tool,false,,,tools,"Bogdan/Björn's Erlang Abstract Machine. Written in C. Runs Erlang, Elixir, Gleam, LFE."
+tool:chez_scheme,Chez Scheme,tool,1985,Scheme,tool,unspecified,tool,true,,,tools,R. Kent Dybvig. Self-hosting Scheme compiler using nanopass framework. Now powers Racket backend.
+tool:femtolisp,FemtoLisp,tool,2009,C,tool,unspecified,tool,false,,,tools,Lightweight Scheme-like Lisp by Jeff Bezanson. Used as Julia's parser frontend until v1.10.
+lang:flow_matic,FLOW-MATIC,language,1955,Assembly,imperative,static,none,false,,,other,"First English-like data processing language, direct predecessor to COBOL"
+lang:comtran,COMTRAN,language,1957,Assembly,imperative,static,none,false,,,other,"IBM's Commercial Translator, co-predecessor to COBOL"
+lang:planner,Planner,language,1969,Lisp,logic;procedural,dynamic,none,false,,,other,Logic programming precursor that directly influenced Prolog's design
+lang:lazy_ml,Lazy ML,language,1984,unspecified,functional,static,none,false,,,other,Lazy functional language used as initial implementation language for GHC prototype (1989)
+lang:newsqueak,Newsqueak,language,1988,C,concurrent;imperative,static,none,false,,,other,"Concurrent programming language by Rob Pike, influenced Go's concurrency model"
+lang:limbo,Limbo,language,1995,C,concurrent;imperative,static,none,false,,,other,"Systems programming language for the Inferno OS, influenced Go"
+lang:oberon2,Oberon-2,language,1991,Oberon,imperative;object-oriented,static,none,false,,,other,"Extension of Oberon with type-bound procedures, influenced Go"
+lang:alef,Alef,language,1992,C,concurrent;imperative,static,none,false,,,other,"Concurrent systems language for Plan 9, influenced Go and Rust"
+lang:cyclone,Cyclone,language,2002,C,imperative;functional,static,none,false,,,other,"Safe dialect of C, influenced Rust's ownership and region-based memory system"
+lang:clu,CLU,language,1975,Assembly,imperative;object-oriented,static,none,false,,,other,"Pioneer in data abstraction, influenced iterators and exception handling in many languages including Rust"
+lang:gleam,Gleam,language,2019,Rust,functional,static,none,false,,,other,"Functional language for Erlang VM, influenced by Rust"
+lang:oberon,Oberon,language,1987,Modula-2,imperative;object-oriented,static,none,false,,,other,"Successor to Modula-2 by Niklaus Wirth, influenced Go"
+lang:abc,ABC,language,1987,C,imperative;procedural,dynamic,none,false,,,other,"Teaching language developed at CWI, primary inspiration for Python"
+lang:modula3,Modula-3,language,1988,C,imperative;object-oriented;concurrent,static,none,false,,,other,"Systems programming language, influenced Python's module and exception system"
+lang:icon,Icon,language,1977,C,imperative;functional,dynamic,none,false,,,other,"High-level language with goal-directed evaluation, influenced Python's generators"
+lang:dylan,Dylan,language,1992,C,object-oriented;functional,dynamic,none,false,,,other,Dynamic language influenced Python's object model
+lang:modula2,Modula-2,language,1978,Pascal,imperative;modular,static,none,false,,,other,"Successor to Pascal with modules, influenced Go and many systems languages"
+lang:self,Self,language,1987,C++,object-oriented;prototype-based,dynamic,none,false,,,other,"Prototype-based OOP language, directly influenced JavaScript's object model"
+lang:miranda,Miranda,language,1985,C,functional,static,none,false,,,other,Lazy functional language that directly inspired Haskell
+lang:matlab,MATLAB,language,1984,C,imperative;array,dynamic,none,false,,,other,"Matrix-oriented language for scientific computing, influenced Julia"
+lang:idris,Idris,language,2011,Haskell,functional;dependent-typed,static,none,false,true,,other,Dependently typed functional language inspired by Haskell
+lang:agda,Agda,language,2007,Haskell,functional;proof-assistant,static,none,false,,,other,Dependently typed proof assistant and programming language
+lang:cython,Cython,language,2007,C,imperative,static,none,false,,,other,Superset of Python that compiles to C for performance
+lang:apl,APL,language,1966,C,array;functional,dynamic,none,false,,,other,"Array programming language with concise notation, influenced many scientific languages"
+lang:delphi,Delphi,language,1995,Pascal,imperative;object-oriented,static,none,false,,,other,"Object Pascal dialect for RAD, predecessor to C# design patterns"
+lang:j,J,language,1990,C,array;functional,dynamic,none,false,,,other,"Successor to APL by its creator, using ASCII characters"
+lang:mercury,Mercury,language,1995,Prolog,logic;functional,static,none,false,,,other,"Purely declarative logic language, statically typed descendant of Prolog"
+lang:algol68,ALGOL 68,language,1968,Assembly,imperative,static,none,false,,,other,"Revision of ALGOL 60, influenced C and Python"
+lang:pl1,PL/I,language,1964,Assembly,imperative;procedural,static,none,false,,,other,General-purpose IBM language combining Fortran and COBOL features
+lang:bash,Bash,language,1989,C,scripting;imperative,dynamic,none,false,,,other,"Unix shell and scripting language, GNU replacement for Bourne shell"
+lang:tcl,Tcl,language,1988,C,scripting;imperative,dynamic,none,false,,,other,Scripting language for embedding in applications
+lang:awk,AWK,language,1977,C,data-driven;scripting,dynamic,none,false,,,other,"Text processing language, influenced Perl"
+lang:sh,Bourne Shell,language,1979,C,scripting,dynamic,none,false,,,other,"Original Unix shell, predecessor to Bash"
+lang:angular,Angular,language,2016,TypeScript,declarative;object-oriented,static,none,false,,,other,TypeScript-based web framework by Google
+lang:luajit,LuaJIT,language,2005,C,scripting;imperative,dynamic,none,false,,,other,"JIT compiler for Lua, significantly faster than standard Lua"
+lang:s,S,language,1976,C,statistical;functional,dynamic,none,false,,,other,"Statistical computing language, inspired R"
+lang:pharo,Pharo,language,2008,C,object-oriented,dynamic,none,false,,,other,Modern Smalltalk dialect focused on live programming
+lang:guile,GNU Guile,language,1993,C,functional;scripting,dynamic,none,false,,,other,"GNU's official scripting language, a Scheme dialect"
+lang:mypy,mypy,language,2012,Python,static-analysis,static,none,false,,,other,Optional static type checker for Python
+lang:freepascal,Free Pascal,language,1993,Pascal,imperative;object-oriented,static,none,false,,,other,Open-source Pascal and Object Pascal compiler
+lang:fortran95,Fortran 95,language,1997,C,imperative;array,static,none,false,,,other,Revised Fortran standard with improved features
+lang:raku,Raku,language,2015,Rakudo / MoarVM,multi-paradigm;functional;object-oriented;concurrent,gradual,vm,false,true,,dynamic,Formerly Perl 6. Reference implementation Rakudo runs on the MoarVM virtual machine.
+lang:hack,Hack,language,2014,HHVM (C++),multi-paradigm;object-oriented;functional,gradual,jit,false,true,Meta,dynamic,"Facebook/Meta dialect of PHP for HHVM, adding gradual static typing."
+lang:rescript,ReScript,language,2020,OCaml,functional,static,transpiled,false,true,,functional,"Typed language that compiles to JavaScript; evolved from BuckleScript and ReasonML, built on OCaml."
+lang:vala,Vala,language,2006,Vala / C,object-oriented;imperative,static,compiled,true,true,,systems,GNOME language that compiles to C using GObject; syntax strongly influenced by C#.
+lang:eiffel,Eiffel,language,1986,Eiffel / C,object-oriented,static,compiled,true,true,Eiffel Software,other,"Introduced Design by Contract; influenced C#, Ada 2012, and D."
+lang:forth,Forth,language,1970,Assembly,imperative;procedural;concurrent,none,interpreted,true,false,,historical,"Stack-based, concatenative language; influenced PostScript, RPL, and Factor."
+lang:solidity,Solidity,language,2014,C++,object-oriented;imperative,static,compiled,false,false,Ethereum Foundation,other,"Smart-contract language compiling to Ethereum Virtual Machine bytecode; influenced by C++, Python, and JavaScript."
+lang:io,Io,language,2002,C,prototype-based;object-oriented;concurrent,dynamic,interpreted,false,true,,dynamic,"Prototype-based language inspired by Smalltalk, Self, NewtonScript, and Lua."
+lang:clean,Clean,language,1987,Clean / C,functional,static,compiled,true,true,,functional,Lazy functional language with uniqueness types; influenced by Miranda; parallels Haskell.
+lang:occam,occam,language,1983,Assembly,concurrent;imperative,static,compiled,false,false,Inmos,historical,Based on Hoare's CSP for the transputer; its concurrency model influenced later languages.
+lang:snobol,SNOBOL,language,1962,Assembly,imperative;scripting,dynamic,interpreted,false,true,Bell Labs,historical,String-processing language from Bell Labs; influenced Icon and later pattern-matching features.
+lang:speedcoding,Speedcoding,language,1953,Machine code,imperative,none,interpreted,false,false,IBM,roots,Early high-level interpretive system by John Backus for the IBM 701; informed the later design of Fortran.
+lang:basic,BASIC,language,1964,FORTRAN / Assembly,imperative;procedural,weak,interpreted,false,false,Dartmouth College,historical,"Dartmouth BASIC, designed for accessibility; influenced by FORTRAN and ALGOL; spawned many dialects including Visual Basic."
+lang:logo,Logo,language,1967,Lisp,functional;imperative,dynamic,interpreted,false,true,BBN,historical,Educational language with turtle graphics; a Lisp dialect that influenced Scratch.
+lang:hope,Hope,language,1980,Hope / Lisp,functional,static,interpreted,false,true,University of Edinburgh,functional,Early functional language with algebraic data types; influenced Miranda and Haskell.
+lang:mesa,Mesa,language,1976,Mesa / BCPL,imperative;modular;concurrent,static,compiled,true,false,Xerox PARC,historical,"Xerox PARC systems language; pioneered modules and monitors; influenced Modula-2, Cedar, and Java."
+lang:ats,ATS,language,2008,ATS / C,functional;imperative;dependent-typed,static,compiled,true,false,,functional,Combines dependent and linear types with low-level programming; influenced by ML and Dependent ML; compiles to C.
+lang:roc,Roc,language,2019,Zig,functional,static,compiled,false,true,,functional,"Fast, friendly functional language influenced by Elm; compiler written in Rust with an LLVM backend."
+lang:unison,Unison,language,2020,Haskell,functional,static,interpreted,false,true,,functional,Content-addressed functional language influenced by Haskell; implemented in Haskell.
+lang:lean,Lean,language,2013,Lean / C++,functional;proof-assistant;dependent-typed,static,compiled,true,true,,functional,Theorem prover and functional language; Lean 4 is self-hosting with a C backend.
+lang:coq,Coq,language,1989,OCaml,proof-assistant;functional;dependent-typed,static,compiled,false,true,INRIA,functional,Proof assistant based on the Calculus of Inductive Constructions; written in OCaml; renamed Rocq in 2025.
+lang:qsharp,Q#,language,2017,C#,functional;imperative,static,jit,false,true,Microsoft,clr,"Microsoft's quantum programming language; runs on .NET; influenced by C#, F#, and Python."
+lang:powershell,PowerShell,language,2006,C#,scripting;imperative;object-oriented,dynamic,interpreted,false,true,Microsoft,clr,"Task-automation shell and scripting language on .NET; influenced by ksh, Perl, Tcl, and C#."
+lang:haxe,Haxe,language,2005,OCaml,multi-paradigm;object-oriented;functional;generic,static,transpiled,false,true,,other,Cross-platform toolkit compiling to many targets; compiler written in OCaml; grew out of ActionScript tooling.
+lang:actionscript,ActionScript,language,1998,C++ (Tamarin),object-oriented;prototype-based;scripting,gradual,jit,false,true,Macromedia / Adobe,dynamic,Scripting language for Adobe Flash based on ECMAScript; ActionScript 3 ran on the Tamarin/AVM2 virtual machine.
+lang:chapel,Chapel,language,2009,C / C++,concurrent;imperative;object-oriented;scientific,static,compiled,false,false,Cray / HPE,scientific,"Parallel programming language for high-performance computing; influenced by C, Fortran, ZPL, and Java."
+lang:pony,Pony,language,2015,C++,object-oriented;concurrent;functional,static,compiled,false,true,,systems,Actor-model language with reference capabilities for data-race freedom; influenced by Erlang; LLVM backend.
+lang:odin,Odin,language,2016,C++,imperative;procedural;systems,static,compiled,false,false,,systems,"Systems language designed as a C alternative; influenced by C, Pascal, Go, and Oberon; LLVM backend."
+lang:hare,Hare,language,2022,C,systems;imperative;procedural,static,compiled,false,false,,systems,Systems language influenced by C; uses the QBE backend; bootstrap compiler written in C.
+lang:wren,Wren,language,2013,C,object-oriented;scripting;concurrent,dynamic,interpreted,false,true,,dynamic,"Small, embeddable scripting language influenced by Lua, Smalltalk, and Ruby; written in C."
+lang:factor,Factor,language,2003,Factor / C++,concurrent;functional;object-oriented;declarative,dynamic,compiled,true,true,,other,"Concatenative, stack-based language influenced by Forth and Lisp; self-hosting with a C++ VM."
+lang:nix,Nix,language,2003,C++,functional;declarative,dynamic,interpreted,false,true,,other,"Purely functional, lazy language driving the Nix package manager; implemented in C++."
+lang:move,Move,language,2019,Rust,imperative;procedural,static,compiled,false,false,Meta,other,Resource-oriented smart-contract language from the Diem project; influenced by Rust; toolchain in Rust.
+tool:hhvm,HHVM,tool,2011,C++,tool,none,jit,false,true,Meta,tools,"Virtual machine and JIT compiler for Hack and PHP, written in C++."
+tool:moarvm,MoarVM,tool,2013,C,tool,none,vm,false,true,,tools,"Virtual machine built for Raku (NQP/Rakudo), written in C."
+tool:graalvm,GraalVM,tool,2019,Java,tool,none,jit,false,true,Oracle,tools,Polyglot JIT compiler and virtual machine written in Java using the Truffle framework.
+tool:quickjs,QuickJS,tool,2019,C,tool,none,interpreted,false,true,,tools,"Small, embeddable JavaScript engine by Fabrice Bellard, written in C."
+tool:esbuild,esbuild,tool,2020,Go,tool,none,tool,false,true,,tools,Fast JavaScript and TypeScript bundler and transpiler written in Go.
+tool:swc,SWC,tool,2019,Rust,tool,none,tool,false,true,,tools,"Rust-based platform for compiling TypeScript/JavaScript, used by Next.js and others."
+tool:babel,Babel,tool,2014,JavaScript,tool,none,tool,false,true,,tools,JavaScript transpiler letting modern JS run in older environments; written in JavaScript.
+lang:emacs_lisp,Emacs Lisp,language,1985,C,functional;procedural;scripting,dynamic,interpreted,false,true,,functional,"Extension language of GNU Emacs, a Maclisp descendant. The evaluator, byte-code interpreter, and primitives are written in C; most of the editor itself is written in Emacs Lisp."
+lang:scratch,Scratch,language,2007,JavaScript,imperative;scripting,dynamic,interpreted,false,true,MIT Media Lab,dynamic,"Block-based language from the MIT Media Lab Lifelong Kindergarten group. Implemented three times: Squeak Smalltalk (1.x), ActionScript/Flash (2.0), and JavaScript (3.0, 2019)."
+lang:clojurescript,ClojureScript,language,2011,Clojure,functional;multi-paradigm,dynamic,transpiled,false,true,,jvm,"Clojure dialect that compiles to JavaScript. The compiler is written in Clojure and runs on the JVM, emitting JavaScript optimized by the Google Closure Compiler."
+lang:rebol,Rebol,language,1997,C,functional;multi-paradigm;scripting,dynamic,interpreted,false,true,,dynamic,"Carl Sassenrath. Homoiconic language built around dialects. The Rebol 3 interpreter, open-sourced in 2012, is written in C."
+lang:red,Red,language,2011,Rebol,functional;multi-paradigm;systems,dynamic,compiled,false,true,,dynamic,"Nenad Rakocevic. Strongly inspired by Rebol, with a native-code compiler and the low-level Red/System dialect. The toolchain is still bootstrapped from Rebol 2 sources."
+lang:gdscript,GDScript,language,2014,C++,object-oriented;imperative;scripting,gradual,vm,false,true,,dynamic,"Scripting language of the Godot game engine, with Python-like indentation syntax. Its parser, compiler, and virtual machine are a C++ module inside the engine."
+lang:fish,fish,language,2005,Rust,scripting;imperative,dynamic,interpreted,false,,,other,"Friendly interactive shell by Axel Liljencrantz. Written in C, ported to C++, then rewritten in Rust for fish 4.0 (2025)."
+lang:luau,Luau,language,2021,C++,imperative;multi-paradigm;scripting,gradual,vm,false,true,Roblox,dynamic,"Gradually typed language derived from Lua 5.1, developed by Roblox and open-sourced in 2021. Compiler, type checker, and VM are written in C++."
+lang:jakt,Jakt,language,2022,Jakt,systems;object-oriented;functional,static,transpiled,true,false,,systems,Memory-safe systems language from the SerenityOS project. Transpiles to C++; the self-hosted compiler is written in Jakt.
+lang:nushell,Nushell,language,2019,Rust,functional;scripting;data-driven,dynamic,interpreted,false,,,other,"Shell and language built around structured data pipelines, drawing on the Unix pipeline model and PowerShell. Written in Rust."
+tool:nodejs,Node.js,tool,2009,C++,tool,none,jit,false,true,,tools,"Server-side JavaScript runtime by Ryan Dahl, built on the V8 engine and libuv. Native core in C++; the standard library is JavaScript."
+tool:deno,Deno,tool,2018,Rust,tool,none,jit,false,true,,tools,"JavaScript, TypeScript, and WebAssembly runtime by Ryan Dahl, built on V8, Rust, and Tokio."
+tool:bun,Bun,tool,2022,Rust,tool,none,jit,false,true,,tools,"JavaScript runtime, bundler, and package manager by Jarred Sumner, powered by JavaScriptCore. Written in Zig until the 2026 rewrite in Rust, shipped in Bun 1.4."
+tool:pypy,PyPy,tool,2007,Python,tool,none,jit,false,true,,tools,"Alternative Python implementation with a tracing JIT. Written in RPython, a restricted subset of Python that the PyPy toolchain translates to C."
+tool:blas,BLAS,tool,1979,Fortran,tool,none,native,false,,,tools,"Basic Linear Algebra Subprograms. The Netlib reference implementation is Fortran; optimized implementations (OpenBLAS, MKL, cuBLAS) sit under most numerical and ML stacks."
+tool:cuda,CUDA,tool,2007,unspecified,tool,none,native,false,,NVIDIA,tools,NVIDIA GPU computing platform. CUDA C++ extends C++ for writing GPU kernels; the NVVM compiler IR is based on LLVM IR. The toolkit itself is proprietary.
+tool:ggml,ggml,tool,2022,C,tool,none,native,false,,,tools,"Tensor library for machine learning by Georgi Gerganov. Core in C with C++ backends, including CUDA and Metal."
+tool:llama_cpp,llama.cpp,tool,2023,C++,tool,none,native,false,,,tools,"LLM inference engine in C/C++, built on the ggml tensor library."
+tool:pytorch,PyTorch,tool,2016,C++,tool,none,native,false,,,tools,"Deep learning framework originally from Meta AI. Python front end over the ATen C++ tensor library, with GPU kernels in CUDA."

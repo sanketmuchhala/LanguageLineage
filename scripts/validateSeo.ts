@@ -288,7 +288,8 @@ if (datasetPage) {
     if (schema['@type'] !== 'Dataset') fail('dataset/index.html JSON-LD is not Dataset');
     if (schema.version !== '5.0') fail('dataset/index.html JSON-LD missing version 5.0');
     if (schema.license !== 'https://creativecommons.org/licenses/by/4.0/') fail('dataset/index.html JSON-LD has unexpected license');
-    if (schema.distribution?.contentUrl !== `${SITE}/dataset/v5/lineage_v5.json`) fail('dataset/index.html JSON-LD missing direct DataDownload URL');
+    const downloads: Array<{ contentUrl?: string }> = [schema.distribution ?? []].flat();
+    if (!downloads.some((d) => d.contentUrl === `${SITE}/dataset/v5/lineage_v5.json`)) fail('dataset/index.html JSON-LD missing direct DataDownload URL');
     else ok('dataset/index.html Dataset JSON-LD has version, license, and download metadata');
   } catch {
     fail('dataset/index.html Dataset JSON-LD is invalid JSON');

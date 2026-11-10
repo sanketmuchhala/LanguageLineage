@@ -6,6 +6,11 @@ version, served live at
 [languagelineage.org/dataset/v5/lineage_v5.json](https://www.languagelineage.org/dataset/v5/lineage_v5.json).
 Earlier versions (`v1`–`v4`) are kept for reproducibility.
 
+`v5/lineage_v5_nodes.csv`, `v5/lineage_v5_edges.csv` and `v5/DATACARD.md` are
+generated from `lineage_v5.json` by `scripts/generateDatasetRelease.ts` on every
+`npm run seo:generate`; edit the JSON, never the CSV. Citation metadata is in
+[`CITATION.cff`](../CITATION.cff) at the repository root.
+
 Each relationship (`compiler_written_in`, `runtime_written_in`,
 `bootstrap_written_in`, `rewritten_in`, `transpiled_to`, `influenced`) carries
 a `confidence` score and an `evidence_source` URL. See

@@ -4,6 +4,8 @@ import { fileURLToPath } from 'url';
 import { LOGO_MAP, LOGO_COLORS, getLogoPresentation } from '../src/data/logoMap.js';
 import { getAdaptiveLogoBackground, getLogoBorderColor } from '../src/utils/colorContrast.js';
 import { LASTMOD_TOKEN, filePathToUrl, resolveDate, flushManifest } from './pageDates.js';
+import { sourceLabel } from './sourceType.js';
+import { buildPosterModel, POSTER_SLUG, POSTER_TYPES, POSTER_MIN_GROUP } from './posterData.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -1449,7 +1451,172 @@ function buildFamilyTreeFigure(nodeMap: Map<string, Language>, rels: Relationshi
 <svg class="ft-compact" viewBox="0 0 ${CW} ${CH}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${escapeHtml(label)}">
   ${SVG_STYLE}${compactHeads}${compactEdges}${compactNodes}
 </svg>
-<figcaption>${edges.length} dated <strong>influence</strong> relationships between ${placed.size} languages, straight from the dataset. In the wide view, horizontal position is the first release year. A few mutual-influence pairs (Swift and Rust, Elm and Rust) run both ways and are left out here; <a href="/explore">the full graph</a> has all 252.</figcaption>
+<figcaption>${edges.length} dated <strong>influence</strong> relationships between ${placed.size} languages, straight from the dataset. In the wide view, horizontal position is the first release year. A few mutual-influence pairs (Swift and Rust, Elm and Rust) run both ways and are left out here; <a href="/explore">the full graph</a> has all ${rels.filter(r => r.relationship === 'influenced').length}.</figcaption>
+</figure>`;
+}
+
+// What each edge type means in one line, for the family-tree guide's relationship table.
+const RELATIONSHIP_KIND_ROWS: Array<{ type: string; meaning: string }> = [
+  { type: 'compiler_written_in', meaning: 'The language a compiler is written in.' },
+  { type: 'runtime_written_in', meaning: 'The language an interpreter, runtime or virtual machine is written in.' },
+  { type: 'bootstrap_written_in', meaning: 'The language of the first compiler, before a language could compile itself.' },
+  { type: 'rewritten_in', meaning: 'An implementation moved to a different language.' },
+  { type: 'transpiled_to', meaning: 'A language that compiles to another high-level language.' },
+  { type: 'influenced', meaning: 'Design ideas borrowed from an earlier language, with no code dependency.' },
+];
+
+function buildRelationshipKindsTable(rels: Relationship[]): string {
+  const rows = RELATIONSHIP_KIND_ROWS.map(({ type, meaning }) => {
+    const count = rels.filter(r => r.relationship === type).length;
+    const slug = type.replace(/_/g, '-');
+    return `<tr><td>${relBadge(type)}</td><td>${escapeHtml(meaning)}</td><td>${count}</td><td><a href="/relationships/${slug}">Browse all</a></td></tr>`;
+  }).join('\n');
+  return `<table class="impl-table" id="relationship-kinds">
+  <thead><tr><th>Relationship</th><th>What it means</th><th>Edges</th><th>List</th></tr></thead>
+  <tbody>
+${rows}
+  </tbody>
+</table>
+<p>The dataset does not record "runs on" or compilation targets (Kotlin running on the JVM, Rust emitting machine code through LLVM) as edges of their own; those appear in each language page's text. Every row above links to the full list, with a source for each edge.</p>`;
+}
+
+// Languages whose compiler was once written in another language and is now self-hosting:
+// a self-loop compiler_written_in edge with a start year, plus at least one earlier
+// compiler_written_in edge from another language that has an end year.
+interface SelfHostingTransition {
+  id: string;
+  selfHostedSince: number;
+  earlier: Relationship[];
+  stillUses: Relationship[];
+  selfEdge: Relationship;
+}
+
+function findSelfHostingTransitions(rels: Relationship[]): SelfHostingTransition[] {
+  const out: SelfHostingTransition[] = [];
+  for (const selfEdge of rels) {
+    if (selfEdge.relationship !== 'compiler_written_in') continue;
+    if (selfEdge.from_language !== selfEdge.to_language || selfEdge.start_year == null) continue;
+    const id = selfEdge.to_language;
+    const others = rels.filter(r => r.relationship === 'compiler_written_in' && r.to_language === id && r.from_language !== id);
+    const earlier = others.filter(r => r.end_year != null).sort((a, b) => (a.start_year ?? 0) - (b.start_year ?? 0));
+    if (earlier.length === 0) continue;
+    const stillUses = others.filter(r => r.end_year == null);
+    out.push({ id, selfHostedSince: selfEdge.start_year, earlier, stillUses, selfEdge });
+  }
+  return out.sort((a, b) => a.selfHostedSince - b.selfHostedSince || a.id.localeCompare(b.id));
+}
+
+// An evidence link followed by its source type, for tables.
+function evidenceCell(url: string | undefined): string {
+  if (!url) return '';
+  return `<a href="${escapeHtml(url)}" rel="noopener noreferrer" target="_blank">${escapeHtml(sourceLabel(url))}</a>`;
+}
+
+function sourceLink(url: string | undefined, n: number): string {
+  if (!url) return '';
+  let host = url;
+  try { host = new URL(url).hostname.replace(/^www\./, ''); } catch { /* keep raw url */ }
+  return `<a href="${escapeHtml(url)}" rel="noopener noreferrer" target="_blank" title="${escapeHtml(url)}">[${n}] ${escapeHtml(host)}</a> <span class="src-type">${escapeHtml(sourceLabel(url))}</span>`;
+}
+
+function yearSpan(r: Relationship): string {
+  if (r.start_year == null) return r.end_year != null ? `until ${r.end_year}` : '';
+  return r.end_year != null ? `${r.start_year}&ndash;${r.end_year}` : `since ${r.start_year}`;
+}
+
+function buildSelfHostingTable(nodeMap: Map<string, Language>, rels: Relationship[]): string {
+  const transitions = findSelfHostingTransitions(rels);
+  if (transitions.length === 0) return '';
+  const rows = transitions.map(t => {
+    const edges = [...t.earlier, t.selfEdge, ...t.stillUses];
+    const urls = [...new Set(edges.map(e => e.evidence_source).filter((u): u is string => !!u))];
+    const earlier = t.earlier.map(r => `${linkNode(r.from_language, nodeMap)} (${yearSpan(r)})`).join(', ');
+    const still = t.stillUses.length
+      ? t.stillUses.map(r => linkNode(r.from_language, nodeMap)).join(', ')
+      : '&mdash;';
+    const sources = urls.map((u, i) => sourceLink(u, i + 1)).join(' ');
+    return `<tr><td>${linkNode(t.id, nodeMap)}</td><td>${earlier}</td><td>${t.selfHostedSince}</td><td>${still}</td><td>${sources}</td></tr>`;
+  }).join('\n');
+  return `<table class="impl-table" id="self-hosting-transitions">
+  <thead><tr><th>Language</th><th>Earlier compiler written in</th><th>Compiles itself since</th><th>Also uses today</th><th>Sources</th></tr></thead>
+  <tbody>
+${rows}
+  </tbody>
+</table>
+<p>${transitions.length} languages in the dataset have a dated move from a compiler written in another language to a self-hosting one. "Also uses today" lists other components the current compiler is recorded as written in or built on, such as the LLVM backend. A language is only listed when both the earlier and the current compiler edges carry a year and a source.</p>`;
+}
+
+// Every implementation edge (not influence or transpilation) into the given nodes, with
+// years and a labeled source, for guides that discuss a specific toolchain.
+const IMPL_HISTORY_TYPES = new Set(['compiler_written_in', 'runtime_written_in', 'bootstrap_written_in', 'rewritten_in']);
+function buildImplementationHistoryTable(ids: string[], nodeMap: Map<string, Language>, rels: Relationship[], tableId: string): string {
+  const rows = ids.flatMap(id => rels
+    .filter(r => r.to_language === id && IMPL_HISTORY_TYPES.has(r.relationship))
+    .sort((a, b) => (a.start_year ?? 9999) - (b.start_year ?? 9999) || a.from_language.localeCompare(b.from_language)));
+  if (rows.length === 0) return '';
+  const body = rows.map(r => `<tr><td>${linkNode(r.to_language, nodeMap)}</td><td>${linkNode(r.from_language, nodeMap)}</td><td>${relBadge(r.relationship)}</td><td>${yearSpan(r) || 'not dated'}</td><td>${evidenceCell(r.evidence_source)}</td></tr>`).join('\n');
+  return `<table class="impl-table" id="${tableId}">
+  <thead><tr><th>Component</th><th>Written in</th><th>Relationship</th><th>Years</th><th>Source</th></tr></thead>
+  <tbody>
+${body}
+  </tbody>
+</table>`;
+}
+
+// One row per self-hosting transition: earlier compiler edges grouped by identical year
+// span (so parallel components such as C++ and LLVM share a box), then the self-hosting box.
+function buildSelfHostingDiagram(nodeMap: Map<string, Language>, rels: Relationship[]): string {
+  const transitions = findSelfHostingTransitions(rels);
+  if (transitions.length === 0) return '';
+  const BOX_W = 128, BOX_H = 44, GAP = 36, LABEL_W = 72, ROW_H = 68, PAD = 12;
+  const color = RELATIONSHIP_DEFS.compiler_written_in.color;
+  const rows = transitions.map(t => {
+    const groups = new Map<string, Relationship[]>();
+    for (const r of t.earlier) {
+      const key = `${r.start_year ?? ''}-${r.end_year ?? ''}`;
+      groups.set(key, [...(groups.get(key) ?? []), r]);
+    }
+    const boxes = [...groups.values()].map(g => ({
+      name: g.map(r => nameFromId(r.from_language, nodeMap)).join(' + '),
+      years: yearSpan(g[0]).replace('&ndash;', '–'),
+      self: false,
+    }));
+    boxes.push({ name: nameFromId(t.id, nodeMap), years: `since ${t.selfHostedSince}`, self: true });
+    return { label: nameFromId(t.id, nodeMap), boxes };
+  });
+  const maxBoxes = Math.max(...rows.map(r => r.boxes.length));
+  const W = LABEL_W + maxBoxes * BOX_W + (maxBoxes - 1) * GAP + PAD;
+  const H = rows.length * ROW_H + PAD;
+  const svgRows = rows.map((row, i) => {
+    const y = PAD + i * ROW_H;
+    const cy = y + BOX_H / 2;
+    const parts = [`<text x="4" y="${cy}" class="sh-lbl">${escapeHtml(row.label.toUpperCase())}</text>`];
+    row.boxes.forEach((b, j) => {
+      const x = LABEL_W + j * (BOX_W + GAP);
+      parts.push(`<rect x="${x}" y="${y}" width="${BOX_W}" height="${BOX_H}" rx="5" fill="#161616" stroke="${b.self ? '#4ade80' : '#5a5a5a'}" stroke-width="${b.self ? 2 : 1.5}"/>`);
+      parts.push(`<text x="${x + BOX_W / 2}" y="${y + 17}" class="${b.self ? 'sh-self' : 'sh-node'}">${escapeHtml(b.name)}</text>`);
+      parts.push(`<text x="${x + BOX_W / 2}" y="${y + 33}" class="sh-year">${escapeHtml(b.years)}</text>`);
+      if (j < row.boxes.length - 1) {
+        const x1 = x + BOX_W, x2 = x + BOX_W + GAP - 8;
+        parts.push(`<line x1="${x1}" y1="${cy}" x2="${x2}" y2="${cy}" stroke="${color}" stroke-width="2"/><polygon points="${x2},${cy - 4} ${x2 + 8},${cy} ${x2},${cy + 4}" fill="${color}"/>`);
+      }
+    });
+    return parts.join('');
+  }).join('\n');
+  const summary = rows.map(r => `${r.label}: ${r.boxes.map(b => `${b.name} (${b.years})`).join(' then ')}`).join('; ');
+  return `<figure class="bootstrap-diagram-wrap">
+<div style="overflow-x:auto">
+<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${escapeHtml(`Compiler implementation language over time. ${summary}.`)}" style="width:100%;min-width:${Math.round(W * 0.8)}px;max-width:${W}px;display:block;margin:0 auto 0.5rem;font-family:inherit">
+  <style>
+    .sh-lbl{font-size:11px;fill:#9a9a9a;font-weight:600;letter-spacing:.04em;dominant-baseline:middle}
+    .sh-node{font-size:12px;fill:#fafafa;text-anchor:middle;dominant-baseline:middle}
+    .sh-self{font-size:12px;fill:#4ade80;text-anchor:middle;dominant-baseline:middle;font-weight:600}
+    .sh-year{font-size:10px;fill:#9a9a9a;text-anchor:middle;dominant-baseline:middle}
+  </style>
+${svgRows}
+</svg>
+</div>
+<figcaption>What each language's compiler was written in, over time, generated from dated <code>compiler_written_in</code> edges in the dataset. Green border: the self-hosting compiler. Components recorded for the same years share a box. Sources are in the table below.</figcaption>
 </figure>`;
 }
 
@@ -1617,7 +1784,7 @@ function buildImplSection(node: Language, rels: Relationship[], nodeMap: Map<str
         <td>${linkNode(implId, nodeMap)}</td>
         <td class="${confidenceClass(conf)}">${(conf * 100).toFixed(0)}%</td>
         <td>${r.notes ? escapeHtml(r.notes) : ''}</td>
-        <td>${r.evidence_source ? `<a href="${escapeHtml(r.evidence_source)}" rel="noopener noreferrer" target="_blank">Source</a>` : ''}</td>
+        <td>${evidenceCell(r.evidence_source)}</td>
       </tr>`;
     }).join('\n');
     return `<h2>${escapeHtml(title)}</h2>
@@ -1847,7 +2014,7 @@ function buildSources(node: Language, rels: Relationship[]): string {
       .filter((s): s is string => !!s)
   )];
 
-  const items = sources.map(s => `<li><a href="${escapeHtml(s)}" rel="noopener noreferrer" target="_blank">${escapeHtml(s)}</a></li>`);
+  const items = sources.map(s => `<li><a href="${escapeHtml(s)}" rel="noopener noreferrer" target="_blank">${escapeHtml(s)}</a> <span class="src-type">${escapeHtml(sourceLabel(s))}</span></li>`);
 
   const e = ENRICHMENT[id];
   if (e) {
@@ -3418,11 +3585,11 @@ function buildDatasetPage(languages: Language[], rels: Relationship[]): string {
     license: DATASET_LICENSE_URL,
     temporalCoverage: `${minYear}/${maxYear}`,
     variableMeasured: Object.keys(relTypeCounts),
-    distribution: {
-      '@type': 'DataDownload',
-      contentUrl: downloadUrl,
-      encodingFormat: 'application/json',
-    },
+    distribution: [
+      { '@type': 'DataDownload', contentUrl: downloadUrl, encodingFormat: 'application/json' },
+      { '@type': 'DataDownload', contentUrl: `${SITE}/dataset/v5/lineage_v5_edges.csv`, encodingFormat: 'text/csv' },
+      { '@type': 'DataDownload', contentUrl: `${SITE}/dataset/v5/lineage_v5_nodes.csv`, encodingFormat: 'text/csv' },
+    ],
   });
 
   return `<!DOCTYPE html>
@@ -3491,6 +3658,7 @@ ${NAV_HTML}
   <p>Download the complete v${DATASET_VERSION} dataset as JSON. Counts and metadata on this page are generated from this file.</p>
   <p><a class="download-btn" href="${DATASET_DOWNLOAD_PATH}" download="language-lineage-v5.json">Download dataset JSON</a></p>
   <pre><code>${downloadUrl}</code></pre>
+  <p>The same data as CSV, generated from the JSON on every build: <a href="/dataset/v5/lineage_v5_edges.csv" download>relationships (${rels.length} rows)</a> and <a href="/dataset/v5/lineage_v5_nodes.csv" download>languages and tools (${languages.length} rows)</a>. Coverage, source mix and limitations are documented in the <a href="/dataset/v5/DATACARD.md">data card</a>. A printable summary is the <a href="/posters/${POSTER_SLUG}">implementation family tree poster</a>; citation metadata is in <a href="https://github.com/sanketmuchhala/LanguageLineage/blob/main/CITATION.cff" rel="noopener noreferrer">CITATION.cff</a>.</p>
 
   <h2>License</h2>
   <p>The Language Lineage dataset is licensed under the <a href="${DATASET_LICENSE_URL}" rel="license noopener noreferrer">${DATASET_LICENSE_NAME} (CC BY 4.0)</a>. You may share and adapt the data for any purpose, provided you give appropriate credit and indicate whether changes were made.</p>
@@ -3577,6 +3745,7 @@ function buildRelationshipPage(type: string, rels: Relationship[], nodeMap: Map<
       <td><a href="/${toPrefix}/${toSlug}">${escapeHtml(toName)}</a></td>
       <td class="${confidenceClass(r.confidence)}">${(r.confidence * 100).toFixed(0)}%</td>
       <td>${r.notes ? escapeHtml(r.notes) : ''}</td>
+      <td>${evidenceCell(r.evidence_source)}</td>
     </tr>`;
   }).join('\n');
 
@@ -3611,10 +3780,10 @@ ${NAV_HTML}
   <div class="answer-box" style="border-left:3px solid ${def.color}">${escapeHtml(def.description)}</div>
 
   <h2>All ${typeRels.length} Relationships</h2>
-  <table>
-    <thead><tr><th>From</th><th>To</th><th>Confidence</th><th>Notes</th></tr></thead>
+  <div class="table-wrap"><table>
+    <thead><tr><th>From</th><th>To</th><th>Confidence</th><th>Notes</th><th>Source</th></tr></thead>
     <tbody>${rows}</tbody>
-  </table>
+  </table></div>
 
   <a class="explore-btn" href="/explore">Explore in Graph &rarr;</a>
 </main>
@@ -3626,9 +3795,9 @@ ${FOOTER_HTML}
 const GUIDES: Array<{ slug: string; title: string; h1: string; description: string; content: string }> = [
   {
     slug: 'what-is-compiler-bootstrapping',
-    title: 'What is Compiler Bootstrapping? | Language Lineage',
+    title: 'What is Compiler Bootstrapping? Real Self-Hosting Chains | Language Lineage',
     h1: 'What is Compiler Bootstrapping?',
-    description: 'Compiler bootstrapping is the process of writing a compiler for a language in that same language. Learn how it works and which languages use it.',
+    description: 'How a language comes to compile itself, with dated, sourced examples: Rust from OCaml, Go from C at 1.5, Zig from C++, plus the three bootstrap stages.',
     content: `<div class="answer-box">Compiler bootstrapping is the process of building a compiler for a programming language that is <strong>written in that same language</strong>. Because you cannot compile the compiler without already having a compiler, the first version is written in a different, already-working language, and each later version is compiled by the version before it. A language whose compiler can compile its own source code is called <em>self-hosting</em>.</div>
 
 <h2>The chicken-and-egg problem</h2>
@@ -3644,61 +3813,7 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
 </ul>
 
 <h2>Bootstrap chain diagram</h2>
-<figure class="bootstrap-diagram-wrap" aria-label="Bootstrap chains for Rust and Go">
-<svg viewBox="0 0 540 185" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:540px;display:block;margin:0 auto 0.5rem;font-family:inherit">
-  <style>
-    .bd-lbl{font-size:11px;fill:#9a9a9a;font-weight:600;letter-spacing:.04em}
-    .bd-node{font-size:12px;fill:#fafafa;text-anchor:middle;dominant-baseline:middle}
-    .bd-node-self{font-size:12px;fill:#4ade80;text-anchor:middle;dominant-baseline:middle;font-weight:600}
-    .bd-etype{font-size:10px;fill:#8b5cf6;text-anchor:middle}
-    .bd-year{font-size:10px;fill:#5a5a5a;text-anchor:middle}
-  </style>
-  <!-- Row labels -->
-  <text x="4" y="54" class="bd-lbl">RUST</text>
-  <text x="4" y="134" class="bd-lbl">GO</text>
-  <!-- === RUST CHAIN === -->
-  <!-- OCaml node -->
-  <rect x="58" y="34" width="88" height="40" rx="5" fill="#161616" stroke="#5a5a5a" stroke-width="1.5"/>
-  <text x="102" y="54" class="bd-node">OCaml</text>
-  <!-- arrow 1 -->
-  <line x1="146" y1="54" x2="192" y2="54" stroke="#8b5cf6" stroke-width="2"/>
-  <polygon points="192,50 200,54 192,58" fill="#8b5cf6"/>
-  <text x="169" y="47" class="bd-etype">bootstrap</text>
-  <!-- rustboot node -->
-  <rect x="200" y="34" width="100" height="40" rx="5" fill="#161616" stroke="#5a5a5a" stroke-width="1.5"/>
-  <text x="250" y="50" class="bd-node">rustboot</text>
-  <text x="250" y="64" class="bd-node" style="font-size:10px;fill:#9a9a9a">(in OCaml)</text>
-  <!-- arrow 2 -->
-  <line x1="300" y1="54" x2="346" y2="54" stroke="#8b5cf6" stroke-width="2"/>
-  <polygon points="346,50 354,54 346,58" fill="#8b5cf6"/>
-  <text x="323" y="47" class="bd-etype">bootstrap</text>
-  <!-- rustc self-hosting node -->
-  <rect x="354" y="34" width="100" height="40" rx="5" fill="#161616" stroke="#4ade80" stroke-width="2"/>
-  <text x="404" y="54" class="bd-node-self">rustc (Rust)</text>
-  <text x="404" y="84" class="bd-year">self-hosting 2011</text>
-  <!-- === GO CHAIN === -->
-  <!-- C node -->
-  <rect x="58" y="114" width="88" height="40" rx="5" fill="#161616" stroke="#5a5a5a" stroke-width="1.5"/>
-  <text x="102" y="134" class="bd-node">C compiler</text>
-  <!-- arrow 1 -->
-  <line x1="146" y1="134" x2="192" y2="134" stroke="#8b5cf6" stroke-width="2"/>
-  <polygon points="192,130 200,134 192,138" fill="#8b5cf6"/>
-  <text x="169" y="127" class="bd-etype">bootstrap</text>
-  <!-- early gc node -->
-  <rect x="200" y="114" width="100" height="40" rx="5" fill="#161616" stroke="#5a5a5a" stroke-width="1.5"/>
-  <text x="250" y="130" class="bd-node">gc compiler</text>
-  <text x="250" y="144" class="bd-node" style="font-size:10px;fill:#9a9a9a">(in C)</text>
-  <!-- arrow 2 -->
-  <line x1="300" y1="134" x2="346" y2="134" stroke="#8b5cf6" stroke-width="2"/>
-  <polygon points="346,130 354,134 346,138" fill="#8b5cf6"/>
-  <text x="323" y="127" class="bd-etype">bootstrap</text>
-  <!-- go self-hosting node -->
-  <rect x="354" y="114" width="100" height="40" rx="5" fill="#161616" stroke="#4ade80" stroke-width="2"/>
-  <text x="404" y="134" class="bd-node-self">gc (Go 1.5)</text>
-  <text x="404" y="164" class="bd-year">self-hosting 2015</text>
-</svg>
-<figcaption>Simplified bootstrap chains. Green border = self-hosting. Violet arrows = bootstrap_written_in edges from the dataset.</figcaption>
-</figure>
+{{SELF_HOSTING_DIAGRAM}}
 
 <h2>Why languages bootstrap</h2>
 <p>Self-hosting is a milestone of maturity. It proves the language is expressive and complete enough to build a large, performance-sensitive systems program, a compiler. It also lets the compiler team write the compiler in the language they are designing, so every improvement to the language immediately benefits the tool that builds it. Finally, it removes the long-term dependency on a foreign implementation language.</p>
@@ -3711,6 +3826,10 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
 <p><a href="/languages/go">Go</a>'s original toolchain was written in <a href="/languages/c">C</a>. The Go team at Google designed the language starting in 2007 and open-sourced it in November 2009, with a Plan 9-style C compiler as the implementation. In 2013, Russ Cox ran an automated translation of the C compiler sources to Go, producing a Go-syntax compiler that was still structurally C. That translated compiler was refined and shipped as the default compiler in Go 1.5 (August 2015), removing the C toolchain requirement entirely. From Go 1.5 onward, the build tool only needs a previous Go binary as seed.</p>
 <p>Other examples: <a href="/languages/haskell">Haskell</a>'s <a href="/tools/ghc">GHC</a> is written in Haskell with a C runtime. <a href="/tools/gcc">GCC</a> is bootstrapped from an earlier C/C++ compiler through exactly the stage 0/1/2 process. <a href="/languages/typescript">TypeScript</a>'s tsc is written in TypeScript and compiles itself.</p>
 <p>See <a href="/relationships/bootstrap-written-in">every bootstrap relationship in the dataset</a> for the full list, each with a source and confidence score.</p>
+
+<h2>Every dated self-hosting transition</h2>
+<p>The dataset records when each of these compilers stopped depending on another language. The years and sources come straight from its <code>compiler_written_in</code> edges:</p>
+{{SELF_HOSTING_TABLE}}
 
 <h2>Glossary</h2>
 <dl class="quick-facts">
@@ -3827,7 +3946,7 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
     title: 'Programming Language Family Tree | Language Lineage',
     h1: 'Programming Language Family Tree',
     description: 'The programming language family tree: how Fortran, LISP, and C influenced and implemented the languages that followed, across 75+ years of compiler and runtime history.',
-    content: `<div class="answer-box">The programming language family tree traces how languages influenced, implemented, and descended from each other over 75+ years, from <a href="/languages/fortran">Fortran</a> (1957) and <a href="/languages/lisp">Lisp</a> (1958) to <a href="/languages/rust">Rust</a> and beyond. It maps two different kinds of ancestry: <strong>influence</strong> (where a language borrowed ideas) and <strong>implementation</strong> (what a language is actually written in).</div>
+    content: `<div class="answer-box">The programming language family tree traces how languages influenced, implemented, and descended from each other over 75+ years, from <a href="/languages/fortran">Fortran</a> (1957) and <a href="/languages/lisp">Lisp</a> (1958) to <a href="/languages/rust">Rust</a> and beyond. It maps two different kinds of ancestry: <strong>influence</strong> (where a language borrowed ideas) and <strong>implementation</strong> (what a language is actually written in). The two trees disagree more than you might expect: Rust's design borrows from ML, while its compiler was written in OCaml until 2011, and <a href="/languages/go">Go</a>'s compiler was written in C until Go 1.5 (<a href="#compilers-that-learned-to-compile-themselves">see every dated transition</a>).</div>
 
 {{FAMILY_TREE_FIGURE}}
 
@@ -3838,6 +3957,13 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
 <li><strong>Implementation</strong>, what a language is built in. Python's reference interpreter, CPython, is written in <a href="/languages/c">C</a>. That is a concrete dependency, not just inspiration.</li>
 </ul>
 <p>Most "family tree" diagrams only show influence. This atlas tracks both, which is why C sits at the center of so much of the graph: dozens of languages were <em>inspired</em> by others but are <em>implemented</em> in C.</p>
+<p>In the dataset, implementation is split into several kinds of edge, and influence is kept as its own type:</p>
+{{RELATIONSHIP_KINDS_TABLE}}
+
+<h2>Compilers that learned to compile themselves</h2>
+<p>"What is X written in?" often has two true answers from different years. A new language's first compiler has to be written in something that already exists; once the language is capable enough, its compiler is rewritten in the language itself and builds each new version from the previous one. These are the transitions the dataset records with dates and sources:</p>
+{{SELF_HOSTING_TABLE}}
+<p>For how the chicken-and-egg problem is solved in practice, see <a href="/guides/what-is-compiler-bootstrapping">what compiler bootstrapping is</a> and <a href="/guides/how-rust-is-bootstrapped">how Rust is bootstrapped</a>.</p>
 
 <h2>The roots (1950s)</h2>
 <p>The first high-level languages established the paradigms everything else descends from. <a href="/languages/fortran">Fortran</a> (1957, John Backus at IBM) pioneered imperative scientific computing and proved a compiler could match hand-written assembly. <a href="/languages/lisp">Lisp</a> (1958, John McCarthy) introduced functional programming, garbage collection, the REPL, and the radical idea of treating code as data. <a href="/languages/cobol">COBOL</a> (1959, Grace Hopper and CODASYL) brought English-like syntax to business computing, and still runs much of the world's banking.</p>
@@ -3852,7 +3978,7 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
 <p>Today's languages synthesize all of these threads. <a href="/languages/go">Go</a> (2009) revived the simplicity of C with built-in concurrency. <a href="/languages/rust">Rust</a> (2010) combined ML-style types with systems-level control and memory safety without a garbage collector. <a href="/languages/swift">Swift</a> and <a href="/languages/kotlin">Kotlin</a> modernized mobile development, and <a href="/languages/typescript">TypeScript</a> added a type system on top of JavaScript. Each one is a remix of decisions made decades earlier.</p>
 
 <h2>Follow the threads yourself</h2>
-<p>Pick any language and trace it both ways: what it borrowed, and what it is built from. See the <a href="/relationships/influenced">full influence map</a>, the <a href="/relationships/compiler-written-in">compiler implementation relationships</a>, or read <a href="/guides/what-is-compiler-bootstrapping">how a language comes to compile itself</a>.</p>
+<p>Pick any language and trace it both ways: what it borrowed, and what it is built from. See the <a href="/relationships/influenced">full influence map</a>, the <a href="/relationships/compiler-written-in">compiler implementation relationships</a>, or read <a href="/guides/what-is-compiler-bootstrapping">how a language comes to compile itself</a>. For a printable overview, see the <a href="/posters/programming-language-implementation-family-tree">implementation family tree poster</a>.</p>
 
 <a class="explore-btn" href="/explore">Explore the Family Tree in Graph &rarr;</a>`,
   },
@@ -3922,9 +4048,9 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
   },
   {
     slug: 'how-rust-is-bootstrapped',
-    title: 'How Rust is Bootstrapped | Language Lineage',
+    title: 'How Rust is Bootstrapped: OCaml to Self-Hosted rustc | Language Lineage',
     h1: 'How Rust is Bootstrapped',
-    description: 'Rust is a self-hosting language. The Rust compiler (rustc) is written in Rust itself. Learn how the Rust bootstrap process works.',
+    description: 'rustc is written in Rust and built from the previous release. See the stage 0/1/2 bootstrap, the dated OCaml-to-Rust history with sources, and mrustc.',
     content: `<div class="answer-box">The Rust compiler (<strong>rustc</strong>) is written in Rust. To bootstrap Rust from scratch, you need a prior version of rustc, the compiler bootstraps itself through a stage-based process.</div>
 
 <h2>The Rust Bootstrap Process</h2>
@@ -3938,6 +4064,9 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
 
 <h2>Historical Bootstrap</h2>
 <p>Rust's original compiler (before it was rewritten in Rust) was written in OCaml. The transition to self-hosting happened around 2011–2012. The OCaml compiler was phased out once the Rust-in-Rust compiler was stable.</p>
+
+<p>Every implementation edge the dataset records for Rust and mrustc, with years and sources:</p>
+{{RUST_IMPL_TABLE}}
 
 <h2>mrustc: An Alternative Bootstrap Path</h2>
 <p>mrustc is an alternative Rust compiler written in C++ that can compile older Rust code. It provides a bootstrap path that does not require a pre-compiled rustc binary, which is important for reproducible builds.</p>
@@ -4039,6 +4168,8 @@ const GUIDES: Array<{ slug: string; title: string; h1: string; description: stri
 <tr><td>JavaScriptCore</td><td>Apple/WebKit</td><td>C++</td><td>Safari, all iOS browsers</td></tr>
 </tbody>
 </table>
+<p>The implementation languages the dataset records for each engine, with dates and sources. "Not dated" means the source gives no start year:</p>
+{{JS_ENGINE_IMPL_TABLE}}
 
 <h2>Related Pages</h2>
 <ul>
@@ -5026,6 +5157,7 @@ console.log(`Generated ${count} language/tool pages`);
 
 // Dataset page
 writeFile(join(PUBLIC, 'dataset', 'index.html'), buildDatasetPage(languages, rels));
+writeFile(join(PUBLIC, 'posters', POSTER_SLUG, 'index.html'), processPage(buildPosterPage(languages, rels, nodeMap)));
 console.log('Generated dataset page');
 
 // Relationship pages
@@ -6139,12 +6271,129 @@ function buildDirectoryPage(languages: Language[], rels: Relationship[]): string
   return html;
 }
 
+// The poster page: permanent URL for the SVG/PNG poster written by scripts/generatePoster.ts,
+// with the same groups as crawlable HTML, downloads, an embed snippet and the method.
+function buildPosterPage(languages: Language[], rels: Relationship[], nodeMap: Map<string, Language>): string {
+  const model = buildPosterModel(languages, rels);
+  const url = `${SITE}/posters/${POSTER_SLUG}`;
+  const svgPath = `/posters/${POSTER_SLUG}.svg`;
+  const pngPath = `/posters/${POSTER_SLUG}.png`;
+  const title = 'Programming Language Implementation Family Tree Poster | Language Lineage';
+  const h1 = 'Programming Language Implementation Family Tree';
+  const largest = model.groups.find(g => !g.selfHosted)!;
+  const self = model.groups.find(g => g.selfHosted)!;
+  const description = `A free poster of what programming languages are written in: ${model.nodeCount} languages and tools grouped by the language of their current compiler or runtime. SVG and PNG, CC BY 4.0.`;
+  const typeLinks = [...POSTER_TYPES].map(t => `<a href="/relationships/${t.replace(/_/g, '-')}">${escapeHtml(RELATIONSHIP_DEFS[t].label.toLowerCase())}</a>`).join(', ');
+
+  const rows = model.groups.map(g => `<tr><td>${g.selfHosted ? 'Self-hosted (written in itself)' : linkNode(g.implId!, nodeMap)}</td><td>${g.items.length}</td><td>${g.items.map(i => linkNode(i.id, nodeMap)).join(', ')}</td></tr>`).join('\n');
+  const minorRows = model.minor.map(p => `<tr><td>${linkNode(p.implId, nodeMap)}</td><td>1</td><td>${linkNode(p.item.id, nodeMap)}</td></tr>`).join('\n');
+  const cardsOf = new Map<string, string[]>();
+  for (const g of model.groups) for (const i of g.items) cardsOf.set(i.id, [...(cardsOf.get(i.id) ?? []), g.selfHosted ? 'Self-hosted' : g.title]);
+  const [multiId, multiCards] = [...cardsOf].sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]))[0];
+  const embed = `<a href="${url}"><img src="${SITE}${pngPath}" alt="What programming languages are written in: Language Lineage poster" width="800"></a>`;
+
+  const imageJsonLd = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'ImageObject',
+    name: h1,
+    description,
+    contentUrl: `${SITE}${pngPath}`,
+    url,
+    encodingFormat: 'image/png',
+    license: DATASET_LICENSE_URL,
+    acquireLicensePage: `${SITE}/dataset`,
+    creditText: 'Language Lineage',
+    creator: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
+    isBasedOn: `${SITE}/dataset`,
+  });
+  const breadcrumbJsonLd = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'Dataset', item: `${SITE}/dataset` },
+      { '@type': 'ListItem', position: 3, name: h1, item: url },
+    ],
+  });
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${escapeHtml(title)}</title>
+  <meta name="description" content="${escapeHtml(description)}" />
+  <link rel="canonical" href="${url}" />
+  <link rel="icon" href="/favicon.svg" />
+  ${FONTS_HEAD}${ANALYTICS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="${escapeHtml(title)}" />
+  <meta property="og:description" content="${escapeHtml(description)}" />
+  <meta property="og:url" content="${url}" />
+  <meta property="og:image" content="${ogImg(`posters-${POSTER_SLUG}.png`)}" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">${imageJsonLd}</script>
+  <script type="application/ld+json">${breadcrumbJsonLd}</script>
+</head>
+<body class="seo-page">
+${SKIP_LINK}
+${NAV_HTML}
+<main class="seo-main" id="main-content">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; <a href="/dataset">Dataset</a> &rsaquo; Poster
+  </nav>
+
+  <h1>${escapeHtml(h1)}</h1>
+  %%TOC%%
+
+  <div class="answer-box">What are programming languages written in? Mostly ${escapeHtml(largest.title)}: ${largest.items.length} of the languages and tools in the dataset have a current compiler or runtime written in ${escapeHtml(largest.title)}, while ${self.items.length} are self-hosted and compile themselves. This poster groups ${model.nodeCount} languages and tools by the language their implementation is written in today, from ${model.edgeCount} cited relationships.</div>
+
+  <figure class="seo-figure">
+    <a href="${pngPath}"><img src="${svgPath}" alt="Poster: languages and tools grouped by the language their current compiler or runtime is written in. The full list is in the table below." width="1600" style="width:100%;height:auto;display:block" /></a>
+    <figcaption>Select the poster for the full-size PNG. Generated from the Language Lineage dataset v${DATASET_VERSION}; the table below lists every card as text.</figcaption>
+  </figure>
+
+  <h2>Download and reuse</h2>
+  <p><a class="download-btn" href="${pngPath}" download>Download PNG</a> <a class="download-btn" href="${svgPath}" download>Download SVG</a></p>
+  <p>The poster is licensed <a href="${DATASET_LICENSE_URL}" rel="license noopener noreferrer">CC BY 4.0</a>, like the <a href="/dataset">dataset</a> it is drawn from: print it, put it in slides or course notes, or post it, with credit to Language Lineage and a link to this page. To embed it:</p>
+  <pre><code>${escapeHtml(embed)}</code></pre>
+
+  <h2>Every card, as text</h2>
+  <table>
+    <thead><tr><th>Written in</th><th>Count</th><th>Languages and tools</th></tr></thead>
+    <tbody>
+${rows}
+${minorRows}
+    </tbody>
+  </table>
+
+  <h2>How the poster is made</h2>
+  <p>Each card is an implementation language. Under it are the languages and tools whose compiler or runtime is written in that language today, using the dataset's ${typeLinks} edges that have no end year. Historical implementations are left out, so Go appears as self-hosted rather than under C, which wrote its compiler until 2015; for those changes over time see <a href="/guides/what-is-compiler-bootstrapping">how compilers bootstrap</a>. Influence and transpilation edges are not drawn.</p>
+  <p>A language can appear on several cards when the dataset records parts of its implementation in different languages: ${linkNode(multiId, nodeMap)} appears under ${escapeHtml(joinNames(multiCards))}. Cards with fewer than ${POSTER_MIN_GROUP} entries are merged into "Everything else". Every edge links to its source on the <a href="/relationships">relationship pages</a> and in the <a href="/dataset">downloadable dataset</a>.</p>
+
+  <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>
+</main>
+${FOOTER_HTML}
+</body>
+</html>`;
+}
+
 // Guide pages
-const familyTreeFigure = buildFamilyTreeFigure(nodeMap, rels);
+const GUIDE_PLACEHOLDERS: Record<string, string> = {
+  '{{FAMILY_TREE_FIGURE}}': buildFamilyTreeFigure(nodeMap, rels),
+  '{{RELATIONSHIP_KINDS_TABLE}}': buildRelationshipKindsTable(rels),
+  '{{SELF_HOSTING_TABLE}}': buildSelfHostingTable(nodeMap, rels),
+  '{{SELF_HOSTING_DIAGRAM}}': buildSelfHostingDiagram(nodeMap, rels),
+  '{{RUST_IMPL_TABLE}}': buildImplementationHistoryTable(['lang:rust', 'tool:mrustc'], nodeMap, rels, 'rust-implementation-history'),
+  '{{JS_ENGINE_IMPL_TABLE}}': buildImplementationHistoryTable(['tool:v8', 'tool:spidermonkey', 'tool:javascriptcore', 'tool:quickjs'], nodeMap, rels, 'js-engine-implementation'),
+};
 for (const guide of GUIDES) {
-  const g = guide.content.includes('{{FAMILY_TREE_FIGURE}}')
-    ? { ...guide, content: guide.content.replace('{{FAMILY_TREE_FIGURE}}', familyTreeFigure) }
-    : guide;
+  let content = guide.content;
+  for (const [placeholder, html] of Object.entries(GUIDE_PLACEHOLDERS)) content = content.replace(placeholder, html);
+  const g = content === guide.content ? guide : { ...guide, content };
   writeFile(join(PUBLIC, 'guides', g.slug, 'index.html'), processPage(buildGuidePage(g)));
 }
 console.log(`Generated ${GUIDES.length} guide pages`);

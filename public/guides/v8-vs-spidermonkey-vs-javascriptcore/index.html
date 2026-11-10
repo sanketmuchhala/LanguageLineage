@@ -17,8 +17,8 @@
   <meta property="og:image:height" content="630" />
   <meta property="og:image:type" content="image/png" />
   <meta property="article:published_time" content="2024-01-01" />
-  <meta property="article:modified_time" content="2026-09-09" />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"V8 vs SpiderMonkey vs JavaScriptCore","description":"All three major JavaScript engines are written in C++. V8 powers Chrome and Node.js, SpiderMonkey powers Firefox, and JavaScriptCore powers Safari.","url":"https://www.languagelineage.org/guides/v8-vs-spidermonkey-vs-javascriptcore","datePublished":"2024-01-01","dateModified":"2026-09-09","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":["programming languages","compiler implementation","runtime implementation"],"inLanguage":"en"}</script>
+  <meta property="article:modified_time" content="2026-11-10" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"V8 vs SpiderMonkey vs JavaScriptCore","description":"All three major JavaScript engines are written in C++. V8 powers Chrome and Node.js, SpiderMonkey powers Firefox, and JavaScriptCore powers Safari.","url":"https://www.languagelineage.org/guides/v8-vs-spidermonkey-vs-javascriptcore","datePublished":"2024-01-01","dateModified":"2026-11-10","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":["programming languages","compiler implementation","runtime implementation"],"inLanguage":"en"}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://www.languagelineage.org/guides"},{"@type":"ListItem","position":3,"name":"V8 vs SpiderMonkey vs JavaScriptCore","item":"https://www.languagelineage.org/guides/v8-vs-spidermonkey-vs-javascriptcore"}]}</script>
 </head>
 <body class="seo-page">
@@ -61,6 +61,19 @@
 <tr><td><a href="/tools/spidermonkey">SpiderMonkey</a></td><td>Mozilla</td><td>C++, Rust, JavaScript</td><td>Firefox</td></tr>
 <tr><td>JavaScriptCore</td><td>Apple/WebKit</td><td>C++</td><td>Safari, all iOS browsers</td></tr>
 </tbody>
+</table></div>
+<p>The implementation languages the dataset records for each engine, with dates and sources. "Not dated" means the source gives no start year:</p>
+<div class="table-wrap"><table class="impl-table" id="js-engine-implementation">
+  <thead><tr><th>Component</th><th>Written in</th><th>Relationship</th><th>Years</th><th>Source</th></tr></thead>
+  <tbody>
+<tr><td><a href="/tools/v8">V8</a></td><td><a href="/languages/cxx">C++</a></td><td><span class="rel-badge" style="--rc:#34d399">Runtime Written In</span></td><td>since 2008</td><td><a href="https://github.com/v8/v8" rel="noopener noreferrer" target="_blank">Source repository</a></td></tr>
+<tr><td><a href="/tools/spidermonkey">SpiderMonkey</a></td><td><a href="/languages/cxx">C++</a></td><td><span class="rel-badge" style="--rc:#34d399">Runtime Written In</span></td><td>since 2000</td><td><a href="https://spidermonkey.dev/" rel="noopener noreferrer" target="_blank">Project docs</a></td></tr>
+<tr><td><a href="/tools/spidermonkey">SpiderMonkey</a></td><td><a href="/languages/rust">Rust</a></td><td><span class="rel-badge" style="--rc:#34d399">Runtime Written In</span></td><td>since 2015</td><td><a href="https://spidermonkey.dev/" rel="noopener noreferrer" target="_blank">Project docs</a></td></tr>
+<tr><td><a href="/tools/javascriptcore">JavaScriptCore</a></td><td><a href="/languages/assembly">Assembly</a></td><td><span class="rel-badge" style="--rc:#34d399">Runtime Written In</span></td><td>since 2001</td><td><a href="https://webkit.org/" rel="noopener noreferrer" target="_blank">Project docs</a></td></tr>
+<tr><td><a href="/tools/javascriptcore">JavaScriptCore</a></td><td><a href="/languages/c">C</a></td><td><span class="rel-badge" style="--rc:#34d399">Runtime Written In</span></td><td>since 2001</td><td><a href="https://webkit.org/" rel="noopener noreferrer" target="_blank">Project docs</a></td></tr>
+<tr><td><a href="/tools/javascriptcore">JavaScriptCore</a></td><td><a href="/languages/cxx">C++</a></td><td><span class="rel-badge" style="--rc:#34d399">Runtime Written In</span></td><td>since 2001</td><td><a href="https://webkit.org/" rel="noopener noreferrer" target="_blank">Project docs</a></td></tr>
+<tr><td><a href="/tools/quickjs">QuickJS</a></td><td><a href="/languages/c">C</a></td><td><span class="rel-badge" style="--rc:#34d399">Runtime Written In</span></td><td>not dated</td><td><a href="https://en.wikipedia.org/wiki/QuickJS" rel="noopener noreferrer" target="_blank">Wikipedia</a></td></tr>
+  </tbody>
 </table></div>
 
 <h2>Related Pages</h2>
