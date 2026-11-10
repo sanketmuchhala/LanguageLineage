@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this dataset, please cite it as below."
+type: dataset
+title: "Programming Language Lineage Dataset"
+version: "5.0"
+authors:
+  - family-names: Muchhala
+    given-names: Sanket
+url: "https://www.languagelineage.org/dataset"
+repository-code: "https://github.com/sanketmuchhala/LanguageLineage"
+license: CC-BY-4.0
+abstract: >-
+  A cited graph of what programming languages and their compilers, runtimes and
+  engines are written in, how they bootstrapped, and which languages influenced
+  which. Every relationship carries an evidence URL and a confidence score. The
+  data is licensed CC BY 4.0; the site and generator code are MIT.
+keywords:
+  - programming languages
+  - compilers
+  - bootstrapping
+  - knowledge graph
+  - history of computing

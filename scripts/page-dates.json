@@ -8,12 +8,12 @@
     "lastmod": "2026-09-22"
   },
   "/dataset": {
-    "hash": "6ecb849894e64a02",
-    "lastmod": "2026-09-22"
+    "hash": "619d25f8bfe078cb",
+    "lastmod": "2026-11-10"
   },
   "/directory": {
-    "hash": "7745287a6ee7a8cd",
-    "lastmod": "2026-09-22"
+    "hash": "195c4a11d15daf12",
+    "lastmod": "2026-11-10"
   },
   "/embed-kit": {
     "hash": "12c052528636d9dd",
@@ -24,8 +24,8 @@
     "lastmod": "2026-07-02"
   },
   "/guides": {
-    "hash": "96c238171f46092c",
-    "lastmod": "2026-09-09"
+    "hash": "93eba65c2c4a8de4",
+    "lastmod": "2026-11-10"
   },
   "/guides/compiler-vs-interpreter-vs-runtime": {
     "hash": "fd7ada0497a18ad6",
@@ -72,8 +72,8 @@
     "lastmod": "2026-09-09"
   },
   "/guides/what-is-compiler-bootstrapping": {
-    "hash": "01e524d70e7d62f2",
-    "lastmod": "2026-09-09"
+    "hash": "b10b556d29c93f68",
+    "lastmod": "2026-11-10"
   },
   "/guides/what-is-self-hosting": {
     "hash": "4d965cdcdbc787fd",

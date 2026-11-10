@@ -3560,11 +3560,11 @@ function buildDatasetPage(languages: Language[], rels: Relationship[]): string {
     license: DATASET_LICENSE_URL,
     temporalCoverage: `${minYear}/${maxYear}`,
     variableMeasured: Object.keys(relTypeCounts),
-    distribution: {
-      '@type': 'DataDownload',
-      contentUrl: downloadUrl,
-      encodingFormat: 'application/json',
-    },
+    distribution: [
+      { '@type': 'DataDownload', contentUrl: downloadUrl, encodingFormat: 'application/json' },
+      { '@type': 'DataDownload', contentUrl: `${SITE}/dataset/v5/lineage_v5_edges.csv`, encodingFormat: 'text/csv' },
+      { '@type': 'DataDownload', contentUrl: `${SITE}/dataset/v5/lineage_v5_nodes.csv`, encodingFormat: 'text/csv' },
+    ],
   });
 
   return `<!DOCTYPE html>
@@ -3633,6 +3633,7 @@ ${NAV_HTML}
   <p>Download the complete v${DATASET_VERSION} dataset as JSON. Counts and metadata on this page are generated from this file.</p>
   <p><a class="download-btn" href="${DATASET_DOWNLOAD_PATH}" download="language-lineage-v5.json">Download dataset JSON</a></p>
   <pre><code>${downloadUrl}</code></pre>
+  <p>The same data as CSV, generated from the JSON on every build: <a href="/dataset/v5/lineage_v5_edges.csv" download>relationships (${rels.length} rows)</a> and <a href="/dataset/v5/lineage_v5_nodes.csv" download>languages and tools (${languages.length} rows)</a>. Coverage, source mix and limitations are documented in the <a href="/dataset/v5/DATACARD.md">data card</a>; citation metadata is in <a href="https://github.com/sanketmuchhala/LanguageLineage/blob/main/CITATION.cff" rel="noopener noreferrer">CITATION.cff</a>.</p>
 
   <h2>License</h2>
   <p>The Language Lineage dataset is licensed under the <a href="${DATASET_LICENSE_URL}" rel="license noopener noreferrer">${DATASET_LICENSE_NAME} (CC BY 4.0)</a>. You may share and adapt the data for any purpose, provided you give appropriate credit and indicate whether changes were made.</p>
