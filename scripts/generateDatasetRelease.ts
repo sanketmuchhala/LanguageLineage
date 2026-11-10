@@ -15,6 +15,7 @@
 import { readFileSync, writeFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { sourceKind, SOURCE_LABELS } from './sourceType.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DIR = join(ROOT, 'dataset/v5');
@@ -73,11 +74,11 @@ const nodeRows = nodes.map((n) => [
 
 const EDGE_COLUMNS = [
   'from_id', 'from_name', 'to_id', 'to_name', 'relationship', 'start_year', 'end_year',
-  'confidence', 'evidence_source', 'notes',
+  'confidence', 'evidence_source', 'source_type', 'notes',
 ];
 const edgeRows = edges.map((e) => [
   e.from_language, nameOf.get(e.from_language), e.to_language, nameOf.get(e.to_language), e.relationship,
-  e.start_year, e.end_year, e.confidence, e.evidence_source, e.notes,
+  e.start_year, e.end_year, e.confidence, e.evidence_source, sourceKind(e.evidence_source), e.notes,
 ]);
 
 writeFileSync(join(DIR, 'lineage_v5_nodes.csv'), toCsv(NODE_COLUMNS, nodeRows));
@@ -99,6 +100,8 @@ const confidences = edges.map((e) => e.confidence).sort((a, b) => a - b);
 const pct = (n: number) => `${Math.round((n / edges.length) * 100)}%`;
 
 const typeTable = count(edges, (e) => e.relationship).map(([t, n]) => `| \`${t}\` | ${n} |`).join('\n');
+const sourceTypeTable = count(edges, (e) => sourceKind(e.evidence_source))
+  .map(([k, n]) => `| \`${k}\` | ${SOURCE_LABELS[k as keyof typeof SOURCE_LABELS]} | ${n} |`).join('\n');
 const hostTable = count(edges, (e) => host(e.evidence_source)).slice(0, 10)
   .map(([h, n]) => `| ${h} | ${n} |`).join('\n');
 
@@ -158,6 +161,12 @@ ${dated} of ${edges.length} edges (${pct(dated)}) carry a \`start_year\`; ${ende
 ## Sources and confidence
 
 Every edge cites one \`evidence_source\` URL. ${wikipedia} of ${edges.length} (${pct(wikipedia)}) cite Wikipedia; the rest cite official documentation, source repositories, papers and project announcements. Confidence is a hand-assigned score from ${confidences[0]} to ${confidences[confidences.length - 1]} (median ${confidences[Math.floor(confidences.length / 2)]}); it reflects the curator's judgment of the source, not a statistical estimate.
+
+The \`source_type\` column in the edges CSV is derived from each URL by \`scripts/sourceType.ts\` (a project's own site, docs or blog counts as project docs):
+
+| source_type | Meaning | Edges |
+|---|---|---:|
+${sourceTypeTable}
 
 Most cited hosts:
 

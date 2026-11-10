@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import { LOGO_MAP, LOGO_COLORS, getLogoPresentation } from '../src/data/logoMap.js';
 import { getAdaptiveLogoBackground, getLogoBorderColor } from '../src/utils/colorContrast.js';
 import { LASTMOD_TOKEN, filePathToUrl, resolveDate, flushManifest } from './pageDates.js';
+import { sourceLabel } from './sourceType.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -1504,11 +1505,17 @@ function findSelfHostingTransitions(rels: Relationship[]): SelfHostingTransition
   return out.sort((a, b) => a.selfHostedSince - b.selfHostedSince || a.id.localeCompare(b.id));
 }
 
+// An evidence link followed by its source type, for tables.
+function evidenceCell(url: string | undefined): string {
+  if (!url) return '';
+  return `<a href="${escapeHtml(url)}" rel="noopener noreferrer" target="_blank">${escapeHtml(sourceLabel(url))}</a>`;
+}
+
 function sourceLink(url: string | undefined, n: number): string {
   if (!url) return '';
   let host = url;
   try { host = new URL(url).hostname.replace(/^www\./, ''); } catch { /* keep raw url */ }
-  return `<a href="${escapeHtml(url)}" rel="noopener noreferrer" target="_blank" title="${escapeHtml(url)}">[${n}] ${escapeHtml(host)}</a>`;
+  return `<a href="${escapeHtml(url)}" rel="noopener noreferrer" target="_blank" title="${escapeHtml(url)}">[${n}] ${escapeHtml(host)}</a> <span class="src-type">${escapeHtml(sourceLabel(url))}</span>`;
 }
 
 function yearSpan(r: Relationship): string {
@@ -1759,7 +1766,7 @@ function buildImplSection(node: Language, rels: Relationship[], nodeMap: Map<str
         <td>${linkNode(implId, nodeMap)}</td>
         <td class="${confidenceClass(conf)}">${(conf * 100).toFixed(0)}%</td>
         <td>${r.notes ? escapeHtml(r.notes) : ''}</td>
-        <td>${r.evidence_source ? `<a href="${escapeHtml(r.evidence_source)}" rel="noopener noreferrer" target="_blank">Source</a>` : ''}</td>
+        <td>${evidenceCell(r.evidence_source)}</td>
       </tr>`;
     }).join('\n');
     return `<h2>${escapeHtml(title)}</h2>
@@ -1989,7 +1996,7 @@ function buildSources(node: Language, rels: Relationship[]): string {
       .filter((s): s is string => !!s)
   )];
 
-  const items = sources.map(s => `<li><a href="${escapeHtml(s)}" rel="noopener noreferrer" target="_blank">${escapeHtml(s)}</a></li>`);
+  const items = sources.map(s => `<li><a href="${escapeHtml(s)}" rel="noopener noreferrer" target="_blank">${escapeHtml(s)}</a> <span class="src-type">${escapeHtml(sourceLabel(s))}</span></li>`);
 
   const e = ENRICHMENT[id];
   if (e) {
@@ -3720,6 +3727,7 @@ function buildRelationshipPage(type: string, rels: Relationship[], nodeMap: Map<
       <td><a href="/${toPrefix}/${toSlug}">${escapeHtml(toName)}</a></td>
       <td class="${confidenceClass(r.confidence)}">${(r.confidence * 100).toFixed(0)}%</td>
       <td>${r.notes ? escapeHtml(r.notes) : ''}</td>
+      <td>${evidenceCell(r.evidence_source)}</td>
     </tr>`;
   }).join('\n');
 
@@ -3754,10 +3762,10 @@ ${NAV_HTML}
   <div class="answer-box" style="border-left:3px solid ${def.color}">${escapeHtml(def.description)}</div>
 
   <h2>All ${typeRels.length} Relationships</h2>
-  <table>
-    <thead><tr><th>From</th><th>To</th><th>Confidence</th><th>Notes</th></tr></thead>
+  <div class="table-wrap"><table>
+    <thead><tr><th>From</th><th>To</th><th>Confidence</th><th>Notes</th><th>Source</th></tr></thead>
     <tbody>${rows}</tbody>
-  </table>
+  </table></div>
 
   <a class="explore-btn" href="/explore">Explore in Graph &rarr;</a>
 </main>

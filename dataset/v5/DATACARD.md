@@ -60,6 +60,18 @@ Edges point from the implementation language (or influence) to the thing built w
 
 Every edge cites one `evidence_source` URL. 302 of 490 (62%) cite Wikipedia; the rest cite official documentation, source repositories, papers and project announcements. Confidence is a hand-assigned score from 0.65 to 0.99 (median 0.9); it reflects the curator's judgment of the source, not a statistical estimate.
 
+The `source_type` column in the edges CSV is derived from each URL by `scripts/sourceType.ts` (a project's own site, docs or blog counts as project docs):
+
+| source_type | Meaning | Edges |
+|---|---|---:|
+| `wikipedia` | Wikipedia | 302 |
+| `docs` | Project docs | 99 |
+| `repository` | Source repository | 76 |
+| `paper` | Paper | 6 |
+| `article` | Third-party article | 4 |
+| `forum` | Forum post | 2 |
+| `other` | Other web page | 1 |
+
 Most cited hosts:
 
 | Host | Edges |

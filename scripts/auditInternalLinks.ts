@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync, statSync } from 'fs';
+import { readFileSync, readdirSync, statSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -30,6 +30,8 @@ function extractLinks(html: string): string[] {
     const href = m[1];
     // Skip static assets
     if (/\.(css|js|svg|png|jpg|ico|txt|xml|json|woff2?)$/.test(href)) continue;
+    // Downloadable data files (dataset CSVs, data card): fine if the file exists, broken if not
+    if (/\.(csv|md)$/.test(href) && existsSync(join(PUBLIC, href))) continue;
     // Normalize trailing slash
     const normalized = href === '/' ? '/' : href.replace(/\/$/, '');
     links.add(normalized);

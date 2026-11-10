@@ -39,99 +39,114 @@
   <div class="answer-box" style="border-left:3px solid #a78bfa">Bootstrapping is the process of writing a compiler in the same language it compiles. These relationships show the bootstrap chains, what language was used to write the initial compiler before self-hosting was achieved.</div>
 
   <h2>All 15 Relationships</h2>
-  <table>
-    <thead><tr><th>From</th><th>To</th><th>Confidence</th><th>Notes</th></tr></thead>
+  <div class="table-wrap"><table>
+    <thead><tr><th>From</th><th>To</th><th>Confidence</th><th>Notes</th><th>Source</th></tr></thead>
     <tbody><tr>
       <td><a href="/languages/lazy-ml">Lazy ML</a></td>
       <td><a href="/tools/ghc">GHC</a></td>
       <td class="confidence-high">95%</td>
       <td>Original GHC prototype written in Lazy ML by Kevin Hammond in 1989 before the Haskell rewrite</td>
+      <td><a href="https://www.microsoft.com/en-us/research/wp-content/uploads/2016/07/history.pdf" rel="noopener noreferrer" target="_blank">Paper</a></td>
     </tr>
 <tr>
       <td><a href="/languages/ruby">Ruby</a></td>
       <td><a href="/languages/crystal">Crystal</a></td>
       <td class="confidence-high">92%</td>
       <td>Crystal compiler bootstrapped from Ruby</td>
+      <td><a href="https://github.com/crystal-lang/crystal" rel="noopener noreferrer" target="_blank">Source repository</a></td>
     </tr>
 <tr>
       <td><a href="/languages/erlang">Erlang</a></td>
       <td><a href="/languages/elixir">Elixir</a></td>
       <td class="confidence-high">92%</td>
       <td>Elixir bootstrap compiler written in Erlang</td>
+      <td><a href="https://elixir-lang.org/blog/2013/08/08/elixir-design-goals/" rel="noopener noreferrer" target="_blank">Project docs</a></td>
     </tr>
 <tr>
       <td><a href="/languages/bcpl">BCPL</a></td>
       <td><a href="/languages/b">B</a></td>
       <td class="confidence-high">90%</td>
       <td>B compiler bootstrapped using BCPL</td>
+      <td><a href="https://en.wikipedia.org/wiki/BCPL" rel="noopener noreferrer" target="_blank">Wikipedia</a></td>
     </tr>
 <tr>
       <td><a href="/languages/ocaml">OCaml</a></td>
       <td><a href="/languages/fsharp">F#</a></td>
       <td class="confidence-high">90%</td>
       <td>F# initial compiler written in OCaml before self-hosting</td>
+      <td><a href="https://fsharp.org/history/hopl-final/hopl-fsharp.pdf" rel="noopener noreferrer" target="_blank">Paper</a></td>
     </tr>
 <tr>
       <td><a href="/tools/femtolisp">FemtoLisp</a></td>
       <td><a href="/languages/julia">Julia</a></td>
       <td class="confidence-high">90%</td>
       <td>Julia parser frontend was FemtoLisp until v1.10</td>
+      <td><a href="https://discourse.julialang.org/t/the-role-of-femtolisp-in-julia/" rel="noopener noreferrer" target="_blank">Forum post</a></td>
     </tr>
 <tr>
       <td><a href="/languages/modula2">Modula-2</a></td>
       <td><a href="/languages/oberon">Oberon</a></td>
       <td class="confidence-high">90%</td>
       <td>Oberon compiler bootstrapped from Modula-2</td>
+      <td><a href="https://en.wikipedia.org/wiki/Oberon_(programming_language)" rel="noopener noreferrer" target="_blank">Wikipedia</a></td>
     </tr>
 <tr>
       <td><a href="/languages/pascal">Pascal</a></td>
       <td><a href="/languages/freepascal">Free Pascal</a></td>
       <td class="confidence-high">90%</td>
       <td>Free Pascal compiler initially written in Turbo Pascal then self-hosted</td>
+      <td><a href="https://en.wikipedia.org/wiki/Free_Pascal" rel="noopener noreferrer" target="_blank">Wikipedia</a></td>
     </tr>
 <tr>
       <td><a href="/languages/pascal">Pascal</a></td>
       <td><a href="/languages/delphi">Delphi</a></td>
       <td class="confidence-high">90%</td>
       <td>Delphi compiler bootstrapped from Turbo Pascal, now self-hosted</td>
+      <td><a href="https://en.wikipedia.org/wiki/Delphi_(software)" rel="noopener noreferrer" target="_blank">Wikipedia</a></td>
     </tr>
 <tr>
       <td><a href="/languages/prolog">Prolog</a></td>
       <td><a href="/languages/mercury">Mercury</a></td>
       <td class="confidence-high">90%</td>
       <td>Mercury compiler initially written in Prolog, then self-hosted</td>
+      <td><a href="https://en.wikipedia.org/wiki/Mercury_(programming_language)" rel="noopener noreferrer" target="_blank">Wikipedia</a></td>
     </tr>
 <tr>
       <td><a href="/languages/haskell">Haskell</a></td>
       <td><a href="/languages/idris">Idris</a></td>
       <td class="confidence-high">90%</td>
       <td>Idris compiler initially written in Haskell, later self-hosted</td>
+      <td><a href="https://en.wikipedia.org/wiki/Idris_(programming_language)" rel="noopener noreferrer" target="_blank">Wikipedia</a></td>
     </tr>
 <tr>
       <td><a href="/languages/machine-code">Machine Code</a></td>
       <td><a href="/languages/rust">Rust</a></td>
       <td class="confidence-mid">88%</td>
       <td>Rust bootstrap chain starts at machine code level</td>
+      <td><a href="https://rustc-dev-guide.rust-lang.org/building/bootstrapping/what-bootstrapping-does.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
     </tr>
 <tr>
       <td><a href="/languages/b">B</a></td>
       <td><a href="/languages/c">C</a></td>
       <td class="confidence-mid">85%</td>
       <td>Early C compiler bootstrapped from B</td>
+      <td><a href="https://en.wikipedia.org/wiki/B_(programming_language)" rel="noopener noreferrer" target="_blank">Wikipedia</a></td>
     </tr>
 <tr>
       <td><a href="/languages/c">C</a></td>
       <td><a href="/languages/hare">Hare</a></td>
       <td class="confidence-mid">85%</td>
       <td>Hare's bootstrap compiler is written in C.</td>
+      <td><a href="https://slackbuilds.org/repository/15.0/development/harec/" rel="noopener noreferrer" target="_blank">Third-party article</a></td>
     </tr>
 <tr>
       <td><a href="/languages/machine-code">Machine Code</a></td>
       <td><a href="/languages/swift">Swift</a></td>
       <td class="confidence-mid">80%</td>
       <td>Swift bootstrap chain via LLVM</td>
+      <td><a href="https://github.com/apple/swift/blob/main/SwiftCompilerSources/README.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
     </tr></tbody>
-  </table>
+  </table></div>
 
   <a class="explore-btn" href="/explore">Explore in Graph &rarr;</a>
 </main>

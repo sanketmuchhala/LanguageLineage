@@ -9,6 +9,7 @@ import { readFileSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { describe, it, expect } from 'vitest';
+import { sourceKind } from './sourceType';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DIR = join(ROOT, 'dataset/v5');
@@ -58,6 +59,7 @@ describe('dataset release CSVs', () => {
       expect(r.end_year).toBe(str(e.end_year));
       expect(r.confidence).toBe(str(e.confidence));
       expect(r.evidence_source).toBe(e.evidence_source);
+      expect(r.source_type).toBe(sourceKind(String(e.evidence_source)));
       expect(r.notes).toBe(str(e.notes));
     });
   });
