@@ -6,6 +6,7 @@ import { getAdaptiveLogoBackground, getLogoBorderColor } from '../src/utils/colo
 import { LASTMOD_TOKEN, filePathToUrl, resolveDate, flushManifest } from './pageDates.js';
 import { sourceLabel } from './sourceType.js';
 import { buildPosterModel, POSTER_SLUG, POSTER_TYPES, POSTER_MIN_GROUP } from './posterData.js';
+import { loadAllPaths, buildPathSvg, activePath, defaultSelection, statusText, whenText, stepId, KIND_STYLE, type PathsData } from './aiPaths.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -2047,6 +2048,7 @@ const QUESTION_CANONICAL_TO_LANG = new Set(['rust', 'python', 'roc', 'prolog']);
 const QUESTION_SLUG_OVERRIDE: Record<string, string> = { cxx: 'cpp' };
 
 // Contextually relevant guide links per language slug (at most 2)
+
 const LANG_GUIDE_LINKS: Record<string, Array<{ slug: string; label: string }>> = {
   python:     [{ slug: 'how-python-is-implemented', label: 'How Python is implemented' }],
   rust:       [{ slug: 'how-rust-is-bootstrapped', label: 'How Rust bootstraps itself' }, { slug: 'the-c-bootstrap-chain', label: 'Toolchain lineage back to C' }],
@@ -2094,6 +2096,10 @@ function buildDiscoverMore(node: Language, rels: Relationship[], nodeMap: Map<st
   for (const r of influencers) {
     const s = nodeMap.get(r.from_language);
     if (s) links.push(`<a href="/${idToPrefix(s.id)}/${idToSlug(s.id)}" class="discover-link">Languages that influenced ${name}: ${escapeHtml(s.name)}</a>`);
+  }
+
+  for (const p of AI_PATH_PAGES.filter(p => p.link_from.includes(node.id))) {
+    links.push(`<a href="/ai/${p.slug}" class="discover-link">${escapeHtml(p.h1.replace(/\?$/, ''))}</a>`);
   }
 
   // Per-language contextual guide links (at most 2, deduplicated against already-added bootstrap guide)
@@ -4564,6 +4570,7 @@ ${FOOTER_HTML}
 }
 
 // Main
+const AI_PATH_PAGES = loadAllPaths(ROOT);
 const raw = JSON.parse(readFileSync(DATASET_PATH, 'utf8'));
 const languages: Language[] = raw.languages ?? [];
 const rels: Relationship[] = raw.relationships ?? [];
@@ -5158,6 +5165,7 @@ console.log(`Generated ${count} language/tool pages`);
 // Dataset page
 writeFile(join(PUBLIC, 'dataset', 'index.html'), buildDatasetPage(languages, rels));
 writeFile(join(PUBLIC, 'posters', POSTER_SLUG, 'index.html'), processPage(buildPosterPage(languages, rels, nodeMap)));
+for (const p of AI_PATH_PAGES) writeFile(join(PUBLIC, 'ai', p.slug, 'index.html'), processPage(buildAiPathPage(p, nodeMap)));
 console.log('Generated dataset page');
 
 // Relationship pages
@@ -6373,6 +6381,167 @@ ${minorRows}
   <h2>How the poster is made</h2>
   <p>Each card is an implementation language. Under it are the languages and tools whose compiler or runtime is written in that language today, using the dataset's ${typeLinks} edges that have no end year. Historical implementations are left out, so Go appears as self-hosted rather than under C, which wrote its compiler until 2015; for those changes over time see <a href="/guides/what-is-compiler-bootstrapping">how compilers bootstrap</a>. Influence and transpilation edges are not drawn.</p>
   <p>A language can appear on several cards when the dataset records parts of its implementation in different languages: ${linkNode(multiId, nodeMap)} appears under ${escapeHtml(joinNames(multiCards))}. Cards with fewer than ${POSTER_MIN_GROUP} entries are merged into "Everything else". Every edge links to its source on the <a href="/relationships">relationship pages</a> and in the <a href="/dataset">downloadable dataset</a>.</p>
+
+  <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>
+</main>
+${FOOTER_HTML}
+</body>
+</html>`;
+}
+
+// /ai/<slug>: AI execution-path explainers, one per dataset/ai/<slug>.json (scripts/aiPaths.ts).
+// Everything is server-rendered; public/ai-path.js only switches the selected path and detail panel.
+function aiQuotes(data: PathsData, evidence: Array<{ source: string; quote: string }>): string {
+  return `<ul class="ai-sources">${evidence.map(e => {
+    const src = data.sources[e.source];
+    return `<li><blockquote>${escapeHtml(e.quote)}</blockquote><a href="${escapeHtml(src.url)}" rel="noopener noreferrer" target="_blank">${escapeHtml(src.title)}</a> <span class="src-type">${escapeHtml(sourceLabel(src.url))}</span></li>`;
+  }).join('')}</ul>`;
+}
+
+// Plain text with **bold** spans.
+function aiInline(text: string): string {
+  return escapeHtml(text).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+}
+
+function buildAiPathPage(data: PathsData, nodeMap: Map<string, Language>): string {
+  const url = `${SITE}/ai/${data.slug}`;
+  const name = (id: string) => data.stages.find(s => s.id === id)!.name;
+  const sel = defaultSelection(data);
+  const defaultPath = activePath(data, sel);
+
+  const controls = data.dimensions.map(d => `<fieldset><legend>${escapeHtml(d.legend)}</legend>
+        ${d.options.map(o => `<label><input type="radio" name="${d.id}" value="${o.value}" data-phrase="${escapeHtml(o.phrase)}"${o.value === d.default ? ' checked' : ''}> ${escapeHtml(o.label)}</label>`).join('\n        ')}
+      </fieldset>`).join('\n      ');
+
+  const stageArticles = data.stages.map(st => {
+    const lineage = st.lineage_id && nodeMap.has(st.lineage_id)
+      ? `<p class="ai-lineage">In the atlas: ${linkNode(st.lineage_id, nodeMap)}</p>` : '';
+    return `<article class="ai-stage-detail" id="detail-stage-${st.id}" data-stage="${st.id}">
+<h3>${escapeHtml(st.name)}</h3>
+<p class="ai-kind-tag" style="--kc:${KIND_STYLE[st.kind].color}">${escapeHtml(st.kind.replace(/_/g, ' '))}</p>
+<p>${escapeHtml(st.summary)}</p>
+${lineage}
+${aiQuotes(data, st.evidence)}
+</article>`;
+  }).join('\n');
+
+  const stepRows = data.steps.map(st => `<tr id="detail-step-${stepId(st)}" data-step="${stepId(st)}" data-from="${st.from}" data-to="${st.to}" data-when="${escapeHtml(JSON.stringify(st.when))}"${defaultPath.steps.has(stepId(st)) ? ' class="on"' : ''}>
+<td>${escapeHtml(name(st.from))}</td><td>${escapeHtml(st.label)}</td><td>${escapeHtml(name(st.to))}</td><td>${escapeHtml(whenText(data, st))}</td><td>${escapeHtml(st.explanation)}</td><td>${st.evidence.map(e => evidenceCell(data.sources[e.source].url)).join('<br>')}</td>
+</tr>`).join('\n');
+
+  const pathList = data.steps.filter(st => defaultPath.steps.has(stepId(st)))
+    .map(st => `<li>${escapeHtml(name(st.from))} <em>${escapeHtml(st.label)}</em> ${escapeHtml(name(st.to))}: ${escapeHtml(st.explanation)}</li>`).join('\n');
+
+  const usedKinds = new Set(data.stages.map(s => s.kind));
+  const legendKinds = [...new Map(Object.entries(KIND_STYLE).filter(([k]) => usedKinds.has(k)).map(([, v]) => [v.label, v.color])).entries()]
+    .map(([label, color]) => `<li><span class="ai-swatch" style="--kc:${color}"></span>${escapeHtml(label)}</li>`).join('');
+  const hasFallback = data.steps.some(s => s.kind === 'falls_back_to');
+
+  const sections = data.sections.map(sec => `<h2>${escapeHtml(sec.heading)}</h2>
+  ${sec.paragraphs.map(p => `<p>${aiInline(p)}</p>`).join('\n  ')}`).join('\n\n  ');
+
+  const atlasLinks = [...new Set(data.stages.map(s => s.lineage_id).filter((id): id is string => !!id && nodeMap.has(id)))]
+    .map(id => linkNode(id, nodeMap));
+  const otherPages = AI_PATH_PAGES.filter(p => p.slug !== data.slug)
+    .map(p => `<a href="/ai/${p.slug}">${escapeHtml(p.h1.replace(/\?$/, ''))}</a>`);
+
+  const articleJsonLd = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    headline: data.h1,
+    description: data.description,
+    url,
+    datePublished: data.verified_on,
+    dateModified: LASTMOD_TOKEN,
+    author: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
+    publisher: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
+    citation: Object.values(data.sources).map(s => s.url),
+    inLanguage: 'en',
+  });
+  const breadcrumbJsonLd = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+      { '@type': 'ListItem', position: 2, name: data.h1, item: url },
+    ],
+  });
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${escapeHtml(data.title)}</title>
+  <meta name="description" content="${escapeHtml(data.description)}" />
+  <link rel="canonical" href="${url}" />
+  <link rel="icon" href="/favicon.svg" />
+  ${FONTS_HEAD}${ANALYTICS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  <script defer src="/ai-path.js"></script>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="${escapeHtml(data.title)}" />
+  <meta property="og:description" content="${escapeHtml(data.description)}" />
+  <meta property="og:url" content="${url}" />
+  <meta property="og:image" content="${ogImg(`ai-${data.slug}.png`)}" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">${articleJsonLd}</script>
+  <script type="application/ld+json">${breadcrumbJsonLd}</script>
+</head>
+<body class="seo-page">
+${SKIP_LINK}
+${NAV_HTML}
+<main class="seo-main" id="main-content">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; ${escapeHtml(data.h1.replace(/\?$/, ''))}
+  </nav>
+
+  <h1>${escapeHtml(data.h1)}</h1>
+  %%TOC%%
+
+  <div class="answer-box">${aiInline(data.answer)}</div>
+
+  <section class="ai-explorer" id="explorer" aria-label="Execution path explorer">
+    <form class="ai-controls" onsubmit="return false">
+      ${controls}
+      <button type="button" class="ai-copy" hidden>Copy link to this path</button>
+    </form>
+    <p class="ai-status" aria-live="polite" data-template="${escapeHtml(data.status_template)}">${escapeHtml(statusText(data, sel, defaultPath.stages.size, defaultPath.steps.size))}</p>
+    <div class="ai-layout">
+      <div class="ai-diagram-wrap">${buildPathSvg(data, sel)}</div>
+      <aside class="ai-detail" aria-live="polite"><p class="ai-detail-hint">Select a stage or an arrow to see what it does and the source behind it.${hasFallback ? ' Dashed arrows are fallbacks some operations take.' : ''}</p></aside>
+    </div>
+    <ul class="ai-legend" aria-label="Legend">${legendKinds}${hasFallback ? '<li><span class="ai-swatch ai-swatch-dash"></span>Fallback for some operations</li>' : ''}</ul>
+  </section>
+
+  <h2>The selected path, step by step</h2>
+  <ol class="ai-path-list">
+${pathList}
+  </ol>
+
+  ${sections}
+
+  <h2>Every stage</h2>
+  <div class="ai-stage-list">
+${stageArticles}
+  </div>
+
+  <h2>Every step</h2>
+  <table class="ai-steps">
+    <thead><tr><th>From</th><th>Step</th><th>To</th><th>When</th><th>What happens</th><th>Source</th></tr></thead>
+    <tbody>
+${stepRows}
+    </tbody>
+  </table>
+
+  <h2>What this does not show</h2>
+  <p>${escapeHtml(data.scope)}${data.out_of_scope_note ? ` ${escapeHtml(data.out_of_scope_note)}` : ''}</p>
+
+  <h2>How this page is checked</h2>
+  <p>Every stage and step above quotes the source that supports it. The quotes were checked against ${escapeHtml(data.verified_against)} on ${escapeHtml(data.verified_on)}. The data is a <a href="/dataset/ai/${data.slug}.json">versioned JSON file</a> under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. Found something wrong or out of date? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
+  <p>What these tools are written in is in the main atlas: ${atlasLinks.join(', ')}.${otherPages.length ? ` More execution paths: ${otherPages.join(', ')}.` : ''}</p>
 
   <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>
 </main>

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How Does llama.cpp Run a Model? CPU, CUDA and Metal | Language Lineage</title>
+  <meta name="description" content="Follow a local LLM through llama.cpp: GGUF file, ggml compute graph, and the CPU, CUDA or Metal backend, with the language each kernel is written in and sources." />
+  <link rel="canonical" href="https://www.languagelineage.org/ai/how-llama-cpp-runs" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><script defer src="/fx.js"></script><script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script><link rel="alternate" type="application/rss+xml" title="Language Lineage" href="/rss.xml" /><link rel="stylesheet" href="/seo.css" />
+  <script defer src="/ai-path.js"></script>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="How Does llama.cpp Run a Model? CPU, CUDA and Metal | Language Lineage" />
+  <meta property="og:description" content="Follow a local LLM through llama.cpp: GGUF file, ggml compute graph, and the CPU, CUDA or Metal backend, with the language each kernel is written in and sources." />
+  <meta property="og:url" content="https://www.languagelineage.org/ai/how-llama-cpp-runs" />
+  <meta property="og:image" content="https://www.languagelineage.org/og/ai-how-llama-cpp-runs.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"How Does llama.cpp Run a Model on Your Hardware?","description":"Follow a local LLM through llama.cpp: GGUF file, ggml compute graph, and the CPU, CUDA or Metal backend, with the language each kernel is written in and sources.","url":"https://www.languagelineage.org/ai/how-llama-cpp-runs","datePublished":"2026-11-11","dateModified":"2026-11-11","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"citation":["https://github.com/ggml-org/llama.cpp/blob/master/README.md","https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md","https://github.com/ggml-org/ggml/blob/master/docs/gguf.md","https://huggingface.co/blog/introduction-to-ggml","https://github.com/ggml-org/llama.cpp/blob/master/ggml/src/ggml-cuda/argmax.cu","https://github.com/ggml-org/llama.cpp/blob/master/ggml/src/ggml-metal/kernels/argsort.metal"],"inLanguage":"en"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"How Does llama.cpp Run a Model on Your Hardware?","item":"https://www.languagelineage.org/ai/how-llama-cpp-runs"}]}</script>
+</head>
+<body class="seo-page">
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<nav class="seo-nav">
+  <a href="/" class="nav-brand"><img class="nav-logo-mark" src="/logo-mark.svg" width="22" height="22" alt="" aria-hidden="true">Language Lineage</a>
+  <a href="/relationships">Relationships</a>
+  <a href="/languages">Languages</a>
+  <a href="/tools">Tools</a>
+  <a href="/guides">Guides</a>
+  <a href="/timeline">Timeline</a>
+  <a href="/dataset">Dataset</a>
+  <a href="/how-it-works">How It Works</a>
+  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
+</nav>
+<main class="seo-main" id="main-content">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; How Does llama.cpp Run a Model on Your Hardware
+  </nav>
+
+  <h1>How Does llama.cpp Run a Model on Your Hardware?</h1>
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#the-selected-path-step-by-step">The selected path, step by step</a></li>
+    <li><a href="#which-language-does-the-work">Which language does the work</a></li>
+    <li><a href="#cpu-and-gpu-together">CPU and GPU together</a></li>
+    <li><a href="#every-stage">Every stage</a></li>
+    <li><a href="#every-step">Every step</a></li>
+    <li><a href="#what-this-does-not-show">What this does not show</a></li>
+    <li><a href="#how-this-page-is-checked">How this page is checked</a></li>
+  </ol>
+</nav>
+
+  <div class="answer-box">llama.cpp is <strong>plain C/C++</strong>: your program calls the llama.cpp library, which loads a <strong>GGUF</strong> model file and builds a <strong>ggml</strong> compute graph for each step of inference. ggml then runs that graph on a backend. On the <strong>CPU</strong> it uses SIMD kernels written in C/C++; on an <strong>NVIDIA GPU</strong> it runs CUDA kernels that nvcc compiled when llama.cpp was built; on <strong>Apple silicon</strong> it runs kernels written in Metal Shading Language. With a GPU backend, layers that are not offloaded to the GPU still run on the CPU.</div>
+
+  <section class="ai-explorer" id="explorer" aria-label="Execution path explorer">
+    <form class="ai-controls" onsubmit="return false">
+      <fieldset><legend>Backend</legend>
+        <label><input type="radio" name="backend" value="cpu" data-phrase="CPU"> CPU</label>
+        <label><input type="radio" name="backend" value="cuda" data-phrase="CUDA (NVIDIA GPU)"> CUDA (NVIDIA)</label>
+        <label><input type="radio" name="backend" value="metal" data-phrase="Metal (Apple silicon)" checked> Metal (Apple)</label>
+      </fieldset>
+      <button type="button" class="ai-copy" hidden>Copy link to this path</button>
+    </form>
+    <p class="ai-status" aria-live="polite" data-template="Showing the {backend} backend">Showing the Metal (Apple silicon) backend: 9 stages, 8 steps.</p>
+    <div class="ai-layout">
+      <div class="ai-diagram-wrap"><svg class="ai-path-svg" viewBox="0 0 620 546" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Execution path diagram: select a stage or step for details">
+<defs><marker id="ai-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9a9a9a"/></marker></defs>
+<path id="step-app--libllama" class="ai-step on" d="M310,62 C310,78 310,78 310,88" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Your program calls llama.cpp library"><title>Your program calls llama.cpp library</title></path>
+<path id="step-libllama--gguf" class="ai-step on" d="M222,117 C210,117 210,117 198,117" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="llama.cpp library loads GGUF model file"><title>llama.cpp library loads GGUF model file</title></path>
+<path id="step-libllama--ggml_graph" class="ai-step on" d="M310,140 C310,156 310,156 310,166" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="llama.cpp library builds ggml compute graph"><title>llama.cpp library builds ggml compute graph</title></path>
+<path id="step-ggml_graph--ggml_cpu" class="ai-step on" d="M310,218 C310,234 104,234 104,244" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="ggml compute graph runs layers on ggml CPU backend"><title>ggml compute graph runs layers on ggml CPU backend</title></path>
+<path id="step-ggml_graph--ggml_cuda" class="ai-step" d="M310,218 C310,234 310,234 310,244" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="ggml compute graph offloads layers to ggml CUDA backend"><title>ggml compute graph offloads layers to ggml CUDA backend</title></path>
+<path id="step-ggml_graph--ggml_metal" class="ai-step on" d="M310,218 C310,234 516,234 516,244" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="ggml compute graph offloads layers to ggml Metal backend"><title>ggml compute graph offloads layers to ggml Metal backend</title></path>
+<path id="step-ggml_cpu--cpu" class="ai-step on" d="M104,296 C104,390 104,390 104,478" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="ggml CPU backend runs on CPU"><title>ggml CPU backend runs on CPU</title></path>
+<path id="step-ggml_cuda--cuda_kernels" class="ai-step" d="M310,296 C310,312 310,312 310,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="ggml CUDA backend kernels written in CUDA kernels (.cu)"><title>ggml CUDA backend kernels written in CUDA kernels (.cu)</title></path>
+<path id="step-cuda_kernels--nvcc" class="ai-step" d="M310,374 C310,390 310,390 310,400" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="CUDA kernels (.cu) compiled at build time by nvcc (CUDA toolkit)"><title>CUDA kernels (.cu) compiled at build time by nvcc (CUDA toolkit)</title></path>
+<path id="step-nvcc--nvidia_gpu" class="ai-step" d="M310,452 C310,468 310,468 310,478" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="nvcc (CUDA toolkit) compiles for NVIDIA GPU"><title>nvcc (CUDA toolkit) compiles for NVIDIA GPU</title></path>
+<path id="step-ggml_metal--metal_kernels" class="ai-step on" d="M516,296 C516,312 516,312 516,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="ggml Metal backend kernels written in Metal kernels (MSL)"><title>ggml Metal backend kernels written in Metal kernels (MSL)</title></path>
+<path id="step-metal_kernels--apple_gpu" class="ai-step on" d="M516,374 C516,429 516,429 516,478" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Metal kernels (MSL) run on Apple silicon GPU"><title>Metal kernels (MSL) run on Apple silicon GPU</title></path>
+<g id="stage-app" class="ai-stage on" tabindex="0" role="button" aria-label="Your program: Your program">
+  <rect x="222" y="16" width="176" height="46" rx="7" style="--kc:#60a5fa"/>
+  <rect x="222" y="16" width="4" height="46" rx="2" fill="#60a5fa"/>
+  <text x="236" y="35" class="ai-name">Your program</text>
+  <text x="236" y="51" class="ai-kind">application</text>
+</g>
+<g id="stage-libllama" class="ai-stage on" tabindex="0" role="button" aria-label="llama.cpp library: Framework core">
+  <rect x="222" y="94" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="222" y="94" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="236" y="113" class="ai-name">llama.cpp library</text>
+  <text x="236" y="129" class="ai-kind">framework component</text>
+</g>
+<g id="stage-gguf" class="ai-stage on" tabindex="0" role="button" aria-label="GGUF model file: Model file">
+  <rect x="16" y="94" width="176" height="46" rx="7" style="--kc:#fb7185"/>
+  <rect x="16" y="94" width="4" height="46" rx="2" fill="#fb7185"/>
+  <text x="30" y="113" class="ai-name">GGUF model file</text>
+  <text x="30" y="129" class="ai-kind">model format</text>
+</g>
+<g id="stage-ggml_graph" class="ai-stage on" tabindex="0" role="button" aria-label="ggml compute graph: Framework core">
+  <rect x="222" y="172" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="222" y="172" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="236" y="191" class="ai-name">ggml compute graph</text>
+  <text x="236" y="207" class="ai-kind">framework component</text>
+</g>
+<g id="stage-ggml_cpu" class="ai-stage on" tabindex="0" role="button" aria-label="ggml CPU backend: Kernel">
+  <rect x="16" y="250" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="16" y="250" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="30" y="269" class="ai-name">ggml CPU backend</text>
+  <text x="30" y="285" class="ai-kind">kernel</text>
+</g>
+<g id="stage-ggml_cuda" class="ai-stage" tabindex="0" role="button" aria-label="ggml CUDA backend: Framework core">
+  <rect x="222" y="250" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="222" y="250" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="236" y="269" class="ai-name">ggml CUDA backend</text>
+  <text x="236" y="285" class="ai-kind">framework component</text>
+</g>
+<g id="stage-ggml_metal" class="ai-stage on" tabindex="0" role="button" aria-label="ggml Metal backend: Framework core">
+  <rect x="428" y="250" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="428" y="250" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="442" y="269" class="ai-name">ggml Metal backend</text>
+  <text x="442" y="285" class="ai-kind">framework component</text>
+</g>
+<g id="stage-cuda_kernels" class="ai-stage" tabindex="0" role="button" aria-label="CUDA kernels (.cu): Kernel">
+  <rect x="222" y="328" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="222" y="328" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="236" y="347" class="ai-name">CUDA kernels (.cu)</text>
+  <text x="236" y="363" class="ai-kind">kernel language</text>
+</g>
+<g id="stage-metal_kernels" class="ai-stage on" tabindex="0" role="button" aria-label="Metal kernels (MSL): Kernel">
+  <rect x="428" y="328" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="428" y="328" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="442" y="347" class="ai-name">Metal kernels (MSL)</text>
+  <text x="442" y="363" class="ai-kind">kernel language</text>
+</g>
+<g id="stage-nvcc" class="ai-stage" tabindex="0" role="button" aria-label="nvcc (CUDA toolkit): Compiler">
+  <rect x="222" y="406" width="176" height="46" rx="7" style="--kc:#a78bfa"/>
+  <rect x="222" y="406" width="4" height="46" rx="2" fill="#a78bfa"/>
+  <text x="236" y="425" class="ai-name">nvcc (CUDA toolkit)</text>
+  <text x="236" y="441" class="ai-kind">compiler</text>
+</g>
+<g id="stage-cpu" class="ai-stage on" tabindex="0" role="button" aria-label="CPU: Hardware">
+  <rect x="16" y="484" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="16" y="484" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="30" y="503" class="ai-name">CPU</text>
+  <text x="30" y="519" class="ai-kind">hardware</text>
+</g>
+<g id="stage-nvidia_gpu" class="ai-stage" tabindex="0" role="button" aria-label="NVIDIA GPU: Hardware">
+  <rect x="222" y="484" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="222" y="484" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="236" y="503" class="ai-name">NVIDIA GPU</text>
+  <text x="236" y="519" class="ai-kind">hardware</text>
+</g>
+<g id="stage-apple_gpu" class="ai-stage on" tabindex="0" role="button" aria-label="Apple silicon GPU: Hardware">
+  <rect x="428" y="484" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="428" y="484" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="442" y="503" class="ai-name">Apple silicon GPU</text>
+  <text x="442" y="519" class="ai-kind">hardware</text>
+</g>
+</svg></div>
+      <aside class="ai-detail" aria-live="polite"><p class="ai-detail-hint">Select a stage or an arrow to see what it does and the source behind it.</p></aside>
+    </div>
+    <ul class="ai-legend" aria-label="Legend"><li><span class="ai-swatch" style="--kc:#60a5fa"></span>Your program</li><li><span class="ai-swatch" style="--kc:#e3a008"></span>Framework core</li><li><span class="ai-swatch" style="--kc:#fb7185"></span>Model file</li><li><span class="ai-swatch" style="--kc:#f472b6"></span>Kernel</li><li><span class="ai-swatch" style="--kc:#a78bfa"></span>Compiler</li><li><span class="ai-swatch" style="--kc:#4ade80"></span>Hardware</li></ul>
+  </section>
+
+  <h2 id="the-selected-path-step-by-step">The selected path, step by step</h2>
+  <ol class="ai-path-list">
+<li>Your program <em>calls</em> llama.cpp library: The program calls the llama.cpp library, which is plain C/C++ with no other dependencies.</li>
+<li>llama.cpp library <em>loads</em> GGUF model file: The library reads the model's weights and metadata from a GGUF file.</li>
+<li>llama.cpp library <em>builds</em> ggml compute graph: For each step of generation, llama.cpp describes the computation as a ggml graph.</li>
+<li>ggml compute graph <em>runs layers on</em> ggml CPU backend: With the CPU backend the whole graph runs here. With a GPU backend, the layers not offloaded to the GPU still run here; --n-gpu-layers controls the split.</li>
+<li>ggml compute graph <em>offloads layers to</em> ggml Metal backend: On macOS builds Metal is on by default, and the offloaded layers are computed by the Metal backend. --n-gpu-layers 0 turns GPU inference off.</li>
+<li>ggml CPU backend <em>runs on</em> CPU: The C/C++ kernels run on the CPU's cores using its SIMD instructions.</li>
+<li>ggml Metal backend <em>kernels written in</em> Metal kernels (MSL): The Metal backend's operations are llama.cpp's own kernels in Metal Shading Language.</li>
+<li>Metal kernels (MSL) <em>run on</em> Apple silicon GPU: Through Apple's Metal framework the kernels run on the Apple silicon GPU.</li>
+  </ol>
+
+  <h2 id="which-language-does-the-work">Which language does the work</h2>
+  <p>There is no Python on this path. The library, the model loader and ggml are C and C++, and the language of the innermost loops depends on the backend: C/C++ with SIMD instructions on the CPU, CUDA C++ on NVIDIA GPUs, and Metal Shading Language on Apple GPUs.</p>
+  <p>The GPU kernels are written for each backend and kept in the llama.cpp repository. CUDA kernels are compiled by NVIDIA's nvcc when llama.cpp itself is built, by default for the GPU in the build machine. That is a different arrangement from <strong>torch.compile</strong>, where TorchInductor generates new kernels while your program runs.</p>
+
+  <h2 id="cpu-and-gpu-together">CPU and GPU together</h2>
+  <p>With the CUDA or Metal backend, the GPU only runs the layers offloaded to it, which the --n-gpu-layers (-ngl) option controls. The rest of the model runs on the CPU backend, which is how llama.cpp runs models larger than the GPU's memory.</p>
+
+  <h2 id="every-stage">Every stage</h2>
+  <div class="ai-stage-list">
+<article class="ai-stage-detail" id="detail-stage-app" data-stage="app">
+<h3>Your program</h3>
+<p class="ai-kind-tag" style="--kc:#60a5fa">application</p>
+<p>A program that runs a model: llama.cpp's own command-line tool or OpenAI-compatible server, or your own code linked against the library.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/llama-cpp">llama.cpp</a></p>
+<ul class="ai-sources"><li><blockquote>The main goal of llama.cpp is to enable LLM (and VLM) inference with minimal setup and state-of-the-art performance on a wide range of hardware</blockquote><a href="https://github.com/ggml-org/llama.cpp/blob/master/README.md" rel="noopener noreferrer" target="_blank">llama.cpp README</a> <span class="src-type">Source repository</span></li><li><blockquote>Launch OpenAI-compatible API server</blockquote><a href="https://github.com/ggml-org/llama.cpp/blob/master/README.md" rel="noopener noreferrer" target="_blank">llama.cpp README</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-libllama" data-stage="libllama">
+<h3>llama.cpp library</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>The C/C++ inference library: it loads the model and builds the computation for each step of generation on top of ggml.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/llama-cpp">llama.cpp</a></p>
+<ul class="ai-sources"><li><blockquote>Plain C/C++ implementation without any dependencies</blockquote><a href="https://github.com/ggml-org/llama.cpp/blob/master/README.md" rel="noopener noreferrer" target="_blank">llama.cpp README</a> <span class="src-type">Source repository</span></li><li><blockquote>LLM inference with llama.cpp, which builds upon ggml.</blockquote><a href="https://huggingface.co/blog/introduction-to-ggml" rel="noopener noreferrer" target="_blank">Introduction to ggml (Hugging Face blog, by ggml maintainers)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-gguf" data-stage="gguf">
+<h3>GGUF model file</h3>
+<p class="ai-kind-tag" style="--kc:#fb7185">model format</p>
+<p>The model's weights and metadata in one binary file. GGUF is a file format, not a programming language.</p>
+
+<ul class="ai-sources"><li><blockquote>GGUF is a file format for storing models for inference with GGML and executors based on GGML.</blockquote><a href="https://github.com/ggml-org/ggml/blob/master/docs/gguf.md" rel="noopener noreferrer" target="_blank">GGUF specification (ggml)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-ggml_graph" data-stage="ggml_graph">
+<h3>ggml compute graph</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>ggml, the C/C++ tensor library under llama.cpp, records the operations of each step as a graph, then hands it to a backend to compute.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/ggml">ggml</a></p>
+<ul class="ai-sources"><li><blockquote>ggml is a machine learning (ML) library written in C and C++ with a focus on Transformer inference.</blockquote><a href="https://huggingface.co/blog/introduction-to-ggml" rel="noopener noreferrer" target="_blank">Introduction to ggml (Hugging Face blog, by ggml maintainers)</a> <span class="src-type">Project docs</span></li><li><blockquote>ggml_cgraph : Represents a computational graph. Think of it as the &quot;order of computation&quot; that will be transferred to the backend.</blockquote><a href="https://huggingface.co/blog/introduction-to-ggml" rel="noopener noreferrer" target="_blank">Introduction to ggml (Hugging Face blog, by ggml maintainers)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-ggml_cpu" data-stage="ggml_cpu">
+<h3>ggml CPU backend</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel</p>
+<p>C/C++ kernels using the CPU's SIMD instructions: AVX on x86, NEON on ARM, including Apple silicon.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/ggml">ggml</a></p>
+<ul class="ai-sources"><li><blockquote>AVX, AVX2, AVX512 and AMX support for x86 architectures</blockquote><a href="https://github.com/ggml-org/llama.cpp/blob/master/README.md" rel="noopener noreferrer" target="_blank">llama.cpp README</a> <span class="src-type">Source repository</span></li><li><blockquote>Apple silicon is a first-class citizen - optimized via ARM NEON, Accelerate and Metal frameworks</blockquote><a href="https://github.com/ggml-org/llama.cpp/blob/master/README.md" rel="noopener noreferrer" target="_blank">llama.cpp README</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-ggml_cuda" data-stage="ggml_cuda">
+<h3>ggml CUDA backend</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>The backend for NVIDIA GPUs, enabled at build time with -DGGML_CUDA=ON. It runs llama.cpp's own CUDA kernels.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/ggml">ggml</a></p>
+<ul class="ai-sources"><li><blockquote>Custom CUDA kernels for running LLMs on NVIDIA GPUs</blockquote><a href="https://github.com/ggml-org/llama.cpp/blob/master/README.md" rel="noopener noreferrer" target="_blank">llama.cpp README</a> <span class="src-type">Source repository</span></li><li><blockquote>This provides GPU acceleration using an NVIDIA GPU.</blockquote><a href="https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md" rel="noopener noreferrer" target="_blank">llama.cpp build guide</a> <span class="src-type">Source repository</span></li><li><blockquote>cmake -B build -DGGML_CUDA=ON</blockquote><a href="https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md" rel="noopener noreferrer" target="_blank">llama.cpp build guide</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-ggml_metal" data-stage="ggml_metal">
+<h3>ggml Metal backend</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>The backend for Apple GPUs, enabled by default on macOS. It runs llama.cpp's own Metal kernels through Apple's Metal framework.</p>
+
+<ul class="ai-sources"><li><blockquote>On MacOS, Metal is enabled by default. Using Metal makes the computation run on the GPU.</blockquote><a href="https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md" rel="noopener noreferrer" target="_blank">llama.cpp build guide</a> <span class="src-type">Source repository</span></li><li><blockquote>Apple silicon is a first-class citizen - optimized via ARM NEON, Accelerate and Metal frameworks</blockquote><a href="https://github.com/ggml-org/llama.cpp/blob/master/README.md" rel="noopener noreferrer" target="_blank">llama.cpp README</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-cuda_kernels" data-stage="cuda_kernels">
+<h3>CUDA kernels (.cu)</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel language</p>
+<p>GPU functions written in CUDA C++ and marked __global__, in .cu files under ggml/src/ggml-cuda (for example argmax.cu).</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/cuda">CUDA</a></p>
+<ul class="ai-sources"><li><blockquote>static __global__ void argmax_f32(const float * __restrict__ x, int32_t * __restrict__ dst, const int64_t ncols)</blockquote><a href="https://github.com/ggml-org/llama.cpp/blob/master/ggml/src/ggml-cuda/argmax.cu" rel="noopener noreferrer" target="_blank">llama.cpp CUDA kernel source (ggml-cuda/argmax.cu)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-metal_kernels" data-stage="metal_kernels">
+<h3>Metal kernels (MSL)</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel language</p>
+<p>GPU functions written in Metal Shading Language and marked kernel, in .metal files under ggml/src/ggml-metal/kernels.</p>
+
+<ul class="ai-sources"><li><blockquote>kernel void kernel_argsort_f32_i32(</blockquote><a href="https://github.com/ggml-org/llama.cpp/blob/master/ggml/src/ggml-metal/kernels/argsort.metal" rel="noopener noreferrer" target="_blank">llama.cpp Metal kernel source (ggml-metal/kernels/argsort.metal)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-nvcc" data-stage="nvcc">
+<h3>nvcc (CUDA toolkit)</h3>
+<p class="ai-kind-tag" style="--kc:#a78bfa">compiler</p>
+<p>NVIDIA's CUDA compiler. It compiles the CUDA kernels when llama.cpp is built, by default for the GPU in the build machine.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/cuda">CUDA</a></p>
+<ul class="ai-sources"><li><blockquote>If nvcc cannot detect your gpu, you may get compile warnings such as</blockquote><a href="https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md" rel="noopener noreferrer" target="_blank">llama.cpp build guide</a> <span class="src-type">Source repository</span></li><li><blockquote>By default llama.cpp will be built for the hardware that is connected to the system at that time.</blockquote><a href="https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md" rel="noopener noreferrer" target="_blank">llama.cpp build guide</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-cpu" data-stage="cpu">
+<h3>CPU</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">hardware</p>
+<p>Runs the whole model with the CPU backend, or the layers not offloaded to a GPU.</p>
+
+<ul class="ai-sources"><li><blockquote>CPU+GPU hybrid inference to partially accelerate models larger than the total VRAM capacity</blockquote><a href="https://github.com/ggml-org/llama.cpp/blob/master/README.md" rel="noopener noreferrer" target="_blank">llama.cpp README</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-nvidia_gpu" data-stage="nvidia_gpu">
+<h3>NVIDIA GPU</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">hardware</p>
+<p>Runs the compiled CUDA kernels for the offloaded layers.</p>
+
+<ul class="ai-sources"><li><blockquote>This provides GPU acceleration using an NVIDIA GPU.</blockquote><a href="https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md" rel="noopener noreferrer" target="_blank">llama.cpp build guide</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-apple_gpu" data-stage="apple_gpu">
+<h3>Apple silicon GPU</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">hardware</p>
+<p>Runs the Metal kernels for the offloaded layers.</p>
+
+<ul class="ai-sources"><li><blockquote>On MacOS, Metal is enabled by default. Using Metal makes the computation run on the GPU.</blockquote><a href="https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md" rel="noopener noreferrer" target="_blank">llama.cpp build guide</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+  </div>
+
+  <h2 id="every-step">Every step</h2>
+  <div class="table-wrap"><table class="ai-steps">
+    <thead><tr><th>From</th><th>Step</th><th>To</th><th>When</th><th>What happens</th><th>Source</th></tr></thead>
+    <tbody>
+<tr id="detail-step-app--libllama" data-step="app--libllama" data-from="app" data-to="libllama" data-when="{}" class="on">
+<td>Your program</td><td>calls</td><td>llama.cpp library</td><td>any backend</td><td>The program calls the llama.cpp library, which is plain C/C++ with no other dependencies.</td><td><a href="https://github.com/ggml-org/llama.cpp/blob/master/README.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-libllama--gguf" data-step="libllama--gguf" data-from="libllama" data-to="gguf" data-when="{}" class="on">
+<td>llama.cpp library</td><td>loads</td><td>GGUF model file</td><td>any backend</td><td>The library reads the model's weights and metadata from a GGUF file.</td><td><a href="https://github.com/ggml-org/ggml/blob/master/docs/gguf.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-libllama--ggml_graph" data-step="libllama--ggml_graph" data-from="libllama" data-to="ggml_graph" data-when="{}" class="on">
+<td>llama.cpp library</td><td>builds</td><td>ggml compute graph</td><td>any backend</td><td>For each step of generation, llama.cpp describes the computation as a ggml graph.</td><td><a href="https://huggingface.co/blog/introduction-to-ggml" rel="noopener noreferrer" target="_blank">Project docs</a><br><a href="https://huggingface.co/blog/introduction-to-ggml" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-ggml_graph--ggml_cpu" data-step="ggml_graph--ggml_cpu" data-from="ggml_graph" data-to="ggml_cpu" data-when="{}" class="on">
+<td>ggml compute graph</td><td>runs layers on</td><td>ggml CPU backend</td><td>any backend</td><td>With the CPU backend the whole graph runs here. With a GPU backend, the layers not offloaded to the GPU still run here; --n-gpu-layers controls the split.</td><td><a href="https://github.com/ggml-org/llama.cpp/blob/master/README.md" rel="noopener noreferrer" target="_blank">Source repository</a><br><a href="https://huggingface.co/blog/introduction-to-ggml" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-ggml_graph--ggml_cuda" data-step="ggml_graph--ggml_cuda" data-from="ggml_graph" data-to="ggml_cuda" data-when="{&quot;backend&quot;:[&quot;cuda&quot;]}">
+<td>ggml compute graph</td><td>offloads layers to</td><td>ggml CUDA backend</td><td>CUDA (NVIDIA)</td><td>In a CUDA build, the layers offloaded to the GPU are computed by the CUDA backend.</td><td><a href="https://huggingface.co/blog/introduction-to-ggml" rel="noopener noreferrer" target="_blank">Project docs</a><br><a href="https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-ggml_graph--ggml_metal" data-step="ggml_graph--ggml_metal" data-from="ggml_graph" data-to="ggml_metal" data-when="{&quot;backend&quot;:[&quot;metal&quot;]}" class="on">
+<td>ggml compute graph</td><td>offloads layers to</td><td>ggml Metal backend</td><td>Metal (Apple)</td><td>On macOS builds Metal is on by default, and the offloaded layers are computed by the Metal backend. --n-gpu-layers 0 turns GPU inference off.</td><td><a href="https://huggingface.co/blog/introduction-to-ggml" rel="noopener noreferrer" target="_blank">Project docs</a><br><a href="https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-ggml_cpu--cpu" data-step="ggml_cpu--cpu" data-from="ggml_cpu" data-to="cpu" data-when="{}" class="on">
+<td>ggml CPU backend</td><td>runs on</td><td>CPU</td><td>any backend</td><td>The C/C++ kernels run on the CPU's cores using its SIMD instructions.</td><td><a href="https://github.com/ggml-org/llama.cpp/blob/master/README.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-ggml_cuda--cuda_kernels" data-step="ggml_cuda--cuda_kernels" data-from="ggml_cuda" data-to="cuda_kernels" data-when="{&quot;backend&quot;:[&quot;cuda&quot;]}">
+<td>ggml CUDA backend</td><td>kernels written in</td><td>CUDA kernels (.cu)</td><td>CUDA (NVIDIA)</td><td>The CUDA backend's operations are llama.cpp's own CUDA C++ kernels.</td><td><a href="https://github.com/ggml-org/llama.cpp/blob/master/README.md" rel="noopener noreferrer" target="_blank">Source repository</a><br><a href="https://github.com/ggml-org/llama.cpp/blob/master/ggml/src/ggml-cuda/argmax.cu" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-cuda_kernels--nvcc" data-step="cuda_kernels--nvcc" data-from="cuda_kernels" data-to="nvcc" data-when="{&quot;backend&quot;:[&quot;cuda&quot;]}">
+<td>CUDA kernels (.cu)</td><td>compiled at build time by</td><td>nvcc (CUDA toolkit)</td><td>CUDA (NVIDIA)</td><td>The kernels are compiled by NVIDIA's nvcc when llama.cpp is built, by default for the GPU present at build time.</td><td><a href="https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md" rel="noopener noreferrer" target="_blank">Source repository</a><br><a href="https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-nvcc--nvidia_gpu" data-step="nvcc--nvidia_gpu" data-from="nvcc" data-to="nvidia_gpu" data-when="{&quot;backend&quot;:[&quot;cuda&quot;]}">
+<td>nvcc (CUDA toolkit)</td><td>compiles for</td><td>NVIDIA GPU</td><td>CUDA (NVIDIA)</td><td>The compiled kernels run on the NVIDIA GPU. A build made for all CUDA GPUs may need some just-in-time compilation on the target GPU.</td><td><a href="https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-ggml_metal--metal_kernels" data-step="ggml_metal--metal_kernels" data-from="ggml_metal" data-to="metal_kernels" data-when="{&quot;backend&quot;:[&quot;metal&quot;]}" class="on">
+<td>ggml Metal backend</td><td>kernels written in</td><td>Metal kernels (MSL)</td><td>Metal (Apple)</td><td>The Metal backend's operations are llama.cpp's own kernels in Metal Shading Language.</td><td><a href="https://github.com/ggml-org/llama.cpp/blob/master/ggml/src/ggml-metal/kernels/argsort.metal" rel="noopener noreferrer" target="_blank">Source repository</a><br><a href="https://github.com/ggml-org/llama.cpp/blob/master/README.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-metal_kernels--apple_gpu" data-step="metal_kernels--apple_gpu" data-from="metal_kernels" data-to="apple_gpu" data-when="{&quot;backend&quot;:[&quot;metal&quot;]}" class="on">
+<td>Metal kernels (MSL)</td><td>run on</td><td>Apple silicon GPU</td><td>Metal (Apple)</td><td>Through Apple's Metal framework the kernels run on the Apple silicon GPU.</td><td><a href="https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="what-this-does-not-show">What this does not show</h2>
+  <p>Documented paths for running a GGUF model with llama.cpp on three of its backends: the CPU, CUDA on an NVIDIA GPU, and Metal on Apple silicon. Other backends (Vulkan, HIP, SYCL, OpenCL and more), multi-GPU and RPC setups, and how a model is converted to GGUF are out of scope. The same ggml graph can run on any backend the build enables; this page shows three of them.</p>
+
+  <h2 id="how-this-page-is-checked">How this page is checked</h2>
+  <p>Every stage and step above quotes the source that supports it. The quotes were checked against the llama.cpp README and build guide, the GGUF specification, Hugging Face's Introduction to ggml, and llama.cpp's CUDA and Metal kernel sources (master branch) on 2026-11-11. The data is a <a href="/dataset/ai/how-llama-cpp-runs.json">versioned JSON file</a> under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. Found something wrong or out of date? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
+  <p>What these tools are written in is in the main atlas: <a href="/tools/llama-cpp">llama.cpp</a>, <a href="/tools/ggml">ggml</a>, <a href="/tools/cuda">CUDA</a>. More execution paths: <a href="/ai/how-pytorch-runs">What Actually Happens When You Run a PyTorch Model</a>.</p>
+
+  <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>
+</main>
+<footer class="seo-footer-rich">
+  <div data-nosnippet>
+  <div class="footer-grid">
+    <div class="footer-col">
+      <span class="footer-col-head">Explore</span>
+      <a href="/programming-language-graph">Programming language graph</a>
+      <a href="/rankings/most-influential">Most influential languages</a>
+      <a href="/rss.xml">RSS feed</a>
+      <a href="/embed-kit">Embed the graph</a>
+      <a href="/guides/programming-language-family-tree">Language family tree</a>
+      <a href="/programming-language-evolution">Evolution timeline</a>
+      <a href="/what-are-programming-languages-written-in">What languages are written in</a>
+      <a href="/explore">Interactive Graph</a>
+      <a href="/dataset">Dataset</a>
+      <a href="/directory">Site Directory</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Popular Languages</span>
+      <a href="/languages/python">Python</a>
+      <a href="/languages/javascript">JavaScript</a>
+      <a href="/languages/rust">Rust</a>
+      <a href="/languages/go">Go</a>
+      <a href="/languages/java">Java</a>
+      <a href="/languages/c">C</a>
+      <a href="/languages/cxx">C++</a>
+      <a href="/languages/typescript">TypeScript</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Questions</span>
+      <a href="/questions/what-is-python-written-in">What is Python written in?</a>
+      <a href="/questions/what-is-javascript-written-in">What is JavaScript written in?</a>
+      <a href="/questions/what-is-rust-written-in">What is Rust written in?</a>
+      <a href="/questions/what-is-go-written-in">What is Go written in?</a>
+      <a href="/questions/what-is-compiler-bootstrapping">What is compiler bootstrapping?</a>
+      <a href="/questions">All questions &rarr;</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Tools &amp; Guides</span>
+      <a href="/tools/v8">V8</a>
+      <a href="/tools/llvm">LLVM</a>
+      <a href="/tools/gcc">GCC</a>
+      <a href="/tools/ghc">GHC</a>
+      <a href="/guides">All guides</a>
+      <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </div>
+  <p class="footer-note">The Language Lineage dataset is meticulously curated and verified by human researchers. We use AI agents to assist with large-scale data gathering and modeling, but every implementation fact is manually reviewed for accuracy. Spot an error? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue on GitHub</a> and it gets fixed. <a href="/how-it-works">Learn how it works &rarr;</a></p>
+  <div class="footer-bottom">Made with <span style="color:#fb7185">❤️</span> by <a href="https://github.com/sanketmuchhala" rel="noopener noreferrer">Sanket Muchhala</a> &middot; <a href="/">Language Lineage</a></div>
+  </div>
+</footer>
+</body>
+</html>

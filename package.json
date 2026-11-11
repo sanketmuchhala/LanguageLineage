@@ -29,6 +29,7 @@
     "poster:generate": "tsx scripts/generatePoster.ts",
     "gsc:analyze": "tsx scripts/analyzeGsc.ts",
     "check:evidence-links": "tsx scripts/checkEvidenceLinks.ts",
+    "check:ai-quotes": "tsx scripts/checkAiQuotes.ts",
     "test:embed": "playwright test --config=playwright.embed.config.ts"
   },
   "dependencies": {

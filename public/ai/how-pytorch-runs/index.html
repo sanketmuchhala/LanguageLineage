@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>What Actually Happens When You Run a PyTorch Model? | Language Lineage</title>
+  <meta name="description" content="Trace a PyTorch model from Python to the hardware: eager mode vs torch.compile, CPU vs GPU, through ATen, TorchDynamo, TorchInductor, Triton, LLVM IR and PTX, with sources." />
+  <link rel="canonical" href="https://www.languagelineage.org/ai/how-pytorch-runs" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><script defer src="/fx.js"></script><script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script><link rel="alternate" type="application/rss+xml" title="Language Lineage" href="/rss.xml" /><link rel="stylesheet" href="/seo.css" />
+  <script defer src="/ai-path.js"></script>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="What Actually Happens When You Run a PyTorch Model? | Language Lineage" />
+  <meta property="og:description" content="Trace a PyTorch model from Python to the hardware: eager mode vs torch.compile, CPU vs GPU, through ATen, TorchDynamo, TorchInductor, Triton, LLVM IR and PTX, with sources." />
+  <meta property="og:url" content="https://www.languagelineage.org/ai/how-pytorch-runs" />
+  <meta property="og:image" content="https://www.languagelineage.org/og/ai-how-pytorch-runs.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What Actually Happens When You Run a PyTorch Model?","description":"Trace a PyTorch model from Python to the hardware: eager mode vs torch.compile, CPU vs GPU, through ATen, TorchDynamo, TorchInductor, Triton, LLVM IR and PTX, with sources.","url":"https://www.languagelineage.org/ai/how-pytorch-runs","datePublished":"2026-11-10","dateModified":"2026-11-11","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"citation":["https://docs.pytorch.org/docs/main/user_guide/torch_compiler/torch.compiler_dynamo_overview.html","https://docs.pytorch.org/docs/2.15/user_guide/torch_compiler/compile/programming_model.graph_breaks_index.html","https://docs.pytorch.org/docs/2.15/user_guide/torch_compiler/torch.compiler.html","https://pytorch.org/blog/pytorch-pytorch-2-paper-tutorial/","https://dev-discuss.pytorch.org/t/torchinductor-a-pytorch-native-compiler-with-define-by-run-ir-and-symbolic-shapes/747","https://docs.pytorch.org/cppdocs/","https://docs.pytorch.org/docs/2.15/notes/cuda.html","https://triton-lang.org/main/index.html","https://github.com/triton-lang/triton/blob/main/README.md","https://docs.nvidia.com/cuda/parallel-thread-execution/index.html"],"inLanguage":"en"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"What Actually Happens When You Run a PyTorch Model?","item":"https://www.languagelineage.org/ai/how-pytorch-runs"}]}</script>
+</head>
+<body class="seo-page">
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<nav class="seo-nav">
+  <a href="/" class="nav-brand"><img class="nav-logo-mark" src="/logo-mark.svg" width="22" height="22" alt="" aria-hidden="true">Language Lineage</a>
+  <a href="/relationships">Relationships</a>
+  <a href="/languages">Languages</a>
+  <a href="/tools">Tools</a>
+  <a href="/guides">Guides</a>
+  <a href="/timeline">Timeline</a>
+  <a href="/dataset">Dataset</a>
+  <a href="/how-it-works">How It Works</a>
+  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
+</nav>
+<main class="seo-main" id="main-content">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; What Actually Happens When You Run a PyTorch Model
+  </nav>
+
+  <h1>What Actually Happens When You Run a PyTorch Model?</h1>
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#the-selected-path-step-by-step">The selected path, step by step</a></li>
+    <li><a href="#where-python-ends">Where Python ends</a></li>
+    <li><a href="#every-stage">Every stage</a></li>
+    <li><a href="#every-step">Every step</a></li>
+    <li><a href="#what-this-does-not-show">What this does not show</a></li>
+    <li><a href="#how-this-page-is-checked">How this page is checked</a></li>
+  </ol>
+</nav>
+
+  <div class="answer-box">In <strong>eager mode</strong>, each tensor operation in your Python code is a separate call into ATen, PyTorch's C++ core, which runs a precompiled C++ kernel on the CPU or a CUDA kernel on the GPU. With <strong>torch.compile</strong>, TorchDynamo captures runs of operations as an FX graph, and TorchInductor generates new kernels for it: C++ with OpenMP for CPUs, Triton for GPUs. On an NVIDIA GPU, Triton lowers each kernel through MLIR and LLVM IR to PTX, which NVIDIA's driver turns into the GPU's own machine code.</div>
+
+  <section class="ai-explorer" id="explorer" aria-label="Execution path explorer">
+    <form class="ai-controls" onsubmit="return false">
+      <fieldset><legend>Mode</legend>
+        <label><input type="radio" name="mode" value="eager" data-phrase="eager mode"> Eager</label>
+        <label><input type="radio" name="mode" value="compile" data-phrase="torch.compile" checked> torch.compile</label>
+      </fieldset>
+      <fieldset><legend>Device</legend>
+        <label><input type="radio" name="device" value="cpu" data-phrase="a CPU"> CPU</label>
+        <label><input type="radio" name="device" value="gpu" data-phrase="an NVIDIA GPU" checked> NVIDIA GPU</label>
+      </fieldset>
+      <button type="button" class="ai-copy" hidden>Copy link to this path</button>
+    </form>
+    <p class="ai-status" aria-live="polite" data-template="Showing {mode} on {device}">Showing torch.compile on an NVIDIA GPU: 12 stages, 12 steps.</p>
+    <div class="ai-layout">
+      <div class="ai-diagram-wrap"><svg class="ai-path-svg" viewBox="0 0 826 858" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Execution path diagram: select a stage or step for details">
+<defs><marker id="ai-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9a9a9a"/></marker></defs>
+<path id="step-python_code--cpython" class="ai-step on" d="M413,62 C413,78 413,78 413,88" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Your model code runs in CPython interpreter"><title>Your model code runs in CPython interpreter</title></path>
+<path id="step-cpython--aten" class="ai-step" d="M413,140 C413,156 207,156 207,166" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="CPython interpreter calls, one op at a time ATen dispatch"><title>CPython interpreter calls, one op at a time ATen dispatch</title></path>
+<path id="step-aten--aten_cpu" class="ai-step" d="M207,218 C207,234 104,234 104,244" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="ATen dispatch dispatches to ATen CPU kernels"><title>ATen dispatch dispatches to ATen CPU kernels</title></path>
+<path id="step-aten--aten_cuda" class="ai-step" d="M207,218 C207,234 310,234 310,244" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="ATen dispatch dispatches to ATen CUDA kernels"><title>ATen dispatch dispatches to ATen CUDA kernels</title></path>
+<path id="step-aten_cpu--cpu" class="ai-step" d="M104,296 C104,546 258.5,546 258.5,790" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="ATen CPU kernels runs on CPU"><title>ATen CPU kernels runs on CPU</title></path>
+<path id="step-aten_cuda--nvidia_gpu" class="ai-step on" d="M310,296 C310,546 619,546 619,790" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="ATen CUDA kernels launched on NVIDIA GPU"><title>ATen CUDA kernels launched on NVIDIA GPU</title></path>
+<path id="step-cpython--dynamo" class="ai-step on" d="M413,140 C413,156 619,156 619,166" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="CPython interpreter intercepted by TorchDynamo"><title>CPython interpreter intercepted by TorchDynamo</title></path>
+<path id="step-dynamo--fx_graph" class="ai-step on" d="M619,218 C619,234 619,234 619,244" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="TorchDynamo captures FX graph"><title>TorchDynamo captures FX graph</title></path>
+<path id="step-fx_graph--inductor" class="ai-step on" d="M619,296 C619,312 619,312 619,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="FX graph compiled by TorchInductor"><title>FX graph compiled by TorchInductor</title></path>
+<path id="step-inductor--cpp_openmp" class="ai-step" d="M619,374 C619,390 516,390 516,400" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="TorchInductor generates C++/OpenMP kernels"><title>TorchInductor generates C++/OpenMP kernels</title></path>
+<path id="step-inductor--triton_kernels" class="ai-step on" d="M619,374 C619,390 722,390 722,400" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="TorchInductor generates Triton kernels"><title>TorchInductor generates Triton kernels</title></path>
+<path id="step-inductor--aten_cpu" class="ai-step" d="M531,351 C364.5,351 364.5,273 198,273" stroke-dasharray="5 4" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="TorchInductor some ops fall back to ATen CPU kernels"><title>TorchInductor some ops fall back to ATen CPU kernels</title></path>
+<path id="step-inductor--aten_cuda" class="ai-step on" d="M531,351 C467.5,351 467.5,273 404,273" stroke-dasharray="5 4" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="TorchInductor some ops stay ATen CUDA kernels"><title>TorchInductor some ops stay ATen CUDA kernels</title></path>
+<path id="step-cpp_openmp--cpu" class="ai-step" d="M516,452 C516,624 258.5,624 258.5,790" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="C++/OpenMP kernels runs on CPU"><title>C++/OpenMP kernels runs on CPU</title></path>
+<path id="step-triton_kernels--triton_compiler" class="ai-step on" d="M722,452 C722,468 722,468 722,478" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Triton kernels compiled by Triton compiler"><title>Triton kernels compiled by Triton compiler</title></path>
+<path id="step-triton_compiler--llvm_ir" class="ai-step on" d="M722,530 C722,546 722,546 722,556" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Triton compiler lowers to LLVM IR"><title>Triton compiler lowers to LLVM IR</title></path>
+<path id="step-llvm_ir--ptx" class="ai-step on" d="M722,608 C722,624 722,624 722,634" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="LLVM IR lowers to PTX"><title>LLVM IR lowers to PTX</title></path>
+<path id="step-ptx--gpu_machine_code" class="ai-step on" d="M722,686 C722,702 722,702 722,712" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="PTX translated to GPU machine code"><title>PTX translated to GPU machine code</title></path>
+<path id="step-gpu_machine_code--nvidia_gpu" class="ai-step on" d="M722,764 C722,780 619,780 619,790" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="GPU machine code launched on NVIDIA GPU"><title>GPU machine code launched on NVIDIA GPU</title></path>
+<g id="stage-python_code" class="ai-stage on" tabindex="0" role="button" aria-label="Your model code: Your program">
+  <rect x="325" y="16" width="176" height="46" rx="7" style="--kc:#60a5fa"/>
+  <rect x="325" y="16" width="4" height="46" rx="2" fill="#60a5fa"/>
+  <text x="339" y="35" class="ai-name">Your model code</text>
+  <text x="339" y="51" class="ai-kind">programming language</text>
+</g>
+<g id="stage-cpython" class="ai-stage on" tabindex="0" role="button" aria-label="CPython interpreter: Your program">
+  <rect x="325" y="94" width="176" height="46" rx="7" style="--kc:#60a5fa"/>
+  <rect x="325" y="94" width="4" height="46" rx="2" fill="#60a5fa"/>
+  <text x="339" y="113" class="ai-name">CPython interpreter</text>
+  <text x="339" y="129" class="ai-kind">runtime</text>
+</g>
+<g id="stage-aten" class="ai-stage" tabindex="0" role="button" aria-label="ATen dispatch: Framework core">
+  <rect x="119" y="172" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="119" y="172" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="133" y="191" class="ai-name">ATen dispatch</text>
+  <text x="133" y="207" class="ai-kind">framework component</text>
+</g>
+<g id="stage-aten_cpu" class="ai-stage" tabindex="0" role="button" aria-label="ATen CPU kernels: Kernel">
+  <rect x="16" y="250" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="16" y="250" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="30" y="269" class="ai-name">ATen CPU kernels</text>
+  <text x="30" y="285" class="ai-kind">kernel</text>
+</g>
+<g id="stage-aten_cuda" class="ai-stage on" tabindex="0" role="button" aria-label="ATen CUDA kernels: Kernel">
+  <rect x="222" y="250" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="222" y="250" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="236" y="269" class="ai-name">ATen CUDA kernels</text>
+  <text x="236" y="285" class="ai-kind">kernel</text>
+</g>
+<g id="stage-dynamo" class="ai-stage on" tabindex="0" role="button" aria-label="TorchDynamo: Compiler">
+  <rect x="531" y="172" width="176" height="46" rx="7" style="--kc:#a78bfa"/>
+  <rect x="531" y="172" width="4" height="46" rx="2" fill="#a78bfa"/>
+  <text x="545" y="191" class="ai-name">TorchDynamo</text>
+  <text x="545" y="207" class="ai-kind">compiler</text>
+</g>
+<g id="stage-fx_graph" class="ai-stage on" tabindex="0" role="button" aria-label="FX graph: Intermediate representation">
+  <rect x="531" y="250" width="176" height="46" rx="7" style="--kc:#22d3ee"/>
+  <rect x="531" y="250" width="4" height="46" rx="2" fill="#22d3ee"/>
+  <text x="545" y="269" class="ai-name">FX graph</text>
+  <text x="545" y="285" class="ai-kind">intermediate representation</text>
+</g>
+<g id="stage-inductor" class="ai-stage on" tabindex="0" role="button" aria-label="TorchInductor: Compiler">
+  <rect x="531" y="328" width="176" height="46" rx="7" style="--kc:#a78bfa"/>
+  <rect x="531" y="328" width="4" height="46" rx="2" fill="#a78bfa"/>
+  <text x="545" y="347" class="ai-name">TorchInductor</text>
+  <text x="545" y="363" class="ai-kind">compiler</text>
+</g>
+<g id="stage-cpp_openmp" class="ai-stage" tabindex="0" role="button" aria-label="C++/OpenMP kernels: Kernel">
+  <rect x="428" y="406" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="428" y="406" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="442" y="425" class="ai-name">C++/OpenMP kernels</text>
+  <text x="442" y="441" class="ai-kind">kernel</text>
+</g>
+<g id="stage-triton_kernels" class="ai-stage on" tabindex="0" role="button" aria-label="Triton kernels: Kernel">
+  <rect x="634" y="406" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="634" y="406" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="648" y="425" class="ai-name">Triton kernels</text>
+  <text x="648" y="441" class="ai-kind">kernel language</text>
+</g>
+<g id="stage-triton_compiler" class="ai-stage on" tabindex="0" role="button" aria-label="Triton compiler: Compiler">
+  <rect x="634" y="484" width="176" height="46" rx="7" style="--kc:#a78bfa"/>
+  <rect x="634" y="484" width="4" height="46" rx="2" fill="#a78bfa"/>
+  <text x="648" y="503" class="ai-name">Triton compiler</text>
+  <text x="648" y="519" class="ai-kind">compiler</text>
+</g>
+<g id="stage-llvm_ir" class="ai-stage on" tabindex="0" role="button" aria-label="LLVM IR: Intermediate representation">
+  <rect x="634" y="562" width="176" height="46" rx="7" style="--kc:#22d3ee"/>
+  <rect x="634" y="562" width="4" height="46" rx="2" fill="#22d3ee"/>
+  <text x="648" y="581" class="ai-name">LLVM IR</text>
+  <text x="648" y="597" class="ai-kind">intermediate representation</text>
+</g>
+<g id="stage-ptx" class="ai-stage on" tabindex="0" role="button" aria-label="PTX: Intermediate representation">
+  <rect x="634" y="640" width="176" height="46" rx="7" style="--kc:#22d3ee"/>
+  <rect x="634" y="640" width="4" height="46" rx="2" fill="#22d3ee"/>
+  <text x="648" y="659" class="ai-name">PTX</text>
+  <text x="648" y="675" class="ai-kind">intermediate representation</text>
+</g>
+<g id="stage-gpu_machine_code" class="ai-stage on" tabindex="0" role="button" aria-label="GPU machine code: Hardware">
+  <rect x="634" y="718" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="634" y="718" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="648" y="737" class="ai-name">GPU machine code</text>
+  <text x="648" y="753" class="ai-kind">machine code</text>
+</g>
+<g id="stage-cpu" class="ai-stage" tabindex="0" role="button" aria-label="CPU: Hardware">
+  <rect x="170.5" y="796" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="170.5" y="796" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="184.5" y="815" class="ai-name">CPU</text>
+  <text x="184.5" y="831" class="ai-kind">hardware</text>
+</g>
+<g id="stage-nvidia_gpu" class="ai-stage on" tabindex="0" role="button" aria-label="NVIDIA GPU: Hardware">
+  <rect x="531" y="796" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="531" y="796" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="545" y="815" class="ai-name">NVIDIA GPU</text>
+  <text x="545" y="831" class="ai-kind">hardware</text>
+</g>
+</svg></div>
+      <aside class="ai-detail" aria-live="polite"><p class="ai-detail-hint">Select a stage or an arrow to see what it does and the source behind it. Dashed arrows are fallbacks some operations take.</p></aside>
+    </div>
+    <ul class="ai-legend" aria-label="Legend"><li><span class="ai-swatch" style="--kc:#60a5fa"></span>Your program</li><li><span class="ai-swatch" style="--kc:#e3a008"></span>Framework core</li><li><span class="ai-swatch" style="--kc:#f472b6"></span>Kernel</li><li><span class="ai-swatch" style="--kc:#a78bfa"></span>Compiler</li><li><span class="ai-swatch" style="--kc:#22d3ee"></span>Intermediate representation</li><li><span class="ai-swatch" style="--kc:#4ade80"></span>Hardware</li><li><span class="ai-swatch ai-swatch-dash"></span>Fallback for some operations</li></ul>
+  </section>
+
+  <h2 id="the-selected-path-step-by-step">The selected path, step by step</h2>
+  <ol class="ai-path-list">
+<li>Your model code <em>runs in</em> CPython interpreter: Your model is ordinary Python, executed by the CPython interpreter.</li>
+<li>ATen CUDA kernels <em>launched on</em> NVIDIA GPU: The kernel is queued on the GPU; Python continues without waiting for it to finish.</li>
+<li>CPython interpreter <em>intercepted by</em> TorchDynamo: With torch.compile, TorchDynamo hooks CPython's frame evaluation and rewrites the function's bytecode before it runs.</li>
+<li>TorchDynamo <em>captures</em> FX graph: Sequences of PyTorch operations become an FX graph. Code that cannot be traced causes a graph break and runs in normal Python between graphs.</li>
+<li>FX graph <em>compiled by</em> TorchInductor: The graph goes to the backend compiler; by default that is TorchInductor.</li>
+<li>TorchInductor <em>generates</em> Triton kernels: For GPUs, Inductor generates Triton kernels.</li>
+<li>TorchInductor <em>some ops stay</em> ATen CUDA kernels: Some operations stay ATen calls under torch.compile, for example certain matrix multiplications that remain cuBLAS calls.</li>
+<li>Triton kernels <em>compiled by</em> Triton compiler: Each Triton kernel is compiled by the Triton compiler, which runs a series of MLIR passes.</li>
+<li>Triton compiler <em>lowers to</em> LLVM IR: Triton lowers the kernel to LLVM IR and uses LLVM for code generation.</li>
+<li>LLVM IR <em>lowers to</em> PTX: For NVIDIA GPUs the final stage of Triton's pipeline is PTX (for AMD GPUs it is AMDGCN instead).</li>
+<li>PTX <em>translated to</em> GPU machine code: NVIDIA's translator and driver turn portable PTX into the machine code of the installed GPU.</li>
+<li>GPU machine code <em>launched on</em> NVIDIA GPU: The compiled kernel is launched on the GPU, asynchronously, like any other CUDA kernel.</li>
+  </ol>
+
+  <h2 id="where-python-ends">Where Python ends</h2>
+  <p>In eager mode, Python's part ends at each operation's call into ATen: from there on, everything is precompiled C++ and CUDA that shipped inside PyTorch. Python is still in charge of the order of operations, one call at a time, so the interpreter's overhead is paid on every operation.</p>
+  <p>Under torch.compile, Python's part ends earlier for the code TorchDynamo can capture: the captured operations never run as individual Python calls again. They become an FX graph, then new code generated by TorchInductor, and on a GPU that code passes through three compiler stages (Triton, LLVM, PTX) before NVIDIA's driver produces machine code for the specific GPU. Code Dynamo cannot trace causes a graph break and still runs in normal Python between compiled graphs.</p>
+  <p>Either way the GPU work is asynchronous: Python queues kernels and moves on, which is why a GPU program can look fast until something forces it to wait for a result.</p>
+
+  <h2 id="every-stage">Every stage</h2>
+  <div class="ai-stage-list">
+<article class="ai-stage-detail" id="detail-stage-python_code" data-stage="python_code">
+<h3>Your model code</h3>
+<p class="ai-kind-tag" style="--kc:#60a5fa">programming language</p>
+<p>The nn.Module and training or inference loop you write in Python. Every tensor operation in it is a call into PyTorch.</p>
+<p class="ai-lineage">In the atlas: <a href="/languages/python">Python</a></p>
+<ul class="ai-sources"><li><blockquote>ATen is fundamentally a tensor library, on top of which almost all other Python and C++ interfaces in PyTorch are built.</blockquote><a href="https://docs.pytorch.org/cppdocs/" rel="noopener noreferrer" target="_blank">PyTorch C++ API: ATen (PyTorch documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-cpython" data-stage="cpython">
+<h3>CPython interpreter</h3>
+<p class="ai-kind-tag" style="--kc:#60a5fa">runtime</p>
+<p>Runs your Python bytecode. In eager mode it calls PyTorch one operation at a time; under torch.compile, TorchDynamo hooks into it before each frame runs.</p>
+<p class="ai-lineage">In the atlas: <a href="/languages/python">Python</a></p>
+<ul class="ai-sources"><li><blockquote>Dynamo hooks into the frame evaluation API in CPython (PEP 523) to dynamically modify Python bytecode right before it is executed.</blockquote><a href="https://docs.pytorch.org/docs/main/user_guide/torch_compiler/torch.compiler_dynamo_overview.html" rel="noopener noreferrer" target="_blank">Dynamo Overview (PyTorch documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-aten" data-stage="aten">
+<h3>ATen dispatch</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>PyTorch's C++ tensor library. Each operation is looked up and sent to the implementation for the tensor's device and type.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/pytorch">PyTorch</a></p>
+<ul class="ai-sources"><li><blockquote>Most of these operations have both CPU and GPU implementations, to which the Tensor class will dynamically dispatch based on its type.</blockquote><a href="https://docs.pytorch.org/cppdocs/" rel="noopener noreferrer" target="_blank">PyTorch C++ API: ATen (PyTorch documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-aten_cpu" data-stage="aten_cpu">
+<h3>ATen CPU kernels</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel</p>
+<p>Precompiled C++ implementations of each operation for the CPU, shipped inside the PyTorch library.</p>
+<p class="ai-lineage">In the atlas: <a href="/languages/cxx">C++</a></p>
+<ul class="ai-sources"><li><blockquote>Most of these operations have both CPU and GPU implementations, to which the Tensor class will dynamically dispatch based on its type.</blockquote><a href="https://docs.pytorch.org/cppdocs/" rel="noopener noreferrer" target="_blank">PyTorch C++ API: ATen (PyTorch documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-aten_cuda" data-stage="aten_cuda">
+<h3>ATen CUDA kernels</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel</p>
+<p>Precompiled GPU implementations of each operation. Some, such as matrix multiplications, call NVIDIA's cuBLAS library.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/cuda">CUDA</a></p>
+<ul class="ai-sources"><li><blockquote>Most of these operations have both CPU and GPU implementations, to which the Tensor class will dynamically dispatch based on its type.</blockquote><a href="https://docs.pytorch.org/cppdocs/" rel="noopener noreferrer" target="_blank">PyTorch C++ API: ATen (PyTorch documentation)</a> <span class="src-type">Project docs</span></li><li><blockquote>Under torch.compile, FP32 matmuls using bfx9 remain ATen/cuBLAS calls</blockquote><a href="https://docs.pytorch.org/docs/2.15/notes/cuda.html" rel="noopener noreferrer" target="_blank">CUDA semantics (PyTorch 2.15 documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-dynamo" data-stage="dynamo">
+<h3>TorchDynamo</h3>
+<p class="ai-kind-tag" style="--kc:#a78bfa">compiler</p>
+<p>A Python-level JIT compiler. It rewrites your function's bytecode so that runs of PyTorch operations are captured as a graph instead of executed one by one.</p>
+
+<ul class="ai-sources"><li><blockquote>It rewrites Python bytecode to extract sequences of PyTorch operations into an FX Graph which is then compiled with a customizable backend.</blockquote><a href="https://docs.pytorch.org/docs/main/user_guide/torch_compiler/torch.compiler_dynamo_overview.html" rel="noopener noreferrer" target="_blank">Dynamo Overview (PyTorch documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-fx_graph" data-stage="fx_graph">
+<h3>FX graph</h3>
+<p class="ai-kind-tag" style="--kc:#22d3ee">intermediate representation</p>
+<p>The captured sequence of PyTorch operations, as a graph a backend compiler can optimize. Code Dynamo cannot trace causes a graph break and runs in normal Python between graphs.</p>
+
+<ul class="ai-sources"><li><blockquote>It rewrites Python bytecode to extract sequences of PyTorch operations into an FX Graph which is then compiled with a customizable backend.</blockquote><a href="https://docs.pytorch.org/docs/main/user_guide/torch_compiler/torch.compiler_dynamo_overview.html" rel="noopener noreferrer" target="_blank">Dynamo Overview (PyTorch documentation)</a> <span class="src-type">Project docs</span></li><li><blockquote>Dynamo performs a graph break when it encounters code that can't be traced.</blockquote><a href="https://docs.pytorch.org/docs/2.15/user_guide/torch_compiler/compile/programming_model.graph_breaks_index.html" rel="noopener noreferrer" target="_blank">Working with Graph Breaks (PyTorch 2.15 documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-inductor" data-stage="inductor">
+<h3>TorchInductor</h3>
+<p class="ai-kind-tag" style="--kc:#a78bfa">compiler</p>
+<p>The default torch.compile backend. It generates new kernels for the graph: Triton for GPUs and C++ for CPUs. For training, AOT Autograd also captures the backward pass ahead of time.</p>
+
+<ul class="ai-sources"><li><blockquote>The default backend is called TorchInductor</blockquote><a href="https://docs.pytorch.org/docs/2.15/user_guide/torch_compiler/torch.compiler.html" rel="noopener noreferrer" target="_blank">torch.compiler (PyTorch 2.15 documentation)</a> <span class="src-type">Project docs</span></li><li><blockquote>TorchInductor is the default compiler backend for TorchDynamo, which translates PyTorch programs into OpenAI's Triton for GPUs and C++ for CPUs.</blockquote><a href="https://pytorch.org/blog/pytorch-pytorch-2-paper-tutorial/" rel="noopener noreferrer" target="_blank">PyTorch 2 paper and tutorial (PyTorch blog)</a> <span class="src-type">Project docs</span></li><li><blockquote>AOT Autograd captures not only the user-level code, but also backpropagation</blockquote><a href="https://docs.pytorch.org/docs/2.15/user_guide/torch_compiler/torch.compiler.html" rel="noopener noreferrer" target="_blank">torch.compiler (PyTorch 2.15 documentation)</a> <span class="src-type">Project docs</span></li><li><blockquote>Pointwise ops can be fused with: other pointwise ops; reduction ops; and matmul/conv templates.</blockquote><a href="https://dev-discuss.pytorch.org/t/torchinductor-a-pytorch-native-compiler-with-define-by-run-ir-and-symbolic-shapes/747" rel="noopener noreferrer" target="_blank">TorchInductor design post by its lead author (PyTorch dev-discuss)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-cpp_openmp" data-stage="cpp_openmp">
+<h3>C++/OpenMP kernels</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel</p>
+<p>On CPU, Inductor writes C++ kernels that use OpenMP to spread work across cores, usually fusing several operations into one kernel.</p>
+<p class="ai-lineage">In the atlas: <a href="/languages/cxx">C++</a></p>
+<ul class="ai-sources"><li><blockquote>TorchInductor is the default compiler backend for TorchDynamo, which translates PyTorch programs into OpenAI's Triton for GPUs and C++ for CPUs.</blockquote><a href="https://pytorch.org/blog/pytorch-pytorch-2-paper-tutorial/" rel="noopener noreferrer" target="_blank">PyTorch 2 paper and tutorial (PyTorch blog)</a> <span class="src-type">Project docs</span></li><li><blockquote>OpenMP provides a work sharing parallel execution model, and enables support for CPUs.</blockquote><a href="https://dev-discuss.pytorch.org/t/torchinductor-a-pytorch-native-compiler-with-define-by-run-ir-and-symbolic-shapes/747" rel="noopener noreferrer" target="_blank">TorchInductor design post by its lead author (PyTorch dev-discuss)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-triton_kernels" data-stage="triton_kernels">
+<h3>Triton kernels</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel language</p>
+<p>On GPU, Inductor writes kernels in Triton, a Python-embedded language for GPU programming, usually fusing several operations into one kernel.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/triton">Triton</a></p>
+<ul class="ai-sources"><li><blockquote>For NVIDIA, AMD and Intel GPUs, it leverages OpenAI Triton as the key building block.</blockquote><a href="https://docs.pytorch.org/docs/2.15/user_guide/torch_compiler/torch.compiler.html" rel="noopener noreferrer" target="_blank">torch.compiler (PyTorch 2.15 documentation)</a> <span class="src-type">Project docs</span></li><li><blockquote>Triton is a language and compiler for parallel programming.</blockquote><a href="https://triton-lang.org/main/index.html" rel="noopener noreferrer" target="_blank">Triton documentation</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-triton_compiler" data-stage="triton_compiler">
+<h3>Triton compiler</h3>
+<p class="ai-kind-tag" style="--kc:#a78bfa">compiler</p>
+<p>Compiles each Triton kernel through a series of MLIR passes, then hands it to LLVM for code generation.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/triton">Triton</a></p>
+<ul class="ai-sources"><li><blockquote>Triton is a language and compiler for parallel programming.</blockquote><a href="https://triton-lang.org/main/index.html" rel="noopener noreferrer" target="_blank">Triton documentation</a> <span class="src-type">Project docs</span></li><li><blockquote>MLIR_ENABLE_DUMP=1 dumps the IR before every MLIR pass Triton runs, for all kernels.</blockquote><a href="https://github.com/triton-lang/triton/blob/main/README.md" rel="noopener noreferrer" target="_blank">Triton README (triton-lang/triton)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-llvm_ir" data-stage="llvm_ir">
+<h3>LLVM IR</h3>
+<p class="ai-kind-tag" style="--kc:#22d3ee">intermediate representation</p>
+<p>LLVM's intermediate representation. Triton uses LLVM to generate the device code.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/llvm">LLVM</a></p>
+<ul class="ai-sources"><li><blockquote>Triton uses LLVM to generate code for GPUs and CPUs.</blockquote><a href="https://github.com/triton-lang/triton/blob/main/README.md" rel="noopener noreferrer" target="_blank">Triton README (triton-lang/triton)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-ptx" data-stage="ptx">
+<h3>PTX</h3>
+<p class="ai-kind-tag" style="--kc:#22d3ee">intermediate representation</p>
+<p>NVIDIA's virtual instruction set, the last portable step. It is not yet the GPU's own machine code.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/cuda">CUDA</a></p>
+<ul class="ai-sources"><li><blockquote>TRITON_KERNEL_DUMP enables the dumping of the IR from each compilation stage and the final ptx/amdgcn.</blockquote><a href="https://github.com/triton-lang/triton/blob/main/README.md" rel="noopener noreferrer" target="_blank">Triton README (triton-lang/triton)</a> <span class="src-type">Source repository</span></li><li><blockquote>PTX defines a virtual machine and ISA for general purpose parallel thread execution.</blockquote><a href="https://docs.nvidia.com/cuda/parallel-thread-execution/index.html" rel="noopener noreferrer" target="_blank">PTX ISA (NVIDIA documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-gpu_machine_code" data-stage="gpu_machine_code">
+<h3>GPU machine code</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">machine code</p>
+<p>The instructions of one specific GPU architecture, produced from PTX by NVIDIA's translator and driver.</p>
+<p class="ai-lineage">In the atlas: <a href="/languages/machine-code">Machine Code</a></p>
+<ul class="ai-sources"><li><blockquote>The PTX-to-GPU translator and driver enable NVIDIA GPUs to be used as programmable parallel computers.</blockquote><a href="https://docs.nvidia.com/cuda/parallel-thread-execution/index.html" rel="noopener noreferrer" target="_blank">PTX ISA (NVIDIA documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-cpu" data-stage="cpu">
+<h3>CPU</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">hardware</p>
+<p>Runs the compiled C++ kernels directly, across its cores.</p>
+
+<ul class="ai-sources"><li><blockquote>OpenMP provides a work sharing parallel execution model, and enables support for CPUs.</blockquote><a href="https://dev-discuss.pytorch.org/t/torchinductor-a-pytorch-native-compiler-with-define-by-run-ir-and-symbolic-shapes/747" rel="noopener noreferrer" target="_blank">TorchInductor design post by its lead author (PyTorch dev-discuss)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-nvidia_gpu" data-stage="nvidia_gpu">
+<h3>NVIDIA GPU</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">hardware</p>
+<p>Runs kernels launched from the CPU. Launches are queued, so Python usually returns before the GPU has finished.</p>
+
+<ul class="ai-sources"><li><blockquote>By default, GPU operations are asynchronous. When you call a function that uses the GPU, the operations are enqueued to the particular device, but not necessarily executed until later.</blockquote><a href="https://docs.pytorch.org/docs/2.15/notes/cuda.html" rel="noopener noreferrer" target="_blank">CUDA semantics (PyTorch 2.15 documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+  </div>
+
+  <h2 id="every-step">Every step</h2>
+  <div class="table-wrap"><table class="ai-steps">
+    <thead><tr><th>From</th><th>Step</th><th>To</th><th>When</th><th>What happens</th><th>Source</th></tr></thead>
+    <tbody>
+<tr id="detail-step-python_code--cpython" data-step="python_code--cpython" data-from="python_code" data-to="cpython" data-when="{}" class="on">
+<td>Your model code</td><td>runs in</td><td>CPython interpreter</td><td>any mode · any device</td><td>Your model is ordinary Python, executed by the CPython interpreter.</td><td><a href="https://docs.pytorch.org/docs/main/user_guide/torch_compiler/torch.compiler_dynamo_overview.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-cpython--aten" data-step="cpython--aten" data-from="cpython" data-to="aten" data-when="{&quot;mode&quot;:[&quot;eager&quot;]}">
+<td>CPython interpreter</td><td>calls, one op at a time</td><td>ATen dispatch</td><td>Eager · any device</td><td>In eager mode each tensor operation is a separate call from Python into PyTorch's C++ core.</td><td><a href="https://docs.pytorch.org/cppdocs/" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-aten--aten_cpu" data-step="aten--aten_cpu" data-from="aten" data-to="aten_cpu" data-when="{&quot;mode&quot;:[&quot;eager&quot;],&quot;device&quot;:[&quot;cpu&quot;]}">
+<td>ATen dispatch</td><td>dispatches to</td><td>ATen CPU kernels</td><td>Eager · CPU</td><td>For CPU tensors, ATen picks the CPU implementation of the operation.</td><td><a href="https://docs.pytorch.org/cppdocs/" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-aten--aten_cuda" data-step="aten--aten_cuda" data-from="aten" data-to="aten_cuda" data-when="{&quot;mode&quot;:[&quot;eager&quot;],&quot;device&quot;:[&quot;gpu&quot;]}">
+<td>ATen dispatch</td><td>dispatches to</td><td>ATen CUDA kernels</td><td>Eager · NVIDIA GPU</td><td>For CUDA tensors, ATen picks the GPU implementation of the operation.</td><td><a href="https://docs.pytorch.org/cppdocs/" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-aten_cpu--cpu" data-step="aten_cpu--cpu" data-from="aten_cpu" data-to="cpu" data-when="{&quot;device&quot;:[&quot;cpu&quot;]}">
+<td>ATen CPU kernels</td><td>runs on</td><td>CPU</td><td>any mode · CPU</td><td>The precompiled C++ kernel runs on the CPU.</td><td><a href="https://docs.pytorch.org/cppdocs/" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-aten_cuda--nvidia_gpu" data-step="aten_cuda--nvidia_gpu" data-from="aten_cuda" data-to="nvidia_gpu" data-when="{&quot;device&quot;:[&quot;gpu&quot;]}" class="on">
+<td>ATen CUDA kernels</td><td>launched on</td><td>NVIDIA GPU</td><td>any mode · NVIDIA GPU</td><td>The kernel is queued on the GPU; Python continues without waiting for it to finish.</td><td><a href="https://docs.pytorch.org/docs/2.15/notes/cuda.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-cpython--dynamo" data-step="cpython--dynamo" data-from="cpython" data-to="dynamo" data-when="{&quot;mode&quot;:[&quot;compile&quot;]}" class="on">
+<td>CPython interpreter</td><td>intercepted by</td><td>TorchDynamo</td><td>torch.compile · any device</td><td>With torch.compile, TorchDynamo hooks CPython's frame evaluation and rewrites the function's bytecode before it runs.</td><td><a href="https://docs.pytorch.org/docs/main/user_guide/torch_compiler/torch.compiler_dynamo_overview.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-dynamo--fx_graph" data-step="dynamo--fx_graph" data-from="dynamo" data-to="fx_graph" data-when="{&quot;mode&quot;:[&quot;compile&quot;]}" class="on">
+<td>TorchDynamo</td><td>captures</td><td>FX graph</td><td>torch.compile · any device</td><td>Sequences of PyTorch operations become an FX graph. Code that cannot be traced causes a graph break and runs in normal Python between graphs.</td><td><a href="https://docs.pytorch.org/docs/main/user_guide/torch_compiler/torch.compiler_dynamo_overview.html" rel="noopener noreferrer" target="_blank">Project docs</a><br><a href="https://docs.pytorch.org/docs/2.15/user_guide/torch_compiler/compile/programming_model.graph_breaks_index.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-fx_graph--inductor" data-step="fx_graph--inductor" data-from="fx_graph" data-to="inductor" data-when="{&quot;mode&quot;:[&quot;compile&quot;]}" class="on">
+<td>FX graph</td><td>compiled by</td><td>TorchInductor</td><td>torch.compile · any device</td><td>The graph goes to the backend compiler; by default that is TorchInductor.</td><td><a href="https://docs.pytorch.org/docs/2.15/user_guide/torch_compiler/torch.compiler.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-inductor--cpp_openmp" data-step="inductor--cpp_openmp" data-from="inductor" data-to="cpp_openmp" data-when="{&quot;mode&quot;:[&quot;compile&quot;],&quot;device&quot;:[&quot;cpu&quot;]}">
+<td>TorchInductor</td><td>generates</td><td>C++/OpenMP kernels</td><td>torch.compile · CPU</td><td>For CPU, Inductor generates C++ kernels parallelized with OpenMP.</td><td><a href="https://pytorch.org/blog/pytorch-pytorch-2-paper-tutorial/" rel="noopener noreferrer" target="_blank">Project docs</a><br><a href="https://dev-discuss.pytorch.org/t/torchinductor-a-pytorch-native-compiler-with-define-by-run-ir-and-symbolic-shapes/747" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-inductor--triton_kernels" data-step="inductor--triton_kernels" data-from="inductor" data-to="triton_kernels" data-when="{&quot;mode&quot;:[&quot;compile&quot;],&quot;device&quot;:[&quot;gpu&quot;]}" class="on">
+<td>TorchInductor</td><td>generates</td><td>Triton kernels</td><td>torch.compile · NVIDIA GPU</td><td>For GPUs, Inductor generates Triton kernels.</td><td><a href="https://pytorch.org/blog/pytorch-pytorch-2-paper-tutorial/" rel="noopener noreferrer" target="_blank">Project docs</a><br><a href="https://docs.pytorch.org/docs/2.15/user_guide/torch_compiler/torch.compiler.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-inductor--aten_cpu" data-step="inductor--aten_cpu" data-from="inductor" data-to="aten_cpu" data-when="{&quot;mode&quot;:[&quot;compile&quot;],&quot;device&quot;:[&quot;cpu&quot;]}">
+<td>TorchInductor</td><td>some ops fall back to</td><td>ATen CPU kernels</td><td>torch.compile · CPU</td><td>Operations Inductor does not generate code for are still run by the existing ATen kernels.</td><td><a href="https://dev-discuss.pytorch.org/t/torchinductor-a-pytorch-native-compiler-with-define-by-run-ir-and-symbolic-shapes/747" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-inductor--aten_cuda" data-step="inductor--aten_cuda" data-from="inductor" data-to="aten_cuda" data-when="{&quot;mode&quot;:[&quot;compile&quot;],&quot;device&quot;:[&quot;gpu&quot;]}" class="on">
+<td>TorchInductor</td><td>some ops stay</td><td>ATen CUDA kernels</td><td>torch.compile · NVIDIA GPU</td><td>Some operations stay ATen calls under torch.compile, for example certain matrix multiplications that remain cuBLAS calls.</td><td><a href="https://docs.pytorch.org/docs/2.15/notes/cuda.html" rel="noopener noreferrer" target="_blank">Project docs</a><br><a href="https://dev-discuss.pytorch.org/t/torchinductor-a-pytorch-native-compiler-with-define-by-run-ir-and-symbolic-shapes/747" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-cpp_openmp--cpu" data-step="cpp_openmp--cpu" data-from="cpp_openmp" data-to="cpu" data-when="{&quot;mode&quot;:[&quot;compile&quot;],&quot;device&quot;:[&quot;cpu&quot;]}">
+<td>C++/OpenMP kernels</td><td>runs on</td><td>CPU</td><td>torch.compile · CPU</td><td>The compiled C++ kernels run on the CPU, split across cores by OpenMP.</td><td><a href="https://dev-discuss.pytorch.org/t/torchinductor-a-pytorch-native-compiler-with-define-by-run-ir-and-symbolic-shapes/747" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-triton_kernels--triton_compiler" data-step="triton_kernels--triton_compiler" data-from="triton_kernels" data-to="triton_compiler" data-when="{&quot;mode&quot;:[&quot;compile&quot;],&quot;device&quot;:[&quot;gpu&quot;]}" class="on">
+<td>Triton kernels</td><td>compiled by</td><td>Triton compiler</td><td>torch.compile · NVIDIA GPU</td><td>Each Triton kernel is compiled by the Triton compiler, which runs a series of MLIR passes.</td><td><a href="https://github.com/triton-lang/triton/blob/main/README.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-triton_compiler--llvm_ir" data-step="triton_compiler--llvm_ir" data-from="triton_compiler" data-to="llvm_ir" data-when="{&quot;mode&quot;:[&quot;compile&quot;],&quot;device&quot;:[&quot;gpu&quot;]}" class="on">
+<td>Triton compiler</td><td>lowers to</td><td>LLVM IR</td><td>torch.compile · NVIDIA GPU</td><td>Triton lowers the kernel to LLVM IR and uses LLVM for code generation.</td><td><a href="https://github.com/triton-lang/triton/blob/main/README.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-llvm_ir--ptx" data-step="llvm_ir--ptx" data-from="llvm_ir" data-to="ptx" data-when="{&quot;mode&quot;:[&quot;compile&quot;],&quot;device&quot;:[&quot;gpu&quot;]}" class="on">
+<td>LLVM IR</td><td>lowers to</td><td>PTX</td><td>torch.compile · NVIDIA GPU</td><td>For NVIDIA GPUs the final stage of Triton's pipeline is PTX (for AMD GPUs it is AMDGCN instead).</td><td><a href="https://github.com/triton-lang/triton/blob/main/README.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-ptx--gpu_machine_code" data-step="ptx--gpu_machine_code" data-from="ptx" data-to="gpu_machine_code" data-when="{&quot;mode&quot;:[&quot;compile&quot;],&quot;device&quot;:[&quot;gpu&quot;]}" class="on">
+<td>PTX</td><td>translated to</td><td>GPU machine code</td><td>torch.compile · NVIDIA GPU</td><td>NVIDIA's translator and driver turn portable PTX into the machine code of the installed GPU.</td><td><a href="https://docs.nvidia.com/cuda/parallel-thread-execution/index.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-gpu_machine_code--nvidia_gpu" data-step="gpu_machine_code--nvidia_gpu" data-from="gpu_machine_code" data-to="nvidia_gpu" data-when="{&quot;mode&quot;:[&quot;compile&quot;],&quot;device&quot;:[&quot;gpu&quot;]}" class="on">
+<td>GPU machine code</td><td>launched on</td><td>NVIDIA GPU</td><td>torch.compile · NVIDIA GPU</td><td>The compiled kernel is launched on the GPU, asynchronously, like any other CUDA kernel.</td><td><a href="https://docs.pytorch.org/docs/2.15/notes/cuda.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="what-this-does-not-show">What this does not show</h2>
+  <p>Illustrative, documented paths for one PyTorch program in eager mode and under torch.compile with the default TorchInductor backend, on a CPU or an NVIDIA GPU. Not every PyTorch program takes these paths: other torch.compile backends, AMD and Intel GPUs, Apple MPS, CUDA graphs and custom operators are out of scope. TorchInductor's GPU path through Triton also serves AMD and Intel GPUs, ending in a different final format (for AMD, AMDGCN instead of PTX). Other torch.compile backends replace TorchInductor entirely.</p>
+
+  <h2 id="how-this-page-is-checked">How this page is checked</h2>
+  <p>Every stage and step above quotes the source that supports it. The quotes were checked against PyTorch 2.15 documentation, Triton main README, NVIDIA PTX ISA documentation on 2026-11-10. The data is a <a href="/dataset/ai/how-pytorch-runs.json">versioned JSON file</a> under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. Found something wrong or out of date? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
+  <p>What these tools are written in is in the main atlas: <a href="/languages/python">Python</a>, <a href="/tools/pytorch">PyTorch</a>, <a href="/languages/cxx">C++</a>, <a href="/tools/cuda">CUDA</a>, <a href="/tools/triton">Triton</a>, <a href="/tools/llvm">LLVM</a>, <a href="/languages/machine-code">Machine Code</a>. More execution paths: <a href="/ai/how-llama-cpp-runs">How Does llama.cpp Run a Model on Your Hardware</a>.</p>
+
+  <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>
+</main>
+<footer class="seo-footer-rich">
+  <div data-nosnippet>
+  <div class="footer-grid">
+    <div class="footer-col">
+      <span class="footer-col-head">Explore</span>
+      <a href="/programming-language-graph">Programming language graph</a>
+      <a href="/rankings/most-influential">Most influential languages</a>
+      <a href="/rss.xml">RSS feed</a>
+      <a href="/embed-kit">Embed the graph</a>
+      <a href="/guides/programming-language-family-tree">Language family tree</a>
+      <a href="/programming-language-evolution">Evolution timeline</a>
+      <a href="/what-are-programming-languages-written-in">What languages are written in</a>
+      <a href="/explore">Interactive Graph</a>
+      <a href="/dataset">Dataset</a>
+      <a href="/directory">Site Directory</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Popular Languages</span>
+      <a href="/languages/python">Python</a>
+      <a href="/languages/javascript">JavaScript</a>
+      <a href="/languages/rust">Rust</a>
+      <a href="/languages/go">Go</a>
+      <a href="/languages/java">Java</a>
+      <a href="/languages/c">C</a>
+      <a href="/languages/cxx">C++</a>
+      <a href="/languages/typescript">TypeScript</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Questions</span>
+      <a href="/questions/what-is-python-written-in">What is Python written in?</a>
+      <a href="/questions/what-is-javascript-written-in">What is JavaScript written in?</a>
+      <a href="/questions/what-is-rust-written-in">What is Rust written in?</a>
+      <a href="/questions/what-is-go-written-in">What is Go written in?</a>
+      <a href="/questions/what-is-compiler-bootstrapping">What is compiler bootstrapping?</a>
+      <a href="/questions">All questions &rarr;</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Tools &amp; Guides</span>
+      <a href="/tools/v8">V8</a>
+      <a href="/tools/llvm">LLVM</a>
+      <a href="/tools/gcc">GCC</a>
+      <a href="/tools/ghc">GHC</a>
+      <a href="/guides">All guides</a>
+      <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </div>
+  <p class="footer-note">The Language Lineage dataset is meticulously curated and verified by human researchers. We use AI agents to assist with large-scale data gathering and modeling, but every implementation fact is manually reviewed for accuracy. Spot an error? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue on GitHub</a> and it gets fixed. <a href="/how-it-works">Learn how it works &rarr;</a></p>
+  <div class="footer-bottom">Made with <span style="color:#fb7185">❤️</span> by <a href="https://github.com/sanketmuchhala" rel="noopener noreferrer">Sanket Muchhala</a> &middot; <a href="/">Language Lineage</a></div>
+  </div>
+</footer>
+</body>
+</html>

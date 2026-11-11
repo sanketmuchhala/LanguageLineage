@@ -3,6 +3,7 @@ import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
+import { loadAllPaths } from './aiPaths.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -334,6 +335,13 @@ async function main() {
     const card = buildCard({ eyebrow: 'GUIDE', title, rel: null });
     const png = await renderCard(card);
     write(join(OG_DIR, `guides-${slug}.png`), png);
+    count++;
+  }
+
+  // AI execution-path explainers (/ai/<slug>, one per dataset/ai/<slug>.json)
+  for (const p of loadAllPaths(ROOT)) {
+    const card = buildCard({ eyebrow: 'AI INFRASTRUCTURE', title: p.h1, subtitle: p.og_subtitle, rel: null });
+    write(join(OG_DIR, `ai-${p.slug}.png`), await renderCard(card));
     count++;
   }
 

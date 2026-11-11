@@ -2,6 +2,7 @@ import { readFileSync, writeFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { lookupDate } from './pageDates.js';
+import { loadAllPaths } from './aiPaths.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -98,6 +99,7 @@ const urls: Array<{ loc: string }> = [
   { loc: `${SITE}/programming-language-genealogy` },
   { loc: `${SITE}/compiler-runtime-bootstrap` },
   { loc: `${SITE}/posters/programming-language-implementation-family-tree` },
+  ...loadAllPaths(ROOT).map(p => ({ loc: `${SITE}/ai/${p.slug}` })),
   // Questions
   { loc: `${SITE}/questions` },
   ...QUESTION_SLUGS.filter(s => !QUESTION_CANONICAL_TO_LANG.has((s.match(/^what-is-(.+)-written-in$/) || [])[1] || '')).map(s => ({ loc: `${SITE}/questions/${s}` })),
