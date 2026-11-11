@@ -36,7 +36,6 @@ lang:c,C,lang:php,PHP,runtime_written_in,1995,,0.95,https://github.com/php/php-s
 lang:c,C,lang:ruby,Ruby,runtime_written_in,1995,,0.95,https://github.com/ruby/ruby,repository,MRI/CRuby written in C
 lang:c,C,lang:r,R,runtime_written_in,1993,,0.9,https://www.r-project.org/,docs,R runtime core in C
 lang:c,C,lang:go,Go,compiler_written_in,2009,2015,0.98,https://go.dev/doc/faq#history,docs,"Original Go compiler in C, rewritten in Go in 1.5 (2015)"
-lang:c,C,lang:rust,Rust,compiler_written_in,2006,2010,0.85,https://github.com/iohub/rustboot,repository,Early Rust had C components before OCaml bootstrap compiler
 lang:c,C,lang:ocaml,OCaml,runtime_written_in,1996,,0.95,https://github.com/ocaml/ocaml,repository,OCaml runtime/GC written in C
 lang:c,C,lang:haskell,Haskell,runtime_written_in,1992,,0.9,https://gitlab.haskell.org/ghc/ghc,repository,GHC RTS (runtime system) written in C
 lang:c,C,tool:gcc,GCC,compiler_written_in,1987,2012,0.95,https://gcc.gnu.org/wiki/History,docs,"GCC originally written in C, switched to C++ in 2012"
@@ -71,7 +70,7 @@ lang:smalltalk,Smalltalk,lang:ruby,Ruby,influenced,1995,,0.92,https://en.wikiped
 lang:smalltalk,Smalltalk,lang:python,Python,influenced,1991,,0.85,https://en.wikipedia.org/wiki/Python_(programming_language),wikipedia,Python influenced by Smalltalk OOP model
 lang:smalltalk,Smalltalk,lang:scala,Scala,influenced,2003,,0.8,https://en.wikipedia.org/wiki/Scala_(programming_language),wikipedia,Scala influenced by Smalltalk's uniform object model
 lang:smalltalk,Smalltalk,lang:javascript,JavaScript,influenced,1995,,0.85,https://auth0.com/blog/a-brief-history-of-javascript/,article,Brendan Eich cited Self (Smalltalk descendant) as influence
-lang:ocaml,OCaml,lang:rust,Rust,compiler_written_in,2010,2011,0.95,https://github.com/iohub/rustboot,repository,Original Rust compiler (rustboot) written in OCaml
+lang:ocaml,OCaml,lang:rust,Rust,compiler_written_in,2006,2011,0.95,https://github.com/iohub/rustboot,repository,Original Rust compiler (rustboot) written in OCaml
 lang:ocaml,OCaml,lang:ocaml,OCaml,compiler_written_in,1996,,0.98,https://github.com/ocaml/ocaml,repository,OCaml compiler is self-hosting
 lang:ocaml,OCaml,lang:reasonml,ReasonML,influenced,2016,,0.98,https://reasonml.github.io/,docs,ReasonML is OCaml with JS-friendly syntax
 lang:ocaml,OCaml,lang:fsharp,F#,influenced,2005,,0.92,https://fsharp.org/history/hopl-final/hopl-fsharp.pdf,paper,F# initially derived from OCaml

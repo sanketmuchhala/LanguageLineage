@@ -14,11 +14,11 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/embed-kit</loc>
-    <lastmod>2026-09-22</lastmod>
+    <lastmod>2026-11-11</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/programming-language-graph</loc>
-    <lastmod>2026-09-22</lastmod>
+    <lastmod>2026-11-11</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/programming-language-evolution</loc>
@@ -26,7 +26,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/what-are-programming-languages-written-in</loc>
-    <lastmod>2026-09-22</lastmod>
+    <lastmod>2026-11-11</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/programming-language-genealogy</loc>
@@ -34,7 +34,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/compiler-runtime-bootstrap</loc>
-    <lastmod>2026-09-22</lastmod>
+    <lastmod>2026-11-11</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/posters/programming-language-implementation-family-tree</loc>
@@ -514,11 +514,11 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/how-it-works</loc>
-    <lastmod>2026-09-22</lastmod>
+    <lastmod>2026-11-11</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/dataset</loc>
-    <lastmod>2026-11-10</lastmod>
+    <lastmod>2026-11-11</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages</loc>
@@ -534,7 +534,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/relationships</loc>
-    <lastmod>2026-09-22</lastmod>
+    <lastmod>2026-11-11</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/timeline</loc>
@@ -586,7 +586,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/c</loc>
-    <lastmod>2026-11-10</lastmod>
+    <lastmod>2026-11-11</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/ml</loc>
@@ -698,7 +698,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/rust</loc>
-    <lastmod>2026-11-10</lastmod>
+    <lastmod>2026-11-11</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/kotlin</loc>
@@ -1234,7 +1234,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/relationships/compiler-written-in</loc>
-    <lastmod>2026-11-10</lastmod>
+    <lastmod>2026-11-11</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/relationships/runtime-written-in</loc>
@@ -1250,7 +1250,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides/what-is-compiler-bootstrapping</loc>
-    <lastmod>2026-11-10</lastmod>
+    <lastmod>2026-11-11</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides/what-is-self-hosting</loc>
@@ -1262,7 +1262,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides/programming-language-family-tree</loc>
-    <lastmod>2026-11-10</lastmod>
+    <lastmod>2026-11-11</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides/how-javascript-engines-work</loc>
@@ -1274,7 +1274,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides/how-rust-is-bootstrapped</loc>
-    <lastmod>2026-11-10</lastmod>
+    <lastmod>2026-11-11</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides/gcc-vs-llvm</loc>

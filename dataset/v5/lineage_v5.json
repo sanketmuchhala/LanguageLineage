@@ -4301,16 +4301,6 @@
     },
     {
       "from_language": "lang:c",
-      "to_language": "lang:rust",
-      "relationship": "compiler_written_in",
-      "start_year": 2006,
-      "end_year": 2010,
-      "confidence": 0.85,
-      "evidence_source": "https://github.com/iohub/rustboot",
-      "notes": "Early Rust had C components before OCaml bootstrap compiler"
-    },
-    {
-      "from_language": "lang:c",
       "to_language": "lang:ocaml",
       "relationship": "runtime_written_in",
       "start_year": 1996,
@@ -4653,7 +4643,7 @@
       "from_language": "lang:ocaml",
       "to_language": "lang:rust",
       "relationship": "compiler_written_in",
-      "start_year": 2010,
+      "start_year": 2006,
       "end_year": 2011,
       "confidence": 0.95,
       "evidence_source": "https://github.com/iohub/rustboot",

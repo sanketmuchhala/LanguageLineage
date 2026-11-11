@@ -90,7 +90,7 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
           <p className="hero-subtitle reveal">
             Trace what programming languages are <em>written in</em>: their compilers,
             runtimes, virtual machines, and bootstrap chains. An interactive programming
-            language family tree of 171 languages and toolchains and 490 sourced
+            language family tree of 171 languages and toolchains and 489 sourced
             relationships, each with a confidence score and citation.
           </p>
           <div className="hero-actions reveal">
@@ -170,7 +170,7 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
         </div>
         <div className="stat-divider" />
         <div className="stat reveal">
-          <span className="stat-number">490</span>
+          <span className="stat-number">489</span>
           <span className="stat-label">Relationships</span>
         </div>
         <div className="stat-divider" />
@@ -348,7 +348,7 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
           <p className="section-text centered reveal">
             Most language family trees show only influence and ancestry. Language Lineage also
             maps implementation relationships: what compilers, runtimes, virtual machines, and
-            bootstrap chains each language actually uses. 171 languages and toolchains, 490
+            bootstrap chains each language actually uses. 171 languages and toolchains, 489
             evidence-backed relationships.
           </p>
         </div>

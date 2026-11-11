@@ -4,20 +4,20 @@
     "lastmod": "2026-07-02"
   },
   "/compiler-runtime-bootstrap": {
-    "hash": "f95c52d25d1e5276",
-    "lastmod": "2026-09-22"
+    "hash": "f92085501422d40d",
+    "lastmod": "2026-11-11"
   },
   "/dataset": {
-    "hash": "54fc423b1bb66da1",
-    "lastmod": "2026-11-10"
+    "hash": "d7ba3fba75fe6b70",
+    "lastmod": "2026-11-11"
   },
   "/directory": {
     "hash": "9eb5c0b718147abe",
     "lastmod": "2026-11-10"
   },
   "/embed-kit": {
-    "hash": "12c052528636d9dd",
-    "lastmod": "2026-09-22"
+    "hash": "e12750ee258cc939",
+    "lastmod": "2026-11-11"
   },
   "/explore": {
     "hash": "",
@@ -52,12 +52,12 @@
     "lastmod": "2026-09-09"
   },
   "/guides/how-rust-is-bootstrapped": {
-    "hash": "510abd56a69a9c23",
-    "lastmod": "2026-11-10"
+    "hash": "c9e1b32ef3ad13b0",
+    "lastmod": "2026-11-11"
   },
   "/guides/programming-language-family-tree": {
-    "hash": "38619008fdf205ac",
-    "lastmod": "2026-11-10"
+    "hash": "15b588f4f32ceae8",
+    "lastmod": "2026-11-11"
   },
   "/guides/the-c-bootstrap-chain": {
     "hash": "fec82a6a4088827b",
@@ -72,16 +72,16 @@
     "lastmod": "2026-11-10"
   },
   "/guides/what-is-compiler-bootstrapping": {
-    "hash": "c9642f9a86b2264e",
-    "lastmod": "2026-11-10"
+    "hash": "d15713c82269b671",
+    "lastmod": "2026-11-11"
   },
   "/guides/what-is-self-hosting": {
     "hash": "4d965cdcdbc787fd",
     "lastmod": "2026-09-09"
   },
   "/how-it-works": {
-    "hash": "a8f080fb6bd6d029",
-    "lastmod": "2026-09-22"
+    "hash": "ce2b899d6b1cc038",
+    "lastmod": "2026-11-11"
   },
   "/languages": {
     "hash": "2139499fd4972b02",
@@ -152,8 +152,8 @@
     "lastmod": "2026-11-10"
   },
   "/languages/c": {
-    "hash": "edbb016ec95a8571",
-    "lastmod": "2026-11-10"
+    "hash": "883d3063ddb64514",
+    "lastmod": "2026-11-11"
   },
   "/languages/carbon": {
     "hash": "a1c5e9572325ebb5",
@@ -564,8 +564,8 @@
     "lastmod": "2026-11-10"
   },
   "/languages/rust": {
-    "hash": "deb8f446aa4d550c",
-    "lastmod": "2026-11-10"
+    "hash": "bb38b082934308a4",
+    "lastmod": "2026-11-11"
   },
   "/languages/s": {
     "hash": "cb963a88648f6fb9",
@@ -668,8 +668,8 @@
     "lastmod": "2026-09-22"
   },
   "/programming-language-graph": {
-    "hash": "a9b2191149d1112d",
-    "lastmod": "2026-09-22"
+    "hash": "351255941f7470fe",
+    "lastmod": "2026-11-11"
   },
   "/questions": {
     "hash": "abba2b91184fc812",
@@ -1160,16 +1160,16 @@
     "lastmod": "2026-09-22"
   },
   "/relationships": {
-    "hash": "a875ec17850a7f7f",
-    "lastmod": "2026-09-22"
+    "hash": "0add69595f94d046",
+    "lastmod": "2026-11-11"
   },
   "/relationships/bootstrap-written-in": {
     "hash": "9dcbae7d4f3f1fcd",
     "lastmod": "2026-11-10"
   },
   "/relationships/compiler-written-in": {
-    "hash": "eeb522d5a7a19640",
-    "lastmod": "2026-11-10"
+    "hash": "9ff8b327ea3a6b58",
+    "lastmod": "2026-11-11"
   },
   "/relationships/influenced": {
     "hash": "e149be93ca3955c5",
@@ -1316,7 +1316,7 @@
     "lastmod": "2026-11-10"
   },
   "/what-are-programming-languages-written-in": {
-    "hash": "c8c80d20c1952fb2",
-    "lastmod": "2026-09-22"
+    "hash": "0de72edd07ecf749",
+    "lastmod": "2026-11-11"
   }
 }
