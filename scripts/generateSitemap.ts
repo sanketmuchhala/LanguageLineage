@@ -99,6 +99,7 @@ const urls: Array<{ loc: string }> = [
   { loc: `${SITE}/programming-language-genealogy` },
   { loc: `${SITE}/compiler-runtime-bootstrap` },
   { loc: `${SITE}/posters/programming-language-implementation-family-tree` },
+  { loc: `${SITE}/ai` },
   ...loadAllPaths(ROOT).map(p => ({ loc: `${SITE}/ai/${p.slug}` })),
   // Questions
   { loc: `${SITE}/questions` },

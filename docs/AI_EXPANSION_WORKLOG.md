@@ -65,3 +65,11 @@ Checked and **not** used: the dispatcher tutorial (deprecated as of PyTorch 2.4;
 - `check:ai-quotes` now sends `Accept-Language: en`: openxla.org served random machine translations (Indonesian, Portuguese, Persian) without it, which made quotes fail intermittently. Three consecutive runs: all 61 distinct quotes found.
 - Legend: `runtime` stages now have their own "Runtime" entry instead of sharing "Your program".
 - `npm run verify`: 203 tests, seo:validate 0/0, seo:links 0/0/0, sitemap 329. Browser: all five mode/device combinations checked, 320px with JS on/off, no page errors.
+
+## 2026-11-11 — /ai hub (AI-09, first slice)
+
+- Merged **#46** (JAX) and **#47** (README counts) at the owner's request; production checked (sitemap 329, all `/ai/` pages and data 200).
+- **`/ai`** hub (branch `feat/ai-hub`): one card per explainer (choices, stage/step/citation/source counts, check date); "Every path, side by side" table with stage and step counts for all 13 selections, each row deep-linking to that selection; "Tools the paths share" table built from stage `lineage_id`s (CUDA in all three; LLVM, Python and Triton in PyTorch and JAX). No new claims: every number is counted from `dataset/ai/*.json`. ItemList + BreadcrumbList JSON-LD, OG card `ai-index.png`, sitemap entry.
+- Path files gain a required short `name` (JAX, llama.cpp, PyTorch) for tables and the card subtitle. Explainer breadcrumbs now go Home › AI execution paths › page; the footer's Explore column links `/ai` on every generated page.
+- README page counts (330; the sitemap row said 304), new `/ai` rows; launch checklist counts 172/492.
+- `npm run verify`: 207 tests, seo:validate 0/0, seo:links 0/0/0, sitemap 330. Browser: 1280px and 320px with no horizontal scroll, deep link `?mode=jit&device=tpu` opens 9 stages, no page errors.

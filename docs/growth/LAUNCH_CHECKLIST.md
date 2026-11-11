@@ -33,7 +33,7 @@ Human-owned. Claude prepares drafts; the owner rewrites them in their own voice,
 **First comment (outline, not final text):**
 1. Why: "what influenced X?" and "what is X's compiler written in?" get mixed up.
 2. What: both relationships, kept separate; every edge has a source; dated changes such as Rust's OCaml-era compiler and Go before 1.5.
-3. Scope: 171 languages and tools, 490 relationships, open dataset (CC BY 4.0), embeddable graph. Re-check counts on the day.
+3. Scope: 172 languages and tools, 492 relationships, open dataset (CC BY 4.0), embeddable graph. Re-check counts on the day.
 4. Ask: corrections from compiler and PL people, especially better primary sources.
 5. Links: graph, family-tree guide table, GitHub repo.
 

@@ -14,7 +14,7 @@
 
 # Language Lineage
 
-An interactive, evidence-backed atlas mapping implementation, bootstrapping, runtime, and influence relationships across 172 nodes: 141 programming languages and 31 compiler/runtime tools. 329 indexable pages, 492 sourced relationships.
+An interactive, evidence-backed atlas mapping implementation, bootstrapping, runtime, and influence relationships across 172 nodes: 141 programming languages and 31 compiler/runtime tools. 330 indexable pages, 492 sourced relationships.
 
 ## Live Site
 
@@ -24,7 +24,7 @@ An interactive, evidence-backed atlas mapping implementation, bootstrapping, run
 - Language pages: [/languages/python](https://www.languagelineage.org/languages/python) (172 pages with relationship maps, Quick Facts, implementation tables)
 - Question pages: [/questions/what-is-rust-written-in](https://www.languagelineage.org/questions/what-is-rust-written-in) (120 pages, answer-first format)
 - Guides: [/guides](https://www.languagelineage.org/guides) (13 guides including comparisons and bootstrap chain analysis)
-- AI execution paths: [/ai/how-pytorch-runs](https://www.languagelineage.org/ai/how-pytorch-runs), [/ai/how-jax-runs](https://www.languagelineage.org/ai/how-jax-runs), [/ai/how-llama-cpp-runs](https://www.languagelineage.org/ai/how-llama-cpp-runs) (interactive, every step quoted from primary docs; data in `dataset/ai/`)
+- AI execution paths ([/ai](https://www.languagelineage.org/ai) compares them): [/ai/how-pytorch-runs](https://www.languagelineage.org/ai/how-pytorch-runs), [/ai/how-jax-runs](https://www.languagelineage.org/ai/how-jax-runs), [/ai/how-llama-cpp-runs](https://www.languagelineage.org/ai/how-llama-cpp-runs) (interactive, every step quoted from primary docs; data in `dataset/ai/`)
 - Poster: [/posters/programming-language-implementation-family-tree](https://www.languagelineage.org/posters/programming-language-implementation-family-tree) (SVG/PNG, CC BY 4.0)
 - Dataset: [/dataset](https://www.languagelineage.org/dataset) (JSON-LD, JSON and CSV downloads, data card, citation block, embed kit)
 - Embeddable graph: `<iframe src="https://www.languagelineage.org/embed?lang=rust">` (works from any page)
@@ -214,10 +214,12 @@ From the dataset analyzer (`npm run analyze:v5`):
 | `/guides/{slug}` | Static | 13 | Implementation guides and comparisons |
 | `/relationships` | Static | 1 | Index of all relationship types |
 | `/relationships/{slug}` | Static | 6 | Individual relationship type pages |
+| `/ai` | Static | 1 | Hub comparing the AI execution-path explainers |
+| `/ai/{slug}` | Static | 3 | Interactive AI execution-path explainers (`dataset/ai/`) |
 | `/timeline` | Static | 1 | Language timeline page |
 | `/dataset` | Static | 1 | Dataset overview with download, citation, and embed kit |
 | Keyword landings | Static | 6 | Root-level SEO landing pages (5 canonical; `/programming-language-family-tree` canonicalizes to the `/guides/` version) |
-| `/sitemap.xml` | XML | 1 | 304 indexable URLs (canonical only) |
+| `/sitemap.xml` | XML | 1 | 330 indexable URLs (canonical only) |
 | `/robots.txt` | Text | 1 | Crawler directives |
 | `/llms.txt` | Text | 1 | LLM-readable site index |
 | `/llms-full.txt` | Text | 1 | Expanded LLM reference |

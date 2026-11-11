@@ -1690,3 +1690,11 @@ pre {
 @media (prefers-reduced-motion: reduce) {
   .ai-stage, .ai-step { transition: none; }
 }
+
+/* /ai hub */
+.ai-hub-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 24px 0 8px; }
+.ai-hub-card { border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; }
+.ai-hub-card h2 { font-size: 19px; margin: 0 0 8px; }
+.ai-hub-card p { font-size: 14px; margin: 0 0 10px; }
+.ai-hub-choices { font-size: 14px; margin: 0 0 10px; padding-left: 18px; }
+.ai-hub-meta { color: var(--text-tertiary); font-size: 13px !important; margin: 0 !important; }

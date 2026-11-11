@@ -62,6 +62,7 @@ const Step = z.object({
 export const PathsFile = z.object({
   version: z.string(),
   slug: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/),
+  name: z.string().min(2).max(20),
   title: z.string().max(75),
   h1: z.string().min(10),
   description: z.string().min(75).max(180),
