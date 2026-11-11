@@ -14,7 +14,7 @@
 
 # Language Lineage
 
-An interactive, evidence-backed atlas mapping implementation, bootstrapping, runtime, and influence relationships across 171 nodes: 141 programming languages and 30 compiler/runtime tools. 324 indexable pages, 490 sourced relationships.
+An interactive, evidence-backed atlas mapping implementation, bootstrapping, runtime, and influence relationships across 171 nodes: 141 programming languages and 30 compiler/runtime tools. 324 indexable pages, 489 sourced relationships.
 
 ## Live Site
 
@@ -29,7 +29,7 @@ An interactive, evidence-backed atlas mapping implementation, bootstrapping, run
 - Embed guide: [/embed-kit](https://www.languagelineage.org/embed-kit) (live example, snippet, parameters, sizing, attribution)
 
 <p align="center">
-  <img src="public/og-image.png" alt="Language Lineage: what programming languages are written in. 171 languages and tools, 490 sourced relationships." width="900">
+  <img src="public/og-image.png" alt="Language Lineage: what programming languages are written in. 171 languages and tools, 489 sourced relationships." width="900">
 </p>
 
 ## What You Can Explore
@@ -104,7 +104,7 @@ LanguageLineage/
 │   ├── v2/                            67 languages, 128 edges
 │   ├── v3/                            71 languages, 169 edges
 │   ├── v4/                            112 nodes, 347 relationships
-│   └── v5/                            171 nodes, 490 relationships (current)
+│   └── v5/                            171 nodes, 489 relationships (current)
 │       ├── lineage_v5.json            Primary dataset
 │       └── enrichment_v5.json         Wikidata-sourced facts (148/171 nodes)
 ├── api/
@@ -166,7 +166,7 @@ LanguageLineage/
 ### Scale
 
 - 171 nodes: 141 languages + 30 tools (compilers, runtimes, engines)
-- 490 relationships, each with confidence score and evidence source URL
+- 489 relationships, each with confidence score and evidence source URL
 - 100% evidence coverage: every relationship has at least one source
 - 96 logo URLs: 51 Devicon assets + 39 Wikimedia P154 logos + 6 proxy logos
 - 148/171 nodes enriched with Wikidata-sourced facts (designers, developers, license, website, file extensions)
@@ -349,7 +349,7 @@ rules. Log each run in the measurement table in `SITE_IMPROVEMENT_PLAN.md`.
 
 ```
 Language Lineage. Programming Language Lineage Dataset, v5.0.
-171 nodes and 490 relationships. Accessed 2026. https://www.languagelineage.org/dataset
+171 nodes and 489 relationships. Accessed 2026. https://www.languagelineage.org/dataset
 ```
 
 ## Contributing
