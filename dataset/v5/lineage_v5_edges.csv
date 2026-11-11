@@ -488,3 +488,6 @@ lang:c,C,tool:llama_cpp,llama.cpp,runtime_written_in,2023,,0.82,https://github.c
 lang:cxx,C++,tool:pytorch,PyTorch,runtime_written_in,2016,,0.92,https://github.com/pytorch/pytorch/tree/main/aten,repository,PyTorch tensor core (ATen) is written in C++
 lang:python,Python,tool:pytorch,PyTorch,runtime_written_in,2016,,0.88,https://github.com/pytorch/pytorch,repository,PyTorch front end is written in Python
 tool:cuda,CUDA,tool:pytorch,PyTorch,runtime_written_in,2016,,0.9,https://github.com/pytorch/pytorch/tree/main/aten/src/ATen/native/cuda,repository,PyTorch GPU kernels are written in CUDA
+lang:python,Python,tool:triton,Triton,compiler_written_in,,,0.9,https://github.com/triton-lang/triton/blob/main/python/triton/compiler/compiler.py,repository,Kernel frontend and compile driver are Python: triton.compiler.compile() in python/triton/compiler/compiler.py
+lang:cxx,C++,tool:triton,Triton,compiler_written_in,,,0.9,https://github.com/triton-lang/triton/tree/main/lib/Dialect/Triton/IR,repository,Triton's MLIR dialects and compiler passes are C++ (e.g. lib/Dialect/Triton/IR/Ops.cpp)
+tool:llvm,LLVM,tool:triton,Triton,compiler_written_in,,,0.95,https://github.com/triton-lang/triton/blob/main/README.md,repository,"README: ""Triton uses LLVM to generate code for GPUs and CPUs."""

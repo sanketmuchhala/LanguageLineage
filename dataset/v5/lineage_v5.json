@@ -3926,6 +3926,28 @@
       "logo_source": "https://github.com/devicons/devicon/tree/master/icons/pytorch",
       "logo_license": "Devicon MIT; trademarks retained by owners",
       "logo_kind": "devicon"
+    },
+    {
+      "id": "tool:triton",
+      "name": "Triton",
+      "first_release_year": 2021,
+      "current_primary_implementation_language": "C++",
+      "paradigm": [
+        "tool"
+      ],
+      "typing": "none",
+      "runtime_model": "jit_compiled",
+      "self_hosting": false,
+      "notes": "Language and compiler for writing GPU kernels, developed by Philippe Tillet at OpenAI. Python frontend; compiler passes in C++ on MLIR; code generation through LLVM to PTX or AMDGCN. TorchInductor's GPU backend. Not NVIDIA's Triton Inference Server.",
+      "cluster_hint": "tools",
+      "company": null,
+      "garbage_collected": null,
+      "logo_url": null,
+      "peak_year": null,
+      "current_users_estimate": null,
+      "logo_source": null,
+      "logo_license": null,
+      "logo_kind": "none"
     }
   ],
   "relationships": [
@@ -8818,6 +8840,36 @@
       "confidence": 0.9,
       "evidence_source": "https://github.com/pytorch/pytorch/tree/main/aten/src/ATen/native/cuda",
       "notes": "PyTorch GPU kernels are written in CUDA"
+    },
+    {
+      "from_language": "lang:python",
+      "to_language": "tool:triton",
+      "relationship": "compiler_written_in",
+      "start_year": null,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://github.com/triton-lang/triton/blob/main/python/triton/compiler/compiler.py",
+      "notes": "Kernel frontend and compile driver are Python: triton.compiler.compile() in python/triton/compiler/compiler.py"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "tool:triton",
+      "relationship": "compiler_written_in",
+      "start_year": null,
+      "end_year": null,
+      "confidence": 0.9,
+      "evidence_source": "https://github.com/triton-lang/triton/tree/main/lib/Dialect/Triton/IR",
+      "notes": "Triton's MLIR dialects and compiler passes are C++ (e.g. lib/Dialect/Triton/IR/Ops.cpp)"
+    },
+    {
+      "from_language": "tool:llvm",
+      "to_language": "tool:triton",
+      "relationship": "compiler_written_in",
+      "start_year": null,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://github.com/triton-lang/triton/blob/main/README.md",
+      "notes": "README: \"Triton uses LLVM to generate code for GPUs and CPUs.\""
     }
   ]
 }
