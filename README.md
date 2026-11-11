@@ -14,7 +14,7 @@
 
 # Language Lineage
 
-An interactive, evidence-backed atlas mapping implementation, bootstrapping, runtime, and influence relationships across 172 nodes: 141 programming languages and 31 compiler/runtime tools. 324 indexable pages, 492 sourced relationships.
+An interactive, evidence-backed atlas mapping implementation, bootstrapping, runtime, and influence relationships across 172 nodes: 141 programming languages and 31 compiler/runtime tools. 329 indexable pages, 492 sourced relationships.
 
 ## Live Site
 
@@ -24,7 +24,9 @@ An interactive, evidence-backed atlas mapping implementation, bootstrapping, run
 - Language pages: [/languages/python](https://www.languagelineage.org/languages/python) (172 pages with relationship maps, Quick Facts, implementation tables)
 - Question pages: [/questions/what-is-rust-written-in](https://www.languagelineage.org/questions/what-is-rust-written-in) (120 pages, answer-first format)
 - Guides: [/guides](https://www.languagelineage.org/guides) (13 guides including comparisons and bootstrap chain analysis)
-- Dataset: [/dataset](https://www.languagelineage.org/dataset) (JSON-LD, download, citation block, embed kit)
+- AI execution paths: [/ai/how-pytorch-runs](https://www.languagelineage.org/ai/how-pytorch-runs), [/ai/how-jax-runs](https://www.languagelineage.org/ai/how-jax-runs), [/ai/how-llama-cpp-runs](https://www.languagelineage.org/ai/how-llama-cpp-runs) (interactive, every step quoted from primary docs; data in `dataset/ai/`)
+- Poster: [/posters/programming-language-implementation-family-tree](https://www.languagelineage.org/posters/programming-language-implementation-family-tree) (SVG/PNG, CC BY 4.0)
+- Dataset: [/dataset](https://www.languagelineage.org/dataset) (JSON-LD, JSON and CSV downloads, data card, citation block, embed kit)
 - Embeddable graph: `<iframe src="https://www.languagelineage.org/embed?lang=rust">` (works from any page)
 - Embed guide: [/embed-kit](https://www.languagelineage.org/embed-kit) (live example, snippet, parameters, sizing, attribution)
 
@@ -175,12 +177,12 @@ LanguageLineage/
 
 | Type | Count | Color | Description |
 |------|-------|-------|-------------|
-| `influenced` | 252 | Amber | Language A influenced the design of language B |
-| `compiler_written_in` | 96 | Amber | Language A's compiler is written in language B |
-| `runtime_written_in` | 67 | Green (#34d399) | Language A's runtime is written in language B |
-| `bootstrap_written_in` | 15 | Violet | Bootstrap binary seed relationship |
-| `transpiled_to` | 11 | Cyan (#22d3ee) | Language A compiles to language B |
-| `rewritten_in` | 2 | Rose | Implementation rewritten from one language to another |
+| `influenced` | 263 | Blue (#60a5fa) | Language A influenced the design of language B |
+| `compiler_written_in` | 104 | Amber (#e3a008) | Language A's compiler is written in language B |
+| `runtime_written_in` | 93 | Green (#34d399) | Language A's runtime is written in language B |
+| `bootstrap_written_in` | 15 | Violet (#a78bfa) | Bootstrap binary seed relationship |
+| `transpiled_to` | 13 | Cyan (#22d3ee) | Language A compiles to language B |
+| `rewritten_in` | 4 | Rose (#fb7185) | Implementation rewritten from one language to another |
 
 Each relationship includes: `from_language`, `to_language`, `start_year`, `end_year`, `confidence` (0.0-1.0), `evidence_source` (URL), and `notes`.
 
