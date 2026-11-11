@@ -6,7 +6,7 @@ import { getAdaptiveLogoBackground, getLogoBorderColor } from '../src/utils/colo
 import { LASTMOD_TOKEN, filePathToUrl, resolveDate, flushManifest } from './pageDates.js';
 import { sourceLabel } from './sourceType.js';
 import { buildPosterModel, POSTER_SLUG, POSTER_TYPES, POSTER_MIN_GROUP } from './posterData.js';
-import { loadAllPaths, buildPathSvg, activePath, defaultSelection, statusText, whenText, stepId, KIND_STYLE, type PathsData } from './aiPaths.js';
+import { loadAllPaths, buildPathSvg, activePath, defaultSelection, allSelections, statusText, whenText, stepId, KIND_STYLE, type PathsData, type Selection } from './aiPaths.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -59,6 +59,7 @@ const FOOTER_HTML = `<footer class="seo-footer-rich">
       <a href="/guides/programming-language-family-tree">Language family tree</a>
       <a href="/programming-language-evolution">Evolution timeline</a>
       <a href="/what-are-programming-languages-written-in">What languages are written in</a>
+      <a href="/ai">How AI frameworks run code</a>
       <a href="/explore">Interactive Graph</a>
       <a href="/dataset">Dataset</a>
       <a href="/directory">Site Directory</a>
@@ -5166,6 +5167,7 @@ console.log(`Generated ${count} language/tool pages`);
 writeFile(join(PUBLIC, 'dataset', 'index.html'), buildDatasetPage(languages, rels));
 writeFile(join(PUBLIC, 'posters', POSTER_SLUG, 'index.html'), processPage(buildPosterPage(languages, rels, nodeMap)));
 for (const p of AI_PATH_PAGES) writeFile(join(PUBLIC, 'ai', p.slug, 'index.html'), processPage(buildAiPathPage(p, nodeMap)));
+writeFile(join(PUBLIC, 'ai', 'index.html'), processPage(buildAiHubPage(AI_PATH_PAGES, nodeMap)));
 console.log('Generated dataset page');
 
 // Relationship pages
@@ -6465,7 +6467,8 @@ ${aiQuotes(data, st.evidence)}
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
-      { '@type': 'ListItem', position: 2, name: data.h1, item: url },
+      { '@type': 'ListItem', position: 2, name: 'AI execution paths', item: `${SITE}/ai` },
+      { '@type': 'ListItem', position: 3, name: data.h1, item: url },
     ],
   });
 
@@ -6497,7 +6500,7 @@ ${SKIP_LINK}
 ${NAV_HTML}
 <main class="seo-main" id="main-content">
   <nav class="breadcrumb" aria-label="breadcrumb">
-    <a href="/">Home</a> &rsaquo; ${escapeHtml(data.h1.replace(/\?$/, ''))}
+    <a href="/">Home</a> &rsaquo; <a href="/ai">AI execution paths</a> &rsaquo; ${escapeHtml(data.h1.replace(/\?$/, ''))}
   </nav>
 
   <h1>${escapeHtml(data.h1)}</h1>
@@ -6543,7 +6546,132 @@ ${stepRows}
 
   <h2>How this page is checked</h2>
   <p>Every stage and step above quotes the source that supports it. The quotes were checked against ${escapeHtml(data.verified_against)} on ${escapeHtml(data.verified_on)}. The data is a <a href="/dataset/ai/${data.slug}.json">versioned JSON file</a> under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. Found something wrong or out of date? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
-  <p>What these tools are written in is in the main atlas: ${atlasLinks.join(', ')}.${otherPages.length ? ` More execution paths: ${otherPages.join(', ')}.` : ''}</p>
+  <p>What these tools are written in is in the main atlas: ${atlasLinks.join(', ')}.${otherPages.length ? ` More execution paths: ${otherPages.join(', ')}, or <a href="/ai">compare them all</a>.` : ''}</p>
+
+  <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>
+</main>
+${FOOTER_HTML}
+</body>
+</html>`;
+}
+
+/** Query string that opens an explainer on one selection, e.g. ?mode=jit&device=gpu. */
+function aiSelectionQuery(sel: Selection): string {
+  return '?' + Object.entries(sel).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join('&');
+}
+
+/** Short label for a selection, e.g. "jax.jit · NVIDIA GPU". */
+function aiSelectionLabel(data: PathsData, sel: Selection): string {
+  return data.dimensions.map(d => d.options.find(o => o.value === sel[d.id])!.label).join(' · ');
+}
+
+/**
+ * /ai hub: compares the explainers using only their own data files. Nothing here
+ * is a new claim; every number is counted from dataset/ai/*.json and every tool
+ * row comes from a stage's lineage_id.
+ */
+function buildAiHubPage(pages: PathsData[], nodeMap: Map<string, Language>): string {
+  const url = `${SITE}/ai`;
+  const title = 'How AI Frameworks Run Your Code: PyTorch, JAX, llama.cpp';
+  const h1 = 'How AI frameworks run your code';
+  const shortName = (p: PathsData) => p.name;
+  const description = `Interactive, cited execution paths for ${pages.map(shortName).join(', ').replace(/, ([^,]+)$/, ' and $1')}: from your Python or C++ call through compilers and kernels to the hardware.`.slice(0, 180);
+
+  const cards = pages.map(p => {
+    const choices = p.dimensions.map(d => `<li><strong>${escapeHtml(d.legend)}:</strong> ${d.options.map(o => escapeHtml(o.label)).join(', ')}</li>`).join('');
+    const quotes = [...p.stages, ...p.steps].reduce((n, x) => n + x.evidence.length, 0);
+    return `<article class="ai-hub-card">
+<h2><a href="/ai/${p.slug}">${escapeHtml(p.h1)}</a></h2>
+<p>${escapeHtml(p.description)}</p>
+<ul class="ai-hub-choices">${choices}</ul>
+<p class="ai-hub-meta">${p.stages.length} stages, ${p.steps.length} steps, ${quotes} quoted citations from ${Object.keys(p.sources).length} sources. Checked ${escapeHtml(p.verified_on)}.</p>
+</article>`;
+  }).join('\n');
+
+  const pathRows = pages.flatMap(p => allSelections(p).map(sel => {
+    const path = activePath(p, sel);
+    return `<tr><td><a href="/ai/${p.slug}${escapeHtml(aiSelectionQuery(sel))}">${escapeHtml(shortName(p))}</a></td><td>${escapeHtml(aiSelectionLabel(p, sel))}</td><td>${path.stages.size}</td><td>${path.steps.size}</td></tr>`;
+  })).join('\n');
+
+  const sharedIds = [...new Set(pages.flatMap(p => p.stages.map(s => s.lineage_id)).filter((id): id is string => !!id && nodeMap.has(id)))]
+    .map(id => ({ id, in: pages.map(p => p.stages.some(s => s.lineage_id === id)) }))
+    .sort((a, b) => b.in.filter(Boolean).length - a.in.filter(Boolean).length || nodeMap.get(a.id)!.name.localeCompare(nodeMap.get(b.id)!.name));
+  const sharedRows = sharedIds.map(r => `<tr><td>${linkNode(r.id, nodeMap)}</td>${r.in.map(x => `<td>${x ? '<span aria-label="yes">&#10003;</span>' : '<span aria-label="no">&ndash;</span>'}</td>`).join('')}</tr>`).join('\n');
+  const inAll = sharedIds.filter(r => r.in.every(Boolean)).map(r => escapeHtml(nodeMap.get(r.id)!.name));
+
+  const itemListJsonLd = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: h1,
+    itemListElement: pages.map((p, i) => ({ '@type': 'ListItem', position: i + 1, name: p.h1, url: `${SITE}/ai/${p.slug}` })),
+  });
+  const breadcrumbJsonLd = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'AI execution paths', item: url },
+    ],
+  });
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${escapeHtml(title)}</title>
+  <meta name="description" content="${escapeHtml(description)}" />
+  <link rel="canonical" href="${url}" />
+  <link rel="icon" href="/favicon.svg" />
+  ${FONTS_HEAD}${ANALYTICS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="${escapeHtml(title)}" />
+  <meta property="og:description" content="${escapeHtml(description)}" />
+  <meta property="og:url" content="${url}" />
+  <meta property="og:image" content="${ogImg('ai-index.png')}" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">${itemListJsonLd}</script>
+  <script type="application/ld+json">${breadcrumbJsonLd}</script>
+</head>
+<body class="seo-page">
+${SKIP_LINK}
+${NAV_HTML}
+<main class="seo-main" id="main-content">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; AI execution paths
+  </nav>
+
+  <h1>${h1}</h1>
+
+  <div class="answer-box">Each explainer below traces one AI framework from the line of code you write to the chip that runs it. Pick a mode and a device, and the diagram shows which stages your code passes through. Every stage and every arrow quotes the official documentation or source code that supports it.</div>
+
+  <div class="ai-hub-cards">
+${cards}
+  </div>
+
+  <h2 id="every-path">Every path, side by side</h2>
+  <p>The number of stages and steps on each selectable path, counted from the explainers' data files. The counts show how many documented layers a path passes through; they say nothing about speed. Each row opens that explainer on that path.</p>
+  <div class="table-wrap"><table id="ai-path-lengths">
+    <thead><tr><th>Explainer</th><th>Selection</th><th>Stages</th><th>Steps</th></tr></thead>
+    <tbody>
+${pathRows}
+    </tbody>
+  </table></div>
+
+  <h2 id="shared-tools">Tools the paths share</h2>
+  <p>Stages that are also nodes in the Language Lineage atlas, so you can see what each tool is written in.${inAll.length ? ` ${inAll.join(' and ')} ${inAll.length === 1 ? 'appears' : 'appear'} in every explainer.` : ''}</p>
+  <div class="table-wrap"><table id="ai-shared-tools">
+    <thead><tr><th>Tool</th>${pages.map(p => `<th><a href="/ai/${p.slug}">${escapeHtml(shortName(p))}</a></th>`).join('')}</tr></thead>
+    <tbody>
+${sharedRows}
+    </tbody>
+  </table></div>
+
+  <h2>How these pages are built</h2>
+  <p>Each explainer is one versioned JSON file (${pages.map(p => `<a href="/dataset/ai/${p.slug}.json">${p.slug}.json</a>`).join(', ')}) under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. They are kept apart from the language lineage graph on purpose: "lowers to" and "dispatches to" describe how code executes, not what a tool is written in. Closed systems are not guessed at; where the public documentation stops, the diagram stops too. Found a mistake? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
 
   <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>
 </main>

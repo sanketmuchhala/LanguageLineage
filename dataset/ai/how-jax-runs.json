@@ -1,6 +1,7 @@
 {
   "version": "1.0",
   "slug": "how-jax-runs",
+  "name": "JAX",
   "title": "What Happens When You Run JAX? jit, XLA, StableHLO, PJRT | Language Lineage",
   "h1": "What Actually Happens When You Run JAX Code?",
   "description": "Trace JAX from Python to the device: op-by-op dispatch vs jax.jit, through jaxpr, StableHLO, the XLA compiler, LLVM or Triton, and the PJRT runtime, with sources.",

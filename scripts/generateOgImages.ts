@@ -339,6 +339,8 @@ async function main() {
   }
 
   // AI execution-path explainers (/ai/<slug>, one per dataset/ai/<slug>.json)
+  write(join(OG_DIR, 'ai-index.png'), await renderCard(buildCard({ eyebrow: 'AI INFRASTRUCTURE', title: 'How AI frameworks run your code', subtitle: loadAllPaths(ROOT).map(p => p.name).join(' · '), rel: null })));
+  count++;
   for (const p of loadAllPaths(ROOT)) {
     const card = buildCard({ eyebrow: 'AI INFRASTRUCTURE', title: p.h1, subtitle: p.og_subtitle, rel: null });
     write(join(OG_DIR, `ai-${p.slug}.png`), await renderCard(card));

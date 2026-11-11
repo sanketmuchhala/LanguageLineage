@@ -1,6 +1,7 @@
 {
   "version": "1.0",
   "slug": "how-llama-cpp-runs",
+  "name": "llama.cpp",
   "title": "How Does llama.cpp Run a Model? CPU, CUDA and Metal | Language Lineage",
   "h1": "How Does llama.cpp Run a Model on Your Hardware?",
   "description": "Follow a local LLM through llama.cpp: GGUF file, ggml compute graph, and the CPU, CUDA or Metal backend, with the language each kernel is written in and sources.",

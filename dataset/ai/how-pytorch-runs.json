@@ -1,6 +1,7 @@
 {
   "version": "1.1",
   "slug": "how-pytorch-runs",
+  "name": "PyTorch",
   "title": "What Actually Happens When You Run a PyTorch Model? | Language Lineage",
   "h1": "What Actually Happens When You Run a PyTorch Model?",
   "description": "Trace a PyTorch model from Python to the hardware: eager mode vs torch.compile, CPU vs GPU, through ATen, TorchDynamo, TorchInductor, Triton, LLVM IR and PTX, with sources.",

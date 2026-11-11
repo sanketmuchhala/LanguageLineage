@@ -148,3 +148,47 @@ describe('how-pytorch-runs semantics', () => {
     expect(data.steps.find(s => stepId(s) === 'inductor--aten_cpu')?.kind).toBe('falls_back_to');
   });
 });
+
+describe('/ai hub page', () => {
+  const hub = readFileSync(join(ROOT, 'public/ai/index.html'), 'utf8');
+  const table = (id: string) => hub.match(new RegExp(`<table id="${id}">[\\s\\S]*?</table>`))?.[0] ?? '';
+
+  it('links every explainer, and every explainer links back', () => {
+    for (const f of files) {
+      expect(hub).toContain(`<h2><a href="/ai/${f.slug}">`);
+      expect(page(f)).toContain('<a href="/ai">AI execution paths</a>');
+    }
+  });
+
+  it('lists every selectable path with the counts from its data file', () => {
+    const rows = table('ai-path-lengths').match(/<tr><td>[\s\S]*?<\/tr>/g) ?? [];
+    expect(rows.length).toBe(files.reduce((n, f) => n + allSelections(f).length, 0));
+    for (const f of files) {
+      for (const sel of allSelections(f)) {
+        const q = Object.entries(sel).map(([k, v]) => `${k}=${v}`).join('&amp;');
+        const row = rows.find(r => r.includes(`href="/ai/${f.slug}?${q}"`));
+        expect(row, `${f.slug} ${q}`).toBeDefined();
+        const p = activePath(f, sel);
+        expect(row).toContain(`<td>${p.stages.size}</td><td>${p.steps.size}</td>`);
+      }
+    }
+  });
+
+  it('marks a tool as shared only where a stage links to it', () => {
+    const rows = table('ai-shared-tools').match(/<tr><td>[\s\S]*?<\/tr>/g) ?? [];
+    const ids = new Set(files.flatMap(f => f.stages.map(s => s.lineage_id)).filter((id): id is string => !!id));
+    expect(rows.length).toBe(ids.size);
+    for (const row of rows) {
+      const cells = row.match(/<td>[\s\S]*?<\/td>/g)!.slice(1);
+      const name = row.match(/<td><a [^>]*>([^<]+)<\/a>/)![1];
+      const id = [...ids].find(i => (lineage.languages as Array<{ id: string; name: string }>).find(n => n.id === i)?.name === name)!;
+      expect(id, name).toBeDefined();
+      files.forEach((f, i) => expect(cells[i].includes('aria-label="yes"'), `${name} in ${f.slug}`).toBe(f.stages.some(s => s.lineage_id === id)));
+    }
+  });
+
+  it('is in the sitemap', () => {
+    const sitemap = readFileSync(join(ROOT, 'public/sitemap.xml'), 'utf8');
+    expect(sitemap).toContain('<loc>https://www.languagelineage.org/ai</loc>');
+  });
+});
