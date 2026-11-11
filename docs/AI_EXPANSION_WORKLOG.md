@@ -56,3 +56,12 @@ Checked and **not** used: the dispatcher tutorial (deprecated as of PyTorch 2.4;
 1. After #44/#45 merge: rebase this branch, set the PyTorch "Triton compiler" stage's `lineage_id` to `tool:triton`, regenerate.
 2. AI-07: AI mode in the Cytoscape explorer (filter + path overlay).
 3. AI-08: JAX / OpenXLA path file.
+
+## 2026-11-11 — merges, JAX page (AI-08)
+
+- Merged by Claude at the owner's request, in order, squash: **#44** (Rust data fix), **#45** (Triton, rebased onto main first), **#43** (AI pages, rebased; generated-file conflicts resolved by regenerating; PyTorch Triton stages linked to `tool:triton`). Production checked after deploy: both `/ai/` pages, `/tools/triton`, data JSON, OG cards, explorer script and poster return 200; sitemap 328; explorers switch paths with no page errors.
+- **`/ai/how-jax-runs`** (branch `ai/jax-path`): mode (without jit / jax.jit) × device (CPU / NVIDIA GPU / TPU); 15 stages, 19 steps; sources: JAX About, current Just-in-time compilation and Ahead-of-time lowering pages (`/en/latest/201/`, the older URLs are archived copies), OpenXLA XLA architecture, XLA:GPU architecture, PJRT. XLA's TPU backend internals are explicitly not shown. Paths: no jit 4 stages; jit CPU 9; jit GPU 12 (LLVM IR, Triton IR, cuBLAS/cuDNN, PTX); jit TPU 9.
+- `aiInline` now supports internal `[text](/path)` links in path-file prose (internal paths only; checked by the link audit).
+- `check:ai-quotes` now sends `Accept-Language: en`: openxla.org served random machine translations (Indonesian, Portuguese, Persian) without it, which made quotes fail intermittently. Three consecutive runs: all 61 distinct quotes found.
+- Legend: `runtime` stages now have their own "Runtime" entry instead of sharing "Your program".
+- `npm run verify`: 203 tests, seo:validate 0/0, seo:links 0/0/0, sitemap 329. Browser: all five mode/device combinations checked, 320px with JS on/off, no page errors.

@@ -95,9 +95,9 @@
   <text x="339" y="35" class="ai-name">Your model code</text>
   <text x="339" y="51" class="ai-kind">programming language</text>
 </g>
-<g id="stage-cpython" class="ai-stage on" tabindex="0" role="button" aria-label="CPython interpreter: Your program">
-  <rect x="325" y="94" width="176" height="46" rx="7" style="--kc:#60a5fa"/>
-  <rect x="325" y="94" width="4" height="46" rx="2" fill="#60a5fa"/>
+<g id="stage-cpython" class="ai-stage on" tabindex="0" role="button" aria-label="CPython interpreter: Runtime">
+  <rect x="325" y="94" width="176" height="46" rx="7" style="--kc:#93c5fd"/>
+  <rect x="325" y="94" width="4" height="46" rx="2" fill="#93c5fd"/>
   <text x="339" y="113" class="ai-name">CPython interpreter</text>
   <text x="339" y="129" class="ai-kind">runtime</text>
 </g>
@@ -188,7 +188,7 @@
 </svg></div>
       <aside class="ai-detail" aria-live="polite"><p class="ai-detail-hint">Select a stage or an arrow to see what it does and the source behind it. Dashed arrows are fallbacks some operations take.</p></aside>
     </div>
-    <ul class="ai-legend" aria-label="Legend"><li><span class="ai-swatch" style="--kc:#60a5fa"></span>Your program</li><li><span class="ai-swatch" style="--kc:#e3a008"></span>Framework core</li><li><span class="ai-swatch" style="--kc:#f472b6"></span>Kernel</li><li><span class="ai-swatch" style="--kc:#a78bfa"></span>Compiler</li><li><span class="ai-swatch" style="--kc:#22d3ee"></span>Intermediate representation</li><li><span class="ai-swatch" style="--kc:#4ade80"></span>Hardware</li><li><span class="ai-swatch ai-swatch-dash"></span>Fallback for some operations</li></ul>
+    <ul class="ai-legend" aria-label="Legend"><li><span class="ai-swatch" style="--kc:#60a5fa"></span>Your program</li><li><span class="ai-swatch" style="--kc:#93c5fd"></span>Runtime</li><li><span class="ai-swatch" style="--kc:#e3a008"></span>Framework core</li><li><span class="ai-swatch" style="--kc:#f472b6"></span>Kernel</li><li><span class="ai-swatch" style="--kc:#a78bfa"></span>Compiler</li><li><span class="ai-swatch" style="--kc:#22d3ee"></span>Intermediate representation</li><li><span class="ai-swatch" style="--kc:#4ade80"></span>Hardware</li><li><span class="ai-swatch ai-swatch-dash"></span>Fallback for some operations</li></ul>
   </section>
 
   <h2 id="the-selected-path-step-by-step">The selected path, step by step</h2>
@@ -223,7 +223,7 @@
 </article>
 <article class="ai-stage-detail" id="detail-stage-cpython" data-stage="cpython">
 <h3>CPython interpreter</h3>
-<p class="ai-kind-tag" style="--kc:#60a5fa">runtime</p>
+<p class="ai-kind-tag" style="--kc:#93c5fd">runtime</p>
 <p>Runs your Python bytecode. In eager mode it calls PyTorch one operation at a time; under torch.compile, TorchDynamo hooks into it before each frame runs.</p>
 <p class="ai-lineage">In the atlas: <a href="/languages/python">Python</a></p>
 <ul class="ai-sources"><li><blockquote>Dynamo hooks into the frame evaluation API in CPython (PEP 523) to dynamically modify Python bytecode right before it is executed.</blockquote><a href="https://docs.pytorch.org/docs/main/user_guide/torch_compiler/torch.compiler_dynamo_overview.html" rel="noopener noreferrer" target="_blank">Dynamo Overview (PyTorch documentation)</a> <span class="src-type">Project docs</span></li></ul>
@@ -397,7 +397,7 @@
 
   <h2 id="how-this-page-is-checked">How this page is checked</h2>
   <p>Every stage and step above quotes the source that supports it. The quotes were checked against PyTorch 2.15 documentation, Triton main README, NVIDIA PTX ISA documentation on 2026-11-10. The data is a <a href="/dataset/ai/how-pytorch-runs.json">versioned JSON file</a> under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. Found something wrong or out of date? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
-  <p>What these tools are written in is in the main atlas: <a href="/languages/python">Python</a>, <a href="/tools/pytorch">PyTorch</a>, <a href="/languages/cxx">C++</a>, <a href="/tools/cuda">CUDA</a>, <a href="/tools/triton">Triton</a>, <a href="/tools/llvm">LLVM</a>, <a href="/languages/machine-code">Machine Code</a>. More execution paths: <a href="/ai/how-llama-cpp-runs">How Does llama.cpp Run a Model on Your Hardware</a>.</p>
+  <p>What these tools are written in is in the main atlas: <a href="/languages/python">Python</a>, <a href="/tools/pytorch">PyTorch</a>, <a href="/languages/cxx">C++</a>, <a href="/tools/cuda">CUDA</a>, <a href="/tools/triton">Triton</a>, <a href="/tools/llvm">LLVM</a>, <a href="/languages/machine-code">Machine Code</a>. More execution paths: <a href="/ai/how-jax-runs">What Actually Happens When You Run JAX Code</a>, <a href="/ai/how-llama-cpp-runs">How Does llama.cpp Run a Model on Your Hardware</a>.</p>
 
   <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>
 </main>

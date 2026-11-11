@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>What Happens When You Run JAX? jit, XLA, StableHLO, PJRT | Language Lineage</title>
+  <meta name="description" content="Trace JAX from Python to the device: op-by-op dispatch vs jax.jit, through jaxpr, StableHLO, the XLA compiler, LLVM or Triton, and the PJRT runtime, with sources." />
+  <link rel="canonical" href="https://www.languagelineage.org/ai/how-jax-runs" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><script defer src="/fx.js"></script><script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script><link rel="alternate" type="application/rss+xml" title="Language Lineage" href="/rss.xml" /><link rel="stylesheet" href="/seo.css" />
+  <script defer src="/ai-path.js"></script>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="What Happens When You Run JAX? jit, XLA, StableHLO, PJRT | Language Lineage" />
+  <meta property="og:description" content="Trace JAX from Python to the device: op-by-op dispatch vs jax.jit, through jaxpr, StableHLO, the XLA compiler, LLVM or Triton, and the PJRT runtime, with sources." />
+  <meta property="og:url" content="https://www.languagelineage.org/ai/how-jax-runs" />
+  <meta property="og:image" content="https://www.languagelineage.org/og/ai-how-jax-runs.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What Actually Happens When You Run JAX Code?","description":"Trace JAX from Python to the device: op-by-op dispatch vs jax.jit, through jaxpr, StableHLO, the XLA compiler, LLVM or Triton, and the PJRT runtime, with sources.","url":"https://www.languagelineage.org/ai/how-jax-runs","datePublished":"2026-11-11","dateModified":"2026-11-11","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"citation":["https://docs.jax.dev/en/latest/about.html","https://docs.jax.dev/en/latest/201/jit.html","https://docs.jax.dev/en/latest/201/aot.html","https://openxla.org/xla/architecture","https://openxla.org/xla/gpu_architecture","https://openxla.org/xla/pjrt"],"inLanguage":"en"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"What Actually Happens When You Run JAX Code?","item":"https://www.languagelineage.org/ai/how-jax-runs"}]}</script>
+</head>
+<body class="seo-page">
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<nav class="seo-nav">
+  <a href="/" class="nav-brand"><img class="nav-logo-mark" src="/logo-mark.svg" width="22" height="22" alt="" aria-hidden="true">Language Lineage</a>
+  <a href="/relationships">Relationships</a>
+  <a href="/languages">Languages</a>
+  <a href="/tools">Tools</a>
+  <a href="/guides">Guides</a>
+  <a href="/timeline">Timeline</a>
+  <a href="/dataset">Dataset</a>
+  <a href="/how-it-works">How It Works</a>
+  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
+</nav>
+<main class="seo-main" id="main-content">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; What Actually Happens When You Run JAX Code
+  </nav>
+
+  <h1>What Actually Happens When You Run JAX Code?</h1>
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#the-selected-path-step-by-step">The selected path, step by step</a></li>
+    <li><a href="#where-python-ends">Where Python ends</a></li>
+    <li><a href="#how-this-differs-from-pytorch">How this differs from PyTorch</a></li>
+    <li><a href="#every-stage">Every stage</a></li>
+    <li><a href="#every-step">Every step</a></li>
+    <li><a href="#what-this-does-not-show">What this does not show</a></li>
+    <li><a href="#how-this-page-is-checked">How this page is checked</a></li>
+  </ol>
+</nav>
+
+  <div class="answer-box">Without <strong>jax.jit</strong>, JAX dispatches each operation to the device one at a time, as Python reaches it. With <strong>jax.jit</strong>, JAX traces your function into a <strong>jaxpr</strong>, lowers it to <strong>StableHLO</strong>, and hands the whole program to the <strong>XLA</strong> compiler, which fuses operations and compiles them for the target device. On CPUs and NVIDIA GPUs XLA generates code through <strong>LLVM</strong> (PTX for NVIDIA), uses <strong>Triton</strong> for some GPU kernels and NVIDIA libraries such as cuBLAS for others. Either way, JAX runs the result on the device through the <strong>PJRT</strong> runtime.</div>
+
+  <section class="ai-explorer" id="explorer" aria-label="Execution path explorer">
+    <form class="ai-controls" onsubmit="return false">
+      <fieldset><legend>Mode</legend>
+        <label><input type="radio" name="mode" value="eager" data-phrase="op-by-op execution (no jit)"> Without jit</label>
+        <label><input type="radio" name="mode" value="jit" data-phrase="jax.jit" checked> jax.jit</label>
+      </fieldset>
+      <fieldset><legend>Device</legend>
+        <label><input type="radio" name="device" value="cpu" data-phrase="a CPU"> CPU</label>
+        <label><input type="radio" name="device" value="gpu" data-phrase="an NVIDIA GPU" checked> NVIDIA GPU</label>
+        <label><input type="radio" name="device" value="tpu" data-phrase="a TPU"> TPU</label>
+      </fieldset>
+      <button type="button" class="ai-copy" hidden>Copy link to this path</button>
+    </form>
+    <p class="ai-status" aria-live="polite" data-template="Showing {mode} on {device}">Showing jax.jit on an NVIDIA GPU: 12 stages, 13 steps.</p>
+    <div class="ai-layout">
+      <div class="ai-diagram-wrap"><svg class="ai-path-svg" viewBox="0 0 826 780" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Execution path diagram: select a stage or step for details">
+<defs><marker id="ai-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9a9a9a"/></marker></defs>
+<path id="step-python_code--jax" class="ai-step on" d="M413,62 C413,78 413,78 413,88" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Your JAX code calls JAX"><title>Your JAX code calls JAX</title></path>
+<path id="step-jax--pjrt" class="ai-step" d="M413,140 C413,390 207,390 207,634" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="JAX dispatches each op through PJRT runtime"><title>JAX dispatches each op through PJRT runtime</title></path>
+<path id="step-jax--jaxpr" class="ai-step on" d="M413,140 C413,156 619,156 619,166" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="JAX traces to jaxpr"><title>JAX traces to jaxpr</title></path>
+<path id="step-jaxpr--stablehlo" class="ai-step on" d="M619,218 C619,234 619,234 619,244" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="jaxpr lowers to StableHLO"><title>jaxpr lowers to StableHLO</title></path>
+<path id="step-stablehlo--xla" class="ai-step on" d="M619,296 C619,312 619,312 619,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="StableHLO compiled by XLA compiler"><title>StableHLO compiled by XLA compiler</title></path>
+<path id="step-xla--llvm_ir" class="ai-step on" d="M619,374 C619,390 310,390 310,400" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="XLA compiler emits LLVM IR"><title>XLA compiler emits LLVM IR</title></path>
+<path id="step-xla--triton_ir" class="ai-step on" d="M619,374 C619,390 516,390 516,400" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="XLA compiler emits, for some kernels Triton IR"><title>XLA compiler emits, for some kernels Triton IR</title></path>
+<path id="step-xla--cuda_libs" class="ai-step on" d="M619,374 C619,390 722,390 722,400" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="XLA compiler calls, for common ops cuBLAS and cuDNN"><title>XLA compiler calls, for common ops cuBLAS and cuDNN</title></path>
+<path id="step-xla--tpu_backend" class="ai-step" d="M619,374 C619,429 722,429 722,478" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="XLA compiler compiles with XLA TPU backend"><title>XLA compiler compiles with XLA TPU backend</title></path>
+<path id="step-llvm_ir--executable" class="ai-step" d="M310,452 C310,507 516,507 516,556" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="LLVM IR compiled to native code Compiled executable"><title>LLVM IR compiled to native code Compiled executable</title></path>
+<path id="step-llvm_ir--ptx" class="ai-step on" d="M310,452 C310,468 413,468 413,478" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="LLVM IR lowers to PTX"><title>LLVM IR lowers to PTX</title></path>
+<path id="step-triton_ir--ptx" class="ai-step on" d="M516,452 C516,468 413,468 413,478" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Triton IR lowers to PTX"><title>Triton IR lowers to PTX</title></path>
+<path id="step-ptx--executable" class="ai-step on" d="M413,530 C413,546 516,546 516,556" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="PTX built into Compiled executable"><title>PTX built into Compiled executable</title></path>
+<path id="step-cuda_libs--executable" class="ai-step on" d="M722,452 C722,507 516,507 516,556" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="cuBLAS and cuDNN called from Compiled executable"><title>cuBLAS and cuDNN called from Compiled executable</title></path>
+<path id="step-tpu_backend--executable" class="ai-step" d="M722,530 C722,546 516,546 516,556" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="XLA TPU backend produces Compiled executable"><title>XLA TPU backend produces Compiled executable</title></path>
+<path id="step-executable--pjrt" class="ai-step on" d="M516,608 C516,624 207,624 207,634" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Compiled executable run through PJRT runtime"><title>Compiled executable run through PJRT runtime</title></path>
+<path id="step-pjrt--cpu" class="ai-step" d="M207,686 C207,702 104,702 104,712" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="PJRT runtime runs on CPU"><title>PJRT runtime runs on CPU</title></path>
+<path id="step-pjrt--nvidia_gpu" class="ai-step on" d="M207,686 C207,702 361.5,702 361.5,712" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="PJRT runtime launches on NVIDIA GPU"><title>PJRT runtime launches on NVIDIA GPU</title></path>
+<path id="step-pjrt--tpu" class="ai-step" d="M207,686 C207,702 619,702 619,712" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="PJRT runtime launches on TPU"><title>PJRT runtime launches on TPU</title></path>
+<g id="stage-python_code" class="ai-stage on" tabindex="0" role="button" aria-label="Your JAX code: Your program">
+  <rect x="325" y="16" width="176" height="46" rx="7" style="--kc:#60a5fa"/>
+  <rect x="325" y="16" width="4" height="46" rx="2" fill="#60a5fa"/>
+  <text x="339" y="35" class="ai-name">Your JAX code</text>
+  <text x="339" y="51" class="ai-kind">programming language</text>
+</g>
+<g id="stage-jax" class="ai-stage on" tabindex="0" role="button" aria-label="JAX: Framework core">
+  <rect x="325" y="94" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="325" y="94" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="339" y="113" class="ai-name">JAX</text>
+  <text x="339" y="129" class="ai-kind">framework component</text>
+</g>
+<g id="stage-jaxpr" class="ai-stage on" tabindex="0" role="button" aria-label="jaxpr: Intermediate representation">
+  <rect x="531" y="172" width="176" height="46" rx="7" style="--kc:#22d3ee"/>
+  <rect x="531" y="172" width="4" height="46" rx="2" fill="#22d3ee"/>
+  <text x="545" y="191" class="ai-name">jaxpr</text>
+  <text x="545" y="207" class="ai-kind">intermediate representation</text>
+</g>
+<g id="stage-stablehlo" class="ai-stage on" tabindex="0" role="button" aria-label="StableHLO: Intermediate representation">
+  <rect x="531" y="250" width="176" height="46" rx="7" style="--kc:#22d3ee"/>
+  <rect x="531" y="250" width="4" height="46" rx="2" fill="#22d3ee"/>
+  <text x="545" y="269" class="ai-name">StableHLO</text>
+  <text x="545" y="285" class="ai-kind">intermediate representation</text>
+</g>
+<g id="stage-xla" class="ai-stage on" tabindex="0" role="button" aria-label="XLA compiler: Compiler">
+  <rect x="531" y="328" width="176" height="46" rx="7" style="--kc:#a78bfa"/>
+  <rect x="531" y="328" width="4" height="46" rx="2" fill="#a78bfa"/>
+  <text x="545" y="347" class="ai-name">XLA compiler</text>
+  <text x="545" y="363" class="ai-kind">compiler</text>
+</g>
+<g id="stage-llvm_ir" class="ai-stage on" tabindex="0" role="button" aria-label="LLVM IR: Intermediate representation">
+  <rect x="222" y="406" width="176" height="46" rx="7" style="--kc:#22d3ee"/>
+  <rect x="222" y="406" width="4" height="46" rx="2" fill="#22d3ee"/>
+  <text x="236" y="425" class="ai-name">LLVM IR</text>
+  <text x="236" y="441" class="ai-kind">intermediate representation</text>
+</g>
+<g id="stage-triton_ir" class="ai-stage on" tabindex="0" role="button" aria-label="Triton IR: Intermediate representation">
+  <rect x="428" y="406" width="176" height="46" rx="7" style="--kc:#22d3ee"/>
+  <rect x="428" y="406" width="4" height="46" rx="2" fill="#22d3ee"/>
+  <text x="442" y="425" class="ai-name">Triton IR</text>
+  <text x="442" y="441" class="ai-kind">intermediate representation</text>
+</g>
+<g id="stage-cuda_libs" class="ai-stage on" tabindex="0" role="button" aria-label="cuBLAS and cuDNN: Kernel">
+  <rect x="634" y="406" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="634" y="406" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="648" y="425" class="ai-name">cuBLAS and cuDNN</text>
+  <text x="648" y="441" class="ai-kind">kernel</text>
+</g>
+<g id="stage-ptx" class="ai-stage on" tabindex="0" role="button" aria-label="PTX: Intermediate representation">
+  <rect x="325" y="484" width="176" height="46" rx="7" style="--kc:#22d3ee"/>
+  <rect x="325" y="484" width="4" height="46" rx="2" fill="#22d3ee"/>
+  <text x="339" y="503" class="ai-name">PTX</text>
+  <text x="339" y="519" class="ai-kind">intermediate representation</text>
+</g>
+<g id="stage-tpu_backend" class="ai-stage" tabindex="0" role="button" aria-label="XLA TPU backend: Compiler">
+  <rect x="634" y="484" width="176" height="46" rx="7" style="--kc:#a78bfa"/>
+  <rect x="634" y="484" width="4" height="46" rx="2" fill="#a78bfa"/>
+  <text x="648" y="503" class="ai-name">XLA TPU backend</text>
+  <text x="648" y="519" class="ai-kind">compiler</text>
+</g>
+<g id="stage-executable" class="ai-stage on" tabindex="0" role="button" aria-label="Compiled executable: Hardware">
+  <rect x="428" y="562" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="428" y="562" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="442" y="581" class="ai-name">Compiled executable</text>
+  <text x="442" y="597" class="ai-kind">machine code</text>
+</g>
+<g id="stage-pjrt" class="ai-stage on" tabindex="0" role="button" aria-label="PJRT runtime: Runtime">
+  <rect x="119" y="640" width="176" height="46" rx="7" style="--kc:#93c5fd"/>
+  <rect x="119" y="640" width="4" height="46" rx="2" fill="#93c5fd"/>
+  <text x="133" y="659" class="ai-name">PJRT runtime</text>
+  <text x="133" y="675" class="ai-kind">runtime</text>
+</g>
+<g id="stage-cpu" class="ai-stage" tabindex="0" role="button" aria-label="CPU: Hardware">
+  <rect x="16" y="718" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="16" y="718" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="30" y="737" class="ai-name">CPU</text>
+  <text x="30" y="753" class="ai-kind">hardware</text>
+</g>
+<g id="stage-nvidia_gpu" class="ai-stage on" tabindex="0" role="button" aria-label="NVIDIA GPU: Hardware">
+  <rect x="273.5" y="718" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="273.5" y="718" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="287.5" y="737" class="ai-name">NVIDIA GPU</text>
+  <text x="287.5" y="753" class="ai-kind">hardware</text>
+</g>
+<g id="stage-tpu" class="ai-stage" tabindex="0" role="button" aria-label="TPU: Hardware">
+  <rect x="531" y="718" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="531" y="718" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="545" y="737" class="ai-name">TPU</text>
+  <text x="545" y="753" class="ai-kind">hardware</text>
+</g>
+</svg></div>
+      <aside class="ai-detail" aria-live="polite"><p class="ai-detail-hint">Select a stage or an arrow to see what it does and the source behind it.</p></aside>
+    </div>
+    <ul class="ai-legend" aria-label="Legend"><li><span class="ai-swatch" style="--kc:#60a5fa"></span>Your program</li><li><span class="ai-swatch" style="--kc:#93c5fd"></span>Runtime</li><li><span class="ai-swatch" style="--kc:#e3a008"></span>Framework core</li><li><span class="ai-swatch" style="--kc:#f472b6"></span>Kernel</li><li><span class="ai-swatch" style="--kc:#a78bfa"></span>Compiler</li><li><span class="ai-swatch" style="--kc:#22d3ee"></span>Intermediate representation</li><li><span class="ai-swatch" style="--kc:#4ade80"></span>Hardware</li></ul>
+  </section>
+
+  <h2 id="the-selected-path-step-by-step">The selected path, step by step</h2>
+  <ol class="ai-path-list">
+<li>Your JAX code <em>calls</em> JAX: Your functions call JAX's array operations.</li>
+<li>JAX <em>traces to</em> jaxpr: jax.jit runs the function once with tracers and records it as a jaxpr, specialized to the argument shapes and dtypes.</li>
+<li>jaxpr <em>lowers to</em> StableHLO: The jaxpr is lowered to StableHLO, the XLA compiler's input language.</li>
+<li>StableHLO <em>compiled by</em> XLA compiler: XLA compiles the whole StableHLO program, fusing operations and specializing it for the device.</li>
+<li>XLA compiler <em>emits</em> LLVM IR: XLA's CPU and GPU backends emit LLVM IR for the computation.</li>
+<li>XLA compiler <em>emits, for some kernels</em> Triton IR: XLA:GPU generates some kernels through Triton IR emitters.</li>
+<li>XLA compiler <em>calls, for common ops</em> cuBLAS and cuDNN: For each operation XLA chooses between generating code and calling a library; many common operations go to cuBLAS or cuDNN.</li>
+<li>LLVM IR <em>lowers to</em> PTX: On NVIDIA GPUs, LLVM's NVPTX backend turns the IR into PTX.</li>
+<li>Triton IR <em>lowers to</em> PTX: Triton-emitted kernels also end up as PTX.</li>
+<li>PTX <em>built into</em> Compiled executable: The generated kernels become part of the compiled executable.</li>
+<li>cuBLAS and cuDNN <em>called from</em> Compiled executable: Library calls are linked into the runtime and invoked by the executable.</li>
+<li>Compiled executable <em>run through</em> PJRT runtime: JAX runs the compiled executable on the device through the PJRT runtime API.</li>
+<li>PJRT runtime <em>launches on</em> NVIDIA GPU: PJRT's GPU implementation launches the work on the NVIDIA GPU.</li>
+  </ol>
+
+  <h2 id="where-python-ends">Where Python ends</h2>
+  <p>Without jit, Python stays in charge of every operation: each jnp call is dispatched to the device on its own, so the compiler never sees more than one operation at a time.</p>
+  <p>With <strong>jax.jit</strong>, Python runs once to trace the function. From then on the computation is a jaxpr, then a StableHLO program, then an executable that XLA built for the device, and later calls with the same shapes reuse the compiled executable without running the Python body again.</p>
+
+  <h2 id="how-this-differs-from-pytorch">How this differs from PyTorch</h2>
+  <p>Both JAX and PyTorch's torch.compile capture a whole computation and compile it, and both can end up in Triton and LLVM on NVIDIA GPUs. JAX hands its program to XLA through a stable intermediate language, StableHLO, and runs it through PJRT; torch.compile captures an FX graph and generates kernels with TorchInductor. See <a href="/ai/how-pytorch-runs">what happens when you run a PyTorch model</a>.</p>
+
+  <h2 id="every-stage">Every stage</h2>
+  <div class="ai-stage-list">
+<article class="ai-stage-detail" id="detail-stage-python_code" data-stage="python_code">
+<h3>Your JAX code</h3>
+<p class="ai-kind-tag" style="--kc:#60a5fa">programming language</p>
+<p>Python functions using jax.numpy and other JAX APIs.</p>
+<p class="ai-lineage">In the atlas: <a href="/languages/python">Python</a></p>
+<ul class="ai-sources"><li><blockquote>Without jit, JAX executes operations (think jnp function calls) one at a time, dispatching each to the device as it's encountered.</blockquote><a href="https://docs.jax.dev/en/latest/201/jit.html" rel="noopener noreferrer" target="_blank">Just-in-time compilation (JAX documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-jax" data-stage="jax">
+<h3>JAX</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>The JAX library. It traces and transforms your functions, and calls out to XLA and PJRT to compile for and run on devices.</p>
+
+<ul class="ai-sources"><li><blockquote>To manage hardware devices and memory, and for compilation to such devices, JAX calls out to the open XLA compiler and the PJRT runtime.</blockquote><a href="https://docs.jax.dev/en/latest/about.html" rel="noopener noreferrer" target="_blank">About the project (JAX documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-jaxpr" data-stage="jaxpr">
+<h3>jaxpr</h3>
+<p class="ai-kind-tag" style="--kc:#22d3ee">intermediate representation</p>
+<p>JAX's own intermediate language: the traced function as a list of primitive operations, specialized to the argument shapes and dtypes.</p>
+
+<ul class="ai-sources"><li><blockquote>as a jaxpr: a function in JAX's intermediate language.</blockquote><a href="https://docs.jax.dev/en/latest/201/aot.html" rel="noopener noreferrer" target="_blank">Ahead-of-time lowering and compilation (JAX documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-stablehlo" data-stage="stablehlo">
+<h3>StableHLO</h3>
+<p class="ai-kind-tag" style="--kc:#22d3ee">intermediate representation</p>
+<p>XLA's versioned input language, a portability layer between ML frameworks and compilers. It is an operation set, not a programming language.</p>
+
+<ul class="ai-sources"><li><blockquote>Lower this specialized, staged-out computation to the XLA compiler's input language, StableHLO.</blockquote><a href="https://docs.jax.dev/en/latest/201/aot.html" rel="noopener noreferrer" target="_blank">Ahead-of-time lowering and compilation (JAX documentation)</a> <span class="src-type">Project docs</span></li><li><blockquote>StableHLO defines a versioned operation set (HLO = high level operations) that provides a portability layer between ML frameworks and the compiler.</blockquote><a href="https://openxla.org/xla/architecture" rel="noopener noreferrer" target="_blank">XLA architecture (OpenXLA)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-xla" data-stage="xla">
+<h3>XLA compiler</h3>
+<p class="ai-kind-tag" style="--kc:#a78bfa">compiler</p>
+<p>OpenXLA's machine-learning compiler. It optimizes the whole program, fusing operations, and generates code for the target device.</p>
+
+<ul class="ai-sources"><li><blockquote>The XLA compiler takes model graphs from ML frameworks defined in StableHLO and compiles them into machine instructions for various architectures.</blockquote><a href="https://openxla.org/xla/architecture" rel="noopener noreferrer" target="_blank">XLA architecture (OpenXLA)</a> <span class="src-type">Project docs</span></li><li><blockquote>It traces the function to a jaxpr (How transformations work: tracing) and hands the whole jaxpr to XLA, which compiles it into a single optimized executable, fusing operations, eliminating temporary arrays, and specializing for your CPU, GPU, or TPU.</blockquote><a href="https://docs.jax.dev/en/latest/201/jit.html" rel="noopener noreferrer" target="_blank">Just-in-time compilation (JAX documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-llvm_ir" data-stage="llvm_ir">
+<h3>LLVM IR</h3>
+<p class="ai-kind-tag" style="--kc:#22d3ee">intermediate representation</p>
+<p>XLA's CPU and GPU backends emit LLVM IR and use LLVM to generate native code.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/llvm">LLVM</a></p>
+<ul class="ai-sources"><li><blockquote>The CPU and GPU backends included with XLA use LLVM for low-level IR, optimization, and code generation.</blockquote><a href="https://openxla.org/xla/architecture" rel="noopener noreferrer" target="_blank">XLA architecture (OpenXLA)</a> <span class="src-type">Project docs</span></li><li><blockquote>These backends emit the LLVM IR necessary to represent the HLO computation in an efficient manner, and then invoke LLVM to emit native code from this LLVM IR.</blockquote><a href="https://openxla.org/xla/architecture" rel="noopener noreferrer" target="_blank">XLA architecture (OpenXLA)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-triton_ir" data-stage="triton_ir">
+<h3>Triton IR</h3>
+<p class="ai-kind-tag" style="--kc:#22d3ee">intermediate representation</p>
+<p>For some GPU kernels, XLA:GPU emits Triton IR instead of going straight to LLVM.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/triton">Triton</a></p>
+<ul class="ai-sources"><li><blockquote>XLA:GPU uses a combination of &quot;native&quot; (PTX, via LLVM) emitters and TritonIR emitters to generate high-performance GPU kernels</blockquote><a href="https://openxla.org/xla/gpu_architecture" rel="noopener noreferrer" target="_blank">XLA:GPU architecture overview (OpenXLA)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-cuda_libs" data-stage="cuda_libs">
+<h3>cuBLAS and cuDNN</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel</p>
+<p>NVIDIA's libraries, which XLA:GPU calls for many common operations instead of generating code.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/cuda">CUDA</a></p>
+<ul class="ai-sources"><li><blockquote>For many common operations, XLA:GPU uses fast-performance libraries from NVIDIA, such as cuBLAS, cuDNN, and NCCL.</blockquote><a href="https://openxla.org/xla/gpu_architecture" rel="noopener noreferrer" target="_blank">XLA:GPU architecture overview (OpenXLA)</a> <span class="src-type">Project docs</span></li><li><blockquote>For every HLO instruction in the computation, XLA chooses whether to run it using a library linked into a runtime, or to codegen it to PTX.</blockquote><a href="https://openxla.org/xla/gpu_architecture" rel="noopener noreferrer" target="_blank">XLA:GPU architecture overview (OpenXLA)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-ptx" data-stage="ptx">
+<h3>PTX</h3>
+<p class="ai-kind-tag" style="--kc:#22d3ee">intermediate representation</p>
+<p>NVIDIA's virtual instruction set, produced through LLVM's NVPTX backend.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/cuda">CUDA</a></p>
+<ul class="ai-sources"><li><blockquote>The GPU backend currently supports NVIDIA GPUs via the LLVM NVPTX backend.</blockquote><a href="https://openxla.org/xla/architecture" rel="noopener noreferrer" target="_blank">XLA architecture (OpenXLA)</a> <span class="src-type">Project docs</span></li><li><blockquote>XLA:GPU uses a combination of &quot;native&quot; (PTX, via LLVM) emitters and TritonIR emitters to generate high-performance GPU kernels</blockquote><a href="https://openxla.org/xla/gpu_architecture" rel="noopener noreferrer" target="_blank">XLA:GPU architecture overview (OpenXLA)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-tpu_backend" data-stage="tpu_backend">
+<h3>XLA TPU backend</h3>
+<p class="ai-kind-tag" style="--kc:#a78bfa">compiler</p>
+<p>XLA compiles for TPUs too. How its TPU backend generates code is not covered by the open documentation cited here.</p>
+
+<ul class="ai-sources"><li><blockquote>Compile the lowered HLO program to produce an optimized executable for the target device (CPU, GPU, or TPU).</blockquote><a href="https://docs.jax.dev/en/latest/201/aot.html" rel="noopener noreferrer" target="_blank">Ahead-of-time lowering and compilation (JAX documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-executable" data-stage="executable">
+<h3>Compiled executable</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">machine code</p>
+<p>The optimized program for one device and one set of argument shapes. Later calls with the same shapes reuse it.</p>
+
+<ul class="ai-sources"><li><blockquote>Compile the lowered HLO program to produce an optimized executable for the target device (CPU, GPU, or TPU).</blockquote><a href="https://docs.jax.dev/en/latest/201/aot.html" rel="noopener noreferrer" target="_blank">Ahead-of-time lowering and compilation (JAX documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-pjrt" data-stage="pjrt">
+<h3>PJRT runtime</h3>
+<p class="ai-kind-tag" style="--kc:#93c5fd">runtime</p>
+<p>OpenXLA's uniform device API. Frameworks call PJRT; each device type implements it as a plug-in.</p>
+
+<ul class="ai-sources"><li><blockquote>PJRT C API is the uniform Device API that we want to add to the ML ecosystem.</blockquote><a href="https://openxla.org/xla/pjrt" rel="noopener noreferrer" target="_blank">PJRT: uniform device API (OpenXLA)</a> <span class="src-type">Project docs</span></li><li><blockquote>XLA aims for interoperability across accelerators (e.g. by ingesting StableHLO as input) and PJRT offers extensibility through a plug-in device API.</blockquote><a href="https://docs.jax.dev/en/latest/about.html" rel="noopener noreferrer" target="_blank">About the project (JAX documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-cpu" data-stage="cpu">
+<h3>CPU</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">hardware</p>
+<p>XLA's CPU backend supports several CPU instruction sets.</p>
+
+<ul class="ai-sources"><li><blockquote>The CPU backend supports multiple CPU ISAs.</blockquote><a href="https://openxla.org/xla/architecture" rel="noopener noreferrer" target="_blank">XLA architecture (OpenXLA)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-nvidia_gpu" data-stage="nvidia_gpu">
+<h3>NVIDIA GPU</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">hardware</p>
+<p>XLA reaches NVIDIA GPUs through LLVM's NVPTX backend and NVIDIA libraries.</p>
+
+<ul class="ai-sources"><li><blockquote>The GPU backend currently supports NVIDIA GPUs via the LLVM NVPTX backend.</blockquote><a href="https://openxla.org/xla/architecture" rel="noopener noreferrer" target="_blank">XLA architecture (OpenXLA)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-tpu" data-stage="tpu">
+<h3>TPU</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">hardware</p>
+<p>Google's Tensor Processing Unit, one of the devices JAX compiles for.</p>
+
+<ul class="ai-sources"><li><blockquote>Compile the lowered HLO program to produce an optimized executable for the target device (CPU, GPU, or TPU).</blockquote><a href="https://docs.jax.dev/en/latest/201/aot.html" rel="noopener noreferrer" target="_blank">Ahead-of-time lowering and compilation (JAX documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+  </div>
+
+  <h2 id="every-step">Every step</h2>
+  <div class="table-wrap"><table class="ai-steps">
+    <thead><tr><th>From</th><th>Step</th><th>To</th><th>When</th><th>What happens</th><th>Source</th></tr></thead>
+    <tbody>
+<tr id="detail-step-python_code--jax" data-step="python_code--jax" data-from="python_code" data-to="jax" data-when="{}" class="on">
+<td>Your JAX code</td><td>calls</td><td>JAX</td><td>any mode · any device</td><td>Your functions call JAX's array operations.</td><td><a href="https://docs.jax.dev/en/latest/201/jit.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-jax--pjrt" data-step="jax--pjrt" data-from="jax" data-to="pjrt" data-when="{&quot;mode&quot;:[&quot;eager&quot;]}">
+<td>JAX</td><td>dispatches each op through</td><td>PJRT runtime</td><td>Without jit · any device</td><td>Without jit, each operation is dispatched to the device on its own, as Python reaches it.</td><td><a href="https://docs.jax.dev/en/latest/201/jit.html" rel="noopener noreferrer" target="_blank">Project docs</a><br><a href="https://docs.jax.dev/en/latest/about.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-jax--jaxpr" data-step="jax--jaxpr" data-from="jax" data-to="jaxpr" data-when="{&quot;mode&quot;:[&quot;jit&quot;]}" class="on">
+<td>JAX</td><td>traces to</td><td>jaxpr</td><td>jax.jit · any device</td><td>jax.jit runs the function once with tracers and records it as a jaxpr, specialized to the argument shapes and dtypes.</td><td><a href="https://docs.jax.dev/en/latest/201/jit.html" rel="noopener noreferrer" target="_blank">Project docs</a><br><a href="https://docs.jax.dev/en/latest/201/aot.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-jaxpr--stablehlo" data-step="jaxpr--stablehlo" data-from="jaxpr" data-to="stablehlo" data-when="{&quot;mode&quot;:[&quot;jit&quot;]}" class="on">
+<td>jaxpr</td><td>lowers to</td><td>StableHLO</td><td>jax.jit · any device</td><td>The jaxpr is lowered to StableHLO, the XLA compiler's input language.</td><td><a href="https://docs.jax.dev/en/latest/201/aot.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-stablehlo--xla" data-step="stablehlo--xla" data-from="stablehlo" data-to="xla" data-when="{&quot;mode&quot;:[&quot;jit&quot;]}" class="on">
+<td>StableHLO</td><td>compiled by</td><td>XLA compiler</td><td>jax.jit · any device</td><td>XLA compiles the whole StableHLO program, fusing operations and specializing it for the device.</td><td><a href="https://openxla.org/xla/architecture" rel="noopener noreferrer" target="_blank">Project docs</a><br><a href="https://docs.jax.dev/en/latest/201/jit.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-xla--llvm_ir" data-step="xla--llvm_ir" data-from="xla" data-to="llvm_ir" data-when="{&quot;mode&quot;:[&quot;jit&quot;],&quot;device&quot;:[&quot;cpu&quot;,&quot;gpu&quot;]}" class="on">
+<td>XLA compiler</td><td>emits</td><td>LLVM IR</td><td>jax.jit · CPU or NVIDIA GPU</td><td>XLA's CPU and GPU backends emit LLVM IR for the computation.</td><td><a href="https://openxla.org/xla/architecture" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-xla--triton_ir" data-step="xla--triton_ir" data-from="xla" data-to="triton_ir" data-when="{&quot;mode&quot;:[&quot;jit&quot;],&quot;device&quot;:[&quot;gpu&quot;]}" class="on">
+<td>XLA compiler</td><td>emits, for some kernels</td><td>Triton IR</td><td>jax.jit · NVIDIA GPU</td><td>XLA:GPU generates some kernels through Triton IR emitters.</td><td><a href="https://openxla.org/xla/gpu_architecture" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-xla--cuda_libs" data-step="xla--cuda_libs" data-from="xla" data-to="cuda_libs" data-when="{&quot;mode&quot;:[&quot;jit&quot;],&quot;device&quot;:[&quot;gpu&quot;]}" class="on">
+<td>XLA compiler</td><td>calls, for common ops</td><td>cuBLAS and cuDNN</td><td>jax.jit · NVIDIA GPU</td><td>For each operation XLA chooses between generating code and calling a library; many common operations go to cuBLAS or cuDNN.</td><td><a href="https://openxla.org/xla/gpu_architecture" rel="noopener noreferrer" target="_blank">Project docs</a><br><a href="https://openxla.org/xla/gpu_architecture" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-xla--tpu_backend" data-step="xla--tpu_backend" data-from="xla" data-to="tpu_backend" data-when="{&quot;mode&quot;:[&quot;jit&quot;],&quot;device&quot;:[&quot;tpu&quot;]}">
+<td>XLA compiler</td><td>compiles with</td><td>XLA TPU backend</td><td>jax.jit · TPU</td><td>For TPUs, XLA's TPU backend produces the executable; its internals are not covered here.</td><td><a href="https://docs.jax.dev/en/latest/201/aot.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-llvm_ir--executable" data-step="llvm_ir--executable" data-from="llvm_ir" data-to="executable" data-when="{&quot;mode&quot;:[&quot;jit&quot;],&quot;device&quot;:[&quot;cpu&quot;]}">
+<td>LLVM IR</td><td>compiled to native code</td><td>Compiled executable</td><td>jax.jit · CPU</td><td>On CPU, LLVM turns the IR into native machine code.</td><td><a href="https://openxla.org/xla/architecture" rel="noopener noreferrer" target="_blank">Project docs</a><br><a href="https://openxla.org/xla/architecture" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-llvm_ir--ptx" data-step="llvm_ir--ptx" data-from="llvm_ir" data-to="ptx" data-when="{&quot;mode&quot;:[&quot;jit&quot;],&quot;device&quot;:[&quot;gpu&quot;]}" class="on">
+<td>LLVM IR</td><td>lowers to</td><td>PTX</td><td>jax.jit · NVIDIA GPU</td><td>On NVIDIA GPUs, LLVM's NVPTX backend turns the IR into PTX.</td><td><a href="https://openxla.org/xla/architecture" rel="noopener noreferrer" target="_blank">Project docs</a><br><a href="https://openxla.org/xla/gpu_architecture" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-triton_ir--ptx" data-step="triton_ir--ptx" data-from="triton_ir" data-to="ptx" data-when="{&quot;mode&quot;:[&quot;jit&quot;],&quot;device&quot;:[&quot;gpu&quot;]}" class="on">
+<td>Triton IR</td><td>lowers to</td><td>PTX</td><td>jax.jit · NVIDIA GPU</td><td>Triton-emitted kernels also end up as PTX.</td><td><a href="https://openxla.org/xla/gpu_architecture" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-ptx--executable" data-step="ptx--executable" data-from="ptx" data-to="executable" data-when="{&quot;mode&quot;:[&quot;jit&quot;],&quot;device&quot;:[&quot;gpu&quot;]}" class="on">
+<td>PTX</td><td>built into</td><td>Compiled executable</td><td>jax.jit · NVIDIA GPU</td><td>The generated kernels become part of the compiled executable.</td><td><a href="https://docs.jax.dev/en/latest/201/aot.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-cuda_libs--executable" data-step="cuda_libs--executable" data-from="cuda_libs" data-to="executable" data-when="{&quot;mode&quot;:[&quot;jit&quot;],&quot;device&quot;:[&quot;gpu&quot;]}" class="on">
+<td>cuBLAS and cuDNN</td><td>called from</td><td>Compiled executable</td><td>jax.jit · NVIDIA GPU</td><td>Library calls are linked into the runtime and invoked by the executable.</td><td><a href="https://openxla.org/xla/gpu_architecture" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-tpu_backend--executable" data-step="tpu_backend--executable" data-from="tpu_backend" data-to="executable" data-when="{&quot;mode&quot;:[&quot;jit&quot;],&quot;device&quot;:[&quot;tpu&quot;]}">
+<td>XLA TPU backend</td><td>produces</td><td>Compiled executable</td><td>jax.jit · TPU</td><td>The TPU backend produces the executable for the TPU.</td><td><a href="https://docs.jax.dev/en/latest/201/aot.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-executable--pjrt" data-step="executable--pjrt" data-from="executable" data-to="pjrt" data-when="{&quot;mode&quot;:[&quot;jit&quot;]}" class="on">
+<td>Compiled executable</td><td>run through</td><td>PJRT runtime</td><td>jax.jit · any device</td><td>JAX runs the compiled executable on the device through the PJRT runtime API.</td><td><a href="https://openxla.org/xla/gpu_architecture" rel="noopener noreferrer" target="_blank">Project docs</a><br><a href="https://openxla.org/xla/pjrt" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-pjrt--cpu" data-step="pjrt--cpu" data-from="pjrt" data-to="cpu" data-when="{&quot;device&quot;:[&quot;cpu&quot;]}">
+<td>PJRT runtime</td><td>runs on</td><td>CPU</td><td>any mode · CPU</td><td>PJRT's CPU implementation runs the work on the host CPU.</td><td><a href="https://openxla.org/xla/pjrt" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-pjrt--nvidia_gpu" data-step="pjrt--nvidia_gpu" data-from="pjrt" data-to="nvidia_gpu" data-when="{&quot;device&quot;:[&quot;gpu&quot;]}" class="on">
+<td>PJRT runtime</td><td>launches on</td><td>NVIDIA GPU</td><td>any mode · NVIDIA GPU</td><td>PJRT's GPU implementation launches the work on the NVIDIA GPU.</td><td><a href="https://openxla.org/xla/pjrt" rel="noopener noreferrer" target="_blank">Project docs</a><br><a href="https://openxla.org/xla/architecture" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-pjrt--tpu" data-step="pjrt--tpu" data-from="pjrt" data-to="tpu" data-when="{&quot;device&quot;:[&quot;tpu&quot;]}">
+<td>PJRT runtime</td><td>launches on</td><td>TPU</td><td>any mode · TPU</td><td>PJRT's TPU implementation runs the work on the TPU.</td><td><a href="https://openxla.org/xla/pjrt" rel="noopener noreferrer" target="_blank">Project docs</a><br><a href="https://docs.jax.dev/en/latest/201/aot.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="what-this-does-not-show">What this does not show</h2>
+  <p>Documented paths for one JAX program run without jit and with jax.jit, on a CPU, an NVIDIA GPU, or a TPU. Multi-device sharding, Pallas kernels, AMD GPUs, PJRT plugins for other hardware, and the internals of XLA's TPU backend are out of scope. XLA's TPU backend is not described in the open-source documentation cited here, so this page shows that XLA compiles for TPUs without showing how.</p>
+
+  <h2 id="how-this-page-is-checked">How this page is checked</h2>
+  <p>Every stage and step above quotes the source that supports it. The quotes were checked against the JAX documentation (About, Just-in-time compilation, Ahead-of-time lowering) and the OpenXLA documentation (XLA architecture, XLA:GPU architecture, PJRT) on 2026-11-11. The data is a <a href="/dataset/ai/how-jax-runs.json">versioned JSON file</a> under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. Found something wrong or out of date? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
+  <p>What these tools are written in is in the main atlas: <a href="/languages/python">Python</a>, <a href="/tools/llvm">LLVM</a>, <a href="/tools/triton">Triton</a>, <a href="/tools/cuda">CUDA</a>. More execution paths: <a href="/ai/how-llama-cpp-runs">How Does llama.cpp Run a Model on Your Hardware</a>, <a href="/ai/how-pytorch-runs">What Actually Happens When You Run a PyTorch Model</a>.</p>
+
+  <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>
+</main>
+<footer class="seo-footer-rich">
+  <div data-nosnippet>
+  <div class="footer-grid">
+    <div class="footer-col">
+      <span class="footer-col-head">Explore</span>
+      <a href="/programming-language-graph">Programming language graph</a>
+      <a href="/rankings/most-influential">Most influential languages</a>
+      <a href="/rss.xml">RSS feed</a>
+      <a href="/embed-kit">Embed the graph</a>
+      <a href="/guides/programming-language-family-tree">Language family tree</a>
+      <a href="/programming-language-evolution">Evolution timeline</a>
+      <a href="/what-are-programming-languages-written-in">What languages are written in</a>
+      <a href="/explore">Interactive Graph</a>
+      <a href="/dataset">Dataset</a>
+      <a href="/directory">Site Directory</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Popular Languages</span>
+      <a href="/languages/python">Python</a>
+      <a href="/languages/javascript">JavaScript</a>
+      <a href="/languages/rust">Rust</a>
+      <a href="/languages/go">Go</a>
+      <a href="/languages/java">Java</a>
+      <a href="/languages/c">C</a>
+      <a href="/languages/cxx">C++</a>
+      <a href="/languages/typescript">TypeScript</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Questions</span>
+      <a href="/questions/what-is-python-written-in">What is Python written in?</a>
+      <a href="/questions/what-is-javascript-written-in">What is JavaScript written in?</a>
+      <a href="/questions/what-is-rust-written-in">What is Rust written in?</a>
+      <a href="/questions/what-is-go-written-in">What is Go written in?</a>
+      <a href="/questions/what-is-compiler-bootstrapping">What is compiler bootstrapping?</a>
+      <a href="/questions">All questions &rarr;</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Tools &amp; Guides</span>
+      <a href="/tools/v8">V8</a>
+      <a href="/tools/llvm">LLVM</a>
+      <a href="/tools/gcc">GCC</a>
+      <a href="/tools/ghc">GHC</a>
+      <a href="/guides">All guides</a>
+      <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </div>
+  <p class="footer-note">The Language Lineage dataset is meticulously curated and verified by human researchers. We use AI agents to assist with large-scale data gathering and modeling, but every implementation fact is manually reviewed for accuracy. Spot an error? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue on GitHub</a> and it gets fixed. <a href="/how-it-works">Learn how it works &rarr;</a></p>
+  <div class="footer-bottom">Made with <span style="color:#fb7185">❤️</span> by <a href="https://github.com/sanketmuchhala" rel="noopener noreferrer">Sanket Muchhala</a> &middot; <a href="/">Language Lineage</a></div>
+  </div>
+</footer>
+</body>
+</html>

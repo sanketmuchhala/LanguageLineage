@@ -25,7 +25,8 @@ function toText(html: string): string {
     .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ');
 }
 
-// GitHub file pages render client-side; fetch the raw file instead.
+// GitHub file pages render client-side; fetch the raw file instead. Accept-Language is set
+// because some doc sites (openxla.org) otherwise serve a random machine translation.
 function fetchUrl(url: string): string {
   const m = url.match(/^https:\/\/github\.com\/([^/]+\/[^/]+)\/blob\/(.+)$/);
   return m ? `https://raw.githubusercontent.com/${m[1]}/${m[2]}` : url;
@@ -47,7 +48,7 @@ for (const [id, set] of quotes) {
   const src = { url: id };
   let text = '';
   try {
-    const res = await fetch(fetchUrl(src.url), { headers: { 'User-Agent': 'LanguageLineage quote check (+https://www.languagelineage.org)' }, redirect: 'follow' });
+    const res = await fetch(fetchUrl(src.url), { headers: { 'User-Agent': 'LanguageLineage quote check (+https://www.languagelineage.org)', 'Accept-Language': 'en' }, redirect: 'follow' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     text = norm(toText(await res.text()));
   } catch (err) {

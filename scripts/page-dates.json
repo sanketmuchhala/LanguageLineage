@@ -3,12 +3,16 @@
     "hash": "",
     "lastmod": "2026-07-02"
   },
+  "/ai/how-jax-runs": {
+    "hash": "e126dd615d093708",
+    "lastmod": "2026-11-11"
+  },
   "/ai/how-llama-cpp-runs": {
-    "hash": "0e4c0d8583c4fa5b",
+    "hash": "22c50ad5c0f5462d",
     "lastmod": "2026-11-11"
   },
   "/ai/how-pytorch-runs": {
-    "hash": "549b7b1a45f0d364",
+    "hash": "d6955af8435db44c",
     "lastmod": "2026-11-11"
   },
   "/compiler-runtime-bootstrap": {
@@ -528,7 +532,7 @@
     "lastmod": "2026-11-10"
   },
   "/languages/python": {
-    "hash": "8638383a0f4b5847",
+    "hash": "9891774b48a6e2fa",
     "lastmod": "2026-11-11"
   },
   "/languages/qsharp": {
@@ -1280,7 +1284,7 @@
     "lastmod": "2026-11-11"
   },
   "/tools/llvm": {
-    "hash": "d7f99591c7162165",
+    "hash": "6ce0770fd47fb15d",
     "lastmod": "2026-11-11"
   },
   "/tools/moarvm": {
@@ -1320,7 +1324,7 @@
     "lastmod": "2026-11-10"
   },
   "/tools/triton": {
-    "hash": "2eb5986a2ced44db",
+    "hash": "f675e4ac4ca66658",
     "lastmod": "2026-11-11"
   },
   "/tools/v8": {

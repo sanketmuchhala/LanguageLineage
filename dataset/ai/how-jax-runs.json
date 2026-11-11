@@ -1,0 +1,804 @@
+{
+  "version": "1.0",
+  "slug": "how-jax-runs",
+  "title": "What Happens When You Run JAX? jit, XLA, StableHLO, PJRT | Language Lineage",
+  "h1": "What Actually Happens When You Run JAX Code?",
+  "description": "Trace JAX from Python to the device: op-by-op dispatch vs jax.jit, through jaxpr, StableHLO, the XLA compiler, LLVM or Triton, and the PJRT runtime, with sources.",
+  "og_subtitle": "Python → jaxpr → StableHLO → XLA → LLVM / Triton → PJRT → CPU · GPU · TPU",
+  "verified_on": "2026-11-11",
+  "verified_against": "the JAX documentation (About, Just-in-time compilation, Ahead-of-time lowering) and the OpenXLA documentation (XLA architecture, XLA:GPU architecture, PJRT)",
+  "scope": "Documented paths for one JAX program run without jit and with jax.jit, on a CPU, an NVIDIA GPU, or a TPU. Multi-device sharding, Pallas kernels, AMD GPUs, PJRT plugins for other hardware, and the internals of XLA's TPU backend are out of scope.",
+  "answer": "Without **jax.jit**, JAX dispatches each operation to the device one at a time, as Python reaches it. With **jax.jit**, JAX traces your function into a **jaxpr**, lowers it to **StableHLO**, and hands the whole program to the **XLA** compiler, which fuses operations and compiles them for the target device. On CPUs and NVIDIA GPUs XLA generates code through **LLVM** (PTX for NVIDIA), uses **Triton** for some GPU kernels and NVIDIA libraries such as cuBLAS for others. Either way, JAX runs the result on the device through the **PJRT** runtime.",
+  "status_template": "Showing {mode} on {device}",
+  "dimensions": [
+    {
+      "id": "mode",
+      "legend": "Mode",
+      "default": "jit",
+      "options": [
+        {
+          "value": "eager",
+          "label": "Without jit",
+          "phrase": "op-by-op execution (no jit)"
+        },
+        {
+          "value": "jit",
+          "label": "jax.jit",
+          "phrase": "jax.jit"
+        }
+      ]
+    },
+    {
+      "id": "device",
+      "legend": "Device",
+      "default": "gpu",
+      "options": [
+        {
+          "value": "cpu",
+          "label": "CPU",
+          "phrase": "a CPU"
+        },
+        {
+          "value": "gpu",
+          "label": "NVIDIA GPU",
+          "phrase": "an NVIDIA GPU"
+        },
+        {
+          "value": "tpu",
+          "label": "TPU",
+          "phrase": "a TPU"
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "heading": "Where Python ends",
+      "paragraphs": [
+        "Without jit, Python stays in charge of every operation: each jnp call is dispatched to the device on its own, so the compiler never sees more than one operation at a time.",
+        "With **jax.jit**, Python runs once to trace the function. From then on the computation is a jaxpr, then a StableHLO program, then an executable that XLA built for the device, and later calls with the same shapes reuse the compiled executable without running the Python body again."
+      ]
+    },
+    {
+      "heading": "How this differs from PyTorch",
+      "paragraphs": [
+        "Both JAX and PyTorch's torch.compile capture a whole computation and compile it, and both can end up in Triton and LLVM on NVIDIA GPUs. JAX hands its program to XLA through a stable intermediate language, StableHLO, and runs it through PJRT; torch.compile captures an FX graph and generates kernels with TorchInductor. See [what happens when you run a PyTorch model](/ai/how-pytorch-runs)."
+      ]
+    }
+  ],
+  "out_of_scope_note": "XLA's TPU backend is not described in the open-source documentation cited here, so this page shows that XLA compiles for TPUs without showing how.",
+  "link_from": [
+    "lang:python",
+    "tool:llvm",
+    "tool:triton"
+  ],
+  "sources": {
+    "jax_about": {
+      "url": "https://docs.jax.dev/en/latest/about.html",
+      "title": "About the project (JAX documentation)"
+    },
+    "jax_jit": {
+      "url": "https://docs.jax.dev/en/latest/201/jit.html",
+      "title": "Just-in-time compilation (JAX documentation)"
+    },
+    "jax_aot": {
+      "url": "https://docs.jax.dev/en/latest/201/aot.html",
+      "title": "Ahead-of-time lowering and compilation (JAX documentation)"
+    },
+    "xla_arch": {
+      "url": "https://openxla.org/xla/architecture",
+      "title": "XLA architecture (OpenXLA)"
+    },
+    "xla_gpu": {
+      "url": "https://openxla.org/xla/gpu_architecture",
+      "title": "XLA:GPU architecture overview (OpenXLA)"
+    },
+    "pjrt": {
+      "url": "https://openxla.org/xla/pjrt",
+      "title": "PJRT: uniform device API (OpenXLA)"
+    }
+  },
+  "stages": [
+    {
+      "id": "python_code",
+      "name": "Your JAX code",
+      "kind": "programming_language",
+      "layer": "python",
+      "lineage_id": "lang:python",
+      "pos": [
+        1.5,
+        0
+      ],
+      "summary": "Python functions using jax.numpy and other JAX APIs.",
+      "evidence": [
+        {
+          "source": "jax_jit",
+          "quote": "Without jit, JAX executes operations (think jnp function calls) one at a time, dispatching each to the device as it's encountered."
+        }
+      ]
+    },
+    {
+      "id": "jax",
+      "name": "JAX",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": null,
+      "pos": [
+        1.5,
+        1
+      ],
+      "summary": "The JAX library. It traces and transforms your functions, and calls out to XLA and PJRT to compile for and run on devices.",
+      "evidence": [
+        {
+          "source": "jax_about",
+          "quote": "To manage hardware devices and memory, and for compilation to such devices, JAX calls out to the open XLA compiler and the PJRT runtime."
+        }
+      ]
+    },
+    {
+      "id": "jaxpr",
+      "name": "jaxpr",
+      "kind": "intermediate_representation",
+      "layer": "compiler",
+      "lineage_id": null,
+      "pos": [
+        2.5,
+        2
+      ],
+      "summary": "JAX's own intermediate language: the traced function as a list of primitive operations, specialized to the argument shapes and dtypes.",
+      "evidence": [
+        {
+          "source": "jax_aot",
+          "quote": "as a jaxpr: a function in JAX's intermediate language."
+        }
+      ]
+    },
+    {
+      "id": "stablehlo",
+      "name": "StableHLO",
+      "kind": "intermediate_representation",
+      "layer": "compiler",
+      "lineage_id": null,
+      "pos": [
+        2.5,
+        3
+      ],
+      "summary": "XLA's versioned input language, a portability layer between ML frameworks and compilers. It is an operation set, not a programming language.",
+      "evidence": [
+        {
+          "source": "jax_aot",
+          "quote": "Lower this specialized, staged-out computation to the XLA compiler's input language, StableHLO."
+        },
+        {
+          "source": "xla_arch",
+          "quote": "StableHLO defines a versioned operation set (HLO = high level operations) that provides a portability layer between ML frameworks and the compiler."
+        }
+      ]
+    },
+    {
+      "id": "xla",
+      "name": "XLA compiler",
+      "kind": "compiler",
+      "layer": "compiler",
+      "lineage_id": null,
+      "pos": [
+        2.5,
+        4
+      ],
+      "summary": "OpenXLA's machine-learning compiler. It optimizes the whole program, fusing operations, and generates code for the target device.",
+      "evidence": [
+        {
+          "source": "xla_arch",
+          "quote": "The XLA compiler takes model graphs from ML frameworks defined in StableHLO and compiles them into machine instructions for various architectures."
+        },
+        {
+          "source": "jax_jit",
+          "quote": "It traces the function to a jaxpr (How transformations work: tracing) and hands the whole jaxpr to XLA, which compiles it into a single optimized executable, fusing operations, eliminating temporary arrays, and specializing for your CPU, GPU, or TPU."
+        }
+      ]
+    },
+    {
+      "id": "llvm_ir",
+      "name": "LLVM IR",
+      "kind": "intermediate_representation",
+      "layer": "compiler",
+      "lineage_id": "tool:llvm",
+      "pos": [
+        1,
+        5
+      ],
+      "summary": "XLA's CPU and GPU backends emit LLVM IR and use LLVM to generate native code.",
+      "evidence": [
+        {
+          "source": "xla_arch",
+          "quote": "The CPU and GPU backends included with XLA use LLVM for low-level IR, optimization, and code generation."
+        },
+        {
+          "source": "xla_arch",
+          "quote": "These backends emit the LLVM IR necessary to represent the HLO computation in an efficient manner, and then invoke LLVM to emit native code from this LLVM IR."
+        }
+      ]
+    },
+    {
+      "id": "triton_ir",
+      "name": "Triton IR",
+      "kind": "intermediate_representation",
+      "layer": "compiler",
+      "lineage_id": "tool:triton",
+      "pos": [
+        2,
+        5
+      ],
+      "summary": "For some GPU kernels, XLA:GPU emits Triton IR instead of going straight to LLVM.",
+      "evidence": [
+        {
+          "source": "xla_gpu",
+          "quote": "XLA:GPU uses a combination of \"native\" (PTX, via LLVM) emitters and TritonIR emitters to generate high-performance GPU kernels"
+        }
+      ]
+    },
+    {
+      "id": "cuda_libs",
+      "name": "cuBLAS and cuDNN",
+      "kind": "kernel",
+      "layer": "kernel",
+      "lineage_id": "tool:cuda",
+      "pos": [
+        3,
+        5
+      ],
+      "summary": "NVIDIA's libraries, which XLA:GPU calls for many common operations instead of generating code.",
+      "evidence": [
+        {
+          "source": "xla_gpu",
+          "quote": "For many common operations, XLA:GPU uses fast-performance libraries from NVIDIA, such as cuBLAS, cuDNN, and NCCL."
+        },
+        {
+          "source": "xla_gpu",
+          "quote": "For every HLO instruction in the computation, XLA chooses whether to run it using a library linked into a runtime, or to codegen it to PTX."
+        }
+      ]
+    },
+    {
+      "id": "ptx",
+      "name": "PTX",
+      "kind": "intermediate_representation",
+      "layer": "compiler",
+      "lineage_id": "tool:cuda",
+      "pos": [
+        1.5,
+        6
+      ],
+      "summary": "NVIDIA's virtual instruction set, produced through LLVM's NVPTX backend.",
+      "evidence": [
+        {
+          "source": "xla_arch",
+          "quote": "The GPU backend currently supports NVIDIA GPUs via the LLVM NVPTX backend."
+        },
+        {
+          "source": "xla_gpu",
+          "quote": "XLA:GPU uses a combination of \"native\" (PTX, via LLVM) emitters and TritonIR emitters to generate high-performance GPU kernels"
+        }
+      ]
+    },
+    {
+      "id": "tpu_backend",
+      "name": "XLA TPU backend",
+      "kind": "compiler",
+      "layer": "compiler",
+      "lineage_id": null,
+      "pos": [
+        3,
+        6
+      ],
+      "summary": "XLA compiles for TPUs too. How its TPU backend generates code is not covered by the open documentation cited here.",
+      "evidence": [
+        {
+          "source": "jax_aot",
+          "quote": "Compile the lowered HLO program to produce an optimized executable for the target device (CPU, GPU, or TPU)."
+        }
+      ]
+    },
+    {
+      "id": "executable",
+      "name": "Compiled executable",
+      "kind": "machine_code",
+      "layer": "hardware",
+      "lineage_id": null,
+      "pos": [
+        2,
+        7
+      ],
+      "summary": "The optimized program for one device and one set of argument shapes. Later calls with the same shapes reuse it.",
+      "evidence": [
+        {
+          "source": "jax_aot",
+          "quote": "Compile the lowered HLO program to produce an optimized executable for the target device (CPU, GPU, or TPU)."
+        }
+      ]
+    },
+    {
+      "id": "pjrt",
+      "name": "PJRT runtime",
+      "kind": "runtime",
+      "layer": "framework",
+      "lineage_id": null,
+      "pos": [
+        0.5,
+        8
+      ],
+      "summary": "OpenXLA's uniform device API. Frameworks call PJRT; each device type implements it as a plug-in.",
+      "evidence": [
+        {
+          "source": "pjrt",
+          "quote": "PJRT C API is the uniform Device API that we want to add to the ML ecosystem."
+        },
+        {
+          "source": "jax_about",
+          "quote": "XLA aims for interoperability across accelerators (e.g. by ingesting StableHLO as input) and PJRT offers extensibility through a plug-in device API."
+        }
+      ]
+    },
+    {
+      "id": "cpu",
+      "name": "CPU",
+      "kind": "hardware",
+      "layer": "hardware",
+      "lineage_id": null,
+      "pos": [
+        0,
+        9
+      ],
+      "summary": "XLA's CPU backend supports several CPU instruction sets.",
+      "evidence": [
+        {
+          "source": "xla_arch",
+          "quote": "The CPU backend supports multiple CPU ISAs."
+        }
+      ]
+    },
+    {
+      "id": "nvidia_gpu",
+      "name": "NVIDIA GPU",
+      "kind": "hardware",
+      "layer": "hardware",
+      "lineage_id": null,
+      "pos": [
+        1.25,
+        9
+      ],
+      "summary": "XLA reaches NVIDIA GPUs through LLVM's NVPTX backend and NVIDIA libraries.",
+      "evidence": [
+        {
+          "source": "xla_arch",
+          "quote": "The GPU backend currently supports NVIDIA GPUs via the LLVM NVPTX backend."
+        }
+      ]
+    },
+    {
+      "id": "tpu",
+      "name": "TPU",
+      "kind": "hardware",
+      "layer": "hardware",
+      "lineage_id": null,
+      "pos": [
+        2.5,
+        9
+      ],
+      "summary": "Google's Tensor Processing Unit, one of the devices JAX compiles for.",
+      "evidence": [
+        {
+          "source": "jax_aot",
+          "quote": "Compile the lowered HLO program to produce an optimized executable for the target device (CPU, GPU, or TPU)."
+        }
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "from": "python_code",
+      "to": "jax",
+      "kind": "calls",
+      "when": {},
+      "label": "calls",
+      "explanation": "Your functions call JAX's array operations.",
+      "evidence": [
+        {
+          "source": "jax_jit",
+          "quote": "Without jit, JAX executes operations (think jnp function calls) one at a time, dispatching each to the device as it's encountered."
+        }
+      ]
+    },
+    {
+      "from": "jax",
+      "to": "pjrt",
+      "kind": "dispatches_to",
+      "when": {
+        "mode": [
+          "eager"
+        ]
+      },
+      "label": "dispatches each op through",
+      "explanation": "Without jit, each operation is dispatched to the device on its own, as Python reaches it.",
+      "evidence": [
+        {
+          "source": "jax_jit",
+          "quote": "Without jit, JAX executes operations (think jnp function calls) one at a time, dispatching each to the device as it's encountered."
+        },
+        {
+          "source": "jax_about",
+          "quote": "To manage hardware devices and memory, and for compilation to such devices, JAX calls out to the open XLA compiler and the PJRT runtime."
+        }
+      ]
+    },
+    {
+      "from": "jax",
+      "to": "jaxpr",
+      "kind": "captures",
+      "when": {
+        "mode": [
+          "jit"
+        ]
+      },
+      "label": "traces to",
+      "explanation": "jax.jit runs the function once with tracers and records it as a jaxpr, specialized to the argument shapes and dtypes.",
+      "evidence": [
+        {
+          "source": "jax_jit",
+          "quote": "It traces the function to a jaxpr (How transformations work: tracing) and hands the whole jaxpr to XLA, which compiles it into a single optimized executable, fusing operations, eliminating temporary arrays, and specializing for your CPU, GPU, or TPU."
+        },
+        {
+          "source": "jax_aot",
+          "quote": "as a jaxpr: a function in JAX's intermediate language."
+        }
+      ]
+    },
+    {
+      "from": "jaxpr",
+      "to": "stablehlo",
+      "kind": "lowers_to",
+      "when": {
+        "mode": [
+          "jit"
+        ]
+      },
+      "label": "lowers to",
+      "explanation": "The jaxpr is lowered to StableHLO, the XLA compiler's input language.",
+      "evidence": [
+        {
+          "source": "jax_aot",
+          "quote": "Lower this specialized, staged-out computation to the XLA compiler's input language, StableHLO."
+        }
+      ]
+    },
+    {
+      "from": "stablehlo",
+      "to": "xla",
+      "kind": "compiled_by",
+      "when": {
+        "mode": [
+          "jit"
+        ]
+      },
+      "label": "compiled by",
+      "explanation": "XLA compiles the whole StableHLO program, fusing operations and specializing it for the device.",
+      "evidence": [
+        {
+          "source": "xla_arch",
+          "quote": "The XLA compiler takes model graphs from ML frameworks defined in StableHLO and compiles them into machine instructions for various architectures."
+        },
+        {
+          "source": "jax_jit",
+          "quote": "It traces the function to a jaxpr (How transformations work: tracing) and hands the whole jaxpr to XLA, which compiles it into a single optimized executable, fusing operations, eliminating temporary arrays, and specializing for your CPU, GPU, or TPU."
+        }
+      ]
+    },
+    {
+      "from": "xla",
+      "to": "llvm_ir",
+      "kind": "generates",
+      "when": {
+        "mode": [
+          "jit"
+        ],
+        "device": [
+          "cpu",
+          "gpu"
+        ]
+      },
+      "label": "emits",
+      "explanation": "XLA's CPU and GPU backends emit LLVM IR for the computation.",
+      "evidence": [
+        {
+          "source": "xla_arch",
+          "quote": "These backends emit the LLVM IR necessary to represent the HLO computation in an efficient manner, and then invoke LLVM to emit native code from this LLVM IR."
+        }
+      ]
+    },
+    {
+      "from": "xla",
+      "to": "triton_ir",
+      "kind": "generates",
+      "when": {
+        "mode": [
+          "jit"
+        ],
+        "device": [
+          "gpu"
+        ]
+      },
+      "label": "emits, for some kernels",
+      "explanation": "XLA:GPU generates some kernels through Triton IR emitters.",
+      "evidence": [
+        {
+          "source": "xla_gpu",
+          "quote": "XLA:GPU uses a combination of \"native\" (PTX, via LLVM) emitters and TritonIR emitters to generate high-performance GPU kernels"
+        }
+      ]
+    },
+    {
+      "from": "xla",
+      "to": "cuda_libs",
+      "kind": "calls",
+      "when": {
+        "mode": [
+          "jit"
+        ],
+        "device": [
+          "gpu"
+        ]
+      },
+      "label": "calls, for common ops",
+      "explanation": "For each operation XLA chooses between generating code and calling a library; many common operations go to cuBLAS or cuDNN.",
+      "evidence": [
+        {
+          "source": "xla_gpu",
+          "quote": "For every HLO instruction in the computation, XLA chooses whether to run it using a library linked into a runtime, or to codegen it to PTX."
+        },
+        {
+          "source": "xla_gpu",
+          "quote": "For many common operations, XLA:GPU uses fast-performance libraries from NVIDIA, such as cuBLAS, cuDNN, and NCCL."
+        }
+      ]
+    },
+    {
+      "from": "xla",
+      "to": "tpu_backend",
+      "kind": "generates",
+      "when": {
+        "mode": [
+          "jit"
+        ],
+        "device": [
+          "tpu"
+        ]
+      },
+      "label": "compiles with",
+      "explanation": "For TPUs, XLA's TPU backend produces the executable; its internals are not covered here.",
+      "evidence": [
+        {
+          "source": "jax_aot",
+          "quote": "Compile the lowered HLO program to produce an optimized executable for the target device (CPU, GPU, or TPU)."
+        }
+      ]
+    },
+    {
+      "from": "llvm_ir",
+      "to": "executable",
+      "kind": "lowers_to",
+      "when": {
+        "mode": [
+          "jit"
+        ],
+        "device": [
+          "cpu"
+        ]
+      },
+      "label": "compiled to native code",
+      "explanation": "On CPU, LLVM turns the IR into native machine code.",
+      "evidence": [
+        {
+          "source": "xla_arch",
+          "quote": "These backends emit the LLVM IR necessary to represent the HLO computation in an efficient manner, and then invoke LLVM to emit native code from this LLVM IR."
+        },
+        {
+          "source": "xla_arch",
+          "quote": "The CPU backend supports multiple CPU ISAs."
+        }
+      ]
+    },
+    {
+      "from": "llvm_ir",
+      "to": "ptx",
+      "kind": "lowers_to",
+      "when": {
+        "mode": [
+          "jit"
+        ],
+        "device": [
+          "gpu"
+        ]
+      },
+      "label": "lowers to",
+      "explanation": "On NVIDIA GPUs, LLVM's NVPTX backend turns the IR into PTX.",
+      "evidence": [
+        {
+          "source": "xla_arch",
+          "quote": "The GPU backend currently supports NVIDIA GPUs via the LLVM NVPTX backend."
+        },
+        {
+          "source": "xla_gpu",
+          "quote": "XLA:GPU uses a combination of \"native\" (PTX, via LLVM) emitters and TritonIR emitters to generate high-performance GPU kernels"
+        }
+      ]
+    },
+    {
+      "from": "triton_ir",
+      "to": "ptx",
+      "kind": "lowers_to",
+      "when": {
+        "mode": [
+          "jit"
+        ],
+        "device": [
+          "gpu"
+        ]
+      },
+      "label": "lowers to",
+      "explanation": "Triton-emitted kernels also end up as PTX.",
+      "evidence": [
+        {
+          "source": "xla_gpu",
+          "quote": "XLA:GPU uses a combination of \"native\" (PTX, via LLVM) emitters and TritonIR emitters to generate high-performance GPU kernels"
+        }
+      ]
+    },
+    {
+      "from": "ptx",
+      "to": "executable",
+      "kind": "builds",
+      "when": {
+        "mode": [
+          "jit"
+        ],
+        "device": [
+          "gpu"
+        ]
+      },
+      "label": "built into",
+      "explanation": "The generated kernels become part of the compiled executable.",
+      "evidence": [
+        {
+          "source": "jax_aot",
+          "quote": "Compile the lowered HLO program to produce an optimized executable for the target device (CPU, GPU, or TPU)."
+        }
+      ]
+    },
+    {
+      "from": "cuda_libs",
+      "to": "executable",
+      "kind": "calls",
+      "when": {
+        "mode": [
+          "jit"
+        ],
+        "device": [
+          "gpu"
+        ]
+      },
+      "label": "called from",
+      "explanation": "Library calls are linked into the runtime and invoked by the executable.",
+      "evidence": [
+        {
+          "source": "xla_gpu",
+          "quote": "For every HLO instruction in the computation, XLA chooses whether to run it using a library linked into a runtime, or to codegen it to PTX."
+        }
+      ]
+    },
+    {
+      "from": "tpu_backend",
+      "to": "executable",
+      "kind": "builds",
+      "when": {
+        "mode": [
+          "jit"
+        ],
+        "device": [
+          "tpu"
+        ]
+      },
+      "label": "produces",
+      "explanation": "The TPU backend produces the executable for the TPU.",
+      "evidence": [
+        {
+          "source": "jax_aot",
+          "quote": "Compile the lowered HLO program to produce an optimized executable for the target device (CPU, GPU, or TPU)."
+        }
+      ]
+    },
+    {
+      "from": "executable",
+      "to": "pjrt",
+      "kind": "runs_in",
+      "when": {
+        "mode": [
+          "jit"
+        ]
+      },
+      "label": "run through",
+      "explanation": "JAX runs the compiled executable on the device through the PJRT runtime API.",
+      "evidence": [
+        {
+          "source": "xla_gpu",
+          "quote": "invoke the PJRT runtime API, which lets the frameworks perform the operation \"populate the specified buffers using a given StableHLO program on a specific device\"."
+        },
+        {
+          "source": "pjrt",
+          "quote": "PJRT C API is the uniform Device API that we want to add to the ML ecosystem."
+        }
+      ]
+    },
+    {
+      "from": "pjrt",
+      "to": "cpu",
+      "kind": "executes_on",
+      "when": {
+        "device": [
+          "cpu"
+        ]
+      },
+      "label": "runs on",
+      "explanation": "PJRT's CPU implementation runs the work on the host CPU.",
+      "evidence": [
+        {
+          "source": "pjrt",
+          "quote": "PJRT C API is the uniform Device API that we want to add to the ML ecosystem."
+        }
+      ]
+    },
+    {
+      "from": "pjrt",
+      "to": "nvidia_gpu",
+      "kind": "launches_on",
+      "when": {
+        "device": [
+          "gpu"
+        ]
+      },
+      "label": "launches on",
+      "explanation": "PJRT's GPU implementation launches the work on the NVIDIA GPU.",
+      "evidence": [
+        {
+          "source": "pjrt",
+          "quote": "PJRT C API is the uniform Device API that we want to add to the ML ecosystem."
+        },
+        {
+          "source": "xla_arch",
+          "quote": "The GPU backend currently supports NVIDIA GPUs via the LLVM NVPTX backend."
+        }
+      ]
+    },
+    {
+      "from": "pjrt",
+      "to": "tpu",
+      "kind": "launches_on",
+      "when": {
+        "device": [
+          "tpu"
+        ]
+      },
+      "label": "launches on",
+      "explanation": "PJRT's TPU implementation runs the work on the TPU.",
+      "evidence": [
+        {
+          "source": "pjrt",
+          "quote": "PJRT C API is the uniform Device API that we want to add to the ML ecosystem."
+        },
+        {
+          "source": "jax_aot",
+          "quote": "Compile the lowered HLO program to produce an optimized executable for the target device (CPU, GPU, or TPU)."
+        }
+      ]
+    }
+  ]
+}
