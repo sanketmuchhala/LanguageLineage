@@ -5,10 +5,10 @@ Language Lineage is a structured knowledge base for programming-language impleme
 ## Dataset
 
 - Version: 5.0
-- Total nodes: 171
+- Total nodes: 172
 - Language nodes: 141
-- Tool nodes: 30
-- Relationships: 489
+- Tool nodes: 31
+- Relationships: 492
 - Evidence coverage: every relationship has at least one source URL
 - License: Creative Commons Attribution 4.0 International (CC BY 4.0)
 - Download: https://www.languagelineage.org/dataset/v5/lineage_v5.json
@@ -19,7 +19,7 @@ Language Lineage is a structured knowledge base for programming-language impleme
 | Type | Count |
 |---|---:|
 | influenced | 263 |
-| compiler_written_in | 101 |
+| compiler_written_in | 104 |
 | runtime_written_in | 93 |
 | bootstrap_written_in | 15 |
 | transpiled_to | 13 |
@@ -31,20 +31,20 @@ Language and tool nodes include identity, release year, implementation, paradigm
 
 ## Citation
 
-Language Lineage. Programming Language Lineage Dataset, v5.0. 171 nodes and 489 relationships. https://www.languagelineage.org/dataset
+Language Lineage. Programming Language Lineage Dataset, v5.0. 172 nodes and 492 relationships. https://www.languagelineage.org/dataset
 
 ## Complete indexable page catalog
 
-- [Programming Language Lineage Graph | What Languages Are Written In](https://www.languagelineage.org/): Explore what programming languages are written in, how compilers are bootstrapped, and how languages evolved. Interactive graph of 171 languages and 489 relationships.
-- [Interactive Graph Explorer](https://www.languagelineage.org/explore): Explore implementation, bootstrap, runtime, and influence relationships across 171 language and tool nodes.
+- [Programming Language Lineage Graph | What Languages Are Written In](https://www.languagelineage.org/): Explore what programming languages are written in, how compilers are bootstrapped, and how languages evolved. Interactive graph of 172 languages and 492 relationships.
+- [Interactive Graph Explorer](https://www.languagelineage.org/explore): Explore implementation, bootstrap, runtime, and influence relationships across 172 language and tool nodes.
 - [The Most Influential Programming Languages | Language Lineage](https://www.languagelineage.org/rankings/most-influential): Reverse PageRank over 262 cited influence relationships across 141 languages. Generated, not hand-ranked.
-- [Embed the Language Lineage Graph | Language Lineage](https://www.languagelineage.org/embed-kit): Put the relationship graph for any of 171 languages and tools on your own page with one iframe. Copy-paste snippet, parameters, sizing, and attribution.
-- [Programming Language Graph | Interactive Language Lineage Map](https://www.languagelineage.org/programming-language-graph): Interactive graph of 141 programming languages and 489 relationships: what languages are written in, how compilers are implemented, and how they influenced each other.
+- [Embed the Language Lineage Graph | Language Lineage](https://www.languagelineage.org/embed-kit): Put the relationship graph for any of 172 languages and tools on your own page with one iframe. Copy-paste snippet, parameters, sizing, and attribution.
+- [Programming Language Graph | Interactive Language Lineage Map](https://www.languagelineage.org/programming-language-graph): Interactive graph of 141 programming languages and 492 relationships: what languages are written in, how compilers are implemented, and how they influenced each other.
 - [Programming Language Evolution Timeline | 1949 to 2023](https://www.languagelineage.org/programming-language-evolution): Trace the evolution of programming languages from 1949 to 2023. Decade-by-decade timeline of 140 languages with influence and implementation relationships.
-- [What Are Programming Languages Written In?](https://www.languagelineage.org/what-are-programming-languages-written-in): What are programming languages written in? Python is written in C, JavaScript engines in C++, Rust in Rust, Go in Go. Explore 194 implementation relationships with evidence.
-- [Programming Language Genealogy | Language Evolution and Influence](https://www.languagelineage.org/programming-language-genealogy): Explore programming language genealogy: 263 influence relationships, language families, ancestry chains, and implementation lineage across 171 languages.
+- [What Are Programming Languages Written In?](https://www.languagelineage.org/what-are-programming-languages-written-in): What are programming languages written in? Python is written in C, JavaScript engines in C++, Rust in Rust, Go in Go. Explore 197 implementation relationships with evidence.
+- [Programming Language Genealogy | Language Evolution and Influence](https://www.languagelineage.org/programming-language-genealogy): Explore programming language genealogy: 263 influence relationships, language families, ancestry chains, and implementation lineage across 172 languages.
 - [Compiler, Runtime, and Bootstrap Relationships Explained | Language Lineage](https://www.languagelineage.org/compiler-runtime-bootstrap): Understand compiler, runtime, and bootstrap relationships in programming language implementation. Definitions, examples, and dataset evidence for all relationship types.
-- [Programming Language Implementation Family Tree Poster | Language Lineage](https://www.languagelineage.org/posters/programming-language-implementation-family-tree): A free poster of what programming languages are written in: 149 languages and tools grouped by the language of their current compiler or runtime. SVG and PNG, CC BY 4.0.
+- [Programming Language Implementation Family Tree Poster | Language Lineage](https://www.languagelineage.org/posters/programming-language-implementation-family-tree): A free poster of what programming languages are written in: 150 languages and tools grouped by the language of their current compiler or runtime. SVG and PNG, CC BY 4.0.
 - [Programming Language Questions Answered | Language Lineage](https://www.languagelineage.org/questions): Direct answers to common programming language questions: what languages are written in, compiler bootstrapping, self-hosting compilers, and more.
 - [What is JavaScript written in? V8 and SpiderMonkey: C++ | Language Lineage](https://www.languagelineage.org/questions/what-is-javascript-written-in): The major JavaScript engines are written in C++. Google's V8 (used in Chrome and Node.js), Mozilla's SpiderMonkey, and Apple's JavaScriptCore are all...
 - [What is Go written in? Self-hosting since Go 1.5 | Language Lineage](https://www.languagelineage.org/questions/what-is-go-written-in): Go is self-hosting since version 1.5 (2015). The Go compiler and runtime are written in Go itself. Before Go 1.5, the gc compiler was written in C.
@@ -164,12 +164,12 @@ Language Lineage. Programming Language Lineage Dataset, v5.0. 171 nodes and 489 
 - [What is Move written in? written in Rust | Language Lineage](https://www.languagelineage.org/questions/what-is-move-written-in): The Move compiler is written in Rust. Move is a digital currency proposed by Meta Platforms, designed by David A. Marcus, first released in 2019.
 - [Site Directory | Language Lineage](https://www.languagelineage.org/directory): A complete directory of all programming languages, tools, questions, and guides on Language Lineage.
 - [How It Works: Agents, Validation, Human Review | Language Lineage](https://www.languagelineage.org/how-it-works): How Language Lineage is built: research agents harvest cited facts, mechanical gates validate every page, and a human reviews every change before it ships.
-- [Programming Language Lineage Dataset | Language Lineage](https://www.languagelineage.org/dataset): Open dataset of 171 programming languages with 489 implementation and influence relationships, evidence sources, and confidence scores.
+- [Programming Language Lineage Dataset | Language Lineage](https://www.languagelineage.org/dataset): Open dataset of 172 programming languages with 492 implementation and influence relationships, evidence sources, and confidence scores.
 - [Programming Languages Index | Language Lineage](https://www.languagelineage.org/languages): Browse all 141 programming languages in the Language Lineage dataset. Find what each language is written in, its compiler, runtime, and lineage.
-- [Compilers, Runtimes, and Tools | Language Lineage](https://www.languagelineage.org/tools): Browse 30 compilers, runtimes, and language tools: GCC, LLVM, V8, SpiderMonkey, GHC, HotSpot JVM, and more. Find what each is written in.
+- [Compilers, Runtimes, and Tools | Language Lineage](https://www.languagelineage.org/tools): Browse 31 compilers, runtimes, and language tools: GCC, LLVM, V8, SpiderMonkey, GHC, HotSpot JVM, and more. Find what each is written in.
 - [Programming Language Guides | Language Lineage](https://www.languagelineage.org/guides): In-depth guides on compiler bootstrapping, self-hosting, JavaScript engines, Python implementation, GCC vs LLVM, and more.
 - [Relationship Types | Language Lineage](https://www.languagelineage.org/relationships): Browse all 6 relationship types in the Language Lineage dataset: compiler_written_in, runtime_written_in, bootstrap_written_in, influenced, transpiled_to, rewritten_in.
-- [Programming Language Timeline | Language Lineage](https://www.languagelineage.org/timeline): 75+ years of programming language history. Watch 170 languages emerge one by one on an interactive scrollable timeline from Fortran to Rust.
+- [Programming Language Timeline | Language Lineage](https://www.languagelineage.org/timeline): 75+ years of programming language history. Watch 171 languages emerge one by one on an interactive scrollable timeline from Fortran to Rust.
 - [Machine Code: Implementation, History, and Lineage | Language Lineage](https://www.languagelineage.org/languages/machine-code): Machine Code is a set of instructions executed directly by a computer's central processing unit (CPU). Explore the full lineage.
 - [Assembly: Implementation, History, and Lineage | Language Lineage](https://www.languagelineage.org/languages/assembly): Assembly is an any low-level programming language in which there is a very strong correspondence between the instructions in the language and the...
 - [Fortran: Implementation, History, and Lineage | Language Lineage](https://www.languagelineage.org/languages/fortran): Fortran's compiler is written in Fortran. Fortran is a general-purpose programming language, first released in 1957. Explore the full lineage.
@@ -341,9 +341,10 @@ Language Lineage. Programming Language Lineage Dataset, v5.0. 171 nodes and 489 
 - [ggml: Implementation, History, and Lineage | Language Lineage](https://www.languagelineage.org/tools/ggml): ggml is written in C and C++. ggml, first released in 2022. Explore the full lineage.
 - [llama.cpp: Implementation, History, and Lineage | Language Lineage](https://www.languagelineage.org/tools/llama-cpp): llama.cpp is written in C++ and C. llama.cpp, first released in 2023. Explore the full lineage.
 - [PyTorch: Implementation, History, and Lineage | Language Lineage](https://www.languagelineage.org/tools/pytorch): PyTorch is written in C++ and Python. PyTorch, first released in 2016. Explore the full lineage.
+- [Triton: Implementation, History, and Lineage | Language Lineage](https://www.languagelineage.org/tools/triton): Triton is written in Python and C++. Triton, first released in 2021. Explore the full lineage.
 - [263 Language Influence Relationships | Language Lineage](https://www.languagelineage.org/relationships/influenced): Conceptual influence relationships document which design ideas, syntax features, or programming paradigms one language borrowed or adapted from another.
 - [15 Bootstrap and Self-Hosting Chains | Language Lineage](https://www.languagelineage.org/relationships/bootstrap-written-in): Bootstrapping is the process of writing a compiler in the same language it compiles. These relationships show the bootstrap chains, what language was used to wr
-- [101 Compiler Implementation Relationships | Language Lineage](https://www.languagelineage.org/relationships/compiler-written-in): These relationships document what programming language each compiler is written in. For example, GCC (the GNU Compiler Collection) is written in C.
+- [104 Compiler Implementation Relationships | Language Lineage](https://www.languagelineage.org/relationships/compiler-written-in): These relationships document what programming language each compiler is written in. For example, GCC (the GNU Compiler Collection) is written in C.
 - [93 Runtime Implementation Relationships | Language Lineage](https://www.languagelineage.org/relationships/runtime-written-in): These relationships document what programming language each runtime or interpreter is written in. For example, CPython (the reference Python interpreter) is wri
 - [4 Language Rewrites | Language Lineage](https://www.languagelineage.org/relationships/rewritten-in): These relationships document cases where a language runtime or compiler was substantially rewritten in a different implementation language.
 - [13 Transpilation Relationships | Language Lineage](https://www.languagelineage.org/relationships/transpiled-to): Transpilation (source-to-source compilation) converts code from one high-level language to another. For example, CoffeeScript transpiles to JavaScript.

@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>101 Compiler Implementation Relationships | Language Lineage</title>
+  <title>104 Compiler Implementation Relationships | Language Lineage</title>
   <meta name="description" content="These relationships document what programming language each compiler is written in. For example, GCC (the GNU Compiler Collection) is written in C." />
   <link rel="canonical" href="https://www.languagelineage.org/relationships/compiler-written-in" />
   <link rel="icon" href="/favicon.svg" />
   <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><script defer src="/fx.js"></script><script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script><link rel="alternate" type="application/rss+xml" title="Language Lineage" href="/rss.xml" /><link rel="stylesheet" href="/seo.css" />
-  <meta property="og:title" content="101 Compiler Implementation Relationships | Language Lineage" />
+  <meta property="og:title" content="104 Compiler Implementation Relationships | Language Lineage" />
   <meta property="og:url" content="https://www.languagelineage.org/relationships/compiler-written-in" />
   <meta property="og:image" content="https://www.languagelineage.org/og/relationships-compiler-written-in.png" />
   <meta property="og:image:width" content="1200" />
@@ -38,7 +38,7 @@
 
   <div class="answer-box" style="border-left:3px solid #e3a008">These relationships document what programming language each compiler is written in. For example, GCC (the GNU Compiler Collection) is written in C.</div>
 
-  <h2>All 101 Relationships</h2>
+  <h2>All 104 Relationships</h2>
   <div class="table-wrap"><table>
     <thead><tr><th>From</th><th>To</th><th>Confidence</th><th>Notes</th><th>Source</th></tr></thead>
     <tbody><tr>
@@ -343,6 +343,13 @@
       <td><a href="https://github.com/luau-lang/luau" rel="noopener noreferrer" target="_blank">Source repository</a></td>
     </tr>
 <tr>
+      <td><a href="/tools/llvm">LLVM</a></td>
+      <td><a href="/tools/triton">Triton</a></td>
+      <td class="confidence-high">95%</td>
+      <td>README: &quot;Triton uses LLVM to generate code for GPUs and CPUs.&quot;</td>
+      <td><a href="https://github.com/triton-lang/triton/blob/main/README.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
       <td><a href="/languages/fsharp">F#</a></td>
       <td><a href="/languages/fsharp">F#</a></td>
       <td class="confidence-high">92%</td>
@@ -628,6 +635,20 @@
       <td class="confidence-high">90%</td>
       <td>Jakt compiler is self-hosted</td>
       <td><a href="https://github.com/SerenityOS/jakt/tree/main/selfhost" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
+      <td><a href="/languages/python">Python</a></td>
+      <td><a href="/tools/triton">Triton</a></td>
+      <td class="confidence-high">90%</td>
+      <td>Kernel frontend and compile driver are Python: triton.compiler.compile() in python/triton/compiler/compiler.py</td>
+      <td><a href="https://github.com/triton-lang/triton/blob/main/python/triton/compiler/compiler.py" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
+      <td><a href="/languages/cxx">C++</a></td>
+      <td><a href="/tools/triton">Triton</a></td>
+      <td class="confidence-high">90%</td>
+      <td>Triton's MLIR dialects and compiler passes are C++ (e.g. lib/Dialect/Triton/IR/Ops.cpp)</td>
+      <td><a href="https://github.com/triton-lang/triton/tree/main/lib/Dialect/Triton/IR" rel="noopener noreferrer" target="_blank">Source repository</a></td>
     </tr>
 <tr>
       <td><a href="/languages/c">C</a></td>

@@ -8,6 +8,13 @@
     <lastBuildDate>Wed, 11 Nov 2026 00:00:00 GMT</lastBuildDate>
     <atom:link href="https://www.languagelineage.org/rss.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>How Modern Languages Trace Their Toolchains Back to C | Language Lineage</title>
+      <link>https://www.languagelineage.org/guides/the-c-bootstrap-chain</link>
+      <guid isPermaLink="true">https://www.languagelineage.org/guides/the-c-bootstrap-chain</guid>
+      <description>How Python, Rust, Go, JavaScript, Java, Ruby, and Haskell trace their compiler or runtime implementation back to C or C++. 7 chains computed from the Language Lineage dataset.</description>
+      <pubDate>Wed, 11 Nov 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
       <title>How Rust is Bootstrapped: OCaml to Self-Hosted rustc | Language Lineage</title>
       <link>https://www.languagelineage.org/guides/how-rust-is-bootstrapped</link>
       <guid isPermaLink="true">https://www.languagelineage.org/guides/how-rust-is-bootstrapped</guid>
@@ -29,25 +36,18 @@
       <pubDate>Wed, 11 Nov 2026 00:00:00 GMT</pubDate>
     </item>
     <item>
+      <title>The Most Influential Programming Languages | Language Lineage</title>
+      <link>https://www.languagelineage.org/rankings/most-influential</link>
+      <guid isPermaLink="true">https://www.languagelineage.org/rankings/most-influential</guid>
+      <description>Reverse PageRank over 262 cited influence relationships across 141 languages. Generated, not hand-ranked.</description>
+      <pubDate>Wed, 11 Nov 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
       <title>V8 vs SpiderMonkey vs JavaScriptCore | Language Lineage</title>
       <link>https://www.languagelineage.org/guides/v8-vs-spidermonkey-vs-javascriptcore</link>
       <guid isPermaLink="true">https://www.languagelineage.org/guides/v8-vs-spidermonkey-vs-javascriptcore</guid>
       <description>All three major JavaScript engines are written in C++. V8 powers Chrome and Node.js, SpiderMonkey powers Firefox, and JavaScriptCore powers Safari.</description>
       <pubDate>Tue, 10 Nov 2026 00:00:00 GMT</pubDate>
-    </item>
-    <item>
-      <title>How Modern Languages Trace Their Toolchains Back to C | Language Lineage</title>
-      <link>https://www.languagelineage.org/guides/the-c-bootstrap-chain</link>
-      <guid isPermaLink="true">https://www.languagelineage.org/guides/the-c-bootstrap-chain</guid>
-      <description>How Python, Rust, Go, JavaScript, Java, Ruby, and Haskell trace their compiler or runtime implementation back to C or C++. 7 chains computed from the Language Lineage dataset.</description>
-      <pubDate>Tue, 22 Sep 2026 00:00:00 GMT</pubDate>
-    </item>
-    <item>
-      <title>The Most Influential Programming Languages | Language Lineage</title>
-      <link>https://www.languagelineage.org/rankings/most-influential</link>
-      <guid isPermaLink="true">https://www.languagelineage.org/rankings/most-influential</guid>
-      <description>Reverse PageRank over 262 cited influence relationships across 141 languages. Generated, not hand-ranked.</description>
-      <pubDate>Tue, 22 Sep 2026 00:00:00 GMT</pubDate>
     </item>
     <item>
       <title>GraalVM vs HotSpot: Two JVM Implementations Compared | Language Lineage</title>

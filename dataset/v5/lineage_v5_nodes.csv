@@ -170,3 +170,4 @@ tool:cuda,CUDA,tool,2007,unspecified,tool,none,native,false,,NVIDIA,tools,NVIDIA
 tool:ggml,ggml,tool,2022,C,tool,none,native,false,,,tools,"Tensor library for machine learning by Georgi Gerganov. Core in C with C++ backends, including CUDA and Metal."
 tool:llama_cpp,llama.cpp,tool,2023,C++,tool,none,native,false,,,tools,"LLM inference engine in C/C++, built on the ggml tensor library."
 tool:pytorch,PyTorch,tool,2016,C++,tool,none,native,false,,,tools,"Deep learning framework originally from Meta AI. Python front end over the ATen C++ tensor library, with GPU kernels in CUDA."
+tool:triton,Triton,tool,2021,C++,tool,none,jit_compiled,false,,,tools,"Language and compiler for writing GPU kernels, developed by Philippe Tillet at OpenAI. Python frontend; compiler passes in C++ on MLIR; code generation through LLVM to PTX or AMDGCN. TorchInductor's GPU backend. Not NVIDIA's Triton Inference Server."

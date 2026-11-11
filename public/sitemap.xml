@@ -10,7 +10,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/rankings/most-influential</loc>
-    <lastmod>2026-09-22</lastmod>
+    <lastmod>2026-11-11</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/embed-kit</loc>
@@ -30,7 +30,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/programming-language-genealogy</loc>
-    <lastmod>2026-09-22</lastmod>
+    <lastmod>2026-11-11</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/compiler-runtime-bootstrap</loc>
@@ -38,7 +38,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/posters/programming-language-implementation-family-tree</loc>
-    <lastmod>2026-11-10</lastmod>
+    <lastmod>2026-11-11</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions</loc>
@@ -510,7 +510,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/directory</loc>
-    <lastmod>2026-11-10</lastmod>
+    <lastmod>2026-11-11</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/how-it-works</loc>
@@ -526,7 +526,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools</loc>
-    <lastmod>2026-09-22</lastmod>
+    <lastmod>2026-11-11</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides</loc>
@@ -538,7 +538,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/timeline</loc>
-    <lastmod>2026-09-22</lastmod>
+    <lastmod>2026-11-11</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/machine-code</loc>
@@ -606,7 +606,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/cxx</loc>
-    <lastmod>2026-11-10</lastmod>
+    <lastmod>2026-11-11</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/objective-c</loc>
@@ -630,7 +630,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/python</loc>
-    <lastmod>2026-11-10</lastmod>
+    <lastmod>2026-11-11</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/common-lisp</loc>
@@ -774,7 +774,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools/llvm</loc>
-    <lastmod>2026-11-10</lastmod>
+    <lastmod>2026-11-11</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools/clang</loc>
@@ -1225,6 +1225,10 @@
     <lastmod>2026-11-10</lastmod>
   </url>
   <url>
+    <loc>https://www.languagelineage.org/tools/triton</loc>
+    <lastmod>2026-11-11</lastmod>
+  </url>
+  <url>
     <loc>https://www.languagelineage.org/relationships/influenced</loc>
     <lastmod>2026-11-10</lastmod>
   </url>
@@ -1298,6 +1302,6 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides/the-c-bootstrap-chain</loc>
-    <lastmod>2026-09-22</lastmod>
+    <lastmod>2026-11-11</lastmod>
   </url>
 </urlset>
