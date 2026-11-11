@@ -281,14 +281,14 @@
 <h3>Triton kernels</h3>
 <p class="ai-kind-tag" style="--kc:#f472b6">kernel language</p>
 <p>On GPU, Inductor writes kernels in Triton, a Python-embedded language for GPU programming, usually fusing several operations into one kernel.</p>
-
+<p class="ai-lineage">In the atlas: <a href="/tools/triton">Triton</a></p>
 <ul class="ai-sources"><li><blockquote>For NVIDIA, AMD and Intel GPUs, it leverages OpenAI Triton as the key building block.</blockquote><a href="https://docs.pytorch.org/docs/2.15/user_guide/torch_compiler/torch.compiler.html" rel="noopener noreferrer" target="_blank">torch.compiler (PyTorch 2.15 documentation)</a> <span class="src-type">Project docs</span></li><li><blockquote>Triton is a language and compiler for parallel programming.</blockquote><a href="https://triton-lang.org/main/index.html" rel="noopener noreferrer" target="_blank">Triton documentation</a> <span class="src-type">Project docs</span></li></ul>
 </article>
 <article class="ai-stage-detail" id="detail-stage-triton_compiler" data-stage="triton_compiler">
 <h3>Triton compiler</h3>
 <p class="ai-kind-tag" style="--kc:#a78bfa">compiler</p>
 <p>Compiles each Triton kernel through a series of MLIR passes, then hands it to LLVM for code generation.</p>
-
+<p class="ai-lineage">In the atlas: <a href="/tools/triton">Triton</a></p>
 <ul class="ai-sources"><li><blockquote>Triton is a language and compiler for parallel programming.</blockquote><a href="https://triton-lang.org/main/index.html" rel="noopener noreferrer" target="_blank">Triton documentation</a> <span class="src-type">Project docs</span></li><li><blockquote>MLIR_ENABLE_DUMP=1 dumps the IR before every MLIR pass Triton runs, for all kernels.</blockquote><a href="https://github.com/triton-lang/triton/blob/main/README.md" rel="noopener noreferrer" target="_blank">Triton README (triton-lang/triton)</a> <span class="src-type">Source repository</span></li></ul>
 </article>
 <article class="ai-stage-detail" id="detail-stage-llvm_ir" data-stage="llvm_ir">
@@ -397,7 +397,7 @@
 
   <h2 id="how-this-page-is-checked">How this page is checked</h2>
   <p>Every stage and step above quotes the source that supports it. The quotes were checked against PyTorch 2.15 documentation, Triton main README, NVIDIA PTX ISA documentation on 2026-11-10. The data is a <a href="/dataset/ai/how-pytorch-runs.json">versioned JSON file</a> under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. Found something wrong or out of date? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
-  <p>What these tools are written in is in the main atlas: <a href="/languages/python">Python</a>, <a href="/tools/pytorch">PyTorch</a>, <a href="/languages/cxx">C++</a>, <a href="/tools/cuda">CUDA</a>, <a href="/tools/llvm">LLVM</a>, <a href="/languages/machine-code">Machine Code</a>. More execution paths: <a href="/ai/how-llama-cpp-runs">How Does llama.cpp Run a Model on Your Hardware</a>.</p>
+  <p>What these tools are written in is in the main atlas: <a href="/languages/python">Python</a>, <a href="/tools/pytorch">PyTorch</a>, <a href="/languages/cxx">C++</a>, <a href="/tools/cuda">CUDA</a>, <a href="/tools/triton">Triton</a>, <a href="/tools/llvm">LLVM</a>, <a href="/languages/machine-code">Machine Code</a>. More execution paths: <a href="/ai/how-llama-cpp-runs">How Does llama.cpp Run a Model on Your Hardware</a>.</p>
 
   <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>
 </main>

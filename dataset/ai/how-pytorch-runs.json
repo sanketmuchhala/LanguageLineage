@@ -61,7 +61,8 @@
     "tool:pytorch",
     "tool:cuda",
     "tool:llvm",
-    "lang:python"
+    "lang:python",
+    "tool:triton"
   ],
   "sources": {
     "dynamo": {
@@ -297,7 +298,7 @@
       "name": "Triton kernels",
       "kind": "kernel_language",
       "layer": "kernel",
-      "lineage_id": null,
+      "lineage_id": "tool:triton",
       "summary": "On GPU, Inductor writes kernels in Triton, a Python-embedded language for GPU programming, usually fusing several operations into one kernel.",
       "evidence": [
         {
@@ -319,7 +320,7 @@
       "name": "Triton compiler",
       "kind": "compiler",
       "layer": "compiler",
-      "lineage_id": null,
+      "lineage_id": "tool:triton",
       "summary": "Compiles each Triton kernel through a series of MLIR passes, then hands it to LLVM for code generation.",
       "evidence": [
         {
