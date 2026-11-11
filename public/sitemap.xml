@@ -41,6 +41,10 @@
     <lastmod>2026-11-11</lastmod>
   </url>
   <url>
+    <loc>https://www.languagelineage.org/ai/how-pytorch-runs</loc>
+    <lastmod>2026-11-11</lastmod>
+  </url>
+  <url>
     <loc>https://www.languagelineage.org/questions</loc>
     <lastmod>2026-09-09</lastmod>
   </url>
@@ -1210,7 +1214,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools/cuda</loc>
-    <lastmod>2026-11-10</lastmod>
+    <lastmod>2026-11-11</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools/ggml</loc>
@@ -1222,7 +1226,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools/pytorch</loc>
-    <lastmod>2026-11-10</lastmod>
+    <lastmod>2026-11-11</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools/triton</loc>

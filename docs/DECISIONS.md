@@ -56,6 +56,27 @@ change, and at least one non-Wikipedia source per new node.
 **Revisit if.** The pilot nodes earn engagement and the ceiling of roughly 12
 tools and 35 relationships proves too low.
 
+## AI execution paths (added 2026-11-10, owner-directed)
+
+The owner asked for an AI infrastructure atlas starting with "what happens when
+you run a PyTorch model". That is allowed in this form only:
+
+- **Execution paths are a separate dataset**, `dataset/ai/*.json`, validated by
+  `scripts/aiPaths.ts`. Steps such as "lowers to" or "dispatches to" describe
+  execution, not implementation provenance, so they never go into
+  `lineage_v5.json`, and the lineage dataset keeps its six relationship types.
+- **Every stage and step quotes its source**, and `npm run check:ai-quotes` must
+  find every quote before data changes ship. No quote, no claim.
+- **Paths are conditional and scoped.** Each step states the mode and device it
+  applies to; each file states what it does not cover.
+- **Still rejected:** model lineage, model or benchmark tracking, generic "AI
+  explained" tutorials, and any claim about closed systems' internals.
+
+The plan and tickets are in `docs/AI_EXPANSION_PLAN.md`.
+
+**Revisit if.** A path needs a concept the stage or step kinds cannot express;
+extend `scripts/aiPaths.ts` in its own reviewed PR.
+
 ## No machine-generated edges
 
 Do not build a job that writes edges automatically from GitHub's languages API,

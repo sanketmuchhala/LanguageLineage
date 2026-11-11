@@ -337,6 +337,18 @@ async function main() {
     count++;
   }
 
+  // AI infrastructure explainer (/ai/how-pytorch-runs)
+  {
+    const card = buildCard({
+      eyebrow: 'AI INFRASTRUCTURE',
+      title: 'What actually happens when you run a PyTorch model?',
+      subtitle: 'Python → TorchDynamo → TorchInductor → Triton → LLVM IR → PTX → GPU',
+      rel: null,
+    });
+    write(join(OG_DIR, 'ai-how-pytorch-runs.png'), await renderCard(card));
+    count++;
+  }
+
   // Hand-authored question pages
   const QUESTION_SLUGS = [
     'what-is-javascript-written-in',

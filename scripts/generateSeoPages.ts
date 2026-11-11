@@ -6,6 +6,7 @@ import { getAdaptiveLogoBackground, getLogoBorderColor } from '../src/utils/colo
 import { LASTMOD_TOKEN, filePathToUrl, resolveDate, flushManifest } from './pageDates.js';
 import { sourceLabel } from './sourceType.js';
 import { buildPosterModel, POSTER_SLUG, POSTER_TYPES, POSTER_MIN_GROUP } from './posterData.js';
+import { parsePaths, buildPathSvg, activePath, stepId, KIND_STYLE, type PathsData, type StepT } from './aiPaths.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -16,6 +17,8 @@ const DATASET_VERSION = '5.0';
 const DATASET_LICENSE_NAME = 'Creative Commons Attribution 4.0 International';
 const DATASET_LICENSE_URL = 'https://creativecommons.org/licenses/by/4.0/';
 const DATASET_DOWNLOAD_PATH = '/dataset/v5/lineage_v5.json';
+const AI_PYTORCH_SLUG = 'how-pytorch-runs';
+const AI_PATHS_FILE = '/dataset/ai/pytorch_execution_paths.json';
 
 function ogImg(filename: string): string {
   return existsSync(join(PUBLIC, 'og', filename)) ? `${SITE}/og/${filename}` : `${SITE}/og-image.png`;
@@ -2047,6 +2050,9 @@ const QUESTION_CANONICAL_TO_LANG = new Set(['rust', 'python', 'roc', 'prolog']);
 const QUESTION_SLUG_OVERRIDE: Record<string, string> = { cxx: 'cpp' };
 
 // Contextually relevant guide links per language slug (at most 2)
+// Node pages that link to the PyTorch execution-path explainer (/ai/how-pytorch-runs).
+const AI_PAGE_LINK_SLUGS = new Set(['pytorch', 'cuda', 'llvm', 'python']);
+
 const LANG_GUIDE_LINKS: Record<string, Array<{ slug: string; label: string }>> = {
   python:     [{ slug: 'how-python-is-implemented', label: 'How Python is implemented' }],
   rust:       [{ slug: 'how-rust-is-bootstrapped', label: 'How Rust bootstraps itself' }, { slug: 'the-c-bootstrap-chain', label: 'Toolchain lineage back to C' }],
@@ -2094,6 +2100,10 @@ function buildDiscoverMore(node: Language, rels: Relationship[], nodeMap: Map<st
   for (const r of influencers) {
     const s = nodeMap.get(r.from_language);
     if (s) links.push(`<a href="/${idToPrefix(s.id)}/${idToSlug(s.id)}" class="discover-link">Languages that influenced ${name}: ${escapeHtml(s.name)}</a>`);
+  }
+
+  if (AI_PAGE_LINK_SLUGS.has(slug)) {
+    links.push(`<a href="/ai/how-pytorch-runs" class="discover-link">What happens when you run a PyTorch model</a>`);
   }
 
   // Per-language contextual guide links (at most 2, deduplicated against already-added bootstrap guide)
@@ -5158,6 +5168,8 @@ console.log(`Generated ${count} language/tool pages`);
 // Dataset page
 writeFile(join(PUBLIC, 'dataset', 'index.html'), buildDatasetPage(languages, rels));
 writeFile(join(PUBLIC, 'posters', POSTER_SLUG, 'index.html'), processPage(buildPosterPage(languages, rels, nodeMap)));
+const AI_PATHS = parsePaths(JSON.parse(readFileSync(join(ROOT, 'dataset/ai/pytorch_execution_paths.json'), 'utf8')));
+writeFile(join(PUBLIC, 'ai', AI_PYTORCH_SLUG, 'index.html'), processPage(buildAiPytorchPage(AI_PATHS, nodeMap)));
 console.log('Generated dataset page');
 
 // Relationship pages
@@ -6373,6 +6385,169 @@ ${minorRows}
   <h2>How the poster is made</h2>
   <p>Each card is an implementation language. Under it are the languages and tools whose compiler or runtime is written in that language today, using the dataset's ${typeLinks} edges that have no end year. Historical implementations are left out, so Go appears as self-hosted rather than under C, which wrote its compiler until 2015; for those changes over time see <a href="/guides/what-is-compiler-bootstrapping">how compilers bootstrap</a>. Influence and transpilation edges are not drawn.</p>
   <p>A language can appear on several cards when the dataset records parts of its implementation in different languages: ${linkNode(multiId, nodeMap)} appears under ${escapeHtml(joinNames(multiCards))}. Cards with fewer than ${POSTER_MIN_GROUP} entries are merged into "Everything else". Every edge links to its source on the <a href="/relationships">relationship pages</a> and in the <a href="/dataset">downloadable dataset</a>.</p>
+
+  <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>
+</main>
+${FOOTER_HTML}
+</body>
+</html>`;
+}
+
+// /ai/how-pytorch-runs: the PyTorch execution-path explainer. Data and evidence come from
+// dataset/ai/pytorch_execution_paths.json (scripts/aiPaths.ts); everything is server-rendered,
+// and public/ai-path.js only switches the selected path and detail panel.
+
+function aiWhen(step: StepT): string {
+  const mode = step.mode === 'any' ? 'Eager and torch.compile' : step.mode === 'eager' ? 'Eager' : 'torch.compile';
+  const device = step.device === 'any' ? 'CPU and GPU' : step.device === 'cpu' ? 'CPU' : 'NVIDIA GPU';
+  return `${mode} · ${device}`;
+}
+
+function aiQuotes(data: PathsData, evidence: Array<{ source: string; quote: string }>): string {
+  return `<ul class="ai-sources">${evidence.map(e => {
+    const src = data.sources[e.source];
+    return `<li><blockquote>${escapeHtml(e.quote)}</blockquote><a href="${escapeHtml(src.url)}" rel="noopener noreferrer" target="_blank">${escapeHtml(src.title)}</a> <span class="src-type">${escapeHtml(sourceLabel(src.url))}</span></li>`;
+  }).join('')}</ul>`;
+}
+
+function buildAiPytorchPage(data: PathsData, nodeMap: Map<string, Language>): string {
+  const url = `${SITE}/ai/${AI_PYTORCH_SLUG}`;
+  const title = 'What Actually Happens When You Run a PyTorch Model? | Language Lineage';
+  const h1 = 'What Actually Happens When You Run a PyTorch Model?';
+  const description = 'Trace a PyTorch model from Python to the hardware: eager mode vs torch.compile, CPU vs GPU, through ATen, TorchDynamo, TorchInductor, Triton, LLVM IR and PTX, with sources.';
+  const name = (id: string) => data.stages.find(s => s.id === id)!.name;
+  const defaultPath = activePath(data, 'compile', 'gpu');
+
+  const stageArticles = data.stages.map(st => {
+    const lineage = st.lineage_id && nodeMap.has(st.lineage_id)
+      ? `<p class="ai-lineage">In the atlas: ${linkNode(st.lineage_id, nodeMap)}</p>` : '';
+    return `<article class="ai-stage-detail" id="detail-stage-${st.id}" data-stage="${st.id}">
+<h3>${escapeHtml(st.name)}</h3>
+<p class="ai-kind-tag" style="--kc:${KIND_STYLE[st.kind].color}">${escapeHtml(st.kind.replace(/_/g, ' '))}</p>
+<p>${escapeHtml(st.summary)}</p>
+${lineage}
+${aiQuotes(data, st.evidence)}
+</article>`;
+  }).join('\n');
+
+  const stepRows = data.steps.map(st => `<tr id="detail-step-${stepId(st)}" data-step="${stepId(st)}" data-from="${st.from}" data-to="${st.to}" data-mode="${st.mode}" data-device="${st.device}"${defaultPath.steps.has(stepId(st)) ? ' class="on"' : ''}>
+<td>${escapeHtml(name(st.from))}</td><td>${escapeHtml(st.label)}</td><td>${escapeHtml(name(st.to))}</td><td>${escapeHtml(aiWhen(st))}</td><td>${escapeHtml(st.explanation)}</td><td>${st.evidence.map(e => evidenceCell(data.sources[e.source].url)).join('<br>')}</td>
+</tr>`).join('\n');
+
+  const pathList = data.steps.filter(st => defaultPath.steps.has(stepId(st)))
+    .map(st => `<li>${escapeHtml(name(st.from))} <em>${escapeHtml(st.label)}</em> ${escapeHtml(name(st.to))}: ${escapeHtml(st.explanation)}</li>`).join('\n');
+
+  const legendKinds = [...new Map(Object.values(KIND_STYLE).map(k => [k.label, k.color])).entries()]
+    .map(([label, color]) => `<li><span class="ai-swatch" style="--kc:${color}"></span>${escapeHtml(label)}</li>`).join('');
+
+  const articleJsonLd = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    headline: h1,
+    description,
+    url,
+    datePublished: data.verified_on,
+    dateModified: LASTMOD_TOKEN,
+    author: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
+    publisher: { '@type': 'Organization', name: 'Language Lineage', url: SITE },
+    about: ['PyTorch', 'torch.compile', 'TorchInductor', 'Triton', 'compilers'],
+    citation: Object.values(data.sources).map(s => s.url),
+    inLanguage: 'en',
+  });
+  const breadcrumbJsonLd = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE },
+      { '@type': 'ListItem', position: 2, name: 'How PyTorch runs', item: url },
+    ],
+  });
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${escapeHtml(title)}</title>
+  <meta name="description" content="${escapeHtml(description)}" />
+  <link rel="canonical" href="${url}" />
+  <link rel="icon" href="/favicon.svg" />
+  ${FONTS_HEAD}${ANALYTICS_HEAD}<link rel="stylesheet" href="/seo.css" />
+  <script defer src="/ai-path.js"></script>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="${escapeHtml(title)}" />
+  <meta property="og:description" content="${escapeHtml(description)}" />
+  <meta property="og:url" content="${url}" />
+  <meta property="og:image" content="${ogImg(`ai-${AI_PYTORCH_SLUG}.png`)}" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">${articleJsonLd}</script>
+  <script type="application/ld+json">${breadcrumbJsonLd}</script>
+</head>
+<body class="seo-page">
+${SKIP_LINK}
+${NAV_HTML}
+<main class="seo-main" id="main-content">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; How PyTorch runs
+  </nav>
+
+  <h1>${escapeHtml(h1)}</h1>
+  %%TOC%%
+
+  <div class="answer-box">In <strong>eager mode</strong>, each tensor operation in your Python code is a separate call into ATen, PyTorch's C++ core, which runs a precompiled C++ kernel on the CPU or a CUDA kernel on the GPU. With <strong>torch.compile</strong>, TorchDynamo captures runs of operations as an FX graph, and TorchInductor generates new kernels for it: C++ with OpenMP for CPUs, Triton for GPUs. On an NVIDIA GPU, Triton lowers each kernel through MLIR and LLVM IR to PTX, which NVIDIA's driver turns into the GPU's own machine code.</div>
+
+  <section class="ai-explorer" id="explorer" aria-label="Execution path explorer">
+    <form class="ai-controls" onsubmit="return false">
+      <fieldset><legend>Mode</legend>
+        <label><input type="radio" name="mode" value="eager"> Eager</label>
+        <label><input type="radio" name="mode" value="compile" checked> torch.compile</label>
+      </fieldset>
+      <fieldset><legend>Device</legend>
+        <label><input type="radio" name="device" value="cpu"> CPU</label>
+        <label><input type="radio" name="device" value="gpu" checked> NVIDIA GPU</label>
+      </fieldset>
+      <button type="button" class="ai-copy" hidden>Copy link to this path</button>
+    </form>
+    <p class="ai-status" aria-live="polite">Showing torch.compile on an NVIDIA GPU: ${defaultPath.stages.size} stages, ${defaultPath.steps.size} steps.</p>
+    <div class="ai-layout">
+      <div class="ai-diagram-wrap">${buildPathSvg(data, 'compile', 'gpu')}</div>
+      <aside class="ai-detail" aria-live="polite"><p class="ai-detail-hint">Select a stage or an arrow to see what it does and the source behind it. Dashed arrows are fallbacks some operations take.</p></aside>
+    </div>
+    <ul class="ai-legend" aria-label="Legend">${legendKinds}<li><span class="ai-swatch ai-swatch-dash"></span>Fallback for some operations</li></ul>
+  </section>
+
+  <h2>The selected path, step by step</h2>
+  <ol class="ai-path-list">
+${pathList}
+  </ol>
+
+  <h2>Where Python ends</h2>
+  <p>In eager mode, Python's part ends at each operation's call into ATen: from there on, everything is precompiled C++ and CUDA that shipped inside PyTorch. Python is still in charge of the order of operations, one call at a time, so the interpreter's overhead is paid on every operation.</p>
+  <p>Under torch.compile, Python's part ends earlier for the code TorchDynamo can capture: the captured operations never run as individual Python calls again. They become an FX graph, then new code generated by TorchInductor, and on a GPU that code passes through three compiler stages (Triton, LLVM, PTX) before NVIDIA's driver produces machine code for the specific GPU. Code Dynamo cannot trace causes a graph break and still runs in normal Python between compiled graphs.</p>
+  <p>Either way the GPU work is asynchronous: Python queues kernels and moves on, which is why a GPU program can look fast until something forces it to wait for a result.</p>
+
+  <h2>Every stage</h2>
+  <div class="ai-stage-list">
+${stageArticles}
+  </div>
+
+  <h2>Every step</h2>
+  <table class="ai-steps">
+    <thead><tr><th>From</th><th>Step</th><th>To</th><th>When</th><th>What happens</th><th>Source</th></tr></thead>
+    <tbody>
+${stepRows}
+    </tbody>
+  </table>
+
+  <h2>What this does not show</h2>
+  <p>${escapeHtml(data.scope)} TorchInductor's GPU path through Triton also serves AMD and Intel GPUs, ending in a different final format (for AMD, AMDGCN instead of PTX). Other torch.compile backends replace TorchInductor entirely.</p>
+
+  <h2>How this page is checked</h2>
+  <p>Every stage and step above quotes the source that supports it. The quotes were checked against ${escapeHtml(data.verified_against)} on ${escapeHtml(data.verified_on)}. The data is a <a href="${AI_PATHS_FILE}">versioned JSON file</a> under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. Found something wrong or out of date? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
+  <p>The languages these tools are written in are in the main atlas: <a href="/tools/pytorch">PyTorch</a>, <a href="/tools/llvm">LLVM</a>, <a href="/tools/cuda">CUDA</a>, <a href="/languages/python">Python</a> and <a href="/languages/cxx">C++</a>.</p>
 
   <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>
 </main>
