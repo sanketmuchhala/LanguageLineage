@@ -6398,9 +6398,11 @@ function aiQuotes(data: PathsData, evidence: Array<{ source: string; quote: stri
   }).join('')}</ul>`;
 }
 
-// Plain text with **bold** spans.
+// Plain text with **bold** spans and internal [links](/path) only.
 function aiInline(text: string): string {
-  return escapeHtml(text).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  return escapeHtml(text)
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\[([^\]]+)\]\((\/[a-z0-9\/-]*)\)/g, '<a href="$2">$1</a>');
 }
 
 function buildAiPathPage(data: PathsData, nodeMap: Map<string, Language>): string {

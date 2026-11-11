@@ -179,7 +179,7 @@ export function whenText(data: PathsData, s: StepT): string {
 export const KIND_STYLE: Record<string, { label: string; color: string }> = {
   application: { label: 'Your program', color: '#60a5fa' },
   programming_language: { label: 'Your program', color: '#60a5fa' },
-  runtime: { label: 'Your program', color: '#60a5fa' },
+  runtime: { label: 'Runtime', color: '#93c5fd' },
   framework_component: { label: 'Framework core', color: '#e3a008' },
   model_format: { label: 'Model file', color: '#fb7185' },
   kernel: { label: 'Kernel', color: '#f472b6' },
