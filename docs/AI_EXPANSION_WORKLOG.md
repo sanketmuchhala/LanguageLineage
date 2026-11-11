@@ -43,3 +43,16 @@ Checked and **not** used: the dispatcher tutorial (deprecated as of PyTorch 2.4;
 1. AI-00: data PR for the `C → Rust` edge (1h).
 2. AI-04: admit `tool:triton` to the lineage dataset with primary sources (2h).
 3. AI-06: llama.cpp path file and page (5h).
+
+## 2026-11-11 — data PRs, generic path format, llama.cpp page (AI-00, AI-04, AI-06)
+
+- **PR #43** pushed (the PyTorch explainer). **PR #44** (`data/fix-rust-compiler-history`): removed the `lang:c → lang:rust` compiler edge whose own source says OCaml; OCaml edge now starts 2006 (Wikipedia infobox "OCaml (2006–2011)"); counts 490 → 489; `og-image.png` re-rendered. **PR #45** (`data/admit-triton`, stacked on #44): `tool:triton` with three `compiler_written_in` edges (Python: `python/triton/compiler/compiler.py`; C++: `lib/Dialect/Triton/IR`; LLVM: README), first release 2021 from PyPI; counts 172 nodes / 492 relationships. Both gates green (155 tests).
+- **Generic path format** (this branch): files renamed to `dataset/ai/<slug>.json`; each declares title, answer, `dimensions`, `status_template`, `sections`, `link_from`, and stage `pos`; steps use `when`. `scripts/aiPaths.ts` validates duplicate positions, unknown dimension values, defaults and template placeholders. Generator, sitemap, OG cards and `check:ai-quotes` loop over all files; node pages link to every path page that lists them in `link_from`. `public/ai-path.js` reads the choices from the form, so it works for any dimensions.
+- **`/ai/how-llama-cpp-runs`**: 13 stages, 12 steps, one choice (backend: CPU / CUDA / Metal), 6 sources (llama.cpp README and build guide, GGUF spec, Hugging Face "Introduction to ggml", one CUDA and one Metal kernel source file). 40 quote uses checked offline; `npm run check:ai-quotes` found all 43 distinct quotes across both files live.
+- **Tests:** `scripts/aiPaths.test.ts` rewritten: per-file data and page checks (sources cited, lineage links, hardware sinks, every selection reaches hardware, every step used, radios, quotes, canonical/sitemap/OG/script, `link_from` links), schema guards, PyTorch semantics.
+- **Verification:** `npm run verify` exit 0, 14 files, **189 tests**, seo:validate 0/0, seo:links 0/0/0, sitemap 327 (+2 `/ai/` pages vs live 325). Headless Chromium: llama.cpp CPU 6 stages, CUDA 10 (incl. nvcc and the CPU for non-offloaded layers), Metal 9; stage selection and URL updates; PyTorch deep link and switching unchanged; no horizontal scroll at 320px with JS on or off; no page errors.
+
+### Next
+1. After #44/#45 merge: rebase this branch, set the PyTorch "Triton compiler" stage's `lineage_id` to `tool:triton`, regenerate.
+2. AI-07: AI mode in the Cytoscape explorer (filter + path overlay).
+3. AI-08: JAX / OpenXLA path file.

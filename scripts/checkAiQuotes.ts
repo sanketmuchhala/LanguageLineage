@@ -1,18 +1,17 @@
 /**
- * Network check for dataset/ai/pytorch_execution_paths.json: fetches every source
+ * Network check for every dataset/ai/*.json file: fetches every source
  * and confirms each quoted sentence still appears in it (whitespace and curly quotes
  * normalized). Read-only, never edits the data. Not part of `npm run verify`,
  * because it depends on third-party sites; run it before publishing changes:
  *
  *   npm run check:ai-quotes
  */
-import { readFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { parsePaths } from './aiPaths.js';
+import { loadAllPaths } from './aiPaths.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const data = parsePaths(JSON.parse(readFileSync(join(ROOT, 'dataset/ai/pytorch_execution_paths.json'), 'utf8')));
+const files = loadAllPaths(ROOT);
 
 const norm = (s: string) => s
   .replace(/[‘’]/g, "'").replace(/[“”]/g, '"')
@@ -32,14 +31,20 @@ function fetchUrl(url: string): string {
   return m ? `https://raw.githubusercontent.com/${m[1]}/${m[2]}` : url;
 }
 
+// Keyed by URL so a source shared by several files is fetched once.
 const quotes = new Map<string, Set<string>>();
-for (const item of [...data.stages, ...data.steps]) {
-  for (const e of item.evidence) quotes.set(e.source, (quotes.get(e.source) ?? new Set()).add(e.quote));
+for (const data of files) {
+  for (const item of [...data.stages, ...data.steps]) {
+    for (const e of item.evidence) {
+      const url = data.sources[e.source].url;
+      quotes.set(url, (quotes.get(url) ?? new Set()).add(e.quote));
+    }
+  }
 }
 
 let failures = 0;
 for (const [id, set] of quotes) {
-  const src = data.sources[id];
+  const src = { url: id };
   let text = '';
   try {
     const res = await fetch(fetchUrl(src.url), { headers: { 'User-Agent': 'LanguageLineage quote check (+https://www.languagelineage.org)' }, redirect: 'follow' });

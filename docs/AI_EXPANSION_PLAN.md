@@ -50,11 +50,11 @@ Static page generator and templates (`scripts/generateSeoPages.ts`), source-type
 
 ## 4. Data and ontology
 
-`dataset/ai/pytorch_execution_paths.json`, validated by `scripts/aiPaths.ts` (Zod, strict):
+One file per page, `dataset/ai/<slug>.json` (currently `how-pytorch-runs.json` and `how-llama-cpp-runs.json`), validated by `scripts/aiPaths.ts` (Zod, strict). Each file declares its own page text, choices (`dimensions`), diagram positions and sections; the generator, sitemap, OG cards and quote checker loop over all files.
 
-- **Stage kinds:** `programming_language`, `runtime`, `framework_component`, `compiler`, `intermediate_representation`, `kernel_language`, `kernel`, `machine_code`, `hardware`. Models and model formats are deliberately absent from this file.
-- **Step kinds:** `runs_in`, `calls`, `dispatches_to`, `executes_on`, `launches_on`, `intercepted_by`, `captures`, `compiled_by`, `generates`, `falls_back_to`, `lowers_to`, `translated_to`.
-- **Conditions:** each step has `mode` (`any`/`eager`/`compile`) and `device` (`any`/`cpu`/`gpu`). A configuration's path is everything reachable from the first stage along applicable steps.
+- **Stage kinds:** `application`, `programming_language`, `runtime`, `framework_component`, `compiler`, `intermediate_representation`, `model_format`, `kernel_language`, `kernel`, `machine_code`, `hardware`. Model files appear only as a format (GGUF), never as a model family.
+- **Step kinds:** `runs_in`, `calls`, `loads`, `builds`, `dispatches_to`, `executes_on`, `launches_on`, `intercepted_by`, `captures`, `compiled_by`, `compiles_for`, `generates`, `written_in`, `falls_back_to`, `lowers_to`, `translated_to`.
+- **Conditions:** each step has `when: {dimension: [values]}`; a dimension it omits applies to every value. A selection's path is everything reachable from the first stage along applicable steps.
 - **Evidence:** every stage and step has `{source, quote}` pairs; sources have URL and title; `verified_on` and `verified_against` at file level. `npm run check:ai-quotes` re-fetches all sources and checks each quote.
 
 Lineage-dataset additions (Triton, MLIR, XLA, etc. as `tool:` nodes) follow the existing admission rule and go in separate data PRs of ≤5 nodes (AI-04).
@@ -68,10 +68,10 @@ Effort in hours. "Gate" = `npm run verify` green plus the listed check.
 | AI-01 | Audit + this plan + DECISIONS amendment | 2 | — | Plan reviewed by owner | done |
 | AI-02 | Execution-path data file, schema, quote checker | 4 | AI-01 | 0 missing quotes live; schema + semantics tests | done |
 | AI-03 | `/ai/how-pytorch-runs` page, explorer, shareable URLs, OG card, links from PyTorch/CUDA/LLVM/Python pages | 6 | AI-02 | Gate; JS on/off, 320/390/1280px, keyboard, deep links checked in a browser | done |
-| AI-00 | Fix the unsupported `C → Rust` lineage edge (growth WP-03) | 1 | — | Data PR merged | open, owner |
-| AI-04 | Data PR: admit `tool:triton` (and possibly `tool:mlir`) to the lineage dataset with non-Wikipedia sources | 2 | owner review | Admission rule met; ≤5 nodes | next |
+| AI-00 | Fix the unsupported `C → Rust` lineage edge (growth WP-03) | 1 | — | Data PR merged | PR #44, awaiting review |
+| AI-04 | Data PR: admit `tool:triton` (and possibly `tool:mlir`) to the lineage dataset with non-Wikipedia sources | 2 | owner review | Admission rule met; ≤5 nodes | `tool:triton` in PR #45 (stacked on #44) |
 | AI-05 | `/ai/what-is-pytorch-written-in` as a section of the explainer or of `/tools/pytorch` (not a separate page, see §7) | 2 | AI-03 | No new competing URL | next |
-| AI-06 | Second path file: llama.cpp (CPU / CUDA / Metal backends) from its README and build docs | 5 | AI-02 | Same schema, tests, quote check | next |
+| AI-06 | Second path file: llama.cpp (CPU / CUDA / Metal backends) from its README and build docs | 5 | AI-02 | Same schema, tests, quote check | done (`/ai/how-llama-cpp-runs`) |
 | AI-07 | AI mode in the Cytoscape explorer: filter to AI-tagged lineage nodes + overlay of path files | 8 | AI-04, AI-06 | Existing modes unaffected (tree-view and graph tests green) | later |
 | AI-08 | JAX/OpenXLA path (StableHLO, XLA, PJRT) | 6 | AI-02 | Same as AI-06 | later |
 | AI-09 | Inference engines comparison (vLLM, llama.cpp, TensorRT-LLM, MLX) | 8 | AI-06 | Each engine row sourced; no model families | later |

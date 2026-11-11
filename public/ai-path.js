@@ -1,33 +1,41 @@
-// /ai/how-pytorch-runs: path selector, detail panel and shareable URLs.
-// Hand-maintained (like fx.js). The page is fully server-rendered; without this script the
-// default path (torch.compile on an NVIDIA GPU) is shown and every stage and step is listed.
-// URL parameters: ?mode=eager|compile&device=cpu|gpu&stage=<id> or &step=<from>--<to>
+// /ai/<slug> execution-path explainers: path selector, detail panel and shareable URLs.
+// Hand-maintained (like fx.js). Pages are fully server-rendered; without this script the
+// default path is shown and every stage and step is listed.
+// URL parameters: one per choice (e.g. ?mode=eager&device=cpu or ?backend=metal),
+// plus &stage=<id> or &step=<from>--<to> for the selected item.
 (function () {
   var root = document.getElementById('explorer');
   if (!root) return;
-  var START = 'python_code';
-  var MODES = ['eager', 'compile'];
-  var DEVICES = ['cpu', 'gpu'];
-  var LABELS = { eager: 'eager mode', compile: 'torch.compile', cpu: 'a CPU', gpu: 'an NVIDIA GPU' };
 
   var rows = Array.prototype.slice.call(document.querySelectorAll('table.ai-steps tr[data-step]'));
   var steps = rows.map(function (r) {
-    return { id: r.dataset.step, from: r.dataset.from, to: r.dataset.to, mode: r.dataset.mode, device: r.dataset.device, row: r };
+    var when = {};
+    try { when = JSON.parse(r.dataset.when || '{}'); } catch (e) { when = {}; }
+    return { id: r.dataset.step, from: r.dataset.from, to: r.dataset.to, when: when, row: r };
   });
+  var firstStage = root.querySelector('.ai-stage');
+  var START = firstStage ? firstStage.id.slice(6) : '';
   var detail = root.querySelector('.ai-detail');
   var status = root.querySelector('.ai-status');
   var list = document.querySelector('.ai-path-list');
   var copy = root.querySelector('.ai-copy');
+
+  // Choices: one radio group per fieldset; the checked one in the HTML is the default.
+  var dims = {};
+  root.querySelectorAll('.ai-controls input[type=radio]').forEach(function (i) {
+    (dims[i.name] = dims[i.name] || { values: [], def: null, phrases: {} }).values.push(i.value);
+    dims[i.name].phrases[i.value] = i.dataset.phrase || i.value;
+    if (i.defaultChecked) dims[i.name].def = i.value;
+  });
   var params = new URLSearchParams(location.search);
-  var state = {
-    mode: MODES.indexOf(params.get('mode')) >= 0 ? params.get('mode') : 'compile',
-    device: DEVICES.indexOf(params.get('device')) >= 0 ? params.get('device') : 'gpu',
-    stage: params.get('stage'),
-    step: params.get('step'),
-  };
+  var state = { sel: {}, stage: params.get('stage'), step: params.get('step') };
+  Object.keys(dims).forEach(function (d) {
+    var v = params.get(d);
+    state.sel[d] = dims[d].values.indexOf(v) >= 0 ? v : dims[d].def;
+  });
 
   function applies(s) {
-    return (s.mode === 'any' || s.mode === state.mode) && (s.device === 'any' || s.device === state.device);
+    return Object.keys(s.when).every(function (d) { return s.when[d].indexOf(state.sel[d]) >= 0; });
   }
 
   function path() {
@@ -50,7 +58,7 @@
 
   function writeUrl() {
     var q = new URLSearchParams();
-    q.set('mode', state.mode); q.set('device', state.device);
+    Object.keys(dims).forEach(function (d) { q.set(d, state.sel[d]); });
     if (state.stage) q.set('stage', state.stage);
     else if (state.step) q.set('step', state.step);
     history.replaceState(null, '', location.pathname + '?' + q.toString() + location.hash);
@@ -85,10 +93,10 @@
     root.querySelectorAll('.ai-stage').forEach(function (g) { g.classList.toggle('on', !!p.stages[g.id.slice(6)]); });
     root.querySelectorAll('.ai-step').forEach(function (e) { e.classList.toggle('on', !!p.steps[e.id.slice(5)]); });
     rows.forEach(function (r) { r.classList.toggle('on', !!p.steps[r.dataset.step]); });
-    root.querySelectorAll('input[name=mode]').forEach(function (i) { i.checked = i.value === state.mode; });
-    root.querySelectorAll('input[name=device]').forEach(function (i) { i.checked = i.value === state.device; });
-    var nStages = Object.keys(p.stages).length, nSteps = Object.keys(p.steps).length;
-    status.textContent = 'Showing ' + LABELS[state.mode] + ' on ' + LABELS[state.device] + ': ' + nStages + ' stages, ' + nSteps + ' steps.';
+    root.querySelectorAll('.ai-controls input[type=radio]').forEach(function (i) { i.checked = i.value === state.sel[i.name]; });
+    var text = status.dataset.template || '';
+    Object.keys(dims).forEach(function (d) { text = text.replace('{' + d + '}', dims[d].phrases[state.sel[d]]); });
+    status.textContent = text + ': ' + Object.keys(p.stages).length + ' stages, ' + Object.keys(p.steps).length + ' steps.';
     if (list) {
       var items = steps.filter(function (s) { return p.steps[s.id]; }).map(function (s) {
         var cells = s.row.querySelectorAll('td');
@@ -116,8 +124,8 @@
   }
 
   root.addEventListener('change', function (e) {
-    if (e.target.name === 'mode' || e.target.name === 'device') {
-      state[e.target.name] = e.target.value;
+    if (dims[e.target.name]) {
+      state.sel[e.target.name] = e.target.value;
       writeUrl(); render(); centerPath();
     }
   });

@@ -41,6 +41,10 @@
     <lastmod>2026-11-11</lastmod>
   </url>
   <url>
+    <loc>https://www.languagelineage.org/ai/how-llama-cpp-runs</loc>
+    <lastmod>2026-11-11</lastmod>
+  </url>
+  <url>
     <loc>https://www.languagelineage.org/ai/how-pytorch-runs</loc>
     <lastmod>2026-11-11</lastmod>
   </url>
@@ -1218,11 +1222,11 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools/ggml</loc>
-    <lastmod>2026-11-10</lastmod>
+    <lastmod>2026-11-11</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools/llama-cpp</loc>
-    <lastmod>2026-11-10</lastmod>
+    <lastmod>2026-11-11</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools/pytorch</loc>

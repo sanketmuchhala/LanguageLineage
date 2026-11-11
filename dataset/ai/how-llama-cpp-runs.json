@@ -1,0 +1,577 @@
+{
+  "version": "1.0",
+  "slug": "how-llama-cpp-runs",
+  "title": "How Does llama.cpp Run a Model? CPU, CUDA and Metal | Language Lineage",
+  "h1": "How Does llama.cpp Run a Model on Your Hardware?",
+  "description": "Follow a local LLM through llama.cpp: GGUF file, ggml compute graph, and the CPU, CUDA or Metal backend, with the language each kernel is written in and sources.",
+  "og_subtitle": "Your app → llama.cpp → ggml graph → CPU · CUDA · Metal",
+  "verified_on": "2026-11-11",
+  "verified_against": "the llama.cpp README and build guide, the GGUF specification, Hugging Face's Introduction to ggml, and llama.cpp's CUDA and Metal kernel sources (master branch)",
+  "scope": "Documented paths for running a GGUF model with llama.cpp on three of its backends: the CPU, CUDA on an NVIDIA GPU, and Metal on Apple silicon. Other backends (Vulkan, HIP, SYCL, OpenCL and more), multi-GPU and RPC setups, and how a model is converted to GGUF are out of scope.",
+  "answer": "llama.cpp is **plain C/C++**: your program calls the llama.cpp library, which loads a **GGUF** model file and builds a **ggml** compute graph for each step of inference. ggml then runs that graph on a backend. On the **CPU** it uses SIMD kernels written in C/C++; on an **NVIDIA GPU** it runs CUDA kernels that nvcc compiled when llama.cpp was built; on **Apple silicon** it runs kernels written in Metal Shading Language. With a GPU backend, layers that are not offloaded to the GPU still run on the CPU.",
+  "status_template": "Showing the {backend} backend",
+  "dimensions": [
+    {
+      "id": "backend",
+      "legend": "Backend",
+      "default": "metal",
+      "options": [
+        {
+          "value": "cpu",
+          "label": "CPU",
+          "phrase": "CPU"
+        },
+        {
+          "value": "cuda",
+          "label": "CUDA (NVIDIA)",
+          "phrase": "CUDA (NVIDIA GPU)"
+        },
+        {
+          "value": "metal",
+          "label": "Metal (Apple)",
+          "phrase": "Metal (Apple silicon)"
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "heading": "Which language does the work",
+      "paragraphs": [
+        "There is no Python on this path. The library, the model loader and ggml are C and C++, and the language of the innermost loops depends on the backend: C/C++ with SIMD instructions on the CPU, CUDA C++ on NVIDIA GPUs, and Metal Shading Language on Apple GPUs.",
+        "The GPU kernels are written for each backend and kept in the llama.cpp repository. CUDA kernels are compiled by NVIDIA's nvcc when llama.cpp itself is built, by default for the GPU in the build machine. That is a different arrangement from **torch.compile**, where TorchInductor generates new kernels while your program runs."
+      ]
+    },
+    {
+      "heading": "CPU and GPU together",
+      "paragraphs": [
+        "With the CUDA or Metal backend, the GPU only runs the layers offloaded to it, which the --n-gpu-layers (-ngl) option controls. The rest of the model runs on the CPU backend, which is how llama.cpp runs models larger than the GPU's memory."
+      ]
+    }
+  ],
+  "out_of_scope_note": "The same ggml graph can run on any backend the build enables; this page shows three of them.",
+  "link_from": [
+    "tool:llama_cpp",
+    "tool:ggml"
+  ],
+  "sources": {
+    "llama_readme": {
+      "url": "https://github.com/ggml-org/llama.cpp/blob/master/README.md",
+      "title": "llama.cpp README"
+    },
+    "llama_build": {
+      "url": "https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md",
+      "title": "llama.cpp build guide"
+    },
+    "gguf_spec": {
+      "url": "https://github.com/ggml-org/ggml/blob/master/docs/gguf.md",
+      "title": "GGUF specification (ggml)"
+    },
+    "ggml_intro": {
+      "url": "https://huggingface.co/blog/introduction-to-ggml",
+      "title": "Introduction to ggml (Hugging Face blog, by ggml maintainers)"
+    },
+    "cuda_kernel": {
+      "url": "https://github.com/ggml-org/llama.cpp/blob/master/ggml/src/ggml-cuda/argmax.cu",
+      "title": "llama.cpp CUDA kernel source (ggml-cuda/argmax.cu)"
+    },
+    "metal_kernel": {
+      "url": "https://github.com/ggml-org/llama.cpp/blob/master/ggml/src/ggml-metal/kernels/argsort.metal",
+      "title": "llama.cpp Metal kernel source (ggml-metal/kernels/argsort.metal)"
+    }
+  },
+  "stages": [
+    {
+      "id": "app",
+      "name": "Your program",
+      "kind": "application",
+      "layer": "application",
+      "lineage_id": "tool:llama_cpp",
+      "pos": [
+        1,
+        0
+      ],
+      "summary": "A program that runs a model: llama.cpp's own command-line tool or OpenAI-compatible server, or your own code linked against the library.",
+      "evidence": [
+        {
+          "source": "llama_readme",
+          "quote": "The main goal of llama.cpp is to enable LLM (and VLM) inference with minimal setup and state-of-the-art performance on a wide range of hardware"
+        },
+        {
+          "source": "llama_readme",
+          "quote": "Launch OpenAI-compatible API server"
+        }
+      ]
+    },
+    {
+      "id": "libllama",
+      "name": "llama.cpp library",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": "tool:llama_cpp",
+      "pos": [
+        1,
+        1
+      ],
+      "summary": "The C/C++ inference library: it loads the model and builds the computation for each step of generation on top of ggml.",
+      "evidence": [
+        {
+          "source": "llama_readme",
+          "quote": "Plain C/C++ implementation without any dependencies"
+        },
+        {
+          "source": "ggml_intro",
+          "quote": "LLM inference with llama.cpp, which builds upon ggml."
+        }
+      ]
+    },
+    {
+      "id": "gguf",
+      "name": "GGUF model file",
+      "kind": "model_format",
+      "layer": "application",
+      "lineage_id": null,
+      "pos": [
+        0,
+        1
+      ],
+      "summary": "The model's weights and metadata in one binary file. GGUF is a file format, not a programming language.",
+      "evidence": [
+        {
+          "source": "gguf_spec",
+          "quote": "GGUF is a file format for storing models for inference with GGML and executors based on GGML."
+        }
+      ]
+    },
+    {
+      "id": "ggml_graph",
+      "name": "ggml compute graph",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": "tool:ggml",
+      "pos": [
+        1,
+        2
+      ],
+      "summary": "ggml, the C/C++ tensor library under llama.cpp, records the operations of each step as a graph, then hands it to a backend to compute.",
+      "evidence": [
+        {
+          "source": "ggml_intro",
+          "quote": "ggml is a machine learning (ML) library written in C and C++ with a focus on Transformer inference."
+        },
+        {
+          "source": "ggml_intro",
+          "quote": "ggml_cgraph : Represents a computational graph. Think of it as the \"order of computation\" that will be transferred to the backend."
+        }
+      ]
+    },
+    {
+      "id": "ggml_cpu",
+      "name": "ggml CPU backend",
+      "kind": "kernel",
+      "layer": "kernel",
+      "lineage_id": "tool:ggml",
+      "pos": [
+        0,
+        3
+      ],
+      "summary": "C/C++ kernels using the CPU's SIMD instructions: AVX on x86, NEON on ARM, including Apple silicon.",
+      "evidence": [
+        {
+          "source": "llama_readme",
+          "quote": "AVX, AVX2, AVX512 and AMX support for x86 architectures"
+        },
+        {
+          "source": "llama_readme",
+          "quote": "Apple silicon is a first-class citizen - optimized via ARM NEON, Accelerate and Metal frameworks"
+        }
+      ]
+    },
+    {
+      "id": "ggml_cuda",
+      "name": "ggml CUDA backend",
+      "kind": "framework_component",
+      "layer": "kernel",
+      "lineage_id": "tool:ggml",
+      "pos": [
+        1,
+        3
+      ],
+      "summary": "The backend for NVIDIA GPUs, enabled at build time with -DGGML_CUDA=ON. It runs llama.cpp's own CUDA kernels.",
+      "evidence": [
+        {
+          "source": "llama_readme",
+          "quote": "Custom CUDA kernels for running LLMs on NVIDIA GPUs"
+        },
+        {
+          "source": "llama_build",
+          "quote": "This provides GPU acceleration using an NVIDIA GPU."
+        },
+        {
+          "source": "llama_build",
+          "quote": "cmake -B build -DGGML_CUDA=ON"
+        }
+      ]
+    },
+    {
+      "id": "ggml_metal",
+      "name": "ggml Metal backend",
+      "kind": "framework_component",
+      "layer": "kernel",
+      "lineage_id": null,
+      "pos": [
+        2,
+        3
+      ],
+      "summary": "The backend for Apple GPUs, enabled by default on macOS. It runs llama.cpp's own Metal kernels through Apple's Metal framework.",
+      "evidence": [
+        {
+          "source": "llama_build",
+          "quote": "On MacOS, Metal is enabled by default. Using Metal makes the computation run on the GPU."
+        },
+        {
+          "source": "llama_readme",
+          "quote": "Apple silicon is a first-class citizen - optimized via ARM NEON, Accelerate and Metal frameworks"
+        }
+      ]
+    },
+    {
+      "id": "cuda_kernels",
+      "name": "CUDA kernels (.cu)",
+      "kind": "kernel_language",
+      "layer": "kernel",
+      "lineage_id": "tool:cuda",
+      "pos": [
+        1,
+        4
+      ],
+      "summary": "GPU functions written in CUDA C++ and marked __global__, in .cu files under ggml/src/ggml-cuda (for example argmax.cu).",
+      "evidence": [
+        {
+          "source": "cuda_kernel",
+          "quote": "static __global__ void argmax_f32(const float * __restrict__ x, int32_t * __restrict__ dst, const int64_t ncols)"
+        }
+      ]
+    },
+    {
+      "id": "metal_kernels",
+      "name": "Metal kernels (MSL)",
+      "kind": "kernel_language",
+      "layer": "kernel",
+      "lineage_id": null,
+      "pos": [
+        2,
+        4
+      ],
+      "summary": "GPU functions written in Metal Shading Language and marked kernel, in .metal files under ggml/src/ggml-metal/kernels.",
+      "evidence": [
+        {
+          "source": "metal_kernel",
+          "quote": "kernel void kernel_argsort_f32_i32("
+        }
+      ]
+    },
+    {
+      "id": "nvcc",
+      "name": "nvcc (CUDA toolkit)",
+      "kind": "compiler",
+      "layer": "compiler",
+      "lineage_id": "tool:cuda",
+      "pos": [
+        1,
+        5
+      ],
+      "summary": "NVIDIA's CUDA compiler. It compiles the CUDA kernels when llama.cpp is built, by default for the GPU in the build machine.",
+      "evidence": [
+        {
+          "source": "llama_build",
+          "quote": "If nvcc cannot detect your gpu, you may get compile warnings such as"
+        },
+        {
+          "source": "llama_build",
+          "quote": "By default llama.cpp will be built for the hardware that is connected to the system at that time."
+        }
+      ]
+    },
+    {
+      "id": "cpu",
+      "name": "CPU",
+      "kind": "hardware",
+      "layer": "hardware",
+      "lineage_id": null,
+      "pos": [
+        0,
+        6
+      ],
+      "summary": "Runs the whole model with the CPU backend, or the layers not offloaded to a GPU.",
+      "evidence": [
+        {
+          "source": "llama_readme",
+          "quote": "CPU+GPU hybrid inference to partially accelerate models larger than the total VRAM capacity"
+        }
+      ]
+    },
+    {
+      "id": "nvidia_gpu",
+      "name": "NVIDIA GPU",
+      "kind": "hardware",
+      "layer": "hardware",
+      "lineage_id": null,
+      "pos": [
+        1,
+        6
+      ],
+      "summary": "Runs the compiled CUDA kernels for the offloaded layers.",
+      "evidence": [
+        {
+          "source": "llama_build",
+          "quote": "This provides GPU acceleration using an NVIDIA GPU."
+        }
+      ]
+    },
+    {
+      "id": "apple_gpu",
+      "name": "Apple silicon GPU",
+      "kind": "hardware",
+      "layer": "hardware",
+      "lineage_id": null,
+      "pos": [
+        2,
+        6
+      ],
+      "summary": "Runs the Metal kernels for the offloaded layers.",
+      "evidence": [
+        {
+          "source": "llama_build",
+          "quote": "On MacOS, Metal is enabled by default. Using Metal makes the computation run on the GPU."
+        }
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "from": "app",
+      "to": "libllama",
+      "kind": "calls",
+      "when": {},
+      "label": "calls",
+      "explanation": "The program calls the llama.cpp library, which is plain C/C++ with no other dependencies.",
+      "evidence": [
+        {
+          "source": "llama_readme",
+          "quote": "Plain C/C++ implementation without any dependencies"
+        }
+      ]
+    },
+    {
+      "from": "libllama",
+      "to": "gguf",
+      "kind": "loads",
+      "when": {},
+      "label": "loads",
+      "explanation": "The library reads the model's weights and metadata from a GGUF file.",
+      "evidence": [
+        {
+          "source": "gguf_spec",
+          "quote": "GGUF is a file format for storing models for inference with GGML and executors based on GGML."
+        }
+      ]
+    },
+    {
+      "from": "libllama",
+      "to": "ggml_graph",
+      "kind": "builds",
+      "when": {},
+      "label": "builds",
+      "explanation": "For each step of generation, llama.cpp describes the computation as a ggml graph.",
+      "evidence": [
+        {
+          "source": "ggml_intro",
+          "quote": "LLM inference with llama.cpp, which builds upon ggml."
+        },
+        {
+          "source": "ggml_intro",
+          "quote": "ggml_cgraph : Represents a computational graph. Think of it as the \"order of computation\" that will be transferred to the backend."
+        }
+      ]
+    },
+    {
+      "from": "ggml_graph",
+      "to": "ggml_cpu",
+      "kind": "dispatches_to",
+      "when": {},
+      "label": "runs layers on",
+      "explanation": "With the CPU backend the whole graph runs here. With a GPU backend, the layers not offloaded to the GPU still run here; --n-gpu-layers controls the split.",
+      "evidence": [
+        {
+          "source": "llama_readme",
+          "quote": "CPU+GPU hybrid inference to partially accelerate models larger than the total VRAM capacity"
+        },
+        {
+          "source": "ggml_intro",
+          "quote": "It can distribute computations across different hardware (e.g., GPU and CPU) when dealing with large models or multiple GPUs."
+        }
+      ]
+    },
+    {
+      "from": "ggml_graph",
+      "to": "ggml_cuda",
+      "kind": "dispatches_to",
+      "when": {
+        "backend": [
+          "cuda"
+        ]
+      },
+      "label": "offloads layers to",
+      "explanation": "In a CUDA build, the layers offloaded to the GPU are computed by the CUDA backend.",
+      "evidence": [
+        {
+          "source": "ggml_intro",
+          "quote": "Once defined, a graph can be computed with the available hardware by using the respective backend implementation."
+        },
+        {
+          "source": "llama_build",
+          "quote": "\"-ngl 99\" should offload all of the layers to GPU for most (if not all) models."
+        }
+      ]
+    },
+    {
+      "from": "ggml_graph",
+      "to": "ggml_metal",
+      "kind": "dispatches_to",
+      "when": {
+        "backend": [
+          "metal"
+        ]
+      },
+      "label": "offloads layers to",
+      "explanation": "On macOS builds Metal is on by default, and the offloaded layers are computed by the Metal backend. --n-gpu-layers 0 turns GPU inference off.",
+      "evidence": [
+        {
+          "source": "ggml_intro",
+          "quote": "Once defined, a graph can be computed with the available hardware by using the respective backend implementation."
+        },
+        {
+          "source": "llama_build",
+          "quote": "When built with Metal support, you can explicitly disable GPU inference with the --n-gpu-layers 0 command-line argument."
+        }
+      ]
+    },
+    {
+      "from": "ggml_cpu",
+      "to": "cpu",
+      "kind": "executes_on",
+      "when": {},
+      "label": "runs on",
+      "explanation": "The C/C++ kernels run on the CPU's cores using its SIMD instructions.",
+      "evidence": [
+        {
+          "source": "llama_readme",
+          "quote": "AVX, AVX2, AVX512 and AMX support for x86 architectures"
+        }
+      ]
+    },
+    {
+      "from": "ggml_cuda",
+      "to": "cuda_kernels",
+      "kind": "written_in",
+      "when": {
+        "backend": [
+          "cuda"
+        ]
+      },
+      "label": "kernels written in",
+      "explanation": "The CUDA backend's operations are llama.cpp's own CUDA C++ kernels.",
+      "evidence": [
+        {
+          "source": "llama_readme",
+          "quote": "Custom CUDA kernels for running LLMs on NVIDIA GPUs"
+        },
+        {
+          "source": "cuda_kernel",
+          "quote": "static __global__ void argmax_f32(const float * __restrict__ x, int32_t * __restrict__ dst, const int64_t ncols)"
+        }
+      ]
+    },
+    {
+      "from": "cuda_kernels",
+      "to": "nvcc",
+      "kind": "compiled_by",
+      "when": {
+        "backend": [
+          "cuda"
+        ]
+      },
+      "label": "compiled at build time by",
+      "explanation": "The kernels are compiled by NVIDIA's nvcc when llama.cpp is built, by default for the GPU present at build time.",
+      "evidence": [
+        {
+          "source": "llama_build",
+          "quote": "If nvcc cannot detect your gpu, you may get compile warnings such as"
+        },
+        {
+          "source": "llama_build",
+          "quote": "By default llama.cpp will be built for the hardware that is connected to the system at that time."
+        }
+      ]
+    },
+    {
+      "from": "nvcc",
+      "to": "nvidia_gpu",
+      "kind": "compiles_for",
+      "when": {
+        "backend": [
+          "cuda"
+        ]
+      },
+      "label": "compiles for",
+      "explanation": "The compiled kernels run on the NVIDIA GPU. A build made for all CUDA GPUs may need some just-in-time compilation on the target GPU.",
+      "evidence": [
+        {
+          "source": "llama_build",
+          "quote": "The resulting binary should run on all CUDA GPUs with optimal performance, though some just-in-time compilation may be required."
+        }
+      ]
+    },
+    {
+      "from": "ggml_metal",
+      "to": "metal_kernels",
+      "kind": "written_in",
+      "when": {
+        "backend": [
+          "metal"
+        ]
+      },
+      "label": "kernels written in",
+      "explanation": "The Metal backend's operations are llama.cpp's own kernels in Metal Shading Language.",
+      "evidence": [
+        {
+          "source": "metal_kernel",
+          "quote": "kernel void kernel_argsort_f32_i32("
+        },
+        {
+          "source": "llama_readme",
+          "quote": "Apple silicon is a first-class citizen - optimized via ARM NEON, Accelerate and Metal frameworks"
+        }
+      ]
+    },
+    {
+      "from": "metal_kernels",
+      "to": "apple_gpu",
+      "kind": "executes_on",
+      "when": {
+        "backend": [
+          "metal"
+        ]
+      },
+      "label": "run on",
+      "explanation": "Through Apple's Metal framework the kernels run on the Apple silicon GPU.",
+      "evidence": [
+        {
+          "source": "llama_build",
+          "quote": "On MacOS, Metal is enabled by default. Using Metal makes the computation run on the GPU."
+        }
+      ]
+    }
+  ]
+}
