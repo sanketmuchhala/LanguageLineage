@@ -4382,6 +4382,116 @@
       "logo_source": null,
       "logo_license": null,
       "logo_kind": "none"
+    },
+    {
+      "id": "tool:sglang",
+      "name": "SGLang",
+      "first_release_year": 2024,
+      "current_primary_implementation_language": "Python",
+      "paradigm": [
+        "tool"
+      ],
+      "typing": "none",
+      "runtime_model": "tool",
+      "self_hosting": false,
+      "notes": "Open-source model-serving framework. The SRT inference-engine entry point and serving orchestration are implemented in Python; this edge describes that layer, not every device kernel or auxiliary server component.",
+      "cluster_hint": "tools",
+      "company": "SGLang Team",
+      "garbage_collected": null,
+      "logo_url": null,
+      "peak_year": null,
+      "current_users_estimate": null,
+      "logo_source": null,
+      "logo_license": null,
+      "logo_kind": "none"
+    },
+    {
+      "id": "tool:transformers",
+      "name": "Transformers",
+      "first_release_year": 2018,
+      "current_primary_implementation_language": "Python",
+      "paradigm": [
+        "tool"
+      ],
+      "typing": "none",
+      "runtime_model": "tool",
+      "self_hosting": false,
+      "notes": "Hugging Face model library with Python pipeline and model orchestration code. Its Python library implementation is distinct from the native numerical kernels supplied by execution backends. The release year includes its original pytorch-pretrained-bert package.",
+      "cluster_hint": "tools",
+      "company": "Hugging Face",
+      "garbage_collected": null,
+      "logo_url": null,
+      "peak_year": null,
+      "current_users_estimate": null,
+      "logo_source": null,
+      "logo_license": null,
+      "logo_kind": "none"
+    },
+    {
+      "id": "tool:hf_tokenizers",
+      "name": "HF Tokenizers",
+      "first_release_year": 2019,
+      "current_primary_implementation_language": "Rust",
+      "paradigm": [
+        "tool"
+      ],
+      "typing": "none",
+      "runtime_model": "tool",
+      "self_hosting": false,
+      "notes": "Hugging Face tokenization library with a Rust reference implementation and bindings for other languages. This node represents the library core, not an individual tokenizer vocabulary or model.",
+      "cluster_hint": "tools",
+      "company": "Hugging Face",
+      "garbage_collected": null,
+      "logo_url": null,
+      "peak_year": null,
+      "current_users_estimate": null,
+      "logo_source": null,
+      "logo_license": null,
+      "logo_kind": "none"
+    },
+    {
+      "id": "tool:safetensors",
+      "name": "Safetensors",
+      "first_release_year": 2022,
+      "current_primary_implementation_language": "Rust",
+      "paradigm": [
+        "tool"
+      ],
+      "typing": "none",
+      "runtime_model": "tool",
+      "self_hosting": false,
+      "notes": "Tensor serialization library implementing the Safetensors format in Rust with Python bindings. This node represents the reader/writer implementation, not a model runtime or model lineage. Originally developed by Hugging Face.",
+      "cluster_hint": "tools",
+      "company": null,
+      "garbage_collected": null,
+      "logo_url": null,
+      "peak_year": null,
+      "current_users_estimate": null,
+      "logo_source": null,
+      "logo_license": null,
+      "logo_kind": "none"
+    },
+    {
+      "id": "tool:executorch",
+      "name": "ExecuTorch",
+      "first_release_year": 2023,
+      "current_primary_implementation_language": "C++",
+      "paradigm": [
+        "tool"
+      ],
+      "typing": "none",
+      "runtime_model": "tool",
+      "self_hosting": false,
+      "notes": "On-device model deployment stack with a C++ runtime and Python model-export and lowering APIs. The export toolchain and deployed runtime are separate implementation layers; acceleration depends on selected backend delegates.",
+      "cluster_hint": "tools",
+      "company": "PyTorch",
+      "garbage_collected": null,
+      "logo_url": null,
+      "peak_year": null,
+      "current_users_estimate": null,
+      "logo_source": null,
+      "logo_license": null,
+      "logo_kind": "none"
     }
   ],
   "relationships": [
@@ -9674,6 +9784,66 @@
       "confidence": 0.92,
       "evidence_source": "https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/torch/arch_overview.md",
       "notes": "Architecture docs: \"PyTorch is the sole execution backend of TensorRT LLM; the former TensorRT engine backend has been removed\"; models are defined in native PyTorch under tensorrt_llm/_torch/models/"
+    },
+    {
+      "from_language": "lang:python",
+      "to_language": "tool:sglang",
+      "relationship": "runtime_written_in",
+      "start_year": null,
+      "end_year": null,
+      "confidence": 0.96,
+      "evidence_source": "https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/entrypoints/engine.py",
+      "notes": "SRT inference-engine Python APIs and orchestration are implemented in engine.py. Scoped to the Python serving layer; does not characterize every kernel or auxiliary service."
+    },
+    {
+      "from_language": "lang:python",
+      "to_language": "tool:transformers",
+      "relationship": "runtime_written_in",
+      "start_year": null,
+      "end_year": null,
+      "confidence": 0.96,
+      "evidence_source": "https://github.com/huggingface/transformers/blob/main/src/transformers/pipelines/base.py",
+      "notes": "The Python Pipeline base class implements tokenization, model-inference orchestration and post-processing. Backend numerical kernels are outside this edge."
+    },
+    {
+      "from_language": "lang:rust",
+      "to_language": "tool:hf_tokenizers",
+      "relationship": "runtime_written_in",
+      "start_year": null,
+      "end_year": null,
+      "confidence": 0.98,
+      "evidence_source": "https://github.com/huggingface/tokenizers/blob/main/README.md",
+      "notes": "The official bindings table identifies Rust as the reference implementation; Python and Node.js are bindings."
+    },
+    {
+      "from_language": "lang:rust",
+      "to_language": "tool:safetensors",
+      "relationship": "runtime_written_in",
+      "start_year": null,
+      "end_year": null,
+      "confidence": 0.98,
+      "evidence_source": "https://pytorch.org/projects/safetensors/",
+      "notes": "The project overview explicitly states that Safetensors is implemented in Rust with bindings for Python."
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "tool:executorch",
+      "relationship": "runtime_written_in",
+      "start_year": null,
+      "end_year": null,
+      "confidence": 0.98,
+      "evidence_source": "https://docs.pytorch.org/executorch/stable/using-executorch-building-from-source.html",
+      "notes": "The official build guide describes building the C++ runtime, separately from installing Python components."
+    },
+    {
+      "from_language": "lang:python",
+      "to_language": "tool:executorch",
+      "relationship": "compiler_written_in",
+      "start_year": null,
+      "end_year": null,
+      "confidence": 0.95,
+      "evidence_source": "https://github.com/pytorch/executorch/blob/main/docs/source/getting-started.md",
+      "notes": "Model export and lowering use Python APIs, including to_edge_transform_and_lower(...).to_executorch(), to produce .pte programs. This edge is scoped to the export toolchain."
     }
   ]
 }
