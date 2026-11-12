@@ -81,9 +81,9 @@
 </article>
 <article class="ai-hub-card">
 <h2><a href="/ai/how-pytorch-runs">What Actually Happens When You Run a PyTorch Model?</a></h2>
-<p>Trace a PyTorch model from Python to the hardware: eager mode vs torch.compile, CPU vs GPU, through ATen, TorchDynamo, TorchInductor, Triton, LLVM IR and PTX, with sources.</p>
-<ul class="ai-hub-choices"><li><strong>Mode:</strong> Eager, torch.compile</li><li><strong>Device:</strong> CPU, NVIDIA GPU</li></ul>
-<p class="ai-hub-meta">16 stages, 19 steps, 48 quoted citations from 10 sources. Checked 2026-11-10.</p>
+<p>Trace a PyTorch model from Python to the hardware: eager vs torch.compile on a CPU, NVIDIA, AMD (ROCm) or Apple (MPS) GPU, through ATen, TorchInductor and Triton, with sources.</p>
+<ul class="ai-hub-choices"><li><strong>Mode:</strong> Eager, torch.compile</li><li><strong>Device:</strong> CPU, NVIDIA GPU, AMD GPU (ROCm), Apple GPU (MPS)</li></ul>
+<p class="ai-hub-meta">22 stages, 29 steps, 70 quoted citations from 13 sources. Checked 2026-11-12.</p>
 </article>
 <article class="ai-hub-card">
 <h2><a href="/ai/how-tensorflow-runs">How Does TensorFlow Run Python on a CPU or GPU?</a></h2>
@@ -137,8 +137,12 @@
 <tr><td><a href="/ai/how-onnx-runtime-runs?provider=tensorrt">ONNX Runtime</a></td><td>TensorRT (NVIDIA)</td><td>10</td><td>10</td></tr>
 <tr><td><a href="/ai/how-pytorch-runs?mode=eager&amp;device=cpu">PyTorch</a></td><td>Eager · CPU</td><td>5</td><td>4</td></tr>
 <tr><td><a href="/ai/how-pytorch-runs?mode=eager&amp;device=gpu">PyTorch</a></td><td>Eager · NVIDIA GPU</td><td>5</td><td>4</td></tr>
+<tr><td><a href="/ai/how-pytorch-runs?mode=eager&amp;device=rocm">PyTorch</a></td><td>Eager · AMD GPU (ROCm)</td><td>5</td><td>4</td></tr>
+<tr><td><a href="/ai/how-pytorch-runs?mode=eager&amp;device=mps">PyTorch</a></td><td>Eager · Apple GPU (MPS)</td><td>5</td><td>4</td></tr>
 <tr><td><a href="/ai/how-pytorch-runs?mode=compile&amp;device=cpu">PyTorch</a></td><td>torch.compile · CPU</td><td>8</td><td>8</td></tr>
 <tr><td><a href="/ai/how-pytorch-runs?mode=compile&amp;device=gpu">PyTorch</a></td><td>torch.compile · NVIDIA GPU</td><td>12</td><td>12</td></tr>
+<tr><td><a href="/ai/how-pytorch-runs?mode=compile&amp;device=rocm">PyTorch</a></td><td>torch.compile · AMD GPU (ROCm)</td><td>11</td><td>11</td></tr>
+<tr><td><a href="/ai/how-pytorch-runs?mode=compile&amp;device=mps">PyTorch</a></td><td>torch.compile · Apple GPU (MPS)</td><td>8</td><td>8</td></tr>
 <tr><td><a href="/ai/how-tensorflow-runs?mode=eager&amp;device=cpu">TensorFlow</a></td><td>Eager · CPU</td><td>5</td><td>4</td></tr>
 <tr><td><a href="/ai/how-tensorflow-runs?mode=eager&amp;device=gpu">TensorFlow</a></td><td>Eager · NVIDIA GPU</td><td>5</td><td>4</td></tr>
 <tr><td><a href="/ai/how-tensorflow-runs?mode=graph&amp;device=cpu">TensorFlow</a></td><td>tf.function · CPU</td><td>6</td><td>5</td></tr>

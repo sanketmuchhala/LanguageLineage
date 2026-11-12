@@ -37,9 +37,9 @@
     "logo_overrides": 22,
     "ai_execution_paths": {
       "total": 10,
-      "stages": 129,
-      "steps": 148,
-      "sources": 67
+      "stages": 135,
+      "steps": 158,
+      "sources": 70
     }
   },
   "files": [
@@ -145,12 +145,12 @@
       "slug": "how-pytorch-runs",
       "name": "PyTorch",
       "path": "dataset/ai/how-pytorch-runs.json",
-      "verified_on": "2026-11-10",
-      "stages": 16,
-      "steps": 19,
-      "sources": 10,
-      "sha256": "adab61ec207be99c192f570ebcc63f66c63ff898e5bb0daaea65b1089dde2532",
-      "bytes": 26998
+      "verified_on": "2026-11-12",
+      "stages": 22,
+      "steps": 29,
+      "sources": 13,
+      "sha256": "b8c21c09fbddec3152eed2eefc73da0664e2ee158d77d5623523af16a8ec483d",
+      "bytes": 39214
     },
     {
       "slug": "how-tensorflow-runs",
