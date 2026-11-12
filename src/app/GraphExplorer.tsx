@@ -38,6 +38,8 @@ export function GraphExplorer() {
   useEffect(() => {
     const nodeId = searchParams.get('node');
     if (nodeId) setPendingFocusNodeId(nodeId);
+    // ?view=ai opens the explorer with the AI infrastructure filter on (linked from /ai).
+    if (searchParams.get('view') === 'ai') useGraphStore.getState().setAttributeFilters({ ai: true });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

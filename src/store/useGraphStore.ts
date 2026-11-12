@@ -28,7 +28,7 @@ interface GraphStore {
   timelineYear: number;
   isTimelinePlaying: boolean;
   explorationMode: 'none' | 'ancestors' | 'descendants' | 'focus';
-  attributeFilters: { paradigms: string[]; typing: string | null; decade: number | null };
+  attributeFilters: { paradigms: string[]; typing: string | null; decade: number | null; ai: boolean };
   isDarkMode: boolean;
 
   // Deep link: node to focus after layout settles
@@ -55,7 +55,7 @@ interface GraphStore {
   setTimelineYear: (year: number) => void;
   setIsTimelinePlaying: (playing: boolean) => void;
   setExplorationMode: (mode: 'none' | 'ancestors' | 'descendants' | 'focus') => void;
-  setAttributeFilters: (filters: Partial<{ paradigms: string[]; typing: string | null; decade: number | null }>) => void;
+  setAttributeFilters: (filters: Partial<{ paradigms: string[]; typing: string | null; decade: number | null; ai: boolean }>) => void;
   resetAttributeFilters: () => void;
   resetFilters: () => void;
   toggleDarkMode: () => void;
@@ -101,7 +101,7 @@ export const useGraphStore = create<GraphStore>((set) => ({
   timelineYear: 2023,
   isTimelinePlaying: false,
   explorationMode: 'none',
-  attributeFilters: { paradigms: [], typing: null, decade: null },
+  attributeFilters: { paradigms: [], typing: null, decade: null, ai: false },
   isDarkMode: true,
   pendingFocusNodeId: null,
   traceMode: false,
@@ -154,7 +154,7 @@ export const useGraphStore = create<GraphStore>((set) => ({
       attributeFilters: { ...state.attributeFilters, ...filters },
     })),
   resetAttributeFilters: () =>
-    set({ attributeFilters: { paradigms: [], typing: null, decade: null } }),
+    set({ attributeFilters: { paradigms: [], typing: null, decade: null, ai: false } }),
 
   resetFilters: () => set({ filters: DEFAULT_FILTERS }),
   toggleDarkMode: () =>

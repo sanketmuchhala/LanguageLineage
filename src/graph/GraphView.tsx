@@ -1,12 +1,12 @@
 import { useEffect, useRef } from 'react';
-import cytoscape from 'cytoscape';
+import cytoscape, { type Core } from 'cytoscape';
 import coseBilkent from 'cytoscape-cose-bilkent';
 import { useGraphStore } from '../store/useGraphStore';
 import { buildCytoscapeElements } from './buildElements';
 import { getCytoscapeStyle } from './style';
 import { BASE_CYTOSCAPE_CONFIG } from './cytoscapeConfig';
 import { DAG_LAYOUT, FORCE_LAYOUT, CLUSTER_LAYOUT, buildTimelineLayout } from './layouts';
-import { activateFocusMode, deactivateFocusMode, applyTimelineVisibility, clearTimelineVisibility, getAncestors, getDescendants, activateExplorationMode, applyAttributeFilters, findShortestPath, activateTracePath } from './selectors';
+import { activateFocusMode, deactivateFocusMode, applyTimelineVisibility, clearTimelineVisibility, getAncestors, getDescendants, activateExplorationMode, applyAttributeFilters, fitToAiView, findShortestPath, activateTracePath } from './selectors';
 import './GraphView.css';
 
 // Register cose-bilkent layout
@@ -20,6 +20,26 @@ function getLayout(mode: string, cy?: cytoscape.Core): any {
     case 'force':
     default: return FORCE_LAYOUT;
   }
+}
+
+/**
+ * The layouts fit and animate the viewport themselves, and layoutstop fires before that
+ * animation ends, so wait until nothing is animating before zooming to the AI view.
+ */
+function fitAiWhenSettled(cy: Core, inset: () => number, tries = 0): void {
+  const busy = cy.animated() || cy.nodes(':animated').length > 0;
+  if (busy && tries < 40) {
+    setTimeout(() => fitAiWhenSettled(cy, inset, tries + 1), 100);
+    return;
+  }
+  fitToAiView(cy, inset());
+}
+
+/** Width of an open side panel overlapping the canvas's left edge, in pixels. */
+function panelInset(container: HTMLElement | null): number {
+  const panel = document.querySelector('.sidebar:not(.collapsed)');
+  if (!container || !panel) return 0;
+  return Math.max(0, panel.getBoundingClientRect().right - container.getBoundingClientRect().left);
 }
 
 export function GraphView() {
@@ -78,6 +98,12 @@ export function GraphView() {
           }
         }
         setPendingFocusNodeId(null);
+        return;
+      }
+
+      // Deep link ?view=ai: zoom to the AI nodes once the layout has placed them.
+      if (useGraphStore.getState().attributeFilters.ai) {
+        fitAiWhenSettled(instance, () => panelInset(containerRef.current));
         return;
       }
 
@@ -314,9 +340,13 @@ export function GraphView() {
 
   // Attribute filters: fade nodes that don't match paradigm/typing/decade
   const attributeFilters = useGraphStore((s) => s.attributeFilters);
+  const aiWasOn = useRef(attributeFilters.ai);
   useEffect(() => {
     if (!cy || !dataset) return;
     applyAttributeFilters(cy, attributeFilters, dataset);
+    // Zoom in when the AI view is switched on from the panel (deep links zoom on layoutstop).
+    if (attributeFilters.ai && !aiWasOn.current) fitToAiView(cy, panelInset(containerRef.current));
+    aiWasOn.current = attributeFilters.ai;
   }, [cy, attributeFilters, dataset]);
 
   return <div ref={containerRef} className="graph-view" />;
