@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>How TensorRT-LLM Runs: PyTorch, Scheduling and GPUs | Language Lineage</title>
-  <meta name="description" content="Trace current TensorRT-LLM requests through Python or HTTP, PyExecutor, inflight scheduling and PyTorch model execution, with explicit legacy-backend limits." />
+  <title>How TensorRT-LLM Runs a Model: PyExecutor &amp; CUDA Graphs | Language Lineage</title>
+  <meta name="description" content="Trace a TensorRT-LLM request on an NVIDIA GPU: LLM API or trtllm-serve, PyExecutor, C++ scheduler and KV cache, PyTorch model, torch.compile and CUDA Graphs, with sources." />
   <link rel="canonical" href="https://www.languagelineage.org/ai/how-tensorrt-llm-runs" />
   <link rel="icon" href="/favicon.svg" />
   <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><script defer src="/fx.js"></script><script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script><link rel="alternate" type="application/rss+xml" title="Language Lineage" href="/rss.xml" /><link rel="stylesheet" href="/seo.css" />
   <script defer src="/ai-path.js"></script>
   <meta property="og:type" content="article" />
-  <meta property="og:title" content="How TensorRT-LLM Runs: PyTorch, Scheduling and GPUs | Language Lineage" />
-  <meta property="og:description" content="Trace current TensorRT-LLM requests through Python or HTTP, PyExecutor, inflight scheduling and PyTorch model execution, with explicit legacy-backend limits." />
+  <meta property="og:title" content="How TensorRT-LLM Runs a Model: PyExecutor &amp; CUDA Graphs | Language Lineage" />
+  <meta property="og:description" content="Trace a TensorRT-LLM request on an NVIDIA GPU: LLM API or trtllm-serve, PyExecutor, C++ scheduler and KV cache, PyTorch model, torch.compile and CUDA Graphs, with sources." />
   <meta property="og:url" content="https://www.languagelineage.org/ai/how-tensorrt-llm-runs" />
   <meta property="og:image" content="https://www.languagelineage.org/og/ai-how-tensorrt-llm-runs.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:type" content="image/png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"How Does TensorRT-LLM Execute an Inference Request?","description":"Trace current TensorRT-LLM requests through Python or HTTP, PyExecutor, inflight scheduling and PyTorch model execution, with explicit legacy-backend limits.","url":"https://www.languagelineage.org/ai/how-tensorrt-llm-runs","datePublished":"2026-11-11","dateModified":"2026-11-12","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"citation":["https://nvidia.github.io/TensorRT-LLM/latest/torch/arch_overview.html","https://nvidia.github.io/TensorRT-LLM/latest/legacy/tensorrt-backend-removal.html","https://nvidia.github.io/TensorRT-LLM/latest/torch/scheduler.html","https://nvidia.github.io/TensorRT-LLM/latest/quick-start-guide.html","https://github.com/NVIDIA/TensorRT-LLM/blob/main/README.md","https://github.com/NVIDIA/TensorRT-LLM/blob/main/tensorrt_llm/_torch/pyexecutor/py_executor.py","https://nvidia.github.io/TensorRT-LLM/latest/supported-hardware.html"],"inLanguage":"en"}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"AI execution paths","item":"https://www.languagelineage.org/ai"},{"@type":"ListItem","position":3,"name":"How Does TensorRT-LLM Execute an Inference Request?","item":"https://www.languagelineage.org/ai/how-tensorrt-llm-runs"}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What Actually Happens When TensorRT-LLM Runs a Model?","description":"Trace a TensorRT-LLM request on an NVIDIA GPU: LLM API or trtllm-serve, PyExecutor, C++ scheduler and KV cache, PyTorch model, torch.compile and CUDA Graphs, with sources.","url":"https://www.languagelineage.org/ai/how-tensorrt-llm-runs","datePublished":"2026-11-11","dateModified":"2026-11-12","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"citation":["https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/developer-guide/overview.md","https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/torch/arch_overview.md","https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/torch/scheduler.md","https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/torch/kv_cache_manager.md","https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/torch/attention.md","https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/features/torch_compile_and_piecewise_cuda_graph.md","https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/quick-start-guide.md","https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/legacy/tensorrt-backend-removal.md"],"inLanguage":"en"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"AI execution paths","item":"https://www.languagelineage.org/ai"},{"@type":"ListItem","position":3,"name":"What Actually Happens When TensorRT-LLM Runs a Model?","item":"https://www.languagelineage.org/ai/how-tensorrt-llm-runs"}]}</script>
 </head>
 <body class="seo-page">
 <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -36,20 +36,16 @@
 </nav>
 <main class="seo-main" id="main-content">
   <nav class="breadcrumb" aria-label="breadcrumb">
-    <a href="/">Home</a> &rsaquo; <a href="/ai">AI execution paths</a> &rsaquo; How Does TensorRT-LLM Execute an Inference Request
+    <a href="/">Home</a> &rsaquo; <a href="/ai">AI execution paths</a> &rsaquo; What Actually Happens When TensorRT-LLM Runs a Model
   </nav>
 
-  <h1>How Does TensorRT-LLM Execute an Inference Request?</h1>
+  <h1>What Actually Happens When TensorRT-LLM Runs a Model?</h1>
   <nav class="page-toc" aria-label="Page contents">
   <p class="page-toc-label">On this page</p>
   <ol class="page-toc-list">
     <li><a href="#the-selected-path-step-by-step">The selected path, step by step</a></li>
-    <li><a href="#is-tensorrt-llm-the-same-product-as-tensorrt">Is TensorRT-LLM the same product as TensorRT?</a></li>
-    <li><a href="#what-happens-after-the-request-arrives">What happens after the request arrives?</a></li>
-    <li><a href="#what-is-inflight-batching">What is inflight batching?</a></li>
-    <li><a href="#where-do-python-c-and-cuda-appear">Where do Python, C++ and CUDA appear?</a></li>
-    <li><a href="#how-does-this-compare-with-vllm-or-llama-cpp">How does this compare with vLLM or llama.cpp?</a></li>
-    <li><a href="#does-the-diagram-describe-every-token-and-every-gpu">Does the diagram describe every token and every GPU?</a></li>
+    <li><a href="#pytorch-is-now-the-sole-execution-backend">PyTorch is now the sole execution backend</a></li>
+    <li><a href="#how-tensorrt-llm-s-torch-compile-backend-differs-from-vllm-s">How TensorRT-LLM's torch.compile backend differs from vLLM's</a></li>
     <li><a href="#every-stage">Every stage</a></li>
     <li><a href="#every-step">Every step</a></li>
     <li><a href="#what-this-does-not-show">What this does not show</a></li>
@@ -57,171 +53,282 @@
   </ol>
 </nav>
 
-  <div class="answer-box">Current <strong>TensorRT-LLM uses a PyTorch execution backend</strong>. A Python LLM call or a request to trtllm-serve enters an executor that schedules requests, manages resources and runs the model forward pass using optimized GPU kernels. Older instructions built around the removed TensorRT engine backend describe a different version of the system. An API-compatible server also does not reveal the internals of any unrelated hosted service.</div>
+  <div class="answer-box">A call to <strong>LLM.generate()</strong> or <strong>trtllm-serve</strong> tokenizes the prompt and submits it to a per-rank <strong>PyExecutor</strong> worker running an asynchronous loop with the <strong>Overlap Scheduler</strong>. Each step, C++-bound <strong>CapacityScheduler</strong> and <strong>MicroBatchScheduler</strong> pick active context and generation requests while the C++-bound <strong>KVCacheManager</strong> allocates paged KV-cache blocks. <strong>ModelEngine</strong> delegates the batch to a native <strong>PyTorch</strong> model (<strong>PyTorch</strong> is now TensorRT-LLM's sole execution backend; `trtllm-build` engines were removed). With <strong>Piecewise CUDA Graph</strong> enabled, <strong>TorchDynamo</strong> traces the model into Torch IR and TensorRT-LLM's custom <strong>torch.compile</strong> backend lowers it via <strong>aot_module_simplified</strong> to <strong>ATen IR</strong>—fusing AllReduce + RMSNorm and scheduling multiple CUDA streams without using TorchInductor—then replays <strong>Piecewise CUDA Graphs</strong> around in-place <strong>TrtllmAttention</strong> or <strong>FlashInferAttention</strong> kernels.</div>
 
   <section class="ai-explorer" id="explorer" aria-label="Execution path explorer">
     <form class="ai-controls" onsubmit="return false">
-      <fieldset><legend>Request interface</legend>
-        <label><input type="radio" name="interface" value="python" data-phrase="a Python LLM API call" checked> Python LLM API</label>
-        <label><input type="radio" name="interface" value="http" data-phrase="an HTTP serving request"> HTTP server</label>
+      <fieldset><legend>Compilation &amp; graph mode</legend>
+        <label><input type="radio" name="mode" value="compiled" data-phrase="torch.compile with Piecewise CUDA Graphs (prefill_cuda_graph_backend: piecewise)" checked> torch.compile + Piecewise CUDA Graph</label>
+        <label><input type="radio" name="mode" value="eager" data-phrase="eager prefill with generation-only CUDA Graphs"> Default (eager prefill + decode CUDA Graph)</label>
+      </fieldset>
+      <fieldset><legend>Attention backend</legend>
+        <label><input type="radio" name="attention" value="trtllm" data-phrase="the default TrtllmAttention backend" checked> TrtllmAttention (default)</label>
+        <label><input type="radio" name="attention" value="flashinfer" data-phrase="the FlashInferAttention backend"> FlashInferAttention</label>
       </fieldset>
       <button type="button" class="ai-copy" hidden>Copy link to this path</button>
     </form>
-    <p class="ai-status" aria-live="polite" data-template="Showing {interface}">Showing a Python LLM API call: 7 stages, 6 steps.</p>
+    <p class="ai-status" aria-live="polite" data-template="Showing {mode} with {attention}">Showing torch.compile with Piecewise CUDA Graphs (prefill_cuda_graph_backend: piecewise) with the default TrtllmAttention backend: 13 stages, 13 steps.</p>
     <div class="ai-layout">
-      <div class="ai-diagram-wrap"><svg class="ai-path-svg" viewBox="0 0 826 546" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Execution path diagram: select a stage or step for details">
+      <div class="ai-diagram-wrap"><svg class="ai-path-svg" viewBox="0 0 826 780" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Execution path diagram: select a stage or step for details">
 <defs><marker id="ai-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9a9a9a"/></marker></defs>
-<path id="step-application--python_api" class="ai-step on" d="M413,62 C413,78 104,78 104,88" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Your inference call invokes LLM API Python LLM API"><title>Your inference call invokes LLM API Python LLM API</title></path>
-<path id="step-application--http" class="ai-step" d="M413,62 C413,78 722,78 722,88" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Your inference call sends HTTP request trtllm-serve"><title>Your inference call sends HTTP request trtllm-serve</title></path>
-<path id="step-python_api--executor" class="ai-step on" d="M104,140 C104,156 413,156 413,166" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Python LLM API submits inference PyExecutor"><title>Python LLM API submits inference PyExecutor</title></path>
-<path id="step-http--executor" class="ai-step" d="M722,140 C722,156 413,156 413,166" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="trtllm-serve submits server request PyExecutor"><title>trtllm-serve submits server request PyExecutor</title></path>
-<path id="step-executor--scheduler" class="ai-step on" d="M413,218 C413,234 413,234 413,244" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="PyExecutor schedules iteration Inflight scheduler"><title>PyExecutor schedules iteration Inflight scheduler</title></path>
-<path id="step-scheduler--engine" class="ai-step on" d="M413,296 C413,312 413,312 413,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Inflight scheduler runs selected forward PyTorch model engine"><title>Inflight scheduler runs selected forward PyTorch model engine</title></path>
-<path id="step-engine--kernels" class="ai-step on" d="M413,374 C413,390 413,390 413,400" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="PyTorch model engine executes model ops Specialized kernels"><title>PyTorch model engine executes model ops Specialized kernels</title></path>
-<path id="step-kernels--gpu" class="ai-step on" d="M413,452 C413,468 413,468 413,478" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Specialized kernels launches device work NVIDIA GPU"><title>Specialized kernels launches device work NVIDIA GPU</title></path>
-<g id="stage-application" class="ai-stage on" tabindex="0" role="button" aria-label="Your inference call: Your program">
+<path id="step-entry--py_executor" class="ai-step on" d="M413,62 C413,78 413,78 413,88" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="LLM API / serve tokenizes and submits request to PyExecutor worker"><title>LLM API / serve tokenizes and submits request to PyExecutor worker</title></path>
+<path id="step-py_executor--scheduler" class="ai-step on" d="M413,140 C413,156 207,156 207,166" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="PyExecutor worker schedules active requests via C++ batch scheduler"><title>PyExecutor worker schedules active requests via C++ batch scheduler</title></path>
+<path id="step-scheduler--kv_cache" class="ai-step on" d="M295,195 C410,195 410,195 525,195" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="C++ batch scheduler checks capacity and reserves blocks in C++ KVCacheManager"><title>C++ batch scheduler checks capacity and reserves blocks in C++ KVCacheManager</title></path>
+<path id="step-kv_cache--model_engine" class="ai-step on" d="M619,218 C619,234 413,234 413,244" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="C++ KVCacheManager passes scheduled batch &amp; KV buffers to ModelEngine &amp; runner"><title>C++ KVCacheManager passes scheduled batch &amp; KV buffers to ModelEngine &amp; runner</title></path>
+<path id="step-model_engine--pytorch_model" class="ai-step on" d="M413,296 C413,312 413,312 413,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="ModelEngine &amp; runner runs forward pass on PyTorch model"><title>ModelEngine &amp; runner runs forward pass on PyTorch model</title></path>
+<path id="step-pytorch_model--eager_prefill" class="ai-step" d="M413,374 C413,390 104,390 104,400" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="PyTorch model executes context/mixed batches via Eager prefill ops"><title>PyTorch model executes context/mixed batches via Eager prefill ops</title></path>
+<path id="step-pytorch_model--attention_op" class="ai-step on" d="M413,374 C413,390 413,390 413,400" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="PyTorch model invokes attention through Attention custom op"><title>PyTorch model invokes attention through Attention custom op</title></path>
+<path id="step-pytorch_model--dynamo_fx" class="ai-step on" d="M413,374 C413,390 722,390 722,400" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="PyTorch model traced in fullgraph mode by TorchDynamo (FX)"><title>PyTorch model traced in fullgraph mode by TorchDynamo (FX)</title></path>
+<path id="step-dynamo_fx--aten_passes" class="ai-step on" d="M722,452 C722,468 722,468 722,478" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="TorchDynamo (FX) lowered via aot_module_simplified to TRT-LLM ATen IR"><title>TorchDynamo (FX) lowered via aot_module_simplified to TRT-LLM ATen IR</title></path>
+<path id="step-aten_passes--piecewise_graphs" class="ai-step on" d="M722,530 C722,546 722,546 722,556" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="TRT-LLM ATen IR partitioned at attention into Piecewise CUDA Graph"><title>TRT-LLM ATen IR partitioned at attention into Piecewise CUDA Graph</title></path>
+<path id="step-eager_prefill--decode_graphs" class="ai-step" d="M104,452 C104,507 104,507 104,556" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Eager prefill ops captures decode steps as Decode CUDA Graph"><title>Eager prefill ops captures decode steps as Decode CUDA Graph</title></path>
+<path id="step-attention_op--trtllm_attn" class="ai-step on" d="M413,452 C413,507 310,507 310,556" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Attention custom op dispatches by default to TrtllmAttention"><title>Attention custom op dispatches by default to TrtllmAttention</title></path>
+<path id="step-attention_op--flashinfer_attn" class="ai-step" d="M413,452 C413,507 516,507 516,556" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Attention custom op dispatches when selected to FlashInferAttention"><title>Attention custom op dispatches when selected to FlashInferAttention</title></path>
+<path id="step-piecewise_graphs--sampler" class="ai-step on" d="M722,608 C722,624 413,624 413,634" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Piecewise CUDA Graph produces logits for Sampler"><title>Piecewise CUDA Graph produces logits for Sampler</title></path>
+<path id="step-decode_graphs--sampler" class="ai-step" d="M104,608 C104,624 413,624 413,634" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Decode CUDA Graph produces logits for Sampler"><title>Decode CUDA Graph produces logits for Sampler</title></path>
+<path id="step-trtllm_attn--gpu" class="ai-step on" d="M310,608 C310,663 413,663 413,712" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="TrtllmAttention executes CUDA kernels on NVIDIA GPU"><title>TrtllmAttention executes CUDA kernels on NVIDIA GPU</title></path>
+<path id="step-flashinfer_attn--gpu" class="ai-step" d="M516,608 C516,663 413,663 413,712" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="FlashInferAttention executes CUDA kernels on NVIDIA GPU"><title>FlashInferAttention executes CUDA kernels on NVIDIA GPU</title></path>
+<path id="step-sampler--gpu" class="ai-step on" d="M413,686 C413,702 413,702 413,712" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Sampler samples next tokens on NVIDIA GPU"><title>Sampler samples next tokens on NVIDIA GPU</title></path>
+<g id="stage-entry" class="ai-stage on" tabindex="0" role="button" aria-label="LLM API / serve: Your program">
   <rect x="325" y="16" width="176" height="46" rx="7" style="--kc:#60a5fa"/>
   <rect x="325" y="16" width="4" height="46" rx="2" fill="#60a5fa"/>
-  <text x="339" y="35" class="ai-name">Your inference call</text>
+  <text x="339" y="35" class="ai-name">LLM API / serve</text>
   <text x="339" y="51" class="ai-kind">application</text>
 </g>
-<g id="stage-python_api" class="ai-stage on" tabindex="0" role="button" aria-label="Python LLM API: Framework core">
-  <rect x="16" y="94" width="176" height="46" rx="7" style="--kc:#e3a008"/>
-  <rect x="16" y="94" width="4" height="46" rx="2" fill="#e3a008"/>
-  <text x="30" y="113" class="ai-name">Python LLM API</text>
-  <text x="30" y="129" class="ai-kind">framework component</text>
+<g id="stage-py_executor" class="ai-stage on" tabindex="0" role="button" aria-label="PyExecutor worker: Runtime">
+  <rect x="325" y="94" width="176" height="46" rx="7" style="--kc:#93c5fd"/>
+  <rect x="325" y="94" width="4" height="46" rx="2" fill="#93c5fd"/>
+  <text x="339" y="113" class="ai-name">PyExecutor worker</text>
+  <text x="339" y="129" class="ai-kind">runtime</text>
 </g>
-<g id="stage-http" class="ai-stage" tabindex="0" role="button" aria-label="trtllm-serve: Runtime">
-  <rect x="634" y="94" width="176" height="46" rx="7" style="--kc:#93c5fd"/>
-  <rect x="634" y="94" width="4" height="46" rx="2" fill="#93c5fd"/>
-  <text x="648" y="113" class="ai-name">trtllm-serve</text>
-  <text x="648" y="129" class="ai-kind">runtime</text>
+<g id="stage-scheduler" class="ai-stage on" tabindex="0" role="button" aria-label="C++ batch scheduler: Framework core">
+  <rect x="119" y="172" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="119" y="172" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="133" y="191" class="ai-name">C++ batch scheduler</text>
+  <text x="133" y="207" class="ai-kind">framework component</text>
 </g>
-<g id="stage-executor" class="ai-stage on" tabindex="0" role="button" aria-label="PyExecutor: Runtime">
-  <rect x="325" y="172" width="176" height="46" rx="7" style="--kc:#93c5fd"/>
-  <rect x="325" y="172" width="4" height="46" rx="2" fill="#93c5fd"/>
-  <text x="339" y="191" class="ai-name">PyExecutor</text>
-  <text x="339" y="207" class="ai-kind">runtime</text>
+<g id="stage-kv_cache" class="ai-stage on" tabindex="0" role="button" aria-label="C++ KVCacheManager: Framework core">
+  <rect x="531" y="172" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="531" y="172" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="545" y="191" class="ai-name">C++ KVCacheManager</text>
+  <text x="545" y="207" class="ai-kind">framework component</text>
 </g>
-<g id="stage-scheduler" class="ai-stage on" tabindex="0" role="button" aria-label="Inflight scheduler: Runtime">
-  <rect x="325" y="250" width="176" height="46" rx="7" style="--kc:#93c5fd"/>
-  <rect x="325" y="250" width="4" height="46" rx="2" fill="#93c5fd"/>
-  <text x="339" y="269" class="ai-name">Inflight scheduler</text>
-  <text x="339" y="285" class="ai-kind">runtime</text>
+<g id="stage-model_engine" class="ai-stage on" tabindex="0" role="button" aria-label="ModelEngine &amp; runner: Framework core">
+  <rect x="325" y="250" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="325" y="250" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="339" y="269" class="ai-name">ModelEngine &amp; runner</text>
+  <text x="339" y="285" class="ai-kind">framework component</text>
 </g>
-<g id="stage-engine" class="ai-stage on" tabindex="0" role="button" aria-label="PyTorch model engine: Framework core">
+<g id="stage-pytorch_model" class="ai-stage on" tabindex="0" role="button" aria-label="PyTorch model: Framework core">
   <rect x="325" y="328" width="176" height="46" rx="7" style="--kc:#e3a008"/>
   <rect x="325" y="328" width="4" height="46" rx="2" fill="#e3a008"/>
-  <text x="339" y="347" class="ai-name">PyTorch model engine</text>
+  <text x="339" y="347" class="ai-name">PyTorch model</text>
   <text x="339" y="363" class="ai-kind">framework component</text>
 </g>
-<g id="stage-kernels" class="ai-stage on" tabindex="0" role="button" aria-label="Specialized kernels: Kernel">
-  <rect x="325" y="406" width="176" height="46" rx="7" style="--kc:#f472b6"/>
-  <rect x="325" y="406" width="4" height="46" rx="2" fill="#f472b6"/>
-  <text x="339" y="425" class="ai-name">Specialized kernels</text>
-  <text x="339" y="441" class="ai-kind">kernel</text>
+<g id="stage-eager_prefill" class="ai-stage" tabindex="0" role="button" aria-label="Eager prefill ops: Kernel">
+  <rect x="16" y="406" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="16" y="406" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="30" y="425" class="ai-name">Eager prefill ops</text>
+  <text x="30" y="441" class="ai-kind">kernel</text>
+</g>
+<g id="stage-attention_op" class="ai-stage on" tabindex="0" role="button" aria-label="Attention custom op: Framework core">
+  <rect x="325" y="406" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="325" y="406" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="339" y="425" class="ai-name">Attention custom op</text>
+  <text x="339" y="441" class="ai-kind">framework component</text>
+</g>
+<g id="stage-dynamo_fx" class="ai-stage on" tabindex="0" role="button" aria-label="TorchDynamo (FX): Compiler">
+  <rect x="634" y="406" width="176" height="46" rx="7" style="--kc:#a78bfa"/>
+  <rect x="634" y="406" width="4" height="46" rx="2" fill="#a78bfa"/>
+  <text x="648" y="425" class="ai-name">TorchDynamo (FX)</text>
+  <text x="648" y="441" class="ai-kind">compiler</text>
+</g>
+<g id="stage-aten_passes" class="ai-stage on" tabindex="0" role="button" aria-label="TRT-LLM ATen IR: Compiler">
+  <rect x="634" y="484" width="176" height="46" rx="7" style="--kc:#a78bfa"/>
+  <rect x="634" y="484" width="4" height="46" rx="2" fill="#a78bfa"/>
+  <text x="648" y="503" class="ai-name">TRT-LLM ATen IR</text>
+  <text x="648" y="519" class="ai-kind">compiler</text>
+</g>
+<g id="stage-trtllm_attn" class="ai-stage on" tabindex="0" role="button" aria-label="TrtllmAttention: Kernel">
+  <rect x="222" y="562" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="222" y="562" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="236" y="581" class="ai-name">TrtllmAttention</text>
+  <text x="236" y="597" class="ai-kind">kernel</text>
+</g>
+<g id="stage-flashinfer_attn" class="ai-stage" tabindex="0" role="button" aria-label="FlashInferAttention: Kernel">
+  <rect x="428" y="562" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="428" y="562" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="442" y="581" class="ai-name">FlashInferAttention</text>
+  <text x="442" y="597" class="ai-kind">kernel</text>
+</g>
+<g id="stage-piecewise_graphs" class="ai-stage on" tabindex="0" role="button" aria-label="Piecewise CUDA Graph: Runtime">
+  <rect x="634" y="562" width="176" height="46" rx="7" style="--kc:#93c5fd"/>
+  <rect x="634" y="562" width="4" height="46" rx="2" fill="#93c5fd"/>
+  <text x="648" y="581" class="ai-name">Piecewise CUDA Graph</text>
+  <text x="648" y="597" class="ai-kind">runtime</text>
+</g>
+<g id="stage-decode_graphs" class="ai-stage" tabindex="0" role="button" aria-label="Decode CUDA Graph: Runtime">
+  <rect x="16" y="562" width="176" height="46" rx="7" style="--kc:#93c5fd"/>
+  <rect x="16" y="562" width="4" height="46" rx="2" fill="#93c5fd"/>
+  <text x="30" y="581" class="ai-name">Decode CUDA Graph</text>
+  <text x="30" y="597" class="ai-kind">runtime</text>
+</g>
+<g id="stage-sampler" class="ai-stage on" tabindex="0" role="button" aria-label="Sampler: Framework core">
+  <rect x="325" y="640" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="325" y="640" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="339" y="659" class="ai-name">Sampler</text>
+  <text x="339" y="675" class="ai-kind">framework component</text>
 </g>
 <g id="stage-gpu" class="ai-stage on" tabindex="0" role="button" aria-label="NVIDIA GPU: Hardware">
-  <rect x="325" y="484" width="176" height="46" rx="7" style="--kc:#4ade80"/>
-  <rect x="325" y="484" width="4" height="46" rx="2" fill="#4ade80"/>
-  <text x="339" y="503" class="ai-name">NVIDIA GPU</text>
-  <text x="339" y="519" class="ai-kind">hardware</text>
+  <rect x="325" y="718" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="325" y="718" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="339" y="737" class="ai-name">NVIDIA GPU</text>
+  <text x="339" y="753" class="ai-kind">hardware</text>
 </g>
 </svg></div>
       <aside class="ai-detail" aria-live="polite"><p class="ai-detail-hint">Select a stage or an arrow to see what it does and the source behind it.</p></aside>
     </div>
-    <ul class="ai-legend" aria-label="Legend"><li><span class="ai-swatch" style="--kc:#60a5fa"></span>Your program</li><li><span class="ai-swatch" style="--kc:#93c5fd"></span>Runtime</li><li><span class="ai-swatch" style="--kc:#e3a008"></span>Framework core</li><li><span class="ai-swatch" style="--kc:#f472b6"></span>Kernel</li><li><span class="ai-swatch" style="--kc:#4ade80"></span>Hardware</li></ul>
+    <ul class="ai-legend" aria-label="Legend"><li><span class="ai-swatch" style="--kc:#60a5fa"></span>Your program</li><li><span class="ai-swatch" style="--kc:#93c5fd"></span>Runtime</li><li><span class="ai-swatch" style="--kc:#e3a008"></span>Framework core</li><li><span class="ai-swatch" style="--kc:#f472b6"></span>Kernel</li><li><span class="ai-swatch" style="--kc:#a78bfa"></span>Compiler</li><li><span class="ai-swatch" style="--kc:#4ade80"></span>Hardware</li></ul>
   </section>
 
   <h2 id="the-selected-path-step-by-step">The selected path, step by step</h2>
   <ol class="ai-path-list">
-<li>Your inference call <em>invokes LLM API</em> Python LLM API: The Python route enters through tensorrt_llm.LLM.</li>
-<li>Python LLM API <em>submits inference</em> PyExecutor: The API uses TensorRT-LLM’s current executor stack for model inference.</li>
-<li>PyExecutor <em>schedules iteration</em> Inflight scheduler: The executor selects runnable requests for the current step.</li>
-<li>Inflight scheduler <em>runs selected forward</em> PyTorch model engine: Only scheduled work is submitted for the model forward pass.</li>
-<li>PyTorch model engine <em>executes model ops</em> Specialized kernels: The current PyTorch stack uses TensorRT-LLM’s optimized numerical kernels where applicable.</li>
-<li>Specialized kernels <em>launches device work</em> NVIDIA GPU: The executor uses CUDA runtime bindings for the supported NVIDIA GPU execution path.</li>
+<li>LLM API / serve <em>tokenizes and submits request to</em> PyExecutor worker: LLM.generate() or trtllm-serve tokenizes the prompt and queues the request for the rank's PyExecutor worker.</li>
+<li>PyExecutor worker <em>schedules active requests via</em> C++ batch scheduler: At each iteration of its background loop, PyExecutor invokes SimpleScheduler (combining CapacityScheduler and MicroBatchScheduler).</li>
+<li>C++ batch scheduler <em>checks capacity and reserves blocks in</em> C++ KVCacheManager: CapacityScheduler queries KVCacheManager for available blocks and PyExecutor calls prepare_resources to allocate paged KV-cache blocks for the batch.</li>
+<li>C++ KVCacheManager <em>passes scheduled batch &amp; KV buffers to</em> ModelEngine &amp; runner: PyExecutor invokes ModelEngine.forward with the scheduled context and generation requests and their allocated KV-cache resources.</li>
+<li>ModelEngine &amp; runner <em>runs forward pass on</em> PyTorch model: ScheduledModelRunner prepares the input tensors and executes the PyTorch model's forward pass.</li>
+<li>PyTorch model <em>invokes attention through</em> Attention custom op: Each transformer layer prepares AttentionMetadata and calls the wrapped attention custom op.</li>
+<li>PyTorch model <em>traced in fullgraph mode by</em> TorchDynamo (FX): Enabling prefill_cuda_graph_backend: piecewise enables torch.compile, which traces the decoder model with TorchDynamo into a Torch IR FX graph.</li>
+<li>TorchDynamo (FX) <em>lowered via aot_module_simplified to</em> TRT-LLM ATen IR: TensorRT-LLM's custom backend lowers the FX graph to ATen IR, fuses AllReduce + Residual + RMSNorm, removes mutation-wrapper copies, and inserts multi-stream scheduling ops.</li>
+<li>TRT-LLM ATen IR <em>partitioned at attention into</em> Piecewise CUDA Graph: Non-capturable attention is split out while the surrounding fused ATen/custom-op segments are captured per token-count bucket as Piecewise CUDA Graphs.</li>
+<li>Attention custom op <em>dispatches by default to</em> TrtllmAttention: By default, AttentionBackend.forward dispatches to TrtllmAttention, reading and updating paged KV cache blocks.</li>
+<li>Piecewise CUDA Graph <em>produces logits for</em> Sampler: After replaying the Piecewise or generation CUDA Graph segments, the model forward outputs logits to the asynchronous Sampler.</li>
+<li>TrtllmAttention <em>executes CUDA kernels on</em> NVIDIA GPU: TrtllmAttention launches its custom CUDA attention kernels on the GPU, writing in-place into preallocated buffers during Piecewise CUDA Graph execution.</li>
+<li>Sampler <em>samples next tokens on</em> NVIDIA GPU: Sampling runs asynchronously on the GPU while the Overlap Scheduler processes the previous step's completed tokens on the CPU.</li>
   </ol>
 
-  <h2 id="is-tensorrt-llm-the-same-product-as-tensorrt">Is TensorRT-LLM the same product as TensorRT?</h2>
-  <p>No. TensorRT-LLM is an LLM inference stack with its own model API, executor and scheduling. The [migration guide](https://nvidia.github.io/TensorRT-LLM/latest/legacy/tensorrt-backend-removal.html) says the legacy TensorRT engine backend has been removed and PyTorch is now the sole execution backend. A familiar product name is not sufficient evidence that a current request first runs trtllm-build.</p>
-  <p>This version boundary matters when following tutorials. Historical conversion and engine-build instructions can be correct for earlier releases while failing to describe the current API. Match the documentation to the installed version before copying commands or assuming one fixed execution architecture.</p>
+  <h2 id="pytorch-is-now-the-sole-execution-backend">PyTorch is now the sole execution backend</h2>
+  <p>Early releases of TensorRT-LLM required converting weights and running `trtllm-build` to compile a closed TensorRT `.engine` plan file ahead of time. TensorRT-LLM has since removed the TensorRT engine backend entirely: <strong>PyTorch</strong> is now the sole execution backend, HuggingFace checkpoints load directly into `tensorrt_llm.LLM`, and models are written in native PyTorch under `tensorrt_llm/_torch/models/`.</p>
+  <p>Inside each rank's `PyExecutor` worker, latency-critical control-plane pieces—the two-stage in-flight batching scheduler (`CapacityScheduler` and `MicroBatchScheduler`) and the paged `KVCacheManager`—run through <strong>C++</strong> bindings (`cpp/tensorrt_llm/`), while the <strong>Overlap Scheduler</strong> launches step $n+1$ on the GPU before the CPU finishes post-processing step $n$.</p>
 
-  <h2 id="what-happens-after-the-request-arrives">What happens after the request arrives?</h2>
-  <p>The [quick-start guide](https://nvidia.github.io/TensorRT-LLM/latest/quick-start-guide.html) documents Python LLM calls and HTTP serving with trtllm-serve. These are entry points to the inference stack. A compatible HTTP endpoint specifies how a client talks to the server; it does not make the server another vendor’s model service.</p>
-  <p>The [architecture overview](https://nvidia.github.io/TensorRT-LLM/latest/torch/arch_overview.html) describes PyExecutor, its model engine and decoding responsibilities. The diagram shows the compute route for one scheduled forward iteration. After model outputs are available, the decoder produces tokens and request state is updated; generation repeats rather than returning to the initial loading step for every token.</p>
-
-  <h2 id="what-is-inflight-batching">What is inflight batching?</h2>
-  <p>The [scheduler documentation](https://nvidia.github.io/TensorRT-LLM/latest/torch/scheduler.html) describes scheduling at each LLM step. CapacityScheduler determines resource fit, including cache capacity. MicroBatchScheduler chooses which fitting requests should actually execute next. This allows an active server to reconsider runnable work across iterations instead of assuming one fixed request batch lasts forever.</p>
-  <p>Resource fit and execution selection are related but distinct. A request can be active without being chosen for the current forward pass. The diagram therefore puts scheduling before model execution; it does not claim that every queued request runs simultaneously or that batching removes latency tradeoffs.</p>
-
-  <h2 id="where-do-python-c-and-cuda-appear">Where do Python, C++ and CUDA appear?</h2>
-  <p>Python is visible in the executor and model-facing interfaces. The architecture documents C++ bindings for scheduler and KV-cache components, and the [executor source](https://github.com/NVIDIA/TensorRT-LLM/blob/main/tensorrt_llm/_torch/pyexecutor/py_executor.py) imports CUDA runtime bindings. Numerical execution uses the optimized kernel stack described in the [project overview](https://github.com/NVIDIA/TensorRT-LLM/blob/main/README.md).</p>
-  <p>These are different responsibilities. A Python implementation edge describes orchestration; a C++ binding does not mean every kernel is C++; and selecting the PyTorch backend does not mean TensorRT-LLM becomes an ordinary unoptimized eager Python loop. Kernel selection and supported model details depend on the actual release and configuration.</p>
-
-  <h2 id="how-does-this-compare-with-vllm-or-llama-cpp">How does this compare with vLLM or llama.cpp?</h2>
-  <p>Compare the documented mechanisms rather than treating the engines as aliases. <a href="/ai/how-vllm-runs">vLLM</a> has its own scheduling and execution stack. <a href="/ai/how-llama-cpp-runs">llama.cpp</a> uses a distinct model/runtime/backend arrangement. This page explains current TensorRT-LLM execution without asserting a universal speed winner or publishing workload-free performance rankings.</p>
-
-  <h2 id="does-the-diagram-describe-every-token-and-every-gpu">Does the diagram describe every token and every GPU?</h2>
-  <p>No. It stops at the hardware work for a scheduled forward iteration. Sampling, caching, repeated decoding and advanced multi-device scheduling add further state transitions. A complete deployment must satisfy supported hardware, model and software requirements; the diagram is a cited architectural trace, not a compatibility certification.</p>
+  <h2 id="how-tensorrt-llm-s-torch-compile-backend-differs-from-vllm-s">How TensorRT-LLM's torch.compile backend differs from vLLM's</h2>
+  <p>Both <a href="/ai/how-vllm-runs">vLLM</a> and TensorRT-LLM use <a href="/ai/how-pytorch-runs">PyTorch's TorchDynamo</a> to capture the model graph and split it around attention for Piecewise CUDA Graphs, but what happens after Dynamo is different. vLLM hands each subgraph to <strong>TorchInductor</strong> to generate fused <a href="/tools/triton">Triton</a> kernels.</p>
+  <p>TensorRT-LLM does <strong>not</strong> use TorchInductor. Its custom `torch.compile` backend calls `aot_module_simplified` to lower the FX graph to <strong>ATen IR</strong>, runs custom pattern-matcher passes to fuse cross-module `AllReduce + Residual + RMSNorm` (+ FP8/FP4 quantization) into custom CUDA ops, strips `auto_functionalize` mutation copies in-place, inserts `trtllm.set_stream` / `record_event` / `wait_event` ops for multi-stream execution, and rewrites attention to write in-place into preallocated CUDA Graph buffers.</p>
 
   <h2 id="every-stage">Every stage</h2>
   <div class="ai-stage-list">
-<article class="ai-stage-detail" id="detail-stage-application" data-stage="application">
-<h3>Your inference call</h3>
+<article class="ai-stage-detail" id="detail-stage-entry" data-stage="entry">
+<h3>LLM API / serve</h3>
 <p class="ai-kind-tag" style="--kc:#60a5fa">application</p>
-<p>The application invokes the Python LLM API or sends an HTTP request to a locally deployed trtllm-serve instance.</p>
-
-<ul class="ai-sources"><li><blockquote>You can use the trtllm-serve command to start an OpenAI compatible server to interact with a model.</blockquote><a href="https://nvidia.github.io/TensorRT-LLM/latest/quick-start-guide.html" rel="noopener noreferrer" target="_blank">TensorRT-LLM HTTP serving and Python LLM API</a> <span class="src-type">Project docs</span></li></ul>
-</article>
-<article class="ai-stage-detail" id="detail-stage-python_api" data-stage="python_api">
-<h3>Python LLM API</h3>
-<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
-<p>The tensorrt_llm.LLM interface manages model loading and generation for Python callers.</p>
+<p>Your Python code calling LLM.generate() or an OpenAI-compatible HTTP client calling trtllm-serve. The LLM class handles tokenization and detokenization.</p>
 <p class="ai-lineage">In the atlas: <a href="/languages/python">Python</a></p>
-<ul class="ai-sources"><li><blockquote>The interface for PyTorch backend is tensorrt_llm.LLM.</blockquote><a href="https://nvidia.github.io/TensorRT-LLM/latest/torch/arch_overview.html" rel="noopener noreferrer" target="_blank">TensorRT-LLM current PyTorch architecture</a> <span class="src-type">Project docs</span></li></ul>
+<ul class="ai-sources"><li><blockquote>The `LLM` class is a core entry point for the TensorRT LLM, providing a simplified `generate()` API for efficient large language model inference.</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/developer-guide/overview.md" rel="noopener noreferrer" target="_blank">Architecture Overview (TensorRT-LLM Developer Guide)</a> <span class="src-type">Source repository</span></li><li><blockquote>The `LLM` class automatically manages essential pre and post-processing steps, including tokenization (encoding input prompts into numerical representations) and detokenization (decoding model outputs back into human-readable text).</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/developer-guide/overview.md" rel="noopener noreferrer" target="_blank">Architecture Overview (TensorRT-LLM Developer Guide)</a> <span class="src-type">Source repository</span></li><li><blockquote>You can use the `trtllm-serve` command to start an OpenAI compatible server to interact with a model.</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/quick-start-guide.md" rel="noopener noreferrer" target="_blank">Quick Start Guide (TensorRT-LLM documentation)</a> <span class="src-type">Source repository</span></li></ul>
 </article>
-<article class="ai-stage-detail" id="detail-stage-http" data-stage="http">
-<h3>trtllm-serve</h3>
+<article class="ai-stage-detail" id="detail-stage-py_executor" data-stage="py_executor">
+<h3>PyExecutor worker</h3>
 <p class="ai-kind-tag" style="--kc:#93c5fd">runtime</p>
-<p>The server exposes compatible HTTP endpoints while using the TensorRT-LLM inference stack beneath them.</p>
-
-<ul class="ai-sources"><li><blockquote>You can use the trtllm-serve command to start an OpenAI compatible server to interact with a model.</blockquote><a href="https://nvidia.github.io/TensorRT-LLM/latest/quick-start-guide.html" rel="noopener noreferrer" target="_blank">TensorRT-LLM HTTP serving and Python LLM API</a> <span class="src-type">Project docs</span></li></ul>
-</article>
-<article class="ai-stage-detail" id="detail-stage-executor" data-stage="executor">
-<h3>PyExecutor</h3>
-<p class="ai-kind-tag" style="--kc:#93c5fd">runtime</p>
-<p>The Python executor coordinates requests, scheduling, model forward calls and decoding.</p>
+<p>A dedicated worker process per rank running an asynchronous background loop, with the Overlap Scheduler enabled by default to overlap CPU post-processing with GPU execution.</p>
 <p class="ai-lineage">In the atlas: <a href="/tools/tensorrt-llm">TensorRT-LLM</a></p>
-<ul class="ai-sources"><li><blockquote>Running model forward for scheduled requests.</blockquote><a href="https://nvidia.github.io/TensorRT-LLM/latest/torch/arch_overview.html" rel="noopener noreferrer" target="_blank">TensorRT-LLM current PyTorch architecture</a> <span class="src-type">Project docs</span></li></ul>
+<ul class="ai-sources"><li><blockquote>Internally, the `LLM` class orchestrates the creation of a dedicated `PyExecutor(Worker)` process on each rank.</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/developer-guide/overview.md" rel="noopener noreferrer" target="_blank">Architecture Overview (TensorRT-LLM Developer Guide)</a> <span class="src-type">Source repository</span></li><li><blockquote>This `PyExecutor` operates in a continuous background loop, designed for the efficient, asynchronous processing of inference requests.</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/developer-guide/overview.md" rel="noopener noreferrer" target="_blank">Architecture Overview (TensorRT-LLM Developer Guide)</a> <span class="src-type">Source repository</span></li><li><blockquote>The Overlap Scheduler maximizes GPU utilization by hiding CPU-bound latency behind GPU computation.</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/developer-guide/overview.md" rel="noopener noreferrer" target="_blank">Architecture Overview (TensorRT-LLM Developer Guide)</a> <span class="src-type">Source repository</span></li></ul>
 </article>
 <article class="ai-stage-detail" id="detail-stage-scheduler" data-stage="scheduler">
-<h3>Inflight scheduler</h3>
-<p class="ai-kind-tag" style="--kc:#93c5fd">runtime</p>
-<p>Capacity and microbatch scheduling select work for this iteration based on resources and request state.</p>
-
-<ul class="ai-sources"><li><blockquote>The scheduler is invoked to determine which requests are scheduled at the current step.</blockquote><a href="https://nvidia.github.io/TensorRT-LLM/latest/torch/scheduler.html" rel="noopener noreferrer" target="_blank">TensorRT-LLM inflight scheduler</a> <span class="src-type">Project docs</span></li></ul>
-</article>
-<article class="ai-stage-detail" id="detail-stage-engine" data-stage="engine">
-<h3>PyTorch model engine</h3>
+<h3>C++ batch scheduler</h3>
 <p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
-<p>The current model engine prepares and executes the scheduled model forward pass through the PyTorch backend.</p>
-<p class="ai-lineage">In the atlas: <a href="/tools/pytorch">PyTorch</a></p>
-<ul class="ai-sources"><li><blockquote>PyTorch is now the sole execution backend for TensorRT LLM.</blockquote><a href="https://nvidia.github.io/TensorRT-LLM/latest/legacy/tensorrt-backend-removal.html" rel="noopener noreferrer" target="_blank">TensorRT-LLM TensorRT backend removal and migration</a> <span class="src-type">Project docs</span></li></ul>
+<p>Two-stage C++-bound scheduler (CapacityScheduler and MicroBatchScheduler) that dynamically selects context and generation requests at every step.</p>
+<p class="ai-lineage">In the atlas: <a href="/languages/cxx">C++</a></p>
+<ul class="ai-sources"><li><blockquote>TensorRT LLM PyTorch backend employs inflight batching, a mechanism where batching and scheduling occur dynamically at each LLM step.</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/torch/scheduler.md" rel="noopener noreferrer" target="_blank">Scheduler (TensorRT-LLM PyTorch Backend documentation)</a> <span class="src-type">Source repository</span></li><li><blockquote>Both CapacityScheduler and MicroBatchScheduler currently use C++ bindings.</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/torch/arch_overview.md" rel="noopener noreferrer" target="_blank">Architecture Overview (TensorRT-LLM PyTorch Backend documentation)</a> <span class="src-type">Source repository</span></li></ul>
 </article>
-<article class="ai-stage-detail" id="detail-stage-kernels" data-stage="kernels">
-<h3>Specialized kernels</h3>
+<article class="ai-stage-detail" id="detail-stage-kv_cache" data-stage="kv_cache">
+<h3>C++ KVCacheManager</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>C++-bound resource manager that allocates, updates, and recycles paged KV-cache blocks for the scheduled context and generation requests.</p>
+<p class="ai-lineage">In the atlas: <a href="/languages/cxx">C++</a></p>
+<ul class="ai-sources"><li><blockquote>Currently, the KVCacheManager uses C++ binding.</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/torch/arch_overview.md" rel="noopener noreferrer" target="_blank">Architecture Overview (TensorRT-LLM PyTorch Backend documentation)</a> <span class="src-type">Source repository</span></li><li><blockquote>In `KVCacheManager`, this involves allocating KV Cache memory. This allocation varies depending on the request type.</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/torch/kv_cache_manager.md" rel="noopener noreferrer" target="_blank">KV Cache Manager (TensorRT-LLM PyTorch Backend documentation)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-model_engine" data-stage="model_engine">
+<h3>ModelEngine &amp; runner</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>Loads the model, builds ScheduledInputs for the current step, and delegates input preparation, CUDA graphs, and execution to ScheduledModelRunner.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/tensorrt-llm">TensorRT-LLM</a></p>
+<ul class="ai-sources"><li><blockquote>`PyExecutor` calls `ModelEngine.forward` with scheduled requests, runtime resources, and the current speculative decoding state; the engine builds `ScheduledInputs` and delegates to a `ScheduledModelRunner`.</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/torch/arch_overview.md" rel="noopener noreferrer" target="_blank">Architecture Overview (TensorRT-LLM PyTorch Backend documentation)</a> <span class="src-type">Source repository</span></li><li><blockquote>The concrete runner owns input preparation, model execution, CUDA graphs, metadata, and output processing.</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/torch/arch_overview.md" rel="noopener noreferrer" target="_blank">Architecture Overview (TensorRT-LLM PyTorch Backend documentation)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-pytorch_model" data-stage="pytorch_model">
+<h3>PyTorch model</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>The model defined in native PyTorch under tensorrt_llm/_torch/models/. PyTorch is the sole execution backend of TensorRT-LLM; HuggingFace checkpoints load directly without an engine build step.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/pytorch">PyTorch</a></p>
+<ul class="ai-sources"><li><blockquote>PyTorch is the sole execution backend of TensorRT LLM; the former TensorRT engine backend has been removed</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/torch/arch_overview.md" rel="noopener noreferrer" target="_blank">Architecture Overview (TensorRT-LLM PyTorch Backend documentation)</a> <span class="src-type">Source repository</span></li><li><blockquote>There is no separate checkpoint-conversion or engine-build step.</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/legacy/tensorrt-backend-removal.md" rel="noopener noreferrer" target="_blank">Migration Guide: TensorRT Backend Removed (TensorRT-LLM documentation)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-eager_prefill" data-stage="eager_prefill">
+<h3>Eager prefill ops</h3>
 <p class="ai-kind-tag" style="--kc:#f472b6">kernel</p>
-<p>Supported model operations execute through the optimized kernel/runtime stack selected by the current implementation.</p>
-
-<ul class="ai-sources"><li><blockquote>specialized kernels for common operations</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/README.md" rel="noopener noreferrer" target="_blank">TensorRT-LLM specialized kernels and runtime overview</a> <span class="src-type">Source repository</span></li></ul>
+<p>Without Piecewise CUDA Graphs, context and mixed batches execute the PyTorch decoder eagerly while generation-only CUDA graphs are captured from the eager decoder.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/cuda">CUDA</a></p>
+<ul class="ai-sources"><li><blockquote>With this option enabled, ineligible context and mixed forwards use the eager decoder. Ordinary CUDA graphs are also captured from the eager decoder and subsequently replayed as CUDA graphs.</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/features/torch_compile_and_piecewise_cuda_graph.md" rel="noopener noreferrer" target="_blank">Torch Compile &amp; Prefill CUDA Graph (TensorRT-LLM documentation)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-attention_op" data-stage="attention_op">
+<h3>Attention custom op</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>Attention is wrapped as an opaque PyTorch custom op with a fake kernel and AttentionMetadata, writing in-place into preallocated tensors so Piecewise CUDA Graph segments keep stable addresses.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/tensorrt-llm">TensorRT-LLM</a></p>
+<ul class="ai-sources"><li><blockquote>Clear the boundary of attention so that it can be easily recognized by Piecewise CUDA Graph</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/features/torch_compile_and_piecewise_cuda_graph.md" rel="noopener noreferrer" target="_blank">Torch Compile &amp; Prefill CUDA Graph (TensorRT-LLM documentation)</a> <span class="src-type">Source repository</span></li><li><blockquote>Instead of allocating its own output, attention writes results into a tensor preallocated by the preceding CUDA Graph segment.</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/features/torch_compile_and_piecewise_cuda_graph.md" rel="noopener noreferrer" target="_blank">Torch Compile &amp; Prefill CUDA Graph (TensorRT-LLM documentation)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-dynamo_fx" data-stage="dynamo_fx">
+<h3>TorchDynamo (FX)</h3>
+<p class="ai-kind-tag" style="--kc:#a78bfa">compiler</p>
+<p>Traces the PyTorch model in fullgraph mode into a Torch IR FX graph, preserving tensor names so the compiler can track the dynamic token-count SymInt.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/pytorch">PyTorch</a></p>
+<ul class="ai-sources"><li><blockquote>Torch IR is the Fx graph that is directly traced by Torch Dynamo.</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/features/torch_compile_and_piecewise_cuda_graph.md" rel="noopener noreferrer" target="_blank">Torch Compile &amp; Prefill CUDA Graph (TensorRT-LLM documentation)</a> <span class="src-type">Source repository</span></li><li><blockquote>For Piecewise CUDA Graph, it needs to find the correct `SymInt` which represents the token number.</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/features/torch_compile_and_piecewise_cuda_graph.md" rel="noopener noreferrer" target="_blank">Torch Compile &amp; Prefill CUDA Graph (TensorRT-LLM documentation)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-aten_passes" data-stage="aten_passes">
+<h3>TRT-LLM ATen IR</h3>
+<p class="ai-kind-tag" style="--kc:#a78bfa">compiler</p>
+<p>Lowers Torch IR via aot_module_simplified to ATen IR, fuses AllReduce + Residual + RMSNorm (+ FP8/FP4), strips auto_functionalize copies in-place, and schedules multi-stream ops without using TorchInductor.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/tensorrt-llm">TensorRT-LLM</a></p>
+<ul class="ai-sources"><li><blockquote>We get ATen IR after explicitly calling `aot_module_simplified` on the Fx graph.</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/features/torch_compile_and_piecewise_cuda_graph.md" rel="noopener noreferrer" target="_blank">Torch Compile &amp; Prefill CUDA Graph (TensorRT-LLM documentation)</a> <span class="src-type">Source repository</span></li><li><blockquote>We mainly do the operation fusion for AllReduce &amp; RMSNorm.</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/features/torch_compile_and_piecewise_cuda_graph.md" rel="noopener noreferrer" target="_blank">Torch Compile &amp; Prefill CUDA Graph (TensorRT-LLM documentation)</a> <span class="src-type">Source repository</span></li><li><blockquote>In a TorchInductor pipeline, later passes typically eliminate this copy, but TensorRT LLM relies on custom ops and does not use Inductor.</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/features/torch_compile_and_piecewise_cuda_graph.md" rel="noopener noreferrer" target="_blank">Torch Compile &amp; Prefill CUDA Graph (TensorRT-LLM documentation)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-trtllm_attn" data-stage="trtllm_attn">
+<h3>TrtllmAttention</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel</p>
+<p>The default production attention backend (TrtllmAttention): custom CUDA kernels supporting inflight batching, paged KV cache, fused QKV input, and FP8 output.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/cuda">CUDA</a></p>
+<ul class="ai-sources"><li><blockquote>The TRT-LLM backend, `TrtllmAttention`, serves as the default backend and supports all the features available in the Flashinfer backend while being further optimized for enhanced performance.</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/torch/attention.md" rel="noopener noreferrer" target="_blank">Attention (TensorRT-LLM PyTorch Backend documentation)</a> <span class="src-type">Source repository</span></li><li><blockquote>It can accept a single QKV tensor as input, which is more efficient compared to using separate Q, K, and V tensors.</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/torch/attention.md" rel="noopener noreferrer" target="_blank">Attention (TensorRT-LLM PyTorch Backend documentation)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-flashinfer_attn" data-stage="flashinfer_attn">
+<h3>FlashInferAttention</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel</p>
+<p>Optional FlashInfer attention backend (selected with attn_backend=&quot;flashinfer&quot;) supporting inflight batching, paged KV cache, FP8 quantization, and RoPE fusion.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/cuda">CUDA</a></p>
+<ul class="ai-sources"><li><blockquote>In contrast, the Flashinfer backend, `FlashInferAttention`, is performance-optimized and supports both inflight batching and paged KV cache.</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/torch/attention.md" rel="noopener noreferrer" target="_blank">Attention (TensorRT-LLM PyTorch Backend documentation)</a> <span class="src-type">Source repository</span></li><li><blockquote>By integrating rotary position embedding (RoPE) directly into the attention computation, this feature enhances efficiency and reduces overhead.</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/torch/attention.md" rel="noopener noreferrer" target="_blank">Attention (TensorRT-LLM PyTorch Backend documentation)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-piecewise_graphs" data-stage="piecewise_graphs">
+<h3>Piecewise CUDA Graph</h3>
+<p class="ai-kind-tag" style="--kc:#93c5fd">runtime</p>
+<p>Context and mixed batches pad the token count and replay captured Piecewise CUDA Graph segments around eager attention; pure generation iterations replay generation-only CUDA Graphs.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/cuda">CUDA</a></p>
+<ul class="ai-sources"><li><blockquote>We implement Piecewise CUDA Graph execution on top of torch.compile: non-capturable regions run in eager mode, while the rest of the model is captured and replayed as CUDA Graph segments.</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/features/torch_compile_and_piecewise_cuda_graph.md" rel="noopener noreferrer" target="_blank">Torch Compile &amp; Prefill CUDA Graph (TensorRT-LLM documentation)</a> <span class="src-type">Source repository</span></li><li><blockquote>Piecewise CUDA Graph only handles context-only and mixed context+generation iterations, while the generation-only CUDA Graph only handles pure generation iterations.</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/features/torch_compile_and_piecewise_cuda_graph.md" rel="noopener noreferrer" target="_blank">Torch Compile &amp; Prefill CUDA Graph (TensorRT-LLM documentation)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-decode_graphs" data-stage="decode_graphs">
+<h3>Decode CUDA Graph</h3>
+<p class="ai-kind-tag" style="--kc:#93c5fd">runtime</p>
+<p>Pure generation steps replay captured CUDA Graphs padded to the nearest supported batch size, launching the entire sequence of decode kernels with one API call.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/cuda">CUDA</a></p>
+<ul class="ai-sources"><li><blockquote>By capturing a sequence of CUDA operations as a single graph, the entire sequence can be launched with one API call, minimizing CPU-GPU synchronization and driver overhead.</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/developer-guide/overview.md" rel="noopener noreferrer" target="_blank">Architecture Overview (TensorRT-LLM Developer Guide)</a> <span class="src-type">Source repository</span></li><li><blockquote>If an incoming batch's size doesn't match a captured graph, it's padded to the nearest larger, supported size for which a graph exists.</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/developer-guide/overview.md" rel="noopener noreferrer" target="_blank">Architecture Overview (TensorRT-LLM Developer Guide)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-sampler" data-stage="sampler">
+<h3>Sampler</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>Applies greedy, top-k, top-p, or beam-search sampling to the raw logits from ModelEngine asynchronously while the Overlap Scheduler processes the previous batch.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/tensorrt-llm">TensorRT-LLM</a></p>
+<ul class="ai-sources"><li><blockquote>`Sampler`: Takes the raw outputs (logits) from the ModelEngine and applies appropriate sampling strategies (e.g., greedy, top-k, top-p, beam search) to generate the final output tokens.</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/developer-guide/overview.md" rel="noopener noreferrer" target="_blank">Architecture Overview (TensorRT-LLM Developer Guide)</a> <span class="src-type">Source repository</span></li><li><blockquote>The key strategy is to launch the GPU's work for the next step (n+1) immediately, without waiting for the CPU to finish processing the results of the current step (n).</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/developer-guide/overview.md" rel="noopener noreferrer" target="_blank">Architecture Overview (TensorRT-LLM Developer Guide)</a> <span class="src-type">Source repository</span></li></ul>
 </article>
 <article class="ai-stage-detail" id="detail-stage-gpu" data-stage="gpu">
 <h3>NVIDIA GPU</h3>
 <p class="ai-kind-tag" style="--kc:#4ade80">hardware</p>
-<p>The scoped supported NVIDIA deployment executes device work through its CUDA runtime stack; CPU scheduling remains part of the host process.</p>
+<p>Executes the replayed CUDA Graph segments, custom CUDA kernels (attention, GEMM, MoE, AllReduce), and asynchronous sampling on NVIDIA GPUs.</p>
 
-<ul class="ai-sources"><li><blockquote>TensorRT LLM supports the full spectrum of NVIDIA GPU architectures:</blockquote><a href="https://nvidia.github.io/TensorRT-LLM/latest/supported-hardware.html" rel="noopener noreferrer" target="_blank">TensorRT-LLM supported NVIDIA GPU hardware</a> <span class="src-type">Project docs</span></li></ul>
+<ul class="ai-sources"><li><blockquote>`ModelEngine`: Handles the loading and highly efficient execution of the language model on the GPU hardware.</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/developer-guide/overview.md" rel="noopener noreferrer" target="_blank">Architecture Overview (TensorRT-LLM Developer Guide)</a> <span class="src-type">Source repository</span></li></ul>
 </article>
   </div>
 
@@ -229,40 +336,70 @@
   <div class="table-wrap"><table class="ai-steps">
     <thead><tr><th>From</th><th>Step</th><th>To</th><th>When</th><th>What happens</th><th>Source</th></tr></thead>
     <tbody>
-<tr id="detail-step-application--python_api" data-step="application--python_api" data-from="application" data-to="python_api" data-when="{&quot;interface&quot;:[&quot;python&quot;]}" class="on">
-<td>Your inference call</td><td>invokes LLM API</td><td>Python LLM API</td><td>Python LLM API</td><td>The Python route enters through tensorrt_llm.LLM.</td><td><a href="https://nvidia.github.io/TensorRT-LLM/latest/torch/arch_overview.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+<tr id="detail-step-entry--py_executor" data-step="entry--py_executor" data-from="entry" data-to="py_executor" data-when="{}" class="on">
+<td>LLM API / serve</td><td>tokenizes and submits request to</td><td>PyExecutor worker</td><td>any compilation &amp; graph mode · any attention backend</td><td>LLM.generate() or trtllm-serve tokenizes the prompt and queues the request for the rank's PyExecutor worker.</td><td><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/developer-guide/overview.md" rel="noopener noreferrer" target="_blank">Source repository</a><br><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/developer-guide/overview.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
 </tr>
-<tr id="detail-step-application--http" data-step="application--http" data-from="application" data-to="http" data-when="{&quot;interface&quot;:[&quot;http&quot;]}">
-<td>Your inference call</td><td>sends HTTP request</td><td>trtllm-serve</td><td>HTTP server</td><td>The HTTP route assumes a configured trtllm-serve deployment.</td><td><a href="https://nvidia.github.io/TensorRT-LLM/latest/quick-start-guide.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+<tr id="detail-step-py_executor--scheduler" data-step="py_executor--scheduler" data-from="py_executor" data-to="scheduler" data-when="{}" class="on">
+<td>PyExecutor worker</td><td>schedules active requests via</td><td>C++ batch scheduler</td><td>any compilation &amp; graph mode · any attention backend</td><td>At each iteration of its background loop, PyExecutor invokes SimpleScheduler (combining CapacityScheduler and MicroBatchScheduler).</td><td><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/developer-guide/overview.md" rel="noopener noreferrer" target="_blank">Source repository</a><br><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/torch/scheduler.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
 </tr>
-<tr id="detail-step-python_api--executor" data-step="python_api--executor" data-from="python_api" data-to="executor" data-when="{}" class="on">
-<td>Python LLM API</td><td>submits inference</td><td>PyExecutor</td><td>any request interface</td><td>The API uses TensorRT-LLM’s current executor stack for model inference.</td><td><a href="https://nvidia.github.io/TensorRT-LLM/latest/torch/arch_overview.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+<tr id="detail-step-scheduler--kv_cache" data-step="scheduler--kv_cache" data-from="scheduler" data-to="kv_cache" data-when="{}" class="on">
+<td>C++ batch scheduler</td><td>checks capacity and reserves blocks in</td><td>C++ KVCacheManager</td><td>any compilation &amp; graph mode · any attention backend</td><td>CapacityScheduler queries KVCacheManager for available blocks and PyExecutor calls prepare_resources to allocate paged KV-cache blocks for the batch.</td><td><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/developer-guide/overview.md" rel="noopener noreferrer" target="_blank">Source repository</a><br><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/torch/kv_cache_manager.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
 </tr>
-<tr id="detail-step-http--executor" data-step="http--executor" data-from="http" data-to="executor" data-when="{}">
-<td>trtllm-serve</td><td>submits server request</td><td>PyExecutor</td><td>any request interface</td><td>Serving uses the runtime rather than a separate model implementation invented by this API-compatible interface.</td><td><a href="https://nvidia.github.io/TensorRT-LLM/latest/quick-start-guide.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+<tr id="detail-step-kv_cache--model_engine" data-step="kv_cache--model_engine" data-from="kv_cache" data-to="model_engine" data-when="{}" class="on">
+<td>C++ KVCacheManager</td><td>passes scheduled batch &amp; KV buffers to</td><td>ModelEngine &amp; runner</td><td>any compilation &amp; graph mode · any attention backend</td><td>PyExecutor invokes ModelEngine.forward with the scheduled context and generation requests and their allocated KV-cache resources.</td><td><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/torch/arch_overview.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
 </tr>
-<tr id="detail-step-executor--scheduler" data-step="executor--scheduler" data-from="executor" data-to="scheduler" data-when="{}" class="on">
-<td>PyExecutor</td><td>schedules iteration</td><td>Inflight scheduler</td><td>any request interface</td><td>The executor selects runnable requests for the current step.</td><td><a href="https://nvidia.github.io/TensorRT-LLM/latest/torch/scheduler.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+<tr id="detail-step-model_engine--pytorch_model" data-step="model_engine--pytorch_model" data-from="model_engine" data-to="pytorch_model" data-when="{}" class="on">
+<td>ModelEngine &amp; runner</td><td>runs forward pass on</td><td>PyTorch model</td><td>any compilation &amp; graph mode · any attention backend</td><td>ScheduledModelRunner prepares the input tensors and executes the PyTorch model's forward pass.</td><td><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/developer-guide/overview.md" rel="noopener noreferrer" target="_blank">Source repository</a><br><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/torch/arch_overview.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
 </tr>
-<tr id="detail-step-scheduler--engine" data-step="scheduler--engine" data-from="scheduler" data-to="engine" data-when="{}" class="on">
-<td>Inflight scheduler</td><td>runs selected forward</td><td>PyTorch model engine</td><td>any request interface</td><td>Only scheduled work is submitted for the model forward pass.</td><td><a href="https://nvidia.github.io/TensorRT-LLM/latest/torch/arch_overview.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+<tr id="detail-step-pytorch_model--eager_prefill" data-step="pytorch_model--eager_prefill" data-from="pytorch_model" data-to="eager_prefill" data-when="{&quot;mode&quot;:[&quot;eager&quot;]}">
+<td>PyTorch model</td><td>executes context/mixed batches via</td><td>Eager prefill ops</td><td>Default (eager prefill + decode CUDA Graph) · any attention backend</td><td>Without torch.compile Piecewise CUDA Graphs, context and mixed batches run through the eager PyTorch decoder, launching custom ops and ATen kernels directly.</td><td><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/features/torch_compile_and_piecewise_cuda_graph.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
 </tr>
-<tr id="detail-step-engine--kernels" data-step="engine--kernels" data-from="engine" data-to="kernels" data-when="{}" class="on">
-<td>PyTorch model engine</td><td>executes model ops</td><td>Specialized kernels</td><td>any request interface</td><td>The current PyTorch stack uses TensorRT-LLM’s optimized numerical kernels where applicable.</td><td><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/README.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+<tr id="detail-step-pytorch_model--attention_op" data-step="pytorch_model--attention_op" data-from="pytorch_model" data-to="attention_op" data-when="{}" class="on">
+<td>PyTorch model</td><td>invokes attention through</td><td>Attention custom op</td><td>any compilation &amp; graph mode · any attention backend</td><td>Each transformer layer prepares AttentionMetadata and calls the wrapped attention custom op.</td><td><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/torch/attention.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
 </tr>
-<tr id="detail-step-kernels--gpu" data-step="kernels--gpu" data-from="kernels" data-to="gpu" data-when="{}" class="on">
-<td>Specialized kernels</td><td>launches device work</td><td>NVIDIA GPU</td><td>any request interface</td><td>The executor uses CUDA runtime bindings for the supported NVIDIA GPU execution path.</td><td><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/tensorrt_llm/_torch/pyexecutor/py_executor.py" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+<tr id="detail-step-pytorch_model--dynamo_fx" data-step="pytorch_model--dynamo_fx" data-from="pytorch_model" data-to="dynamo_fx" data-when="{&quot;mode&quot;:[&quot;compiled&quot;]}" class="on">
+<td>PyTorch model</td><td>traced in fullgraph mode by</td><td>TorchDynamo (FX)</td><td>torch.compile + Piecewise CUDA Graph · any attention backend</td><td>Enabling prefill_cuda_graph_backend: piecewise enables torch.compile, which traces the decoder model with TorchDynamo into a Torch IR FX graph.</td><td><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/features/torch_compile_and_piecewise_cuda_graph.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-dynamo_fx--aten_passes" data-step="dynamo_fx--aten_passes" data-from="dynamo_fx" data-to="aten_passes" data-when="{&quot;mode&quot;:[&quot;compiled&quot;]}" class="on">
+<td>TorchDynamo (FX)</td><td>lowered via aot_module_simplified to</td><td>TRT-LLM ATen IR</td><td>torch.compile + Piecewise CUDA Graph · any attention backend</td><td>TensorRT-LLM's custom backend lowers the FX graph to ATen IR, fuses AllReduce + Residual + RMSNorm, removes mutation-wrapper copies, and inserts multi-stream scheduling ops.</td><td><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/features/torch_compile_and_piecewise_cuda_graph.md" rel="noopener noreferrer" target="_blank">Source repository</a><br><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/features/torch_compile_and_piecewise_cuda_graph.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-aten_passes--piecewise_graphs" data-step="aten_passes--piecewise_graphs" data-from="aten_passes" data-to="piecewise_graphs" data-when="{&quot;mode&quot;:[&quot;compiled&quot;]}" class="on">
+<td>TRT-LLM ATen IR</td><td>partitioned at attention into</td><td>Piecewise CUDA Graph</td><td>torch.compile + Piecewise CUDA Graph · any attention backend</td><td>Non-capturable attention is split out while the surrounding fused ATen/custom-op segments are captured per token-count bucket as Piecewise CUDA Graphs.</td><td><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/features/torch_compile_and_piecewise_cuda_graph.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-eager_prefill--decode_graphs" data-step="eager_prefill--decode_graphs" data-from="eager_prefill" data-to="decode_graphs" data-when="{&quot;mode&quot;:[&quot;eager&quot;]}">
+<td>Eager prefill ops</td><td>captures decode steps as</td><td>Decode CUDA Graph</td><td>Default (eager prefill + decode CUDA Graph) · any attention backend</td><td>Pure generation steps are captured from the eager decoder as generation-only CUDA Graphs with batch-size padding.</td><td><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/features/torch_compile_and_piecewise_cuda_graph.md" rel="noopener noreferrer" target="_blank">Source repository</a><br><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/developer-guide/overview.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-attention_op--trtllm_attn" data-step="attention_op--trtllm_attn" data-from="attention_op" data-to="trtllm_attn" data-when="{&quot;attention&quot;:[&quot;trtllm&quot;]}" class="on">
+<td>Attention custom op</td><td>dispatches by default to</td><td>TrtllmAttention</td><td>any compilation &amp; graph mode · TrtllmAttention (default)</td><td>By default, AttentionBackend.forward dispatches to TrtllmAttention, reading and updating paged KV cache blocks.</td><td><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/torch/attention.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-attention_op--flashinfer_attn" data-step="attention_op--flashinfer_attn" data-from="attention_op" data-to="flashinfer_attn" data-when="{&quot;attention&quot;:[&quot;flashinfer&quot;]}">
+<td>Attention custom op</td><td>dispatches when selected to</td><td>FlashInferAttention</td><td>any compilation &amp; graph mode · FlashInferAttention</td><td>When configured with attn_backend=&quot;flashinfer&quot;, AttentionBackend.forward calls FlashInferAttention's cached prefill or decode plan.</td><td><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/torch/attention.md" rel="noopener noreferrer" target="_blank">Source repository</a><br><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/torch/attention.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-piecewise_graphs--sampler" data-step="piecewise_graphs--sampler" data-from="piecewise_graphs" data-to="sampler" data-when="{&quot;mode&quot;:[&quot;compiled&quot;]}" class="on">
+<td>Piecewise CUDA Graph</td><td>produces logits for</td><td>Sampler</td><td>torch.compile + Piecewise CUDA Graph · any attention backend</td><td>After replaying the Piecewise or generation CUDA Graph segments, the model forward outputs logits to the asynchronous Sampler.</td><td><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/developer-guide/overview.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-decode_graphs--sampler" data-step="decode_graphs--sampler" data-from="decode_graphs" data-to="sampler" data-when="{&quot;mode&quot;:[&quot;eager&quot;]}">
+<td>Decode CUDA Graph</td><td>produces logits for</td><td>Sampler</td><td>Default (eager prefill + decode CUDA Graph) · any attention backend</td><td>The eager prefill or replayed generation CUDA Graph outputs logits to the asynchronous Sampler.</td><td><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/developer-guide/overview.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-trtllm_attn--gpu" data-step="trtllm_attn--gpu" data-from="trtllm_attn" data-to="gpu" data-when="{&quot;attention&quot;:[&quot;trtllm&quot;]}" class="on">
+<td>TrtllmAttention</td><td>executes CUDA kernels on</td><td>NVIDIA GPU</td><td>any compilation &amp; graph mode · TrtllmAttention (default)</td><td>TrtllmAttention launches its custom CUDA attention kernels on the GPU, writing in-place into preallocated buffers during Piecewise CUDA Graph execution.</td><td><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/torch/attention.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-flashinfer_attn--gpu" data-step="flashinfer_attn--gpu" data-from="flashinfer_attn" data-to="gpu" data-when="{&quot;attention&quot;:[&quot;flashinfer&quot;]}">
+<td>FlashInferAttention</td><td>executes CUDA kernels on</td><td>NVIDIA GPU</td><td>any compilation &amp; graph mode · FlashInferAttention</td><td>FlashInferAttention launches its paged prefill and decode CUDA kernels on the GPU.</td><td><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/torch/attention.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-sampler--gpu" data-step="sampler--gpu" data-from="sampler" data-to="gpu" data-when="{}" class="on">
+<td>Sampler</td><td>samples next tokens on</td><td>NVIDIA GPU</td><td>any compilation &amp; graph mode · any attention backend</td><td>Sampling runs asynchronously on the GPU while the Overlap Scheduler processes the previous step's completed tokens on the CPU.</td><td><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/developer-guide/overview.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
 </tr>
     </tbody>
   </table></div>
 
   <h2 id="what-this-does-not-show">What this does not show</h2>
-  <p>Current TensorRT-LLM documentation retrieved in November 2026, after removal of the legacy TensorRT engine backend. One supported NVIDIA GPU inference deployment through Python LLM or HTTP serving. This diagram summarizes one scheduled forward iteration, not the full token-generation loop. Historical engine builds, encoder/multimodal paths, speculative decoding, disaggregated serving and distributed parallelism are outside scope.</p>
+  <p>Documented execution paths for a causal LLM running on an NVIDIA GPU in TensorRT-LLM's PyTorch backend (the sole execution backend after the legacy TensorRT engine backend was removed), in either torch.compile + Piecewise CUDA Graph mode or default eager-prefill + generation CUDA Graph mode, using the default TrtllmAttention or FlashInferAttention backend. Multi-node tensor/pipeline/expert parallelism, DeepGEMM/MegaMoE barrier internals, speculative decoding, visual diffusion models (VisualGen), the experimental breakable CUDA Graph backend, and the removed legacy trtllm-build TensorRT engine pipeline are out of scope. The removed legacy TensorRT engine backend (`trtllm-build` / `LLM(backend=&quot;tensorrt&quot;)`) and closed NVIDIA TensorRT compiler internals are out of scope; TensorRT-LLM's migration guide states that PyTorch is now the sole execution backend.</p>
 
   <h2 id="how-this-page-is-checked">How this page is checked</h2>
-  <p>Every stage and step above quotes the source that supports it. The quotes were checked against the current TensorRT-LLM architecture, scheduler, migration, quick-start and supported-hardware guides, and Python executor source on 2026-11-11. The data is a <a href="/dataset/ai/how-tensorrt-llm-runs.json">versioned JSON file</a> under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. Found something wrong or out of date? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
-  <p><a class="ai-graph-link" href="/explore?view=ai&amp;path=how-tensorrt-llm-runs&amp;interface=python">See this path in the graph explorer &rarr;</a></p>
-  <p>What these tools are written in is in the main atlas: <a href="/languages/python">Python</a>, <a href="/tools/tensorrt-llm">TensorRT-LLM</a>, <a href="/tools/pytorch">PyTorch</a>. More execution paths: <a href="/ai/how-jax-runs">What Actually Happens When You Run JAX Code</a>, <a href="/ai/how-keras-runs">What Runs Underneath a Keras 3 Model</a>, <a href="/ai/how-llama-cpp-runs">How Does llama.cpp Run a Model on Your Hardware</a>, <a href="/ai/how-mlx-runs">What Actually Happens When You Run MLX on a Mac</a>, <a href="/ai/how-ollama-runs">What Actually Runs When You Send Ollama a Prompt</a>, <a href="/ai/how-onnx-runtime-runs">How Does ONNX Runtime Execute a Model Across Hardware</a>, <a href="/ai/how-pytorch-runs">What Actually Happens When You Run a PyTorch Model</a>, <a href="/ai/how-tensorflow-runs">How Does TensorFlow Run Python on a CPU or GPU</a>, <a href="/ai/how-vllm-runs">What Actually Happens When vLLM Serves a Request</a>, or <a href="/ai">compare them all</a>.</p>
+  <p>Every stage and step above quotes the source that supports it. The quotes were checked against the NVIDIA TensorRT-LLM documentation and repository on main (Developer Guide Architecture Overview, PyTorch Backend Architecture Overview, Scheduler, KV Cache Manager, Attention, Torch Compile &amp; Prefill CUDA Graph, Quick Start Guide, and TensorRT Backend Removal Migration Guide) on 2026-11-11. The data is a <a href="/dataset/ai/how-tensorrt-llm-runs.json">versioned JSON file</a> under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. Found something wrong or out of date? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
+  <p><a class="ai-graph-link" href="/explore?view=ai&amp;path=how-tensorrt-llm-runs&amp;mode=compiled&amp;attention=trtllm">See this path in the graph explorer &rarr;</a></p>
+  <p>What these tools are written in is in the main atlas: <a href="/languages/python">Python</a>, <a href="/tools/tensorrt-llm">TensorRT-LLM</a>, <a href="/languages/cxx">C++</a>, <a href="/tools/pytorch">PyTorch</a>, <a href="/tools/cuda">CUDA</a>. More execution paths: <a href="/ai/how-jax-runs">What Actually Happens When You Run JAX Code</a>, <a href="/ai/how-keras-runs">What Runs Underneath a Keras 3 Model</a>, <a href="/ai/how-llama-cpp-runs">How Does llama.cpp Run a Model on Your Hardware</a>, <a href="/ai/how-mlx-runs">What Actually Happens When You Run MLX on a Mac</a>, <a href="/ai/how-ollama-runs">What Actually Runs When You Send Ollama a Prompt</a>, <a href="/ai/how-onnx-runtime-runs">How Does ONNX Runtime Execute a Model Across Hardware</a>, <a href="/ai/how-pytorch-runs">What Actually Happens When You Run a PyTorch Model</a>, <a href="/ai/how-tensorflow-runs">How Does TensorFlow Run Python on a CPU or GPU</a>, <a href="/ai/how-vllm-runs">What Actually Happens When vLLM Serves a Request</a>, or <a href="/ai">compare them all</a>.</p>
 
   <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>
 </main>
