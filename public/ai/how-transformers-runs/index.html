@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How Hugging Face Transformers Runs a Model: pipeline() | Language Lineage</title>
+  <meta name="description" content="Trace a Hugging Face Transformers text-generation pipeline: Rust tokenizer, safetensors weights, PyTorch model, generate(), SDPA attention on CPU, CUDA or Apple MPS, with sources." />
+  <link rel="canonical" href="https://www.languagelineage.org/ai/how-transformers-runs" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><script defer src="/fx.js"></script><script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script><link rel="alternate" type="application/rss+xml" title="Language Lineage" href="/rss.xml" /><link rel="stylesheet" href="/seo.css" />
+  <script defer src="/ai-path.js"></script>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="How Hugging Face Transformers Runs a Model: pipeline() | Language Lineage" />
+  <meta property="og:description" content="Trace a Hugging Face Transformers text-generation pipeline: Rust tokenizer, safetensors weights, PyTorch model, generate(), SDPA attention on CPU, CUDA or Apple MPS, with sources." />
+  <meta property="og:url" content="https://www.languagelineage.org/ai/how-transformers-runs" />
+  <meta property="og:image" content="https://www.languagelineage.org/og/ai-how-transformers-runs.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What Actually Happens When You Run a Hugging Face Pipeline?","description":"Trace a Hugging Face Transformers text-generation pipeline: Rust tokenizer, safetensors weights, PyTorch model, generate(), SDPA attention on CPU, CUDA or Apple MPS, with sources.","url":"https://www.languagelineage.org/ai/how-transformers-runs","datePublished":"2026-11-12","dateModified":"2026-11-12","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"citation":["https://huggingface.co/docs/transformers/main/en/pipeline_tutorial","https://huggingface.co/docs/transformers/main/en/main_classes/pipelines","https://huggingface.co/docs/transformers/main/en/models","https://huggingface.co/docs/transformers/main/en/fast_tokenizers","https://huggingface.co/docs/transformers/main/en/attention_interface","https://huggingface.co/docs/transformers/main/en/generation_strategies","https://docs.pytorch.org/docs/2.15/notes/mps.html"],"inLanguage":"en"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"AI execution paths","item":"https://www.languagelineage.org/ai"},{"@type":"ListItem","position":3,"name":"What Actually Happens When You Run a Hugging Face Pipeline?","item":"https://www.languagelineage.org/ai/how-transformers-runs"}]}</script>
+</head>
+<body class="seo-page">
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<nav class="seo-nav">
+  <a href="/" class="nav-brand"><img class="nav-logo-mark" src="/logo-mark.svg" width="22" height="22" alt="" aria-hidden="true">Language Lineage</a>
+  <a href="/relationships">Relationships</a>
+  <a href="/languages">Languages</a>
+  <a href="/tools">Tools</a>
+  <a href="/guides">Guides</a>
+  <a href="/timeline">Timeline</a>
+  <a href="/dataset">Dataset</a>
+  <a href="/how-it-works">How It Works</a>
+  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
+</nav>
+<main class="seo-main" id="main-content">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; <a href="/ai">AI execution paths</a> &rsaquo; What Actually Happens When You Run a Hugging Face Pipeline
+  </nav>
+
+  <h1>What Actually Happens When You Run a Hugging Face Pipeline?</h1>
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#the-selected-path-step-by-step">The selected path, step by step</a></li>
+    <li><a href="#which-device-it-picks">Which device it picks</a></li>
+    <li><a href="#where-python-hands-off">Where Python hands off</a></li>
+    <li><a href="#every-stage">Every stage</a></li>
+    <li><a href="#every-step">Every step</a></li>
+    <li><a href="#what-this-does-not-show">What this does not show</a></li>
+    <li><a href="#how-this-page-is-checked">How this page is checked</a></li>
+  </ol>
+</nav>
+
+  <div class="answer-box">A <strong>pipeline()</strong> call runs four documented stages: <strong>tokenization</strong>, <strong>model inference</strong>, <strong>post-processing</strong> and output. The tokenizer turns text into token ids with Hugging Face's <strong>Rust</strong> tokenizers library. The model is a <strong>PyTorch</strong> module whose weights <strong>from_pretrained()</strong> loads from <strong>safetensors</strong> files when they exist. <strong>generate()</strong> then calls the model one step at a time, by default greedily keeping the most likely next token, up to 20 new tokens unless the model's config says otherwise. Attention runs through PyTorch's <strong>SDPA</strong>, which picks the fastest kernel on a CUDA GPU and the C++ implementation on the CPU; on Apple silicon the operations run as MPS kernels. The output ids are decoded back into text.</div>
+
+  <section class="ai-explorer" id="explorer" aria-label="Execution path explorer">
+    <form class="ai-controls" onsubmit="return false">
+      <fieldset><legend>Device</legend>
+        <label><input type="radio" name="device" value="cuda" data-phrase="an NVIDIA GPU (CUDA)" checked> NVIDIA GPU</label>
+        <label><input type="radio" name="device" value="mps" data-phrase="an Apple silicon GPU (mps)"> Apple GPU (MPS)</label>
+        <label><input type="radio" name="device" value="cpu" data-phrase="the CPU"> CPU</label>
+      </fieldset>
+      <button type="button" class="ai-copy" hidden>Copy link to this path</button>
+    </form>
+    <p class="ai-status" aria-live="polite" data-template="Showing pipeline() on {device}">Showing pipeline() on an NVIDIA GPU (CUDA): 10 stages, 10 steps.</p>
+    <div class="ai-layout">
+      <div class="ai-diagram-wrap"><svg class="ai-path-svg" viewBox="0 0 826 624" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Execution path diagram: select a stage or step for details">
+<defs><marker id="ai-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9a9a9a"/></marker></defs>
+<path id="step-python_code--pipeline" class="ai-step on" d="M413,62 C413,78 413,78 413,88" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Your pipeline() call creates and calls Pipeline"><title>Your pipeline() call creates and calls Pipeline</title></path>
+<path id="step-pipeline--weights" class="ai-step on" d="M413,140 C413,156 722,156 722,166" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Pipeline loads safetensors weights"><title>Pipeline loads safetensors weights</title></path>
+<path id="step-weights--model" class="ai-step on" d="M722,218 C722,273 722,273 722,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="safetensors weights fill PyTorch model"><title>safetensors weights fill PyTorch model</title></path>
+<path id="step-pipeline--tokenizer" class="ai-step on" d="M413,140 C413,156 104,156 104,166" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Pipeline tokenizes with Tokenizer (Rust core)"><title>Pipeline tokenizes with Tokenizer (Rust core)</title></path>
+<path id="step-tokenizer--generate" class="ai-step on" d="M104,218 C104,234 413,234 413,244" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Tokenizer (Rust core) token ids go to generate() loop"><title>Tokenizer (Rust core) token ids go to generate() loop</title></path>
+<path id="step-generate--model" class="ai-step on" d="M413,296 C413,312 722,312 722,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="generate() loop calls forward, one token at a time PyTorch model"><title>generate() loop calls forward, one token at a time PyTorch model</title></path>
+<path id="step-model--sdpa" class="ai-step on" d="M722,374 C722,390 413,390 413,400" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="PyTorch model computes attention with PyTorch SDPA"><title>PyTorch model computes attention with PyTorch SDPA</title></path>
+<path id="step-sdpa--cuda_attention" class="ai-step on" d="M413,452 C413,468 619,468 619,478" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="PyTorch SDPA picks Fastest CUDA kernel"><title>PyTorch SDPA picks Fastest CUDA kernel</title></path>
+<path id="step-sdpa--cpp_attention" class="ai-step" d="M413,452 C413,468 207,468 207,478" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="PyTorch SDPA falls back to C++ attention"><title>PyTorch SDPA falls back to C++ attention</title></path>
+<path id="step-sdpa--mps_kernels" class="ai-step" d="M413,452 C413,468 413,468 413,478" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="PyTorch SDPA runs as MPS kernels"><title>PyTorch SDPA runs as MPS kernels</title></path>
+<path id="step-cuda_attention--nvidia_gpu" class="ai-step on" d="M619,530 C619,546 619,546 619,556" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Fastest CUDA kernel runs on NVIDIA GPU"><title>Fastest CUDA kernel runs on NVIDIA GPU</title></path>
+<path id="step-cpp_attention--cpu" class="ai-step" d="M207,530 C207,546 207,546 207,556" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="C++ attention runs on CPU"><title>C++ attention runs on CPU</title></path>
+<path id="step-mps_kernels--apple_gpu" class="ai-step" d="M413,530 C413,546 413,546 413,556" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="MPS kernels run on Apple silicon GPU"><title>MPS kernels run on Apple silicon GPU</title></path>
+<path id="step-generate--postprocess" class="ai-step on" d="M413,296 C413,312 104,312 104,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="generate() loop hands output ids to Post-processing"><title>generate() loop hands output ids to Post-processing</title></path>
+<g id="stage-python_code" class="ai-stage on" tabindex="0" role="button" aria-label="Your pipeline() call: Your program">
+  <rect x="325" y="16" width="176" height="46" rx="7" style="--kc:#60a5fa"/>
+  <rect x="325" y="16" width="4" height="46" rx="2" fill="#60a5fa"/>
+  <text x="339" y="35" class="ai-name">Your pipeline() call</text>
+  <text x="339" y="51" class="ai-kind">programming language</text>
+</g>
+<g id="stage-pipeline" class="ai-stage on" tabindex="0" role="button" aria-label="Pipeline: Framework core">
+  <rect x="325" y="94" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="325" y="94" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="339" y="113" class="ai-name">Pipeline</text>
+  <text x="339" y="129" class="ai-kind">framework component</text>
+</g>
+<g id="stage-weights" class="ai-stage on" tabindex="0" role="button" aria-label="safetensors weights: Model file">
+  <rect x="634" y="172" width="176" height="46" rx="7" style="--kc:#fb7185"/>
+  <rect x="634" y="172" width="4" height="46" rx="2" fill="#fb7185"/>
+  <text x="648" y="191" class="ai-name">safetensors weights</text>
+  <text x="648" y="207" class="ai-kind">model format</text>
+</g>
+<g id="stage-tokenizer" class="ai-stage on" tabindex="0" role="button" aria-label="Tokenizer (Rust core): Framework core">
+  <rect x="16" y="172" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="16" y="172" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="30" y="191" class="ai-name">Tokenizer (Rust core)</text>
+  <text x="30" y="207" class="ai-kind">framework component</text>
+</g>
+<g id="stage-model" class="ai-stage on" tabindex="0" role="button" aria-label="PyTorch model: Framework core">
+  <rect x="634" y="328" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="634" y="328" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="648" y="347" class="ai-name">PyTorch model</text>
+  <text x="648" y="363" class="ai-kind">framework component</text>
+</g>
+<g id="stage-generate" class="ai-stage on" tabindex="0" role="button" aria-label="generate() loop: Runtime">
+  <rect x="325" y="250" width="176" height="46" rx="7" style="--kc:#93c5fd"/>
+  <rect x="325" y="250" width="4" height="46" rx="2" fill="#93c5fd"/>
+  <text x="339" y="269" class="ai-name">generate() loop</text>
+  <text x="339" y="285" class="ai-kind">runtime</text>
+</g>
+<g id="stage-postprocess" class="ai-stage on" tabindex="0" role="button" aria-label="Post-processing: Framework core">
+  <rect x="16" y="328" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="16" y="328" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="30" y="347" class="ai-name">Post-processing</text>
+  <text x="30" y="363" class="ai-kind">framework component</text>
+</g>
+<g id="stage-sdpa" class="ai-stage on" tabindex="0" role="button" aria-label="PyTorch SDPA: Kernel">
+  <rect x="325" y="406" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="325" y="406" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="339" y="425" class="ai-name">PyTorch SDPA</text>
+  <text x="339" y="441" class="ai-kind">kernel</text>
+</g>
+<g id="stage-cpp_attention" class="ai-stage" tabindex="0" role="button" aria-label="C++ attention: Kernel">
+  <rect x="119" y="484" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="119" y="484" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="133" y="503" class="ai-name">C++ attention</text>
+  <text x="133" y="519" class="ai-kind">kernel</text>
+</g>
+<g id="stage-mps_kernels" class="ai-stage" tabindex="0" role="button" aria-label="MPS kernels: Kernel">
+  <rect x="325" y="484" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="325" y="484" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="339" y="503" class="ai-name">MPS kernels</text>
+  <text x="339" y="519" class="ai-kind">kernel</text>
+</g>
+<g id="stage-cuda_attention" class="ai-stage on" tabindex="0" role="button" aria-label="Fastest CUDA kernel: Kernel">
+  <rect x="531" y="484" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="531" y="484" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="545" y="503" class="ai-name">Fastest CUDA kernel</text>
+  <text x="545" y="519" class="ai-kind">kernel</text>
+</g>
+<g id="stage-cpu" class="ai-stage" tabindex="0" role="button" aria-label="CPU: Hardware">
+  <rect x="119" y="562" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="119" y="562" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="133" y="581" class="ai-name">CPU</text>
+  <text x="133" y="597" class="ai-kind">hardware</text>
+</g>
+<g id="stage-apple_gpu" class="ai-stage" tabindex="0" role="button" aria-label="Apple silicon GPU: Hardware">
+  <rect x="325" y="562" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="325" y="562" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="339" y="581" class="ai-name">Apple silicon GPU</text>
+  <text x="339" y="597" class="ai-kind">hardware</text>
+</g>
+<g id="stage-nvidia_gpu" class="ai-stage on" tabindex="0" role="button" aria-label="NVIDIA GPU: Hardware">
+  <rect x="531" y="562" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="531" y="562" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="545" y="581" class="ai-name">NVIDIA GPU</text>
+  <text x="545" y="597" class="ai-kind">hardware</text>
+</g>
+</svg></div>
+      <aside class="ai-detail" aria-live="polite"><p class="ai-detail-hint">Select a stage or an arrow to see what it does and the source behind it.</p></aside>
+    </div>
+    <ul class="ai-legend" aria-label="Legend"><li><span class="ai-swatch" style="--kc:#60a5fa"></span>Your program</li><li><span class="ai-swatch" style="--kc:#93c5fd"></span>Runtime</li><li><span class="ai-swatch" style="--kc:#e3a008"></span>Framework core</li><li><span class="ai-swatch" style="--kc:#fb7185"></span>Model file</li><li><span class="ai-swatch" style="--kc:#f472b6"></span>Kernel</li><li><span class="ai-swatch" style="--kc:#4ade80"></span>Hardware</li></ul>
+  </section>
+
+  <h2 id="the-selected-path-step-by-step">The selected path, step by step</h2>
+  <ol class="ai-path-list">
+<li>Your pipeline() call <em>creates and calls</em> Pipeline: Your code builds a pipeline for a task and calls it with text.</li>
+<li>Pipeline <em>loads</em> safetensors weights: The model's weights are loaded with from_pretrained(), from safetensors files when available.</li>
+<li>safetensors weights <em>fill</em> PyTorch model: The weights are loaded into the model class on the chosen device.</li>
+<li>Pipeline <em>tokenizes with</em> Tokenizer (Rust core): Input text is tokenized first.</li>
+<li>Tokenizer (Rust core) <em>token ids go to</em> generate() loop: The token ids start the generation loop.</li>
+<li>generate() loop <em>calls forward, one token at a time</em> PyTorch model: Each step runs the model and, with greedy search, keeps the most likely next token.</li>
+<li>PyTorch model <em>computes attention with</em> PyTorch SDPA: Unless another attention implementation is set, attention layers use PyTorch's SDPA.</li>
+<li>PyTorch SDPA <em>picks</em> Fastest CUDA kernel: On a CUDA GPU, SDPA selects the fastest available attention kernel.</li>
+<li>Fastest CUDA kernel <em>runs on</em> NVIDIA GPU: The kernels run on the NVIDIA GPU.</li>
+<li>generate() loop <em>hands output ids to</em> Post-processing: The finished token ids go to post-processing.</li>
+  </ol>
+
+  <h2 id="which-device-it-picks">Which device it picks</h2>
+  <p>If you do not pass a device, the pipeline places the model on the first accelerator it finds (a CUDA GPU, Apple silicon's MPS, or others) and uses the CPU only when there is none. Passing device=&quot;cpu&quot; or device=&quot;mps&quot; forces a choice.</p>
+
+  <h2 id="where-python-hands-off">Where Python hands off</h2>
+  <p>Most of the work in this path is not Python: tokenization runs in Rust, and the model's layers run as PyTorch kernels. For what PyTorch does with those operations on each device, see <a href="/ai/how-pytorch-runs">what happens when you run a PyTorch model</a>. For serving many requests at once, engines such as <a href="/ai/how-vllm-runs">vLLM</a> add batching schedulers and KV-cache management on top of the same kind of model.</p>
+
+  <h2 id="every-stage">Every stage</h2>
+  <div class="ai-stage-list">
+<article class="ai-stage-detail" id="detail-stage-python_code" data-stage="python_code">
+<h3>Your pipeline() call</h3>
+<p class="ai-kind-tag" style="--kc:#60a5fa">programming language</p>
+<p>Python code such as pipeline(task=&quot;text-generation&quot;, model=...), which picks a default model and preprocessor for the task unless you name one.</p>
+<p class="ai-lineage">In the atlas: <a href="/languages/python">Python</a></p>
+<ul class="ai-sources"><li><blockquote>Each task is configured to use a default pretrained model and preprocessor, but this can be overridden with the model parameter if you want to use a different model.</blockquote><a href="https://huggingface.co/docs/transformers/main/en/pipeline_tutorial" rel="noopener noreferrer" target="_blank">Pipeline (Transformers documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-pipeline" data-stage="pipeline">
+<h3>Pipeline</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>Transformers' Pipeline class: tokenization, model inference and post-processing in one call, on the device it chooses or you set.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/transformers">Transformers</a></p>
+<ul class="ai-sources"><li><blockquote>Pipeline workflow is defined as a sequence of the following operations: Input -&gt; Tokenization -&gt; Model Inference -&gt; Post-Processing (task dependent) -&gt; Output</blockquote><a href="https://huggingface.co/docs/transformers/main/en/main_classes/pipelines" rel="noopener noreferrer" target="_blank">Pipelines API reference (Transformers documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-weights" data-stage="weights">
+<h3>safetensors weights</h3>
+<p class="ai-kind-tag" style="--kc:#fb7185">model format</p>
+<p>The model's configuration and weights from the Hugging Face Hub or a local folder, read from safetensors files when they exist.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/safetensors">Safetensors</a></p>
+<ul class="ai-sources"><li><blockquote>The from_pretrained() method loads weights stored in the safetensors file format if they’re available.</blockquote><a href="https://huggingface.co/docs/transformers/main/en/models" rel="noopener noreferrer" target="_blank">Loading models (Transformers documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-tokenizer" data-stage="tokenizer">
+<h3>Tokenizer (Rust core)</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>Turns text into token ids. Fast tokenizers run on the Rust tokenizers library, which parallelizes batches across threads.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/hf-tokenizers">HF Tokenizers</a></p>
+<ul class="ai-sources"><li><blockquote>TokenizersBackend handles large batches faster because its Rust-based backend parallelizes work across threads.</blockquote><a href="https://huggingface.co/docs/transformers/main/en/fast_tokenizers" rel="noopener noreferrer" target="_blank">Tokenizers (Transformers documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-model" data-stage="model">
+<h3>PyTorch model</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>The model class (for text generation, a causal language model) holding the loaded weights on the chosen device.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/pytorch">PyTorch</a></p>
+<ul class="ai-sources"><li><blockquote>It requires a model class and the from_pretrained() method.</blockquote><a href="https://huggingface.co/docs/transformers/main/en/models" rel="noopener noreferrer" target="_blank">Loading models (Transformers documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-generate" data-stage="generate">
+<h3>generate() loop</h3>
+<p class="ai-kind-tag" style="--kc:#93c5fd">runtime</p>
+<p>Produces new tokens one step at a time by calling the model; by default it is greedy search, up to 20 new tokens unless the model's generation config says otherwise.</p>
+
+<ul class="ai-sources"><li><blockquote>Greedy search is the default decoding strategy. It selects the next most likely token at each step.</blockquote><a href="https://huggingface.co/docs/transformers/main/en/generation_strategies" rel="noopener noreferrer" target="_blank">Generation strategies (Transformers documentation)</a> <span class="src-type">Project docs</span></li><li><blockquote>Unless specified in GenerationConfig , this strategy generates a maximum of 20 new tokens.</blockquote><a href="https://huggingface.co/docs/transformers/main/en/generation_strategies" rel="noopener noreferrer" target="_blank">Generation strategies (Transformers documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-postprocess" data-stage="postprocess">
+<h3>Post-processing</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>Turns the output token ids back into text for the result.</p>
+
+<ul class="ai-sources"><li><blockquote>Postprocess will receive the raw outputs of the _forward method, generally tensors, and reformat them into something more friendly.</blockquote><a href="https://huggingface.co/docs/transformers/main/en/main_classes/pipelines" rel="noopener noreferrer" target="_blank">Pipelines API reference (Transformers documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-sdpa" data-stage="sdpa">
+<h3>PyTorch SDPA</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel</p>
+<p>Transformers' default attention function: PyTorch's scaled dot product attention.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/pytorch">PyTorch</a></p>
+<ul class="ai-sources"><li><blockquote>Omit certain backbones from the dict to use the default attention function (SDPA).</blockquote><a href="https://huggingface.co/docs/transformers/main/en/attention_interface" rel="noopener noreferrer" target="_blank">Attention backends (Transformers documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-cpp_attention" data-stage="cpp_attention">
+<h3>C++ attention</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel</p>
+<p>On backends other than CUDA, SDPA uses PyTorch's C++ implementation.</p>
+<p class="ai-lineage">In the atlas: <a href="/languages/cxx">C++</a></p>
+<ul class="ai-sources"><li><blockquote>It defaults to the PyTorch C++ implementation for other backends.</blockquote><a href="https://huggingface.co/docs/transformers/main/en/attention_interface" rel="noopener noreferrer" target="_blank">Attention backends (Transformers documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-mps_kernels" data-stage="mps_kernels">
+<h3>MPS kernels</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel</p>
+<p>On the mps device, PyTorch runs operations as Metal Performance Shaders graphs and kernels.</p>
+
+<ul class="ai-sources"><li><blockquote>It introduces a new device to map Machine Learning computational graphs and primitives on highly efficient Metal Performance Shaders Graph framework and tuned kernels provided by Metal Performance Shaders framework respectively.</blockquote><a href="https://docs.pytorch.org/docs/2.15/notes/mps.html" rel="noopener noreferrer" target="_blank">MPS backend (PyTorch 2.15 documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-cuda_attention" data-stage="cuda_attention">
+<h3>Fastest CUDA kernel</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel</p>
+<p>On CUDA, SDPA automatically picks the fastest available attention kernel.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/cuda">CUDA</a></p>
+<ul class="ai-sources"><li><blockquote>PyTorch’s scaled dot product attention (SDPA) selects the fastest attention function for CUDA backends automatically.</blockquote><a href="https://huggingface.co/docs/transformers/main/en/attention_interface" rel="noopener noreferrer" target="_blank">Attention backends (Transformers documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-cpu" data-stage="cpu">
+<h3>CPU</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">hardware</p>
+<p>Used only when no accelerator is available, or when you pass device=&quot;cpu&quot;.</p>
+
+<ul class="ai-sources"><li><blockquote>By default, when device is left unset, Pipeline automatically places the model on the first available accelerator (CUDA GPU, Apple Silicon MPS, XPU, …) and only falls back to a CPU when none is available.</blockquote><a href="https://huggingface.co/docs/transformers/main/en/pipeline_tutorial" rel="noopener noreferrer" target="_blank">Pipeline (Transformers documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-apple_gpu" data-stage="apple_gpu">
+<h3>Apple silicon GPU</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">hardware</p>
+<p>The GPU of an Apple silicon Mac, through PyTorch's mps device.</p>
+
+<ul class="ai-sources"><li><blockquote>To run Pipeline on Apple silicon, set device=&quot;mps&quot;.</blockquote><a href="https://huggingface.co/docs/transformers/main/en/pipeline_tutorial" rel="noopener noreferrer" target="_blank">Pipeline (Transformers documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-nvidia_gpu" data-stage="nvidia_gpu">
+<h3>NVIDIA GPU</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">hardware</p>
+<p>The first choice when device is left unset and a CUDA GPU is present.</p>
+
+<ul class="ai-sources"><li><blockquote>By default, when device is left unset, Pipeline automatically places the model on the first available accelerator (CUDA GPU, Apple Silicon MPS, XPU, …) and only falls back to a CPU when none is available.</blockquote><a href="https://huggingface.co/docs/transformers/main/en/pipeline_tutorial" rel="noopener noreferrer" target="_blank">Pipeline (Transformers documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+  </div>
+
+  <h2 id="every-step">Every step</h2>
+  <div class="table-wrap"><table class="ai-steps">
+    <thead><tr><th>From</th><th>Step</th><th>To</th><th>When</th><th>What happens</th><th>Source</th></tr></thead>
+    <tbody>
+<tr id="detail-step-python_code--pipeline" data-step="python_code--pipeline" data-from="python_code" data-to="pipeline" data-when="{}" class="on">
+<td>Your pipeline() call</td><td>creates and calls</td><td>Pipeline</td><td>any device</td><td>Your code builds a pipeline for a task and calls it with text.</td><td><a href="https://huggingface.co/docs/transformers/main/en/pipeline_tutorial" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-pipeline--weights" data-step="pipeline--weights" data-from="pipeline" data-to="weights" data-when="{}" class="on">
+<td>Pipeline</td><td>loads</td><td>safetensors weights</td><td>any device</td><td>The model's weights are loaded with from_pretrained(), from safetensors files when available.</td><td><a href="https://huggingface.co/docs/transformers/main/en/models" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-weights--model" data-step="weights--model" data-from="weights" data-to="model" data-when="{}" class="on">
+<td>safetensors weights</td><td>fill</td><td>PyTorch model</td><td>any device</td><td>The weights are loaded into the model class on the chosen device.</td><td><a href="https://huggingface.co/docs/transformers/main/en/models" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-pipeline--tokenizer" data-step="pipeline--tokenizer" data-from="pipeline" data-to="tokenizer" data-when="{}" class="on">
+<td>Pipeline</td><td>tokenizes with</td><td>Tokenizer (Rust core)</td><td>any device</td><td>Input text is tokenized first.</td><td><a href="https://huggingface.co/docs/transformers/main/en/main_classes/pipelines" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-tokenizer--generate" data-step="tokenizer--generate" data-from="tokenizer" data-to="generate" data-when="{}" class="on">
+<td>Tokenizer (Rust core)</td><td>token ids go to</td><td>generate() loop</td><td>any device</td><td>The token ids start the generation loop.</td><td><a href="https://huggingface.co/docs/transformers/main/en/main_classes/pipelines" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-generate--model" data-step="generate--model" data-from="generate" data-to="model" data-when="{}" class="on">
+<td>generate() loop</td><td>calls forward, one token at a time</td><td>PyTorch model</td><td>any device</td><td>Each step runs the model and, with greedy search, keeps the most likely next token.</td><td><a href="https://huggingface.co/docs/transformers/main/en/generation_strategies" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-model--sdpa" data-step="model--sdpa" data-from="model" data-to="sdpa" data-when="{}" class="on">
+<td>PyTorch model</td><td>computes attention with</td><td>PyTorch SDPA</td><td>any device</td><td>Unless another attention implementation is set, attention layers use PyTorch's SDPA.</td><td><a href="https://huggingface.co/docs/transformers/main/en/attention_interface" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-sdpa--cuda_attention" data-step="sdpa--cuda_attention" data-from="sdpa" data-to="cuda_attention" data-when="{&quot;device&quot;:[&quot;cuda&quot;]}" class="on">
+<td>PyTorch SDPA</td><td>picks</td><td>Fastest CUDA kernel</td><td>NVIDIA GPU</td><td>On a CUDA GPU, SDPA selects the fastest available attention kernel.</td><td><a href="https://huggingface.co/docs/transformers/main/en/attention_interface" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-sdpa--cpp_attention" data-step="sdpa--cpp_attention" data-from="sdpa" data-to="cpp_attention" data-when="{&quot;device&quot;:[&quot;cpu&quot;]}">
+<td>PyTorch SDPA</td><td>falls back to</td><td>C++ attention</td><td>CPU</td><td>On the CPU, SDPA uses PyTorch's C++ implementation.</td><td><a href="https://huggingface.co/docs/transformers/main/en/attention_interface" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-sdpa--mps_kernels" data-step="sdpa--mps_kernels" data-from="sdpa" data-to="mps_kernels" data-when="{&quot;device&quot;:[&quot;mps&quot;]}">
+<td>PyTorch SDPA</td><td>runs as</td><td>MPS kernels</td><td>Apple GPU (MPS)</td><td>On Apple silicon, the model's operations run as MPS kernels.</td><td><a href="https://docs.pytorch.org/docs/2.15/notes/mps.html" rel="noopener noreferrer" target="_blank">Project docs</a><br><a href="https://huggingface.co/docs/transformers/main/en/pipeline_tutorial" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-cuda_attention--nvidia_gpu" data-step="cuda_attention--nvidia_gpu" data-from="cuda_attention" data-to="nvidia_gpu" data-when="{&quot;device&quot;:[&quot;cuda&quot;]}" class="on">
+<td>Fastest CUDA kernel</td><td>runs on</td><td>NVIDIA GPU</td><td>NVIDIA GPU</td><td>The kernels run on the NVIDIA GPU.</td><td><a href="https://huggingface.co/docs/transformers/main/en/pipeline_tutorial" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-cpp_attention--cpu" data-step="cpp_attention--cpu" data-from="cpp_attention" data-to="cpu" data-when="{&quot;device&quot;:[&quot;cpu&quot;]}">
+<td>C++ attention</td><td>runs on</td><td>CPU</td><td>CPU</td><td>The C++ code runs on the CPU.</td><td><a href="https://huggingface.co/docs/transformers/main/en/pipeline_tutorial" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-mps_kernels--apple_gpu" data-step="mps_kernels--apple_gpu" data-from="mps_kernels" data-to="apple_gpu" data-when="{&quot;device&quot;:[&quot;mps&quot;]}">
+<td>MPS kernels</td><td>run on</td><td>Apple silicon GPU</td><td>Apple GPU (MPS)</td><td>MPS kernels run on the Apple silicon GPU.</td><td><a href="https://docs.pytorch.org/docs/2.15/notes/mps.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-generate--postprocess" data-step="generate--postprocess" data-from="generate" data-to="postprocess" data-when="{}" class="on">
+<td>generate() loop</td><td>hands output ids to</td><td>Post-processing</td><td>any device</td><td>The finished token ids go to post-processing.</td><td><a href="https://huggingface.co/docs/transformers/main/en/main_classes/pipelines" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="what-this-does-not-show">What this does not show</h2>
+  <p>Documented path for one text-generation pipeline() call with the PyTorch backend, default greedy decoding and the default SDPA attention, on a CPU, an NVIDIA GPU or an Apple silicon GPU. Other tasks, other attention implementations (FlashAttention, paged attention), quantization, multi-GPU placement with device_map, Accelerate and other frameworks are out of scope. What happens inside PyTorch on each device is on the PyTorch page.</p>
+
+  <h2 id="how-this-page-is-checked">How this page is checked</h2>
+  <p>Every stage and step above quotes the source that supports it. The quotes were checked against the Transformers documentation (Pipeline tutorial, Pipelines reference, Loading models, Tokenizers, Attention backends, Generation strategies) and the PyTorch MPS backend notes on 2026-11-12. The data is a <a href="/dataset/ai/how-transformers-runs.json">versioned JSON file</a> under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. Found something wrong or out of date? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
+  <p><a class="ai-graph-link" href="/explore?view=ai&amp;path=how-transformers-runs&amp;device=cuda">See this path in the graph explorer &rarr;</a></p>
+  <p>What these tools are written in is in the main atlas: <a href="/languages/python">Python</a>, <a href="/tools/transformers">Transformers</a>, <a href="/tools/safetensors">Safetensors</a>, <a href="/tools/hf-tokenizers">HF Tokenizers</a>, <a href="/tools/pytorch">PyTorch</a>, <a href="/languages/cxx">C++</a>, <a href="/tools/cuda">CUDA</a>. More execution paths: <a href="/ai/how-jax-runs">What Actually Happens When You Run JAX Code</a>, <a href="/ai/how-keras-runs">What Runs Underneath a Keras 3 Model</a>, <a href="/ai/how-llama-cpp-runs">How Does llama.cpp Run a Model on Your Hardware</a>, <a href="/ai/how-mlx-runs">What Actually Happens When You Run MLX on a Mac</a>, <a href="/ai/how-ollama-runs">What Actually Runs When You Send Ollama a Prompt</a>, <a href="/ai/how-onnx-runtime-runs">How Does ONNX Runtime Execute a Model Across Hardware</a>, <a href="/ai/how-pytorch-runs">What Actually Happens When You Run a PyTorch Model</a>, <a href="/ai/how-tensorflow-runs">How Does TensorFlow Run Python on a CPU or GPU</a>, <a href="/ai/how-tensorrt-llm-runs">What Actually Happens When TensorRT-LLM Runs a Model</a>, <a href="/ai/how-vllm-runs">What Actually Happens When vLLM Serves a Request</a>, or <a href="/ai">compare them all</a>.</p>
+
+  <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>
+</main>
+<footer class="seo-footer-rich">
+  <div data-nosnippet>
+  <div class="footer-grid">
+    <div class="footer-col">
+      <span class="footer-col-head">Explore</span>
+      <a href="/programming-language-graph">Programming language graph</a>
+      <a href="/rankings/most-influential">Most influential languages</a>
+      <a href="/rss.xml">RSS feed</a>
+      <a href="/embed-kit">Embed the graph</a>
+      <a href="/guides/programming-language-family-tree">Language family tree</a>
+      <a href="/programming-language-evolution">Evolution timeline</a>
+      <a href="/what-are-programming-languages-written-in">What languages are written in</a>
+      <a href="/ai">How AI frameworks run code</a>
+      <a href="/explore">Interactive Graph</a>
+      <a href="/dataset">Dataset</a>
+      <a href="/directory">Site Directory</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Popular Languages</span>
+      <a href="/languages/python">Python</a>
+      <a href="/languages/javascript">JavaScript</a>
+      <a href="/languages/rust">Rust</a>
+      <a href="/languages/go">Go</a>
+      <a href="/languages/java">Java</a>
+      <a href="/languages/c">C</a>
+      <a href="/languages/cxx">C++</a>
+      <a href="/languages/typescript">TypeScript</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Questions</span>
+      <a href="/questions/what-is-python-written-in">What is Python written in?</a>
+      <a href="/questions/what-is-javascript-written-in">What is JavaScript written in?</a>
+      <a href="/questions/what-is-rust-written-in">What is Rust written in?</a>
+      <a href="/questions/what-is-go-written-in">What is Go written in?</a>
+      <a href="/questions/what-is-compiler-bootstrapping">What is compiler bootstrapping?</a>
+      <a href="/questions">All questions &rarr;</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Tools &amp; Guides</span>
+      <a href="/tools/v8">V8</a>
+      <a href="/tools/llvm">LLVM</a>
+      <a href="/tools/gcc">GCC</a>
+      <a href="/tools/ghc">GHC</a>
+      <a href="/guides">All guides</a>
+      <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </div>
+  <p class="footer-note">The Language Lineage dataset is meticulously curated and verified by human researchers. We use AI agents to assist with large-scale data gathering and modeling, but every implementation fact is manually reviewed for accuracy. Spot an error? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue on GitHub</a> and it gets fixed. <a href="/how-it-works">Learn how it works &rarr;</a></p>
+  <div class="footer-bottom">Made with <span style="color:#fb7185">❤️</span> by <a href="https://github.com/sanketmuchhala" rel="noopener noreferrer">Sanket Muchhala</a> &middot; <a href="/">Language Lineage</a></div>
+  </div>
+</footer>
+</body>
+</html>

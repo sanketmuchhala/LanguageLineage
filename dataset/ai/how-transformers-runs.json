@@ -1,0 +1,574 @@
+{
+  "version": "1.0",
+  "slug": "how-transformers-runs",
+  "name": "Transformers",
+  "title": "How Hugging Face Transformers Runs a Model: pipeline() | Language Lineage",
+  "h1": "What Actually Happens When You Run a Hugging Face Pipeline?",
+  "description": "Trace a Hugging Face Transformers text-generation pipeline: Rust tokenizer, safetensors weights, PyTorch model, generate(), SDPA attention on CPU, CUDA or Apple MPS, with sources.",
+  "og_subtitle": "pipeline() → Rust tokenizer → PyTorch model → generate() → SDPA → CPU · CUDA · MPS",
+  "verified_on": "2026-11-12",
+  "verified_against": "the Transformers documentation (Pipeline tutorial, Pipelines reference, Loading models, Tokenizers, Attention backends, Generation strategies) and the PyTorch MPS backend notes",
+  "scope": "Documented path for one text-generation pipeline() call with the PyTorch backend, default greedy decoding and the default SDPA attention, on a CPU, an NVIDIA GPU or an Apple silicon GPU. Other tasks, other attention implementations (FlashAttention, paged attention), quantization, multi-GPU placement with device_map, Accelerate and other frameworks are out of scope. What happens inside PyTorch on each device is on the PyTorch page.",
+  "answer": "A **pipeline()** call runs four documented stages: **tokenization**, **model inference**, **post-processing** and output. The tokenizer turns text into token ids with Hugging Face's **Rust** tokenizers library. The model is a **PyTorch** module whose weights **from_pretrained()** loads from **safetensors** files when they exist. **generate()** then calls the model one step at a time, by default greedily keeping the most likely next token, up to 20 new tokens unless the model's config says otherwise. Attention runs through PyTorch's **SDPA**, which picks the fastest kernel on a CUDA GPU and the C++ implementation on the CPU; on Apple silicon the operations run as MPS kernels. The output ids are decoded back into text.",
+  "status_template": "Showing pipeline() on {device}",
+  "dimensions": [
+    {
+      "id": "device",
+      "legend": "Device",
+      "default": "cuda",
+      "options": [
+        {
+          "value": "cuda",
+          "label": "NVIDIA GPU",
+          "phrase": "an NVIDIA GPU (CUDA)"
+        },
+        {
+          "value": "mps",
+          "label": "Apple GPU (MPS)",
+          "phrase": "an Apple silicon GPU (mps)"
+        },
+        {
+          "value": "cpu",
+          "label": "CPU",
+          "phrase": "the CPU"
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "heading": "Which device it picks",
+      "paragraphs": [
+        "If you do not pass a device, the pipeline places the model on the first accelerator it finds (a CUDA GPU, Apple silicon's MPS, or others) and uses the CPU only when there is none. Passing device=\"cpu\" or device=\"mps\" forces a choice."
+      ]
+    },
+    {
+      "heading": "Where Python hands off",
+      "paragraphs": [
+        "Most of the work in this path is not Python: tokenization runs in Rust, and the model's layers run as PyTorch kernels. For what PyTorch does with those operations on each device, see [what happens when you run a PyTorch model](/ai/how-pytorch-runs). For serving many requests at once, engines such as [vLLM](/ai/how-vllm-runs) add batching schedulers and KV-cache management on top of the same kind of model."
+      ]
+    }
+  ],
+  "out_of_scope_note": "",
+  "link_from": [
+    "tool:pytorch",
+    "lang:rust",
+    "tool:transformers",
+    "tool:hf_tokenizers",
+    "tool:safetensors"
+  ],
+  "sources": {
+    "tutorial": {
+      "url": "https://huggingface.co/docs/transformers/main/en/pipeline_tutorial",
+      "title": "Pipeline (Transformers documentation)"
+    },
+    "pipelines": {
+      "url": "https://huggingface.co/docs/transformers/main/en/main_classes/pipelines",
+      "title": "Pipelines API reference (Transformers documentation)"
+    },
+    "models": {
+      "url": "https://huggingface.co/docs/transformers/main/en/models",
+      "title": "Loading models (Transformers documentation)"
+    },
+    "tokenizers": {
+      "url": "https://huggingface.co/docs/transformers/main/en/fast_tokenizers",
+      "title": "Tokenizers (Transformers documentation)"
+    },
+    "attention": {
+      "url": "https://huggingface.co/docs/transformers/main/en/attention_interface",
+      "title": "Attention backends (Transformers documentation)"
+    },
+    "generation": {
+      "url": "https://huggingface.co/docs/transformers/main/en/generation_strategies",
+      "title": "Generation strategies (Transformers documentation)"
+    },
+    "mps_notes": {
+      "url": "https://docs.pytorch.org/docs/2.15/notes/mps.html",
+      "title": "MPS backend (PyTorch 2.15 documentation)"
+    }
+  },
+  "stages": [
+    {
+      "id": "python_code",
+      "name": "Your pipeline() call",
+      "kind": "programming_language",
+      "layer": "python",
+      "lineage_id": "lang:python",
+      "pos": [
+        1.5,
+        0
+      ],
+      "summary": "Python code such as pipeline(task=\"text-generation\", model=...), which picks a default model and preprocessor for the task unless you name one.",
+      "evidence": [
+        {
+          "source": "tutorial",
+          "quote": "Each task is configured to use a default pretrained model and preprocessor, but this can be overridden with the model parameter if you want to use a different model."
+        }
+      ]
+    },
+    {
+      "id": "pipeline",
+      "name": "Pipeline",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": "tool:transformers",
+      "pos": [
+        1.5,
+        1
+      ],
+      "summary": "Transformers' Pipeline class: tokenization, model inference and post-processing in one call, on the device it chooses or you set.",
+      "evidence": [
+        {
+          "source": "pipelines",
+          "quote": "Pipeline workflow is defined as a sequence of the following operations: Input -> Tokenization -> Model Inference -> Post-Processing (task dependent) -> Output"
+        }
+      ]
+    },
+    {
+      "id": "weights",
+      "name": "safetensors weights",
+      "kind": "model_format",
+      "layer": "framework",
+      "lineage_id": "tool:safetensors",
+      "pos": [
+        3,
+        2
+      ],
+      "summary": "The model's configuration and weights from the Hugging Face Hub or a local folder, read from safetensors files when they exist.",
+      "evidence": [
+        {
+          "source": "models",
+          "quote": "The from_pretrained() method loads weights stored in the safetensors file format if they’re available."
+        }
+      ]
+    },
+    {
+      "id": "tokenizer",
+      "name": "Tokenizer (Rust core)",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": "tool:hf_tokenizers",
+      "pos": [
+        0,
+        2
+      ],
+      "summary": "Turns text into token ids. Fast tokenizers run on the Rust tokenizers library, which parallelizes batches across threads.",
+      "evidence": [
+        {
+          "source": "tokenizers",
+          "quote": "TokenizersBackend handles large batches faster because its Rust-based backend parallelizes work across threads."
+        }
+      ]
+    },
+    {
+      "id": "model",
+      "name": "PyTorch model",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": "tool:pytorch",
+      "pos": [
+        3,
+        4
+      ],
+      "summary": "The model class (for text generation, a causal language model) holding the loaded weights on the chosen device.",
+      "evidence": [
+        {
+          "source": "models",
+          "quote": "It requires a model class and the from_pretrained() method."
+        }
+      ]
+    },
+    {
+      "id": "generate",
+      "name": "generate() loop",
+      "kind": "runtime",
+      "layer": "framework",
+      "lineage_id": null,
+      "pos": [
+        1.5,
+        3
+      ],
+      "summary": "Produces new tokens one step at a time by calling the model; by default it is greedy search, up to 20 new tokens unless the model's generation config says otherwise.",
+      "evidence": [
+        {
+          "source": "generation",
+          "quote": "Greedy search is the default decoding strategy. It selects the next most likely token at each step."
+        },
+        {
+          "source": "generation",
+          "quote": "Unless specified in GenerationConfig , this strategy generates a maximum of 20 new tokens."
+        }
+      ]
+    },
+    {
+      "id": "postprocess",
+      "name": "Post-processing",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": null,
+      "pos": [
+        0,
+        4
+      ],
+      "summary": "Turns the output token ids back into text for the result.",
+      "evidence": [
+        {
+          "source": "pipelines",
+          "quote": "Postprocess will receive the raw outputs of the _forward method, generally tensors, and reformat them into something more friendly."
+        }
+      ]
+    },
+    {
+      "id": "sdpa",
+      "name": "PyTorch SDPA",
+      "kind": "kernel",
+      "layer": "kernel",
+      "lineage_id": "tool:pytorch",
+      "pos": [
+        1.5,
+        5
+      ],
+      "summary": "Transformers' default attention function: PyTorch's scaled dot product attention.",
+      "evidence": [
+        {
+          "source": "attention",
+          "quote": "Omit certain backbones from the dict to use the default attention function (SDPA)."
+        }
+      ]
+    },
+    {
+      "id": "cpp_attention",
+      "name": "C++ attention",
+      "kind": "kernel",
+      "layer": "kernel",
+      "lineage_id": "lang:cxx",
+      "pos": [
+        0.5,
+        6
+      ],
+      "summary": "On backends other than CUDA, SDPA uses PyTorch's C++ implementation.",
+      "evidence": [
+        {
+          "source": "attention",
+          "quote": "It defaults to the PyTorch C++ implementation for other backends."
+        }
+      ]
+    },
+    {
+      "id": "mps_kernels",
+      "name": "MPS kernels",
+      "kind": "kernel",
+      "layer": "kernel",
+      "lineage_id": null,
+      "pos": [
+        1.5,
+        6
+      ],
+      "summary": "On the mps device, PyTorch runs operations as Metal Performance Shaders graphs and kernels.",
+      "evidence": [
+        {
+          "source": "mps_notes",
+          "quote": "It introduces a new device to map Machine Learning computational graphs and primitives on highly efficient Metal Performance Shaders Graph framework and tuned kernels provided by Metal Performance Shaders framework respectively."
+        }
+      ]
+    },
+    {
+      "id": "cuda_attention",
+      "name": "Fastest CUDA kernel",
+      "kind": "kernel",
+      "layer": "kernel",
+      "lineage_id": "tool:cuda",
+      "pos": [
+        2.5,
+        6
+      ],
+      "summary": "On CUDA, SDPA automatically picks the fastest available attention kernel.",
+      "evidence": [
+        {
+          "source": "attention",
+          "quote": "PyTorch’s scaled dot product attention (SDPA) selects the fastest attention function for CUDA backends automatically."
+        }
+      ]
+    },
+    {
+      "id": "cpu",
+      "name": "CPU",
+      "kind": "hardware",
+      "layer": "hardware",
+      "lineage_id": null,
+      "pos": [
+        0.5,
+        7
+      ],
+      "summary": "Used only when no accelerator is available, or when you pass device=\"cpu\".",
+      "evidence": [
+        {
+          "source": "tutorial",
+          "quote": "By default, when device is left unset, Pipeline automatically places the model on the first available accelerator (CUDA GPU, Apple Silicon MPS, XPU, …) and only falls back to a CPU when none is available."
+        }
+      ]
+    },
+    {
+      "id": "apple_gpu",
+      "name": "Apple silicon GPU",
+      "kind": "hardware",
+      "layer": "hardware",
+      "lineage_id": null,
+      "pos": [
+        1.5,
+        7
+      ],
+      "summary": "The GPU of an Apple silicon Mac, through PyTorch's mps device.",
+      "evidence": [
+        {
+          "source": "tutorial",
+          "quote": "To run Pipeline on Apple silicon, set device=\"mps\"."
+        }
+      ]
+    },
+    {
+      "id": "nvidia_gpu",
+      "name": "NVIDIA GPU",
+      "kind": "hardware",
+      "layer": "hardware",
+      "lineage_id": null,
+      "pos": [
+        2.5,
+        7
+      ],
+      "summary": "The first choice when device is left unset and a CUDA GPU is present.",
+      "evidence": [
+        {
+          "source": "tutorial",
+          "quote": "By default, when device is left unset, Pipeline automatically places the model on the first available accelerator (CUDA GPU, Apple Silicon MPS, XPU, …) and only falls back to a CPU when none is available."
+        }
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "from": "python_code",
+      "to": "pipeline",
+      "kind": "calls",
+      "when": {},
+      "label": "creates and calls",
+      "explanation": "Your code builds a pipeline for a task and calls it with text.",
+      "evidence": [
+        {
+          "source": "tutorial",
+          "quote": "Each task is configured to use a default pretrained model and preprocessor, but this can be overridden with the model parameter if you want to use a different model."
+        }
+      ]
+    },
+    {
+      "from": "pipeline",
+      "to": "weights",
+      "kind": "loads",
+      "when": {},
+      "label": "loads",
+      "explanation": "The model's weights are loaded with from_pretrained(), from safetensors files when available.",
+      "evidence": [
+        {
+          "source": "models",
+          "quote": "The from_pretrained() method loads weights stored in the safetensors file format if they’re available."
+        }
+      ]
+    },
+    {
+      "from": "weights",
+      "to": "model",
+      "kind": "loads",
+      "when": {},
+      "label": "fill",
+      "explanation": "The weights are loaded into the model class on the chosen device.",
+      "evidence": [
+        {
+          "source": "models",
+          "quote": "It requires a model class and the from_pretrained() method."
+        }
+      ]
+    },
+    {
+      "from": "pipeline",
+      "to": "tokenizer",
+      "kind": "calls",
+      "when": {},
+      "label": "tokenizes with",
+      "explanation": "Input text is tokenized first.",
+      "evidence": [
+        {
+          "source": "pipelines",
+          "quote": "Pipeline workflow is defined as a sequence of the following operations: Input -> Tokenization -> Model Inference -> Post-Processing (task dependent) -> Output"
+        }
+      ]
+    },
+    {
+      "from": "tokenizer",
+      "to": "generate",
+      "kind": "calls",
+      "when": {},
+      "label": "token ids go to",
+      "explanation": "The token ids start the generation loop.",
+      "evidence": [
+        {
+          "source": "pipelines",
+          "quote": "Pipeline workflow is defined as a sequence of the following operations: Input -> Tokenization -> Model Inference -> Post-Processing (task dependent) -> Output"
+        }
+      ]
+    },
+    {
+      "from": "generate",
+      "to": "model",
+      "kind": "calls",
+      "when": {},
+      "label": "calls forward, one token at a time",
+      "explanation": "Each step runs the model and, with greedy search, keeps the most likely next token.",
+      "evidence": [
+        {
+          "source": "generation",
+          "quote": "Greedy search is the default decoding strategy. It selects the next most likely token at each step."
+        }
+      ]
+    },
+    {
+      "from": "model",
+      "to": "sdpa",
+      "kind": "calls",
+      "when": {},
+      "label": "computes attention with",
+      "explanation": "Unless another attention implementation is set, attention layers use PyTorch's SDPA.",
+      "evidence": [
+        {
+          "source": "attention",
+          "quote": "Omit certain backbones from the dict to use the default attention function (SDPA)."
+        }
+      ]
+    },
+    {
+      "from": "sdpa",
+      "to": "cuda_attention",
+      "kind": "dispatches_to",
+      "when": {
+        "device": [
+          "cuda"
+        ]
+      },
+      "label": "picks",
+      "explanation": "On a CUDA GPU, SDPA selects the fastest available attention kernel.",
+      "evidence": [
+        {
+          "source": "attention",
+          "quote": "PyTorch’s scaled dot product attention (SDPA) selects the fastest attention function for CUDA backends automatically."
+        }
+      ]
+    },
+    {
+      "from": "sdpa",
+      "to": "cpp_attention",
+      "kind": "dispatches_to",
+      "when": {
+        "device": [
+          "cpu"
+        ]
+      },
+      "label": "falls back to",
+      "explanation": "On the CPU, SDPA uses PyTorch's C++ implementation.",
+      "evidence": [
+        {
+          "source": "attention",
+          "quote": "It defaults to the PyTorch C++ implementation for other backends."
+        }
+      ]
+    },
+    {
+      "from": "sdpa",
+      "to": "mps_kernels",
+      "kind": "dispatches_to",
+      "when": {
+        "device": [
+          "mps"
+        ]
+      },
+      "label": "runs as",
+      "explanation": "On Apple silicon, the model's operations run as MPS kernels.",
+      "evidence": [
+        {
+          "source": "mps_notes",
+          "quote": "It introduces a new device to map Machine Learning computational graphs and primitives on highly efficient Metal Performance Shaders Graph framework and tuned kernels provided by Metal Performance Shaders framework respectively."
+        },
+        {
+          "source": "tutorial",
+          "quote": "To run Pipeline on Apple silicon, set device=\"mps\"."
+        }
+      ]
+    },
+    {
+      "from": "cuda_attention",
+      "to": "nvidia_gpu",
+      "kind": "launches_on",
+      "when": {
+        "device": [
+          "cuda"
+        ]
+      },
+      "label": "runs on",
+      "explanation": "The kernels run on the NVIDIA GPU.",
+      "evidence": [
+        {
+          "source": "tutorial",
+          "quote": "By default, when device is left unset, Pipeline automatically places the model on the first available accelerator (CUDA GPU, Apple Silicon MPS, XPU, …) and only falls back to a CPU when none is available."
+        }
+      ]
+    },
+    {
+      "from": "cpp_attention",
+      "to": "cpu",
+      "kind": "executes_on",
+      "when": {
+        "device": [
+          "cpu"
+        ]
+      },
+      "label": "runs on",
+      "explanation": "The C++ code runs on the CPU.",
+      "evidence": [
+        {
+          "source": "tutorial",
+          "quote": "By default, when device is left unset, Pipeline automatically places the model on the first available accelerator (CUDA GPU, Apple Silicon MPS, XPU, …) and only falls back to a CPU when none is available."
+        }
+      ]
+    },
+    {
+      "from": "mps_kernels",
+      "to": "apple_gpu",
+      "kind": "executes_on",
+      "when": {
+        "device": [
+          "mps"
+        ]
+      },
+      "label": "run on",
+      "explanation": "MPS kernels run on the Apple silicon GPU.",
+      "evidence": [
+        {
+          "source": "mps_notes",
+          "quote": "It introduces a new device to map Machine Learning computational graphs and primitives on highly efficient Metal Performance Shaders Graph framework and tuned kernels provided by Metal Performance Shaders framework respectively."
+        }
+      ]
+    },
+    {
+      "from": "generate",
+      "to": "postprocess",
+      "kind": "calls",
+      "when": {},
+      "label": "hands output ids to",
+      "explanation": "The finished token ids go to post-processing.",
+      "evidence": [
+        {
+          "source": "pipelines",
+          "quote": "Pipeline workflow is defined as a sequence of the following operations: Input -> Tokenization -> Model Inference -> Post-Processing (task dependent) -> Output"
+        }
+      ]
+    }
+  ]
+}
