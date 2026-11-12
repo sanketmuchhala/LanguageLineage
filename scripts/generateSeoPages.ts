@@ -302,6 +302,25 @@ function nameFromId(id: string, nodeMap: Map<string, Language>): string {
   return nodeMap.get(id)?.name ?? id.replace(/^(lang|tool):/, '').replace(/_/g, ' ');
 }
 
+/** "A", "A and B", "A, B and C". */
+function listJoin(items: string[]): string {
+  return items.length <= 1 ? items.join('') : `${items.slice(0, -1).join(', ')} and ${items[items.length - 1]}`;
+}
+
+/**
+ * What a tool is written in, split by node kind and ordered by confidence: languages
+ * (lang:) are what it is written in; tools (tool:) are what it is built on (e.g. JAX on
+ * XLA, vLLM on PyTorch). Only current edges count.
+ */
+export function toolImplementation(implRels: Relationship[], nodeMap: Map<string, Language>): { languages: string[]; builtOn: string[]; compilerOnly: boolean } {
+  const sorted = [...currentRels(implRels)].sort((x, y) => y.confidence - x.confidence);
+  const names = (prefix: string) => [...new Set(sorted.filter(r => r.from_language.startsWith(prefix)).map(r => nameFromId(r.from_language, nodeMap)))];
+  const toolEdges = sorted.filter(r => r.from_language.startsWith('tool:'));
+  // "CUDA's compiler is built on LLVM", not "CUDA is built on LLVM", when only its compiler is.
+  const compilerOnly = toolEdges.length > 0 && toolEdges.every(r => r.relationship === 'compiler_written_in');
+  return { languages: names('lang:'), builtOn: names('tool:'), compilerOnly };
+}
+
 function linkNode(id: string, nodeMap: Map<string, Language>): string {
   const name = nameFromId(id, nodeMap);
   const prefix = idToPrefix(id);
@@ -2115,9 +2134,17 @@ function buildNodePage(node: Language, rels: Relationship[], nodeMap: Map<string
   const implLangs = [...new Set(currentRels(implRels).map(r => nameFromId(r.from_language, nodeMap)))];
   const enrich = ENRICHMENT[node.id];
 
-  // Language/tool pages target brand queries ("X language", "X release date").
-  // Question pages own the "what is X written in" queries.
-  const defaultTitle = `${node.name}: Implementation, History, and Lineage | Language Lineage`;
+  // Language pages target brand queries ("X language", "X release date"); their question
+  // pages own "what is X written in". Tools have no question pages (V8 aside, via its
+  // override), so a tool page answers that query itself, in a title built from its data.
+  // A measured pilot: compare tool-page impressions in Search Console after reindexing.
+  const toolImpl = prefix === 'tools' ? toolImplementation(implRels, nodeMap) : null;
+  const questionTitle = toolImpl && toolImpl.languages.length > 0
+    ? `What is ${node.name} written in? ${listJoin(toolImpl.languages.slice(0, 3))} | Language Lineage`
+    : null;
+  const defaultTitle = questionTitle && questionTitle.length <= 75
+    ? questionTitle
+    : `${node.name}: Implementation, History, and Lineage | Language Lineage`;
   const title = priorityOverride ? priorityOverride.title : defaultTitle;
 
   // Description leads with the implementation answer, then context, to serve both
@@ -2129,18 +2156,22 @@ function buildNodePage(node: Language, rels: Relationship[], nodeMap: Map<string
       ? 'compiler'
       : implRels.length > 0 ? 'implementation' : '';
     const isTool = prefix === 'tools';
-    const implSentence = implLangs.length > 0
-      ? isTool
-        ? `${node.name} is written in ${implLangs.slice(0, 2).join(' and ')}. `
-        : `${node.name}'s ${implType} is written in ${implLangs.slice(0, 2).join(' and ')}. `
+    // Tools: languages are what it is written in, tool dependencies what it is built on
+    // ("JAX is written in Python and C++, built on XLA"), never "written in XLA".
+    const toolSentence = toolImpl
+      ? toolImpl.languages.length > 0
+        ? `${node.name} is written in ${listJoin(toolImpl.languages.slice(0, 3))}${toolImpl.builtOn.length > 0 ? `, built on ${listJoin(toolImpl.builtOn.slice(0, 2))}` : ''}. `
+        : toolImpl.builtOn.length > 0 ? `${node.name}${toolImpl.compilerOnly ? "'s compiler" : ''} is built on ${listJoin(toolImpl.builtOn.slice(0, 2))}. ` : ''
       : '';
+    const implSentence = isTool
+      ? toolSentence
+      : implLangs.length > 0 ? `${node.name}'s ${implType} is written in ${implLangs.slice(0, 2).join(' and ')}. ` : '';
+    const hasYear = !!node.first_release_year && node.first_release_year > 0;
+    // Without a tagline: "PyTorch was first released in 2016.", not "PyTorch, first released in 2016."
     const context = enrich?.tagline
-      ? `${node.name} is ${aOrAn(enrich.tagline)} ${enrich.tagline}`
-      : node.name;
-    const year = node.first_release_year && node.first_release_year > 0
-      ? `, first released in ${node.first_release_year}`
-      : '';
-    return `${implSentence}${context}${year}. Explore the full lineage.`;
+      ? `${node.name} is ${aOrAn(enrich.tagline)} ${enrich.tagline}${hasYear ? `, first released in ${node.first_release_year}` : ''}. `
+      : hasYear ? `${node.name} was first released in ${node.first_release_year}. ` : '';
+    return `${implSentence}${context}Explore the full lineage.`;
   }
   const description = truncateMetaDescription(priorityOverride ? priorityOverride.description : buildDefaultDesc(), 160);
   const priorityHtml = buildPriorityContent(node);
