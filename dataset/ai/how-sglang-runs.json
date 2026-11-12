@@ -1,0 +1,589 @@
+{
+  "version": "1.0",
+  "slug": "how-sglang-runs",
+  "name": "SGLang",
+  "title": "How SGLang Runs a Model: RadixAttention, Scheduler | Language Lineage",
+  "h1": "What Actually Happens When SGLang Serves a Request?",
+  "description": "Trace an SGLang request on an NVIDIA GPU: TokenizerManager, scheduler, RadixAttention prefix cache, CUDA graphs and the attention backend for your GPU, with sources.",
+  "og_subtitle": "HTTP → TokenizerManager → Scheduler + radix cache → ModelRunner → attention backend → GPU",
+  "verified_on": "2026-11-12",
+  "verified_against": "the SGLang source (engine, HTTP server, scheduler, model runner, radix cache and decode CUDA graph runner) and its documentation sources for HiCache design and attention backends",
+  "scope": "Documented paths for one standard (MHA) model such as Llama or Qwen served on a single NVIDIA GPU with default settings, by GPU generation. MLA models, AMD and other hardware, tensor and data parallelism, speculative decoding, HiCache's host and remote tiers, the optional torch.compile mode and SGLang's frontend language are out of scope.",
+  "answer": "A request to SGLang's **HTTP server** goes to the **TokenizerManager** in the same process, which tokenizes it and sends it over ZMQ to the **Scheduler** process. The scheduler matches the prompt against the **radix prefix cache** (RadixAttention), so tokens shared with earlier requests are not prefilled again, forms a batch and runs it through the **ModelRunner**. Decode steps replay **CUDA graphs**, and attention runs on the backend SGLang picks for your GPU: **FlashInfer** on Ampere and Ada, **FlashAttention 3** on Hopper, **TRT-LLM MHA** on Blackwell. Output tokens go to the **DetokenizerManager** process, which returns text to be streamed back.",
+  "status_template": "Showing an SGLang request on {gpu}",
+  "dimensions": [
+    {
+      "id": "gpu",
+      "legend": "GPU generation",
+      "default": "hopper",
+      "options": [
+        {
+          "value": "ampere",
+          "label": "Ampere / Ada",
+          "phrase": "an Ampere or Ada GPU (FlashInfer attention)"
+        },
+        {
+          "value": "hopper",
+          "label": "Hopper (H100)",
+          "phrase": "a Hopper GPU (FlashAttention 3)"
+        },
+        {
+          "value": "blackwell",
+          "label": "Blackwell (B200)",
+          "phrase": "a Blackwell GPU (TRT-LLM MHA attention)"
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "heading": "Why prefix caching matters",
+      "paragraphs": [
+        "When many requests share the same prefix, the KV cache for that prefix is identical. SGLang keeps the KV cache of those tokens in a radix tree, where each node covers a span of tokens and a path from the root is a request's prefix. A new request that shares the path skips computing it, and the shared nodes are stored once."
+      ]
+    },
+    {
+      "heading": "How this compares with vLLM",
+      "paragraphs": [
+        "Both engines split serving into processes: SGLang uses a TokenizerManager, a scheduler process and a DetokenizerManager talking over ZMQ; [vLLM](/ai/how-vllm-runs) uses an API server, an engine core and GPU workers. Both replay CUDA graphs and choose an attention backend by GPU. Which one is faster depends on the workload and version, so this page does not compare speed."
+      ]
+    }
+  ],
+  "out_of_scope_note": "",
+  "link_from": [
+    "tool:vllm",
+    "tool:cuda"
+  ],
+  "sources": {
+    "engine": {
+      "url": "https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/entrypoints/engine.py",
+      "title": "python/sglang/srt/entrypoints/engine.py (sgl-project/sglang)"
+    },
+    "http": {
+      "url": "https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/entrypoints/http_server.py",
+      "title": "python/sglang/srt/entrypoints/http_server.py (sgl-project/sglang)"
+    },
+    "scheduler": {
+      "url": "https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/managers/scheduler.py",
+      "title": "python/sglang/srt/managers/scheduler.py (sgl-project/sglang)"
+    },
+    "model_runner": {
+      "url": "https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/model_executor/model_runner.py",
+      "title": "python/sglang/srt/model_executor/model_runner.py (sgl-project/sglang)"
+    },
+    "radix": {
+      "url": "https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/mem_cache/radix_cache.py",
+      "title": "python/sglang/srt/mem_cache/radix_cache.py (sgl-project/sglang)"
+    },
+    "hicache": {
+      "url": "https://github.com/sgl-project/sglang/blob/main/docs/docs/advanced_features/hicache_design.mdx",
+      "title": "HiCache design (SGLang documentation source)"
+    },
+    "cuda_graph": {
+      "url": "https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/model_executor/runner/decode_cuda_graph_runner.py",
+      "title": "python/sglang/srt/model_executor/runner/decode_cuda_graph_runner.py (sgl-project/sglang)"
+    },
+    "attn": {
+      "url": "https://github.com/sgl-project/sglang/blob/main/docs/docs/advanced_features/attention_backend.mdx",
+      "title": "Attention backend (SGLang documentation source)"
+    }
+  },
+  "stages": [
+    {
+      "id": "client",
+      "name": "Your app or client",
+      "kind": "application",
+      "layer": "application",
+      "lineage_id": null,
+      "pos": [
+        1.5,
+        0
+      ],
+      "summary": "Any program that sends requests to SGLang's HTTP API.",
+      "evidence": [
+        {
+          "source": "http",
+          "quote": "This file implements HTTP APIs for the inference engine via fastapi."
+        }
+      ]
+    },
+    {
+      "id": "http_server",
+      "name": "HTTP server",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": null,
+      "pos": [
+        1.5,
+        1
+      ],
+      "summary": "SGLang's FastAPI server, running in the main process alongside the engine and the TokenizerManager.",
+      "evidence": [
+        {
+          "source": "http",
+          "quote": "This file implements HTTP APIs for the inference engine via fastapi."
+        },
+        {
+          "source": "engine",
+          "quote": "The HTTP server, Engine, and TokenizerManager all run in the main process."
+        }
+      ]
+    },
+    {
+      "id": "tokenizer_manager",
+      "name": "TokenizerManager",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": null,
+      "pos": [
+        1.5,
+        2
+      ],
+      "summary": "Tokenizes each request and hands it to the scheduler process.",
+      "evidence": [
+        {
+          "source": "engine",
+          "quote": "TokenizerManager: Tokenizes the requests and sends them to the scheduler."
+        }
+      ]
+    },
+    {
+      "id": "scheduler",
+      "name": "Scheduler",
+      "kind": "runtime",
+      "layer": "framework",
+      "lineage_id": null,
+      "pos": [
+        1.5,
+        3
+      ],
+      "summary": "A separate process that receives requests, forms batches, runs them through the model and sends the output tokens on.",
+      "evidence": [
+        {
+          "source": "engine",
+          "quote": "Scheduler (subprocess): Receives requests from the Tokenizer Manager, schedules batches, forwards them, and sends the output tokens to the Detokenizer Manager."
+        },
+        {
+          "source": "scheduler",
+          "quote": "A scheduler that manages a tensor parallel GPU worker."
+        }
+      ]
+    },
+    {
+      "id": "detokenizer",
+      "name": "DetokenizerManager",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": null,
+      "pos": [
+        3,
+        3
+      ],
+      "summary": "A separate process that turns output token ids back into text and returns it to the TokenizerManager.",
+      "evidence": [
+        {
+          "source": "engine",
+          "quote": "DetokenizerManager (subprocess): Detokenizes the output tokens and sends the result back to the Tokenizer Manager."
+        }
+      ]
+    },
+    {
+      "id": "radix_cache",
+      "name": "Radix prefix cache",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": null,
+      "pos": [
+        0,
+        4
+      ],
+      "summary": "RadixAttention's radix tree over the KV cache: each node holds the KV of a span of tokens, so requests that share a prefix reuse it instead of recomputing it.",
+      "evidence": [
+        {
+          "source": "radix",
+          "quote": "The radix tree data structure for managing the KV cache."
+        },
+        {
+          "source": "hicache",
+          "quote": "In RadixAttention, each node of the RadixTree corresponds to the KV cache of a consecutive span of tokens in GPU memory."
+        }
+      ]
+    },
+    {
+      "id": "model_runner",
+      "name": "ModelRunner",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": null,
+      "pos": [
+        1.5,
+        4
+      ],
+      "summary": "Runs the model's forward pass for each batch.",
+      "evidence": [
+        {
+          "source": "model_runner",
+          "quote": "ModelRunner runs the forward passes of the models."
+        }
+      ]
+    },
+    {
+      "id": "cuda_graph",
+      "name": "Decode CUDA graphs",
+      "kind": "runtime",
+      "layer": "kernel",
+      "lineage_id": "tool:cuda",
+      "pos": [
+        3,
+        5
+      ],
+      "summary": "Decode steps run as captured CUDA graphs; the default backend keeps one full graph per batch shape.",
+      "evidence": [
+        {
+          "source": "cuda_graph",
+          "quote": "DecodeCudaGraphRunner — runs DECODE / TARGET_VERIFY / DLLM_EXTEND under"
+        },
+        {
+          "source": "cuda_graph",
+          "quote": "default, FullCudaGraphBackend: one"
+        }
+      ]
+    },
+    {
+      "id": "flashinfer",
+      "name": "FlashInfer",
+      "kind": "kernel",
+      "layer": "kernel",
+      "lineage_id": null,
+      "pos": [
+        0.5,
+        6
+      ],
+      "summary": "Default attention backend for standard (MHA) models on Ampere, Ada and other non-Hopper, non-Blackwell NVIDIA GPUs, when available.",
+      "evidence": [
+        {
+          "source": "attn",
+          "quote": "Defaults to flashinfer if available; otherwise falls back to triton."
+        }
+      ]
+    },
+    {
+      "id": "fa3",
+      "name": "FlashAttention 3",
+      "kind": "kernel",
+      "layer": "kernel",
+      "lineage_id": null,
+      "pos": [
+        1.5,
+        6
+      ],
+      "summary": "Default attention backend on Hopper GPUs (H100, H200) with CUDA 12.3 or newer, for supported models.",
+      "evidence": [
+        {
+          "source": "attn",
+          "quote": "Defaults to fa3 if using CUDA 12.3+ and the model configuration is supported."
+        }
+      ]
+    },
+    {
+      "id": "trtllm_mha",
+      "name": "TRT-LLM MHA",
+      "kind": "kernel",
+      "layer": "kernel",
+      "lineage_id": null,
+      "pos": [
+        2.5,
+        6
+      ],
+      "summary": "Default attention backend on Blackwell GPUs (B200), unless speculative decoding uses topk > 1.",
+      "evidence": [
+        {
+          "source": "attn",
+          "quote": "Defaults to trtllm_mha, unless using speculative decoding with topk > 1."
+        }
+      ]
+    },
+    {
+      "id": "gpu",
+      "name": "NVIDIA GPU",
+      "kind": "hardware",
+      "layer": "hardware",
+      "lineage_id": null,
+      "pos": [
+        1.5,
+        7
+      ],
+      "summary": "The GPU that runs the batch.",
+      "evidence": [
+        {
+          "source": "attn",
+          "quote": "If the --attention-backend argument is not specified, SGLang automatically selects the best backend based on the hardware (CUDA) and model architecture."
+        }
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "from": "client",
+      "to": "http_server",
+      "kind": "calls",
+      "when": {},
+      "label": "sends a request to",
+      "explanation": "Your client sends an HTTP request to the server.",
+      "evidence": [
+        {
+          "source": "http",
+          "quote": "This file implements HTTP APIs for the inference engine via fastapi."
+        }
+      ]
+    },
+    {
+      "from": "http_server",
+      "to": "tokenizer_manager",
+      "kind": "calls",
+      "when": {},
+      "label": "hands the request to",
+      "explanation": "The HTTP server and the TokenizerManager share the main process.",
+      "evidence": [
+        {
+          "source": "engine",
+          "quote": "The HTTP server, Engine, and TokenizerManager all run in the main process."
+        }
+      ]
+    },
+    {
+      "from": "tokenizer_manager",
+      "to": "scheduler",
+      "kind": "dispatches_to",
+      "when": {},
+      "label": "sends tokens over ZMQ to",
+      "explanation": "Tokenized requests go to the scheduler process over ZMQ.",
+      "evidence": [
+        {
+          "source": "engine",
+          "quote": "TokenizerManager: Tokenizes the requests and sends them to the scheduler."
+        },
+        {
+          "source": "engine",
+          "quote": "Inter-process communication is done through IPC (each process uses a different port) via the ZMQ library."
+        }
+      ]
+    },
+    {
+      "from": "scheduler",
+      "to": "radix_cache",
+      "kind": "calls",
+      "when": {},
+      "label": "matches prefixes in",
+      "explanation": "The scheduler matches each request against the cached prefixes, so the KV cache of tokens shared with earlier requests is reused rather than computed again.",
+      "evidence": [
+        {
+          "source": "hicache",
+          "quote": "To address this, SGLang introduced RadixAttention, which leverages idle GPU memory to cache and reuse prefix KV caches"
+        },
+        {
+          "source": "hicache",
+          "quote": "shared prefixes across multiple requests can reuse the same nodes, thereby avoiding redundant storage."
+        }
+      ]
+    },
+    {
+      "from": "scheduler",
+      "to": "model_runner",
+      "kind": "dispatches_to",
+      "when": {},
+      "label": "forwards each batch to",
+      "explanation": "The scheduler forms a batch and runs it through the model.",
+      "evidence": [
+        {
+          "source": "engine",
+          "quote": "Scheduler (subprocess): Receives requests from the Tokenizer Manager, schedules batches, forwards them, and sends the output tokens to the Detokenizer Manager."
+        },
+        {
+          "source": "model_runner",
+          "quote": "ModelRunner runs the forward passes of the models."
+        }
+      ]
+    },
+    {
+      "from": "model_runner",
+      "to": "cuda_graph",
+      "kind": "captures",
+      "when": {},
+      "label": "replays decode steps as",
+      "explanation": "Decode batches replay captured CUDA graphs, one per batch shape by default.",
+      "evidence": [
+        {
+          "source": "cuda_graph",
+          "quote": "DecodeCudaGraphRunner — runs DECODE / TARGET_VERIFY / DLLM_EXTEND under"
+        },
+        {
+          "source": "cuda_graph",
+          "quote": "default, FullCudaGraphBackend: one"
+        }
+      ]
+    },
+    {
+      "from": "model_runner",
+      "to": "flashinfer",
+      "kind": "dispatches_to",
+      "when": {
+        "gpu": [
+          "ampere"
+        ]
+      },
+      "label": "computes attention with",
+      "explanation": "With no --attention-backend set, Ampere and Ada GPUs use FlashInfer when it is available.",
+      "evidence": [
+        {
+          "source": "attn",
+          "quote": "If the --attention-backend argument is not specified, SGLang automatically selects the best backend based on the hardware (CUDA) and model architecture."
+        },
+        {
+          "source": "attn",
+          "quote": "Defaults to flashinfer if available; otherwise falls back to triton."
+        }
+      ]
+    },
+    {
+      "from": "model_runner",
+      "to": "fa3",
+      "kind": "dispatches_to",
+      "when": {
+        "gpu": [
+          "hopper"
+        ]
+      },
+      "label": "computes attention with",
+      "explanation": "With no --attention-backend set, Hopper GPUs use FlashAttention 3.",
+      "evidence": [
+        {
+          "source": "attn",
+          "quote": "If the --attention-backend argument is not specified, SGLang automatically selects the best backend based on the hardware (CUDA) and model architecture."
+        },
+        {
+          "source": "attn",
+          "quote": "Defaults to fa3 if using CUDA 12.3+ and the model configuration is supported."
+        }
+      ]
+    },
+    {
+      "from": "model_runner",
+      "to": "trtllm_mha",
+      "kind": "dispatches_to",
+      "when": {
+        "gpu": [
+          "blackwell"
+        ]
+      },
+      "label": "computes attention with",
+      "explanation": "With no --attention-backend set, Blackwell GPUs use TensorRT-LLM's MHA kernels.",
+      "evidence": [
+        {
+          "source": "attn",
+          "quote": "If the --attention-backend argument is not specified, SGLang automatically selects the best backend based on the hardware (CUDA) and model architecture."
+        },
+        {
+          "source": "attn",
+          "quote": "Defaults to trtllm_mha, unless using speculative decoding with topk > 1."
+        }
+      ]
+    },
+    {
+      "from": "flashinfer",
+      "to": "gpu",
+      "kind": "launches_on",
+      "when": {
+        "gpu": [
+          "ampere"
+        ]
+      },
+      "label": "runs on",
+      "explanation": "The attention kernels run on the GPU.",
+      "evidence": [
+        {
+          "source": "attn",
+          "quote": "Defaults to flashinfer if available; otherwise falls back to triton."
+        }
+      ]
+    },
+    {
+      "from": "fa3",
+      "to": "gpu",
+      "kind": "launches_on",
+      "when": {
+        "gpu": [
+          "hopper"
+        ]
+      },
+      "label": "runs on",
+      "explanation": "The attention kernels run on the GPU.",
+      "evidence": [
+        {
+          "source": "attn",
+          "quote": "Defaults to fa3 if using CUDA 12.3+ and the model configuration is supported."
+        }
+      ]
+    },
+    {
+      "from": "trtllm_mha",
+      "to": "gpu",
+      "kind": "launches_on",
+      "when": {
+        "gpu": [
+          "blackwell"
+        ]
+      },
+      "label": "runs on",
+      "explanation": "The attention kernels run on the GPU.",
+      "evidence": [
+        {
+          "source": "attn",
+          "quote": "Defaults to trtllm_mha, unless using speculative decoding with topk > 1."
+        }
+      ]
+    },
+    {
+      "from": "cuda_graph",
+      "to": "gpu",
+      "kind": "launches_on",
+      "when": {},
+      "label": "replayed on",
+      "explanation": "Replaying a graph launches the step's kernels together.",
+      "evidence": [
+        {
+          "source": "cuda_graph",
+          "quote": "default, FullCudaGraphBackend: one"
+        }
+      ]
+    },
+    {
+      "from": "scheduler",
+      "to": "detokenizer",
+      "kind": "dispatches_to",
+      "when": {},
+      "label": "sends output tokens to",
+      "explanation": "Output tokens go to the detokenizer process.",
+      "evidence": [
+        {
+          "source": "engine",
+          "quote": "Scheduler (subprocess): Receives requests from the Tokenizer Manager, schedules batches, forwards them, and sends the output tokens to the Detokenizer Manager."
+        }
+      ]
+    },
+    {
+      "from": "detokenizer",
+      "to": "tokenizer_manager",
+      "kind": "calls",
+      "when": {},
+      "label": "returns text to",
+      "explanation": "Decoded text goes back to the TokenizerManager, which returns it to the client.",
+      "evidence": [
+        {
+          "source": "engine",
+          "quote": "DetokenizerManager (subprocess): Detokenizes the output tokens and sends the result back to the Tokenizer Manager."
+        }
+      ]
+    }
+  ]
+}

@@ -4,47 +4,51 @@
     "lastmod": "2026-07-02"
   },
   "/ai": {
-    "hash": "760dc2ee02214ccb",
+    "hash": "9b35a06fc008555f",
     "lastmod": "2026-11-12"
   },
   "/ai/how-jax-runs": {
-    "hash": "07d28c9f80ee45cf",
+    "hash": "a7c0fa320e020686",
     "lastmod": "2026-11-12"
   },
   "/ai/how-keras-runs": {
-    "hash": "a62d31e0643cf3e2",
+    "hash": "267025cb7e4a97ee",
     "lastmod": "2026-11-12"
   },
   "/ai/how-llama-cpp-runs": {
-    "hash": "06c28182bd0032fd",
+    "hash": "22cc8ac9f8d75235",
     "lastmod": "2026-11-12"
   },
   "/ai/how-mlx-runs": {
-    "hash": "def6881b3da3ab21",
+    "hash": "2895d6a58d6c7826",
     "lastmod": "2026-11-12"
   },
   "/ai/how-ollama-runs": {
-    "hash": "f03aa9dde49f6637",
+    "hash": "db63867177a7a08a",
     "lastmod": "2026-11-12"
   },
   "/ai/how-onnx-runtime-runs": {
-    "hash": "04ff755cdf278d9f",
+    "hash": "50f18cf3c7184bbc",
     "lastmod": "2026-11-12"
   },
   "/ai/how-pytorch-runs": {
-    "hash": "4c00dfc5ee89fd5f",
+    "hash": "ce97ee7ce8f6dd9d",
+    "lastmod": "2026-11-12"
+  },
+  "/ai/how-sglang-runs": {
+    "hash": "a4de4f80dc9f5285",
     "lastmod": "2026-11-12"
   },
   "/ai/how-tensorflow-runs": {
-    "hash": "9fa29b2543854e57",
+    "hash": "84588df249962303",
     "lastmod": "2026-11-12"
   },
   "/ai/how-tensorrt-llm-runs": {
-    "hash": "b2cf224cee5f3bbf",
+    "hash": "d46829cadbfc9834",
     "lastmod": "2026-11-12"
   },
   "/ai/how-vllm-runs": {
-    "hash": "b6ff037e6a07896f",
+    "hash": "a0280352cf6282e9",
     "lastmod": "2026-11-12"
   },
   "/compiler-runtime-bootstrap": {
@@ -1308,7 +1312,7 @@
     "lastmod": "2026-11-12"
   },
   "/tools/cuda": {
-    "hash": "ccc3d61026a79379",
+    "hash": "b37d4a893787db4c",
     "lastmod": "2026-11-12"
   },
   "/tools/deno": {
@@ -1480,7 +1484,7 @@
     "lastmod": "2026-11-11"
   },
   "/tools/vllm": {
-    "hash": "3c27fdc38a8a2581",
+    "hash": "7a120ddf3b56a649",
     "lastmod": "2026-11-12"
   },
   "/tools/whisper-cpp": {
