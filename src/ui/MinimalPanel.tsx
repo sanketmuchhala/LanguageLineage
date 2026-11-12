@@ -74,7 +74,8 @@ export function MinimalPanel({ onBackToLanding }: MinimalPanelProps) {
     }
   };
 
-  const hasActiveFilters = attributeFilters.paradigms.length > 0 || attributeFilters.typing !== null || attributeFilters.decade !== null;
+  const hasActiveFilters = attributeFilters.paradigms.length > 0 || attributeFilters.typing !== null || attributeFilters.decade !== null || attributeFilters.ai;
+  const influenceCount = useMemo(() => dataset?.edges.filter((e) => e.relationship === 'influenced').length ?? 0, [dataset]);
 
   const toggleParadigm = (p: string) => {
     const current = attributeFilters.paradigms;
@@ -183,7 +184,7 @@ export function MinimalPanel({ onBackToLanding }: MinimalPanelProps) {
           {filters.graphMode === 'influence' ? (
             <section className="panel-section">
               <div className="influence-mode-note">
-                Showing 189 documented conceptual influence relationships between languages.
+                Showing {influenceCount} documented conceptual influence relationships between languages.
               </div>
             </section>
           ) : (
@@ -209,6 +210,24 @@ export function MinimalPanel({ onBackToLanding }: MinimalPanelProps) {
                 <button className="clear-filters-btn" onClick={resetAttributeFilters}>Clear</button>
               )}
             </h3>
+
+            <div className="filter-group">
+              <label className="filter-group-label">Focus</label>
+              <div className="filter-chips">
+                <button
+                  className={`filter-chip ${attributeFilters.ai ? 'active' : ''}`}
+                  aria-pressed={attributeFilters.ai}
+                  onClick={() => setAttributeFilters({ ai: !attributeFilters.ai })}
+                >
+                  AI infrastructure
+                </button>
+              </div>
+              {attributeFilters.ai && (
+                <p className="influence-mode-note">
+                  AI tools from the <a href="/ai">execution-path explainers</a>, and what they are written in.
+                </p>
+              )}
+            </div>
 
             <div className="filter-group">
               <label className="filter-group-label">Paradigm</label>

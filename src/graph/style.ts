@@ -177,6 +177,14 @@ export function getCytoscapeStyle(
       },
     },
 
+    // AI infrastructure view: its few nodes keep their labels at any zoom
+    {
+      selector: 'node.ai-focus',
+      style: {
+        label: 'data(label)' as any,
+      },
+    },
+
     // Hovered node - warm accent glow
     {
       selector: 'node.hovered',

@@ -6628,7 +6628,7 @@ ${pathRows}
   </table></div>
 
   <h2 id="shared-tools">Tools the paths share</h2>
-  <p>Stages that are also nodes in the Language Lineage atlas, so you can see what each tool is written in.${inAll.length ? ` ${inAll.join(' and ')} ${inAll.length === 1 ? 'appears' : 'appear'} in every explainer.` : ''}</p>
+  <p>Stages that are also nodes in the Language Lineage atlas, so you can see what each tool is written in.${inAll.length ? ` ${inAll.join(' and ')} ${inAll.length === 1 ? 'appears' : 'appear'} in every explainer.` : ''} <a href="/explore?view=ai">Open the AI tools in the graph explorer</a>.</p>
   <div class="table-wrap"><table id="ai-shared-tools">
     <thead><tr><th>Tool</th>${pages.map(p => `<th><a href="/ai/${p.slug}">${escapeHtml(shortName(p))}</a></th>`).join('')}</tr></thead>
     <tbody>

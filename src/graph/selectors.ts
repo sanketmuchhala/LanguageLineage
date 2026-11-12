@@ -1,3 +1,4 @@
+import { aiViewNodeIds } from '../data/aiExplainers';
 import type { Core } from 'cytoscape';
 import type { DatasetIndex } from '../data/indexDataset';
 import type { NormalizedDataset } from '../data/types';
@@ -130,14 +131,16 @@ export function activateExplorationMode(cy: Core, nodeId: string, relatedNodes: 
 // Attribute filters: fade nodes that don't match active filters
 export function applyAttributeFilters(
   cy: Core,
-  filters: { paradigms: string[]; typing: string | null; decade: number | null },
+  filters: { paradigms: string[]; typing: string | null; decade: number | null; ai: boolean },
   dataset: NormalizedDataset
 ): void {
-  const hasFilters = filters.paradigms.length > 0 || filters.typing !== null || filters.decade !== null;
+  const hasFilters = filters.paradigms.length > 0 || filters.typing !== null || filters.decade !== null || filters.ai;
+  const aiIds = filters.ai ? aiViewNodeIds(dataset.edges) : null;
 
   if (!hasFilters) {
     cy.batch(() => {
       cy.elements().removeClass('attribute-faded');
+      cy.nodes().removeClass('ai-focus');
     });
     return;
   }
@@ -165,11 +168,18 @@ export function applyAttributeFilters(
         matches = matches && year >= filters.decade && year <= filters.decade + 9;
       }
 
+      if (aiIds) {
+        matches = matches && aiIds.has(node.id());
+      }
+
       if (matches) {
         node.removeClass('attribute-faded');
       } else {
         node.addClass('attribute-faded');
       }
+      // Labels stay on for the AI view's nodes whatever the zoom level.
+      if (matches && aiIds) node.addClass('ai-focus');
+      else node.removeClass('ai-focus');
     });
 
     cy.edges().forEach((edge: any) => {
@@ -182,6 +192,32 @@ export function applyAttributeFilters(
       }
     });
   });
+}
+
+/**
+ * Zoom to the nodes of the AI infrastructure view, inside the part of the canvas that is
+ * not covered on the left by an open side panel (`leftInset`, in rendered pixels).
+ * No animation with reduced motion.
+ */
+export function fitToAiView(cy: Core, leftInset = 0): void {
+  const eles = cy.nodes('.ai-focus');
+  if (eles.length === 0) return;
+  const pad = 70;
+  const bb = eles.boundingBox({ includeLabels: true });
+  const availW = Math.max(cy.width() - leftInset - pad * 2, 100);
+  const availH = Math.max(cy.height() - pad * 2, 100);
+  const needed = Math.min(availW / bb.w, availH / bb.h);
+  // Layouts that spread the AI tools apart (Cluster) cannot fit them above the minimum
+  // zoom; keep the layout's own fit-everything view rather than cut nodes off.
+  if (needed < cy.minZoom()) return;
+  const zoom = Math.min(needed, 1.6, cy.maxZoom());
+  const pan = {
+    x: leftInset + pad + availW / 2 - zoom * (bb.x1 + bb.w / 2),
+    y: pad + availH / 2 - zoom * (bb.y1 + bb.h / 2),
+  };
+  const calm = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (calm) cy.viewport({ zoom, pan });
+  else cy.animate({ zoom, pan }, { duration: 600, easing: 'ease-in-out-cubic' });
 }
 
 // BFS shortest path between two nodes (treats graph as undirected for traversal)

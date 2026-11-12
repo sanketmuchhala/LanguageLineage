@@ -1,3 +1,4 @@
+import { explainersFor } from '../data/aiExplainers';
 import { useState } from 'react';
 import { useGraphStore } from '../store/useGraphStore';
 import { LOGO_MAP, LOGO_COLORS, getLogoPresentation } from '../data/logoMap';
@@ -91,6 +92,7 @@ export function SideDrawer() {
     const incoming = datasetIndex?.incomingEdges.get(selectedNodeId) || [];
     const outgoing = datasetIndex?.outgoingEdges.get(selectedNodeId) || [];
 
+    const aiExplainers = selectedNodeId.startsWith('tool:') ? explainersFor(selectedNodeId) : [];
     const prefix = selectedNodeId.startsWith('tool:') ? 'tools' : 'languages';
     const slug = selectedNodeId.replace(/^(lang|tool):/, '').replace(/_/g, '-');
     const detailsUrl = `/${prefix}/${slug}`;
@@ -151,6 +153,17 @@ export function SideDrawer() {
               View full details page &rarr;
             </a>
           </section>
+
+          {aiExplainers.length > 0 && (
+            <section className="drawer-section">
+              <h3>How it runs</h3>
+              {aiExplainers.map((e) => (
+                <p key={e.slug}>
+                  <a href={`/ai/${e.slug}`} className="drawer-details-link">How {e.name} runs, step by step &rarr;</a>
+                </p>
+              ))}
+            </section>
+          )}
 
           <section className="drawer-section">
             <h3>Details</h3>

@@ -112,3 +112,13 @@ Checked and **not** used: the dispatcher tutorial (deprecated as of PyTorch 2.4;
 
 - **`/ai/how-onnx-runtime-runs`** (`dataset/ai/how-onnx-runtime-runs.json`): execution provider (`CPU (Default)` / `CUDA (NVIDIA)` / `TensorRT (NVIDIA)`); 11 stages, 13 steps, 6 primary sources (ONNX README, ONNX Runtime README, Execution Providers docs, Graph Optimizations docs, CUDA EP docs, TensorRT EP docs).
 - Added `how-onnx-runtime-runs` semantics tests in `scripts/aiPaths.test.ts`; regenerated `/ai` hub (now 6 explainers), OG cards (`ai-how-onnx-runtime-runs.png`, `ai-index.png`), and `sitemap.xml` (337 indexable URLs).
+## 2026-11-11 — explorer AI view (AI-07, first slice)
+
+- Merged **#52** (MLX explainer); production checked (sitemap 336). A local, unpushed commit on `main` (`a229afea`, content pipeline) is the owner's/Codex's; left untouched. This branch starts from `origin/main`.
+- Branch `ai/explorer-view`:
+  - `src/data/aiExplainers.ts` reads `slug`, `name` and `stages` from `dataset/ai/*.json` at build time (`import.meta.glob`, no request). AI tools = `tool:` nodes linked by an explainer stage (10 today); the view adds what they are implemented in (non-influence edges into them: C, C++, Python), 13 of 176 nodes.
+  - Explorer: "AI infrastructure" chip under Attribute Filters (fades everything else, keeps labels on the AI nodes), `/explore?view=ai` deep link, zoom to the AI nodes inside the area not covered by the side panel once the layout's own fit animation has finished. A node's drawer links to every explainer that draws it ("How PyTorch runs, step by step").
+  - `/ai` links to `/explore?view=ai`.
+  - The influence-mode note said "189 documented conceptual influence relationships"; it is now counted from the data (263).
+- Known, pre-existing: the Cluster layout leaves about half of all nodes off-screen at the minimum zoom (91 of 176, with or without this filter). The AI zoom does nothing there instead of cutting nodes off.
+- Tests: `src/data/aiExplainers.test.ts` (explainer list, AI set equals stage-linked tools, the view adds only implementation parents, drawer links). `npm run verify`: 250 tests. Browser: deep link at 1440/1024/390px with every AI node in view, chip toggle on and off restores all 176 nodes, Network/Timeline layouts, Triton drawer links to JAX, PyTorch and vLLM; no page errors (only the local `/_vercel` analytics 404s).
