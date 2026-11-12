@@ -48,11 +48,11 @@
     "lastmod": "2026-11-12"
   },
   "/compiler-runtime-bootstrap": {
-    "hash": "ae9b1ff867a7b93b",
+    "hash": "d8c26f87508182af",
     "lastmod": "2026-11-12"
   },
   "/dataset": {
-    "hash": "f37dd1c0949a29cb",
+    "hash": "a161a5c842cc10fe",
     "lastmod": "2026-11-12"
   },
   "/directory": {
@@ -60,7 +60,7 @@
     "lastmod": "2026-11-12"
   },
   "/embed-kit": {
-    "hash": "ab126cc9fa7b89fb",
+    "hash": "4fd2523e00576a7a",
     "lastmod": "2026-11-12"
   },
   "/explore": {
@@ -100,7 +100,7 @@
     "lastmod": "2026-11-11"
   },
   "/guides/programming-language-family-tree": {
-    "hash": "8ae904e539d5aec7",
+    "hash": "332f38491d589b77",
     "lastmod": "2026-11-12"
   },
   "/guides/the-c-bootstrap-chain": {
@@ -124,7 +124,7 @@
     "lastmod": "2026-11-11"
   },
   "/how-it-works": {
-    "hash": "735eb04bea7a603c",
+    "hash": "d38961bf9963f256",
     "lastmod": "2026-11-12"
   },
   "/languages": {
@@ -736,7 +736,7 @@
     "lastmod": "2026-11-11"
   },
   "/posters/programming-language-implementation-family-tree": {
-    "hash": "b6a032a4a2abc117",
+    "hash": "fd5b57c06f4c6510",
     "lastmod": "2026-11-12"
   },
   "/programming-language-evolution": {
@@ -752,7 +752,7 @@
     "lastmod": "2026-11-12"
   },
   "/programming-language-graph": {
-    "hash": "fa625084130fd03b",
+    "hash": "c6b9b79c0742783a",
     "lastmod": "2026-11-12"
   },
   "/questions": {
@@ -1244,7 +1244,7 @@
     "lastmod": "2026-11-12"
   },
   "/relationships": {
-    "hash": "0fa7ee9039f18c09",
+    "hash": "d0deee32a0247c01",
     "lastmod": "2026-11-12"
   },
   "/relationships/bootstrap-written-in": {
@@ -1264,7 +1264,7 @@
     "lastmod": "2026-11-11"
   },
   "/relationships/runtime-written-in": {
-    "hash": "e878e1595d6b723b",
+    "hash": "f7df89f7356df18a",
     "lastmod": "2026-11-12"
   },
   "/relationships/transpiled-to": {
@@ -1304,7 +1304,7 @@
     "lastmod": "2026-11-11"
   },
   "/tools/cuda": {
-    "hash": "d4be65268f96bcc4",
+    "hash": "01254f90af052a27",
     "lastmod": "2026-11-12"
   },
   "/tools/deno": {
@@ -1396,7 +1396,7 @@
     "lastmod": "2026-11-11"
   },
   "/tools/pytorch": {
-    "hash": "cdd89cd8c64d7353",
+    "hash": "bccf577010a8ab11",
     "lastmod": "2026-11-12"
   },
   "/tools/quickjs": {
@@ -1420,7 +1420,7 @@
     "lastmod": "2026-11-12"
   },
   "/tools/tensorrt-llm": {
-    "hash": "804052b55121c470",
+    "hash": "49abb1b8064cfe3b",
     "lastmod": "2026-11-12"
   },
   "/tools/triton": {
@@ -1440,7 +1440,7 @@
     "lastmod": "2026-11-12"
   },
   "/what-are-programming-languages-written-in": {
-    "hash": "b85f0ff050d8f892",
+    "hash": "04b7d608b93a63b6",
     "lastmod": "2026-11-12"
   }
 }
