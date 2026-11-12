@@ -9654,6 +9654,26 @@
       "confidence": 0.98,
       "evidence_source": "https://nvidia.github.io/TensorRT-LLM/latest/torch/arch_overview.html",
       "notes": "The architecture explicitly documents C++ bindings for the capacity scheduler, microbatch scheduler and KV-cache manager."
+    },
+    {
+      "from_language": "tool:cuda",
+      "to_language": "tool:tensorrt_llm",
+      "relationship": "runtime_written_in",
+      "start_year": null,
+      "end_year": null,
+      "confidence": 0.92,
+      "evidence_source": "https://github.com/NVIDIA/TensorRT-LLM/tree/main/cpp/tensorrt_llm/kernels",
+      "notes": "Custom GPU kernels for attention, quantization, MoE, sampling and communication are CUDA under cpp/tensorrt_llm/kernels/ (*.cu)"
+    },
+    {
+      "from_language": "tool:pytorch",
+      "to_language": "tool:tensorrt_llm",
+      "relationship": "runtime_written_in",
+      "start_year": null,
+      "end_year": null,
+      "confidence": 0.92,
+      "evidence_source": "https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/torch/arch_overview.md",
+      "notes": "Architecture docs: \"PyTorch is the sole execution backend of TensorRT LLM; the former TensorRT engine backend has been removed\"; models are defined in native PyTorch under tensorrt_llm/_torch/models/"
     }
   ]
 }
