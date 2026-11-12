@@ -4602,6 +4602,72 @@
       "logo_source": null,
       "logo_license": null,
       "logo_kind": "none"
+    },
+    {
+      "id": "tool:litert",
+      "name": "LiteRT",
+      "first_release_year": 2017,
+      "current_primary_implementation_language": "C++",
+      "paradigm": [
+        "tool"
+      ],
+      "typing": "none",
+      "runtime_model": "tool",
+      "self_hosting": false,
+      "notes": "Google on-device inference runtime, originally released as TensorFlow Lite in 2017 and renamed LiteRT in 2024. The published runtime includes C++ compiled-model execution code; language APIs and optional hardware delegates are separate layers. This node covers the open-source runtime, not proprietary accelerator internals.",
+      "cluster_hint": "tools",
+      "company": "Google",
+      "garbage_collected": null,
+      "logo_url": null,
+      "peak_year": null,
+      "current_users_estimate": null,
+      "logo_source": null,
+      "logo_license": null,
+      "logo_kind": "none"
+    },
+    {
+      "id": "tool:whisper_cpp",
+      "name": "whisper.cpp",
+      "first_release_year": 2022,
+      "current_primary_implementation_language": "C++",
+      "paradigm": [
+        "tool"
+      ],
+      "typing": "none",
+      "runtime_model": "tool",
+      "self_hosting": false,
+      "notes": "Open-source C/C++ implementation of Whisper speech-recognition inference. High-level model execution is implemented in whisper.cpp, with tensor operations provided by the ggml library. Device acceleration is conditional on the selected build and backend. This is implementation provenance, not the lineage of the Whisper model.",
+      "cluster_hint": "tools",
+      "company": null,
+      "garbage_collected": null,
+      "logo_url": null,
+      "peak_year": null,
+      "current_users_estimate": null,
+      "logo_source": null,
+      "logo_license": null,
+      "logo_kind": "none"
+    },
+    {
+      "id": "tool:mlc_llm",
+      "name": "MLC LLM",
+      "first_release_year": 2023,
+      "current_primary_implementation_language": "C++",
+      "paradigm": [
+        "tool"
+      ],
+      "typing": "none",
+      "runtime_model": "tool",
+      "self_hosting": false,
+      "notes": "Open-source model compiler and deployment engine. Its model-compilation pipeline is implemented in Python using Apache TVM APIs, while the native serving engine is C++. Generated device code and runtime scheduling are separate layers.",
+      "cluster_hint": "tools",
+      "company": "MLC Team",
+      "garbage_collected": null,
+      "logo_url": null,
+      "peak_year": null,
+      "current_users_estimate": null,
+      "logo_source": null,
+      "logo_license": null,
+      "logo_kind": "none"
     }
   ],
   "relationships": [
@@ -10034,6 +10100,76 @@
       "confidence": 0.98,
       "evidence_source": "https://github.com/huggingface/candle/blob/main/README.md",
       "notes": "The official README identifies Candle as a Rust ML framework and demonstrates its candle_core tensor API in Rust."
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "tool:litert",
+      "relationship": "runtime_written_in",
+      "start_year": null,
+      "end_year": null,
+      "confidence": 0.96,
+      "evidence_source": "https://github.com/google-ai-edge/LiteRT/blob/main/litert/runtime/compiled_model.cc",
+      "notes": "LiteRT compiled-model runtime implementation uses C++ classes, namespaces, templates and standard-library containers. Scoped to the published native runtime."
+    },
+    {
+      "from_language": "lang:c",
+      "to_language": "tool:whisper_cpp",
+      "relationship": "runtime_written_in",
+      "start_year": null,
+      "end_year": null,
+      "confidence": 0.97,
+      "evidence_source": "https://github.com/ggml-org/whisper.cpp/blob/master/README.md",
+      "notes": "The official README describes a plain C/C++ implementation. C covers the tensor-library portion; the high-level model implementation is whisper.cpp."
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "tool:whisper_cpp",
+      "relationship": "runtime_written_in",
+      "start_year": null,
+      "end_year": null,
+      "confidence": 0.98,
+      "evidence_source": "https://github.com/ggml-org/whisper.cpp/blob/master/README.md",
+      "notes": "The official README describes a plain C/C++ implementation and identifies src/whisper.cpp as the high-level model implementation."
+    },
+    {
+      "from_language": "tool:ggml",
+      "to_language": "tool:whisper_cpp",
+      "relationship": "runtime_written_in",
+      "start_year": null,
+      "end_year": null,
+      "confidence": 0.97,
+      "evidence_source": "https://github.com/ggml-org/whisper.cpp/blob/master/README.md",
+      "notes": "The README states that the high-level model code is whisper.h/whisper.cpp and the rest is part of the ggml machine-learning library. This edge represents its tensor execution implementation."
+    },
+    {
+      "from_language": "lang:python",
+      "to_language": "tool:mlc_llm",
+      "relationship": "compiler_written_in",
+      "start_year": null,
+      "end_year": null,
+      "confidence": 0.98,
+      "evidence_source": "https://github.com/mlc-ai/mlc-llm/blob/main/docs/install/tvm.rst",
+      "notes": "The official compiler installation guide explicitly states that MLC LLM compilation is implemented in pure Python using TVM APIs."
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "tool:mlc_llm",
+      "relationship": "runtime_written_in",
+      "start_year": null,
+      "end_year": null,
+      "confidence": 0.96,
+      "evidence_source": "https://github.com/mlc-ai/mlc-llm/blob/main/cpp/serve/engine.cc",
+      "notes": "The serving engine runtime module is implemented in C++, including request and engine-state handling using TVM runtime and FFI types."
+    },
+    {
+      "from_language": "tool:tvm",
+      "to_language": "tool:mlc_llm",
+      "relationship": "compiler_written_in",
+      "start_year": null,
+      "end_year": null,
+      "confidence": 0.98,
+      "evidence_source": "https://github.com/mlc-ai/mlc-llm/blob/main/docs/install/tvm.rst",
+      "notes": "The official MLC LLM installation guide identifies TVM Unity as required and states that MLC LLM compilation is implemented using its APIs. This edge represents compiler infrastructure, not a source language."
     }
   ]
 }
