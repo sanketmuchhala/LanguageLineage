@@ -149,6 +149,38 @@ describe('how-pytorch-runs semantics', () => {
   });
 });
 
+describe('how-pytorch-runs on AMD (ROCm) and Apple (MPS) GPUs', () => {
+  const data = bySlug('how-pytorch-runs');
+  const path = (mode: string, device: string) => activePath(data, { mode, device });
+  const NVIDIA_ONLY = ['aten_cuda', 'ptx', 'gpu_machine_code', 'nvidia_gpu'];
+
+  it.each(['eager', 'compile'])('%s on ROCm reaches the AMD GPU and nothing NVIDIA-specific', (mode) => {
+    const p = path(mode, 'rocm');
+    expect(p.stages.has('amd_gpu')).toBe(true);
+    for (const id of [...NVIDIA_ONLY, 'apple_gpu', 'cpu', 'aten_mps', 'metal_shaders']) expect(p.stages.has(id), id).toBe(false);
+  });
+
+  it('torch.compile on ROCm takes the Triton route to AMDGCN, with ATen fallbacks on HIP', () => {
+    const p = path('compile', 'rocm');
+    const chain = ['inductor', 'triton_kernels', 'triton_compiler', 'llvm_ir', 'amdgcn', 'amd_gpu'];
+    for (let i = 0; i < chain.length - 1; i++) expect(p.steps.has(`${chain[i]}--${chain[i + 1]}`), `${chain[i]} -> ${chain[i + 1]}`).toBe(true);
+    expect(data.steps.find(s => stepId(s) === 'inductor--aten_hip')?.kind).toBe('falls_back_to');
+  });
+
+  it.each(['eager', 'compile'])('%s on MPS stays on the Apple GPU, without Triton or CUDA', (mode) => {
+    const p = path(mode, 'mps');
+    expect(p.stages.has('apple_gpu')).toBe(true);
+    for (const id of [...NVIDIA_ONLY, 'amd_gpu', 'cpu', 'triton_kernels', 'amdgcn', 'aten_hip']) expect(p.stages.has(id), id).toBe(false);
+  });
+
+  it('torch.compile on MPS is the documented prototype: Metal shaders for elementwise ops, the rest on MPS kernels', () => {
+    const p = path('compile', 'mps');
+    expect(p.steps.has('inductor--metal_shaders')).toBe(true);
+    expect(data.steps.find(s => stepId(s) === 'inductor--aten_mps')?.kind).toBe('falls_back_to');
+    expect(data.stages.find(s => s.id === 'metal_shaders')!.summary).toMatch(/prototype/);
+  });
+});
+
 describe('how-vllm-runs semantics', () => {
   const data = bySlug('how-vllm-runs');
   const path = (mode: string, attention: string) => activePath(data, { mode, attention });
