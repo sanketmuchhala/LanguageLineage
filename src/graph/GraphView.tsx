@@ -4,8 +4,9 @@ import coseBilkent from 'cytoscape-cose-bilkent';
 import { useGraphStore } from '../store/useGraphStore';
 import { buildCytoscapeElements } from './buildElements';
 import { getCytoscapeStyle } from './style';
+import { panelInset } from './viewport';
 import { BASE_CYTOSCAPE_CONFIG } from './cytoscapeConfig';
-import { DAG_LAYOUT, FORCE_LAYOUT, CLUSTER_LAYOUT, buildTimelineLayout } from './layouts';
+import { DAG_LAYOUT, FORCE_LAYOUT, buildClusterLayout, buildTimelineLayout } from './layouts';
 import { activateFocusMode, deactivateFocusMode, applyTimelineVisibility, clearTimelineVisibility, getAncestors, getDescendants, activateExplorationMode, applyAttributeFilters, fitToAiView, fitNodesInView, activateAiOverlay, findShortestPath, activateTracePath } from './selectors';
 import './GraphView.css';
 
@@ -15,17 +16,13 @@ cytoscape.use(coseBilkent);
 function getLayout(mode: string, cy?: cytoscape.Core): any {
   switch (mode) {
     case 'dag': return DAG_LAYOUT;
-    case 'cluster': return CLUSTER_LAYOUT;
+    case 'cluster': return cy ? buildClusterLayout(cy) : FORCE_LAYOUT;
     case 'timeline': return cy ? buildTimelineLayout(cy) : DAG_LAYOUT;
     case 'force':
     default: return FORCE_LAYOUT;
   }
 }
 
-/**
- * The layouts fit and animate the viewport themselves, and layoutstop fires before that
- * animation ends, so wait until nothing is animating before zooming to the AI view.
- */
 /** Clear hover/selection highlighting, keeping an active AI path overlay. */
 function restoreBaseHighlight(cy: Core): void {
   const overlay = useGraphStore.getState().aiOverlayNodeIds;
@@ -33,6 +30,10 @@ function restoreBaseHighlight(cy: Core): void {
   else deactivateFocusMode(cy);
 }
 
+/**
+ * The layouts fit and animate the viewport themselves, and layoutstop fires before that
+ * animation ends, so wait until nothing is animating before re-fitting the view.
+ */
 function settle(cy: Core, run: () => void, tries = 0): void {
   const busy = cy.animated() || cy.nodes(':animated').length > 0;
   if (busy && tries < 40) {
@@ -51,12 +52,6 @@ function fitAiWhenSettled(cy: Core, inset: () => number): void {
   });
 }
 
-/** Width of an open side panel overlapping the canvas's left edge, in pixels. */
-function panelInset(container: HTMLElement | null): number {
-  const panel = document.querySelector('.sidebar:not(.collapsed)');
-  if (!container || !panel) return 0;
-  return Math.max(0, panel.getBoundingClientRect().right - container.getBoundingClientRect().left);
-}
 
 export function GraphView() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -120,6 +115,13 @@ export function GraphView() {
       // Deep link ?view=ai: zoom to the AI nodes once the layout has placed them.
       if (useGraphStore.getState().attributeFilters.ai) {
         fitAiWhenSettled(instance, () => panelInset(containerRef.current));
+        return;
+      }
+
+      // Cluster layout on wider screens: fit the whole graph into the area the side panel
+      // leaves visible (the layout's own fit uses the full canvas, under the panel).
+      if (useGraphStore.getState().filters.layoutMode === 'cluster' && !window.matchMedia('(max-width: 640px)').matches) {
+        settle(instance, () => fitNodesInView(instance, instance.nodes().filter((n) => !n.isParent()), panelInset(containerRef.current)));
         return;
       }
 
