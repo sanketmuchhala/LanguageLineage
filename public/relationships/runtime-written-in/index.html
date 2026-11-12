@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>122 Runtime Implementation Relationships | Language Lineage</title>
+  <title>128 Runtime Implementation Relationships | Language Lineage</title>
   <meta name="description" content="These relationships document what programming language each runtime or interpreter is written in. For example, CPython (the reference Python interpreter) is wri" />
   <link rel="canonical" href="https://www.languagelineage.org/relationships/runtime-written-in" />
   <link rel="icon" href="/favicon.svg" />
   <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><script defer src="/fx.js"></script><script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script><link rel="alternate" type="application/rss+xml" title="Language Lineage" href="/rss.xml" /><link rel="stylesheet" href="/seo.css" />
-  <meta property="og:title" content="122 Runtime Implementation Relationships | Language Lineage" />
+  <meta property="og:title" content="128 Runtime Implementation Relationships | Language Lineage" />
   <meta property="og:url" content="https://www.languagelineage.org/relationships/runtime-written-in" />
   <meta property="og:image" content="https://www.languagelineage.org/og/relationships-runtime-written-in.png" />
   <meta property="og:image:width" content="1200" />
@@ -38,7 +38,7 @@
 
   <div class="answer-box" style="border-left:3px solid #34d399">These relationships document what programming language each runtime or interpreter is written in. For example, CPython (the reference Python interpreter) is written in C.</div>
 
-  <h2>All 122 Relationships</h2>
+  <h2>All 128 Relationships</h2>
   <div class="table-wrap"><table>
     <thead><tr><th>From</th><th>To</th><th>Confidence</th><th>Notes</th><th>Source</th></tr></thead>
     <tbody><tr>
@@ -189,6 +189,13 @@
       <td><a href="https://docs.pytorch.org/executorch/stable/using-executorch-building-from-source.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
     </tr>
 <tr>
+      <td><a href="/languages/rust">Rust</a></td>
+      <td><a href="/tools/candle">Candle</a></td>
+      <td class="confidence-high">98%</td>
+      <td>The official README identifies Candle as a Rust ML framework and demonstrates its candle_core tensor API in Rust.</td>
+      <td><a href="https://github.com/huggingface/candle/blob/main/README.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
       <td><a href="/languages/c">C</a></td>
       <td><a href="/tools/ghc">GHC</a></td>
       <td class="confidence-high">97%</td>
@@ -264,6 +271,20 @@
       <td class="confidence-high">96%</td>
       <td>The Python Pipeline base class implements tokenization, model-inference orchestration and post-processing. Backend numerical kernels are outside this edge.</td>
       <td><a href="https://github.com/huggingface/transformers/blob/main/src/transformers/pipelines/base.py" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
+      <td><a href="/languages/c">C</a></td>
+      <td><a href="/tools/numpy">NumPy</a></td>
+      <td class="confidence-high">96%</td>
+      <td>The multiarray array-object implementation is C, including PyArray_Size and array-object handling. Scoped to the native array core.</td>
+      <td><a href="https://github.com/numpy/numpy/blob/main/numpy/_core/src/multiarray/arrayobject.c" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
+      <td><a href="/languages/fortran">Fortran</a></td>
+      <td><a href="/tools/openblas">OpenBLAS</a></td>
+      <td class="confidence-high">96%</td>
+      <td>The included LAPACK linear-system solver DGESV is Fortran. This edge applies to the included Fortran LAPACK build, not builds omitting LAPACK or selecting translated C fallback sources.</td>
+      <td><a href="https://github.com/OpenMathLib/OpenBLAS/blob/develop/lapack-netlib/SRC/dgesv.f" rel="noopener noreferrer" target="_blank">Source repository</a></td>
     </tr>
 <tr>
       <td><a href="/languages/c">C</a></td>
@@ -474,6 +495,27 @@
       <td class="confidence-high">95%</td>
       <td>The engine, scheduler, model executor and OpenAI-compatible server are Python (vllm/engine, vllm/model_executor, vllm/entrypoints)</td>
       <td><a href="https://github.com/vllm-project/vllm/tree/main/vllm" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
+      <td><a href="/languages/python">Python</a></td>
+      <td><a href="/tools/numpy">NumPy</a></td>
+      <td class="confidence-high">95%</td>
+      <td>Python numerical functions are implemented in numeric.py, importing and composing the native multiarray and umath operations.</td>
+      <td><a href="https://github.com/numpy/numpy/blob/main/numpy/_core/numeric.py" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
+      <td><a href="/languages/c">C</a></td>
+      <td><a href="/tools/openblas">OpenBLAS</a></td>
+      <td class="confidence-high">95%</td>
+      <td>The level-3 numerical-operation template implements C BLAS driver logic. This does not characterize every optimized assembly kernel.</td>
+      <td><a href="https://github.com/OpenMathLib/OpenBLAS/blob/develop/driver/level3/level3.c" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
+      <td><a href="/languages/cxx">C++</a></td>
+      <td><a href="/tools/nccl">NCCL</a></td>
+      <td class="confidence-high">95%</td>
+      <td>NCCL collective host functions and enqueue logic are implemented in C++. This edge is scoped to host-side library code, not the CUDA device-kernel layer.</td>
+      <td><a href="https://github.com/NVIDIA/nccl/blob/master/src/collectives.cc" rel="noopener noreferrer" target="_blank">Source repository</a></td>
     </tr>
 <tr>
       <td><a href="/languages/cxx">C++</a></td>

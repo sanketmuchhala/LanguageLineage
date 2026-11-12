@@ -48,19 +48,19 @@
     "lastmod": "2026-11-12"
   },
   "/compiler-runtime-bootstrap": {
-    "hash": "662bd106d1bab994",
+    "hash": "0d91c464157c67eb",
     "lastmod": "2026-11-12"
   },
   "/dataset": {
-    "hash": "6f99a5f0b086bd8b",
+    "hash": "096479f1d642e519",
     "lastmod": "2026-11-12"
   },
   "/directory": {
-    "hash": "afbbec12e52d2865",
+    "hash": "0ac3d8594ab349aa",
     "lastmod": "2026-11-12"
   },
   "/embed-kit": {
-    "hash": "9ed10efdf48e1cc4",
+    "hash": "24c3a62eff3c69ec",
     "lastmod": "2026-11-12"
   },
   "/explore": {
@@ -100,11 +100,11 @@
     "lastmod": "2026-11-11"
   },
   "/guides/programming-language-family-tree": {
-    "hash": "c07f552463c99fb0",
+    "hash": "50ed688fd3317ec0",
     "lastmod": "2026-11-12"
   },
   "/guides/the-c-bootstrap-chain": {
-    "hash": "e984f87cdbc7b6df",
+    "hash": "83029b52e9846573",
     "lastmod": "2026-11-12"
   },
   "/guides/typescript-vs-javascript-implementation": {
@@ -124,7 +124,7 @@
     "lastmod": "2026-11-11"
   },
   "/how-it-works": {
-    "hash": "a2abcdd64d7ac958",
+    "hash": "ed3a105f08fcb916",
     "lastmod": "2026-11-12"
   },
   "/languages": {
@@ -204,7 +204,7 @@
     "lastmod": "2026-11-12"
   },
   "/languages/c": {
-    "hash": "2e41d6f81329621e",
+    "hash": "2fbf93ba594e1bb6",
     "lastmod": "2026-11-12"
   },
   "/languages/carbon": {
@@ -264,7 +264,7 @@
     "lastmod": "2026-11-12"
   },
   "/languages/cxx": {
-    "hash": "ee0df0692fd6d176",
+    "hash": "40b6f7c5338f853a",
     "lastmod": "2026-11-12"
   },
   "/languages/cyclone": {
@@ -328,8 +328,8 @@
     "lastmod": "2026-11-11"
   },
   "/languages/fortran": {
-    "hash": "31221d4b36b48b55",
-    "lastmod": "2026-11-11"
+    "hash": "a8fd5f1187ae507e",
+    "lastmod": "2026-11-12"
   },
   "/languages/fortran95": {
     "hash": "bccfdeebfc3e9233",
@@ -592,7 +592,7 @@
     "lastmod": "2026-11-11"
   },
   "/languages/python": {
-    "hash": "d31ca2d26cb37488",
+    "hash": "da8f007b2baf09fd",
     "lastmod": "2026-11-12"
   },
   "/languages/qsharp": {
@@ -636,7 +636,7 @@
     "lastmod": "2026-11-11"
   },
   "/languages/rust": {
-    "hash": "6cc6edcfd085f970",
+    "hash": "45b6fd2709313bcf",
     "lastmod": "2026-11-12"
   },
   "/languages/s": {
@@ -736,7 +736,7 @@
     "lastmod": "2026-11-11"
   },
   "/posters/programming-language-implementation-family-tree": {
-    "hash": "2668d18bad4c469e",
+    "hash": "c097d948429a04ee",
     "lastmod": "2026-11-12"
   },
   "/programming-language-evolution": {
@@ -748,11 +748,11 @@
     "lastmod": "2026-11-12"
   },
   "/programming-language-genealogy": {
-    "hash": "18b03527769cec81",
+    "hash": "b767b45dc17a6d3c",
     "lastmod": "2026-11-12"
   },
   "/programming-language-graph": {
-    "hash": "394de44c1fcbbbfa",
+    "hash": "af8c456c22128475",
     "lastmod": "2026-11-12"
   },
   "/questions": {
@@ -1240,11 +1240,11 @@
     "lastmod": "2026-11-11"
   },
   "/rankings/most-influential": {
-    "hash": "8b81d7a9ea52e101",
+    "hash": "5943443ce693cced",
     "lastmod": "2026-11-12"
   },
   "/relationships": {
-    "hash": "a011266cb17093f6",
+    "hash": "6d98377f74577282",
     "lastmod": "2026-11-12"
   },
   "/relationships/bootstrap-written-in": {
@@ -1252,7 +1252,7 @@
     "lastmod": "2026-11-11"
   },
   "/relationships/compiler-written-in": {
-    "hash": "7d54e1584577d6f8",
+    "hash": "e8f93ee45b75d253",
     "lastmod": "2026-11-12"
   },
   "/relationships/influenced": {
@@ -1264,7 +1264,7 @@
     "lastmod": "2026-11-11"
   },
   "/relationships/runtime-written-in": {
-    "hash": "548cb5d850f4ff5b",
+    "hash": "b7a8d7bdf6f74922",
     "lastmod": "2026-11-12"
   },
   "/relationships/transpiled-to": {
@@ -1272,11 +1272,11 @@
     "lastmod": "2026-11-12"
   },
   "/timeline": {
-    "hash": "edb79d193f25ffbd",
+    "hash": "39f7dc8b6c40a6ef",
     "lastmod": "2026-11-12"
   },
   "/tools": {
-    "hash": "5c695c5b3f9f8554",
+    "hash": "e4b078a3e31258e3",
     "lastmod": "2026-11-12"
   },
   "/tools/babel": {
@@ -1293,6 +1293,10 @@
   },
   "/tools/bun": {
     "hash": "db9b341f314a82ee",
+    "lastmod": "2026-11-12"
+  },
+  "/tools/candle": {
+    "hash": "85e6bfba5c4791d0",
     "lastmod": "2026-11-12"
   },
   "/tools/chez-scheme": {
@@ -1387,8 +1391,16 @@
     "hash": "9a57afe682aaae65",
     "lastmod": "2026-11-12"
   },
+  "/tools/nccl": {
+    "hash": "6f83adf8324ed625",
+    "lastmod": "2026-11-12"
+  },
   "/tools/nodejs": {
     "hash": "362ccf02b23f8022",
+    "lastmod": "2026-11-12"
+  },
+  "/tools/numpy": {
+    "hash": "6c8cb744be1c0a15",
     "lastmod": "2026-11-12"
   },
   "/tools/ollama": {
@@ -1397,6 +1409,10 @@
   },
   "/tools/onnx-runtime": {
     "hash": "ff22814f77d5e1f2",
+    "lastmod": "2026-11-12"
+  },
+  "/tools/openblas": {
+    "hash": "93c915f687db143c",
     "lastmod": "2026-11-12"
   },
   "/tools/pypy": {
@@ -1447,6 +1463,10 @@
     "hash": "86510e3be7166195",
     "lastmod": "2026-11-12"
   },
+  "/tools/tvm": {
+    "hash": "415579b9ead443bd",
+    "lastmod": "2026-11-12"
+  },
   "/tools/v8": {
     "hash": "2de2b9cf196d65c1",
     "lastmod": "2026-11-11"
@@ -1460,7 +1480,7 @@
     "lastmod": "2026-11-12"
   },
   "/what-are-programming-languages-written-in": {
-    "hash": "0db4ab1420072b9c",
+    "hash": "a459925525a1af28",
     "lastmod": "2026-11-12"
   }
 }

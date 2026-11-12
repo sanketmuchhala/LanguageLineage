@@ -594,7 +594,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/fortran</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/lisp</loc>
@@ -1366,6 +1366,26 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools/executorch</loc>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.languagelineage.org/tools/numpy</loc>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.languagelineage.org/tools/openblas</loc>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.languagelineage.org/tools/nccl</loc>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.languagelineage.org/tools/tvm</loc>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.languagelineage.org/tools/candle</loc>
     <lastmod>2026-11-12</lastmod>
   </url>
   <url>
