@@ -306,6 +306,14 @@ describe('explainer pages link their path to the graph explorer', () => {
   });
 });
 
+describe('explainer prose renders its links', () => {
+  // Markdown links in sections and answers must become anchors, never raw "[text](url)" text.
+  it.each(files.map(f => [f.slug, f] as const))('%s shows no raw markdown links', (_slug, data) => {
+    const visible = page(data).replace(/<script[\s\S]*?<\/script>/g, '');
+    expect(visible).not.toMatch(/\]\((?:https?:\/\/|\/)/);
+  });
+});
+
 describe('/ai hub page', () => {
   const hub = readFileSync(join(ROOT, 'public/ai/index.html'), 'utf8');
   const table = (id: string) => hub.match(new RegExp(`<table id="${id}">[\\s\\S]*?</table>`))?.[0] ?? '';

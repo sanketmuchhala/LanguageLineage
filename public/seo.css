@@ -1700,4 +1700,4 @@ pre {
 .ai-hub-meta { color: var(--text-tertiary); font-size: 13px !important; margin: 0 !important; }
 
 /* Long identifiers in quotes (module paths, op names) must wrap on phones. */
-.ai-stage-detail p, .ai-sources blockquote, .ai-steps td { overflow-wrap: anywhere; }
+.ai-stage-detail p, .ai-sources blockquote, .ai-sources li, .ai-sources a, .ai-steps td { overflow-wrap: anywhere; }
