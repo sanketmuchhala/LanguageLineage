@@ -1,3 +1,4 @@
+import { idToSlug, idToPrefix, discoverAutoQuestions, QUESTION_CANONICAL_TO_LANG } from './contentPages.js';
 import { readFileSync, writeFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -9,14 +10,6 @@ const ROOT = join(__dirname, '..');
 const PUBLIC = join(ROOT, 'public');
 const SITE = 'https://www.languagelineage.org';
 
-function idToSlug(id: string): string {
-  return id.replace(/^(lang|tool):/, '').replace(/_/g, '-');
-}
-
-function idToPrefix(id: string): string {
-  return id.startsWith('tool:') ? 'tools' : 'languages';
-}
-
 interface Language { id: string }
 interface FullLanguage { id: string; name: string }
 interface Relationship { relationship: string; to_language: string; from_language: string }
@@ -26,26 +19,9 @@ const languages: FullLanguage[] = raw.languages ?? [];
 const rels: Relationship[] = raw.relationships ?? [];
 const relTypes = [...new Set(rels.map((r) => r.relationship))];
 
-// Auto-question-page qualifying nodes (same criteria as generateSeoPages.ts)
 const enrichmentRaw = JSON.parse(readFileSync(join(ROOT, 'dataset/v5/enrichment_v5.json'), 'utf8'));
-const enrichmentMap: Record<string, unknown> = enrichmentRaw.enrichment ?? {};
-const IMPL_REL_TYPES_Q = new Set(['compiler_written_in', 'runtime_written_in', 'bootstrap_written_in']);
-const HAND_AUTHORED_Q = new Set(['python','javascript','rust','go','java','c','cxx','typescript','ruby']);
-const incomingImplIds = new Set<string>();
-for (const rel of rels) {
-  if (!IMPL_REL_TYPES_Q.has(rel.relationship)) continue;
-  if (!rel.to_language.startsWith('lang:')) continue;
-  incomingImplIds.add(rel.to_language);
-}
-const AUTO_QUESTION_SLUGS: string[] = [];
-for (const node of languages) {
-  if (!node.id.startsWith('lang:')) continue;
-  const slug = idToSlug(node.id);
-  if (HAND_AUTHORED_Q.has(slug)) continue;
-  if (!incomingImplIds.has(node.id)) continue;
-  if (!enrichmentMap[node.id]) continue;
-  AUTO_QUESTION_SLUGS.push(slug);
-}
+const AUTO_QUESTION_SLUGS = discoverAutoQuestions(languages, rels, enrichmentRaw.enrichment ?? {})
+  .map(({ node }) => idToSlug(node.id));
 
 const GUIDE_SLUGS = [
   'what-is-compiler-bootstrapping',
@@ -62,11 +38,6 @@ const GUIDE_SLUGS = [
   'graalvm-vs-hotspot',
   'the-c-bootstrap-chain',
 ];
-
-// Question pages that canonicalize to their language page (see
-// QUESTION_CANONICAL_TO_LANG in generateSeoPages.ts) are non-canonical, so they
-// stay out of the sitemap.
-const QUESTION_CANONICAL_TO_LANG = new Set(['rust', 'python', 'roc', 'prolog']);
 
 const QUESTION_SLUGS = [
   'what-is-python-written-in',

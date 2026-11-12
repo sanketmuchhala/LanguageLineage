@@ -57,6 +57,11 @@ by hand.
 | `auditInternalLinks.ts` | `seo:links` | Gate. Broken links, crawl depth, orphans. |
 | `checkEvidenceLinks.ts` | `check:evidence-links` | Network check of every citation. Read-only, never auto-fixes. |
 
+Discovery rules shared by the HTML and sitemap generators live in
+`scripts/contentPages.ts`. See [CONTENT_PIPELINE.md](CONTENT_PIPELINE.md) for
+adding records without new page code. `seo:generate` also generates social
+images before HTML so first-time pages can reference their images.
+
 `npm run build` is `seo:generate && tsc && vite build`, then a patch step for
 the `/explore` page. So a build always regenerates the static site first: you
 cannot ship app code against stale pages.

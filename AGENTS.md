@@ -20,6 +20,20 @@ in it carries an evidence URL and a hand-assigned confidence score. That cited
 coverage is the product's differentiator and the thing an agent can most easily
 destroy.
 
+## Dataset-driven publishing (owner-directed, 2026-11-11)
+
+Read [docs/CONTENT_PIPELINE.md](docs/CONTENT_PIPELINE.md) before adding content or
+page families. New records in an existing family use the shared renderer; do not
+add a component, slug switch, copied HTML, or per-record registration. Lineage
+records come from `dataset/v5/lineage_v5.json`; execution paths come from
+`dataset/ai/*.json`. Keep discovery rules shared in `scripts/contentPages.ts`.
+`npm run seo:generate` generates social images before pages so new records get
+their images on the first build. Existing editorial page families still have
+manual catalogs; see the guide before extending those.
+
+This authorizes reusable publishing infrastructure. It does not authorize bulk
+low-value pages, automatically authored claims, or changes to evidence rules.
+
 ## Commands
 
 ```bash
@@ -43,7 +57,7 @@ After any dataset change:
 
 ```bash
 npm run seo:generate     # regenerate every static page, sitemap, llms.txt
-npm run og:generate      # regenerate social preview images
+npm run og:generate      # optional: regenerate only social preview images
 ```
 
 Data and logo work:

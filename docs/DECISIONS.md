@@ -90,6 +90,19 @@ scores for this reason.
 **Revisit if.** Never, as stated. A harvester may *propose* candidates in a PR
 description for a human to score.
 
+## Reusable publishing templates (added 2026-11-11, owner-directed)
+
+The owner requested that new content use data and shared templates instead of
+writing each page again. Existing lineage and execution-path families already
+follow this model. Preserve it for additions and extend it for new approved
+families. Shared discovery must drive both rendering and indexing; avoid copied
+eligibility rules and per-record code. The workflow and remaining gaps are in
+[CONTENT_PIPELINE.md](CONTENT_PIPELINE.md).
+
+This is infrastructure authorization, not authorization to invent claims or
+publish permutations merely to increase the URL count. The quality decision
+below and evidence review requirements still apply.
+
 ## No mass-generated pages
 
 No more definition, question, or comparison pages generated in bulk. Audit the

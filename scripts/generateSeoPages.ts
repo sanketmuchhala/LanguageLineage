@@ -1,3 +1,4 @@
+import { idToSlug, idToPrefix, discoverAutoQuestions, QUESTION_CANONICAL_TO_LANG } from './contentPages.js';
 import { readFileSync, mkdirSync, writeFileSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -169,14 +170,6 @@ if (!existsSync(CENTRALITY_PATH)) {
   throw new Error(`Missing ${CENTRALITY_PATH} - run "npm run rankings:compute" (or the full seo:generate chain) before generateSeoPages.ts.`);
 }
 const CENTRALITY = JSON.parse(readFileSync(CENTRALITY_PATH, 'utf8'));
-
-function idToSlug(id: string): string {
-  return id.replace(/^(lang|tool):/, '').replace(/_/g, '-');
-}
-
-function idToPrefix(id: string): string {
-  return id.startsWith('tool:') ? 'tools' : 'languages';
-}
 
 function confidenceNote(c: number): string {
   if (c >= 0.95) return ' (well-documented)';
@@ -2038,12 +2031,6 @@ function buildToolIntro(node: Language): string {
 }
 
 const QUESTION_PAGE_LANGS = new Set(['python','javascript','rust','go','java','c','cxx','typescript','ruby','v8','cpython']);
-
-// Slugs where /languages/{slug} and /questions/what-is-{slug}-written-in both draw
-// impressions, so the question page canonicalizes to the stronger language page.
-// Derived from the GSC export (npm run gsc:analyze); elm is deliberately absent
-// because its question page out-ranks and out-clicks the language page.
-const QUESTION_CANONICAL_TO_LANG = new Set(['rust', 'python', 'roc', 'prolog']);
 
 // Some language slugs differ from their question page slug (cxx -> cpp)
 const QUESTION_SLUG_OVERRIDE: Record<string, string> = { cxx: 'cpp' };
@@ -4577,28 +4564,7 @@ const languages: Language[] = raw.languages ?? [];
 const rels: Relationship[] = raw.relationships ?? [];
 const nodeMap = new Map(languages.map(l => [l.id, l]));
 
-// Phase 3: compute auto-question-page nodes
-const IMPL_REL_TYPES_Q = new Set(['compiler_written_in', 'runtime_written_in', 'bootstrap_written_in']);
-const HAND_AUTHORED_Q = new Set([
-  'python','javascript','rust','go','java','c','cxx','typescript','ruby',
-]);
-const incomingImplMap = new Map<string, Relationship[]>();
-for (const rel of rels) {
-  if (!IMPL_REL_TYPES_Q.has(rel.relationship)) continue;
-  if (!rel.to_language.startsWith('lang:')) continue;
-  if (!incomingImplMap.has(rel.to_language)) incomingImplMap.set(rel.to_language, []);
-  incomingImplMap.get(rel.to_language)!.push(rel);
-}
-const AUTO_QUESTION_NODES: AutoQNode[] = [];
-for (const node of languages) {
-  if (!node.id.startsWith('lang:')) continue;
-  const slug = idToSlug(node.id);
-  if (HAND_AUTHORED_Q.has(slug)) continue;
-  const implEdges = incomingImplMap.get(node.id) ?? [];
-  if (implEdges.length === 0) continue;
-  if (!ENRICHMENT[node.id]) continue;
-  AUTO_QUESTION_NODES.push({ node, implEdges });
-}
+const AUTO_QUESTION_NODES: AutoQNode[] = discoverAutoQuestions(languages, rels, ENRICHMENT);
 // Add auto slugs to QUESTION_PAGE_LANGS so language pages get cross-reference links
 for (const { node } of AUTO_QUESTION_NODES) {
   QUESTION_PAGE_LANGS.add(idToSlug(node.id));

@@ -69,6 +69,17 @@ this catches is a node claiming a logo the graph cannot draw:
   An agent once deleted that line to silence a console error, which blanked
   every logo on the graph while everything still built and validated.
 
+### Content publishing — `scripts/contentPages.test.ts`
+
+Checks that new eligible records are discovered without slug registration, and
+that the real dataset's lineage and AI records have their expected generated
+pages, sitemap entries and social images. AI records must also appear in the
+hub and llms catalog. Question pages share eligibility and canonical rules
+between HTML and sitemap generation in `scripts/contentPages.ts`.
+
+`npm run seo:generate` now generates social cards before HTML. Run it before
+validating changed data so the tests inspect the current publishing output.
+
 ### Counts — `scripts/siteCounts.test.ts`
 
 Node and relationship totals are typed by hand into the landing page, the SPA
