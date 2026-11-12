@@ -37,9 +37,9 @@
     "logo_overrides": 22,
     "ai_execution_paths": {
       "total": 10,
-      "stages": 121,
-      "steps": 138,
-      "sources": 66
+      "stages": 129,
+      "steps": 148,
+      "sources": 67
     }
   },
   "files": [
@@ -168,11 +168,11 @@
       "name": "TensorRT-LLM",
       "path": "dataset/ai/how-tensorrt-llm-runs.json",
       "verified_on": "2026-11-11",
-      "stages": 8,
-      "steps": 8,
-      "sources": 7,
-      "sha256": "0ac1f7d1bc713e1fde456278ab7dd1e094f4325c84f49f04e660771ca5617ce4",
-      "bytes": 15268
+      "stages": 16,
+      "steps": 18,
+      "sources": 8,
+      "sha256": "6f3011e178416541a0c24161db3582383ea54c781605db6f6d52edf91892e6c4",
+      "bytes": 30936
     },
     {
       "slug": "how-vllm-runs",

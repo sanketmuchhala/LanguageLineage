@@ -60,10 +60,10 @@ describe('expanded execution paths preserve architectural boundaries', () => {
     expect(mlx.has('apple_gpu')).toBe(true);
   });
 
-  it.each(['python', 'http'])('current TensorRT-LLM %s entry reaches its scheduled PyTorch engine', interfaceName => {
-    const stages = trace('how-tensorrt-llm-runs', { interface: interfaceName }).stages;
-    for (const stage of ['executor', 'scheduler', 'engine', 'kernels', 'gpu']) expect(stages.has(stage), stage).toBe(true);
-    expect(stages.has(interfaceName === 'python' ? 'http' : 'python_api')).toBe(false);
+  it.each([['compiled', 'trtllm'], ['compiled', 'flashinfer'], ['eager', 'trtllm'], ['eager', 'flashinfer']])('current TensorRT-LLM %s mode with %s attention reaches its scheduled PyTorch engine', (mode, attention) => {
+    const stages = trace('how-tensorrt-llm-runs', { mode, attention }).stages;
+    for (const stage of ['py_executor', 'scheduler', 'kv_cache', 'model_engine', 'pytorch_model', 'attention_op', 'sampler', 'gpu']) expect(stages.has(stage), stage).toBe(true);
+    expect(stages.has(attention === 'trtllm' ? 'flashinfer_attn' : 'trtllm_attn')).toBe(false);
   });
 
   it('every new stage is reachable in at least one documented selection', () => {

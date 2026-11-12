@@ -229,6 +229,39 @@ describe('how-onnx-runtime-runs semantics', () => {
   });
 });
 
+describe('how-tensorrt-llm-runs semantics', () => {
+  const data = bySlug('how-tensorrt-llm-runs');
+  const path = (mode: string, attention: string) => activePath(data, { mode, attention });
+  const COMPILER = ['dynamo_fx', 'aten_passes', 'piecewise_graphs'];
+  const CONTROL = ['entry', 'py_executor', 'scheduler', 'kv_cache', 'model_engine', 'pytorch_model', 'attention_op', 'sampler', 'gpu'];
+
+  it.each([['compiled', 'trtllm'], ['compiled', 'flashinfer'], ['eager', 'trtllm'], ['eager', 'flashinfer']])('%s with %s attention goes through the PyExecutor, C++ scheduler, KV cache, and PyTorch model engine', (mode, attention) => {
+    const p = path(mode, attention);
+    for (const id of CONTROL) expect(p.stages.has(id), id).toBe(true);
+  });
+
+  it.each(['trtllm', 'flashinfer'])('eager mode with %s attention skips torch.compile and uses eager prefill + decode CUDA graphs', (attention) => {
+    const p = path('eager', attention);
+    for (const id of COMPILER) expect(p.stages.has(id), id).toBe(false);
+    expect(p.stages.has('eager_prefill')).toBe(true);
+    expect(p.stages.has('decode_graphs')).toBe(true);
+  });
+
+  it('the compiled path lowers Dynamo FX to ATen IR passes and Piecewise CUDA Graphs without TorchInductor, skipping eager prefill', () => {
+    const p = path('compiled', 'trtllm');
+    const chain = ['pytorch_model', 'dynamo_fx', 'aten_passes', 'piecewise_graphs', 'sampler', 'gpu'];
+    for (let i = 0; i < chain.length - 1; i++) expect(p.steps.has(`${chain[i]}--${chain[i + 1]}`), `${chain[i]} -> ${chain[i + 1]}`).toBe(true);
+    expect(p.stages.has('eager_prefill')).toBe(false);
+    expect(p.stages.has('decode_graphs')).toBe(false);
+  });
+
+  it('each attention choice uses only its own custom op backend', () => {
+    expect(path('compiled', 'trtllm').stages.has('flashinfer_attn')).toBe(false);
+    expect(path('compiled', 'flashinfer').stages.has('trtllm_attn')).toBe(false);
+    expect(path('eager', 'flashinfer').stages.has('flashinfer_attn')).toBe(true);
+  });
+});
+
 describe('explainer pages link their path to the graph explorer', () => {
   it.each(files.map(f => [f.slug, f] as const))('%s links /explore with view=ai, its slug and default choices', (_slug, data) => {
     const href = page(data).match(/<a class="ai-graph-link" href="([^"]+)"/)?.[1];
