@@ -1698,3 +1698,6 @@ pre {
 .ai-hub-card p { font-size: 14px; margin: 0 0 10px; }
 .ai-hub-choices { font-size: 14px; margin: 0 0 10px; padding-left: 18px; }
 .ai-hub-meta { color: var(--text-tertiary); font-size: 13px !important; margin: 0 !important; }
+
+/* Long identifiers in quotes (module paths, op names) must wrap on phones. */
+.ai-stage-detail p, .ai-sources blockquote, .ai-steps td { overflow-wrap: anywhere; }

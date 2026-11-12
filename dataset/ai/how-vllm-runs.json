@@ -1,0 +1,367 @@
+{
+  "version": "1.0",
+  "slug": "how-vllm-runs",
+  "name": "vLLM",
+  "title": "How vLLM Runs a Model: torch.compile, CUDA Graphs | Language Lineage",
+  "h1": "What Actually Happens When vLLM Serves a Request?",
+  "description": "Trace a vLLM request on an NVIDIA GPU: API server, engine core, GPU worker, PyTorch model, then torch.compile and CUDA Graphs or eager kernels, with sources.",
+  "og_subtitle": "API server → engine core → worker → PyTorch → Inductor / Triton · CUDA Graphs → GPU",
+  "verified_on": "2026-11-11",
+  "verified_against": "the vLLM documentation (Architecture Overview, torch.compile integration, CUDA Graphs, CustomOp, Attention Backend Feature Support, Paged Attention, Optimization and Tuning), the vLLM README and the PyTorch ATen documentation",
+  "scope": "Documented paths for one model served with vllm serve on a single NVIDIA Ampere or Hopper GPU, in the default compiled mode or with --enforce-eager, using the FlashAttention or Triton attention backend. Tensor, pipeline and data parallelism, AMD, TPU, CPU and other platforms, FlashInfer and MLA backends, quantized GEMM kernels, speculative decoding, multimodal encoders and the experimental Rust frontend are out of scope.",
+  "answer": "A request to **vllm serve** goes to the **API server** process, which tokenizes it and passes it to the **engine core** process. The engine core's scheduler batches it with other requests and sends the batch to a **GPU worker**, whose model runner calls the model: an ordinary **PyTorch** module. By default vLLM compiles that model with **torch.compile** before serving: Dynamo captures it, the graph is split at attention, and **TorchInductor** generates **Triton** kernels that are replayed through **CUDA Graphs**. With **--enforce-eager**, vLLM skips compilation and runs its own CUDA kernels and PyTorch's ATen ops directly. Attention always goes through an attention backend, **FlashAttention** by default on Ampere and Hopper GPUs, or **Triton**.",
+  "status_template": "Showing {mode} with {attention}",
+  "dimensions": [
+    {
+      "id": "mode",
+      "legend": "Mode",
+      "default": "compiled",
+      "options": [
+        { "value": "compiled", "label": "Default (compiled)", "phrase": "the default torch.compile + CUDA Graphs mode" },
+        { "value": "eager", "label": "--enforce-eager", "phrase": "eager mode (--enforce-eager)" }
+      ]
+    },
+    {
+      "id": "attention",
+      "legend": "Attention backend",
+      "default": "flash",
+      "options": [
+        { "value": "flash", "label": "FlashAttention", "phrase": "the FlashAttention backend" },
+        { "value": "triton", "label": "Triton", "phrase": "the Triton attention backend" }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "heading": "Why vLLM is several processes",
+      "paragraphs": [
+        "HTTP handling and tokenization run in the **API server** process; scheduling and KV-cache management run in the **engine core** process; each GPU has its own **worker** process. vLLM splits the work this way to separate concerns and maximize throughput; the processes talk over ZMQ sockets. Each step, the scheduler fills a token budget from both running and waiting requests, so there are no separate prefill and decode phases.",
+        "The KV cache is managed in fixed-size blocks. The scheduler's KV-cache manager builds the block tables, and the attention backend reads keys and values through them: this is PagedAttention, which today lives inside the attention backends rather than in a separate kernel."
+      ]
+    },
+    {
+      "heading": "Compiled before the first request",
+      "paragraphs": [
+        "vLLM uses the same compiler stack as [PyTorch's torch.compile](/ai/how-pytorch-runs), with one difference that matters for a server: every compilation finishes before vLLM serves any request, and the result is cached on disk, so no request triggers a recompilation.",
+        "The captured graph is split at each attention call. The pieces between attention calls are compiled by TorchInductor and captured as CUDA Graphs; by default, batches of single-token decode steps can run as one full CUDA Graph that includes attention. For a local, single-file engine built on hand-written kernels instead, compare [how llama.cpp runs a model](/ai/how-llama-cpp-runs)."
+      ]
+    }
+  ],
+  "out_of_scope_note": "",
+  "link_from": ["tool:vllm", "tool:pytorch", "tool:triton", "tool:cuda"],
+  "sources": {
+    "arch": { "url": "https://docs.vllm.ai/en/latest/design/arch_overview/", "title": "Architecture Overview (vLLM documentation)" },
+    "compile": { "url": "https://docs.vllm.ai/en/latest/design/torch_compile/", "title": "torch.compile integration (vLLM documentation)" },
+    "cudagraphs": { "url": "https://docs.vllm.ai/en/latest/design/cuda_graphs/", "title": "CUDA Graphs (vLLM documentation)" },
+    "customop": { "url": "https://docs.vllm.ai/en/latest/design/custom_op/", "title": "CustomOp (vLLM documentation)" },
+    "attn_backends": { "url": "https://docs.vllm.ai/en/latest/design/attention_backends/", "title": "Attention Backend Feature Support (vLLM documentation)" },
+    "paged": { "url": "https://docs.vllm.ai/en/latest/design/paged_attention/", "title": "Paged Attention (vLLM documentation)" },
+    "optimization": { "url": "https://docs.vllm.ai/en/latest/configuration/optimization/", "title": "Optimization and Tuning (vLLM documentation)" },
+    "aten": { "url": "https://docs.pytorch.org/cppdocs/", "title": "PyTorch C++ API: ATen (PyTorch documentation)" }
+  },
+  "stages": [
+    {
+      "id": "client",
+      "name": "Your app or client",
+      "kind": "application",
+      "layer": "application",
+      "lineage_id": null,
+      "pos": [1.5, 0],
+      "summary": "Any program that sends requests to vLLM's OpenAI-compatible HTTP API and reads the streamed results.",
+      "evidence": [{ "source": "arch", "quote": "The API server process handles HTTP requests (e.g., the OpenAI-compatible API), performs input processing (tokenization, multi-modal data loading), and streams results back to clients." }]
+    },
+    {
+      "id": "api_server",
+      "name": "API server",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": "tool:vllm",
+      "pos": [1.5, 1],
+      "summary": "The process started by vllm serve. It handles HTTP, tokenizes inputs, and streams outputs back.",
+      "evidence": [
+        { "source": "arch", "quote": "This server can be started using the vllm serve command." },
+        { "source": "arch", "quote": "The API server process handles HTTP requests (e.g., the OpenAI-compatible API), performs input processing (tokenization, multi-modal data loading), and streams results back to clients." }
+      ]
+    },
+    {
+      "id": "engine_core",
+      "name": "Engine core",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": "tool:vllm",
+      "pos": [1.5, 2],
+      "summary": "The process that runs the scheduler and manages the KV cache. Each step it picks which requests run and how many of their tokens.",
+      "evidence": [
+        { "source": "arch", "quote": "The engine core process runs the scheduler, manages KV cache, and coordinates model execution across GPU workers." },
+        { "source": "arch", "quote": "This single loop handles chunked prefill, prefix caching and speculative decoding." }
+      ]
+    },
+    {
+      "id": "gpu_worker",
+      "name": "GPU worker",
+      "kind": "runtime",
+      "layer": "framework",
+      "lineage_id": "tool:vllm",
+      "pos": [1.5, 3],
+      "summary": "One process per GPU. It loads the model weights, runs forward passes, and manages GPU memory.",
+      "evidence": [{ "source": "arch", "quote": "The worker process loads model weights, executes forward passes, and manages GPU memory." }]
+    },
+    {
+      "id": "model_runner",
+      "name": "Model runner",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": "tool:vllm",
+      "pos": [1.5, 4],
+      "summary": "Inside each worker: prepares the input tensors for the batch and captures the CUDA Graphs.",
+      "evidence": [
+        { "source": "arch", "quote": "Every worker has one model runner object, responsible for loading and running the model." },
+        { "source": "arch", "quote": "Much of the model execution logic resides here, such as preparing input tensors and capturing cudagraphs." }
+      ]
+    },
+    {
+      "id": "model",
+      "name": "PyTorch model",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": "tool:pytorch",
+      "pos": [1.5, 5],
+      "summary": "The model itself, an ordinary PyTorch nn.Module (for example vLLM's Llama implementation).",
+      "evidence": [{ "source": "arch", "quote": "Every model runner object has one model object, which is the actual torch.nn.Module instance." }]
+    },
+    {
+      "id": "eager_kernels",
+      "name": "Eager CUDA kernels",
+      "kind": "kernel",
+      "layer": "kernel",
+      "lineage_id": "tool:cuda",
+      "pos": [0, 6],
+      "summary": "Without compilation, layers that are vLLM custom ops run vLLM's own CUDA kernels, and the rest run as PyTorch ATen operations, one kernel launch at a time.",
+      "evidence": [
+        { "source": "customop", "quote": "it will automatically dispatch the forward method to the appropriate backend according to current_platform" },
+        { "source": "aten", "quote": "Most of these operations have both CPU and GPU implementations, to which the Tensor class will dynamically dispatch based on its type." }
+      ]
+    },
+    {
+      "id": "attention_op",
+      "name": "Attention op",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": "tool:vllm",
+      "pos": [1.5, 6],
+      "summary": "vLLM wraps each attention call in one PyTorch custom op, so the compiler treats it as a single opaque operation.",
+      "evidence": [{ "source": "compile", "quote": "we wrap the whole attention operation into a PyTorch custom op torch.ops.vllm.unified_attention_with_output, so that Dynamo will not try to inspect any of the internal operations." }]
+    },
+    {
+      "id": "dynamo",
+      "name": "TorchDynamo",
+      "kind": "compiler",
+      "layer": "compiler",
+      "lineage_id": null,
+      "pos": [3, 6],
+      "summary": "PyTorch's graph capture. vLLM runs it on the model's forward function once, at startup.",
+      "evidence": [
+        { "source": "compile", "quote": "In vLLM's V1 architecture, torch.compile is enabled by default and is a critical part of the framework." },
+        { "source": "compile", "quote": "This is about the Python code compilation, i.e. graph capture by Dynamo." }
+      ]
+    },
+    {
+      "id": "flash_attn",
+      "name": "FlashAttention",
+      "kind": "kernel",
+      "layer": "kernel",
+      "lineage_id": null,
+      "pos": [1, 7],
+      "summary": "The FlashAttention-based backend, vLLM's first choice for standard attention on Ampere and Hopper GPUs. It reads keys and values from the paged KV cache.",
+      "evidence": [
+        { "source": "attn_backends", "quote": "When no backend is explicitly selected, vLLM chooses the first compatible backend from these priority-ordered lists." },
+        { "source": "attn_backends", "quote": "Ampere/Hopper (SM 8.x-9.x): Priority Backend 1 FLASH_ATTN 2 FLASHINFER 3 TRITON_ATTN" }
+      ]
+    },
+    {
+      "id": "triton_attn",
+      "name": "Triton attention",
+      "kind": "kernel",
+      "layer": "kernel",
+      "lineage_id": "tool:triton",
+      "pos": [2, 7],
+      "summary": "An attention backend written in Triton (TritonAttentionImpl). Selected with --attention-backend TRITON_ATTN, or automatically when the backends ahead of it do not fit the model.",
+      "evidence": [
+        { "source": "paged", "quote": "Paged attention is now implemented directly inside vLLM's attention backends (for example TritonAttentionImpl in vllm/v1/attention/backends/triton_attn.py, or the FlashAttention-based backend) using block tables built by the scheduler's KV-cache manager" },
+        { "source": "attn_backends", "quote": "Ampere/Hopper (SM 8.x-9.x): Priority Backend 1 FLASH_ATTN 2 FLASHINFER 3 TRITON_ATTN" }
+      ]
+    },
+    {
+      "id": "graph_pieces",
+      "name": "Piecewise graph",
+      "kind": "intermediate_representation",
+      "layer": "compiler",
+      "lineage_id": null,
+      "pos": [3, 7],
+      "summary": "The captured computation graph, split at each attention call into pieces that are compiled one by one.",
+      "evidence": [{ "source": "compile", "quote": "The computation graph is further split into pieces, by the splitting_ops (usually this is the attention operation)." }]
+    },
+    {
+      "id": "inductor",
+      "name": "TorchInductor",
+      "kind": "compiler",
+      "layer": "compiler",
+      "lineage_id": null,
+      "pos": [3, 8],
+      "summary": "PyTorch's compiler backend. It compiles each graph piece; vLLM caches the results on disk.",
+      "evidence": [{ "source": "compile", "quote": "This means the first piece of computation graph (with shape None for symbolic shape) is compiled by Inductor" }]
+    },
+    {
+      "id": "triton_kernels",
+      "name": "Triton kernels",
+      "kind": "kernel",
+      "layer": "kernel",
+      "lineage_id": "tool:triton",
+      "pos": [3, 9],
+      "summary": "Fused GPU kernels that Inductor generates in Triton, including for the vLLM custom ops that compilation turns off.",
+      "evidence": [{ "source": "customop", "quote": "In this case, Inductor generates (fused) Triton kernels for those disabled custom ops." }]
+    },
+    {
+      "id": "cuda_graphs",
+      "name": "CUDA Graphs",
+      "kind": "runtime",
+      "layer": "kernel",
+      "lineage_id": "tool:cuda",
+      "pos": [3, 10],
+      "summary": "Recorded sequences of kernel launches that are replayed as one unit. By default: full graphs for decode batches, piecewise graphs (attention left outside) for the rest.",
+      "evidence": [{ "source": "cudagraphs", "quote": "FULL_AND_PIECEWISE — (default mode) full CUDA Graph for uniform decode, piecewise CUDA Graphs for others" }]
+    },
+    {
+      "id": "gpu",
+      "name": "NVIDIA GPU",
+      "kind": "hardware",
+      "layer": "hardware",
+      "lineage_id": null,
+      "pos": [1.5, 11],
+      "summary": "The GPU that runs the kernels. This page covers Ampere and Hopper GPUs, where vLLM's attention priority list starts with FlashAttention.",
+      "evidence": [{ "source": "attn_backends", "quote": "Ampere/Hopper (SM 8.x-9.x): Priority Backend 1 FLASH_ATTN 2 FLASHINFER 3 TRITON_ATTN" }]
+    }
+  ],
+  "steps": [
+    {
+      "from": "client", "to": "api_server", "kind": "calls", "when": {},
+      "label": "sends a request to",
+      "explanation": "Your client sends an HTTP request, for example to the OpenAI-compatible chat completions endpoint.",
+      "evidence": [{ "source": "arch", "quote": "The API server process handles HTTP requests (e.g., the OpenAI-compatible API), performs input processing (tokenization, multi-modal data loading), and streams results back to clients." }]
+    },
+    {
+      "from": "api_server", "to": "engine_core", "kind": "dispatches_to", "when": {},
+      "label": "passes tokens over ZMQ to",
+      "explanation": "The API server tokenizes the prompt and hands the request to the engine core process over ZMQ sockets.",
+      "evidence": [{ "source": "arch", "quote": "It communicates with the engine core process(es) via ZMQ sockets." }]
+    },
+    {
+      "from": "engine_core", "to": "gpu_worker", "kind": "dispatches_to", "when": {},
+      "label": "schedules each step on",
+      "explanation": "Every step the scheduler fills a token budget from running and waiting requests, allocates KV-cache blocks for them, and sends the batch to the GPU workers.",
+      "evidence": [{ "source": "arch", "quote": "It runs a busy loop that continuously schedules requests and dispatches work to the GPU workers." }]
+    },
+    {
+      "from": "gpu_worker", "to": "model_runner", "kind": "calls", "when": {},
+      "label": "runs the batch through",
+      "explanation": "The worker's model runner prepares the input tensors for the batch.",
+      "evidence": [{ "source": "arch", "quote": "Much of the model execution logic resides here, such as preparing input tensors and capturing cudagraphs." }]
+    },
+    {
+      "from": "model_runner", "to": "model", "kind": "calls", "when": {},
+      "label": "calls forward() on",
+      "explanation": "The model runner calls the model's forward pass on the batch.",
+      "evidence": [{ "source": "arch", "quote": "Every model runner object has one model object, which is the actual torch.nn.Module instance." }]
+    },
+    {
+      "from": "model", "to": "eager_kernels", "kind": "dispatches_to", "when": { "mode": ["eager"] },
+      "label": "runs layers as",
+      "explanation": "With --enforce-eager there is no compilation or graph capture: each layer launches its kernels as Python reaches it. Startup is fastest; steady-state decoding is slower.",
+      "evidence": [
+        { "source": "optimization", "quote": "Skips both compilation and CUDA-graph capture for the fastest possible startup, at the cost of steady-state decode performance." },
+        { "source": "customop", "quote": "it will automatically dispatch the forward method to the appropriate backend according to current_platform" }
+      ]
+    },
+    {
+      "from": "model", "to": "attention_op", "kind": "calls", "when": {},
+      "label": "calls attention through",
+      "explanation": "Each attention layer calls one vLLM custom op, in both modes.",
+      "evidence": [{ "source": "compile", "quote": "we wrap the whole attention operation into a PyTorch custom op torch.ops.vllm.unified_attention_with_output, so that Dynamo will not try to inspect any of the internal operations." }]
+    },
+    {
+      "from": "model", "to": "dynamo", "kind": "captures", "when": { "mode": ["compiled"] },
+      "label": "captured once at startup by",
+      "explanation": "Dynamo traces the model's forward function before vLLM serves anything; no request triggers a new compilation.",
+      "evidence": [
+        { "source": "compile", "quote": "This is about the Python code compilation, i.e. graph capture by Dynamo." },
+        { "source": "compile", "quote": "we guarantee all the compilation finishes before we serve any requests. No requests will trigger new compilations." }
+      ]
+    },
+    {
+      "from": "attention_op", "to": "flash_attn", "kind": "dispatches_to", "when": { "attention": ["flash"] },
+      "label": "runs on",
+      "explanation": "On Ampere and Hopper GPUs, FlashAttention is the first backend vLLM tries when none is selected.",
+      "evidence": [
+        { "source": "attn_backends", "quote": "When no backend is explicitly selected, vLLM chooses the first compatible backend from these priority-ordered lists." },
+        { "source": "attn_backends", "quote": "Ampere/Hopper (SM 8.x-9.x): Priority Backend 1 FLASH_ATTN 2 FLASHINFER 3 TRITON_ATTN" }
+      ]
+    },
+    {
+      "from": "attention_op", "to": "triton_attn", "kind": "dispatches_to", "when": { "attention": ["triton"] },
+      "label": "runs on",
+      "explanation": "The Triton backend implements paged attention in Triton kernels, reading keys and values through the scheduler's block tables.",
+      "evidence": [{ "source": "paged", "quote": "Paged attention is now implemented directly inside vLLM's attention backends (for example TritonAttentionImpl in vllm/v1/attention/backends/triton_attn.py, or the FlashAttention-based backend) using block tables built by the scheduler's KV-cache manager" }]
+    },
+    {
+      "from": "dynamo", "to": "graph_pieces", "kind": "lowers_to", "when": { "mode": ["compiled"] },
+      "label": "split at attention into",
+      "explanation": "The captured graph is cut at each attention call; attention stays a single opaque op between the pieces.",
+      "evidence": [{ "source": "compile", "quote": "The computation graph is further split into pieces, by the splitting_ops (usually this is the attention operation)." }]
+    },
+    {
+      "from": "graph_pieces", "to": "inductor", "kind": "compiled_by", "when": { "mode": ["compiled"] },
+      "label": "compiled by",
+      "explanation": "Each piece is compiled by TorchInductor, and the result is cached on disk for the next start.",
+      "evidence": [{ "source": "compile", "quote": "This means the first piece of computation graph (with shape None for symbolic shape) is compiled by Inductor" }]
+    },
+    {
+      "from": "inductor", "to": "triton_kernels", "kind": "generates", "when": { "mode": ["compiled"] },
+      "label": "generates",
+      "explanation": "Under compilation vLLM turns its custom ops off by default and Inductor generates fused Triton kernels in their place.",
+      "evidence": [{ "source": "customop", "quote": "In this case, Inductor generates (fused) Triton kernels for those disabled custom ops." }]
+    },
+    {
+      "from": "triton_kernels", "to": "cuda_graphs", "kind": "captures", "when": { "mode": ["compiled"] },
+      "label": "recorded into",
+      "explanation": "The model runner records the compiled kernels' launches as CUDA Graphs and replays them each step.",
+      "evidence": [
+        { "source": "arch", "quote": "Much of the model execution logic resides here, such as preparing input tensors and capturing cudagraphs." },
+        { "source": "cudagraphs", "quote": "FULL_AND_PIECEWISE — (default mode) full CUDA Graph for uniform decode, piecewise CUDA Graphs for others" }
+      ]
+    },
+    {
+      "from": "cuda_graphs", "to": "gpu", "kind": "launches_on", "when": { "mode": ["compiled"] },
+      "label": "replayed on",
+      "explanation": "Replaying a graph launches its whole recorded sequence of kernels at once.",
+      "evidence": [{ "source": "cudagraphs", "quote": "FULL_AND_PIECEWISE — (default mode) full CUDA Graph for uniform decode, piecewise CUDA Graphs for others" }]
+    },
+    {
+      "from": "eager_kernels", "to": "gpu", "kind": "launches_on", "when": { "mode": ["eager"] },
+      "label": "launch on",
+      "explanation": "Each kernel is launched on the GPU individually.",
+      "evidence": [{ "source": "optimization", "quote": "Skips both compilation and CUDA-graph capture for the fastest possible startup, at the cost of steady-state decode performance." }]
+    },
+    {
+      "from": "flash_attn", "to": "gpu", "kind": "launches_on", "when": { "attention": ["flash"] },
+      "label": "runs on",
+      "explanation": "Attention kernels run on the GPU; in the default compiled mode, single-token decode batches can include them in a full CUDA Graph.",
+      "evidence": [{ "source": "cudagraphs", "quote": "FULL_AND_PIECEWISE — (default mode) full CUDA Graph for uniform decode, piecewise CUDA Graphs for others" }]
+    },
+    {
+      "from": "triton_attn", "to": "gpu", "kind": "launches_on", "when": { "attention": ["triton"] },
+      "label": "runs on",
+      "explanation": "Attention kernels run on the GPU; in the default compiled mode, single-token decode batches can include them in a full CUDA Graph.",
+      "evidence": [{ "source": "cudagraphs", "quote": "FULL_AND_PIECEWISE — (default mode) full CUDA Graph for uniform decode, piecewise CUDA Graphs for others" }]
+    }
+  ]
+}

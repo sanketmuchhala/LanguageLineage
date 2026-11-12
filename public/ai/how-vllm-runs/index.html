@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How vLLM Runs a Model: torch.compile, CUDA Graphs | Language Lineage</title>
+  <meta name="description" content="Trace a vLLM request on an NVIDIA GPU: API server, engine core, GPU worker, PyTorch model, then torch.compile and CUDA Graphs or eager kernels, with sources." />
+  <link rel="canonical" href="https://www.languagelineage.org/ai/how-vllm-runs" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><script defer src="/fx.js"></script><script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script><link rel="alternate" type="application/rss+xml" title="Language Lineage" href="/rss.xml" /><link rel="stylesheet" href="/seo.css" />
+  <script defer src="/ai-path.js"></script>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="How vLLM Runs a Model: torch.compile, CUDA Graphs | Language Lineage" />
+  <meta property="og:description" content="Trace a vLLM request on an NVIDIA GPU: API server, engine core, GPU worker, PyTorch model, then torch.compile and CUDA Graphs or eager kernels, with sources." />
+  <meta property="og:url" content="https://www.languagelineage.org/ai/how-vllm-runs" />
+  <meta property="og:image" content="https://www.languagelineage.org/og/ai-how-vllm-runs.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What Actually Happens When vLLM Serves a Request?","description":"Trace a vLLM request on an NVIDIA GPU: API server, engine core, GPU worker, PyTorch model, then torch.compile and CUDA Graphs or eager kernels, with sources.","url":"https://www.languagelineage.org/ai/how-vllm-runs","datePublished":"2026-11-11","dateModified":"2026-11-12","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"citation":["https://docs.vllm.ai/en/latest/design/arch_overview/","https://docs.vllm.ai/en/latest/design/torch_compile/","https://docs.vllm.ai/en/latest/design/cuda_graphs/","https://docs.vllm.ai/en/latest/design/custom_op/","https://docs.vllm.ai/en/latest/design/attention_backends/","https://docs.vllm.ai/en/latest/design/paged_attention/","https://docs.vllm.ai/en/latest/configuration/optimization/","https://docs.pytorch.org/cppdocs/"],"inLanguage":"en"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"AI execution paths","item":"https://www.languagelineage.org/ai"},{"@type":"ListItem","position":3,"name":"What Actually Happens When vLLM Serves a Request?","item":"https://www.languagelineage.org/ai/how-vllm-runs"}]}</script>
+</head>
+<body class="seo-page">
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<nav class="seo-nav">
+  <a href="/" class="nav-brand"><img class="nav-logo-mark" src="/logo-mark.svg" width="22" height="22" alt="" aria-hidden="true">Language Lineage</a>
+  <a href="/relationships">Relationships</a>
+  <a href="/languages">Languages</a>
+  <a href="/tools">Tools</a>
+  <a href="/guides">Guides</a>
+  <a href="/timeline">Timeline</a>
+  <a href="/dataset">Dataset</a>
+  <a href="/how-it-works">How It Works</a>
+  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
+</nav>
+<main class="seo-main" id="main-content">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; <a href="/ai">AI execution paths</a> &rsaquo; What Actually Happens When vLLM Serves a Request
+  </nav>
+
+  <h1>What Actually Happens When vLLM Serves a Request?</h1>
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#the-selected-path-step-by-step">The selected path, step by step</a></li>
+    <li><a href="#why-vllm-is-several-processes">Why vLLM is several processes</a></li>
+    <li><a href="#compiled-before-the-first-request">Compiled before the first request</a></li>
+    <li><a href="#every-stage">Every stage</a></li>
+    <li><a href="#every-step">Every step</a></li>
+    <li><a href="#what-this-does-not-show">What this does not show</a></li>
+    <li><a href="#how-this-page-is-checked">How this page is checked</a></li>
+  </ol>
+</nav>
+
+  <div class="answer-box">A request to <strong>vllm serve</strong> goes to the <strong>API server</strong> process, which tokenizes it and passes it to the <strong>engine core</strong> process. The engine core's scheduler batches it with other requests and sends the batch to a <strong>GPU worker</strong>, whose model runner calls the model: an ordinary <strong>PyTorch</strong> module. By default vLLM compiles that model with <strong>torch.compile</strong> before serving: Dynamo captures it, the graph is split at attention, and <strong>TorchInductor</strong> generates <strong>Triton</strong> kernels that are replayed through <strong>CUDA Graphs</strong>. With <strong>--enforce-eager</strong>, vLLM skips compilation and runs its own CUDA kernels and PyTorch's ATen ops directly. Attention always goes through an attention backend, <strong>FlashAttention</strong> by default on Ampere and Hopper GPUs, or <strong>Triton</strong>.</div>
+
+  <section class="ai-explorer" id="explorer" aria-label="Execution path explorer">
+    <form class="ai-controls" onsubmit="return false">
+      <fieldset><legend>Mode</legend>
+        <label><input type="radio" name="mode" value="compiled" data-phrase="the default torch.compile + CUDA Graphs mode" checked> Default (compiled)</label>
+        <label><input type="radio" name="mode" value="eager" data-phrase="eager mode (--enforce-eager)"> --enforce-eager</label>
+      </fieldset>
+      <fieldset><legend>Attention backend</legend>
+        <label><input type="radio" name="attention" value="flash" data-phrase="the FlashAttention backend" checked> FlashAttention</label>
+        <label><input type="radio" name="attention" value="triton" data-phrase="the Triton attention backend"> Triton</label>
+      </fieldset>
+      <button type="button" class="ai-copy" hidden>Copy link to this path</button>
+    </form>
+    <p class="ai-status" aria-live="polite" data-template="Showing {mode} with {attention}">Showing the default torch.compile + CUDA Graphs mode with the FlashAttention backend: 14 stages, 14 steps.</p>
+    <div class="ai-layout">
+      <div class="ai-diagram-wrap"><svg class="ai-path-svg" viewBox="0 0 826 936" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Execution path diagram: select a stage or step for details">
+<defs><marker id="ai-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9a9a9a"/></marker></defs>
+<path id="step-client--api_server" class="ai-step on" d="M413,62 C413,78 413,78 413,88" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Your app or client sends a request to API server"><title>Your app or client sends a request to API server</title></path>
+<path id="step-api_server--engine_core" class="ai-step on" d="M413,140 C413,156 413,156 413,166" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="API server passes tokens over ZMQ to Engine core"><title>API server passes tokens over ZMQ to Engine core</title></path>
+<path id="step-engine_core--gpu_worker" class="ai-step on" d="M413,218 C413,234 413,234 413,244" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Engine core schedules each step on GPU worker"><title>Engine core schedules each step on GPU worker</title></path>
+<path id="step-gpu_worker--model_runner" class="ai-step on" d="M413,296 C413,312 413,312 413,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="GPU worker runs the batch through Model runner"><title>GPU worker runs the batch through Model runner</title></path>
+<path id="step-model_runner--model" class="ai-step on" d="M413,374 C413,390 413,390 413,400" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Model runner calls forward() on PyTorch model"><title>Model runner calls forward() on PyTorch model</title></path>
+<path id="step-model--eager_kernels" class="ai-step" d="M413,452 C413,468 104,468 104,478" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="PyTorch model runs layers as Eager CUDA kernels"><title>PyTorch model runs layers as Eager CUDA kernels</title></path>
+<path id="step-model--attention_op" class="ai-step on" d="M413,452 C413,468 413,468 413,478" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="PyTorch model calls attention through Attention op"><title>PyTorch model calls attention through Attention op</title></path>
+<path id="step-model--dynamo" class="ai-step on" d="M413,452 C413,468 722,468 722,478" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="PyTorch model captured once at startup by TorchDynamo"><title>PyTorch model captured once at startup by TorchDynamo</title></path>
+<path id="step-attention_op--flash_attn" class="ai-step on" d="M413,530 C413,546 310,546 310,556" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Attention op runs on FlashAttention"><title>Attention op runs on FlashAttention</title></path>
+<path id="step-attention_op--triton_attn" class="ai-step" d="M413,530 C413,546 516,546 516,556" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Attention op runs on Triton attention"><title>Attention op runs on Triton attention</title></path>
+<path id="step-dynamo--graph_pieces" class="ai-step on" d="M722,530 C722,546 722,546 722,556" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="TorchDynamo split at attention into Piecewise graph"><title>TorchDynamo split at attention into Piecewise graph</title></path>
+<path id="step-graph_pieces--inductor" class="ai-step on" d="M722,608 C722,624 722,624 722,634" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Piecewise graph compiled by TorchInductor"><title>Piecewise graph compiled by TorchInductor</title></path>
+<path id="step-inductor--triton_kernels" class="ai-step on" d="M722,686 C722,702 722,702 722,712" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="TorchInductor generates Triton kernels"><title>TorchInductor generates Triton kernels</title></path>
+<path id="step-triton_kernels--cuda_graphs" class="ai-step on" d="M722,764 C722,780 722,780 722,790" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Triton kernels recorded into CUDA Graphs"><title>Triton kernels recorded into CUDA Graphs</title></path>
+<path id="step-cuda_graphs--gpu" class="ai-step on" d="M722,842 C722,858 413,858 413,868" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="CUDA Graphs replayed on NVIDIA GPU"><title>CUDA Graphs replayed on NVIDIA GPU</title></path>
+<path id="step-eager_kernels--gpu" class="ai-step" d="M104,530 C104,702 413,702 413,868" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Eager CUDA kernels launch on NVIDIA GPU"><title>Eager CUDA kernels launch on NVIDIA GPU</title></path>
+<path id="step-flash_attn--gpu" class="ai-step on" d="M310,608 C310,741 413,741 413,868" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="FlashAttention runs on NVIDIA GPU"><title>FlashAttention runs on NVIDIA GPU</title></path>
+<path id="step-triton_attn--gpu" class="ai-step" d="M516,608 C516,741 413,741 413,868" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Triton attention runs on NVIDIA GPU"><title>Triton attention runs on NVIDIA GPU</title></path>
+<g id="stage-client" class="ai-stage on" tabindex="0" role="button" aria-label="Your app or client: Your program">
+  <rect x="325" y="16" width="176" height="46" rx="7" style="--kc:#60a5fa"/>
+  <rect x="325" y="16" width="4" height="46" rx="2" fill="#60a5fa"/>
+  <text x="339" y="35" class="ai-name">Your app or client</text>
+  <text x="339" y="51" class="ai-kind">application</text>
+</g>
+<g id="stage-api_server" class="ai-stage on" tabindex="0" role="button" aria-label="API server: Framework core">
+  <rect x="325" y="94" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="325" y="94" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="339" y="113" class="ai-name">API server</text>
+  <text x="339" y="129" class="ai-kind">framework component</text>
+</g>
+<g id="stage-engine_core" class="ai-stage on" tabindex="0" role="button" aria-label="Engine core: Framework core">
+  <rect x="325" y="172" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="325" y="172" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="339" y="191" class="ai-name">Engine core</text>
+  <text x="339" y="207" class="ai-kind">framework component</text>
+</g>
+<g id="stage-gpu_worker" class="ai-stage on" tabindex="0" role="button" aria-label="GPU worker: Runtime">
+  <rect x="325" y="250" width="176" height="46" rx="7" style="--kc:#93c5fd"/>
+  <rect x="325" y="250" width="4" height="46" rx="2" fill="#93c5fd"/>
+  <text x="339" y="269" class="ai-name">GPU worker</text>
+  <text x="339" y="285" class="ai-kind">runtime</text>
+</g>
+<g id="stage-model_runner" class="ai-stage on" tabindex="0" role="button" aria-label="Model runner: Framework core">
+  <rect x="325" y="328" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="325" y="328" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="339" y="347" class="ai-name">Model runner</text>
+  <text x="339" y="363" class="ai-kind">framework component</text>
+</g>
+<g id="stage-model" class="ai-stage on" tabindex="0" role="button" aria-label="PyTorch model: Framework core">
+  <rect x="325" y="406" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="325" y="406" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="339" y="425" class="ai-name">PyTorch model</text>
+  <text x="339" y="441" class="ai-kind">framework component</text>
+</g>
+<g id="stage-eager_kernels" class="ai-stage" tabindex="0" role="button" aria-label="Eager CUDA kernels: Kernel">
+  <rect x="16" y="484" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="16" y="484" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="30" y="503" class="ai-name">Eager CUDA kernels</text>
+  <text x="30" y="519" class="ai-kind">kernel</text>
+</g>
+<g id="stage-attention_op" class="ai-stage on" tabindex="0" role="button" aria-label="Attention op: Framework core">
+  <rect x="325" y="484" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="325" y="484" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="339" y="503" class="ai-name">Attention op</text>
+  <text x="339" y="519" class="ai-kind">framework component</text>
+</g>
+<g id="stage-dynamo" class="ai-stage on" tabindex="0" role="button" aria-label="TorchDynamo: Compiler">
+  <rect x="634" y="484" width="176" height="46" rx="7" style="--kc:#a78bfa"/>
+  <rect x="634" y="484" width="4" height="46" rx="2" fill="#a78bfa"/>
+  <text x="648" y="503" class="ai-name">TorchDynamo</text>
+  <text x="648" y="519" class="ai-kind">compiler</text>
+</g>
+<g id="stage-flash_attn" class="ai-stage on" tabindex="0" role="button" aria-label="FlashAttention: Kernel">
+  <rect x="222" y="562" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="222" y="562" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="236" y="581" class="ai-name">FlashAttention</text>
+  <text x="236" y="597" class="ai-kind">kernel</text>
+</g>
+<g id="stage-triton_attn" class="ai-stage" tabindex="0" role="button" aria-label="Triton attention: Kernel">
+  <rect x="428" y="562" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="428" y="562" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="442" y="581" class="ai-name">Triton attention</text>
+  <text x="442" y="597" class="ai-kind">kernel</text>
+</g>
+<g id="stage-graph_pieces" class="ai-stage on" tabindex="0" role="button" aria-label="Piecewise graph: Intermediate representation">
+  <rect x="634" y="562" width="176" height="46" rx="7" style="--kc:#22d3ee"/>
+  <rect x="634" y="562" width="4" height="46" rx="2" fill="#22d3ee"/>
+  <text x="648" y="581" class="ai-name">Piecewise graph</text>
+  <text x="648" y="597" class="ai-kind">intermediate representation</text>
+</g>
+<g id="stage-inductor" class="ai-stage on" tabindex="0" role="button" aria-label="TorchInductor: Compiler">
+  <rect x="634" y="640" width="176" height="46" rx="7" style="--kc:#a78bfa"/>
+  <rect x="634" y="640" width="4" height="46" rx="2" fill="#a78bfa"/>
+  <text x="648" y="659" class="ai-name">TorchInductor</text>
+  <text x="648" y="675" class="ai-kind">compiler</text>
+</g>
+<g id="stage-triton_kernels" class="ai-stage on" tabindex="0" role="button" aria-label="Triton kernels: Kernel">
+  <rect x="634" y="718" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="634" y="718" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="648" y="737" class="ai-name">Triton kernels</text>
+  <text x="648" y="753" class="ai-kind">kernel</text>
+</g>
+<g id="stage-cuda_graphs" class="ai-stage on" tabindex="0" role="button" aria-label="CUDA Graphs: Runtime">
+  <rect x="634" y="796" width="176" height="46" rx="7" style="--kc:#93c5fd"/>
+  <rect x="634" y="796" width="4" height="46" rx="2" fill="#93c5fd"/>
+  <text x="648" y="815" class="ai-name">CUDA Graphs</text>
+  <text x="648" y="831" class="ai-kind">runtime</text>
+</g>
+<g id="stage-gpu" class="ai-stage on" tabindex="0" role="button" aria-label="NVIDIA GPU: Hardware">
+  <rect x="325" y="874" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="325" y="874" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="339" y="893" class="ai-name">NVIDIA GPU</text>
+  <text x="339" y="909" class="ai-kind">hardware</text>
+</g>
+</svg></div>
+      <aside class="ai-detail" aria-live="polite"><p class="ai-detail-hint">Select a stage or an arrow to see what it does and the source behind it.</p></aside>
+    </div>
+    <ul class="ai-legend" aria-label="Legend"><li><span class="ai-swatch" style="--kc:#60a5fa"></span>Your program</li><li><span class="ai-swatch" style="--kc:#93c5fd"></span>Runtime</li><li><span class="ai-swatch" style="--kc:#e3a008"></span>Framework core</li><li><span class="ai-swatch" style="--kc:#f472b6"></span>Kernel</li><li><span class="ai-swatch" style="--kc:#a78bfa"></span>Compiler</li><li><span class="ai-swatch" style="--kc:#22d3ee"></span>Intermediate representation</li><li><span class="ai-swatch" style="--kc:#4ade80"></span>Hardware</li></ul>
+  </section>
+
+  <h2 id="the-selected-path-step-by-step">The selected path, step by step</h2>
+  <ol class="ai-path-list">
+<li>Your app or client <em>sends a request to</em> API server: Your client sends an HTTP request, for example to the OpenAI-compatible chat completions endpoint.</li>
+<li>API server <em>passes tokens over ZMQ to</em> Engine core: The API server tokenizes the prompt and hands the request to the engine core process over ZMQ sockets.</li>
+<li>Engine core <em>schedules each step on</em> GPU worker: Every step the scheduler fills a token budget from running and waiting requests, allocates KV-cache blocks for them, and sends the batch to the GPU workers.</li>
+<li>GPU worker <em>runs the batch through</em> Model runner: The worker's model runner prepares the input tensors for the batch.</li>
+<li>Model runner <em>calls forward() on</em> PyTorch model: The model runner calls the model's forward pass on the batch.</li>
+<li>PyTorch model <em>calls attention through</em> Attention op: Each attention layer calls one vLLM custom op, in both modes.</li>
+<li>PyTorch model <em>captured once at startup by</em> TorchDynamo: Dynamo traces the model's forward function before vLLM serves anything; no request triggers a new compilation.</li>
+<li>Attention op <em>runs on</em> FlashAttention: On Ampere and Hopper GPUs, FlashAttention is the first backend vLLM tries when none is selected.</li>
+<li>TorchDynamo <em>split at attention into</em> Piecewise graph: The captured graph is cut at each attention call; attention stays a single opaque op between the pieces.</li>
+<li>Piecewise graph <em>compiled by</em> TorchInductor: Each piece is compiled by TorchInductor, and the result is cached on disk for the next start.</li>
+<li>TorchInductor <em>generates</em> Triton kernels: Under compilation vLLM turns its custom ops off by default and Inductor generates fused Triton kernels in their place.</li>
+<li>Triton kernels <em>recorded into</em> CUDA Graphs: The model runner records the compiled kernels' launches as CUDA Graphs and replays them each step.</li>
+<li>CUDA Graphs <em>replayed on</em> NVIDIA GPU: Replaying a graph launches its whole recorded sequence of kernels at once.</li>
+<li>FlashAttention <em>runs on</em> NVIDIA GPU: Attention kernels run on the GPU; in the default compiled mode, single-token decode batches can include them in a full CUDA Graph.</li>
+  </ol>
+
+  <h2 id="why-vllm-is-several-processes">Why vLLM is several processes</h2>
+  <p>HTTP handling and tokenization run in the <strong>API server</strong> process; scheduling and KV-cache management run in the <strong>engine core</strong> process; each GPU has its own <strong>worker</strong> process. vLLM splits the work this way to separate concerns and maximize throughput; the processes talk over ZMQ sockets. Each step, the scheduler fills a token budget from both running and waiting requests, so there are no separate prefill and decode phases.</p>
+  <p>The KV cache is managed in fixed-size blocks. The scheduler's KV-cache manager builds the block tables, and the attention backend reads keys and values through them: this is PagedAttention, which today lives inside the attention backends rather than in a separate kernel.</p>
+
+  <h2 id="compiled-before-the-first-request">Compiled before the first request</h2>
+  <p>vLLM uses the same compiler stack as <a href="/ai/how-pytorch-runs">PyTorch's torch.compile</a>, with one difference that matters for a server: every compilation finishes before vLLM serves any request, and the result is cached on disk, so no request triggers a recompilation.</p>
+  <p>The captured graph is split at each attention call. The pieces between attention calls are compiled by TorchInductor and captured as CUDA Graphs; by default, batches of single-token decode steps can run as one full CUDA Graph that includes attention. For a local, single-file engine built on hand-written kernels instead, compare <a href="/ai/how-llama-cpp-runs">how llama.cpp runs a model</a>.</p>
+
+  <h2 id="every-stage">Every stage</h2>
+  <div class="ai-stage-list">
+<article class="ai-stage-detail" id="detail-stage-client" data-stage="client">
+<h3>Your app or client</h3>
+<p class="ai-kind-tag" style="--kc:#60a5fa">application</p>
+<p>Any program that sends requests to vLLM's OpenAI-compatible HTTP API and reads the streamed results.</p>
+
+<ul class="ai-sources"><li><blockquote>The API server process handles HTTP requests (e.g., the OpenAI-compatible API), performs input processing (tokenization, multi-modal data loading), and streams results back to clients.</blockquote><a href="https://docs.vllm.ai/en/latest/design/arch_overview/" rel="noopener noreferrer" target="_blank">Architecture Overview (vLLM documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-api_server" data-stage="api_server">
+<h3>API server</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>The process started by vllm serve. It handles HTTP, tokenizes inputs, and streams outputs back.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/vllm">vLLM</a></p>
+<ul class="ai-sources"><li><blockquote>This server can be started using the vllm serve command.</blockquote><a href="https://docs.vllm.ai/en/latest/design/arch_overview/" rel="noopener noreferrer" target="_blank">Architecture Overview (vLLM documentation)</a> <span class="src-type">Project docs</span></li><li><blockquote>The API server process handles HTTP requests (e.g., the OpenAI-compatible API), performs input processing (tokenization, multi-modal data loading), and streams results back to clients.</blockquote><a href="https://docs.vllm.ai/en/latest/design/arch_overview/" rel="noopener noreferrer" target="_blank">Architecture Overview (vLLM documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-engine_core" data-stage="engine_core">
+<h3>Engine core</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>The process that runs the scheduler and manages the KV cache. Each step it picks which requests run and how many of their tokens.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/vllm">vLLM</a></p>
+<ul class="ai-sources"><li><blockquote>The engine core process runs the scheduler, manages KV cache, and coordinates model execution across GPU workers.</blockquote><a href="https://docs.vllm.ai/en/latest/design/arch_overview/" rel="noopener noreferrer" target="_blank">Architecture Overview (vLLM documentation)</a> <span class="src-type">Project docs</span></li><li><blockquote>This single loop handles chunked prefill, prefix caching and speculative decoding.</blockquote><a href="https://docs.vllm.ai/en/latest/design/arch_overview/" rel="noopener noreferrer" target="_blank">Architecture Overview (vLLM documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-gpu_worker" data-stage="gpu_worker">
+<h3>GPU worker</h3>
+<p class="ai-kind-tag" style="--kc:#93c5fd">runtime</p>
+<p>One process per GPU. It loads the model weights, runs forward passes, and manages GPU memory.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/vllm">vLLM</a></p>
+<ul class="ai-sources"><li><blockquote>The worker process loads model weights, executes forward passes, and manages GPU memory.</blockquote><a href="https://docs.vllm.ai/en/latest/design/arch_overview/" rel="noopener noreferrer" target="_blank">Architecture Overview (vLLM documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-model_runner" data-stage="model_runner">
+<h3>Model runner</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>Inside each worker: prepares the input tensors for the batch and captures the CUDA Graphs.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/vllm">vLLM</a></p>
+<ul class="ai-sources"><li><blockquote>Every worker has one model runner object, responsible for loading and running the model.</blockquote><a href="https://docs.vllm.ai/en/latest/design/arch_overview/" rel="noopener noreferrer" target="_blank">Architecture Overview (vLLM documentation)</a> <span class="src-type">Project docs</span></li><li><blockquote>Much of the model execution logic resides here, such as preparing input tensors and capturing cudagraphs.</blockquote><a href="https://docs.vllm.ai/en/latest/design/arch_overview/" rel="noopener noreferrer" target="_blank">Architecture Overview (vLLM documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-model" data-stage="model">
+<h3>PyTorch model</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>The model itself, an ordinary PyTorch nn.Module (for example vLLM's Llama implementation).</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/pytorch">PyTorch</a></p>
+<ul class="ai-sources"><li><blockquote>Every model runner object has one model object, which is the actual torch.nn.Module instance.</blockquote><a href="https://docs.vllm.ai/en/latest/design/arch_overview/" rel="noopener noreferrer" target="_blank">Architecture Overview (vLLM documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-eager_kernels" data-stage="eager_kernels">
+<h3>Eager CUDA kernels</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel</p>
+<p>Without compilation, layers that are vLLM custom ops run vLLM's own CUDA kernels, and the rest run as PyTorch ATen operations, one kernel launch at a time.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/cuda">CUDA</a></p>
+<ul class="ai-sources"><li><blockquote>it will automatically dispatch the forward method to the appropriate backend according to current_platform</blockquote><a href="https://docs.vllm.ai/en/latest/design/custom_op/" rel="noopener noreferrer" target="_blank">CustomOp (vLLM documentation)</a> <span class="src-type">Project docs</span></li><li><blockquote>Most of these operations have both CPU and GPU implementations, to which the Tensor class will dynamically dispatch based on its type.</blockquote><a href="https://docs.pytorch.org/cppdocs/" rel="noopener noreferrer" target="_blank">PyTorch C++ API: ATen (PyTorch documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-attention_op" data-stage="attention_op">
+<h3>Attention op</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>vLLM wraps each attention call in one PyTorch custom op, so the compiler treats it as a single opaque operation.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/vllm">vLLM</a></p>
+<ul class="ai-sources"><li><blockquote>we wrap the whole attention operation into a PyTorch custom op torch.ops.vllm.unified_attention_with_output, so that Dynamo will not try to inspect any of the internal operations.</blockquote><a href="https://docs.vllm.ai/en/latest/design/torch_compile/" rel="noopener noreferrer" target="_blank">torch.compile integration (vLLM documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-dynamo" data-stage="dynamo">
+<h3>TorchDynamo</h3>
+<p class="ai-kind-tag" style="--kc:#a78bfa">compiler</p>
+<p>PyTorch's graph capture. vLLM runs it on the model's forward function once, at startup.</p>
+
+<ul class="ai-sources"><li><blockquote>In vLLM's V1 architecture, torch.compile is enabled by default and is a critical part of the framework.</blockquote><a href="https://docs.vllm.ai/en/latest/design/torch_compile/" rel="noopener noreferrer" target="_blank">torch.compile integration (vLLM documentation)</a> <span class="src-type">Project docs</span></li><li><blockquote>This is about the Python code compilation, i.e. graph capture by Dynamo.</blockquote><a href="https://docs.vllm.ai/en/latest/design/torch_compile/" rel="noopener noreferrer" target="_blank">torch.compile integration (vLLM documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-flash_attn" data-stage="flash_attn">
+<h3>FlashAttention</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel</p>
+<p>The FlashAttention-based backend, vLLM's first choice for standard attention on Ampere and Hopper GPUs. It reads keys and values from the paged KV cache.</p>
+
+<ul class="ai-sources"><li><blockquote>When no backend is explicitly selected, vLLM chooses the first compatible backend from these priority-ordered lists.</blockquote><a href="https://docs.vllm.ai/en/latest/design/attention_backends/" rel="noopener noreferrer" target="_blank">Attention Backend Feature Support (vLLM documentation)</a> <span class="src-type">Project docs</span></li><li><blockquote>Ampere/Hopper (SM 8.x-9.x): Priority Backend 1 FLASH_ATTN 2 FLASHINFER 3 TRITON_ATTN</blockquote><a href="https://docs.vllm.ai/en/latest/design/attention_backends/" rel="noopener noreferrer" target="_blank">Attention Backend Feature Support (vLLM documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-triton_attn" data-stage="triton_attn">
+<h3>Triton attention</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel</p>
+<p>An attention backend written in Triton (TritonAttentionImpl). Selected with --attention-backend TRITON_ATTN, or automatically when the backends ahead of it do not fit the model.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/triton">Triton</a></p>
+<ul class="ai-sources"><li><blockquote>Paged attention is now implemented directly inside vLLM's attention backends (for example TritonAttentionImpl in vllm/v1/attention/backends/triton_attn.py, or the FlashAttention-based backend) using block tables built by the scheduler's KV-cache manager</blockquote><a href="https://docs.vllm.ai/en/latest/design/paged_attention/" rel="noopener noreferrer" target="_blank">Paged Attention (vLLM documentation)</a> <span class="src-type">Project docs</span></li><li><blockquote>Ampere/Hopper (SM 8.x-9.x): Priority Backend 1 FLASH_ATTN 2 FLASHINFER 3 TRITON_ATTN</blockquote><a href="https://docs.vllm.ai/en/latest/design/attention_backends/" rel="noopener noreferrer" target="_blank">Attention Backend Feature Support (vLLM documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-graph_pieces" data-stage="graph_pieces">
+<h3>Piecewise graph</h3>
+<p class="ai-kind-tag" style="--kc:#22d3ee">intermediate representation</p>
+<p>The captured computation graph, split at each attention call into pieces that are compiled one by one.</p>
+
+<ul class="ai-sources"><li><blockquote>The computation graph is further split into pieces, by the splitting_ops (usually this is the attention operation).</blockquote><a href="https://docs.vllm.ai/en/latest/design/torch_compile/" rel="noopener noreferrer" target="_blank">torch.compile integration (vLLM documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-inductor" data-stage="inductor">
+<h3>TorchInductor</h3>
+<p class="ai-kind-tag" style="--kc:#a78bfa">compiler</p>
+<p>PyTorch's compiler backend. It compiles each graph piece; vLLM caches the results on disk.</p>
+
+<ul class="ai-sources"><li><blockquote>This means the first piece of computation graph (with shape None for symbolic shape) is compiled by Inductor</blockquote><a href="https://docs.vllm.ai/en/latest/design/torch_compile/" rel="noopener noreferrer" target="_blank">torch.compile integration (vLLM documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-triton_kernels" data-stage="triton_kernels">
+<h3>Triton kernels</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel</p>
+<p>Fused GPU kernels that Inductor generates in Triton, including for the vLLM custom ops that compilation turns off.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/triton">Triton</a></p>
+<ul class="ai-sources"><li><blockquote>In this case, Inductor generates (fused) Triton kernels for those disabled custom ops.</blockquote><a href="https://docs.vllm.ai/en/latest/design/custom_op/" rel="noopener noreferrer" target="_blank">CustomOp (vLLM documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-cuda_graphs" data-stage="cuda_graphs">
+<h3>CUDA Graphs</h3>
+<p class="ai-kind-tag" style="--kc:#93c5fd">runtime</p>
+<p>Recorded sequences of kernel launches that are replayed as one unit. By default: full graphs for decode batches, piecewise graphs (attention left outside) for the rest.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/cuda">CUDA</a></p>
+<ul class="ai-sources"><li><blockquote>FULL_AND_PIECEWISE — (default mode) full CUDA Graph for uniform decode, piecewise CUDA Graphs for others</blockquote><a href="https://docs.vllm.ai/en/latest/design/cuda_graphs/" rel="noopener noreferrer" target="_blank">CUDA Graphs (vLLM documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-gpu" data-stage="gpu">
+<h3>NVIDIA GPU</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">hardware</p>
+<p>The GPU that runs the kernels. This page covers Ampere and Hopper GPUs, where vLLM's attention priority list starts with FlashAttention.</p>
+
+<ul class="ai-sources"><li><blockquote>Ampere/Hopper (SM 8.x-9.x): Priority Backend 1 FLASH_ATTN 2 FLASHINFER 3 TRITON_ATTN</blockquote><a href="https://docs.vllm.ai/en/latest/design/attention_backends/" rel="noopener noreferrer" target="_blank">Attention Backend Feature Support (vLLM documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+  </div>
+
+  <h2 id="every-step">Every step</h2>
+  <div class="table-wrap"><table class="ai-steps">
+    <thead><tr><th>From</th><th>Step</th><th>To</th><th>When</th><th>What happens</th><th>Source</th></tr></thead>
+    <tbody>
+<tr id="detail-step-client--api_server" data-step="client--api_server" data-from="client" data-to="api_server" data-when="{}" class="on">
+<td>Your app or client</td><td>sends a request to</td><td>API server</td><td>any mode · any attention backend</td><td>Your client sends an HTTP request, for example to the OpenAI-compatible chat completions endpoint.</td><td><a href="https://docs.vllm.ai/en/latest/design/arch_overview/" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-api_server--engine_core" data-step="api_server--engine_core" data-from="api_server" data-to="engine_core" data-when="{}" class="on">
+<td>API server</td><td>passes tokens over ZMQ to</td><td>Engine core</td><td>any mode · any attention backend</td><td>The API server tokenizes the prompt and hands the request to the engine core process over ZMQ sockets.</td><td><a href="https://docs.vllm.ai/en/latest/design/arch_overview/" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-engine_core--gpu_worker" data-step="engine_core--gpu_worker" data-from="engine_core" data-to="gpu_worker" data-when="{}" class="on">
+<td>Engine core</td><td>schedules each step on</td><td>GPU worker</td><td>any mode · any attention backend</td><td>Every step the scheduler fills a token budget from running and waiting requests, allocates KV-cache blocks for them, and sends the batch to the GPU workers.</td><td><a href="https://docs.vllm.ai/en/latest/design/arch_overview/" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-gpu_worker--model_runner" data-step="gpu_worker--model_runner" data-from="gpu_worker" data-to="model_runner" data-when="{}" class="on">
+<td>GPU worker</td><td>runs the batch through</td><td>Model runner</td><td>any mode · any attention backend</td><td>The worker's model runner prepares the input tensors for the batch.</td><td><a href="https://docs.vllm.ai/en/latest/design/arch_overview/" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-model_runner--model" data-step="model_runner--model" data-from="model_runner" data-to="model" data-when="{}" class="on">
+<td>Model runner</td><td>calls forward() on</td><td>PyTorch model</td><td>any mode · any attention backend</td><td>The model runner calls the model's forward pass on the batch.</td><td><a href="https://docs.vllm.ai/en/latest/design/arch_overview/" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-model--eager_kernels" data-step="model--eager_kernels" data-from="model" data-to="eager_kernels" data-when="{&quot;mode&quot;:[&quot;eager&quot;]}">
+<td>PyTorch model</td><td>runs layers as</td><td>Eager CUDA kernels</td><td>--enforce-eager · any attention backend</td><td>With --enforce-eager there is no compilation or graph capture: each layer launches its kernels as Python reaches it. Startup is fastest; steady-state decoding is slower.</td><td><a href="https://docs.vllm.ai/en/latest/configuration/optimization/" rel="noopener noreferrer" target="_blank">Project docs</a><br><a href="https://docs.vllm.ai/en/latest/design/custom_op/" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-model--attention_op" data-step="model--attention_op" data-from="model" data-to="attention_op" data-when="{}" class="on">
+<td>PyTorch model</td><td>calls attention through</td><td>Attention op</td><td>any mode · any attention backend</td><td>Each attention layer calls one vLLM custom op, in both modes.</td><td><a href="https://docs.vllm.ai/en/latest/design/torch_compile/" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-model--dynamo" data-step="model--dynamo" data-from="model" data-to="dynamo" data-when="{&quot;mode&quot;:[&quot;compiled&quot;]}" class="on">
+<td>PyTorch model</td><td>captured once at startup by</td><td>TorchDynamo</td><td>Default (compiled) · any attention backend</td><td>Dynamo traces the model's forward function before vLLM serves anything; no request triggers a new compilation.</td><td><a href="https://docs.vllm.ai/en/latest/design/torch_compile/" rel="noopener noreferrer" target="_blank">Project docs</a><br><a href="https://docs.vllm.ai/en/latest/design/torch_compile/" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-attention_op--flash_attn" data-step="attention_op--flash_attn" data-from="attention_op" data-to="flash_attn" data-when="{&quot;attention&quot;:[&quot;flash&quot;]}" class="on">
+<td>Attention op</td><td>runs on</td><td>FlashAttention</td><td>any mode · FlashAttention</td><td>On Ampere and Hopper GPUs, FlashAttention is the first backend vLLM tries when none is selected.</td><td><a href="https://docs.vllm.ai/en/latest/design/attention_backends/" rel="noopener noreferrer" target="_blank">Project docs</a><br><a href="https://docs.vllm.ai/en/latest/design/attention_backends/" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-attention_op--triton_attn" data-step="attention_op--triton_attn" data-from="attention_op" data-to="triton_attn" data-when="{&quot;attention&quot;:[&quot;triton&quot;]}">
+<td>Attention op</td><td>runs on</td><td>Triton attention</td><td>any mode · Triton</td><td>The Triton backend implements paged attention in Triton kernels, reading keys and values through the scheduler's block tables.</td><td><a href="https://docs.vllm.ai/en/latest/design/paged_attention/" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-dynamo--graph_pieces" data-step="dynamo--graph_pieces" data-from="dynamo" data-to="graph_pieces" data-when="{&quot;mode&quot;:[&quot;compiled&quot;]}" class="on">
+<td>TorchDynamo</td><td>split at attention into</td><td>Piecewise graph</td><td>Default (compiled) · any attention backend</td><td>The captured graph is cut at each attention call; attention stays a single opaque op between the pieces.</td><td><a href="https://docs.vllm.ai/en/latest/design/torch_compile/" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-graph_pieces--inductor" data-step="graph_pieces--inductor" data-from="graph_pieces" data-to="inductor" data-when="{&quot;mode&quot;:[&quot;compiled&quot;]}" class="on">
+<td>Piecewise graph</td><td>compiled by</td><td>TorchInductor</td><td>Default (compiled) · any attention backend</td><td>Each piece is compiled by TorchInductor, and the result is cached on disk for the next start.</td><td><a href="https://docs.vllm.ai/en/latest/design/torch_compile/" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-inductor--triton_kernels" data-step="inductor--triton_kernels" data-from="inductor" data-to="triton_kernels" data-when="{&quot;mode&quot;:[&quot;compiled&quot;]}" class="on">
+<td>TorchInductor</td><td>generates</td><td>Triton kernels</td><td>Default (compiled) · any attention backend</td><td>Under compilation vLLM turns its custom ops off by default and Inductor generates fused Triton kernels in their place.</td><td><a href="https://docs.vllm.ai/en/latest/design/custom_op/" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-triton_kernels--cuda_graphs" data-step="triton_kernels--cuda_graphs" data-from="triton_kernels" data-to="cuda_graphs" data-when="{&quot;mode&quot;:[&quot;compiled&quot;]}" class="on">
+<td>Triton kernels</td><td>recorded into</td><td>CUDA Graphs</td><td>Default (compiled) · any attention backend</td><td>The model runner records the compiled kernels' launches as CUDA Graphs and replays them each step.</td><td><a href="https://docs.vllm.ai/en/latest/design/arch_overview/" rel="noopener noreferrer" target="_blank">Project docs</a><br><a href="https://docs.vllm.ai/en/latest/design/cuda_graphs/" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-cuda_graphs--gpu" data-step="cuda_graphs--gpu" data-from="cuda_graphs" data-to="gpu" data-when="{&quot;mode&quot;:[&quot;compiled&quot;]}" class="on">
+<td>CUDA Graphs</td><td>replayed on</td><td>NVIDIA GPU</td><td>Default (compiled) · any attention backend</td><td>Replaying a graph launches its whole recorded sequence of kernels at once.</td><td><a href="https://docs.vllm.ai/en/latest/design/cuda_graphs/" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-eager_kernels--gpu" data-step="eager_kernels--gpu" data-from="eager_kernels" data-to="gpu" data-when="{&quot;mode&quot;:[&quot;eager&quot;]}">
+<td>Eager CUDA kernels</td><td>launch on</td><td>NVIDIA GPU</td><td>--enforce-eager · any attention backend</td><td>Each kernel is launched on the GPU individually.</td><td><a href="https://docs.vllm.ai/en/latest/configuration/optimization/" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-flash_attn--gpu" data-step="flash_attn--gpu" data-from="flash_attn" data-to="gpu" data-when="{&quot;attention&quot;:[&quot;flash&quot;]}" class="on">
+<td>FlashAttention</td><td>runs on</td><td>NVIDIA GPU</td><td>any mode · FlashAttention</td><td>Attention kernels run on the GPU; in the default compiled mode, single-token decode batches can include them in a full CUDA Graph.</td><td><a href="https://docs.vllm.ai/en/latest/design/cuda_graphs/" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-triton_attn--gpu" data-step="triton_attn--gpu" data-from="triton_attn" data-to="gpu" data-when="{&quot;attention&quot;:[&quot;triton&quot;]}">
+<td>Triton attention</td><td>runs on</td><td>NVIDIA GPU</td><td>any mode · Triton</td><td>Attention kernels run on the GPU; in the default compiled mode, single-token decode batches can include them in a full CUDA Graph.</td><td><a href="https://docs.vllm.ai/en/latest/design/cuda_graphs/" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="what-this-does-not-show">What this does not show</h2>
+  <p>Documented paths for one model served with vllm serve on a single NVIDIA Ampere or Hopper GPU, in the default compiled mode or with --enforce-eager, using the FlashAttention or Triton attention backend. Tensor, pipeline and data parallelism, AMD, TPU, CPU and other platforms, FlashInfer and MLA backends, quantized GEMM kernels, speculative decoding, multimodal encoders and the experimental Rust frontend are out of scope.</p>
+
+  <h2 id="how-this-page-is-checked">How this page is checked</h2>
+  <p>Every stage and step above quotes the source that supports it. The quotes were checked against the vLLM documentation (Architecture Overview, torch.compile integration, CUDA Graphs, CustomOp, Attention Backend Feature Support, Paged Attention, Optimization and Tuning), the vLLM README and the PyTorch ATen documentation on 2026-11-11. The data is a <a href="/dataset/ai/how-vllm-runs.json">versioned JSON file</a> under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. Found something wrong or out of date? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
+  <p>What these tools are written in is in the main atlas: <a href="/tools/vllm">vLLM</a>, <a href="/tools/pytorch">PyTorch</a>, <a href="/tools/cuda">CUDA</a>, <a href="/tools/triton">Triton</a>. More execution paths: <a href="/ai/how-jax-runs">What Actually Happens When You Run JAX Code</a>, <a href="/ai/how-llama-cpp-runs">How Does llama.cpp Run a Model on Your Hardware</a>, <a href="/ai/how-pytorch-runs">What Actually Happens When You Run a PyTorch Model</a>, or <a href="/ai">compare them all</a>.</p>
+
+  <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>
+</main>
+<footer class="seo-footer-rich">
+  <div data-nosnippet>
+  <div class="footer-grid">
+    <div class="footer-col">
+      <span class="footer-col-head">Explore</span>
+      <a href="/programming-language-graph">Programming language graph</a>
+      <a href="/rankings/most-influential">Most influential languages</a>
+      <a href="/rss.xml">RSS feed</a>
+      <a href="/embed-kit">Embed the graph</a>
+      <a href="/guides/programming-language-family-tree">Language family tree</a>
+      <a href="/programming-language-evolution">Evolution timeline</a>
+      <a href="/what-are-programming-languages-written-in">What languages are written in</a>
+      <a href="/ai">How AI frameworks run code</a>
+      <a href="/explore">Interactive Graph</a>
+      <a href="/dataset">Dataset</a>
+      <a href="/directory">Site Directory</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Popular Languages</span>
+      <a href="/languages/python">Python</a>
+      <a href="/languages/javascript">JavaScript</a>
+      <a href="/languages/rust">Rust</a>
+      <a href="/languages/go">Go</a>
+      <a href="/languages/java">Java</a>
+      <a href="/languages/c">C</a>
+      <a href="/languages/cxx">C++</a>
+      <a href="/languages/typescript">TypeScript</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Questions</span>
+      <a href="/questions/what-is-python-written-in">What is Python written in?</a>
+      <a href="/questions/what-is-javascript-written-in">What is JavaScript written in?</a>
+      <a href="/questions/what-is-rust-written-in">What is Rust written in?</a>
+      <a href="/questions/what-is-go-written-in">What is Go written in?</a>
+      <a href="/questions/what-is-compiler-bootstrapping">What is compiler bootstrapping?</a>
+      <a href="/questions">All questions &rarr;</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Tools &amp; Guides</span>
+      <a href="/tools/v8">V8</a>
+      <a href="/tools/llvm">LLVM</a>
+      <a href="/tools/gcc">GCC</a>
+      <a href="/tools/ghc">GHC</a>
+      <a href="/guides">All guides</a>
+      <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </div>
+  <p class="footer-note">The Language Lineage dataset is meticulously curated and verified by human researchers. We use AI agents to assist with large-scale data gathering and modeling, but every implementation fact is manually reviewed for accuracy. Spot an error? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue on GitHub</a> and it gets fixed. <a href="/how-it-works">Learn how it works &rarr;</a></p>
+  <div class="footer-bottom">Made with <span style="color:#fb7185">❤️</span> by <a href="https://github.com/sanketmuchhala" rel="noopener noreferrer">Sanket Muchhala</a> &middot; <a href="/">Language Lineage</a></div>
+  </div>
+</footer>
+</body>
+</html>

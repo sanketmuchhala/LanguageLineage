@@ -84,3 +84,12 @@ Checked and **not** used: the dispatcher tutorial (deprecated as of PyTorch 2.4;
 - JAX explainer: the JAX and XLA compiler stages now link to the new nodes; both node pages link to `/ai/how-jax-runs`.
 - Counts 172 → 175 nodes, 31 → 34 tools, 492 → 501 relationships (compiler 107, runtime 99); og-image re-rendered; poster regenerated.
 - `npm run verify`: 207 tests, seo:validate 0/0, links 0/0/0, sitemap 333.
+
+## 2026-11-11 — vLLM explainer (AI-09)
+
+- Merged **#48** (`/ai` hub) and **#49** (XLA, JAX, vLLM nodes); production checked.
+- **`/ai/how-vllm-runs`** (branch `ai/vllm-path`): mode (default compiled / `--enforce-eager`) × attention backend (FlashAttention / Triton) on one NVIDIA Ampere/Hopper GPU; 16 stages, 18 steps. Serving stack from the Architecture Overview (API server → engine core over ZMQ → GPU worker → model runner → `torch.nn.Module`); compiled path from the torch.compile integration, CustomOp and CUDA Graphs docs (Dynamo once at startup, graph split at attention, Inductor, Triton kernels for the disabled custom ops, `FULL_AND_PIECEWISE` CUDA Graphs); eager path from Optimization and Tuning ("Skips both compilation and CUDA-graph capture…") and CustomOp dispatch; attention from the backend priority table and the Paged Attention note. Paths: compiled 14 stages, eager 10.
+- Out of scope, stated on the page: parallelism, non-NVIDIA platforms, FlashInfer/MLA, quantized GEMMs, speculative decoding, multimodal, the Rust frontend.
+- `check:ai-quotes`: all 84 distinct quotes found live (23 new).
+- `seo.css`: quotes, stage summaries and step cells wrap long identifiers (`overflow-wrap: anywhere`); the vLLM page scrolled 34px sideways at 320px because of `torch.ops.vllm.unified_attention_with_output`.
+- Tests: vLLM semantics (every selection goes through the serving stack; eager has no compiler stage or CUDA Graphs; compiled order Dynamo → pieces → Inductor → Triton → CUDA Graphs → GPU; each attention choice uses only its backend). `npm run verify`: 227 tests, seo:validate 0/0, links 0/0/0, sitemap 334. Browser: all four AI pages and the hub at 320/390px with no horizontal scroll, switching and deep links work, no page errors.
