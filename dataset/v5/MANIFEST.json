@@ -6,26 +6,26 @@
   "license": "CC-BY-4.0",
   "counts": {
     "nodes": {
-      "total": 196,
+      "total": 201,
       "languages": 151,
-      "tools": 45,
+      "tools": 50,
       "self_hosting": 45
     },
     "relationships": {
-      "total": 535,
+      "total": 543,
       "dated": 397,
       "ended": 20,
       "by_type": {
         "influenced": 264,
-        "runtime_written_in": 122,
-        "compiler_written_in": 115,
+        "runtime_written_in": 128,
+        "compiler_written_in": 117,
         "bootstrap_written_in": 15,
         "transpiled_to": 15,
         "rewritten_in": 4
       },
       "by_source_type": {
         "wikipedia": 302,
-        "repository": 113,
+        "repository": 121,
         "docs": 107,
         "paper": 6,
         "article": 4,
@@ -45,8 +45,8 @@
   "files": [
     {
       "path": "dataset/v5/lineage_v5.json",
-      "sha256": "ef15dc690309130d0b71c0017e4f02a449d92dd72398f2c8bc91ceacdb244e8e",
-      "bytes": 342505
+      "sha256": "7a1974c54221734fef6d2f928b734844d68c33d118865a0afab59a177f3d3c41",
+      "bytes": 350188
     },
     {
       "path": "dataset/v5/enrichment_v5.json",
@@ -60,17 +60,17 @@
     },
     {
       "path": "dataset/v5/lineage_v5_nodes.csv",
-      "sha256": "eafd68428521d50bac065592582eb583333fb66234e3b6db47f63854140b6ba1",
-      "bytes": 43249
+      "sha256": "aa5a5cefbd29c662f1cca7e004a4c3078279d657aae5c768bea44a81d4799d88",
+      "bytes": 44822
     },
     {
       "path": "dataset/v5/lineage_v5_edges.csv",
-      "sha256": "ca27397e068e899d9e9c3f456f3c392be336234532bca51fb42d5e31d3bd09dd",
-      "bytes": 89734
+      "sha256": "7cb05590ea444fdf049b1b5590cd586ebd0987a1ad3c6ddfa50ee2abe94e343b",
+      "bytes": 91987
     },
     {
       "path": "dataset/v5/DATACARD.md",
-      "sha256": "4c857726f9f77394995b8be9f4010b8f3feb656910aaa405c0eb5ee42c663245",
+      "sha256": "c746f950a98f8419d166248849dc0573c7a36ac2b2d6dba8cb41295d1516a73e",
       "bytes": 4122
     }
   ],
