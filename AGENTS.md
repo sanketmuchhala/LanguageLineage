@@ -72,6 +72,10 @@ npm run check:evidence-links            # network check that citations still res
 
 ## Hard rules
 
+<!-- HUMAN-ONLY:START -->
+> **HUMAN EYES ONLY — PROTECTED GOVERNANCE BLOCK**
+> The rules inside this `HUMAN-ONLY` block are set by the repository owner (`@sanketmuchhala`). AI coding agents must **never** edit, weaken, delete, or reword anything between `<!-- HUMAN-ONLY:START -->` and `<!-- HUMAN-ONLY:END -->`. Integrity of this block is enforced by `scripts/datasetRelease.test.ts`.
+
 Breaking one of these is worse than not doing the task at all.
 
 1. **Never hand-edit generated files.** Everything under `public/languages/`,
@@ -99,15 +103,57 @@ Breaking one of these is worse than not doing the task at all.
    Bun moved from Zig to Rust, fish from C++ to Rust, TypeScript's compiler to
    Go.
 7. **Never push to `main`, and never merge your own work.** Open a pull request
-   and let a person review it.
+   and let a person review it unless the repository owner explicitly instructs you
+   to merge a specific PR in the active session.
 8. **Do not relitigate settled decisions.** See `docs/DECISIONS.md`. No database, no
    domain rename, no AI-model-lineage features, no mass-generated pages.
-9. **Keep the hand-written counts in sync.** Node and relationship totals appear
-   in the landing page, `index.html`, `README.md`, `dataset/index.html`,
-   `dataset/README.md` and the social image. `npm test` fails if they drift.
-10. **Scope.** Do only what was asked. No unrequested refactors, no renaming for
-    "clarity", no new abstractions for one-time use, no added comments or docs
-    unless asked.
+9. **Keep the hand-written counts and dataset release manifest in sync.** Node and
+   relationship totals appear in the landing page, `index.html`, `README.md`,
+   `dataset/index.html`, `dataset/README.md`, `dataset/v5/DATACARD.md`,
+   `dataset/v5/MANIFEST.json`, and the social image. `npm test` fails if they drift.
+10. **Surgical scope: only touch necessary files.** Make only the change that was
+    requested. Do not modify, reformat, or "clean up" unrelated files. No
+    unrequested refactors, no renaming for "clarity", no new abstractions for
+    one-time use, no added comments or docs unless asked.
+11. **Respect `HUMAN-ONLY` zones and `CODEOWNERS`.** Never modify any section
+    fenced by `<!-- HUMAN-ONLY:START -->` and `<!-- HUMAN-ONLY:END -->`,
+    `.github/CODEOWNERS`, or existing curatorial scores (`confidence`,
+    `evidence_source`) without an explicit, direct instruction from the human
+    owner in the current prompt.
+<!-- HUMAN-ONLY:END -->
+
+## Multi-agent & worktree discipline
+
+Multiple AI agents (Claude Code, Codex, Antigravity / `agy`, Jules, Cursor) work
+on this repository in parallel using separate git worktrees. Follow these rules
+so agents never corrupt each other's work:
+
+1. **Stay in your own worktree.** Never run `git checkout`, `git reset`,
+   `git clean`, or edit files inside another agent's worktree directory.
+2. **Stage explicit files only.** Use `git add <specific-files>` rather than
+   blind `git add -A` or `git add .` so untracked scratch files or artifacts
+   outside your task scope never leak into a commit.
+3. **Sync with `origin/main` before generating output.** Because generated files
+   (`public/sitemap.xml`, `public/llms.txt`, `dataset/v5/MANIFEST.json`,
+   `dataset/v5/DATACARD.md`, CSVs) are derived from the full dataset, always
+   rebase onto `origin/main` and re-run `npm run seo:generate` + `npm run verify`
+   immediately before opening or merging a PR.
+4. **Inspect `git diff --stat origin/main...HEAD` before opening a PR.** Every
+   file in the diff must be either (a) a source file directly required by your
+   task or (b) a deterministic output of `npm run seo:generate` caused by your
+   source change. If any unrelated file appears in the diff, revert it.
+
+## Human-eyes-only zones (`HUMAN-ONLY`)
+
+Certain files and sections represent human curatorial judgment or repository
+governance and are off-limits to autonomous agent edits:
+
+| Protected target | Rule |
+|---|---|
+| `<!-- HUMAN-ONLY:START -->` … `<!-- HUMAN-ONLY:END -->` blocks in `AGENTS.md` and `docs/DECISIONS.md` | **Read-only for agents.** Locked by SHA-256 checksum in `scripts/datasetRelease.test.ts`. |
+| Existing `evidence_source` and `confidence` fields in `dataset/v5/lineage_v5.json` | **Immutable to agents.** Propose corrections via GitHub Issue (`dataset-correction.yml`) or in the PR body for human sign-off. |
+| `.github/CODEOWNERS` and `.github/workflows/release.yml` | **Owner-controlled.** Do not alter review requirements or release credentials. |
+| `CITATION.cff` author/license metadata | **Owner-controlled.** Version/date fields update only during coordinated releases. |
 
 ## Before you build with intent to deploy
 

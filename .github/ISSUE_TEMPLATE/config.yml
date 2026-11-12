@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Interactive Lineage Explorer
+    url: https://www.languagelineage.org/explore
+    about: Inspect the live language and AI infrastructure provenance graph
+  - name: Dataset Download & Data Card
+    url: https://www.languagelineage.org/dataset
+    about: Browse dataset schema, CSV/JSON downloads, and citation guidelines

@@ -1,0 +1,63 @@
+name: Dataset & Version Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Release tag to publish (e.g. v5.2.0) — leave empty for dry-run verification only'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Verify & Package Dataset Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run full verification gate
+        run: npm run verify
+
+      - name: Build release bundle & SHA-256 checksums
+        run: |
+          mkdir -p dist-release
+          cp dataset/v5/lineage_v5.json dist-release/
+          cp dataset/v5/enrichment_v5.json dist-release/
+          cp dataset/v5/lineage_v5_nodes.csv dist-release/
+          cp dataset/v5/lineage_v5_edges.csv dist-release/
+          cp dataset/v5/DATACARD.md dist-release/
+          cp dataset/v5/MANIFEST.json dist-release/
+          cp CITATION.cff dist-release/
+          (cd dist-release && sha256sum lineage_v5.json enrichment_v5.json lineage_v5_nodes.csv lineage_v5_edges.csv DATACARD.md MANIFEST.json CITATION.cff > SHA256SUMS.txt)
+          cat dist-release/SHA256SUMS.txt
+
+      - name: Upload release artifacts (CI run)
+        uses: actions/upload-artifact@v4
+        with:
+          name: languagelineage-dataset-release
+          path: dist-release/*
+
+      - name: Publish GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.tag_name != '')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag_name || github.ref_name }}
+        run: |
+          gh release create "$TAG" dist-release/* \
+            --title "Language Lineage Dataset & Platform $TAG" \
+            --notes-file dataset/v5/DATACARD.md \
+            --verify-tag=false

@@ -1,0 +1,27 @@
+# Language Lineage — Repository Code Owners
+# Every PR requires human review by the repository owner before merge.
+
+# Default owner for everything in the repository
+*                                         @sanketmuchhala
+
+# Protected agent governance & architectural decision records (HUMAN-ONLY zones)
+/AGENTS.md                                @sanketmuchhala
+/CLAUDE.md                                @sanketmuchhala
+/CONTRIBUTING.md                          @sanketmuchhala
+/CHANGELOG.md                             @sanketmuchhala
+/CITATION.cff                             @sanketmuchhala
+/docs/DECISIONS.md                        @sanketmuchhala
+/.github/                                 @sanketmuchhala
+
+# Canonical datasets & release manifests (require citation & confidence verification)
+/dataset/v5/lineage_v5.json               @sanketmuchhala
+/dataset/v5/enrichment_v5.json            @sanketmuchhala
+/dataset/v5/MANIFEST.json                 @sanketmuchhala
+/dataset/v5/DATACARD.md                   @sanketmuchhala
+/dataset/ai/                              @sanketmuchhala
+
+# Schema, validators, and release generators
+/scripts/schema.ts                        @sanketmuchhala
+/scripts/aiPaths.ts                       @sanketmuchhala
+/scripts/generateDatasetRelease.ts        @sanketmuchhala
+/scripts/datasetRelease.test.ts           @sanketmuchhala

@@ -1,0 +1,46 @@
+name: Dataset Correction (Evidence or Confidence)
+description: Propose a correction to an existing relationship, implementation language, evidence URL, or confidence score.
+title: "[Dataset Correction]: "
+labels: ["dataset", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Existing `evidence_source` and `confidence` values in `dataset/v5/lineage_v5.json` are curated by hand and locked against automated edits. Use this template to propose a correction with primary-source evidence.
+  - type: input
+    id: nodes
+    attributes:
+      label: Node ID(s) or Relationship
+      description: "Specify the node (`lang:...` or `tool:...`) or directed edge (`from_language -> to_language`)."
+      placeholder: "e.g., lang:rust -> tool:fish (runtime_written_in)"
+    validations:
+      required: true
+  - type: textarea
+    id: current_value
+    attributes:
+      label: Current Record / Claim
+      description: What does the dataset or page currently state?
+    validations:
+      required: true
+  - type: textarea
+    id: proposed_change
+    attributes:
+      label: Proposed Correction
+      description: What should the record state instead (e.g., updated `end_year`, new `evidence_source`, revised `confidence`)?
+    validations:
+      required: true
+  - type: input
+    id: evidence_url
+    attributes:
+      label: Primary Evidence URL
+      description: Link to the specific repository path, release announcement, paper, or documentation page (not a generic homepage).
+      placeholder: "https://..."
+    validations:
+      required: true
+  - type: textarea
+    id: verbatim_quote
+    attributes:
+      label: Verbatim Supporting Quote
+      description: Paste the exact sentence or build configuration from the source URL that proves this claim.
+    validations:
+      required: true

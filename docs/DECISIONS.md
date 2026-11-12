@@ -115,14 +115,16 @@ growing collection of generic pages.
 **Revisit if.** An exploratory template earns impressions in a limited pilot,
 which is the only route by which a template gets scaled.
 
+<!-- HUMAN-ONLY:START -->
 ## Human review is not optional
 
 Agents propose; a person merges. Confidence scores and evidence sources are
 assigned and changed by humans. An auditing agent never edits the claims it
 audits.
 
-**Why.** 444 out of 444 cited relationships is the site's core differentiator
-and the one property an agent cannot cheaply regenerate if corrupted.
+**Why.** 100% cited relationships across the dataset is the site's core
+differentiator and the one property an agent cannot cheaply regenerate if
+corrupted.
 
 **Revisit if.** Never while a single maintainer owns the dataset.
 
@@ -141,6 +143,7 @@ deliberate:
 - **The design system is locked**: Section 1.6 of `SITE_IMPROVEMENT_PLAN.md`.
 - **Dataset files are cached one hour in the browser, one year at the CDN**, and
   are edited in place within a version rather than being immutable.
+<!-- HUMAN-ONLY:END -->
 
 ## Where the open questions live
 

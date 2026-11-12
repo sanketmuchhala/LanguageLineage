@@ -1,10 +1,12 @@
 /**
  * Dataset release artifacts, generated from the one source of truth
- * (dataset/v5/lineage_v5.json) so the CSV copies can never drift from it:
+ * (dataset/v5/lineage_v5.json) so the CSV copies and release manifest can
+ * never drift from it:
  *
  *   dataset/v5/lineage_v5_nodes.csv   one row per language or tool
  *   dataset/v5/lineage_v5_edges.csv   one row per cited relationship
  *   dataset/v5/DATACARD.md            data card (Hugging Face compatible front matter)
+ *   dataset/v5/MANIFEST.json          deterministic SHA-256 & count provenance manifest
  *
  * `public/dataset` is a symlink to `dataset/`, so these are served at
  * /dataset/v5/… alongside the JSON. Logo fields are left out of the CSV on
@@ -12,13 +14,15 @@
  *
  * Run as part of `npm run seo:generate`.
  */
-import { readFileSync, writeFileSync } from 'fs';
+import { createHash } from 'crypto';
+import { readFileSync, readdirSync, writeFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { sourceKind, SOURCE_LABELS } from './sourceType.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DIR = join(ROOT, 'dataset/v5');
+const AI_DIR = join(ROOT, 'dataset/ai');
 const SITE = 'https://www.languagelineage.org';
 
 interface Node {
@@ -189,4 +193,89 @@ Data: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Code: MIT. Cite 
 `;
 
 writeFileSync(join(DIR, 'DATACARD.md'), card);
-console.log(`Dataset release: ${nodeRows.length} node rows, ${edgeRows.length} edge rows, DATACARD.md`);
+
+// ---- Deterministic release manifest (MANIFEST.json) ------------------------
+
+function fileDigest(relPath: string): { path: string; sha256: string; bytes: number } {
+  const buf = readFileSync(join(ROOT, relPath));
+  return {
+    path: relPath,
+    sha256: createHash('sha256').update(buf).digest('hex'),
+    bytes: buf.byteLength,
+  };
+}
+
+const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'));
+const cffText = readFileSync(join(ROOT, 'CITATION.cff'), 'utf8');
+const cffVersionMatch = cffText.match(/^version:\s*["']?([^\s"']+)["']?/m);
+const enrichment = JSON.parse(readFileSync(join(DIR, 'enrichment_v5.json'), 'utf8'));
+const logoOverrides = JSON.parse(readFileSync(join(DIR, 'wikimedia_logo_overrides.json'), 'utf8'));
+
+const aiFiles = readdirSync(AI_DIR)
+  .filter((f) => f.endsWith('.json'))
+  .sort();
+
+const aiPaths = aiFiles.map((file) => {
+  const relPath = `dataset/ai/${file}`;
+  const raw = JSON.parse(readFileSync(join(ROOT, relPath), 'utf8'));
+  const stages = Array.isArray(raw.stages) ? raw.stages.length : 0;
+  const steps = Array.isArray(raw.steps) ? raw.steps.length : 0;
+  const sources = raw.sources && typeof raw.sources === 'object' ? Object.keys(raw.sources).length : 0;
+  return {
+    slug: String(raw.slug),
+    name: String(raw.name),
+    path: relPath,
+    verified_on: String(raw.verified_on),
+    stages,
+    steps,
+    sources,
+    ...fileDigest(relPath),
+  };
+});
+
+const releaseFiles = [
+  'dataset/v5/lineage_v5.json',
+  'dataset/v5/enrichment_v5.json',
+  'dataset/v5/wikimedia_logo_overrides.json',
+  'dataset/v5/lineage_v5_nodes.csv',
+  'dataset/v5/lineage_v5_edges.csv',
+  'dataset/v5/DATACARD.md',
+].map(fileDigest);
+
+const manifest = {
+  schema_version: '1.0',
+  dataset_version: String(data.version).replace(/^v/, ''),
+  package_version: String(pkg.version),
+  citation_version: cffVersionMatch ? cffVersionMatch[1] : String(data.version).replace(/^v/, ''),
+  license: 'CC-BY-4.0',
+  counts: {
+    nodes: {
+      total: nodes.length,
+      languages,
+      tools,
+      self_hosting: nodes.filter((n) => n.self_hosting).length,
+    },
+    relationships: {
+      total: edges.length,
+      dated,
+      ended,
+      by_type: Object.fromEntries(count(edges, (e) => e.relationship)),
+      by_source_type: Object.fromEntries(count(edges, (e) => sourceKind(e.evidence_source))),
+    },
+    enrichment_records: Object.keys(enrichment.enrichment ?? {}).length,
+    logo_overrides: Object.keys(logoOverrides.logos ?? {}).length,
+    ai_execution_paths: {
+      total: aiPaths.length,
+      stages: aiPaths.reduce((acc, p) => acc + p.stages, 0),
+      steps: aiPaths.reduce((acc, p) => acc + p.steps, 0),
+      sources: aiPaths.reduce((acc, p) => acc + p.sources, 0),
+    },
+  },
+  files: releaseFiles,
+  ai_paths: aiPaths,
+};
+
+writeFileSync(join(DIR, 'MANIFEST.json'), JSON.stringify(manifest, null, 2) + '\n');
+console.log(
+  `Dataset release: ${nodeRows.length} node rows, ${edgeRows.length} edge rows, ${aiPaths.length} AI paths, DATACARD.md, MANIFEST.json`,
+);
