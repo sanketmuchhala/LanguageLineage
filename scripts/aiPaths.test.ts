@@ -198,6 +198,26 @@ describe('how-sglang-runs semantics', () => {
   });
 });
 
+describe('how-transformers-runs semantics', () => {
+  const data = bySlug('how-transformers-runs');
+  const path = (device: string) => activePath(data, { device });
+  const DEVICE: Record<string, [string, string]> = { cuda: ['cuda_attention', 'nvidia_gpu'], mps: ['mps_kernels', 'apple_gpu'], cpu: ['cpp_attention', 'cpu'] };
+
+  it.each(Object.keys(DEVICE))('%s follows tokenization, model inference and post-processing, on its own device only', (device) => {
+    const p = path(device);
+    for (const id of ['pipeline', 'tokenizer', 'weights', 'model', 'generate', 'sdpa', 'postprocess']) expect(p.stages.has(id), id).toBe(true);
+    for (const [other, [kernel, hw]] of Object.entries(DEVICE)) {
+      expect(p.stages.has(kernel), `${device}: ${kernel}`).toBe(other === device);
+      expect(p.stages.has(hw), `${device}: ${hw}`).toBe(other === device);
+    }
+  });
+
+  it('tokenizes before generating and generates before post-processing', () => {
+    const p = path('cuda');
+    for (const s of ['pipeline--tokenizer', 'tokenizer--generate', 'generate--model', 'generate--postprocess']) expect(p.steps.has(s), s).toBe(true);
+  });
+});
+
 describe('how-vllm-runs semantics', () => {
   const data = bySlug('how-vllm-runs');
   const path = (mode: string, attention: string) => activePath(data, { mode, attention });

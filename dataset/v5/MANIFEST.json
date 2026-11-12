@@ -36,10 +36,10 @@
     "enrichment_records": 148,
     "logo_overrides": 22,
     "ai_execution_paths": {
-      "total": 11,
-      "stages": 147,
-      "steps": 173,
-      "sources": 78
+      "total": 12,
+      "stages": 161,
+      "steps": 187,
+      "sources": 85
     }
   },
   "files": [
@@ -184,6 +184,17 @@
       "sources": 8,
       "sha256": "6f3011e178416541a0c24161db3582383ea54c781605db6f6d52edf91892e6c4",
       "bytes": 30936
+    },
+    {
+      "slug": "how-transformers-runs",
+      "name": "Transformers",
+      "path": "dataset/ai/how-transformers-runs.json",
+      "verified_on": "2026-11-12",
+      "stages": 14,
+      "steps": 14,
+      "sources": 7,
+      "sha256": "9174e0405790da41c57803c77003b371392bf42d71f4a2f3ecd166992e4e3050",
+      "bytes": 19735
     },
     {
       "slug": "how-vllm-runs",
