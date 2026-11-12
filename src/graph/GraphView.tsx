@@ -183,7 +183,6 @@ export function GraphView() {
 
       setSelectedNode(node.id());
       activateFocusMode(instance, node.id());
-      history.replaceState(null, '', `/explore?node=${encodeURIComponent(node.id())}`);
       const calm = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (!calm) {
         instance.animate({ center: { eles: node } }, { duration: 430, easing: 'ease-in-out-cubic' });
@@ -196,7 +195,7 @@ export function GraphView() {
       setSelectedEdge(edgeId);
     });
 
-    // Background tap: clear selection and URL param
+    // Background tap: clear selection (GraphExplorer keeps the URL in step)
     instance.on('tap', (evt) => {
       if (evt.target === instance) {
         const state = useGraphStore.getState();
@@ -208,7 +207,6 @@ export function GraphView() {
         setSelectedNode(null);
         setSelectedEdge(null);
         restoreBaseHighlight(instance);
-        history.replaceState(null, '', '/explore');
       }
     });
 

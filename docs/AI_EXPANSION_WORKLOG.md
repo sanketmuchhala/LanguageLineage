@@ -143,13 +143,7 @@ Checked and **not** used: the dispatcher tutorial (deprecated as of PyTorch 2.4;
 - `panelInset` moved to `src/graph/viewport.ts` (used by the AI view, the overlay and the Cluster fit).
 - Tests: `src/graph/layouts.test.ts` (headless Cytoscape with the real dataset: no node or cluster overlaps, deterministic, fits 1140×900 above minimum zoom). Browser at 1440×900, 1280×800, 1024×768: all 176 nodes inside the visible area (zoom 0.31 / 0.21 / 0.26); Network unchanged; no page errors.
 
-## 2026-11-11 — data PR: TensorRT-LLM (`agy-agent/admit-tensorrt-llm`, issue #55 part 1)
+## 2026-11-11 — explorer URL follows what is shown
 
-- Branch `agy-agent/admit-tensorrt-llm`: `tool:tensorrt_llm` (`TensorRT-LLM`, first release 2023 from PyPI `0.5.0` uploaded `2023-10-20`).
-- Four `runtime_written_in` edges, all fetched and read from `NVIDIA/TensorRT-LLM`:
-  - `lang:python → tool:tensorrt_llm` (`0.94`, `tensorrt_llm/`: LLM API, `PyExecutor`, model definitions under `tensorrt_llm/_torch`, and `trtllm-serve`; repository is ~75% Python).
-  - `lang:cxx → tool:tensorrt_llm` (`0.92`, `cpp/tensorrt_llm/`: executor, batch manager, `CapacityScheduler`, `MicroBatchScheduler`, `KVCacheManager`, and PyTorch custom-op bindings).
-  - `tool:cuda → tool:tensorrt_llm` (`0.92`, `cpp/tensorrt_llm/kernels/`: custom `.cu` GPU kernels for attention, quantization, MoE, sampling, and communication).
-  - `tool:pytorch → tool:tensorrt_llm` (`0.92`, `docs/source/torch/arch_overview.md`: "PyTorch is the sole execution backend of TensorRT LLM; the former TensorRT engine backend has been removed").
-- Counts updated to 177 nodes (141 languages + 36 tools) and 508 relationships (`runtime_written_in`: 106); `public/og-image.png`, poster (`npm run poster:generate`), and static SEO pages + `dataset/v5/MANIFEST.json` regenerated (`sitemap.xml`: 338 URLs).
-- `npm run check:evidence-links`: all four TensorRT-LLM primary source URLs resolve HTTP 200; headless Chromium check on `/tools/tensorrt-llm` at 320px, 390px, and 1280px: 0 horizontal overflow, 0 page errors; `npm run verify` green.
+- Branch `feat/explore-url-state`: the address bar was only written on node tap (`?node=`) and reset to `/explore` on background tap or Escape, so turning on the AI view or overlaying a path in the panel left nothing to share, and tapping the background dropped `view=ai`. Now `src/app/exploreUrl.ts` builds the URL from state (node, `view=ai`, `path` + choices) and one effect in `GraphExplorer` writes it on change; the three ad-hoc `history.replaceState` calls are gone. Changes only after mount are written, so incoming deep links are not overwritten (and React StrictMode's double effect run writes nothing).
+- Tests: `src/app/exploreUrl.test.ts`. `npm run verify`: 288 tests. Browser: AI on → `?view=ai`; PyTorch → `&path=how-pytorch-runs&mode=compile&device=gpu`; device CPU updates it; node tap → `?node=tool%3Atriton&view=ai`; background tap / Escape → `?view=ai`; reloading a copied link restores the same highlight; `?node=` deep links unchanged.
