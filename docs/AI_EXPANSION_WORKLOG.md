@@ -73,3 +73,14 @@ Checked and **not** used: the dispatcher tutorial (deprecated as of PyTorch 2.4;
 - Path files gain a required short `name` (JAX, llama.cpp, PyTorch) for tables and the card subtitle. Explainer breadcrumbs now go Home › AI execution paths › page; the footer's Explore column links `/ai` on every generated page.
 - README page counts (330; the sitemap row said 304), new `/ai` rows; launch checklist counts 172/492.
 - `npm run verify`: 207 tests, seo:validate 0/0, seo:links 0/0/0, sitemap 330. Browser: 1280px and 320px with no horizontal scroll, deep link `?mode=jit&device=tpu` opens 9 stages, no page errors.
+
+## 2026-11-11 — data PR: XLA, JAX, vLLM (AI-04 continued)
+
+- Branch `data/admit-xla-jax-vllm`: three `tool:` nodes, nine edges, all from the projects' own repositories or docs (fetched and read):
+  - `tool:xla` (2017, TensorFlow 1.0 release notes "XLA (experimental): initial release"): C++ → XLA `compiler_written_in` 0.88 (`xla/service` sources); LLVM → XLA 0.95 (openxla.org architecture: "The CPU and GPU backends included with XLA use LLVM…").
+  - `tool:jax` (2018, first PyPI upload 2018-12-07): Python 0.9 (`jax/`), C++ 0.85 (`jaxlib/`), XLA → JAX `compiler_written_in` 0.95 (README: "JAX uses XLA to compile…").
+  - `tool:vllm` (2023, first PyPI upload 2023-06-19): Python 0.95 (`vllm/`), CUDA 0.9 (`csrc/`), PyTorch 0.88 (models are `torch.nn` modules), Triton 0.88 (`vllm/v1/attention/ops/triton_*`). The experimental Rust frontend (`rust/`) is noted, not an edge.
+  - MLIR not admitted: no primary source states a first release year cleanly.
+- JAX explainer: the JAX and XLA compiler stages now link to the new nodes; both node pages link to `/ai/how-jax-runs`.
+- Counts 172 → 175 nodes, 31 → 34 tools, 492 → 501 relationships (compiler 107, runtime 99); og-image re-rendered; poster regenerated.
+- `npm run verify`: 207 tests, seo:validate 0/0, links 0/0/0, sitemap 333.

@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>93 Runtime Implementation Relationships | Language Lineage</title>
+  <title>99 Runtime Implementation Relationships | Language Lineage</title>
   <meta name="description" content="These relationships document what programming language each runtime or interpreter is written in. For example, CPython (the reference Python interpreter) is wri" />
   <link rel="canonical" href="https://www.languagelineage.org/relationships/runtime-written-in" />
   <link rel="icon" href="/favicon.svg" />
   <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><script defer src="/fx.js"></script><script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script><link rel="alternate" type="application/rss+xml" title="Language Lineage" href="/rss.xml" /><link rel="stylesheet" href="/seo.css" />
-  <meta property="og:title" content="93 Runtime Implementation Relationships | Language Lineage" />
+  <meta property="og:title" content="99 Runtime Implementation Relationships | Language Lineage" />
   <meta property="og:url" content="https://www.languagelineage.org/relationships/runtime-written-in" />
   <meta property="og:image" content="https://www.languagelineage.org/og/relationships-runtime-written-in.png" />
   <meta property="og:image:width" content="1200" />
@@ -38,7 +38,7 @@
 
   <div class="answer-box" style="border-left:3px solid #34d399">These relationships document what programming language each runtime or interpreter is written in. For example, CPython (the reference Python interpreter) is written in C.</div>
 
-  <h2>All 93 Relationships</h2>
+  <h2>All 99 Relationships</h2>
   <div class="table-wrap"><table>
     <thead><tr><th>From</th><th>To</th><th>Confidence</th><th>Notes</th><th>Source</th></tr></thead>
     <tbody><tr>
@@ -343,6 +343,13 @@
       <td><a href="https://github.com/ggml-org/llama.cpp" rel="noopener noreferrer" target="_blank">Source repository</a></td>
     </tr>
 <tr>
+      <td><a href="/languages/python">Python</a></td>
+      <td><a href="/tools/vllm">vLLM</a></td>
+      <td class="confidence-high">95%</td>
+      <td>The engine, scheduler, model executor and OpenAI-compatible server are Python (vllm/engine, vllm/model_executor, vllm/entrypoints)</td>
+      <td><a href="https://github.com/vllm-project/vllm/tree/main/vllm" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
       <td><a href="/languages/cxx">C++</a></td>
       <td><a href="/tools/spidermonkey">SpiderMonkey</a></td>
       <td class="confidence-high">92%</td>
@@ -560,6 +567,20 @@
       <td><a href="https://github.com/pytorch/pytorch/tree/main/aten/src/ATen/native/cuda" rel="noopener noreferrer" target="_blank">Source repository</a></td>
     </tr>
 <tr>
+      <td><a href="/languages/python">Python</a></td>
+      <td><a href="/tools/jax">JAX</a></td>
+      <td class="confidence-high">90%</td>
+      <td>The jax package (tracing, transformations, jax.numpy, lax) is Python: jax/core.py, jax/_src</td>
+      <td><a href="https://github.com/jax-ml/jax/tree/main/jax" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
+      <td><a href="/tools/cuda">CUDA</a></td>
+      <td><a href="/tools/vllm">vLLM</a></td>
+      <td class="confidence-high">90%</td>
+      <td>Custom GPU kernels in CUDA under csrc/ (cache_kernels.cu, layernorm_kernels.cu, attention/)</td>
+      <td><a href="https://github.com/vllm-project/vllm/tree/main/csrc" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
       <td><a href="/languages/rust">Rust</a></td>
       <td><a href="/tools/spidermonkey">SpiderMonkey</a></td>
       <td class="confidence-mid">88%</td>
@@ -586,6 +607,20 @@
       <td class="confidence-mid">88%</td>
       <td>PyTorch front end is written in Python</td>
       <td><a href="https://github.com/pytorch/pytorch" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
+      <td><a href="/tools/pytorch">PyTorch</a></td>
+      <td><a href="/tools/vllm">vLLM</a></td>
+      <td class="confidence-mid">88%</td>
+      <td>Model implementations are PyTorch modules (llama.py: &quot;import torch&quot;, &quot;from torch import nn&quot;); kernels are registered as torch ops (csrc/torch_bindings.cpp)</td>
+      <td><a href="https://github.com/vllm-project/vllm/blob/main/vllm/model_executor/models/llama.py" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
+      <td><a href="/tools/triton">Triton</a></td>
+      <td><a href="/tools/vllm">vLLM</a></td>
+      <td class="confidence-mid">88%</td>
+      <td>Part of the attention kernels are Triton (triton_unified_attention.py, triton_decode_attention.py); README lists Triton among its attention kernels</td>
+      <td><a href="https://github.com/vllm-project/vllm/tree/main/vllm/v1/attention/ops" rel="noopener noreferrer" target="_blank">Source repository</a></td>
     </tr>
 <tr>
       <td><a href="/languages/c">C</a></td>
@@ -670,6 +705,13 @@
       <td class="confidence-mid">85%</td>
       <td>ggml CPU and GPU backends are largely C++</td>
       <td><a href="https://github.com/ggml-org/ggml" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
+      <td><a href="/languages/cxx">C++</a></td>
+      <td><a href="/tools/jax">JAX</a></td>
+      <td class="confidence-mid">85%</td>
+      <td>jaxlib, JAX's compiled extension (dispatch, FFI, DLPack, custom calls), is C++: jaxlib/dlpack.cc, jaxlib/ffi.cc</td>
+      <td><a href="https://github.com/jax-ml/jax/tree/main/jaxlib" rel="noopener noreferrer" target="_blank">Source repository</a></td>
     </tr>
 <tr>
       <td><a href="/languages/c">C</a></td>

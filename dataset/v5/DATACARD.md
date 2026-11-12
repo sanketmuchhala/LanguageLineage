@@ -27,9 +27,9 @@ A cited graph of what programming languages and their compilers, runtimes and en
 
 | File | Rows | Description |
 |---|---:|---|
-| `lineage_v5.json` | 172 nodes, 492 edges | Canonical source; every other file is generated from it |
-| `lineage_v5_nodes.csv` | 172 | 141 languages and 31 tools (compilers, runtimes, engines) |
-| `lineage_v5_edges.csv` | 492 | Directed relationships, each with an evidence URL and a confidence score |
+| `lineage_v5.json` | 175 nodes, 501 edges | Canonical source; every other file is generated from it |
+| `lineage_v5_nodes.csv` | 175 | 141 languages and 34 tools (compilers, runtimes, engines) |
+| `lineage_v5_edges.csv` | 501 | Directed relationships, each with an evidence URL and a confidence score |
 
 Edges point from the implementation language (or influence) to the thing built with it: `lang:c → lang:python` with `runtime_written_in` means CPython is written in C.
 
@@ -38,8 +38,8 @@ Edges point from the implementation language (or influence) to the thing built w
 | Type | Edges |
 |---|---:|
 | `influenced` | 263 |
-| `compiler_written_in` | 104 |
-| `runtime_written_in` | 93 |
+| `compiler_written_in` | 107 |
+| `runtime_written_in` | 99 |
 | `bootstrap_written_in` | 15 |
 | `transpiled_to` | 13 |
 | `rewritten_in` | 4 |
@@ -54,19 +54,19 @@ Edges point from the implementation language (or influence) to the thing built w
 
 ## Time
 
-397 of 492 edges (81%) carry a `start_year`; 20 have an `end_year`, meaning the relationship stopped holding (for example Go's compiler was written in C until 2015). An empty `end_year` means the relationship still holds. A `first_release_year` of 0 marks root nodes such as machine code where a year does not apply.
+397 of 501 edges (79%) carry a `start_year`; 20 have an `end_year`, meaning the relationship stopped holding (for example Go's compiler was written in C until 2015). An empty `end_year` means the relationship still holds. A `first_release_year` of 0 marks root nodes such as machine code where a year does not apply.
 
 ## Sources and confidence
 
-Every edge cites one `evidence_source` URL. 302 of 492 (61%) cite Wikipedia; the rest cite official documentation, source repositories, papers and project announcements. Confidence is a hand-assigned score from 0.65 to 0.99 (median 0.9); it reflects the curator's judgment of the source, not a statistical estimate.
+Every edge cites one `evidence_source` URL. 302 of 501 (60%) cite Wikipedia; the rest cite official documentation, source repositories, papers and project announcements. Confidence is a hand-assigned score from 0.65 to 0.99 (median 0.9); it reflects the curator's judgment of the source, not a statistical estimate.
 
 The `source_type` column in the edges CSV is derived from each URL by `scripts/sourceType.ts` (a project's own site, docs or blog counts as project docs):
 
 | source_type | Meaning | Edges |
 |---|---|---:|
 | `wikipedia` | Wikipedia | 302 |
-| `docs` | Project docs | 99 |
-| `repository` | Source repository | 78 |
+| `docs` | Project docs | 100 |
+| `repository` | Source repository | 86 |
 | `paper` | Paper | 6 |
 | `article` | Third-party article | 4 |
 | `forum` | Forum post | 2 |
@@ -77,7 +77,7 @@ Most cited hosts:
 | Host | Edges |
 |---|---:|
 | en.wikipedia.org | 302 |
-| github.com | 77 |
+| github.com | 85 |
 | dlang.org | 5 |
 | ziglang.org | 5 |
 | fishshell.com | 4 |

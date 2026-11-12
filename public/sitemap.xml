@@ -10,15 +10,15 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/rankings/most-influential</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/embed-kit</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/programming-language-graph</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/programming-language-evolution</loc>
@@ -26,27 +26,27 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/what-are-programming-languages-written-in</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/programming-language-genealogy</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/compiler-runtime-bootstrap</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/posters/programming-language-implementation-family-tree</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/ai</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/ai/how-jax-runs</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/ai/how-llama-cpp-runs</loc>
@@ -526,15 +526,15 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/directory</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/how-it-works</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/dataset</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages</loc>
@@ -542,7 +542,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides</loc>
@@ -550,11 +550,11 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/relationships</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/timeline</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/machine-code</loc>
@@ -622,7 +622,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/cxx</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/objective-c</loc>
@@ -646,7 +646,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/python</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/common-lisp</loc>
@@ -790,7 +790,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools/llvm</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools/clang</loc>
@@ -1226,7 +1226,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools/cuda</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools/ggml</loc>
@@ -1238,11 +1238,23 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools/pytorch</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools/triton</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.languagelineage.org/tools/xla</loc>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.languagelineage.org/tools/jax</loc>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.languagelineage.org/tools/vllm</loc>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/relationships/influenced</loc>
@@ -1254,11 +1266,11 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/relationships/compiler-written-in</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/relationships/runtime-written-in</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/relationships/rewritten-in</loc>
@@ -1282,7 +1294,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides/programming-language-family-tree</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides/how-javascript-engines-work</loc>
@@ -1318,6 +1330,6 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides/the-c-bootstrap-chain</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
 </urlset>

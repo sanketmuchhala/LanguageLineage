@@ -71,7 +71,9 @@
   "link_from": [
     "lang:python",
     "tool:llvm",
-    "tool:triton"
+    "tool:triton",
+    "tool:jax",
+    "tool:xla"
   ],
   "sources": {
     "jax_about": {
@@ -123,7 +125,7 @@
       "name": "JAX",
       "kind": "framework_component",
       "layer": "framework",
-      "lineage_id": null,
+      "lineage_id": "tool:jax",
       "pos": [
         1.5,
         1
@@ -181,7 +183,7 @@
       "name": "XLA compiler",
       "kind": "compiler",
       "layer": "compiler",
-      "lineage_id": null,
+      "lineage_id": "tool:xla",
       "pos": [
         2.5,
         4
