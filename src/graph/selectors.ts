@@ -1,5 +1,5 @@
 import { aiViewNodeIds } from '../data/aiExplainers';
-import type { Core } from 'cytoscape';
+import type { Core, NodeCollection } from 'cytoscape';
 import type { DatasetIndex } from '../data/indexDataset';
 import type { NormalizedDataset } from '../data/types';
 
@@ -200,7 +200,11 @@ export function applyAttributeFilters(
  * No animation with reduced motion.
  */
 export function fitToAiView(cy: Core, leftInset = 0): void {
-  const eles = cy.nodes('.ai-focus');
+  fitNodesInView(cy, cy.nodes('.ai-focus'), leftInset);
+}
+
+/** Zoom to some nodes inside the canvas area right of `leftInset`; no-op if they cannot fit. */
+export function fitNodesInView(cy: Core, eles: NodeCollection, leftInset = 0): void {
   if (eles.length === 0) return;
   const pad = 70;
   const bb = eles.boundingBox({ includeLabels: true });
@@ -218,6 +222,18 @@ export function fitToAiView(cy: Core, leftInset = 0): void {
   const calm = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (calm) cy.viewport({ zoom, pan });
   else cy.animate({ zoom, pan }, { duration: 600, easing: 'ease-in-out-cubic' });
+}
+
+/**
+ * AI path overlay: highlight the atlas nodes an explainer path passes through and fade
+ * the rest. Edges stay faded on purpose: graph edges mean "written in", not the
+ * execution steps, which only the explainer page shows.
+ */
+export function activateAiOverlay(cy: Core, nodeIds: string[]): void {
+  cy.batch(() => {
+    cy.elements().addClass('faded').removeClass('highlighted selected');
+    for (const id of nodeIds) cy.getElementById(id).removeClass('faded').addClass('highlighted');
+  });
 }
 
 // BFS shortest path between two nodes (treats graph as undirected for traversal)

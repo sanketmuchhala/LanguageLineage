@@ -747,3 +747,6 @@
 
 /* Slider thumb glow (keeps native track) */
 .slider { accent-color: var(--accent); height: 5px; }
+
+/* AI path overlay: one row of choices per explainer dimension */
+.ai-overlay-dimension { margin-top: 8px; }

@@ -207,7 +207,7 @@
       "name": "TorchDynamo",
       "kind": "compiler",
       "layer": "compiler",
-      "lineage_id": null,
+      "lineage_id": "tool:pytorch",
       "summary": "A Python-level JIT compiler. It rewrites your function's bytecode so that runs of PyTorch operations are captured as a graph instead of executed one by one.",
       "evidence": [
         {
@@ -247,7 +247,7 @@
       "name": "TorchInductor",
       "kind": "compiler",
       "layer": "compiler",
-      "lineage_id": null,
+      "lineage_id": "tool:pytorch",
       "summary": "The default torch.compile backend. It generates new kernels for the graph: Triton for GPUs and C++ for CPUs. For training, AOT Autograd also captures the backward pass ahead of time.",
       "evidence": [
         {

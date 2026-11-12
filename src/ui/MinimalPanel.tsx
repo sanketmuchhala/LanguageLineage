@@ -5,6 +5,7 @@ import { SearchBox } from './SearchBox';
 import { Slider } from './Slider';
 import { Toggle } from './Toggle';
 import { RelationshipFilters } from './RelationshipFilters';
+import { AiPathOverlay } from './AiPathOverlay';
 import type { RelationshipType } from '../data/types';
 import './MinimalPanel.css';
 
@@ -228,6 +229,8 @@ export function MinimalPanel({ onBackToLanding }: MinimalPanelProps) {
                 </p>
               )}
             </div>
+
+            {attributeFilters.ai && <AiPathOverlay />}
 
             <div className="filter-group">
               <label className="filter-group-label">Paradigm</label>

@@ -6,7 +6,7 @@ import { buildCytoscapeElements } from './buildElements';
 import { getCytoscapeStyle } from './style';
 import { BASE_CYTOSCAPE_CONFIG } from './cytoscapeConfig';
 import { DAG_LAYOUT, FORCE_LAYOUT, CLUSTER_LAYOUT, buildTimelineLayout } from './layouts';
-import { activateFocusMode, deactivateFocusMode, applyTimelineVisibility, clearTimelineVisibility, getAncestors, getDescendants, activateExplorationMode, applyAttributeFilters, fitToAiView, findShortestPath, activateTracePath } from './selectors';
+import { activateFocusMode, deactivateFocusMode, applyTimelineVisibility, clearTimelineVisibility, getAncestors, getDescendants, activateExplorationMode, applyAttributeFilters, fitToAiView, fitNodesInView, activateAiOverlay, findShortestPath, activateTracePath } from './selectors';
 import './GraphView.css';
 
 // Register cose-bilkent layout
@@ -26,13 +26,29 @@ function getLayout(mode: string, cy?: cytoscape.Core): any {
  * The layouts fit and animate the viewport themselves, and layoutstop fires before that
  * animation ends, so wait until nothing is animating before zooming to the AI view.
  */
-function fitAiWhenSettled(cy: Core, inset: () => number, tries = 0): void {
+/** Clear hover/selection highlighting, keeping an active AI path overlay. */
+function restoreBaseHighlight(cy: Core): void {
+  const overlay = useGraphStore.getState().aiOverlayNodeIds;
+  if (overlay && overlay.length > 0) activateAiOverlay(cy, overlay);
+  else deactivateFocusMode(cy);
+}
+
+function settle(cy: Core, run: () => void, tries = 0): void {
   const busy = cy.animated() || cy.nodes(':animated').length > 0;
   if (busy && tries < 40) {
-    setTimeout(() => fitAiWhenSettled(cy, inset, tries + 1), 100);
+    setTimeout(() => settle(cy, run, tries + 1), 100);
     return;
   }
-  fitToAiView(cy, inset());
+  run();
+}
+
+function fitAiWhenSettled(cy: Core, inset: () => number): void {
+  settle(cy, () => {
+    // A path overlay zooms to its own nodes instead of the whole AI view.
+    const overlay = useGraphStore.getState().aiOverlayNodeIds;
+    if (overlay && overlay.length > 0) fitNodesInView(cy, cy.nodes().filter((n) => overlay.includes(n.id())), inset());
+    else fitToAiView(cy, inset());
+  });
 }
 
 /** Width of an open side panel overlapping the canvas's left edge, in pixels. */
@@ -189,7 +205,7 @@ export function GraphView() {
         }
         setSelectedNode(null);
         setSelectedEdge(null);
-        deactivateFocusMode(instance);
+        restoreBaseHighlight(instance);
         history.replaceState(null, '', '/explore');
       }
     });
@@ -207,7 +223,7 @@ export function GraphView() {
       const { selectedNodeId } = useGraphStore.getState();
       if (selectedNodeId) return;
       evt.target.removeClass('hovered');
-      deactivateFocusMode(instance);
+      restoreBaseHighlight(instance);
     });
 
     // Edge hover: show tooltip
@@ -286,8 +302,8 @@ export function GraphView() {
     cy.style(style);
     cy.json({ elements });
 
-    // Deactivate focus mode when filters change
-    deactivateFocusMode(cy);
+    // Deactivate focus mode when filters change (an AI path overlay stays on)
+    restoreBaseHighlight(cy);
   }, [cy, dataset, filters, isDarkMode]);
 
   // Update layout when layout mode changes
@@ -348,6 +364,23 @@ export function GraphView() {
     if (attributeFilters.ai && !aiWasOn.current) fitToAiView(cy, panelInset(containerRef.current));
     aiWasOn.current = attributeFilters.ai;
   }, [cy, attributeFilters, dataset]);
+
+  // AI path overlay (chosen in the panel or via ?path=): highlight its nodes and zoom to them
+  const aiOverlayNodeIds = useGraphStore((s) => s.aiOverlayNodeIds);
+  const overlayShown = useRef(false);
+  useEffect(() => {
+    if (!cy) return;
+    if (aiOverlayNodeIds && aiOverlayNodeIds.length > 0) {
+      activateAiOverlay(cy, aiOverlayNodeIds);
+      overlayShown.current = true;
+      const eles = cy.nodes().filter((n) => aiOverlayNodeIds.includes(n.id()));
+      const inset = () => panelInset(containerRef.current);
+      settle(cy, () => fitNodesInView(cy, eles, inset()));
+    } else if (overlayShown.current) {
+      overlayShown.current = false;
+      if (!useGraphStore.getState().selectedNodeId) deactivateFocusMode(cy);
+    }
+  }, [cy, aiOverlayNodeIds]);
 
   return <div ref={containerRef} className="graph-view" />;
 }

@@ -122,3 +122,16 @@ Checked and **not** used: the dispatcher tutorial (deprecated as of PyTorch 2.4;
   - The influence-mode note said "189 documented conceptual influence relationships"; it is now counted from the data (263).
 - Known, pre-existing: the Cluster layout leaves about half of all nodes off-screen at the minimum zoom (91 of 176, with or without this filter). The AI zoom does nothing there instead of cutting nodes off.
 - Tests: `src/data/aiExplainers.test.ts` (explainer list, AI set equals stage-linked tools, the view adds only implementation parents, drawer links). `npm run verify`: 250 tests. Browser: deep link at 1440/1024/390px with every AI node in view, chip toggle on and off restores all 176 nodes, Network/Timeline layouts, Triton drawer links to JAX, PyTorch and vLLM; no page errors (only the local `/_vercel` analytics 404s).
+
+## 2026-11-11 — explorer path overlays (AI-07, issue #56 part 1)
+
+- Work split with agy (issues #55 agy: TensorRT-LLM data + explainer, `dataset/` only; #56 Claude: `src/` explorer work).
+- Branch `ai/explorer-path-overlay`:
+  - Path selection logic (`stepId`, `defaultSelection`, `allSelections`, `stepApplies`, `activePath`) moved to `src/data/aiPathLogic.ts`, dependency-free; `scripts/aiPaths.ts` re-exports it, so the generated pages and the explorer use one implementation.
+  - In the AI view, "Show an execution path" chips per explainer, then one chip row per dimension from the file. The path's atlas nodes are highlighted and zoomed to; edges stay faded (they mean "written in", not execution steps), and the caption says so and links the explainer with the same choices. Explainer files load lazily (their own chunks) only when a path is chosen.
+  - Order of nodes in the caption: where the main path first reaches them, fallback arrows ignored, ties by file order (PyTorch compile GPU: Python → PyTorch → Triton → LLVM → CUDA → Machine Code; vLLM eager: vLLM → PyTorch → CUDA).
+  - Deep link `/explore?view=ai&path=<slug>&<dim>=<value>`; every explainer page links it ("See this path in the graph explorer"), and `ai-path.js` keeps the link in step with the reader's choices.
+  - Hover, background tap and filter changes restore the overlay instead of clearing it; selecting a node ends it.
+  - The AI view now also includes every node an explainer stage links to (adds Machine Code), so overlaid nodes are never faded by the filter.
+  - Data: TorchDynamo and TorchInductor stages in the PyTorch and vLLM explainers now link to `tool:pytorch` (both ship in PyTorch as torch.compile); without this the PyTorch path did not highlight PyTorch.
+- Tests: overlay ids for every selection of every explainer exist and sit inside the AI view; exact order for PyTorch compile GPU and vLLM eager; URL selection parsing; every explainer page's graph link. `npm run verify`: 277 tests. Browser: deep link at 1440/390px with all path nodes in view and no edges lit, choice switching, hover, toggling, node tap ends the overlay, no page errors.

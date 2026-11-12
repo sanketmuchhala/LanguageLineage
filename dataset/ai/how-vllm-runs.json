@@ -157,7 +157,7 @@
       "name": "TorchDynamo",
       "kind": "compiler",
       "layer": "compiler",
-      "lineage_id": null,
+      "lineage_id": "tool:pytorch",
       "pos": [3, 6],
       "summary": "PyTorch's graph capture. vLLM runs it on the model's forward function once, at startup.",
       "evidence": [
@@ -206,7 +206,7 @@
       "name": "TorchInductor",
       "kind": "compiler",
       "layer": "compiler",
-      "lineage_id": null,
+      "lineage_id": "tool:pytorch",
       "pos": [3, 8],
       "summary": "PyTorch's compiler backend. It compiles each graph piece; vLLM caches the results on disk.",
       "evidence": [{ "source": "compile", "quote": "This means the first piece of computation graph (with shape None for symbolic shape) is compiled by Inductor" }]

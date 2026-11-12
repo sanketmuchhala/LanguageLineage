@@ -253,7 +253,7 @@
 <h3>TorchDynamo</h3>
 <p class="ai-kind-tag" style="--kc:#a78bfa">compiler</p>
 <p>A Python-level JIT compiler. It rewrites your function's bytecode so that runs of PyTorch operations are captured as a graph instead of executed one by one.</p>
-
+<p class="ai-lineage">In the atlas: <a href="/tools/pytorch">PyTorch</a></p>
 <ul class="ai-sources"><li><blockquote>It rewrites Python bytecode to extract sequences of PyTorch operations into an FX Graph which is then compiled with a customizable backend.</blockquote><a href="https://docs.pytorch.org/docs/main/user_guide/torch_compiler/torch.compiler_dynamo_overview.html" rel="noopener noreferrer" target="_blank">Dynamo Overview (PyTorch documentation)</a> <span class="src-type">Project docs</span></li></ul>
 </article>
 <article class="ai-stage-detail" id="detail-stage-fx_graph" data-stage="fx_graph">
@@ -267,7 +267,7 @@
 <h3>TorchInductor</h3>
 <p class="ai-kind-tag" style="--kc:#a78bfa">compiler</p>
 <p>The default torch.compile backend. It generates new kernels for the graph: Triton for GPUs and C++ for CPUs. For training, AOT Autograd also captures the backward pass ahead of time.</p>
-
+<p class="ai-lineage">In the atlas: <a href="/tools/pytorch">PyTorch</a></p>
 <ul class="ai-sources"><li><blockquote>The default backend is called TorchInductor</blockquote><a href="https://docs.pytorch.org/docs/2.15/user_guide/torch_compiler/torch.compiler.html" rel="noopener noreferrer" target="_blank">torch.compiler (PyTorch 2.15 documentation)</a> <span class="src-type">Project docs</span></li><li><blockquote>TorchInductor is the default compiler backend for TorchDynamo, which translates PyTorch programs into OpenAI's Triton for GPUs and C++ for CPUs.</blockquote><a href="https://pytorch.org/blog/pytorch-pytorch-2-paper-tutorial/" rel="noopener noreferrer" target="_blank">PyTorch 2 paper and tutorial (PyTorch blog)</a> <span class="src-type">Project docs</span></li><li><blockquote>AOT Autograd captures not only the user-level code, but also backpropagation</blockquote><a href="https://docs.pytorch.org/docs/2.15/user_guide/torch_compiler/torch.compiler.html" rel="noopener noreferrer" target="_blank">torch.compiler (PyTorch 2.15 documentation)</a> <span class="src-type">Project docs</span></li><li><blockquote>Pointwise ops can be fused with: other pointwise ops; reduction ops; and matmul/conv templates.</blockquote><a href="https://dev-discuss.pytorch.org/t/torchinductor-a-pytorch-native-compiler-with-define-by-run-ir-and-symbolic-shapes/747" rel="noopener noreferrer" target="_blank">TorchInductor design post by its lead author (PyTorch dev-discuss)</a> <span class="src-type">Project docs</span></li></ul>
 </article>
 <article class="ai-stage-detail" id="detail-stage-cpp_openmp" data-stage="cpp_openmp">
@@ -397,6 +397,7 @@
 
   <h2 id="how-this-page-is-checked">How this page is checked</h2>
   <p>Every stage and step above quotes the source that supports it. The quotes were checked against PyTorch 2.15 documentation, Triton main README, NVIDIA PTX ISA documentation on 2026-11-10. The data is a <a href="/dataset/ai/how-pytorch-runs.json">versioned JSON file</a> under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. Found something wrong or out of date? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
+  <p><a class="ai-graph-link" href="/explore?view=ai&amp;path=how-pytorch-runs&amp;mode=compile&amp;device=gpu">See this path in the graph explorer &rarr;</a></p>
   <p>What these tools are written in is in the main atlas: <a href="/languages/python">Python</a>, <a href="/tools/pytorch">PyTorch</a>, <a href="/languages/cxx">C++</a>, <a href="/tools/cuda">CUDA</a>, <a href="/tools/triton">Triton</a>, <a href="/tools/llvm">LLVM</a>, <a href="/languages/machine-code">Machine Code</a>. More execution paths: <a href="/ai/how-jax-runs">What Actually Happens When You Run JAX Code</a>, <a href="/ai/how-llama-cpp-runs">How Does llama.cpp Run a Model on Your Hardware</a>, <a href="/ai/how-mlx-runs">What Actually Happens When You Run MLX on a Mac</a>, <a href="/ai/how-onnx-runtime-runs">How Does ONNX Runtime Execute a Model Across Hardware</a>, <a href="/ai/how-vllm-runs">What Actually Happens When vLLM Serves a Request</a>, or <a href="/ai">compare them all</a>.</p>
 
   <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>

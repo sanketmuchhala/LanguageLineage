@@ -34,6 +34,11 @@ interface GraphStore {
   // Deep link: node to focus after layout settles
   pendingFocusNodeId: string | null;
 
+  // AI view: an explainer path overlaid on the graph (requested slug + selection),
+  // and the atlas nodes it resolves to once the explainer file has loaded
+  aiOverlay: { slug: string; selection: Record<string, string> } | null;
+  aiOverlayNodeIds: string[] | null;
+
   // Trace mode: A-to-B shortest path
   traceMode: boolean;
   traceNodeA: string | null;
@@ -60,6 +65,8 @@ interface GraphStore {
   resetFilters: () => void;
   toggleDarkMode: () => void;
   setPendingFocusNodeId: (id: string | null) => void;
+  setAiOverlay: (overlay: { slug: string; selection: Record<string, string> } | null) => void;
+  setAiOverlayNodeIds: (ids: string[] | null) => void;
   setTraceMode: (active: boolean) => void;
   setTraceNodes: (a: string | null, b: string | null) => void;
   setTracePath: (path: string[] | null, edgeIds: string[] | null) => void;
@@ -104,6 +111,8 @@ export const useGraphStore = create<GraphStore>((set) => ({
   attributeFilters: { paradigms: [], typing: null, decade: null, ai: false },
   isDarkMode: true,
   pendingFocusNodeId: null,
+  aiOverlay: null,
+  aiOverlayNodeIds: null,
   traceMode: false,
   traceNodeA: null,
   traceNodeB: null,
@@ -124,6 +133,7 @@ export const useGraphStore = create<GraphStore>((set) => ({
 
   setSelectedNode: (nodeId) =>
     set((state) => ({
+      ...(nodeId !== null ? { aiOverlay: null, aiOverlayNodeIds: null } : {}),
       selectedNodeId: nodeId,
       selectedEdgeId: null,
       sideDrawerOpen: nodeId !== null,
@@ -152,9 +162,10 @@ export const useGraphStore = create<GraphStore>((set) => ({
   setAttributeFilters: (filters) =>
     set((state) => ({
       attributeFilters: { ...state.attributeFilters, ...filters },
+      ...(filters.ai === false ? { aiOverlay: null, aiOverlayNodeIds: null } : {}),
     })),
   resetAttributeFilters: () =>
-    set({ attributeFilters: { paradigms: [], typing: null, decade: null, ai: false } }),
+    set({ attributeFilters: { paradigms: [], typing: null, decade: null, ai: false }, aiOverlay: null, aiOverlayNodeIds: null }),
 
   resetFilters: () => set({ filters: DEFAULT_FILTERS }),
   toggleDarkMode: () =>
@@ -165,6 +176,8 @@ export const useGraphStore = create<GraphStore>((set) => ({
       return { isDarkMode: next };
     }),
   setPendingFocusNodeId: (id) => set({ pendingFocusNodeId: id }),
+  setAiOverlay: (aiOverlay) => set({ aiOverlay, aiOverlayNodeIds: null, ...(aiOverlay ? { selectedNodeId: null, sideDrawerOpen: false, explorationMode: 'none' as const } : {}) }),
+  setAiOverlayNodeIds: (aiOverlayNodeIds) => set({ aiOverlayNodeIds }),
   setTraceMode: (active) => set((state) => ({
     traceMode: active,
     traceNodeA: active ? state.traceNodeA : null,
