@@ -60,7 +60,9 @@ by hand.
 Discovery rules shared by the HTML and sitemap generators live in
 `scripts/contentPages.ts`. See [CONTENT_PIPELINE.md](CONTENT_PIPELINE.md) for
 adding records without new page code. `seo:generate` also generates social
-images before HTML so first-time pages can reference their images.
+images before HTML so first-time pages can reference their images. The same
+chain regenerates the downloadable family-tree poster before its preview is
+read, keeping the poster synchronized with dataset additions.
 
 `npm run build` is `seo:generate && tsc && vite build`, then a patch step for
 the `/explore` page. So a build always regenerates the static site first: you

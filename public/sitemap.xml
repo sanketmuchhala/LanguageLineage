@@ -22,7 +22,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/programming-language-evolution</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/what-are-programming-languages-written-in</loc>
@@ -49,6 +49,10 @@
     <lastmod>2026-11-12</lastmod>
   </url>
   <url>
+    <loc>https://www.languagelineage.org/ai/how-keras-runs</loc>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
     <loc>https://www.languagelineage.org/ai/how-llama-cpp-runs</loc>
     <lastmod>2026-11-12</lastmod>
   </url>
@@ -57,11 +61,23 @@
     <lastmod>2026-11-12</lastmod>
   </url>
   <url>
+    <loc>https://www.languagelineage.org/ai/how-ollama-runs</loc>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
     <loc>https://www.languagelineage.org/ai/how-onnx-runtime-runs</loc>
     <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/ai/how-pytorch-runs</loc>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.languagelineage.org/ai/how-tensorflow-runs</loc>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.languagelineage.org/ai/how-tensorrt-llm-runs</loc>
     <lastmod>2026-11-12</lastmod>
   </url>
   <url>
@@ -550,7 +566,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools</loc>
@@ -614,7 +630,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/c</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/ml</loc>
@@ -654,7 +670,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/haskell</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/python</loc>
@@ -718,7 +734,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/go</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/coffeescript</loc>
@@ -726,7 +742,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/rust</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/kotlin</loc>
@@ -734,7 +750,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/typescript</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/dart</loc>
@@ -946,7 +962,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/apl</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/languages/delphi</loc>
@@ -1242,11 +1258,11 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools/ggml</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools/llama-cpp</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/tools/pytorch</loc>
@@ -1273,8 +1289,68 @@
     <lastmod>2026-11-12</lastmod>
   </url>
   <url>
+    <loc>https://www.languagelineage.org/languages/assemblyscript</loc>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.languagelineage.org/languages/futhark</loc>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.languagelineage.org/languages/hy</loc>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.languagelineage.org/languages/janet</loc>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.languagelineage.org/languages/bqn</loc>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.languagelineage.org/languages/uiua</loc>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.languagelineage.org/languages/cue</loc>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.languagelineage.org/languages/jsonnet</loc>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.languagelineage.org/languages/vyper</loc>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.languagelineage.org/languages/slang</loc>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.languagelineage.org/tools/tensorflow</loc>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.languagelineage.org/tools/onnx-runtime</loc>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.languagelineage.org/tools/ollama</loc>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.languagelineage.org/tools/keras</loc>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.languagelineage.org/tools/tensorrt-llm</loc>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
     <loc>https://www.languagelineage.org/relationships/influenced</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/relationships/bootstrap-written-in</loc>
@@ -1294,7 +1370,7 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/relationships/transpiled-to</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/guides/what-is-compiler-bootstrapping</loc>

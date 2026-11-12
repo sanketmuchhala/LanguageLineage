@@ -1,0 +1,380 @@
+{
+  "version": "1.0",
+  "slug": "how-tensorrt-llm-runs",
+  "name": "TensorRT-LLM",
+  "title": "How TensorRT-LLM Runs: PyTorch, Scheduling and GPUs | Language Lineage",
+  "h1": "How Does TensorRT-LLM Execute an Inference Request?",
+  "description": "Trace current TensorRT-LLM requests through Python or HTTP, PyExecutor, inflight scheduling and PyTorch model execution, with explicit legacy-backend limits.",
+  "og_subtitle": "Request → PyExecutor → scheduler → PyTorch model engine → GPU kernels",
+  "verified_on": "2026-11-11",
+  "verified_against": "the current TensorRT-LLM architecture, scheduler, migration, quick-start and supported-hardware guides, and Python executor source",
+  "scope": "Current TensorRT-LLM documentation retrieved in November 2026, after removal of the legacy TensorRT engine backend. One supported NVIDIA GPU inference deployment through Python LLM or HTTP serving. This diagram summarizes one scheduled forward iteration, not the full token-generation loop. Historical engine builds, encoder/multimodal paths, speculative decoding, disaggregated serving and distributed parallelism are outside scope.",
+  "answer": "Current **TensorRT-LLM uses a PyTorch execution backend**. A Python LLM call or a request to trtllm-serve enters an executor that schedules requests, manages resources and runs the model forward pass using optimized GPU kernels. Older instructions built around the removed TensorRT engine backend describe a different version of the system. An API-compatible server also does not reveal the internals of any unrelated hosted service.",
+  "status_template": "Showing {interface}",
+  "dimensions": [
+    {
+      "id": "interface",
+      "legend": "Request interface",
+      "default": "python",
+      "options": [
+        {
+          "value": "python",
+          "label": "Python LLM API",
+          "phrase": "a Python LLM API call"
+        },
+        {
+          "value": "http",
+          "label": "HTTP server",
+          "phrase": "an HTTP serving request"
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "heading": "Is TensorRT-LLM the same product as TensorRT?",
+      "paragraphs": [
+        "No. TensorRT-LLM is an LLM inference stack with its own model API, executor and scheduling. The [migration guide](https://nvidia.github.io/TensorRT-LLM/latest/legacy/tensorrt-backend-removal.html) says the legacy TensorRT engine backend has been removed and PyTorch is now the sole execution backend. A familiar product name is not sufficient evidence that a current request first runs trtllm-build.",
+        "This version boundary matters when following tutorials. Historical conversion and engine-build instructions can be correct for earlier releases while failing to describe the current API. Match the documentation to the installed version before copying commands or assuming one fixed execution architecture."
+      ]
+    },
+    {
+      "heading": "What happens after the request arrives?",
+      "paragraphs": [
+        "The [quick-start guide](https://nvidia.github.io/TensorRT-LLM/latest/quick-start-guide.html) documents Python LLM calls and HTTP serving with trtllm-serve. These are entry points to the inference stack. A compatible HTTP endpoint specifies how a client talks to the server; it does not make the server another vendor’s model service.",
+        "The [architecture overview](https://nvidia.github.io/TensorRT-LLM/latest/torch/arch_overview.html) describes PyExecutor, its model engine and decoding responsibilities. The diagram shows the compute route for one scheduled forward iteration. After model outputs are available, the decoder produces tokens and request state is updated; generation repeats rather than returning to the initial loading step for every token."
+      ]
+    },
+    {
+      "heading": "What is inflight batching?",
+      "paragraphs": [
+        "The [scheduler documentation](https://nvidia.github.io/TensorRT-LLM/latest/torch/scheduler.html) describes scheduling at each LLM step. CapacityScheduler determines resource fit, including cache capacity. MicroBatchScheduler chooses which fitting requests should actually execute next. This allows an active server to reconsider runnable work across iterations instead of assuming one fixed request batch lasts forever.",
+        "Resource fit and execution selection are related but distinct. A request can be active without being chosen for the current forward pass. The diagram therefore puts scheduling before model execution; it does not claim that every queued request runs simultaneously or that batching removes latency tradeoffs."
+      ]
+    },
+    {
+      "heading": "Where do Python, C++ and CUDA appear?",
+      "paragraphs": [
+        "Python is visible in the executor and model-facing interfaces. The architecture documents C++ bindings for scheduler and KV-cache components, and the [executor source](https://github.com/NVIDIA/TensorRT-LLM/blob/main/tensorrt_llm/_torch/pyexecutor/py_executor.py) imports CUDA runtime bindings. Numerical execution uses the optimized kernel stack described in the [project overview](https://github.com/NVIDIA/TensorRT-LLM/blob/main/README.md).",
+        "These are different responsibilities. A Python implementation edge describes orchestration; a C++ binding does not mean every kernel is C++; and selecting the PyTorch backend does not mean TensorRT-LLM becomes an ordinary unoptimized eager Python loop. Kernel selection and supported model details depend on the actual release and configuration."
+      ]
+    },
+    {
+      "heading": "How does this compare with vLLM or llama.cpp?",
+      "paragraphs": [
+        "Compare the documented mechanisms rather than treating the engines as aliases. [vLLM](/ai/how-vllm-runs) has its own scheduling and execution stack. [llama.cpp](/ai/how-llama-cpp-runs) uses a distinct model/runtime/backend arrangement. This page explains current TensorRT-LLM execution without asserting a universal speed winner or publishing workload-free performance rankings."
+      ]
+    },
+    {
+      "heading": "Does the diagram describe every token and every GPU?",
+      "paragraphs": [
+        "No. It stops at the hardware work for a scheduled forward iteration. Sampling, caching, repeated decoding and advanced multi-device scheduling add further state transitions. A complete deployment must satisfy supported hardware, model and software requirements; the diagram is a cited architectural trace, not a compatibility certification."
+      ]
+    }
+  ],
+  "out_of_scope_note": "",
+  "link_from": [
+    "tool:tensorrt_llm",
+    "tool:pytorch",
+    "tool:cuda",
+    "lang:python"
+  ],
+  "sources": {
+    "arch": {
+      "url": "https://nvidia.github.io/TensorRT-LLM/latest/torch/arch_overview.html",
+      "title": "TensorRT-LLM current PyTorch architecture"
+    },
+    "migration": {
+      "url": "https://nvidia.github.io/TensorRT-LLM/latest/legacy/tensorrt-backend-removal.html",
+      "title": "TensorRT-LLM TensorRT backend removal and migration"
+    },
+    "scheduler": {
+      "url": "https://nvidia.github.io/TensorRT-LLM/latest/torch/scheduler.html",
+      "title": "TensorRT-LLM inflight scheduler"
+    },
+    "quick": {
+      "url": "https://nvidia.github.io/TensorRT-LLM/latest/quick-start-guide.html",
+      "title": "TensorRT-LLM HTTP serving and Python LLM API"
+    },
+    "readme": {
+      "url": "https://github.com/NVIDIA/TensorRT-LLM/blob/main/README.md",
+      "title": "TensorRT-LLM specialized kernels and runtime overview"
+    },
+    "cuda": {
+      "url": "https://github.com/NVIDIA/TensorRT-LLM/blob/main/tensorrt_llm/_torch/pyexecutor/py_executor.py",
+      "title": "TensorRT-LLM Python executor and CUDA runtime bindings"
+    },
+    "hardware": {
+      "url": "https://nvidia.github.io/TensorRT-LLM/latest/supported-hardware.html",
+      "title": "TensorRT-LLM supported NVIDIA GPU hardware"
+    }
+  },
+  "stages": [
+    {
+      "id": "application",
+      "name": "Your inference call",
+      "kind": "application",
+      "layer": "application",
+      "lineage_id": null,
+      "pos": [
+        1.5,
+        0
+      ],
+      "summary": "The application invokes the Python LLM API or sends an HTTP request to a locally deployed trtllm-serve instance.",
+      "evidence": [
+        {
+          "source": "quick",
+          "quote": "You can use the trtllm-serve command to start an OpenAI compatible server to interact with a model."
+        }
+      ]
+    },
+    {
+      "id": "python_api",
+      "name": "Python LLM API",
+      "kind": "framework_component",
+      "layer": "python",
+      "lineage_id": "lang:python",
+      "pos": [
+        0,
+        1
+      ],
+      "summary": "The tensorrt_llm.LLM interface manages model loading and generation for Python callers.",
+      "evidence": [
+        {
+          "source": "arch",
+          "quote": "The interface for PyTorch backend is tensorrt_llm.LLM."
+        }
+      ]
+    },
+    {
+      "id": "http",
+      "name": "trtllm-serve",
+      "kind": "runtime",
+      "layer": "application",
+      "lineage_id": null,
+      "pos": [
+        3,
+        1
+      ],
+      "summary": "The server exposes compatible HTTP endpoints while using the TensorRT-LLM inference stack beneath them.",
+      "evidence": [
+        {
+          "source": "quick",
+          "quote": "You can use the trtllm-serve command to start an OpenAI compatible server to interact with a model."
+        }
+      ]
+    },
+    {
+      "id": "executor",
+      "name": "PyExecutor",
+      "kind": "runtime",
+      "layer": "framework",
+      "lineage_id": "tool:tensorrt_llm",
+      "pos": [
+        1.5,
+        2
+      ],
+      "summary": "The Python executor coordinates requests, scheduling, model forward calls and decoding.",
+      "evidence": [
+        {
+          "source": "arch",
+          "quote": "Running model forward for scheduled requests."
+        }
+      ]
+    },
+    {
+      "id": "scheduler",
+      "name": "Inflight scheduler",
+      "kind": "runtime",
+      "layer": "framework",
+      "lineage_id": null,
+      "pos": [
+        1.5,
+        3
+      ],
+      "summary": "Capacity and microbatch scheduling select work for this iteration based on resources and request state.",
+      "evidence": [
+        {
+          "source": "scheduler",
+          "quote": "The scheduler is invoked to determine which requests are scheduled at the current step."
+        }
+      ]
+    },
+    {
+      "id": "engine",
+      "name": "PyTorch model engine",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": "tool:pytorch",
+      "pos": [
+        1.5,
+        4
+      ],
+      "summary": "The current model engine prepares and executes the scheduled model forward pass through the PyTorch backend.",
+      "evidence": [
+        {
+          "source": "migration",
+          "quote": "PyTorch is now the sole execution backend for TensorRT LLM."
+        }
+      ]
+    },
+    {
+      "id": "kernels",
+      "name": "Specialized kernels",
+      "kind": "kernel",
+      "layer": "kernel",
+      "lineage_id": null,
+      "pos": [
+        1.5,
+        5
+      ],
+      "summary": "Supported model operations execute through the optimized kernel/runtime stack selected by the current implementation.",
+      "evidence": [
+        {
+          "source": "readme",
+          "quote": "specialized kernels for common operations"
+        }
+      ]
+    },
+    {
+      "id": "gpu",
+      "name": "NVIDIA GPU",
+      "kind": "hardware",
+      "layer": "hardware",
+      "lineage_id": null,
+      "pos": [
+        1.5,
+        6
+      ],
+      "summary": "The scoped supported NVIDIA deployment executes device work through its CUDA runtime stack; CPU scheduling remains part of the host process.",
+      "evidence": [
+        {
+          "source": "hardware",
+          "quote": "TensorRT LLM supports the full spectrum of NVIDIA GPU architectures:"
+        }
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "to": "python_api",
+      "kind": "calls",
+      "when": {
+        "interface": [
+          "python"
+        ]
+      },
+      "label": "invokes LLM API",
+      "explanation": "The Python route enters through tensorrt_llm.LLM.",
+      "evidence": [
+        {
+          "source": "arch",
+          "quote": "The interface for PyTorch backend is tensorrt_llm.LLM."
+        }
+      ],
+      "from": "application"
+    },
+    {
+      "to": "http",
+      "kind": "calls",
+      "when": {
+        "interface": [
+          "http"
+        ]
+      },
+      "label": "sends HTTP request",
+      "explanation": "The HTTP route assumes a configured trtllm-serve deployment.",
+      "evidence": [
+        {
+          "source": "quick",
+          "quote": "You can use the trtllm-serve command to start an OpenAI compatible server to interact with a model."
+        }
+      ],
+      "from": "application"
+    },
+    {
+      "to": "executor",
+      "kind": "calls",
+      "when": {},
+      "label": "submits inference",
+      "explanation": "The API uses TensorRT-LLM’s current executor stack for model inference.",
+      "evidence": [
+        {
+          "source": "arch",
+          "quote": "The interface for PyTorch backend is tensorrt_llm.LLM."
+        }
+      ],
+      "from": "python_api"
+    },
+    {
+      "to": "executor",
+      "kind": "calls",
+      "when": {},
+      "label": "submits server request",
+      "explanation": "Serving uses the runtime rather than a separate model implementation invented by this API-compatible interface.",
+      "evidence": [
+        {
+          "source": "quick",
+          "quote": "You can use the trtllm-serve command to start an OpenAI compatible server to interact with a model."
+        }
+      ],
+      "from": "http"
+    },
+    {
+      "to": "scheduler",
+      "kind": "calls",
+      "when": {},
+      "label": "schedules iteration",
+      "explanation": "The executor selects runnable requests for the current step.",
+      "evidence": [
+        {
+          "source": "scheduler",
+          "quote": "The scheduler is invoked to determine which requests are scheduled at the current step."
+        }
+      ],
+      "from": "executor"
+    },
+    {
+      "to": "engine",
+      "kind": "calls",
+      "when": {},
+      "label": "runs selected forward",
+      "explanation": "Only scheduled work is submitted for the model forward pass.",
+      "evidence": [
+        {
+          "source": "arch",
+          "quote": "Running model forward for scheduled requests."
+        }
+      ],
+      "from": "scheduler"
+    },
+    {
+      "to": "kernels",
+      "kind": "dispatches_to",
+      "when": {},
+      "label": "executes model ops",
+      "explanation": "The current PyTorch stack uses TensorRT-LLM’s optimized numerical kernels where applicable.",
+      "evidence": [
+        {
+          "source": "readme",
+          "quote": "specialized kernels for common operations"
+        }
+      ],
+      "from": "engine"
+    },
+    {
+      "to": "gpu",
+      "kind": "executes_on",
+      "when": {},
+      "label": "launches device work",
+      "explanation": "The executor uses CUDA runtime bindings for the supported NVIDIA GPU execution path.",
+      "evidence": [
+        {
+          "source": "cuda",
+          "quote": "from cuda.bindings import runtime as cudart"
+        }
+      ],
+      "from": "kernels"
+    }
+  ]
+}

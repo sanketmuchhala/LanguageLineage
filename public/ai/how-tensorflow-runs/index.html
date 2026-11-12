@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How TensorFlow Runs: Eager, tf.function and XLA | Language Lineage</title>
+  <meta name="description" content="Trace TensorFlow eager execution, tf.function graphs and explicit XLA compilation to CPU or NVIDIA GPU kernels, with cited device-placement and fallback limits." />
+  <link rel="canonical" href="https://www.languagelineage.org/ai/how-tensorflow-runs" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><script defer src="/fx.js"></script><script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script><link rel="alternate" type="application/rss+xml" title="Language Lineage" href="/rss.xml" /><link rel="stylesheet" href="/seo.css" />
+  <script defer src="/ai-path.js"></script>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="How TensorFlow Runs: Eager, tf.function and XLA | Language Lineage" />
+  <meta property="og:description" content="Trace TensorFlow eager execution, tf.function graphs and explicit XLA compilation to CPU or NVIDIA GPU kernels, with cited device-placement and fallback limits." />
+  <meta property="og:url" content="https://www.languagelineage.org/ai/how-tensorflow-runs" />
+  <meta property="og:image" content="https://www.languagelineage.org/og/ai-how-tensorflow-runs.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"How Does TensorFlow Run Python on a CPU or GPU?","description":"Trace TensorFlow eager execution, tf.function graphs and explicit XLA compilation to CPU or NVIDIA GPU kernels, with cited device-placement and fallback limits.","url":"https://www.languagelineage.org/ai/how-tensorflow-runs","datePublished":"2026-11-11","dateModified":"2026-11-12","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"citation":["https://www.tensorflow.org/guide/intro_to_graphs","https://www.tensorflow.org/api_docs/python/tf/function","https://www.tensorflow.org/guide/gpu","https://openxla.org/xla"],"inLanguage":"en"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"AI execution paths","item":"https://www.languagelineage.org/ai"},{"@type":"ListItem","position":3,"name":"How Does TensorFlow Run Python on a CPU or GPU?","item":"https://www.languagelineage.org/ai/how-tensorflow-runs"}]}</script>
+</head>
+<body class="seo-page">
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<nav class="seo-nav">
+  <a href="/" class="nav-brand"><img class="nav-logo-mark" src="/logo-mark.svg" width="22" height="22" alt="" aria-hidden="true">Language Lineage</a>
+  <a href="/relationships">Relationships</a>
+  <a href="/languages">Languages</a>
+  <a href="/tools">Tools</a>
+  <a href="/guides">Guides</a>
+  <a href="/timeline">Timeline</a>
+  <a href="/dataset">Dataset</a>
+  <a href="/how-it-works">How It Works</a>
+  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
+</nav>
+<main class="seo-main" id="main-content">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; <a href="/ai">AI execution paths</a> &rsaquo; How Does TensorFlow Run Python on a CPU or GPU
+  </nav>
+
+  <h1>How Does TensorFlow Run Python on a CPU or GPU?</h1>
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#the-selected-path-step-by-step">The selected path, step by step</a></li>
+    <li><a href="#does-tensorflow-execute-python-on-the-gpu">Does TensorFlow execute Python on the GPU?</a></li>
+    <li><a href="#what-is-the-difference-between-eager-mode-and-tf-function">What is the difference between eager mode and tf.function?</a></li>
+    <li><a href="#is-tf-function-the-same-as-xla">Is tf.function the same as XLA?</a></li>
+    <li><a href="#where-does-keras-fit">Where does Keras fit?</a></li>
+    <li><a href="#how-should-i-interpret-speed-differences">How should I interpret speed differences?</a></li>
+    <li><a href="#every-stage">Every stage</a></li>
+    <li><a href="#every-step">Every step</a></li>
+    <li><a href="#what-this-does-not-show">What this does not show</a></li>
+    <li><a href="#how-this-page-is-checked">How this page is checked</a></li>
+  </ol>
+</nav>
+
+  <div class="answer-box">TensorFlow starts with a <strong>Python API</strong>, but the selected execution mode changes what runs next. <strong>Eager mode</strong> dispatches operations individually. <strong>tf.function</strong> traces TensorFlow operations into a reusable graph. <strong>jit_compile=True</strong> additionally asks XLA to compile the function. Device placement then determines CPU or GPU execution; using a graph does not itself mean XLA or guarantee GPU-only work.</div>
+
+  <section class="ai-explorer" id="explorer" aria-label="Execution path explorer">
+    <form class="ai-controls" onsubmit="return false">
+      <fieldset><legend>Execution mode</legend>
+        <label><input type="radio" name="mode" value="eager" data-phrase="eager execution" checked> Eager</label>
+        <label><input type="radio" name="mode" value="graph" data-phrase="a graph without explicit XLA"> tf.function</label>
+        <label><input type="radio" name="mode" value="xla" data-phrase="successful explicit XLA compilation"> Explicit XLA</label>
+      </fieldset>
+      <fieldset><legend>Device</legend>
+        <label><input type="radio" name="device" value="cpu" data-phrase="the CPU" checked> CPU</label>
+        <label><input type="radio" name="device" value="gpu" data-phrase="a configured NVIDIA GPU"> NVIDIA GPU</label>
+      </fieldset>
+      <button type="button" class="ai-copy" hidden>Copy link to this path</button>
+    </form>
+    <p class="ai-status" aria-live="polite" data-template="Showing {mode} on {device}">Showing eager execution on the CPU: 5 stages, 4 steps.</p>
+    <div class="ai-layout">
+      <div class="ai-diagram-wrap"><svg class="ai-path-svg" viewBox="0 0 826 468" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Execution path diagram: select a stage or step for details">
+<defs><marker id="ai-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9a9a9a"/></marker></defs>
+<path id="step-python--api" class="ai-step on" d="M413,62 C413,78 413,78 413,88" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Your Python code calls TensorFlow TensorFlow API"><title>Your Python code calls TensorFlow TensorFlow API</title></path>
+<path id="step-api--eager" class="ai-step on" d="M413,140 C413,156 104,156 104,166" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="TensorFlow API dispatches each op Eager execution"><title>TensorFlow API dispatches each op Eager execution</title></path>
+<path id="step-api--graph" class="ai-step" d="M413,140 C413,156 516,156 516,166" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="TensorFlow API traces TensorFlow ops Traced tf.Graph"><title>TensorFlow API traces TensorFlow ops Traced tf.Graph</title></path>
+<path id="step-graph--executor" class="ai-step" d="M516,218 C516,234 413,234 413,244" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Traced tf.Graph executes graph Graph execution"><title>Traced tf.Graph executes graph Graph execution</title></path>
+<path id="step-graph--xla" class="ai-step" d="M516,218 C516,234 722,234 722,244" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Traced tf.Graph compiled with XLA XLA compilation"><title>Traced tf.Graph compiled with XLA XLA compilation</title></path>
+<path id="step-eager--cpu_kernel" class="ai-step on" d="M104,218 C104,273 104,273 104,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Eager execution selects CPU kernels CPU op kernels"><title>Eager execution selects CPU kernels CPU op kernels</title></path>
+<path id="step-eager--gpu_kernel" class="ai-step" d="M104,218 C104,273 310,273 310,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Eager execution selects GPU kernels GPU op kernels"><title>Eager execution selects GPU kernels GPU op kernels</title></path>
+<path id="step-executor--cpu_kernel" class="ai-step" d="M413,296 C413,312 104,312 104,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Graph execution selects CPU kernels CPU op kernels"><title>Graph execution selects CPU kernels CPU op kernels</title></path>
+<path id="step-executor--gpu_kernel" class="ai-step" d="M413,296 C413,312 310,312 310,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Graph execution selects GPU kernels GPU op kernels"><title>Graph execution selects GPU kernels GPU op kernels</title></path>
+<path id="step-xla--cpu_code" class="ai-step" d="M722,296 C722,312 516,312 516,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="XLA compilation targets CPU XLA CPU code"><title>XLA compilation targets CPU XLA CPU code</title></path>
+<path id="step-cpu_kernel--cpu" class="ai-step on" d="M104,374 C104,390 207,390 207,400" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="CPU op kernels executes on CPU"><title>CPU op kernels executes on CPU</title></path>
+<path id="step-cpu_code--cpu" class="ai-step" d="M516,374 C516,390 207,390 207,400" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="XLA CPU code executes on CPU"><title>XLA CPU code executes on CPU</title></path>
+<path id="step-xla--gpu_code" class="ai-step" d="M722,296 C722,312 722,312 722,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="XLA compilation targets GPU XLA GPU executable"><title>XLA compilation targets GPU XLA GPU executable</title></path>
+<path id="step-gpu_kernel--gpu" class="ai-step" d="M310,374 C310,390 619,390 619,400" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="GPU op kernels executes on NVIDIA GPU"><title>GPU op kernels executes on NVIDIA GPU</title></path>
+<path id="step-gpu_code--gpu" class="ai-step" d="M722,374 C722,390 619,390 619,400" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="XLA GPU executable executes on NVIDIA GPU"><title>XLA GPU executable executes on NVIDIA GPU</title></path>
+<g id="stage-python" class="ai-stage on" tabindex="0" role="button" aria-label="Your Python code: Your program">
+  <rect x="325" y="16" width="176" height="46" rx="7" style="--kc:#60a5fa"/>
+  <rect x="325" y="16" width="4" height="46" rx="2" fill="#60a5fa"/>
+  <text x="339" y="35" class="ai-name">Your Python code</text>
+  <text x="339" y="51" class="ai-kind">programming language</text>
+</g>
+<g id="stage-api" class="ai-stage on" tabindex="0" role="button" aria-label="TensorFlow API: Framework core">
+  <rect x="325" y="94" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="325" y="94" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="339" y="113" class="ai-name">TensorFlow API</text>
+  <text x="339" y="129" class="ai-kind">framework component</text>
+</g>
+<g id="stage-eager" class="ai-stage on" tabindex="0" role="button" aria-label="Eager execution: Runtime">
+  <rect x="16" y="172" width="176" height="46" rx="7" style="--kc:#93c5fd"/>
+  <rect x="16" y="172" width="4" height="46" rx="2" fill="#93c5fd"/>
+  <text x="30" y="191" class="ai-name">Eager execution</text>
+  <text x="30" y="207" class="ai-kind">runtime</text>
+</g>
+<g id="stage-graph" class="ai-stage" tabindex="0" role="button" aria-label="Traced tf.Graph: Intermediate representation">
+  <rect x="428" y="172" width="176" height="46" rx="7" style="--kc:#22d3ee"/>
+  <rect x="428" y="172" width="4" height="46" rx="2" fill="#22d3ee"/>
+  <text x="442" y="191" class="ai-name">Traced tf.Graph</text>
+  <text x="442" y="207" class="ai-kind">intermediate representation</text>
+</g>
+<g id="stage-executor" class="ai-stage" tabindex="0" role="button" aria-label="Graph execution: Runtime">
+  <rect x="325" y="250" width="176" height="46" rx="7" style="--kc:#93c5fd"/>
+  <rect x="325" y="250" width="4" height="46" rx="2" fill="#93c5fd"/>
+  <text x="339" y="269" class="ai-name">Graph execution</text>
+  <text x="339" y="285" class="ai-kind">runtime</text>
+</g>
+<g id="stage-xla" class="ai-stage" tabindex="0" role="button" aria-label="XLA compilation: Compiler">
+  <rect x="634" y="250" width="176" height="46" rx="7" style="--kc:#a78bfa"/>
+  <rect x="634" y="250" width="4" height="46" rx="2" fill="#a78bfa"/>
+  <text x="648" y="269" class="ai-name">XLA compilation</text>
+  <text x="648" y="285" class="ai-kind">compiler</text>
+</g>
+<g id="stage-cpu_kernel" class="ai-stage on" tabindex="0" role="button" aria-label="CPU op kernels: Kernel">
+  <rect x="16" y="328" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="16" y="328" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="30" y="347" class="ai-name">CPU op kernels</text>
+  <text x="30" y="363" class="ai-kind">kernel</text>
+</g>
+<g id="stage-gpu_kernel" class="ai-stage" tabindex="0" role="button" aria-label="GPU op kernels: Kernel">
+  <rect x="222" y="328" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="222" y="328" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="236" y="347" class="ai-name">GPU op kernels</text>
+  <text x="236" y="363" class="ai-kind">kernel</text>
+</g>
+<g id="stage-cpu_code" class="ai-stage" tabindex="0" role="button" aria-label="XLA CPU code: Hardware">
+  <rect x="428" y="328" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="428" y="328" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="442" y="347" class="ai-name">XLA CPU code</text>
+  <text x="442" y="363" class="ai-kind">machine code</text>
+</g>
+<g id="stage-gpu_code" class="ai-stage" tabindex="0" role="button" aria-label="XLA GPU executable: Hardware">
+  <rect x="634" y="328" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="634" y="328" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="648" y="347" class="ai-name">XLA GPU executable</text>
+  <text x="648" y="363" class="ai-kind">machine code</text>
+</g>
+<g id="stage-cpu" class="ai-stage on" tabindex="0" role="button" aria-label="CPU: Hardware">
+  <rect x="119" y="406" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="119" y="406" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="133" y="425" class="ai-name">CPU</text>
+  <text x="133" y="441" class="ai-kind">hardware</text>
+</g>
+<g id="stage-gpu" class="ai-stage" tabindex="0" role="button" aria-label="NVIDIA GPU: Hardware">
+  <rect x="531" y="406" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="531" y="406" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="545" y="425" class="ai-name">NVIDIA GPU</text>
+  <text x="545" y="441" class="ai-kind">hardware</text>
+</g>
+</svg></div>
+      <aside class="ai-detail" aria-live="polite"><p class="ai-detail-hint">Select a stage or an arrow to see what it does and the source behind it.</p></aside>
+    </div>
+    <ul class="ai-legend" aria-label="Legend"><li><span class="ai-swatch" style="--kc:#60a5fa"></span>Your program</li><li><span class="ai-swatch" style="--kc:#93c5fd"></span>Runtime</li><li><span class="ai-swatch" style="--kc:#e3a008"></span>Framework core</li><li><span class="ai-swatch" style="--kc:#f472b6"></span>Kernel</li><li><span class="ai-swatch" style="--kc:#a78bfa"></span>Compiler</li><li><span class="ai-swatch" style="--kc:#22d3ee"></span>Intermediate representation</li><li><span class="ai-swatch" style="--kc:#4ade80"></span>Hardware</li></ul>
+  </section>
+
+  <h2 id="the-selected-path-step-by-step">The selected path, step by step</h2>
+  <ol class="ai-path-list">
+<li>Your Python code <em>calls TensorFlow</em> TensorFlow API: The program enters TensorFlow through its Python API.</li>
+<li>TensorFlow API <em>dispatches each op</em> Eager execution: Eager execution evaluates operations as Python calls them.</li>
+<li>Eager execution <em>selects CPU kernels</em> CPU op kernels: Device placement chooses the implementations for the supported operations shown here.</li>
+<li>CPU op kernels <em>executes on</em> CPU: Numerical work reaches the selected physical processor.</li>
+  </ol>
+
+  <h2 id="does-tensorflow-execute-python-on-the-gpu">Does TensorFlow execute Python on the GPU?</h2>
+  <p>Python supplies the program and launches TensorFlow operations. Numerical kernels execute on the selected device; a Python loop, a print statement and a matrix multiplication are not interchangeable units of GPU work. The [device-placement guide](https://www.tensorflow.org/guide/gpu) explains how to log where operations actually run. A visible GPU is a prerequisite, not proof that the complete program uses it.</p>
+  <p>The CPU selection here shows CPU numerical work. The GPU selection shows supported NVIDIA device operations while leaving host orchestration implicit. Operations without an applicable GPU implementation may run on the CPU. Inspect placement and data movement before interpreting a low GPU utilization reading as a compiler defect.</p>
+
+  <h2 id="what-is-the-difference-between-eager-mode-and-tf-function">What is the difference between eager mode and tf.function?</h2>
+  <p>Eager mode is useful for inspecting values because Python dispatches each operation immediately. Wrapping a compatible function with tf.function produces a callable backed by a traced graph. Repeated compatible calls can reuse that graph instead of rebuilding it operation by operation. The [graph introduction](https://www.tensorflow.org/guide/intro_to_graphs) describes the difference and why graphs can be exported without the original Python program.</p>
+  <p>Tracing is not the same as running every Python statement again on every invocation. Python-side effects and changing argument signatures can behave differently from ordinary eager code. Retracing can add startup work; it is separate from the steady-state cost of executing an already constructed graph.</p>
+
+  <h2 id="is-tf-function-the-same-as-xla">Is tf.function the same as XLA?</h2>
+  <p>No. The graph-only choice in this page uses tf.function with jit_compile=False. The explicit-XLA choice adds compiler optimization through jit_compile=True. The [API contract](https://www.tensorflow.org/api_docs/python/tf/function) states that an explicitly compiled function must be supported by XLA or an error is raised. Do not assume an unsupported function will silently fall back to eager execution.</p>
+  <p>XLA can optimize and combine work for supported targets. It is also used by <a href="/ai/how-jax-runs">JAX</a>, but sharing a compiler does not make the frameworks identical: their front ends, tracing rules and user APIs differ. See the [OpenXLA overview](https://openxla.org/xla) for the supported compiler role.</p>
+
+  <h2 id="where-does-keras-fit">Where does Keras fit?</h2>
+  <p>A <a href="/ai/how-keras-runs">Keras model</a> using the TensorFlow backend enters this stack through TensorFlow operations. Keras 3 can also select another backend, so a Keras import alone does not identify this path. This page explains TensorFlow execution rather than prescribing one framework for every workload.</p>
+
+  <h2 id="how-should-i-interpret-speed-differences">How should I interpret speed differences?</h2>
+  <p>Compare equivalent computations after separating initialization, tracing or compilation from repeated execution. A graph or XLA can reduce some overhead, but neither is a universal speed guarantee. Tensor sizes, supported operations, device placement and transfers all affect the resulting path. This diagram records mechanisms rather than benchmark rankings.</p>
+
+  <h2 id="every-stage">Every stage</h2>
+  <div class="ai-stage-list">
+<article class="ai-stage-detail" id="detail-stage-python" data-stage="python">
+<h3>Your Python code</h3>
+<p class="ai-kind-tag" style="--kc:#60a5fa">programming language</p>
+<p>Python invokes TensorFlow operations or calls a function previously wrapped with tf.function.</p>
+<p class="ai-lineage">In the atlas: <a href="/languages/python">Python</a></p>
+<ul class="ai-sources"><li><blockquote>TensorFlow operations are executed by Python, operation by operation, and return results back to Python.</blockquote><a href="https://www.tensorflow.org/guide/intro_to_graphs" rel="noopener noreferrer" target="_blank">Introduction to graphs and tf.function (TensorFlow)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-api" data-stage="api">
+<h3>TensorFlow API</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>The Python API routes the selected eager, graph or explicitly XLA-compiled execution path.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/tensorflow">TensorFlow</a></p>
+<ul class="ai-sources"><li><blockquote>Compiles a function into a callable TensorFlow graph.</blockquote><a href="https://www.tensorflow.org/api_docs/python/tf/function" rel="noopener noreferrer" target="_blank">tf.function API, including jit_compile (TensorFlow)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-eager" data-stage="eager">
+<h3>Eager execution</h3>
+<p class="ai-kind-tag" style="--kc:#93c5fd">runtime</p>
+<p>Operations are dispatched one by one from Python. This path does not first trace the whole function into a graph.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/tensorflow">TensorFlow</a></p>
+<ul class="ai-sources"><li><blockquote>TensorFlow operations are executed by Python, operation by operation, and return results back to Python.</blockquote><a href="https://www.tensorflow.org/guide/intro_to_graphs" rel="noopener noreferrer" target="_blank">Introduction to graphs and tf.function (TensorFlow)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-graph" data-stage="graph">
+<h3>Traced tf.Graph</h3>
+<p class="ai-kind-tag" style="--kc:#22d3ee">intermediate representation</p>
+<p>tf.function traces TensorFlow operations into a reusable graph; Python side effects do not become ordinary graph operations.</p>
+
+<ul class="ai-sources"><li><blockquote>A PolymorphicFunction is a Python callable that builds TensorFlow graphs from the Python function.</blockquote><a href="https://www.tensorflow.org/guide/intro_to_graphs" rel="noopener noreferrer" target="_blank">Introduction to graphs and tf.function (TensorFlow)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-executor" data-stage="executor">
+<h3>Graph execution</h3>
+<p class="ai-kind-tag" style="--kc:#93c5fd">runtime</p>
+<p>The traced graph runs through TensorFlow execution without requiring explicit XLA compilation in the graph-only selection.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/tensorflow">TensorFlow</a></p>
+<ul class="ai-sources"><li><blockquote>Compiles a function into a callable TensorFlow graph.</blockquote><a href="https://www.tensorflow.org/api_docs/python/tf/function" rel="noopener noreferrer" target="_blank">tf.function API, including jit_compile (TensorFlow)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-xla" data-stage="xla">
+<h3>XLA compilation</h3>
+<p class="ai-kind-tag" style="--kc:#a78bfa">compiler</p>
+<p>With jit_compile=True, the selected function must be supported by XLA. Compilation failure is an error, not a promised eager fallback.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/xla">XLA</a></p>
+<ul class="ai-sources"><li><blockquote>XLA (Accelerated Linear Algebra) is an open-source compiler for machine learning.</blockquote><a href="https://openxla.org/xla" rel="noopener noreferrer" target="_blank">XLA overview (OpenXLA)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-cpu_kernel" data-stage="cpu_kernel">
+<h3>CPU op kernels</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel</p>
+<p>TensorFlow operations placed on the CPU use CPU implementations of their numerical kernels.</p>
+
+<ul class="ai-sources"><li><blockquote>TensorFlow supports running computations on a variety of types of devices, including CPU and GPU.</blockquote><a href="https://www.tensorflow.org/guide/gpu" rel="noopener noreferrer" target="_blank">Device placement and CPU/GPU kernels (TensorFlow)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-gpu_kernel" data-stage="gpu_kernel">
+<h3>GPU op kernels</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel</p>
+<p>Supported operations placed on a visible NVIDIA GPU use GPU implementations; CPU-only operations can still remain on the host.</p>
+
+<ul class="ai-sources"><li><blockquote>TensorFlow supports running computations on a variety of types of devices, including CPU and GPU.</blockquote><a href="https://www.tensorflow.org/guide/gpu" rel="noopener noreferrer" target="_blank">Device placement and CPU/GPU kernels (TensorFlow)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-cpu_code" data-stage="cpu_code">
+<h3>XLA CPU code</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">machine code</p>
+<p>The successful XLA CPU selection executes code produced for its CPU target.</p>
+
+<ul class="ai-sources"><li><blockquote>XLA (Accelerated Linear Algebra) is an open-source compiler for machine learning.</blockquote><a href="https://openxla.org/xla" rel="noopener noreferrer" target="_blank">XLA overview (OpenXLA)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-gpu_code" data-stage="gpu_code">
+<h3>XLA GPU executable</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">machine code</p>
+<p>The successful XLA GPU selection executes a GPU-targeted compiled computation; this is not the ordinary per-op eager path.</p>
+
+<ul class="ai-sources"><li><blockquote>XLA (Accelerated Linear Algebra) is an open-source compiler for machine learning.</blockquote><a href="https://openxla.org/xla" rel="noopener noreferrer" target="_blank">XLA overview (OpenXLA)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-cpu" data-stage="cpu">
+<h3>CPU</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">hardware</p>
+<p>The CPU executes the selected CPU computation. Host-side control also exists for GPU workloads.</p>
+
+<ul class="ai-sources"><li><blockquote>TensorFlow supports running computations on a variety of types of devices, including CPU and GPU.</blockquote><a href="https://www.tensorflow.org/guide/gpu" rel="noopener noreferrer" target="_blank">Device placement and CPU/GPU kernels (TensorFlow)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-gpu" data-stage="gpu">
+<h3>NVIDIA GPU</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">hardware</p>
+<p>A configured NVIDIA GPU executes supported GPU computations. The diagram does not assert that every host operation moves to it.</p>
+
+<ul class="ai-sources"><li><blockquote>TensorFlow supports running computations on a variety of types of devices, including CPU and GPU.</blockquote><a href="https://www.tensorflow.org/guide/gpu" rel="noopener noreferrer" target="_blank">Device placement and CPU/GPU kernels (TensorFlow)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+  </div>
+
+  <h2 id="every-step">Every step</h2>
+  <div class="table-wrap"><table class="ai-steps">
+    <thead><tr><th>From</th><th>Step</th><th>To</th><th>When</th><th>What happens</th><th>Source</th></tr></thead>
+    <tbody>
+<tr id="detail-step-python--api" data-step="python--api" data-from="python" data-to="api" data-when="{}" class="on">
+<td>Your Python code</td><td>calls TensorFlow</td><td>TensorFlow API</td><td>any execution mode · any device</td><td>The program enters TensorFlow through its Python API.</td><td><a href="https://www.tensorflow.org/guide/intro_to_graphs" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-api--eager" data-step="api--eager" data-from="api" data-to="eager" data-when="{&quot;mode&quot;:[&quot;eager&quot;]}" class="on">
+<td>TensorFlow API</td><td>dispatches each op</td><td>Eager execution</td><td>Eager · any device</td><td>Eager execution evaluates operations as Python calls them.</td><td><a href="https://www.tensorflow.org/guide/intro_to_graphs" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-api--graph" data-step="api--graph" data-from="api" data-to="graph" data-when="{&quot;mode&quot;:[&quot;graph&quot;,&quot;xla&quot;]}">
+<td>TensorFlow API</td><td>traces TensorFlow ops</td><td>Traced tf.Graph</td><td>tf.function or Explicit XLA · any device</td><td>Both graph selections first obtain a traced TensorFlow graph.</td><td><a href="https://www.tensorflow.org/guide/intro_to_graphs" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-graph--executor" data-step="graph--executor" data-from="graph" data-to="executor" data-when="{&quot;mode&quot;:[&quot;graph&quot;]}">
+<td>Traced tf.Graph</td><td>executes graph</td><td>Graph execution</td><td>tf.function · any device</td><td>Graph-only mode executes the graph with explicit XLA compilation disabled.</td><td><a href="https://www.tensorflow.org/api_docs/python/tf/function" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-graph--xla" data-step="graph--xla" data-from="graph" data-to="xla" data-when="{&quot;mode&quot;:[&quot;xla&quot;]}">
+<td>Traced tf.Graph</td><td>compiled with XLA</td><td>XLA compilation</td><td>Explicit XLA · any device</td><td>Explicit jit_compile=True compiles the function rather than merely tracing it.</td><td><a href="https://openxla.org/xla" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-eager--cpu_kernel" data-step="eager--cpu_kernel" data-from="eager" data-to="cpu_kernel" data-when="{&quot;device&quot;:[&quot;cpu&quot;]}" class="on">
+<td>Eager execution</td><td>selects CPU kernels</td><td>CPU op kernels</td><td>any execution mode · CPU</td><td>Device placement chooses the implementations for the supported operations shown here.</td><td><a href="https://www.tensorflow.org/guide/gpu" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-eager--gpu_kernel" data-step="eager--gpu_kernel" data-from="eager" data-to="gpu_kernel" data-when="{&quot;device&quot;:[&quot;gpu&quot;]}">
+<td>Eager execution</td><td>selects GPU kernels</td><td>GPU op kernels</td><td>any execution mode · NVIDIA GPU</td><td>Device placement chooses the implementations for the supported operations shown here.</td><td><a href="https://www.tensorflow.org/guide/gpu" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-executor--cpu_kernel" data-step="executor--cpu_kernel" data-from="executor" data-to="cpu_kernel" data-when="{&quot;device&quot;:[&quot;cpu&quot;]}">
+<td>Graph execution</td><td>selects CPU kernels</td><td>CPU op kernels</td><td>any execution mode · CPU</td><td>Device placement chooses the implementations for the supported operations shown here.</td><td><a href="https://www.tensorflow.org/guide/gpu" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-executor--gpu_kernel" data-step="executor--gpu_kernel" data-from="executor" data-to="gpu_kernel" data-when="{&quot;device&quot;:[&quot;gpu&quot;]}">
+<td>Graph execution</td><td>selects GPU kernels</td><td>GPU op kernels</td><td>any execution mode · NVIDIA GPU</td><td>Device placement chooses the implementations for the supported operations shown here.</td><td><a href="https://www.tensorflow.org/guide/gpu" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-xla--cpu_code" data-step="xla--cpu_code" data-from="xla" data-to="cpu_code" data-when="{&quot;device&quot;:[&quot;cpu&quot;]}">
+<td>XLA compilation</td><td>targets CPU</td><td>XLA CPU code</td><td>any execution mode · CPU</td><td>XLA targets the selected supported hardware after successful compilation.</td><td><a href="https://openxla.org/xla" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-cpu_kernel--cpu" data-step="cpu_kernel--cpu" data-from="cpu_kernel" data-to="cpu" data-when="{}" class="on">
+<td>CPU op kernels</td><td>executes on</td><td>CPU</td><td>any execution mode · any device</td><td>Numerical work reaches the selected physical processor.</td><td><a href="https://www.tensorflow.org/guide/gpu" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-cpu_code--cpu" data-step="cpu_code--cpu" data-from="cpu_code" data-to="cpu" data-when="{}">
+<td>XLA CPU code</td><td>executes on</td><td>CPU</td><td>any execution mode · any device</td><td>The compiled computation executes on its target hardware.</td><td><a href="https://openxla.org/xla" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-xla--gpu_code" data-step="xla--gpu_code" data-from="xla" data-to="gpu_code" data-when="{&quot;device&quot;:[&quot;gpu&quot;]}">
+<td>XLA compilation</td><td>targets GPU</td><td>XLA GPU executable</td><td>any execution mode · NVIDIA GPU</td><td>XLA targets the selected supported hardware after successful compilation.</td><td><a href="https://openxla.org/xla" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-gpu_kernel--gpu" data-step="gpu_kernel--gpu" data-from="gpu_kernel" data-to="gpu" data-when="{}">
+<td>GPU op kernels</td><td>executes on</td><td>NVIDIA GPU</td><td>any execution mode · any device</td><td>Numerical work reaches the selected physical processor.</td><td><a href="https://www.tensorflow.org/guide/gpu" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-gpu_code--gpu" data-step="gpu_code--gpu" data-from="gpu_code" data-to="gpu" data-when="{}">
+<td>XLA GPU executable</td><td>executes on</td><td>NVIDIA GPU</td><td>any execution mode · any device</td><td>The compiled computation executes on its target hardware.</td><td><a href="https://openxla.org/xla" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="what-this-does-not-show">What this does not show</h2>
+  <p>TensorFlow 2 numerical computation on one CPU or a configured NVIDIA GPU. The graph-only option explicitly disables XLA; the XLA option assumes successful compilation. TPU, distributed training, TensorFlow Lite, browser TensorFlow.js, custom ops and detailed optimizer/gradient execution are outside this diagram. GPU branches show supported device work; host control and CPU-only ops may coexist.</p>
+
+  <h2 id="how-this-page-is-checked">How this page is checked</h2>
+  <p>Every stage and step above quotes the source that supports it. The quotes were checked against the TensorFlow 2 API, TensorFlow graph and device-placement guides, and the OpenXLA compiler overview on 2026-11-11. The data is a <a href="/dataset/ai/how-tensorflow-runs.json">versioned JSON file</a> under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. Found something wrong or out of date? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
+  <p><a class="ai-graph-link" href="/explore?view=ai&amp;path=how-tensorflow-runs&amp;mode=eager&amp;device=cpu">See this path in the graph explorer &rarr;</a></p>
+  <p>What these tools are written in is in the main atlas: <a href="/languages/python">Python</a>, <a href="/tools/tensorflow">TensorFlow</a>, <a href="/tools/xla">XLA</a>. More execution paths: <a href="/ai/how-jax-runs">What Actually Happens When You Run JAX Code</a>, <a href="/ai/how-keras-runs">What Runs Underneath a Keras 3 Model</a>, <a href="/ai/how-llama-cpp-runs">How Does llama.cpp Run a Model on Your Hardware</a>, <a href="/ai/how-mlx-runs">What Actually Happens When You Run MLX on a Mac</a>, <a href="/ai/how-ollama-runs">What Actually Runs When You Send Ollama a Prompt</a>, <a href="/ai/how-onnx-runtime-runs">How Does ONNX Runtime Execute a Model Across Hardware</a>, <a href="/ai/how-pytorch-runs">What Actually Happens When You Run a PyTorch Model</a>, <a href="/ai/how-tensorrt-llm-runs">How Does TensorRT-LLM Execute an Inference Request</a>, <a href="/ai/how-vllm-runs">What Actually Happens When vLLM Serves a Request</a>, or <a href="/ai">compare them all</a>.</p>
+
+  <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>
+</main>
+<footer class="seo-footer-rich">
+  <div data-nosnippet>
+  <div class="footer-grid">
+    <div class="footer-col">
+      <span class="footer-col-head">Explore</span>
+      <a href="/programming-language-graph">Programming language graph</a>
+      <a href="/rankings/most-influential">Most influential languages</a>
+      <a href="/rss.xml">RSS feed</a>
+      <a href="/embed-kit">Embed the graph</a>
+      <a href="/guides/programming-language-family-tree">Language family tree</a>
+      <a href="/programming-language-evolution">Evolution timeline</a>
+      <a href="/what-are-programming-languages-written-in">What languages are written in</a>
+      <a href="/ai">How AI frameworks run code</a>
+      <a href="/explore">Interactive Graph</a>
+      <a href="/dataset">Dataset</a>
+      <a href="/directory">Site Directory</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Popular Languages</span>
+      <a href="/languages/python">Python</a>
+      <a href="/languages/javascript">JavaScript</a>
+      <a href="/languages/rust">Rust</a>
+      <a href="/languages/go">Go</a>
+      <a href="/languages/java">Java</a>
+      <a href="/languages/c">C</a>
+      <a href="/languages/cxx">C++</a>
+      <a href="/languages/typescript">TypeScript</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Questions</span>
+      <a href="/questions/what-is-python-written-in">What is Python written in?</a>
+      <a href="/questions/what-is-javascript-written-in">What is JavaScript written in?</a>
+      <a href="/questions/what-is-rust-written-in">What is Rust written in?</a>
+      <a href="/questions/what-is-go-written-in">What is Go written in?</a>
+      <a href="/questions/what-is-compiler-bootstrapping">What is compiler bootstrapping?</a>
+      <a href="/questions">All questions &rarr;</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Tools &amp; Guides</span>
+      <a href="/tools/v8">V8</a>
+      <a href="/tools/llvm">LLVM</a>
+      <a href="/tools/gcc">GCC</a>
+      <a href="/tools/ghc">GHC</a>
+      <a href="/guides">All guides</a>
+      <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </div>
+  <p class="footer-note">The Language Lineage dataset is meticulously curated and verified by human researchers. We use AI agents to assist with large-scale data gathering and modeling, but every implementation fact is manually reviewed for accuracy. Spot an error? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue on GitHub</a> and it gets fixed. <a href="/how-it-works">Learn how it works &rarr;</a></p>
+  <div class="footer-bottom">Made with <span style="color:#fb7185">❤️</span> by <a href="https://github.com/sanketmuchhala" rel="noopener noreferrer">Sanket Muchhala</a> &middot; <a href="/">Language Lineage</a></div>
+  </div>
+</footer>
+</body>
+</html>

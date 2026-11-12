@@ -50,28 +50,119 @@ AI file discovery and validation across the generators.
 Canonical exceptions reflect existing search evidence. Do not remove them or
 scale question pages without the review described in `docs/DECISIONS.md`.
 
-## Publish an addition
+## Required content task handoff
 
-1. Add reviewed data and citations. Keep schema changes separate from content.
-2. Run `npm run seo:generate`. This generates social cards before HTML; a new
-   record must get its final social image on this first run. Sitemap, catalogs,
-   dataset downloads and existing feed generation run in the same command.
-3. For lineage records with logos, follow the logo commands in AGENTS.md. Logo
-   harvesting and rendering remain explicit because they can fetch remote data.
-4. Run the relevant citation check (`npm run check:ai-quotes` for execution
-   paths, or `npm run check:evidence-links` for lineage), read the sources, and
-   inspect the new page and its hub/backlinks.
-5. Run `npm run verify`. Review generated changes and canonical URLs; keep
-   counts synchronized as described below. Commit data and generated artifacts
-   together in a content PR, with human review of confidence values.
+This is the agent's mandatory finish procedure for both additions and
+corrections. Trigger it after the final edit to lineage data, enrichment, AI
+path files, logo metadata or editorial generator content. Do not ask the owner
+to run the pipeline, and do not report content as complete after writing JSON.
+Generation is an explicit command; saving a JSON file does not launch it.
 
-`npm run build` also runs generation. Deploy only after the freshness and live
-sitemap checks in AGENTS.md. Nothing in this workflow auto-merges or deploys.
+### 1. Prepare in your own worktree
+
+Read the target checkout's AGENTS.md and the relevant data instructions. Check
+`git status --short` and `git worktree list` before changing files. Keep a note
+of pre-existing changes. Work only in your assigned checkout; other agents may
+be editing or committing simultaneously. Fetch and inspect the latest
+`origin/main` when network access permits. Integrate required changes in your
+own branch, preserving other agents' commits. Never reset, stash, switch or
+clean another agent's checkout. Before deploying, the freshness and live
+sitemap checks in AGENTS.md are required.
+
+Add reviewed data and citations without changing the schema. For new nodes or
+relationships, update the hand-written totals listed in `docs/ARCHITECTURE.md`.
+If the global social image's numbers change, re-render `public/og-image.png`
+from its SVG too; per-page OG generation does not update that global image.
+For new or changed logos, follow `docs/DATASET.md`: render graph assets, check
+rendered coverage, and inspect the marks. Do not run harvesters unrelated to
+the task or rebuild the canonical dataset from historical inputs.
+
+### 2. Verify sources
+
+Read every citation added and confirm it supports the exact claim. Then run
+checks relevant to the changed content:
+
+| Change | Command | Passing result |
+| --- | --- | --- |
+| Lineage nodes or relationships | `npm run analyze:v5` | Valid schema, no integrity errors, connected graph |
+| Lineage relationship citations | `npm run check:evidence-links` | Review the report; all new citation URLs resolve and support the claim |
+| AI execution paths | `npm run check:ai-quotes` | All required quotes found in the live sources |
+
+Network checks are separate from `verify`. If a check cannot run or a source
+fails, report the exact failure and affected claim; do not mark it passed,
+delete a claim to hide the failure, or silently change existing evidence or
+confidence. A human still reviews evidence and new confidence values.
+
+### 3. Trigger generation, then the full gate
+
+Run these in order after the final content edit:
+
+```bash
+npm run seo:generate
+npm run verify
+```
+
+The first command computes rankings, regenerates the downloadable family-tree
+poster and its preview, generates per-page social cards before
+HTML, then builds pages, hubs, sitemap, RSS, llms catalogs and dataset releases.
+AI records are discovered from `dataset/ai/*.json`; lineage records are read
+from the v5 dataset. Existing template eligibility determines which optional
+question pages are produced. No per-record page code is needed.
+
+The second command runs type checking, all tests, SEO validation, the internal
+link audit and the production build. The build regenerates the site again;
+that repetition is part of the existing gate. Require zero SEO errors/warnings,
+zero broken/over-depth/orphan links, and all tests passing with none skipped.
+The documented Cytoscape chunk-size warning is expected.
+
+If content changes after either command, run both again. Fix failures in their
+source; never hand-edit generated output or weaken tests. If the environment
+blocks a command, record the error and any equivalent checks you could run.
+Do not claim `npm run verify` passed if only individual stages were run.
+
+### 4. Inspect output and prepare the handoff
+
+Run `git diff --check`, `git diff --stat` and `git status --short`. Inspect the
+new or changed page and its social image, its hub/directory entry and relevant
+backlinks. Check canonical URLs, sitemap membership and llms catalog coverage.
+A noncanonical question page correctly stays out of the sitemap. AI paths must
+work for every supported mode/device selection. Existing discovered-file tests
+cover each AI JSON file and its rendered stages and steps.
+
+Compare sitemap URL sets before and after the change, using the task's base
+commit, and report additions and removals. For a publishing task also compare
+against the live sitemap as AGENTS.md requires. Investigate missing URLs;
+renames and deletions need explicit redirect/removal review. Generation does
+not prune stale HTML automatically.
+
+Include source data and all affected tracked generated artifacts together in
+the content commit. Inspect `public/`, generated logo manifests and
+`scripts/page-dates.json`; do not stage another agent's pre-existing work or
+force-add ignored files. `public/dataset/` releases are intentionally ignored
+and rebuilt from tracked source data. Content and generator infrastructure
+changes remain separate concerns.
+
+Generation does not commit, push, merge or deploy. Follow the owner's current
+instructions and repository review rules for those actions. Finish with a
+report containing:
+
+```text
+Content: records added/updated and their generated routes.
+Generation: command and actual result.
+Sources: checks run, results, and evidence/confidence needing review.
+Validation: full gate result, or each equivalent stage and any blocked checks.
+URLs: added N, removed N; explain redirects or removals.
+Review: pages/images/selections inspected and remaining manual checks.
+Git: branch/commit, whether pushed, and PR/deployment status if applicable.
+```
+
+Do not call the task complete while generation, required source verification
+or the gate is still failing or pending; report the outstanding work clearly.
 
 `contentPages.test.ts` checks new-record eligibility without a slug allowlist,
-then checks actual lineage pages, sitemap membership and social cards, automatic
-question canonical decisions, and AI hub/catalog/image coverage. The existing
-AI suite checks all discovered files and their rendered execution paths.
+actual lineage pages, sitemap membership, social cards, question canonical
+decisions, and AI hub/catalog/image coverage. The existing AI suite checks all
+discovered files and their rendered execution paths.
 
 ## When a new page family is needed
 

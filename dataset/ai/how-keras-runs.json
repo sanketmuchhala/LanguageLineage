@@ -1,0 +1,451 @@
+{
+  "version": "1.0",
+  "slug": "how-keras-runs",
+  "name": "Keras",
+  "title": "How Keras 3 Runs: TensorFlow, JAX or PyTorch | Language Lineage",
+  "h1": "What Runs Underneath a Keras 3 Model?",
+  "description": "Trace Keras 3 backend selection into TensorFlow, JAX or PyTorch and the configured CPU or GPU, separating Python APIs from compilers and numerical execution.",
+  "og_subtitle": "Keras API → selected backend → framework runtime → CPU / GPU",
+  "verified_on": "2026-11-11",
+  "verified_against": "the Keras 3 README, backend-configuration guide and Python backend-dispatch implementation",
+  "scope": "Keras 3 backend routing for compatible tensor operations or models using TensorFlow, JAX or PyTorch on CPU or a supported configured GPU. This is a routing overview, not a complete training loop or a guarantee of identical backend behavior. OpenVINO inference, NumPy fallback, pluggable backends, distributed training, optimizer internals and framework-specific compilation settings are outside the diagram.",
+  "answer": "**Keras 3 is a Python API with selectable numerical backends.** TensorFlow, JAX and PyTorch provide different execution stacks beneath it. Choosing the backend determines which framework handles tensor operations and devices; calling model.compile does not establish one universal compiler path. This diagram shows the routing boundary and links to the detailed execution path for each framework.",
+  "status_template": "Showing {backend} on {device}",
+  "dimensions": [
+    {
+      "id": "backend",
+      "legend": "Backend",
+      "default": "tensorflow",
+      "options": [
+        {
+          "value": "tensorflow",
+          "label": "TensorFlow",
+          "phrase": "the TensorFlow backend"
+        },
+        {
+          "value": "jax",
+          "label": "JAX",
+          "phrase": "the JAX backend"
+        },
+        {
+          "value": "torch",
+          "label": "PyTorch",
+          "phrase": "the PyTorch backend"
+        }
+      ]
+    },
+    {
+      "id": "device",
+      "legend": "Device",
+      "default": "cpu",
+      "options": [
+        {
+          "value": "cpu",
+          "label": "CPU",
+          "phrase": "the CPU"
+        },
+        {
+          "value": "gpu",
+          "label": "Configured GPU",
+          "phrase": "a supported configured GPU"
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "heading": "Is Keras the same thing as TensorFlow?",
+      "paragraphs": [
+        "No. Keras 3 can use TensorFlow, JAX or PyTorch as a numerical backend, and also documents an OpenVINO inference-only option. The [Keras README](https://github.com/keras-team/keras/blob/master/README.md) describes these choices. A tutorial using tf.keras tells you something about that tutorial’s integration; the broader Keras 3 project is not limited to that one stack.",
+        "This page separates the Python-facing API from numerical execution. Building layers, configuring a loss and handling model structure belong to the Keras interface. The selected backend determines which tensor implementation and hardware runtime actually carry out the work. Different backend choices therefore lead to different implementation paths even when the Keras model looks similar."
+      ]
+    },
+    {
+      "heading": "When does KERAS_BACKEND take effect?",
+      "paragraphs": [
+        "The [getting-started guide](https://keras.io/getting_started/) documents KERAS_BACKEND and the Keras configuration file. Configure the backend before importing Keras. This is a process-level choice in the documented startup workflow, not a per-layer switch that can be changed at an arbitrary point in an already imported program.",
+        "Use the control above to compare routes conceptually. It does not execute a model or rewrite the local environment. A working installation still needs the selected backend package and its appropriate CPU or GPU dependencies."
+      ]
+    },
+    {
+      "heading": "What changes with TensorFlow, JAX or PyTorch?",
+      "paragraphs": [
+        "With [TensorFlow](/ai/how-tensorflow-runs), operations can follow eager execution, traced graph execution or explicit XLA compilation. With [JAX](/ai/how-jax-runs), tracing, XLA lowering and device execution have their own rules. With [PyTorch](/ai/how-pytorch-runs), eager dispatch and torch.compile are distinct paths. The diagram ends at the backend’s device target so it does not incorrectly present one compiler pipeline as common to all three.",
+        "The [backend dispatch source](https://github.com/keras-team/keras/blob/master/keras/src/backend/__init__.py) shows separate imports for those implementations. That is stronger evidence for the routing boundary than inferring execution from the language percentages reported on a repository page."
+      ]
+    },
+    {
+      "heading": "Does model.compile mean the same thing on every backend?",
+      "paragraphs": [
+        "Treat the high-level compile API as model configuration, and inspect the documented backend settings before drawing conclusions about machine-code compilation. TensorFlow’s tf.function, JAX’s jit and PyTorch’s torch.compile are different mechanisms. Their names are not interchangeable evidence that a particular kernel fusion or compiler was used.",
+        "The same caution applies to performance comparisons: keep model, shapes, precision, device configuration and warmup behavior comparable. This page does not rank frameworks or assume that changing a backend preserves every custom operation or execution detail."
+      ]
+    },
+    {
+      "heading": "Does selecting a GPU remove Python and CPU work?",
+      "paragraphs": [
+        "No. The selected framework manages device placement and its CPU-side orchestration. The Keras device context exposes backend-independent placement controls, but each backend still needs its own working GPU runtime. The [implementation](https://github.com/keras-team/keras/blob/master/keras/src/backend/__init__.py) explicitly maps PyTorch’s GPU terminology to CUDA. This page’s GPU route covers supported device operations, not every line of Python."
+      ]
+    }
+  ],
+  "out_of_scope_note": "",
+  "link_from": [
+    "tool:keras",
+    "tool:tensorflow",
+    "tool:jax",
+    "tool:pytorch",
+    "lang:python"
+  ],
+  "sources": {
+    "readme": {
+      "url": "https://github.com/keras-team/keras/blob/master/README.md",
+      "title": "Keras 3 README"
+    },
+    "setup": {
+      "url": "https://keras.io/getting_started/",
+      "title": "Getting started and backend selection (Keras)"
+    },
+    "dispatch": {
+      "url": "https://github.com/keras-team/keras/blob/master/keras/src/backend/__init__.py",
+      "title": "Backend dispatch and device context implementation (Keras)"
+    }
+  },
+  "stages": [
+    {
+      "id": "python",
+      "name": "Your Keras code",
+      "kind": "programming_language",
+      "layer": "python",
+      "lineage_id": "lang:python",
+      "pos": [
+        1.5,
+        0
+      ],
+      "summary": "A Python program constructs layers or invokes Keras tensor operations.",
+      "evidence": [
+        {
+          "source": "readme",
+          "quote": "Keras 3 is a multi-backend deep learning framework, with support for JAX, TensorFlow, PyTorch, and OpenVINO (for inference-only)."
+        }
+      ]
+    },
+    {
+      "id": "keras",
+      "name": "Keras 3 API",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": "tool:keras",
+      "pos": [
+        1.5,
+        1
+      ],
+      "summary": "Keras supplies a high-level API; its configured backend supplies tensor execution.",
+      "evidence": [
+        {
+          "source": "readme",
+          "quote": "Keras 3 is a multi-backend deep learning framework, with support for JAX, TensorFlow, PyTorch, and OpenVINO (for inference-only)."
+        }
+      ]
+    },
+    {
+      "id": "dispatch",
+      "name": "Backend dispatch",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": null,
+      "pos": [
+        1.5,
+        2
+      ],
+      "summary": "Keras exposes the selected backend implementation instead of running a second independent tensor engine.",
+      "evidence": [
+        {
+          "source": "setup",
+          "quote": "The backend must be configured before importing Keras, and the backend cannot be changed after the package has been imported."
+        }
+      ]
+    },
+    {
+      "id": "tensorflow",
+      "name": "TensorFlow backend",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": "tool:tensorflow",
+      "pos": [
+        0,
+        3
+      ],
+      "summary": "TensorFlow-backed Keras dispatches numerical operations into TensorFlow. Graph and XLA choices are described on the TensorFlow execution page.",
+      "evidence": [
+        {
+          "source": "dispatch",
+          "quote": "from keras.src.backend.tensorflow import *"
+        }
+      ]
+    },
+    {
+      "id": "jax",
+      "name": "JAX backend",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": "tool:jax",
+      "pos": [
+        1.5,
+        3
+      ],
+      "summary": "JAX-backed Keras uses JAX tensor execution. The JAX page explains tracing, compilation and device dispatch in that stack.",
+      "evidence": [
+        {
+          "source": "dispatch",
+          "quote": "from keras.src.backend.jax import *"
+        }
+      ]
+    },
+    {
+      "id": "torch",
+      "name": "PyTorch backend",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": "tool:pytorch",
+      "pos": [
+        3,
+        3
+      ],
+      "summary": "PyTorch-backed Keras uses PyTorch tensor execution; this alone does not establish that torch.compile is enabled.",
+      "evidence": [
+        {
+          "source": "dispatch",
+          "quote": "from keras.src.backend.torch import *"
+        }
+      ]
+    },
+    {
+      "id": "cpu",
+      "name": "CPU",
+      "kind": "hardware",
+      "layer": "hardware",
+      "lineage_id": null,
+      "pos": [
+        0.5,
+        4
+      ],
+      "summary": "The selected backend performs the scoped numerical computation on CPU. This diagram summarizes routing rather than its internal kernel graph.",
+      "evidence": [
+        {
+          "source": "dispatch",
+          "quote": "This works across all backends (TensorFlow, JAX, PyTorch)."
+        }
+      ]
+    },
+    {
+      "id": "gpu",
+      "name": "Configured GPU",
+      "kind": "hardware",
+      "layer": "hardware",
+      "lineage_id": null,
+      "pos": [
+        2.5,
+        4
+      ],
+      "summary": "The selected backend performs supported computation on a properly configured GPU. Hardware and dependency support depend on that backend.",
+      "evidence": [
+        {
+          "source": "dispatch",
+          "quote": "This works across all backends (TensorFlow, JAX, PyTorch)."
+        }
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "to": "keras",
+      "kind": "calls",
+      "when": {},
+      "label": "calls Keras",
+      "explanation": "Python enters the shared Keras API rather than selecting numerical kernels directly.",
+      "evidence": [
+        {
+          "source": "readme",
+          "quote": "Keras 3 is a multi-backend deep learning framework, with support for JAX, TensorFlow, PyTorch, and OpenVINO (for inference-only)."
+        }
+      ],
+      "from": "python"
+    },
+    {
+      "to": "dispatch",
+      "kind": "dispatches_to",
+      "when": {},
+      "label": "uses configured backend",
+      "explanation": "The selected backend must already be configured when Keras is imported.",
+      "evidence": [
+        {
+          "source": "setup",
+          "quote": "The backend must be configured before importing Keras, and the backend cannot be changed after the package has been imported."
+        }
+      ],
+      "from": "keras"
+    },
+    {
+      "to": "tensorflow",
+      "kind": "dispatches_to",
+      "when": {
+        "backend": [
+          "tensorflow"
+        ]
+      },
+      "label": "routes to tensorflow",
+      "explanation": "Keras exposes the backend selected for this process.",
+      "evidence": [
+        {
+          "source": "dispatch",
+          "quote": "from keras.src.backend.tensorflow import *"
+        }
+      ],
+      "from": "dispatch"
+    },
+    {
+      "to": "cpu",
+      "kind": "executes_on",
+      "when": {
+        "device": [
+          "cpu"
+        ]
+      },
+      "label": "targets CPU",
+      "explanation": "The selected backend handles supported operations on this configured device; internal compiler stages are linked from the text.",
+      "evidence": [
+        {
+          "source": "dispatch",
+          "quote": "This works across all backends (TensorFlow, JAX, PyTorch)."
+        }
+      ],
+      "from": "tensorflow"
+    },
+    {
+      "to": "gpu",
+      "kind": "executes_on",
+      "when": {
+        "device": [
+          "gpu"
+        ]
+      },
+      "label": "targets GPU",
+      "explanation": "The selected backend handles supported operations on this configured device; internal compiler stages are linked from the text.",
+      "evidence": [
+        {
+          "source": "dispatch",
+          "quote": "This works across all backends (TensorFlow, JAX, PyTorch)."
+        }
+      ],
+      "from": "tensorflow"
+    },
+    {
+      "to": "jax",
+      "kind": "dispatches_to",
+      "when": {
+        "backend": [
+          "jax"
+        ]
+      },
+      "label": "routes to jax",
+      "explanation": "Keras exposes the backend selected for this process.",
+      "evidence": [
+        {
+          "source": "dispatch",
+          "quote": "from keras.src.backend.jax import *"
+        }
+      ],
+      "from": "dispatch"
+    },
+    {
+      "to": "cpu",
+      "kind": "executes_on",
+      "when": {
+        "device": [
+          "cpu"
+        ]
+      },
+      "label": "targets CPU",
+      "explanation": "The selected backend handles supported operations on this configured device; internal compiler stages are linked from the text.",
+      "evidence": [
+        {
+          "source": "dispatch",
+          "quote": "This works across all backends (TensorFlow, JAX, PyTorch)."
+        }
+      ],
+      "from": "jax"
+    },
+    {
+      "to": "gpu",
+      "kind": "executes_on",
+      "when": {
+        "device": [
+          "gpu"
+        ]
+      },
+      "label": "targets GPU",
+      "explanation": "The selected backend handles supported operations on this configured device; internal compiler stages are linked from the text.",
+      "evidence": [
+        {
+          "source": "dispatch",
+          "quote": "This works across all backends (TensorFlow, JAX, PyTorch)."
+        }
+      ],
+      "from": "jax"
+    },
+    {
+      "to": "torch",
+      "kind": "dispatches_to",
+      "when": {
+        "backend": [
+          "torch"
+        ]
+      },
+      "label": "routes to torch",
+      "explanation": "Keras exposes the backend selected for this process.",
+      "evidence": [
+        {
+          "source": "dispatch",
+          "quote": "from keras.src.backend.torch import *"
+        }
+      ],
+      "from": "dispatch"
+    },
+    {
+      "to": "cpu",
+      "kind": "executes_on",
+      "when": {
+        "device": [
+          "cpu"
+        ]
+      },
+      "label": "targets CPU",
+      "explanation": "The selected backend handles supported operations on this configured device; internal compiler stages are linked from the text.",
+      "evidence": [
+        {
+          "source": "dispatch",
+          "quote": "This works across all backends (TensorFlow, JAX, PyTorch)."
+        }
+      ],
+      "from": "torch"
+    },
+    {
+      "to": "gpu",
+      "kind": "executes_on",
+      "when": {
+        "device": [
+          "gpu"
+        ]
+      },
+      "label": "targets GPU",
+      "explanation": "The selected backend handles supported operations on this configured device; internal compiler stages are linked from the text.",
+      "evidence": [
+        {
+          "source": "dispatch",
+          "quote": "This works across all backends (TensorFlow, JAX, PyTorch)."
+        }
+      ],
+      "from": "torch"
+    }
+  ]
+}

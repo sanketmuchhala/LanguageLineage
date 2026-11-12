@@ -4,20 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>How AI Frameworks Run Your Code: PyTorch, JAX, llama.cpp</title>
-  <meta name="description" content="Interactive, cited execution paths for JAX, llama.cpp, MLX, ONNX Runtime, PyTorch and vLLM: from your Python or C++ call through compilers and kernels to the hardware." />
+  <meta name="description" content="Interactive, cited execution paths for JAX, Keras, llama.cpp, MLX, Ollama, ONNX Runtime, PyTorch, TensorFlow, TensorRT-LLM and vLLM: from your Python or C++ call through compilers " />
   <link rel="canonical" href="https://www.languagelineage.org/ai" />
   <link rel="icon" href="/favicon.svg" />
   <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><script defer src="/fx.js"></script><script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script><link rel="alternate" type="application/rss+xml" title="Language Lineage" href="/rss.xml" /><link rel="stylesheet" href="/seo.css" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="How AI Frameworks Run Your Code: PyTorch, JAX, llama.cpp" />
-  <meta property="og:description" content="Interactive, cited execution paths for JAX, llama.cpp, MLX, ONNX Runtime, PyTorch and vLLM: from your Python or C++ call through compilers and kernels to the hardware." />
+  <meta property="og:description" content="Interactive, cited execution paths for JAX, Keras, llama.cpp, MLX, Ollama, ONNX Runtime, PyTorch, TensorFlow, TensorRT-LLM and vLLM: from your Python or C++ call through compilers " />
   <meta property="og:url" content="https://www.languagelineage.org/ai" />
   <meta property="og:image" content="https://www.languagelineage.org/og/ai-index.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:type" content="image/png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"How AI frameworks run your code","itemListElement":[{"@type":"ListItem","position":1,"name":"What Actually Happens When You Run JAX Code?","url":"https://www.languagelineage.org/ai/how-jax-runs"},{"@type":"ListItem","position":2,"name":"How Does llama.cpp Run a Model on Your Hardware?","url":"https://www.languagelineage.org/ai/how-llama-cpp-runs"},{"@type":"ListItem","position":3,"name":"What Actually Happens When You Run MLX on a Mac?","url":"https://www.languagelineage.org/ai/how-mlx-runs"},{"@type":"ListItem","position":4,"name":"How Does ONNX Runtime Execute a Model Across Hardware?","url":"https://www.languagelineage.org/ai/how-onnx-runtime-runs"},{"@type":"ListItem","position":5,"name":"What Actually Happens When You Run a PyTorch Model?","url":"https://www.languagelineage.org/ai/how-pytorch-runs"},{"@type":"ListItem","position":6,"name":"What Actually Happens When vLLM Serves a Request?","url":"https://www.languagelineage.org/ai/how-vllm-runs"}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"How AI frameworks run your code","itemListElement":[{"@type":"ListItem","position":1,"name":"What Actually Happens When You Run JAX Code?","url":"https://www.languagelineage.org/ai/how-jax-runs"},{"@type":"ListItem","position":2,"name":"What Runs Underneath a Keras 3 Model?","url":"https://www.languagelineage.org/ai/how-keras-runs"},{"@type":"ListItem","position":3,"name":"How Does llama.cpp Run a Model on Your Hardware?","url":"https://www.languagelineage.org/ai/how-llama-cpp-runs"},{"@type":"ListItem","position":4,"name":"What Actually Happens When You Run MLX on a Mac?","url":"https://www.languagelineage.org/ai/how-mlx-runs"},{"@type":"ListItem","position":5,"name":"What Actually Runs When You Send Ollama a Prompt?","url":"https://www.languagelineage.org/ai/how-ollama-runs"},{"@type":"ListItem","position":6,"name":"How Does ONNX Runtime Execute a Model Across Hardware?","url":"https://www.languagelineage.org/ai/how-onnx-runtime-runs"},{"@type":"ListItem","position":7,"name":"What Actually Happens When You Run a PyTorch Model?","url":"https://www.languagelineage.org/ai/how-pytorch-runs"},{"@type":"ListItem","position":8,"name":"How Does TensorFlow Run Python on a CPU or GPU?","url":"https://www.languagelineage.org/ai/how-tensorflow-runs"},{"@type":"ListItem","position":9,"name":"How Does TensorRT-LLM Execute an Inference Request?","url":"https://www.languagelineage.org/ai/how-tensorrt-llm-runs"},{"@type":"ListItem","position":10,"name":"What Actually Happens When vLLM Serves a Request?","url":"https://www.languagelineage.org/ai/how-vllm-runs"}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"AI execution paths","item":"https://www.languagelineage.org/ai"}]}</script>
 </head>
 <body class="seo-page">
@@ -50,6 +50,12 @@
 <p class="ai-hub-meta">15 stages, 19 steps, 49 quoted citations from 6 sources. Checked 2026-11-11.</p>
 </article>
 <article class="ai-hub-card">
+<h2><a href="/ai/how-keras-runs">What Runs Underneath a Keras 3 Model?</a></h2>
+<p>Trace Keras 3 backend selection into TensorFlow, JAX or PyTorch and the configured CPU or GPU, separating Python APIs from compilers and numerical execution.</p>
+<ul class="ai-hub-choices"><li><strong>Backend:</strong> TensorFlow, JAX, PyTorch</li><li><strong>Device:</strong> CPU, Configured GPU</li></ul>
+<p class="ai-hub-meta">8 stages, 11 steps, 19 quoted citations from 3 sources. Checked 2026-11-11.</p>
+</article>
+<article class="ai-hub-card">
 <h2><a href="/ai/how-llama-cpp-runs">How Does llama.cpp Run a Model on Your Hardware?</a></h2>
 <p>Follow a local LLM through llama.cpp: GGUF file, ggml compute graph, and the CPU, CUDA or Metal backend, with the language each kernel is written in and sources.</p>
 <ul class="ai-hub-choices"><li><strong>Backend:</strong> CPU, CUDA (NVIDIA), Metal (Apple)</li></ul>
@@ -62,6 +68,12 @@
 <p class="ai-hub-meta">11 stages, 13 steps, 35 quoted citations from 8 sources. Checked 2026-11-11.</p>
 </article>
 <article class="ai-hub-card">
+<h2><a href="/ai/how-ollama-runs">What Actually Runs When You Send Ollama a Prompt?</a></h2>
+<p>Trace a local Ollama request through its Go service and a supported llama.cpp or MLX engine, separating CPU, NVIDIA CUDA and Apple-silicon Metal execution.</p>
+<ul class="ai-hub-choices"><li><strong>Supported local route:</strong> GGUF / CPU, GGUF / NVIDIA CUDA, MLX / Apple silicon</li></ul>
+<p class="ai-hub-meta">11 stages, 10 steps, 21 quoted citations from 8 sources. Checked 2026-11-11.</p>
+</article>
+<article class="ai-hub-card">
 <h2><a href="/ai/how-onnx-runtime-runs">How Does ONNX Runtime Execute a Model Across Hardware?</a></h2>
 <p>Trace an ONNX model through ONNX Runtime: .onnx graph loading, Basic and Extended graph optimizations, GetCapability partitioning, and CPU, CUDA or TensorRT execution.</p>
 <ul class="ai-hub-choices"><li><strong>Execution provider:</strong> CPU (Default), CUDA (NVIDIA), TensorRT (NVIDIA)</li></ul>
@@ -72,6 +84,18 @@
 <p>Trace a PyTorch model from Python to the hardware: eager mode vs torch.compile, CPU vs GPU, through ATen, TorchDynamo, TorchInductor, Triton, LLVM IR and PTX, with sources.</p>
 <ul class="ai-hub-choices"><li><strong>Mode:</strong> Eager, torch.compile</li><li><strong>Device:</strong> CPU, NVIDIA GPU</li></ul>
 <p class="ai-hub-meta">16 stages, 19 steps, 48 quoted citations from 10 sources. Checked 2026-11-10.</p>
+</article>
+<article class="ai-hub-card">
+<h2><a href="/ai/how-tensorflow-runs">How Does TensorFlow Run Python on a CPU or GPU?</a></h2>
+<p>Trace TensorFlow eager execution, tf.function graphs and explicit XLA compilation to CPU or NVIDIA GPU kernels, with cited device-placement and fallback limits.</p>
+<ul class="ai-hub-choices"><li><strong>Execution mode:</strong> Eager, tf.function, Explicit XLA</li><li><strong>Device:</strong> CPU, NVIDIA GPU</li></ul>
+<p class="ai-hub-meta">12 stages, 15 steps, 27 quoted citations from 4 sources. Checked 2026-11-11.</p>
+</article>
+<article class="ai-hub-card">
+<h2><a href="/ai/how-tensorrt-llm-runs">How Does TensorRT-LLM Execute an Inference Request?</a></h2>
+<p>Trace current TensorRT-LLM requests through Python or HTTP, PyExecutor, inflight scheduling and PyTorch model execution, with explicit legacy-backend limits.</p>
+<ul class="ai-hub-choices"><li><strong>Request interface:</strong> Python LLM API, HTTP server</li></ul>
+<p class="ai-hub-meta">8 stages, 8 steps, 16 quoted citations from 7 sources. Checked 2026-11-11.</p>
 </article>
 <article class="ai-hub-card">
 <h2><a href="/ai/how-vllm-runs">What Actually Happens When vLLM Serves a Request?</a></h2>
@@ -92,6 +116,12 @@
 <tr><td><a href="/ai/how-jax-runs?mode=jit&amp;device=cpu">JAX</a></td><td>jax.jit · CPU</td><td>9</td><td>8</td></tr>
 <tr><td><a href="/ai/how-jax-runs?mode=jit&amp;device=gpu">JAX</a></td><td>jax.jit · NVIDIA GPU</td><td>12</td><td>13</td></tr>
 <tr><td><a href="/ai/how-jax-runs?mode=jit&amp;device=tpu">JAX</a></td><td>jax.jit · TPU</td><td>9</td><td>8</td></tr>
+<tr><td><a href="/ai/how-keras-runs?backend=tensorflow&amp;device=cpu">Keras</a></td><td>TensorFlow · CPU</td><td>5</td><td>4</td></tr>
+<tr><td><a href="/ai/how-keras-runs?backend=tensorflow&amp;device=gpu">Keras</a></td><td>TensorFlow · Configured GPU</td><td>5</td><td>4</td></tr>
+<tr><td><a href="/ai/how-keras-runs?backend=jax&amp;device=cpu">Keras</a></td><td>JAX · CPU</td><td>5</td><td>4</td></tr>
+<tr><td><a href="/ai/how-keras-runs?backend=jax&amp;device=gpu">Keras</a></td><td>JAX · Configured GPU</td><td>5</td><td>4</td></tr>
+<tr><td><a href="/ai/how-keras-runs?backend=torch&amp;device=cpu">Keras</a></td><td>PyTorch · CPU</td><td>5</td><td>4</td></tr>
+<tr><td><a href="/ai/how-keras-runs?backend=torch&amp;device=gpu">Keras</a></td><td>PyTorch · Configured GPU</td><td>5</td><td>4</td></tr>
 <tr><td><a href="/ai/how-llama-cpp-runs?backend=cpu">llama.cpp</a></td><td>CPU</td><td>6</td><td>5</td></tr>
 <tr><td><a href="/ai/how-llama-cpp-runs?backend=cuda">llama.cpp</a></td><td>CUDA (NVIDIA)</td><td>10</td><td>9</td></tr>
 <tr><td><a href="/ai/how-llama-cpp-runs?backend=metal">llama.cpp</a></td><td>Metal (Apple)</td><td>9</td><td>8</td></tr>
@@ -99,6 +129,9 @@
 <tr><td><a href="/ai/how-mlx-runs?mode=lazy&amp;device=cpu">MLX</a></td><td>Lazy (no compile) · CPU</td><td>6</td><td>5</td></tr>
 <tr><td><a href="/ai/how-mlx-runs?mode=compiled&amp;device=gpu">MLX</a></td><td>mx.compile · GPU (Metal)</td><td>8</td><td>8</td></tr>
 <tr><td><a href="/ai/how-mlx-runs?mode=compiled&amp;device=cpu">MLX</a></td><td>mx.compile · CPU</td><td>8</td><td>8</td></tr>
+<tr><td><a href="/ai/how-ollama-runs?route=gguf_cpu">Ollama</a></td><td>GGUF / CPU</td><td>6</td><td>5</td></tr>
+<tr><td><a href="/ai/how-ollama-runs?route=gguf_cuda">Ollama</a></td><td>GGUF / NVIDIA CUDA</td><td>6</td><td>5</td></tr>
+<tr><td><a href="/ai/how-ollama-runs?route=mlx_metal">Ollama</a></td><td>MLX / Apple silicon</td><td>6</td><td>5</td></tr>
 <tr><td><a href="/ai/how-onnx-runtime-runs?provider=cpu">ONNX Runtime</a></td><td>CPU (Default)</td><td>8</td><td>7</td></tr>
 <tr><td><a href="/ai/how-onnx-runtime-runs?provider=cuda">ONNX Runtime</a></td><td>CUDA (NVIDIA)</td><td>10</td><td>9</td></tr>
 <tr><td><a href="/ai/how-onnx-runtime-runs?provider=tensorrt">ONNX Runtime</a></td><td>TensorRT (NVIDIA)</td><td>10</td><td>10</td></tr>
@@ -106,6 +139,14 @@
 <tr><td><a href="/ai/how-pytorch-runs?mode=eager&amp;device=gpu">PyTorch</a></td><td>Eager · NVIDIA GPU</td><td>5</td><td>4</td></tr>
 <tr><td><a href="/ai/how-pytorch-runs?mode=compile&amp;device=cpu">PyTorch</a></td><td>torch.compile · CPU</td><td>8</td><td>8</td></tr>
 <tr><td><a href="/ai/how-pytorch-runs?mode=compile&amp;device=gpu">PyTorch</a></td><td>torch.compile · NVIDIA GPU</td><td>12</td><td>12</td></tr>
+<tr><td><a href="/ai/how-tensorflow-runs?mode=eager&amp;device=cpu">TensorFlow</a></td><td>Eager · CPU</td><td>5</td><td>4</td></tr>
+<tr><td><a href="/ai/how-tensorflow-runs?mode=eager&amp;device=gpu">TensorFlow</a></td><td>Eager · NVIDIA GPU</td><td>5</td><td>4</td></tr>
+<tr><td><a href="/ai/how-tensorflow-runs?mode=graph&amp;device=cpu">TensorFlow</a></td><td>tf.function · CPU</td><td>6</td><td>5</td></tr>
+<tr><td><a href="/ai/how-tensorflow-runs?mode=graph&amp;device=gpu">TensorFlow</a></td><td>tf.function · NVIDIA GPU</td><td>6</td><td>5</td></tr>
+<tr><td><a href="/ai/how-tensorflow-runs?mode=xla&amp;device=cpu">TensorFlow</a></td><td>Explicit XLA · CPU</td><td>6</td><td>5</td></tr>
+<tr><td><a href="/ai/how-tensorflow-runs?mode=xla&amp;device=gpu">TensorFlow</a></td><td>Explicit XLA · NVIDIA GPU</td><td>6</td><td>5</td></tr>
+<tr><td><a href="/ai/how-tensorrt-llm-runs?interface=python">TensorRT-LLM</a></td><td>Python LLM API</td><td>7</td><td>6</td></tr>
+<tr><td><a href="/ai/how-tensorrt-llm-runs?interface=http">TensorRT-LLM</a></td><td>HTTP server</td><td>7</td><td>6</td></tr>
 <tr><td><a href="/ai/how-vllm-runs?mode=compiled&amp;attention=flash">vLLM</a></td><td>Default (compiled) · FlashAttention</td><td>14</td><td>14</td></tr>
 <tr><td><a href="/ai/how-vllm-runs?mode=compiled&amp;attention=triton">vLLM</a></td><td>Default (compiled) · Triton</td><td>14</td><td>14</td></tr>
 <tr><td><a href="/ai/how-vllm-runs?mode=eager&amp;attention=flash">vLLM</a></td><td>--enforce-eager · FlashAttention</td><td>10</td><td>10</td></tr>
@@ -116,26 +157,30 @@
   <h2 id="shared-tools">Tools the paths share</h2>
   <p>Stages that are also nodes in the Language Lineage atlas, so you can see what each tool is written in. <a href="/explore?view=ai">Open the AI tools in the graph explorer</a>.</p>
   <div class="table-wrap"><div class="table-wrap"><table id="ai-shared-tools">
-    <thead><tr><th>Tool</th><th><a href="/ai/how-jax-runs">JAX</a></th><th><a href="/ai/how-llama-cpp-runs">llama.cpp</a></th><th><a href="/ai/how-mlx-runs">MLX</a></th><th><a href="/ai/how-onnx-runtime-runs">ONNX Runtime</a></th><th><a href="/ai/how-pytorch-runs">PyTorch</a></th><th><a href="/ai/how-vllm-runs">vLLM</a></th></tr></thead>
+    <thead><tr><th>Tool</th><th><a href="/ai/how-jax-runs">JAX</a></th><th><a href="/ai/how-keras-runs">Keras</a></th><th><a href="/ai/how-llama-cpp-runs">llama.cpp</a></th><th><a href="/ai/how-mlx-runs">MLX</a></th><th><a href="/ai/how-ollama-runs">Ollama</a></th><th><a href="/ai/how-onnx-runtime-runs">ONNX Runtime</a></th><th><a href="/ai/how-pytorch-runs">PyTorch</a></th><th><a href="/ai/how-tensorflow-runs">TensorFlow</a></th><th><a href="/ai/how-tensorrt-llm-runs">TensorRT-LLM</a></th><th><a href="/ai/how-vllm-runs">vLLM</a></th></tr></thead>
     <tbody>
-<tr><td><a href="/tools/cuda">CUDA</a></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td></tr>
-<tr><td><a href="/languages/python">Python</a></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
-<tr><td><a href="/languages/cxx">C++</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
-<tr><td><a href="/tools/triton">Triton</a></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td></tr>
-<tr><td><a href="/tools/llvm">LLVM</a></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
-<tr><td><a href="/tools/pytorch">PyTorch</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td></tr>
-<tr><td><a href="/tools/ggml">ggml</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
-<tr><td><a href="/tools/jax">JAX</a></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
-<tr><td><a href="/tools/llama-cpp">llama.cpp</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
-<tr><td><a href="/languages/machine-code">Machine Code</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
-<tr><td><a href="/tools/mlx">MLX</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
-<tr><td><a href="/tools/vllm">vLLM</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td></tr>
-<tr><td><a href="/tools/xla">XLA</a></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
+<tr><td><a href="/languages/python">Python</a></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
+<tr><td><a href="/tools/cuda">CUDA</a></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td></tr>
+<tr><td><a href="/tools/pytorch">PyTorch</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td></tr>
+<tr><td><a href="/languages/cxx">C++</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
+<tr><td><a href="/tools/triton">Triton</a></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td></tr>
+<tr><td><a href="/tools/ggml">ggml</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
+<tr><td><a href="/tools/jax">JAX</a></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
+<tr><td><a href="/tools/llama-cpp">llama.cpp</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
+<tr><td><a href="/tools/llvm">LLVM</a></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
+<tr><td><a href="/tools/mlx">MLX</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
+<tr><td><a href="/tools/tensorflow">TensorFlow</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
+<tr><td><a href="/tools/xla">XLA</a></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
+<tr><td><a href="/tools/keras">Keras</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
+<tr><td><a href="/languages/machine-code">Machine Code</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
+<tr><td><a href="/tools/ollama">Ollama</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
+<tr><td><a href="/tools/tensorrt-llm">TensorRT-LLM</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
+<tr><td><a href="/tools/vllm">vLLM</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td></tr>
     </tbody>
   </table></div></div>
 
   <h2>How these pages are built</h2>
-  <p>Each explainer is one versioned JSON file (<a href="/dataset/ai/how-jax-runs.json">how-jax-runs.json</a>, <a href="/dataset/ai/how-llama-cpp-runs.json">how-llama-cpp-runs.json</a>, <a href="/dataset/ai/how-mlx-runs.json">how-mlx-runs.json</a>, <a href="/dataset/ai/how-onnx-runtime-runs.json">how-onnx-runtime-runs.json</a>, <a href="/dataset/ai/how-pytorch-runs.json">how-pytorch-runs.json</a>, <a href="/dataset/ai/how-vllm-runs.json">how-vllm-runs.json</a>) under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. They are kept apart from the language lineage graph on purpose: "lowers to" and "dispatches to" describe how code executes, not what a tool is written in. Closed systems are not guessed at; where the public documentation stops, the diagram stops too. Found a mistake? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
+  <p>Each explainer is one versioned JSON file (<a href="/dataset/ai/how-jax-runs.json">how-jax-runs.json</a>, <a href="/dataset/ai/how-keras-runs.json">how-keras-runs.json</a>, <a href="/dataset/ai/how-llama-cpp-runs.json">how-llama-cpp-runs.json</a>, <a href="/dataset/ai/how-mlx-runs.json">how-mlx-runs.json</a>, <a href="/dataset/ai/how-ollama-runs.json">how-ollama-runs.json</a>, <a href="/dataset/ai/how-onnx-runtime-runs.json">how-onnx-runtime-runs.json</a>, <a href="/dataset/ai/how-pytorch-runs.json">how-pytorch-runs.json</a>, <a href="/dataset/ai/how-tensorflow-runs.json">how-tensorflow-runs.json</a>, <a href="/dataset/ai/how-tensorrt-llm-runs.json">how-tensorrt-llm-runs.json</a>, <a href="/dataset/ai/how-vllm-runs.json">how-vllm-runs.json</a>) under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. They are kept apart from the language lineage graph on purpose: "lowers to" and "dispatches to" describe how code executes, not what a tool is written in. Closed systems are not guessed at; where the public documentation stops, the diagram stops too. Found a mistake? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
 
   <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>
 </main>

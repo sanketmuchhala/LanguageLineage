@@ -49,13 +49,47 @@
         "Unlike a single-backend engine, an ONNX Runtime session takes a priority-ordered list of execution providers—for example, TensorrtExecutionProvider, then CUDAExecutionProvider, then CPUExecutionProvider. ONNX Runtime queries each provider's GetCapability() interface in order to claim subgraphs or individual nodes.",
         "Any operator that a higher-priority accelerator provider cannot run is automatically assigned to the next provider in the list, with the built-in CPU execution provider acting as the final fallback."
       ]
+    },
+    {
+      "heading": "What is the difference between ONNX and ONNX Runtime?",
+      "paragraphs": [
+        "An ONNX file describes a computation in a portable graph format. ONNX Runtime supplies the machinery to load and execute that graph. Exporting a [PyTorch model](/ai/how-pytorch-runs) to ONNX does not leave the ordinary PyTorch eager interpreter in charge of numerical execution. The [Python API overview](https://onnxruntime.ai/docs/api/python/api_summary.html) describes sessions, inputs, outputs and provider configuration.",
+        "A session is worth distinguishing from one inference call. Session initialization can parse the model, apply optimizations and prepare provider assignments. Repeated session.run calls then use that prepared configuration. Recreating the session for every request measures more than model execution."
+      ]
+    },
+    {
+      "heading": "Why does ONNX Runtime still use the CPU with CUDA?",
+      "paragraphs": [
+        "Execution providers advertise the operators or subgraphs they can handle. ONNX Runtime considers them in priority order. With CUDA before CPU, supported operations can go to CUDA while other supported CPU operations remain on the host. The [architecture document](https://onnxruntime.ai/docs/reference/high-level-design.html) explains this partitioning rather than treating the entire model as an indivisible GPU job.",
+        "The CUDA and TensorRT selections retain fallback paths because provider registration does not prove complete operator coverage. The diagram shows possible fallback work, not a measurement that every model necessarily executes on both processors. If the installed package cannot load CUDA dependencies, that is a provider-availability problem, distinct from an individual operator being assigned to the CPU."
+      ]
+    },
+    {
+      "heading": "Does graph optimization compile every model into one GPU kernel?",
+      "paragraphs": [
+        "No. Graph optimizations include simplifications and selected fusions, and the available transformations depend on provider and optimization level. Some occur before partitioning; others operate on provider-assigned graph portions. The optimization box is a summary of this preparation work, not a promise of one fused executable. Read the [optimization guide](https://onnxruntime.ai/docs/performance/model-optimizations/graph-optimizations.html) before assuming a particular fusion is enabled.",
+        "Optimizations can run at session initialization or be saved in an optimized model ahead of deployment. Offline optimization must match the target options and hardware constraints. An optimized artifact for one provider or CPU instruction set is not automatically portable to every other environment."
+      ]
+    },
+    {
+      "heading": "Why can data transfers matter as much as compute?",
+      "paragraphs": [
+        "The default Python API commonly accepts and returns host-resident data. For GPU execution this can introduce transfers between host and device. I/O binding allows the application to manage device-resident inputs and outputs. It changes where the data lives, rather than changing the model into a different neural network. See the I/O binding examples in the [API overview](https://onnxruntime.ai/docs/api/python/api_summary.html)."
+      ]
+    },
+    {
+      "heading": "How is CUDA different from the TensorRT execution provider?",
+      "paragraphs": [
+        "CUDAExecutionProvider and TensorRTExecutionProvider are distinct plugins in the [execution-provider catalog](https://onnxruntime.ai/docs/execution-providers/). The controls preserve separate CPU, CUDA and TensorRT provider paths. The TensorRT execution provider can compile supported graph partitions into an engine, while other operations can use fallback providers. Also distinguish this integration from [TensorRT-LLM](/ai/how-tensorrt-llm-runs), which is a separate serving stack with its own current PyTorch execution backend."
+      ]
     }
   ],
   "out_of_scope_note": "ONNX Runtime uses the same GetCapability() partitioning architecture for more than a dozen other execution providers, including CoreML, DirectML, OpenVINO, and WebGPU.",
   "link_from": [
     "lang:python",
     "lang:cxx",
-    "tool:cuda"
+    "tool:cuda",
+    "tool:onnx_runtime"
   ],
   "sources": {
     "onnx_readme": {

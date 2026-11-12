@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>102 Runtime Implementation Relationships | Language Lineage</title>
+  <title>115 Runtime Implementation Relationships | Language Lineage</title>
   <meta name="description" content="These relationships document what programming language each runtime or interpreter is written in. For example, CPython (the reference Python interpreter) is wri" />
   <link rel="canonical" href="https://www.languagelineage.org/relationships/runtime-written-in" />
   <link rel="icon" href="/favicon.svg" />
   <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><script defer src="/fx.js"></script><script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script><link rel="alternate" type="application/rss+xml" title="Language Lineage" href="/rss.xml" /><link rel="stylesheet" href="/seo.css" />
-  <meta property="og:title" content="102 Runtime Implementation Relationships | Language Lineage" />
+  <meta property="og:title" content="115 Runtime Implementation Relationships | Language Lineage" />
   <meta property="og:url" content="https://www.languagelineage.org/relationships/runtime-written-in" />
   <meta property="og:image" content="https://www.languagelineage.org/og/relationships-runtime-written-in.png" />
   <meta property="og:image:width" content="1200" />
@@ -38,7 +38,7 @@
 
   <div class="answer-box" style="border-left:3px solid #34d399">These relationships document what programming language each runtime or interpreter is written in. For example, CPython (the reference Python interpreter) is written in C.</div>
 
-  <h2>All 102 Relationships</h2>
+  <h2>All 115 Relationships</h2>
   <div class="table-wrap"><table>
     <thead><tr><th>From</th><th>To</th><th>Confidence</th><th>Notes</th><th>Source</th></tr></thead>
     <tbody><tr>
@@ -99,6 +99,76 @@
     </tr>
 <tr>
       <td><a href="/languages/c">C</a></td>
+      <td><a href="/languages/janet">Janet</a></td>
+      <td class="confidence-high">98%</td>
+      <td>The project explicitly states that the language implementation is mostly standard C99.</td>
+      <td><a href="https://janet-lang.org/" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+    </tr>
+<tr>
+      <td><a href="/languages/c">C</a></td>
+      <td><a href="/languages/bqn">BQN</a></td>
+      <td class="confidence-high">98%</td>
+      <td>CBQN is a BQN implementation in C; some runtime components remain written in BQN.</td>
+      <td><a href="https://github.com/dzaima/CBQN" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
+      <td><a href="/languages/rust">Rust</a></td>
+      <td><a href="/languages/uiua">Uiua</a></td>
+      <td class="confidence-high">98%</td>
+      <td>The Rust source explicitly identifies itself as the Uiua interpreter/runtime.</td>
+      <td><a href="https://github.com/uiua-lang/uiua/blob/main/src/run.rs" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
+      <td><a href="/languages/cxx">C++</a></td>
+      <td><a href="/languages/jsonnet">Jsonnet</a></td>
+      <td class="confidence-high">98%</td>
+      <td>Original C++ Jsonnet implementation; it coexists with go-jsonnet, rather than being a completed rewrite.</td>
+      <td><a href="https://github.com/google/jsonnet/blob/master/README.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
+      <td><a href="/languages/go">Go</a></td>
+      <td><a href="/languages/jsonnet">Jsonnet</a></td>
+      <td class="confidence-high">98%</td>
+      <td>The README explicitly describes a feature-complete implementation in pure Go.</td>
+      <td><a href="https://github.com/google/go-jsonnet/blob/master/README.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
+      <td><a href="/languages/cxx">C++</a></td>
+      <td><a href="/tools/tensorflow">TensorFlow</a></td>
+      <td class="confidence-high">98%</td>
+      <td>C++ graph executor in TensorFlow core.</td>
+      <td><a href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/common_runtime/executor.cc" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
+      <td><a href="/languages/cxx">C++</a></td>
+      <td><a href="/tools/onnx-runtime">ONNX Runtime</a></td>
+      <td class="confidence-high">98%</td>
+      <td>The C++ InferenceSession implementation manages graph loading and execution.</td>
+      <td><a href="https://github.com/microsoft/onnxruntime/blob/main/onnxruntime/core/session/inference_session.cc" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
+      <td><a href="/languages/go">Go</a></td>
+      <td><a href="/tools/ollama">Ollama</a></td>
+      <td class="confidence-high">98%</td>
+      <td>Go server routes implement request handling and runner scheduling; this does not assign Go as the implementation language of every numerical kernel.</td>
+      <td><a href="https://github.com/ollama/ollama/blob/main/server/routes.go" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
+      <td><a href="/languages/python">Python</a></td>
+      <td><a href="/tools/keras">Keras</a></td>
+      <td class="confidence-high">98%</td>
+      <td>Python backend-dispatch module imports and exposes the selected backend implementation.</td>
+      <td><a href="https://github.com/keras-team/keras/blob/master/keras/src/backend/__init__.py" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
+      <td><a href="/languages/cxx">C++</a></td>
+      <td><a href="/tools/tensorrt-llm">TensorRT-LLM</a></td>
+      <td class="confidence-high">98%</td>
+      <td>The architecture explicitly documents C++ bindings for the capacity scheduler, microbatch scheduler and KV-cache manager.</td>
+      <td><a href="https://nvidia.github.io/TensorRT-LLM/latest/torch/arch_overview.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+    </tr>
+<tr>
+      <td><a href="/languages/c">C</a></td>
       <td><a href="/tools/ghc">GHC</a></td>
       <td class="confidence-high">97%</td>
       <td>GHC's runtime system (RTS) is written in C and C--</td>
@@ -138,6 +208,27 @@
       <td class="confidence-high">97%</td>
       <td>Node.js native core is written in C++ on top of V8</td>
       <td><a href="https://github.com/nodejs/node" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
+      <td><a href="/languages/python">Python</a></td>
+      <td><a href="/tools/tensorflow">TensorFlow</a></td>
+      <td class="confidence-high">97%</td>
+      <td>Python eager-context orchestration; numerical kernels are not implemented by this wrapper.</td>
+      <td><a href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/eager/context.py" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
+      <td><a href="/languages/python">Python</a></td>
+      <td><a href="/tools/tensorrt-llm">TensorRT-LLM</a></td>
+      <td class="confidence-high">97%</td>
+      <td>Python PyExecutor coordinates the current TensorRT-LLM execution backend.</td>
+      <td><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/tensorrt_llm/_torch/pyexecutor/py_executor.py" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
+      <td><a href="/languages/go">Go</a></td>
+      <td><a href="/languages/cue">CUE</a></td>
+      <td class="confidence-high">96%</td>
+      <td>The Go CUE package implements the evaluation context for building and evaluating CUE values.</td>
+      <td><a href="https://github.com/cue-lang/cue/blob/master/cue/context.go" rel="noopener noreferrer" target="_blank">Source repository</a></td>
     </tr>
 <tr>
       <td><a href="/languages/c">C</a></td>

@@ -202,7 +202,9 @@ Two gotchas, both of which have caused real regressions:
 4. `npm run analyze:v5` — schema valid, 0 integrity errors, one connected
    component, no isolated nodes.
 5. Logos: devicon, harvest, apply, render, check the count, look at the images.
-6. `npm run seo:generate` then `npm run og:generate`.
+6. Follow the mandatory [content task handoff](CONTENT_PIPELINE.md#required-content-task-handoff):
+   run `npm run seo:generate` yourself after the final edit. Social cards are
+   included; a separate `og:generate` run is unnecessary.
 7. Update the hand-written counts (`npm test` tells you if you missed one).
 8. `npm run verify` — the whole gate green.
 9. Compare `public/sitemap.xml` with the live sitemap: gaining URLs is fine,

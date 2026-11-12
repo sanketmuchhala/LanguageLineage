@@ -1,0 +1,379 @@
+{
+  "checked_on": "2026-11-11",
+  "method": "Live connected web/GitHub source retrieval; exact quotes compared after whitespace, typography and rendered link-marker normalization. Includes preserved upstream ONNX Runtime evidence. Native network checker remains blocked by shell DNS.",
+  "results": [
+    {
+      "url": "https://www.tensorflow.org/guide/intro_to_graphs",
+      "method": "Connected web source",
+      "quotes": [
+        {
+          "quote": "A PolymorphicFunction is a Python callable that builds TensorFlow graphs from the Python function.",
+          "found": true
+        },
+        {
+          "quote": "TensorFlow operations are executed by Python, operation by operation, and return results back to Python.",
+          "found": true
+        }
+      ]
+    },
+    {
+      "url": "https://www.tensorflow.org/api_docs/python/tf/function",
+      "method": "Connected web source",
+      "quotes": [
+        {
+          "quote": "Compiles a function into a callable TensorFlow graph.",
+          "found": true
+        }
+      ]
+    },
+    {
+      "url": "https://openxla.org/xla",
+      "method": "Connected web source",
+      "quotes": [
+        {
+          "quote": "XLA (Accelerated Linear Algebra) is an open-source compiler for machine learning.",
+          "found": true
+        }
+      ]
+    },
+    {
+      "url": "https://www.tensorflow.org/guide/gpu",
+      "method": "Connected web source",
+      "quotes": [
+        {
+          "quote": "TensorFlow supports running computations on a variety of types of devices, including CPU and GPU.",
+          "found": true
+        }
+      ]
+    },
+    {
+      "url": "https://onnxruntime.ai/docs/execution-providers/",
+      "method": "Connected web source",
+      "quotes": [
+        {
+          "quote": "The list of providers is ordered by Priority.",
+          "found": true
+        },
+        {
+          "quote": "For example ['CUDAExecutionProvider', 'CPUExecutionProvider'] means execute a node using CUDAExecutionProvider if capable, otherwise execute using CPUExecutionProvider.",
+          "found": true
+        },
+        {
+          "quote": "ONNX Runtime works with the execution provider(s) using the GetCapability() interface to allocate specific nodes or sub-graphs for execution by the EP library in supported hardware.",
+          "found": true
+        },
+        {
+          "quote": "The APIs to set EP options are available across Python, C/C++/C#, Java and node.js.",
+          "found": true
+        },
+        {
+          "quote": "The EP libraries that are pre-installed in the execution environment process and execute the ONNX sub-graph on the hardware.",
+          "found": true
+        },
+        {
+          "quote": "The ONNX Runtime package can be built with any combination of the EPs along with the default CPU execution provider.",
+          "found": true
+        },
+        {
+          "quote": "This architecture abstracts out the details of the hardware specific libraries that are essential to optimize the execution of deep neural networks across hardware platforms like CPU, GPU, FPGA or specialized NPUs.",
+          "found": true
+        }
+      ]
+    },
+    {
+      "url": "https://github.com/keras-team/keras/blob/master/README.md",
+      "method": "GitHub connected source",
+      "sha": "da60850f49d6bac37ecf108b10c827894e95f49f",
+      "quotes": [
+        {
+          "quote": "Keras 3 is a multi-backend deep learning framework, with support for JAX, TensorFlow, PyTorch, and OpenVINO (for inference-only).",
+          "found": true
+        }
+      ]
+    },
+    {
+      "url": "https://keras.io/getting_started/",
+      "method": "Connected web source",
+      "quotes": [
+        {
+          "quote": "The backend must be configured before importing Keras, and the backend cannot be changed after the package has been imported.",
+          "found": true
+        }
+      ]
+    },
+    {
+      "url": "https://github.com/keras-team/keras/blob/master/keras/src/backend/__init__.py",
+      "method": "GitHub connected source",
+      "sha": "59b9245426c292c1313c263f224f5bd026e7ee50",
+      "quotes": [
+        {
+          "quote": "This works across all backends (TensorFlow, JAX, PyTorch).",
+          "found": true
+        },
+        {
+          "quote": "from keras.src.backend.jax import *",
+          "found": true
+        },
+        {
+          "quote": "from keras.src.backend.tensorflow import *",
+          "found": true
+        },
+        {
+          "quote": "from keras.src.backend.torch import *",
+          "found": true
+        }
+      ]
+    },
+    {
+      "url": "https://docs.ollama.com/api/introduction",
+      "method": "Connected web source",
+      "quotes": [
+        {
+          "quote": "For local inference, use http://localhost:11434/api/chat with a downloaded model and omit the authorization header.",
+          "found": true
+        }
+      ]
+    },
+    {
+      "url": "https://github.com/ollama/ollama/blob/main/server/routes.go",
+      "method": "GitHub connected source",
+      "sha": "452b046a1ce4326d71995508b9ea8384a6fee7b3",
+      "quotes": [
+        {
+          "quote": "scheduleRunner schedules a runner after validating inputs such as capabilities and model options.",
+          "found": true
+        }
+      ]
+    },
+    {
+      "url": "https://ollama.com/blog/improved-performance-and-model-support-with-gguf",
+      "method": "Connected web source",
+      "quotes": [
+        {
+          "quote": "GGUF model compatibility through llama.cpp",
+          "found": true
+        }
+      ]
+    },
+    {
+      "url": "https://ollama.com/blog/mlx",
+      "method": "Connected web source",
+      "quotes": [
+        {
+          "quote": "Ollama on Apple silicon is now built on top of Apple’s machine learning framework, MLX",
+          "found": true
+        }
+      ]
+    },
+    {
+      "url": "https://github.com/ggml-org/llama.cpp/blob/master/README.md",
+      "method": "GitHub connected source",
+      "sha": "84e9eb5d929512ae10fbeb15d23df5af58480b50",
+      "quotes": [
+        {
+          "quote": "AVX, AVX2, AVX512 and AMX support for x86 architectures",
+          "found": true
+        }
+      ]
+    },
+    {
+      "url": "https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md",
+      "method": "GitHub connected source",
+      "sha": "4e3bfe651b391fa5a7ffa4e63922ed43b99c8d93",
+      "quotes": [
+        {
+          "quote": "This provides GPU acceleration using an NVIDIA GPU.",
+          "found": true
+        }
+      ]
+    },
+    {
+      "url": "https://ml-explore.github.io/mlx/build/html/dev/extensions.html",
+      "method": "Connected web source",
+      "quotes": [
+        {
+          "quote": "Apple silicon devices address their GPUs using the Metal shading language, and GPU kernels in MLX are written using Metal.",
+          "found": true
+        }
+      ]
+    },
+    {
+      "url": "https://docs.ollama.com/faq",
+      "method": "Connected web source",
+      "quotes": [
+        {
+          "quote": "100% CPU means the model was loaded entirely in system memory",
+          "found": true
+        }
+      ]
+    },
+    {
+      "url": "https://nvidia.github.io/TensorRT-LLM/latest/quick-start-guide.html",
+      "method": "Connected web source",
+      "quotes": [
+        {
+          "quote": "You can use the trtllm-serve command to start an OpenAI compatible server to interact with a model.",
+          "found": true
+        }
+      ]
+    },
+    {
+      "url": "https://nvidia.github.io/TensorRT-LLM/latest/torch/arch_overview.html",
+      "method": "Connected web source",
+      "quotes": [
+        {
+          "quote": "Running model forward for scheduled requests.",
+          "found": true
+        },
+        {
+          "quote": "The interface for PyTorch backend is tensorrt_llm.LLM.",
+          "found": true
+        }
+      ]
+    },
+    {
+      "url": "https://nvidia.github.io/TensorRT-LLM/latest/torch/scheduler.html",
+      "method": "Connected web source",
+      "quotes": [
+        {
+          "quote": "The scheduler is invoked to determine which requests are scheduled at the current step.",
+          "found": true
+        }
+      ]
+    },
+    {
+      "url": "https://nvidia.github.io/TensorRT-LLM/latest/legacy/tensorrt-backend-removal.html",
+      "method": "Connected web source",
+      "quotes": [
+        {
+          "quote": "PyTorch is now the sole execution backend for TensorRT LLM.",
+          "found": true
+        }
+      ]
+    },
+    {
+      "url": "https://github.com/NVIDIA/TensorRT-LLM/blob/main/README.md",
+      "method": "GitHub connected source",
+      "sha": "7338093c6df6871bd161c989d1ae374bb856b480",
+      "quotes": [
+        {
+          "quote": "specialized kernels for common operations",
+          "found": true
+        }
+      ]
+    },
+    {
+      "url": "https://nvidia.github.io/TensorRT-LLM/latest/supported-hardware.html",
+      "method": "Connected web source",
+      "quotes": [
+        {
+          "quote": "TensorRT LLM supports the full spectrum of NVIDIA GPU architectures:",
+          "found": true
+        }
+      ]
+    },
+    {
+      "url": "https://github.com/NVIDIA/TensorRT-LLM/blob/main/tensorrt_llm/_torch/pyexecutor/py_executor.py",
+      "method": "GitHub connected source",
+      "sha": "cd5703847df287b78cda2576d69dd607c31ced2c",
+      "quotes": [
+        {
+          "quote": "from cuda.bindings import runtime as cudart",
+          "found": true
+        }
+      ]
+    },
+    {
+      "url": "https://github.com/onnx/onnx/blob/main/README.md",
+      "method": "GitHub connected source",
+      "sha": "3526422d4d0327272381b4b4a122b4c5c25b6d12",
+      "quotes": [
+        {
+          "quote": "ONNX provides an open source format for AI models, both deep learning and traditional ML. It defines an extensible computation graph model, as well as definitions of built-in operators and standard data types.",
+          "found": true
+        }
+      ]
+    },
+    {
+      "url": "https://github.com/microsoft/onnxruntime/blob/main/README.md",
+      "method": "GitHub connected source",
+      "sha": "3e4e46f9aa04a769e83790037da70908e4bc1c9e",
+      "quotes": [
+        {
+          "quote": "ONNX Runtime is compatible with different hardware, drivers, and operating systems, and provides optimal performance by leveraging hardware accelerators where applicable alongside graph optimizations and transforms.",
+          "found": true
+        },
+        {
+          "quote": "supporting models from deep learning frameworks such as PyTorch and TensorFlow/Keras as well as classical machine learning libraries such as scikit-learn, LightGBM, XGBoost, etc.",
+          "found": true
+        }
+      ]
+    },
+    {
+      "url": "https://onnxruntime.ai/docs/performance/model-optimizations/graph-optimizations.html",
+      "method": "Connected web source",
+      "quotes": [
+        {
+          "quote": "Constant Folding: Statically computes parts of the graph that rely only on constant initializers.",
+          "found": true
+        },
+        {
+          "quote": "In online mode, when initializing an inference session, we also apply all enabled graph optimizations before performing model inference.",
+          "found": true
+        },
+        {
+          "quote": "NCHWc Optimizer: Optimizes the graph by using NCHWc layout instead of NCHW layout.",
+          "found": true
+        },
+        {
+          "quote": "These are semantics-preserving graph rewrites which remove redundant nodes and redundant computation. They run before graph partitioning and thus apply to all the execution providers.",
+          "found": true
+        },
+        {
+          "quote": "These optimizations include complex node fusions. They are run after graph partitioning and are only applied to the nodes assigned to the CPU or CUDA or ROCm execution provider.",
+          "found": true
+        },
+        {
+          "quote": "They are run after graph partitioning and are only applied to nodes assigned to CPU execution provider.",
+          "found": true
+        }
+      ]
+    },
+    {
+      "url": "https://onnxruntime.ai/docs/execution-providers/TensorRT-ExecutionProvider.html",
+      "method": "Connected web source",
+      "quotes": [
+        {
+          "quote": "Note that it is recommended you also register CUDAExecutionProvider to allow Onnx Runtime to assign nodes to CUDA execution provider that TensorRT does not support.",
+          "found": true
+        },
+        {
+          "quote": "The TensorRT execution provider in the ONNX Runtime makes use of NVIDIA’s TensorRT Deep Learning inferencing engine to accelerate ONNX model in their family of GPUs.",
+          "found": true
+        },
+        {
+          "quote": "With the TensorRT execution provider, the ONNX Runtime delivers better inferencing performance on the same hardware compared to generic GPU acceleration.",
+          "found": true
+        },
+        {
+          "quote": "sess = ort . InferenceSession ( 'model.onnx' , providers = [ 'TensorrtExecutionProvider' , 'CUDAExecutionProvider' ])",
+          "found": true
+        }
+      ]
+    },
+    {
+      "url": "https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html",
+      "method": "Connected web source",
+      "quotes": [
+        {
+          "quote": "The CUDA Execution Provider enables hardware accelerated computation on Nvidia CUDA-enabled GPUs.",
+          "found": true
+        },
+        {
+          "quote": "libcudart 11.4.43 libcufft 10.5.2.100 libcurand 10.2.5.120 libcublasLt 11.6.5.2 libcublas 11.6.5.2 libcudnn 8.2.4",
+          "found": true
+        }
+      ]
+    }
+  ]
+}

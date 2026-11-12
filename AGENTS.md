@@ -27,12 +27,40 @@ page families. New records in an existing family use the shared renderer; do not
 add a component, slug switch, copied HTML, or per-record registration. Lineage
 records come from `dataset/v5/lineage_v5.json`; execution paths come from
 `dataset/ai/*.json`. Keep discovery rules shared in `scripts/contentPages.ts`.
-`npm run seo:generate` generates social images before pages so new records get
+`npm run seo:generate` regenerates the family-tree poster and social images
+before pages so new records get
 their images on the first build. Existing editorial page families still have
 manual catalogs; see the guide before extending those.
 
 This authorizes reusable publishing infrastructure. It does not authorize bulk
 low-value pages, automatically authored claims, or changes to evidence rules.
+
+## Required finish step for content tasks
+
+**Trigger this yourself after the final content edit. Do not stop at writing
+JSON, leave generation to the owner, or ask whether to run it.** This applies
+to additions and corrections in `dataset/v5/lineage_v5.json`,
+`dataset/v5/enrichment_v5.json`, `dataset/ai/*.json`, logo metadata, and content
+in existing editorial generators. Run in your own worktree:
+
+```bash
+npm run seo:generate
+npm run verify
+```
+
+Before these commands, verify new sources and update affected hand-written
+counts and logo assets. For AI execution-path changes also run
+`npm run check:ai-quotes`; for lineage relationship changes run
+`npm run check:evidence-links` and read the new citations. Full instructions,
+artifact checks, failure handling and the completion report are in
+[docs/CONTENT_PIPELINE.md#required-content-task-handoff](docs/CONTENT_PIPELINE.md#required-content-task-handoff).
+
+Re-run generation and validation if you edit content after they pass. Include
+source data and tracked generated artifacts in the same content commit. Report
+actual command results and any blocked checks; a build alone is not the gate.
+Generation does not publish, commit, merge or push; follow the owner's current
+instructions for those actions. Never switch, reset, stash or regenerate files
+in another agent's worktree to finish your task.
 
 ## Commands
 

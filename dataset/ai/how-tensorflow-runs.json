@@ -1,0 +1,585 @@
+{
+  "version": "1.0",
+  "slug": "how-tensorflow-runs",
+  "name": "TensorFlow",
+  "title": "How TensorFlow Runs: Eager, tf.function and XLA | Language Lineage",
+  "h1": "How Does TensorFlow Run Python on a CPU or GPU?",
+  "description": "Trace TensorFlow eager execution, tf.function graphs and explicit XLA compilation to CPU or NVIDIA GPU kernels, with cited device-placement and fallback limits.",
+  "og_subtitle": "Python → eager or graph → optional XLA → CPU / NVIDIA GPU",
+  "verified_on": "2026-11-11",
+  "verified_against": "the TensorFlow 2 API, TensorFlow graph and device-placement guides, and the OpenXLA compiler overview",
+  "scope": "TensorFlow 2 numerical computation on one CPU or a configured NVIDIA GPU. The graph-only option explicitly disables XLA; the XLA option assumes successful compilation. TPU, distributed training, TensorFlow Lite, browser TensorFlow.js, custom ops and detailed optimizer/gradient execution are outside this diagram. GPU branches show supported device work; host control and CPU-only ops may coexist.",
+  "answer": "TensorFlow starts with a **Python API**, but the selected execution mode changes what runs next. **Eager mode** dispatches operations individually. **tf.function** traces TensorFlow operations into a reusable graph. **jit_compile=True** additionally asks XLA to compile the function. Device placement then determines CPU or GPU execution; using a graph does not itself mean XLA or guarantee GPU-only work.",
+  "status_template": "Showing {mode} on {device}",
+  "dimensions": [
+    {
+      "id": "mode",
+      "legend": "Execution mode",
+      "default": "eager",
+      "options": [
+        {
+          "value": "eager",
+          "label": "Eager",
+          "phrase": "eager execution"
+        },
+        {
+          "value": "graph",
+          "label": "tf.function",
+          "phrase": "a graph without explicit XLA"
+        },
+        {
+          "value": "xla",
+          "label": "Explicit XLA",
+          "phrase": "successful explicit XLA compilation"
+        }
+      ]
+    },
+    {
+      "id": "device",
+      "legend": "Device",
+      "default": "cpu",
+      "options": [
+        {
+          "value": "cpu",
+          "label": "CPU",
+          "phrase": "the CPU"
+        },
+        {
+          "value": "gpu",
+          "label": "NVIDIA GPU",
+          "phrase": "a configured NVIDIA GPU"
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "heading": "Does TensorFlow execute Python on the GPU?",
+      "paragraphs": [
+        "Python supplies the program and launches TensorFlow operations. Numerical kernels execute on the selected device; a Python loop, a print statement and a matrix multiplication are not interchangeable units of GPU work. The [device-placement guide](https://www.tensorflow.org/guide/gpu) explains how to log where operations actually run. A visible GPU is a prerequisite, not proof that the complete program uses it.",
+        "The CPU selection here shows CPU numerical work. The GPU selection shows supported NVIDIA device operations while leaving host orchestration implicit. Operations without an applicable GPU implementation may run on the CPU. Inspect placement and data movement before interpreting a low GPU utilization reading as a compiler defect."
+      ]
+    },
+    {
+      "heading": "What is the difference between eager mode and tf.function?",
+      "paragraphs": [
+        "Eager mode is useful for inspecting values because Python dispatches each operation immediately. Wrapping a compatible function with tf.function produces a callable backed by a traced graph. Repeated compatible calls can reuse that graph instead of rebuilding it operation by operation. The [graph introduction](https://www.tensorflow.org/guide/intro_to_graphs) describes the difference and why graphs can be exported without the original Python program.",
+        "Tracing is not the same as running every Python statement again on every invocation. Python-side effects and changing argument signatures can behave differently from ordinary eager code. Retracing can add startup work; it is separate from the steady-state cost of executing an already constructed graph."
+      ]
+    },
+    {
+      "heading": "Is tf.function the same as XLA?",
+      "paragraphs": [
+        "No. The graph-only choice in this page uses tf.function with jit_compile=False. The explicit-XLA choice adds compiler optimization through jit_compile=True. The [API contract](https://www.tensorflow.org/api_docs/python/tf/function) states that an explicitly compiled function must be supported by XLA or an error is raised. Do not assume an unsupported function will silently fall back to eager execution.",
+        "XLA can optimize and combine work for supported targets. It is also used by [JAX](/ai/how-jax-runs), but sharing a compiler does not make the frameworks identical: their front ends, tracing rules and user APIs differ. See the [OpenXLA overview](https://openxla.org/xla) for the supported compiler role."
+      ]
+    },
+    {
+      "heading": "Where does Keras fit?",
+      "paragraphs": [
+        "A [Keras model](/ai/how-keras-runs) using the TensorFlow backend enters this stack through TensorFlow operations. Keras 3 can also select another backend, so a Keras import alone does not identify this path. This page explains TensorFlow execution rather than prescribing one framework for every workload."
+      ]
+    },
+    {
+      "heading": "How should I interpret speed differences?",
+      "paragraphs": [
+        "Compare equivalent computations after separating initialization, tracing or compilation from repeated execution. A graph or XLA can reduce some overhead, but neither is a universal speed guarantee. Tensor sizes, supported operations, device placement and transfers all affect the resulting path. This diagram records mechanisms rather than benchmark rankings."
+      ]
+    }
+  ],
+  "out_of_scope_note": "",
+  "link_from": [
+    "tool:tensorflow",
+    "tool:xla",
+    "lang:python"
+  ],
+  "sources": {
+    "graphs": {
+      "url": "https://www.tensorflow.org/guide/intro_to_graphs",
+      "title": "Introduction to graphs and tf.function (TensorFlow)"
+    },
+    "function": {
+      "url": "https://www.tensorflow.org/api_docs/python/tf/function",
+      "title": "tf.function API, including jit_compile (TensorFlow)"
+    },
+    "gpu": {
+      "url": "https://www.tensorflow.org/guide/gpu",
+      "title": "Device placement and CPU/GPU kernels (TensorFlow)"
+    },
+    "xla": {
+      "url": "https://openxla.org/xla",
+      "title": "XLA overview (OpenXLA)"
+    }
+  },
+  "stages": [
+    {
+      "id": "python",
+      "name": "Your Python code",
+      "kind": "programming_language",
+      "layer": "python",
+      "lineage_id": "lang:python",
+      "pos": [
+        1.5,
+        0
+      ],
+      "summary": "Python invokes TensorFlow operations or calls a function previously wrapped with tf.function.",
+      "evidence": [
+        {
+          "source": "graphs",
+          "quote": "TensorFlow operations are executed by Python, operation by operation, and return results back to Python."
+        }
+      ]
+    },
+    {
+      "id": "api",
+      "name": "TensorFlow API",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": "tool:tensorflow",
+      "pos": [
+        1.5,
+        1
+      ],
+      "summary": "The Python API routes the selected eager, graph or explicitly XLA-compiled execution path.",
+      "evidence": [
+        {
+          "source": "function",
+          "quote": "Compiles a function into a callable TensorFlow graph."
+        }
+      ]
+    },
+    {
+      "id": "eager",
+      "name": "Eager execution",
+      "kind": "runtime",
+      "layer": "framework",
+      "lineage_id": "tool:tensorflow",
+      "pos": [
+        0,
+        2
+      ],
+      "summary": "Operations are dispatched one by one from Python. This path does not first trace the whole function into a graph.",
+      "evidence": [
+        {
+          "source": "graphs",
+          "quote": "TensorFlow operations are executed by Python, operation by operation, and return results back to Python."
+        }
+      ]
+    },
+    {
+      "id": "graph",
+      "name": "Traced tf.Graph",
+      "kind": "intermediate_representation",
+      "layer": "compiler",
+      "lineage_id": null,
+      "pos": [
+        2,
+        2
+      ],
+      "summary": "tf.function traces TensorFlow operations into a reusable graph; Python side effects do not become ordinary graph operations.",
+      "evidence": [
+        {
+          "source": "graphs",
+          "quote": "A PolymorphicFunction is a Python callable that builds TensorFlow graphs from the Python function."
+        }
+      ]
+    },
+    {
+      "id": "executor",
+      "name": "Graph execution",
+      "kind": "runtime",
+      "layer": "framework",
+      "lineage_id": "tool:tensorflow",
+      "pos": [
+        1.5,
+        3
+      ],
+      "summary": "The traced graph runs through TensorFlow execution without requiring explicit XLA compilation in the graph-only selection.",
+      "evidence": [
+        {
+          "source": "function",
+          "quote": "Compiles a function into a callable TensorFlow graph."
+        }
+      ]
+    },
+    {
+      "id": "xla",
+      "name": "XLA compilation",
+      "kind": "compiler",
+      "layer": "compiler",
+      "lineage_id": "tool:xla",
+      "pos": [
+        3,
+        3
+      ],
+      "summary": "With jit_compile=True, the selected function must be supported by XLA. Compilation failure is an error, not a promised eager fallback.",
+      "evidence": [
+        {
+          "source": "xla",
+          "quote": "XLA (Accelerated Linear Algebra) is an open-source compiler for machine learning."
+        }
+      ]
+    },
+    {
+      "id": "cpu_kernel",
+      "name": "CPU op kernels",
+      "kind": "kernel",
+      "layer": "kernel",
+      "lineage_id": null,
+      "pos": [
+        0,
+        4
+      ],
+      "summary": "TensorFlow operations placed on the CPU use CPU implementations of their numerical kernels.",
+      "evidence": [
+        {
+          "source": "gpu",
+          "quote": "TensorFlow supports running computations on a variety of types of devices, including CPU and GPU."
+        }
+      ]
+    },
+    {
+      "id": "gpu_kernel",
+      "name": "GPU op kernels",
+      "kind": "kernel",
+      "layer": "kernel",
+      "lineage_id": null,
+      "pos": [
+        1,
+        4
+      ],
+      "summary": "Supported operations placed on a visible NVIDIA GPU use GPU implementations; CPU-only operations can still remain on the host.",
+      "evidence": [
+        {
+          "source": "gpu",
+          "quote": "TensorFlow supports running computations on a variety of types of devices, including CPU and GPU."
+        }
+      ]
+    },
+    {
+      "id": "cpu_code",
+      "name": "XLA CPU code",
+      "kind": "machine_code",
+      "layer": "kernel",
+      "lineage_id": null,
+      "pos": [
+        2,
+        4
+      ],
+      "summary": "The successful XLA CPU selection executes code produced for its CPU target.",
+      "evidence": [
+        {
+          "source": "xla",
+          "quote": "XLA (Accelerated Linear Algebra) is an open-source compiler for machine learning."
+        }
+      ]
+    },
+    {
+      "id": "gpu_code",
+      "name": "XLA GPU executable",
+      "kind": "machine_code",
+      "layer": "kernel",
+      "lineage_id": null,
+      "pos": [
+        3,
+        4
+      ],
+      "summary": "The successful XLA GPU selection executes a GPU-targeted compiled computation; this is not the ordinary per-op eager path.",
+      "evidence": [
+        {
+          "source": "xla",
+          "quote": "XLA (Accelerated Linear Algebra) is an open-source compiler for machine learning."
+        }
+      ]
+    },
+    {
+      "id": "cpu",
+      "name": "CPU",
+      "kind": "hardware",
+      "layer": "hardware",
+      "lineage_id": null,
+      "pos": [
+        0.5,
+        5
+      ],
+      "summary": "The CPU executes the selected CPU computation. Host-side control also exists for GPU workloads.",
+      "evidence": [
+        {
+          "source": "gpu",
+          "quote": "TensorFlow supports running computations on a variety of types of devices, including CPU and GPU."
+        }
+      ]
+    },
+    {
+      "id": "gpu",
+      "name": "NVIDIA GPU",
+      "kind": "hardware",
+      "layer": "hardware",
+      "lineage_id": null,
+      "pos": [
+        2.5,
+        5
+      ],
+      "summary": "A configured NVIDIA GPU executes supported GPU computations. The diagram does not assert that every host operation moves to it.",
+      "evidence": [
+        {
+          "source": "gpu",
+          "quote": "TensorFlow supports running computations on a variety of types of devices, including CPU and GPU."
+        }
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "to": "api",
+      "kind": "calls",
+      "when": {},
+      "label": "calls TensorFlow",
+      "explanation": "The program enters TensorFlow through its Python API.",
+      "evidence": [
+        {
+          "source": "graphs",
+          "quote": "TensorFlow operations are executed by Python, operation by operation, and return results back to Python."
+        }
+      ],
+      "from": "python"
+    },
+    {
+      "to": "eager",
+      "kind": "dispatches_to",
+      "when": {
+        "mode": [
+          "eager"
+        ]
+      },
+      "label": "dispatches each op",
+      "explanation": "Eager execution evaluates operations as Python calls them.",
+      "evidence": [
+        {
+          "source": "graphs",
+          "quote": "TensorFlow operations are executed by Python, operation by operation, and return results back to Python."
+        }
+      ],
+      "from": "api"
+    },
+    {
+      "to": "graph",
+      "kind": "captures",
+      "when": {
+        "mode": [
+          "graph",
+          "xla"
+        ]
+      },
+      "label": "traces TensorFlow ops",
+      "explanation": "Both graph selections first obtain a traced TensorFlow graph.",
+      "evidence": [
+        {
+          "source": "graphs",
+          "quote": "A PolymorphicFunction is a Python callable that builds TensorFlow graphs from the Python function."
+        }
+      ],
+      "from": "api"
+    },
+    {
+      "to": "executor",
+      "kind": "runs_in",
+      "when": {
+        "mode": [
+          "graph"
+        ]
+      },
+      "label": "executes graph",
+      "explanation": "Graph-only mode executes the graph with explicit XLA compilation disabled.",
+      "evidence": [
+        {
+          "source": "function",
+          "quote": "Compiles a function into a callable TensorFlow graph."
+        }
+      ],
+      "from": "graph"
+    },
+    {
+      "to": "xla",
+      "kind": "compiled_by",
+      "when": {
+        "mode": [
+          "xla"
+        ]
+      },
+      "label": "compiled with XLA",
+      "explanation": "Explicit jit_compile=True compiles the function rather than merely tracing it.",
+      "evidence": [
+        {
+          "source": "xla",
+          "quote": "XLA (Accelerated Linear Algebra) is an open-source compiler for machine learning."
+        }
+      ],
+      "from": "graph"
+    },
+    {
+      "to": "cpu_kernel",
+      "kind": "dispatches_to",
+      "when": {
+        "device": [
+          "cpu"
+        ]
+      },
+      "label": "selects CPU kernels",
+      "explanation": "Device placement chooses the implementations for the supported operations shown here.",
+      "evidence": [
+        {
+          "source": "gpu",
+          "quote": "TensorFlow supports running computations on a variety of types of devices, including CPU and GPU."
+        }
+      ],
+      "from": "eager"
+    },
+    {
+      "to": "gpu_kernel",
+      "kind": "dispatches_to",
+      "when": {
+        "device": [
+          "gpu"
+        ]
+      },
+      "label": "selects GPU kernels",
+      "explanation": "Device placement chooses the implementations for the supported operations shown here.",
+      "evidence": [
+        {
+          "source": "gpu",
+          "quote": "TensorFlow supports running computations on a variety of types of devices, including CPU and GPU."
+        }
+      ],
+      "from": "eager"
+    },
+    {
+      "to": "cpu_kernel",
+      "kind": "dispatches_to",
+      "when": {
+        "device": [
+          "cpu"
+        ]
+      },
+      "label": "selects CPU kernels",
+      "explanation": "Device placement chooses the implementations for the supported operations shown here.",
+      "evidence": [
+        {
+          "source": "gpu",
+          "quote": "TensorFlow supports running computations on a variety of types of devices, including CPU and GPU."
+        }
+      ],
+      "from": "executor"
+    },
+    {
+      "to": "gpu_kernel",
+      "kind": "dispatches_to",
+      "when": {
+        "device": [
+          "gpu"
+        ]
+      },
+      "label": "selects GPU kernels",
+      "explanation": "Device placement chooses the implementations for the supported operations shown here.",
+      "evidence": [
+        {
+          "source": "gpu",
+          "quote": "TensorFlow supports running computations on a variety of types of devices, including CPU and GPU."
+        }
+      ],
+      "from": "executor"
+    },
+    {
+      "to": "cpu_code",
+      "kind": "generates",
+      "when": {
+        "device": [
+          "cpu"
+        ]
+      },
+      "label": "targets CPU",
+      "explanation": "XLA targets the selected supported hardware after successful compilation.",
+      "evidence": [
+        {
+          "source": "xla",
+          "quote": "XLA (Accelerated Linear Algebra) is an open-source compiler for machine learning."
+        }
+      ],
+      "from": "xla"
+    },
+    {
+      "to": "cpu",
+      "kind": "executes_on",
+      "when": {},
+      "label": "executes on",
+      "explanation": "Numerical work reaches the selected physical processor.",
+      "evidence": [
+        {
+          "source": "gpu",
+          "quote": "TensorFlow supports running computations on a variety of types of devices, including CPU and GPU."
+        }
+      ],
+      "from": "cpu_kernel"
+    },
+    {
+      "to": "cpu",
+      "kind": "executes_on",
+      "when": {},
+      "label": "executes on",
+      "explanation": "The compiled computation executes on its target hardware.",
+      "evidence": [
+        {
+          "source": "xla",
+          "quote": "XLA (Accelerated Linear Algebra) is an open-source compiler for machine learning."
+        }
+      ],
+      "from": "cpu_code"
+    },
+    {
+      "to": "gpu_code",
+      "kind": "generates",
+      "when": {
+        "device": [
+          "gpu"
+        ]
+      },
+      "label": "targets GPU",
+      "explanation": "XLA targets the selected supported hardware after successful compilation.",
+      "evidence": [
+        {
+          "source": "xla",
+          "quote": "XLA (Accelerated Linear Algebra) is an open-source compiler for machine learning."
+        }
+      ],
+      "from": "xla"
+    },
+    {
+      "to": "gpu",
+      "kind": "executes_on",
+      "when": {},
+      "label": "executes on",
+      "explanation": "Numerical work reaches the selected physical processor.",
+      "evidence": [
+        {
+          "source": "gpu",
+          "quote": "TensorFlow supports running computations on a variety of types of devices, including CPU and GPU."
+        }
+      ],
+      "from": "gpu_kernel"
+    },
+    {
+      "to": "gpu",
+      "kind": "executes_on",
+      "when": {},
+      "label": "executes on",
+      "explanation": "The compiled computation executes on its target hardware.",
+      "evidence": [
+        {
+          "source": "xla",
+          "quote": "XLA (Accelerated Linear Algebra) is an open-source compiler for machine learning."
+        }
+      ],
+      "from": "gpu_code"
+    }
+  ]
+}
