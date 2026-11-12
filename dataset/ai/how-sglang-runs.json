@@ -51,6 +51,7 @@
   ],
   "out_of_scope_note": "",
   "link_from": [
+    "tool:sglang",
     "tool:vllm",
     "tool:cuda"
   ],
@@ -112,7 +113,7 @@
       "name": "HTTP server",
       "kind": "framework_component",
       "layer": "framework",
-      "lineage_id": null,
+      "lineage_id": "tool:sglang",
       "pos": [
         1.5,
         1
@@ -134,7 +135,7 @@
       "name": "TokenizerManager",
       "kind": "framework_component",
       "layer": "framework",
-      "lineage_id": null,
+      "lineage_id": "tool:sglang",
       "pos": [
         1.5,
         2
@@ -152,7 +153,7 @@
       "name": "Scheduler",
       "kind": "runtime",
       "layer": "framework",
-      "lineage_id": null,
+      "lineage_id": "tool:sglang",
       "pos": [
         1.5,
         3
@@ -174,7 +175,7 @@
       "name": "DetokenizerManager",
       "kind": "framework_component",
       "layer": "framework",
-      "lineage_id": null,
+      "lineage_id": "tool:sglang",
       "pos": [
         3,
         3
@@ -192,7 +193,7 @@
       "name": "Radix prefix cache",
       "kind": "framework_component",
       "layer": "framework",
-      "lineage_id": null,
+      "lineage_id": "tool:sglang",
       "pos": [
         0,
         4
@@ -214,7 +215,7 @@
       "name": "ModelRunner",
       "kind": "framework_component",
       "layer": "framework",
-      "lineage_id": null,
+      "lineage_id": "tool:sglang",
       "pos": [
         1.5,
         4

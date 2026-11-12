@@ -195,42 +195,42 @@
 <h3>HTTP server</h3>
 <p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
 <p>SGLang's FastAPI server, running in the main process alongside the engine and the TokenizerManager.</p>
-
+<p class="ai-lineage">In the atlas: <a href="/tools/sglang">SGLang</a></p>
 <ul class="ai-sources"><li><blockquote>This file implements HTTP APIs for the inference engine via fastapi.</blockquote><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/entrypoints/http_server.py" rel="noopener noreferrer" target="_blank">python/sglang/srt/entrypoints/http_server.py (sgl-project/sglang)</a> <span class="src-type">Source repository</span></li><li><blockquote>The HTTP server, Engine, and TokenizerManager all run in the main process.</blockquote><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/entrypoints/engine.py" rel="noopener noreferrer" target="_blank">python/sglang/srt/entrypoints/engine.py (sgl-project/sglang)</a> <span class="src-type">Source repository</span></li></ul>
 </article>
 <article class="ai-stage-detail" id="detail-stage-tokenizer_manager" data-stage="tokenizer_manager">
 <h3>TokenizerManager</h3>
 <p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
 <p>Tokenizes each request and hands it to the scheduler process.</p>
-
+<p class="ai-lineage">In the atlas: <a href="/tools/sglang">SGLang</a></p>
 <ul class="ai-sources"><li><blockquote>TokenizerManager: Tokenizes the requests and sends them to the scheduler.</blockquote><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/entrypoints/engine.py" rel="noopener noreferrer" target="_blank">python/sglang/srt/entrypoints/engine.py (sgl-project/sglang)</a> <span class="src-type">Source repository</span></li></ul>
 </article>
 <article class="ai-stage-detail" id="detail-stage-scheduler" data-stage="scheduler">
 <h3>Scheduler</h3>
 <p class="ai-kind-tag" style="--kc:#93c5fd">runtime</p>
 <p>A separate process that receives requests, forms batches, runs them through the model and sends the output tokens on.</p>
-
+<p class="ai-lineage">In the atlas: <a href="/tools/sglang">SGLang</a></p>
 <ul class="ai-sources"><li><blockquote>Scheduler (subprocess): Receives requests from the Tokenizer Manager, schedules batches, forwards them, and sends the output tokens to the Detokenizer Manager.</blockquote><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/entrypoints/engine.py" rel="noopener noreferrer" target="_blank">python/sglang/srt/entrypoints/engine.py (sgl-project/sglang)</a> <span class="src-type">Source repository</span></li><li><blockquote>A scheduler that manages a tensor parallel GPU worker.</blockquote><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/managers/scheduler.py" rel="noopener noreferrer" target="_blank">python/sglang/srt/managers/scheduler.py (sgl-project/sglang)</a> <span class="src-type">Source repository</span></li></ul>
 </article>
 <article class="ai-stage-detail" id="detail-stage-detokenizer" data-stage="detokenizer">
 <h3>DetokenizerManager</h3>
 <p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
 <p>A separate process that turns output token ids back into text and returns it to the TokenizerManager.</p>
-
+<p class="ai-lineage">In the atlas: <a href="/tools/sglang">SGLang</a></p>
 <ul class="ai-sources"><li><blockquote>DetokenizerManager (subprocess): Detokenizes the output tokens and sends the result back to the Tokenizer Manager.</blockquote><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/entrypoints/engine.py" rel="noopener noreferrer" target="_blank">python/sglang/srt/entrypoints/engine.py (sgl-project/sglang)</a> <span class="src-type">Source repository</span></li></ul>
 </article>
 <article class="ai-stage-detail" id="detail-stage-radix_cache" data-stage="radix_cache">
 <h3>Radix prefix cache</h3>
 <p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
 <p>RadixAttention's radix tree over the KV cache: each node holds the KV of a span of tokens, so requests that share a prefix reuse it instead of recomputing it.</p>
-
+<p class="ai-lineage">In the atlas: <a href="/tools/sglang">SGLang</a></p>
 <ul class="ai-sources"><li><blockquote>The radix tree data structure for managing the KV cache.</blockquote><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/mem_cache/radix_cache.py" rel="noopener noreferrer" target="_blank">python/sglang/srt/mem_cache/radix_cache.py (sgl-project/sglang)</a> <span class="src-type">Source repository</span></li><li><blockquote>In RadixAttention, each node of the RadixTree corresponds to the KV cache of a consecutive span of tokens in GPU memory.</blockquote><a href="https://github.com/sgl-project/sglang/blob/main/docs/docs/advanced_features/hicache_design.mdx" rel="noopener noreferrer" target="_blank">HiCache design (SGLang documentation source)</a> <span class="src-type">Source repository</span></li></ul>
 </article>
 <article class="ai-stage-detail" id="detail-stage-model_runner" data-stage="model_runner">
 <h3>ModelRunner</h3>
 <p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
 <p>Runs the model's forward pass for each batch.</p>
-
+<p class="ai-lineage">In the atlas: <a href="/tools/sglang">SGLang</a></p>
 <ul class="ai-sources"><li><blockquote>ModelRunner runs the forward passes of the models.</blockquote><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/model_executor/model_runner.py" rel="noopener noreferrer" target="_blank">python/sglang/srt/model_executor/model_runner.py (sgl-project/sglang)</a> <span class="src-type">Source repository</span></li></ul>
 </article>
 <article class="ai-stage-detail" id="detail-stage-cuda_graph" data-stage="cuda_graph">
@@ -328,7 +328,7 @@
   <h2 id="how-this-page-is-checked">How this page is checked</h2>
   <p>Every stage and step above quotes the source that supports it. The quotes were checked against the SGLang source (engine, HTTP server, scheduler, model runner, radix cache and decode CUDA graph runner) and its documentation sources for HiCache design and attention backends on 2026-11-12. The data is a <a href="/dataset/ai/how-sglang-runs.json">versioned JSON file</a> under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. Found something wrong or out of date? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
   <p><a class="ai-graph-link" href="/explore?view=ai&amp;path=how-sglang-runs&amp;gpu=hopper">See this path in the graph explorer &rarr;</a></p>
-  <p>What these tools are written in is in the main atlas: <a href="/tools/cuda">CUDA</a>. More execution paths: <a href="/ai/how-jax-runs">What Actually Happens When You Run JAX Code</a>, <a href="/ai/how-keras-runs">What Runs Underneath a Keras 3 Model</a>, <a href="/ai/how-llama-cpp-runs">How Does llama.cpp Run a Model on Your Hardware</a>, <a href="/ai/how-mlx-runs">What Actually Happens When You Run MLX on a Mac</a>, <a href="/ai/how-ollama-runs">What Actually Runs When You Send Ollama a Prompt</a>, <a href="/ai/how-onnx-runtime-runs">How Does ONNX Runtime Execute a Model Across Hardware</a>, <a href="/ai/how-pytorch-runs">What Actually Happens When You Run a PyTorch Model</a>, <a href="/ai/how-tensorflow-runs">How Does TensorFlow Run Python on a CPU or GPU</a>, <a href="/ai/how-tensorrt-llm-runs">What Actually Happens When TensorRT-LLM Runs a Model</a>, <a href="/ai/how-vllm-runs">What Actually Happens When vLLM Serves a Request</a>, or <a href="/ai">compare them all</a>.</p>
+  <p>What these tools are written in is in the main atlas: <a href="/tools/sglang">SGLang</a>, <a href="/tools/cuda">CUDA</a>. More execution paths: <a href="/ai/how-jax-runs">What Actually Happens When You Run JAX Code</a>, <a href="/ai/how-keras-runs">What Runs Underneath a Keras 3 Model</a>, <a href="/ai/how-llama-cpp-runs">How Does llama.cpp Run a Model on Your Hardware</a>, <a href="/ai/how-mlx-runs">What Actually Happens When You Run MLX on a Mac</a>, <a href="/ai/how-ollama-runs">What Actually Runs When You Send Ollama a Prompt</a>, <a href="/ai/how-onnx-runtime-runs">How Does ONNX Runtime Execute a Model Across Hardware</a>, <a href="/ai/how-pytorch-runs">What Actually Happens When You Run a PyTorch Model</a>, <a href="/ai/how-tensorflow-runs">How Does TensorFlow Run Python on a CPU or GPU</a>, <a href="/ai/how-tensorrt-llm-runs">What Actually Happens When TensorRT-LLM Runs a Model</a>, <a href="/ai/how-vllm-runs">What Actually Happens When vLLM Serves a Request</a>, or <a href="/ai">compare them all</a>.</p>
 
   <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>
 </main>
