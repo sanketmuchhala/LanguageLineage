@@ -41,5 +41,5 @@ is separately licensed under MIT — see the [root LICENSE](../LICENSE).
 Suggested citation:
 
 ```
-Language Lineage. Programming Language Lineage Dataset, v5.0. 175 nodes and 501 relationships. Accessed 2026. https://www.languagelineage.org/dataset
+Language Lineage. Programming Language Lineage Dataset, v5.0. 176 nodes and 504 relationships. Accessed 2026. https://www.languagelineage.org/dataset
 ```

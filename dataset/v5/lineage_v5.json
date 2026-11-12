@@ -4014,6 +4014,28 @@
       "logo_source": null,
       "logo_license": null,
       "logo_kind": "none"
+    },
+    {
+      "id": "tool:mlx",
+      "name": "MLX",
+      "first_release_year": 2023,
+      "current_primary_implementation_language": "C++",
+      "paradigm": [
+        "tool"
+      ],
+      "typing": "none",
+      "runtime_model": "jit_compiled",
+      "self_hosting": false,
+      "notes": "Array framework for machine learning on Apple silicon from Apple machine learning research; first released on PyPI in December 2023. NumPy-like Python API with lazy evaluation and unified memory. C++ core; GPU kernels in Metal (not a node in this dataset); a CUDA backend for Linux; mlx.nn and mlx.optimizers in Python.",
+      "cluster_hint": "tools",
+      "company": null,
+      "garbage_collected": null,
+      "logo_url": null,
+      "peak_year": null,
+      "current_users_estimate": null,
+      "logo_source": null,
+      "logo_license": null,
+      "logo_kind": "none"
     }
   ],
   "relationships": [
@@ -9026,6 +9048,36 @@
       "confidence": 0.88,
       "evidence_source": "https://github.com/vllm-project/vllm/tree/main/vllm/v1/attention/ops",
       "notes": "Part of the attention kernels are Triton (triton_unified_attention.py, triton_decode_attention.py); README lists Triton among its attention kernels"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "tool:mlx",
+      "relationship": "runtime_written_in",
+      "start_year": null,
+      "end_year": null,
+      "confidence": 0.92,
+      "evidence_source": "https://github.com/ml-explore/mlx/tree/main/mlx",
+      "notes": "The array type, graph transformations, compiler and CPU/GPU backends are C++ (mlx/array.cpp, mlx/compile.cpp, mlx/backend/); GitHub reports the repository as about 63% C++"
+    },
+    {
+      "from_language": "lang:python",
+      "to_language": "tool:mlx",
+      "relationship": "runtime_written_in",
+      "start_year": null,
+      "end_year": null,
+      "confidence": 0.85,
+      "evidence_source": "https://github.com/ml-explore/mlx/tree/main/python/mlx/nn",
+      "notes": "The higher-level mlx.nn layers and mlx.optimizers are Python (python/mlx/nn/layers, python/mlx/optimizers); the core array API is a C++ extension"
+    },
+    {
+      "from_language": "tool:cuda",
+      "to_language": "tool:mlx",
+      "relationship": "runtime_written_in",
+      "start_year": null,
+      "end_year": null,
+      "confidence": 0.88,
+      "evidence_source": "https://github.com/ml-explore/mlx/tree/main/mlx/backend/cuda",
+      "notes": "The CUDA backend's kernels are CUDA (mlx/backend/cuda/*.cu, e.g. layer_norm.cu, rms_norm.cu)"
     }
   ]
 }

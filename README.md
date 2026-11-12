@@ -14,14 +14,14 @@
 
 # Language Lineage
 
-An interactive, evidence-backed atlas mapping implementation, bootstrapping, runtime, and influence relationships across 175 nodes: 141 programming languages and 34 compiler/runtime tools. 334 indexable pages, 501 sourced relationships.
+An interactive, evidence-backed atlas mapping implementation, bootstrapping, runtime, and influence relationships across 176 nodes: 141 programming languages and 35 compiler/runtime tools. 335 indexable pages, 504 sourced relationships.
 
 ## Live Site
 
 **[languagelineage.org](https://www.languagelineage.org)**
 
 - Interactive graph explorer: [/explore](https://www.languagelineage.org/explore) (deep-linkable via `?node=lang:rust`, trace mode for shortest paths)
-- Language pages: [/languages/python](https://www.languagelineage.org/languages/python) (175 pages with relationship maps, Quick Facts, implementation tables)
+- Language pages: [/languages/python](https://www.languagelineage.org/languages/python) (176 pages with relationship maps, Quick Facts, implementation tables)
 - Question pages: [/questions/what-is-rust-written-in](https://www.languagelineage.org/questions/what-is-rust-written-in) (120 pages, answer-first format)
 - Guides: [/guides](https://www.languagelineage.org/guides) (13 guides including comparisons and bootstrap chain analysis)
 - AI execution paths ([/ai](https://www.languagelineage.org/ai) compares them): [/ai/how-pytorch-runs](https://www.languagelineage.org/ai/how-pytorch-runs), [/ai/how-jax-runs](https://www.languagelineage.org/ai/how-jax-runs), [/ai/how-llama-cpp-runs](https://www.languagelineage.org/ai/how-llama-cpp-runs), [/ai/how-vllm-runs](https://www.languagelineage.org/ai/how-vllm-runs) (interactive, every step quoted from primary docs; data in `dataset/ai/`)
@@ -31,7 +31,7 @@ An interactive, evidence-backed atlas mapping implementation, bootstrapping, run
 - Embed guide: [/embed-kit](https://www.languagelineage.org/embed-kit) (live example, snippet, parameters, sizing, attribution)
 
 <p align="center">
-  <img src="public/og-image.png" alt="Language Lineage: what programming languages are written in. 175 languages and tools, 501 sourced relationships." width="900">
+  <img src="public/og-image.png" alt="Language Lineage: what programming languages are written in. 176 languages and tools, 504 sourced relationships." width="900">
 </p>
 
 ## What You Can Explore
@@ -106,13 +106,13 @@ LanguageLineage/
 │   ├── v2/                            67 languages, 128 edges
 │   ├── v3/                            71 languages, 169 edges
 │   ├── v4/                            112 nodes, 347 relationships
-│   └── v5/                            175 nodes, 501 relationships (current)
+│   └── v5/                            176 nodes, 504 relationships (current)
 │       ├── lineage_v5.json            Primary dataset
-│       └── enrichment_v5.json         Wikidata-sourced facts (148/175 nodes)
+│       └── enrichment_v5.json         Wikidata-sourced facts (148/176 nodes)
 ├── api/
 │   └── propose.ts                     Serverless endpoint: correction form to GitHub issue
 ├── scripts/                           Build and data tooling
-│   ├── generateSeoPages.ts            Static page generator (175 node pages, 120 question pages, 13 guides, 6 relationship pages, etc.)
+│   ├── generateSeoPages.ts            Static page generator (176 node pages, 120 question pages, 13 guides, 6 relationship pages, etc.)
 │   ├── generateSitemap.ts             Sitemap generator (304 URLs, canonical only)
 │   ├── generateLlmsTxt.ts             LLM-readable site index
 │   ├── generateOgImages.ts            Per-page OG social cards (satori + resvg)
@@ -167,11 +167,11 @@ LanguageLineage/
 
 ### Scale
 
-- 175 nodes: 141 languages + 34 tools (compilers, runtimes, engines)
-- 501 relationships, each with confidence score and evidence source URL
+- 176 nodes: 141 languages + 35 tools (compilers, runtimes, engines)
+- 504 relationships, each with confidence score and evidence source URL
 - 100% evidence coverage: every relationship has at least one source
 - 96 logo URLs: 51 Devicon assets + 39 Wikimedia P154 logos + 6 proxy logos
-- 148/175 nodes enriched with Wikidata-sourced facts (designers, developers, license, website, file extensions)
+- 148/176 nodes enriched with Wikidata-sourced facts (designers, developers, license, website, file extensions)
 
 ### Relationship Types
 
@@ -179,7 +179,7 @@ LanguageLineage/
 |------|-------|-------|-------------|
 | `influenced` | 263 | Blue (#60a5fa) | Language A influenced the design of language B |
 | `compiler_written_in` | 107 | Amber (#e3a008) | Language A's compiler is written in language B |
-| `runtime_written_in` | 99 | Green (#34d399) | Language A's runtime is written in language B |
+| `runtime_written_in` | 102 | Green (#34d399) | Language A's runtime is written in language B |
 | `bootstrap_written_in` | 15 | Violet (#a78bfa) | Bootstrap binary seed relationship |
 | `transpiled_to` | 13 | Cyan (#22d3ee) | Language A compiles to language B |
 | `rewritten_in` | 4 | Rose (#fb7185) | Implementation rewritten from one language to another |
@@ -219,7 +219,7 @@ From the dataset analyzer (`npm run analyze:v5`):
 | `/timeline` | Static | 1 | Language timeline page |
 | `/dataset` | Static | 1 | Dataset overview with download, citation, and embed kit |
 | Keyword landings | Static | 6 | Root-level SEO landing pages (5 canonical; `/programming-language-family-tree` canonicalizes to the `/guides/` version) |
-| `/sitemap.xml` | XML | 1 | 334 indexable URLs (canonical only) |
+| `/sitemap.xml` | XML | 1 | 335 indexable URLs (canonical only) |
 | `/robots.txt` | Text | 1 | Crawler directives |
 | `/llms.txt` | Text | 1 | LLM-readable site index |
 | `/llms-full.txt` | Text | 1 | Expanded LLM reference |
@@ -353,7 +353,7 @@ rules. Log each run in the measurement table in `SITE_IMPROVEMENT_PLAN.md`.
 
 ```
 Language Lineage. Programming Language Lineage Dataset, v5.0.
-175 nodes and 501 relationships. Accessed 2026. https://www.languagelineage.org/dataset
+176 nodes and 504 relationships. Accessed 2026. https://www.languagelineage.org/dataset
 ```
 
 ## Contributing
