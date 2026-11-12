@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>117 Runtime Implementation Relationships | Language Lineage</title>
+  <title>122 Runtime Implementation Relationships | Language Lineage</title>
   <meta name="description" content="These relationships document what programming language each runtime or interpreter is written in. For example, CPython (the reference Python interpreter) is wri" />
   <link rel="canonical" href="https://www.languagelineage.org/relationships/runtime-written-in" />
   <link rel="icon" href="/favicon.svg" />
   <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><script defer src="/fx.js"></script><script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script><link rel="alternate" type="application/rss+xml" title="Language Lineage" href="/rss.xml" /><link rel="stylesheet" href="/seo.css" />
-  <meta property="og:title" content="117 Runtime Implementation Relationships | Language Lineage" />
+  <meta property="og:title" content="122 Runtime Implementation Relationships | Language Lineage" />
   <meta property="og:url" content="https://www.languagelineage.org/relationships/runtime-written-in" />
   <meta property="og:image" content="https://www.languagelineage.org/og/relationships-runtime-written-in.png" />
   <meta property="og:image:width" content="1200" />
@@ -38,7 +38,7 @@
 
   <div class="answer-box" style="border-left:3px solid #34d399">These relationships document what programming language each runtime or interpreter is written in. For example, CPython (the reference Python interpreter) is written in C.</div>
 
-  <h2>All 117 Relationships</h2>
+  <h2>All 122 Relationships</h2>
   <div class="table-wrap"><table>
     <thead><tr><th>From</th><th>To</th><th>Confidence</th><th>Notes</th><th>Source</th></tr></thead>
     <tbody><tr>
@@ -168,6 +168,27 @@
       <td><a href="https://nvidia.github.io/TensorRT-LLM/latest/torch/arch_overview.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
     </tr>
 <tr>
+      <td><a href="/languages/rust">Rust</a></td>
+      <td><a href="/tools/hf-tokenizers">HF Tokenizers</a></td>
+      <td class="confidence-high">98%</td>
+      <td>The official bindings table identifies Rust as the reference implementation; Python and Node.js are bindings.</td>
+      <td><a href="https://github.com/huggingface/tokenizers/blob/main/README.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
+      <td><a href="/languages/rust">Rust</a></td>
+      <td><a href="/tools/safetensors">Safetensors</a></td>
+      <td class="confidence-high">98%</td>
+      <td>The project overview explicitly states that Safetensors is implemented in Rust with bindings for Python.</td>
+      <td><a href="https://pytorch.org/projects/safetensors/" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+    </tr>
+<tr>
+      <td><a href="/languages/cxx">C++</a></td>
+      <td><a href="/tools/executorch">ExecuTorch</a></td>
+      <td class="confidence-high">98%</td>
+      <td>The official build guide describes building the C++ runtime, separately from installing Python components.</td>
+      <td><a href="https://docs.pytorch.org/executorch/stable/using-executorch-building-from-source.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+    </tr>
+<tr>
       <td><a href="/languages/c">C</a></td>
       <td><a href="/tools/ghc">GHC</a></td>
       <td class="confidence-high">97%</td>
@@ -229,6 +250,20 @@
       <td class="confidence-high">96%</td>
       <td>The Go CUE package implements the evaluation context for building and evaluating CUE values.</td>
       <td><a href="https://github.com/cue-lang/cue/blob/master/cue/context.go" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
+      <td><a href="/languages/python">Python</a></td>
+      <td><a href="/tools/sglang">SGLang</a></td>
+      <td class="confidence-high">96%</td>
+      <td>SRT inference-engine Python APIs and orchestration are implemented in engine.py. Scoped to the Python serving layer; does not characterize every kernel or auxiliary service.</td>
+      <td><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/entrypoints/engine.py" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
+      <td><a href="/languages/python">Python</a></td>
+      <td><a href="/tools/transformers">Transformers</a></td>
+      <td class="confidence-high">96%</td>
+      <td>The Python Pipeline base class implements tokenization, model-inference orchestration and post-processing. Backend numerical kernels are outside this edge.</td>
+      <td><a href="https://github.com/huggingface/transformers/blob/main/src/transformers/pipelines/base.py" rel="noopener noreferrer" target="_blank">Source repository</a></td>
     </tr>
 <tr>
       <td><a href="/languages/c">C</a></td>
