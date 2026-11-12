@@ -1,0 +1,30 @@
+name: AI Execution Path Proposal or Quote Update
+description: Propose a new /ai/ execution-path explainer (dataset/ai/*.json) or update a verbatim source quote.
+title: "[AI Execution Path]: "
+labels: ["ai-paths", "dataset"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        AI execution paths (`dataset/ai/*.json`) trace how a real open-source AI runtime executes a model from user entry point down to hardware kernels. Every stage and step must carry a verbatim `quote` verified by `npm run check:ai-quotes`.
+  - type: input
+    id: slug
+    attributes:
+      label: Path Slug & Target Node
+      placeholder: "e.g., how-onnx-runtime-runs (tool:onnx_runtime)"
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Execution Scope & Non-Coverage
+      description: What execution modes and hardware targets are covered, and what is explicitly out of scope?
+    validations:
+      required: true
+  - type: textarea
+    id: stages_and_quotes
+    attributes:
+      label: Stages, Steps & Verbatim Primary Quotes
+      description: List the proposed stages/steps along with the official documentation or source-tree URLs and exact quotes.
+    validations:
+      required: true

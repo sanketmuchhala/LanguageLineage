@@ -1,0 +1,41 @@
+name: New Language, Tool, or Provenance Edge
+description: Propose adding a programming language, compiler/runtime tool, or cited relationship to dataset/v5/lineage_v5.json.
+title: "[New Node/Edge]: "
+labels: ["dataset", "enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before proposing a node, check [`docs/DATASET.md`](https://github.com/sanketmuchhala/LanguageLineage/blob/main/docs/DATASET.md) and [`docs/DECISIONS.md`](https://github.com/sanketmuchhala/LanguageLineage/blob/main/docs/DECISIONS.md). Every node must connect to an existing node via one of the six relationship types (`compiler_written_in`, `runtime_written_in`, `bootstrap_written_in`, `rewritten_in`, `transpiled_to`, `influenced`) and include at least one non-Wikipedia primary source.
+  - type: input
+    id: node_id
+    attributes:
+      label: Proposed Node ID & Name
+      description: "Use `lang:<slug>` for languages or `tool:<slug>` for compilers, runtimes, and engines."
+      placeholder: "e.g., tool:onnx_runtime — ONNX Runtime"
+    validations:
+      required: true
+  - type: input
+    id: impl_language
+    attributes:
+      label: Primary Implementation Language & First Release Year
+      placeholder: "e.g., C++ (2018)"
+    validations:
+      required: true
+  - type: textarea
+    id: edges
+    attributes:
+      label: Proposed Directed Edges
+      description: "List each edge as `from_language -> to_language (relationship, start_year, confidence)`."
+      placeholder: |
+        lang:cpp -> tool:onnx_runtime (runtime_written_in, 2018, 0.97)
+        tool:cuda -> tool:onnx_runtime (runtime_written_in, 2018, 0.95)
+    validations:
+      required: true
+  - type: textarea
+    id: citations
+    attributes:
+      label: Primary Source URLs & Verbatim Claims
+      description: Provide one specific URL per edge and state what the page proves.
+    validations:
+      required: true

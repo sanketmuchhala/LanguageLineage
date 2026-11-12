@@ -5,6 +5,7 @@
  *
  * When this fails after a dataset change, run `npm run seo:generate`.
  */
+import { createHash } from 'crypto';
 import { readFileSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -92,5 +93,67 @@ describe('dataset release CSVs', () => {
     expect(text).toContain('cff-version: 1.2.0');
     expect(text).toContain('license: CC-BY-4.0');
     expect(text).not.toMatch(/doi:/i);
+  });
+
+  it('MANIFEST.json tracks exact counts and SHA-256 digests of all dataset and AI path files', () => {
+    const manifestPath = join(DIR, 'MANIFEST.json');
+    expect(existsSync(manifestPath)).toBe(true);
+    const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+
+    expect(manifest.schema_version).toBe('1.0');
+    expect(manifest.license).toBe('CC-BY-4.0');
+    expect(manifest.counts.nodes.total).toBe(data.languages.length);
+    expect(manifest.counts.relationships.total).toBe(data.relationships.length);
+    expect(manifest.ai_paths.length).toBe(manifest.counts.ai_execution_paths.total);
+    expect(manifest.ai_paths.length).toBeGreaterThanOrEqual(6);
+
+    for (const entry of [...manifest.files, ...manifest.ai_paths]) {
+      const buf = readFileSync(join(ROOT, entry.path));
+      const actualSha = createHash('sha256').update(buf).digest('hex');
+      expect(actualSha, `SHA-256 drift in ${entry.path} — run npm run seo:generate`).toBe(entry.sha256);
+      expect(buf.byteLength, `Byte size drift in ${entry.path}`).toBe(entry.bytes);
+    }
+  });
+});
+
+describe('repository & multi-agent governance invariants', () => {
+  const PINNED_HUMAN_ONLY_BLOCKS: Record<string, string[]> = {
+    'AGENTS.md': ['0f27abdca64b082e37ddcb5ed74440e7433c9ce563736367e475049369a0f801'],
+    'docs/DECISIONS.md': ['01ebadbdee3ec0facce427f43bf9d737799a016007e66464edcc9f606713a628'],
+  };
+
+  it('HUMAN-ONLY blocks in AGENTS.md and docs/DECISIONS.md are intact and unmodified', () => {
+    for (const [relPath, expectedHashes] of Object.entries(PINNED_HUMAN_ONLY_BLOCKS)) {
+      const text = readFileSync(join(ROOT, relPath), 'utf8');
+      const blocks = text.match(/^<!-- HUMAN-ONLY:START -->\n[\s\S]*?\n<!-- HUMAN-ONLY:END -->$/gm) ?? [];
+      const actualHashes = blocks.map((b) => createHash('sha256').update(b).digest('hex'));
+      expect(
+        actualHashes,
+        `Protected HUMAN-ONLY block in ${relPath} was modified! Agents must never edit HUMAN-ONLY sections.`,
+      ).toEqual(expectedHashes);
+    }
+  });
+
+  it('required GitHub governance, contribution, changelog, and release files exist', () => {
+    const requiredFiles = [
+      'AGENTS.md',
+      'CLAUDE.md',
+      'CONTRIBUTING.md',
+      'CHANGELOG.md',
+      'CITATION.cff',
+      '.github/CODEOWNERS',
+      '.github/PULL_REQUEST_TEMPLATE.md',
+      '.github/ISSUE_TEMPLATE/config.yml',
+      '.github/ISSUE_TEMPLATE/dataset-correction.yml',
+      '.github/ISSUE_TEMPLATE/new-node-or-edge.yml',
+      '.github/ISSUE_TEMPLATE/ai-execution-path.yml',
+      '.github/workflows/verify.yml',
+      '.github/workflows/release.yml',
+    ];
+    for (const relPath of requiredFiles) {
+      const fullPath = join(ROOT, relPath);
+      expect(existsSync(fullPath), `Missing governance file: ${relPath}`).toBe(true);
+      expect(readFileSync(fullPath, 'utf8').trim().length, `Empty governance file: ${relPath}`).toBeGreaterThan(50);
+    }
   });
 });
