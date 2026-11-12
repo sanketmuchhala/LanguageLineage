@@ -58,7 +58,7 @@
 <h2 id="why-c-is-at-the-center">Why C is at the center</h2>
 <p>When a new programming language is designed, its first compiler or runtime almost always gets written in C or C++. The reasons are practical: C runs everywhere, has no runtime dependency, can be compiled by GCC or Clang on any system, and gives the implementer direct control over memory layout and calling conventions. Every major operating system exposes its API in C. Every CPU architecture has a C compiler.</p>
 <p>This creates a pattern: the first implementation of Language X is written in C. Once X matures, the community rewrites the implementation in X itself (self-hosting), or in a higher-level systems language like C++ or Rust. But the historical chain from X back to C remains encoded in the dataset as bootstrap or implementation edges.</p>
-<p>The Language Lineage dataset records <code>compiler_written_in</code>, <code>runtime_written_in</code>, <code>bootstrap_written_in</code>, and <code>rewritten_in</code> edges for 176 languages and tools. The chains below are computed at generation time by following those edges backward until reaching C or C++.</p>
+<p>The Language Lineage dataset records <code>compiler_written_in</code>, <code>runtime_written_in</code>, <code>bootstrap_written_in</code>, and <code>rewritten_in</code> edges for 177 languages and tools. The chains below are computed at generation time by following those edges backward until reaching C or C++.</p>
 
 <h2 id="implementation-chains-from-the-dataset">Implementation chains from the dataset</h2>
 <p>7 out of 8 target languages have traceable chains to C or C++ in the current dataset. Chains read from root (C or C++) to target language.</p>

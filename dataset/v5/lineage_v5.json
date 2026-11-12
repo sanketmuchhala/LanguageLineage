@@ -4036,6 +4036,28 @@
       "logo_source": null,
       "logo_license": null,
       "logo_kind": "none"
+    },
+    {
+      "id": "tool:tensorrt_llm",
+      "name": "TensorRT-LLM",
+      "first_release_year": 2023,
+      "current_primary_implementation_language": "Python",
+      "paradigm": [
+        "tool"
+      ],
+      "typing": "none",
+      "runtime_model": "native",
+      "self_hosting": false,
+      "notes": "Open-source LLM and visual-generation inference library from NVIDIA, first released on PyPI in October 2023 (v0.5.0). Architected on a PyTorch execution backend (LLM API, PyExecutor, and model definitions in Python under tensorrt_llm/_torch) with C++ runtime, scheduler, and KV-cache bindings (cpp/tensorrt_llm/executor, batch_manager) and custom CUDA kernels (cpp/tensorrt_llm/kernels). An earlier TensorRT engine backend (trtllm-build) was later removed.",
+      "cluster_hint": "tools",
+      "company": null,
+      "garbage_collected": null,
+      "logo_url": null,
+      "peak_year": null,
+      "current_users_estimate": null,
+      "logo_source": null,
+      "logo_license": null,
+      "logo_kind": "none"
     }
   ],
   "relationships": [
@@ -9078,6 +9100,46 @@
       "confidence": 0.88,
       "evidence_source": "https://github.com/ml-explore/mlx/tree/main/mlx/backend/cuda",
       "notes": "The CUDA backend's kernels are CUDA (mlx/backend/cuda/*.cu, e.g. layer_norm.cu, rms_norm.cu)"
+    },
+    {
+      "from_language": "lang:python",
+      "to_language": "tool:tensorrt_llm",
+      "relationship": "runtime_written_in",
+      "start_year": null,
+      "end_year": null,
+      "confidence": 0.94,
+      "evidence_source": "https://github.com/NVIDIA/TensorRT-LLM/tree/main/tensorrt_llm",
+      "notes": "The high-level LLM API, PyExecutor, model definitions, quantization and OpenAI-compatible server are Python (tensorrt_llm/llmapi, tensorrt_llm/_torch, tensorrt_llm/serve); GitHub reports the repository as about 75% Python"
+    },
+    {
+      "from_language": "lang:cxx",
+      "to_language": "tool:tensorrt_llm",
+      "relationship": "runtime_written_in",
+      "start_year": null,
+      "end_year": null,
+      "confidence": 0.92,
+      "evidence_source": "https://github.com/NVIDIA/TensorRT-LLM/tree/main/cpp/tensorrt_llm",
+      "notes": "The executor, batch manager, CapacityScheduler, MicroBatchScheduler, KVCacheManager and PyTorch custom-op bindings are C++ (cpp/tensorrt_llm/executor, cpp/tensorrt_llm/batch_manager, cpp/tensorrt_llm/thop)"
+    },
+    {
+      "from_language": "tool:cuda",
+      "to_language": "tool:tensorrt_llm",
+      "relationship": "runtime_written_in",
+      "start_year": null,
+      "end_year": null,
+      "confidence": 0.92,
+      "evidence_source": "https://github.com/NVIDIA/TensorRT-LLM/tree/main/cpp/tensorrt_llm/kernels",
+      "notes": "Custom GPU kernels for attention, quantization, MoE, sampling and communication are CUDA under cpp/tensorrt_llm/kernels/ (*.cu)"
+    },
+    {
+      "from_language": "tool:pytorch",
+      "to_language": "tool:tensorrt_llm",
+      "relationship": "runtime_written_in",
+      "start_year": null,
+      "end_year": null,
+      "confidence": 0.92,
+      "evidence_source": "https://github.com/NVIDIA/TensorRT-LLM/blob/main/docs/source/torch/arch_overview.md",
+      "notes": "Architecture docs: \"PyTorch is the sole execution backend of TensorRT LLM; the former TensorRT engine backend has been removed\"; models are defined in native PyTorch under tensorrt_llm/_torch/models/"
     }
   ]
 }

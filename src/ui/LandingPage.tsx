@@ -90,7 +90,7 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
           <p className="hero-subtitle reveal">
             Trace what programming languages are <em>written in</em>: their compilers,
             runtimes, virtual machines, and bootstrap chains. An interactive programming
-            language family tree of 176 languages and toolchains and 504 sourced
+            language family tree of 177 languages and toolchains and 508 sourced
             relationships, each with a confidence score and citation.
           </p>
           <div className="hero-actions reveal">
@@ -165,12 +165,12 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
       {/* Stats Bar */}
       <section className="stats-bar">
         <div className="stat reveal">
-          <span className="stat-number">176</span>
+          <span className="stat-number">177</span>
           <span className="stat-label">Languages &amp; tools</span>
         </div>
         <div className="stat-divider" />
         <div className="stat reveal">
-          <span className="stat-number">504</span>
+          <span className="stat-number">508</span>
           <span className="stat-label">Relationships</span>
         </div>
         <div className="stat-divider" />
@@ -348,7 +348,7 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
           <p className="section-text centered reveal">
             Most language family trees show only influence and ancestry. Language Lineage also
             maps implementation relationships: what compilers, runtimes, virtual machines, and
-            bootstrap chains each language actually uses. 176 languages and toolchains, 504
+            bootstrap chains each language actually uses. 177 languages and toolchains, 508
             evidence-backed relationships.
           </p>
         </div>
@@ -442,7 +442,7 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
           </h2>
           <p className="cta-text reveal">
             Explore the implementation, runtime, bootstrap, and influence relationships
-            between 176 programming languages and toolchains, every edge sourced.
+            between 177 programming languages and toolchains, every edge sourced.
           </p>
           <button className="btn-primary large reveal" onClick={onEnterGraph}>
             <span>Launch the graph</span>
