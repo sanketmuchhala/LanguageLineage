@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How SGLang Runs a Model: RadixAttention, Scheduler | Language Lineage</title>
+  <meta name="description" content="Trace an SGLang request on an NVIDIA GPU: TokenizerManager, scheduler, RadixAttention prefix cache, CUDA graphs and the attention backend for your GPU, with sources." />
+  <link rel="canonical" href="https://www.languagelineage.org/ai/how-sglang-runs" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><script defer src="/fx.js"></script><script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script><link rel="alternate" type="application/rss+xml" title="Language Lineage" href="/rss.xml" /><link rel="stylesheet" href="/seo.css" />
+  <script defer src="/ai-path.js"></script>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="How SGLang Runs a Model: RadixAttention, Scheduler | Language Lineage" />
+  <meta property="og:description" content="Trace an SGLang request on an NVIDIA GPU: TokenizerManager, scheduler, RadixAttention prefix cache, CUDA graphs and the attention backend for your GPU, with sources." />
+  <meta property="og:url" content="https://www.languagelineage.org/ai/how-sglang-runs" />
+  <meta property="og:image" content="https://www.languagelineage.org/og/ai-how-sglang-runs.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What Actually Happens When SGLang Serves a Request?","description":"Trace an SGLang request on an NVIDIA GPU: TokenizerManager, scheduler, RadixAttention prefix cache, CUDA graphs and the attention backend for your GPU, with sources.","url":"https://www.languagelineage.org/ai/how-sglang-runs","datePublished":"2026-11-12","dateModified":"2026-11-12","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"citation":["https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/entrypoints/engine.py","https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/entrypoints/http_server.py","https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/managers/scheduler.py","https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/model_executor/model_runner.py","https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/mem_cache/radix_cache.py","https://github.com/sgl-project/sglang/blob/main/docs/docs/advanced_features/hicache_design.mdx","https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/model_executor/runner/decode_cuda_graph_runner.py","https://github.com/sgl-project/sglang/blob/main/docs/docs/advanced_features/attention_backend.mdx"],"inLanguage":"en"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"AI execution paths","item":"https://www.languagelineage.org/ai"},{"@type":"ListItem","position":3,"name":"What Actually Happens When SGLang Serves a Request?","item":"https://www.languagelineage.org/ai/how-sglang-runs"}]}</script>
+</head>
+<body class="seo-page">
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<nav class="seo-nav">
+  <a href="/" class="nav-brand"><img class="nav-logo-mark" src="/logo-mark.svg" width="22" height="22" alt="" aria-hidden="true">Language Lineage</a>
+  <a href="/relationships">Relationships</a>
+  <a href="/languages">Languages</a>
+  <a href="/tools">Tools</a>
+  <a href="/guides">Guides</a>
+  <a href="/timeline">Timeline</a>
+  <a href="/dataset">Dataset</a>
+  <a href="/how-it-works">How It Works</a>
+  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
+</nav>
+<main class="seo-main" id="main-content">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; <a href="/ai">AI execution paths</a> &rsaquo; What Actually Happens When SGLang Serves a Request
+  </nav>
+
+  <h1>What Actually Happens When SGLang Serves a Request?</h1>
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#the-selected-path-step-by-step">The selected path, step by step</a></li>
+    <li><a href="#why-prefix-caching-matters">Why prefix caching matters</a></li>
+    <li><a href="#how-this-compares-with-vllm">How this compares with vLLM</a></li>
+    <li><a href="#every-stage">Every stage</a></li>
+    <li><a href="#every-step">Every step</a></li>
+    <li><a href="#what-this-does-not-show">What this does not show</a></li>
+    <li><a href="#how-this-page-is-checked">How this page is checked</a></li>
+  </ol>
+</nav>
+
+  <div class="answer-box">A request to SGLang's <strong>HTTP server</strong> goes to the <strong>TokenizerManager</strong> in the same process, which tokenizes it and sends it over ZMQ to the <strong>Scheduler</strong> process. The scheduler matches the prompt against the <strong>radix prefix cache</strong> (RadixAttention), so tokens shared with earlier requests are not prefilled again, forms a batch and runs it through the <strong>ModelRunner</strong>. Decode steps replay <strong>CUDA graphs</strong>, and attention runs on the backend SGLang picks for your GPU: <strong>FlashInfer</strong> on Ampere and Ada, <strong>FlashAttention 3</strong> on Hopper, <strong>TRT-LLM MHA</strong> on Blackwell. Output tokens go to the <strong>DetokenizerManager</strong> process, which returns text to be streamed back.</div>
+
+  <section class="ai-explorer" id="explorer" aria-label="Execution path explorer">
+    <form class="ai-controls" onsubmit="return false">
+      <fieldset><legend>GPU generation</legend>
+        <label><input type="radio" name="gpu" value="ampere" data-phrase="an Ampere or Ada GPU (FlashInfer attention)"> Ampere / Ada</label>
+        <label><input type="radio" name="gpu" value="hopper" data-phrase="a Hopper GPU (FlashAttention 3)" checked> Hopper (H100)</label>
+        <label><input type="radio" name="gpu" value="blackwell" data-phrase="a Blackwell GPU (TRT-LLM MHA attention)"> Blackwell (B200)</label>
+      </fieldset>
+      <button type="button" class="ai-copy" hidden>Copy link to this path</button>
+    </form>
+    <p class="ai-status" aria-live="polite" data-template="Showing an SGLang request on {gpu}">Showing an SGLang request on a Hopper GPU (FlashAttention 3): 10 stages, 11 steps.</p>
+    <div class="ai-layout">
+      <div class="ai-diagram-wrap"><svg class="ai-path-svg" viewBox="0 0 826 624" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Execution path diagram: select a stage or step for details">
+<defs><marker id="ai-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9a9a9a"/></marker></defs>
+<path id="step-client--http_server" class="ai-step on" d="M413,62 C413,78 413,78 413,88" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Your app or client sends a request to HTTP server"><title>Your app or client sends a request to HTTP server</title></path>
+<path id="step-http_server--tokenizer_manager" class="ai-step on" d="M413,140 C413,156 413,156 413,166" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="HTTP server hands the request to TokenizerManager"><title>HTTP server hands the request to TokenizerManager</title></path>
+<path id="step-tokenizer_manager--scheduler" class="ai-step on" d="M413,218 C413,234 413,234 413,244" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="TokenizerManager sends tokens over ZMQ to Scheduler"><title>TokenizerManager sends tokens over ZMQ to Scheduler</title></path>
+<path id="step-scheduler--radix_cache" class="ai-step on" d="M413,296 C413,312 104,312 104,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Scheduler matches prefixes in Radix prefix cache"><title>Scheduler matches prefixes in Radix prefix cache</title></path>
+<path id="step-scheduler--model_runner" class="ai-step on" d="M413,296 C413,312 413,312 413,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Scheduler forwards each batch to ModelRunner"><title>Scheduler forwards each batch to ModelRunner</title></path>
+<path id="step-model_runner--cuda_graph" class="ai-step on" d="M413,374 C413,390 722,390 722,400" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="ModelRunner replays decode steps as Decode CUDA graphs"><title>ModelRunner replays decode steps as Decode CUDA graphs</title></path>
+<path id="step-model_runner--flashinfer" class="ai-step" d="M413,374 C413,429 207,429 207,478" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="ModelRunner computes attention with FlashInfer"><title>ModelRunner computes attention with FlashInfer</title></path>
+<path id="step-model_runner--fa3" class="ai-step on" d="M413,374 C413,429 413,429 413,478" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="ModelRunner computes attention with FlashAttention 3"><title>ModelRunner computes attention with FlashAttention 3</title></path>
+<path id="step-model_runner--trtllm_mha" class="ai-step" d="M413,374 C413,429 619,429 619,478" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="ModelRunner computes attention with TRT-LLM MHA"><title>ModelRunner computes attention with TRT-LLM MHA</title></path>
+<path id="step-flashinfer--gpu" class="ai-step" d="M207,530 C207,546 413,546 413,556" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="FlashInfer runs on NVIDIA GPU"><title>FlashInfer runs on NVIDIA GPU</title></path>
+<path id="step-fa3--gpu" class="ai-step on" d="M413,530 C413,546 413,546 413,556" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="FlashAttention 3 runs on NVIDIA GPU"><title>FlashAttention 3 runs on NVIDIA GPU</title></path>
+<path id="step-trtllm_mha--gpu" class="ai-step" d="M619,530 C619,546 413,546 413,556" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="TRT-LLM MHA runs on NVIDIA GPU"><title>TRT-LLM MHA runs on NVIDIA GPU</title></path>
+<path id="step-cuda_graph--gpu" class="ai-step on" d="M722,452 C722,507 413,507 413,556" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Decode CUDA graphs replayed on NVIDIA GPU"><title>Decode CUDA graphs replayed on NVIDIA GPU</title></path>
+<path id="step-scheduler--detokenizer" class="ai-step on" d="M501,273 C564.5,273 564.5,273 628,273" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Scheduler sends output tokens to DetokenizerManager"><title>Scheduler sends output tokens to DetokenizerManager</title></path>
+<path id="step-detokenizer--tokenizer_manager" class="ai-step on" d="M634,273 C570.5,273 570.5,195 507,195" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="DetokenizerManager returns text to TokenizerManager"><title>DetokenizerManager returns text to TokenizerManager</title></path>
+<g id="stage-client" class="ai-stage on" tabindex="0" role="button" aria-label="Your app or client: Your program">
+  <rect x="325" y="16" width="176" height="46" rx="7" style="--kc:#60a5fa"/>
+  <rect x="325" y="16" width="4" height="46" rx="2" fill="#60a5fa"/>
+  <text x="339" y="35" class="ai-name">Your app or client</text>
+  <text x="339" y="51" class="ai-kind">application</text>
+</g>
+<g id="stage-http_server" class="ai-stage on" tabindex="0" role="button" aria-label="HTTP server: Framework core">
+  <rect x="325" y="94" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="325" y="94" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="339" y="113" class="ai-name">HTTP server</text>
+  <text x="339" y="129" class="ai-kind">framework component</text>
+</g>
+<g id="stage-tokenizer_manager" class="ai-stage on" tabindex="0" role="button" aria-label="TokenizerManager: Framework core">
+  <rect x="325" y="172" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="325" y="172" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="339" y="191" class="ai-name">TokenizerManager</text>
+  <text x="339" y="207" class="ai-kind">framework component</text>
+</g>
+<g id="stage-scheduler" class="ai-stage on" tabindex="0" role="button" aria-label="Scheduler: Runtime">
+  <rect x="325" y="250" width="176" height="46" rx="7" style="--kc:#93c5fd"/>
+  <rect x="325" y="250" width="4" height="46" rx="2" fill="#93c5fd"/>
+  <text x="339" y="269" class="ai-name">Scheduler</text>
+  <text x="339" y="285" class="ai-kind">runtime</text>
+</g>
+<g id="stage-detokenizer" class="ai-stage on" tabindex="0" role="button" aria-label="DetokenizerManager: Framework core">
+  <rect x="634" y="250" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="634" y="250" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="648" y="269" class="ai-name">DetokenizerManager</text>
+  <text x="648" y="285" class="ai-kind">framework component</text>
+</g>
+<g id="stage-radix_cache" class="ai-stage on" tabindex="0" role="button" aria-label="Radix prefix cache: Framework core">
+  <rect x="16" y="328" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="16" y="328" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="30" y="347" class="ai-name">Radix prefix cache</text>
+  <text x="30" y="363" class="ai-kind">framework component</text>
+</g>
+<g id="stage-model_runner" class="ai-stage on" tabindex="0" role="button" aria-label="ModelRunner: Framework core">
+  <rect x="325" y="328" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="325" y="328" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="339" y="347" class="ai-name">ModelRunner</text>
+  <text x="339" y="363" class="ai-kind">framework component</text>
+</g>
+<g id="stage-cuda_graph" class="ai-stage on" tabindex="0" role="button" aria-label="Decode CUDA graphs: Runtime">
+  <rect x="634" y="406" width="176" height="46" rx="7" style="--kc:#93c5fd"/>
+  <rect x="634" y="406" width="4" height="46" rx="2" fill="#93c5fd"/>
+  <text x="648" y="425" class="ai-name">Decode CUDA graphs</text>
+  <text x="648" y="441" class="ai-kind">runtime</text>
+</g>
+<g id="stage-flashinfer" class="ai-stage" tabindex="0" role="button" aria-label="FlashInfer: Kernel">
+  <rect x="119" y="484" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="119" y="484" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="133" y="503" class="ai-name">FlashInfer</text>
+  <text x="133" y="519" class="ai-kind">kernel</text>
+</g>
+<g id="stage-fa3" class="ai-stage on" tabindex="0" role="button" aria-label="FlashAttention 3: Kernel">
+  <rect x="325" y="484" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="325" y="484" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="339" y="503" class="ai-name">FlashAttention 3</text>
+  <text x="339" y="519" class="ai-kind">kernel</text>
+</g>
+<g id="stage-trtllm_mha" class="ai-stage" tabindex="0" role="button" aria-label="TRT-LLM MHA: Kernel">
+  <rect x="531" y="484" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="531" y="484" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="545" y="503" class="ai-name">TRT-LLM MHA</text>
+  <text x="545" y="519" class="ai-kind">kernel</text>
+</g>
+<g id="stage-gpu" class="ai-stage on" tabindex="0" role="button" aria-label="NVIDIA GPU: Hardware">
+  <rect x="325" y="562" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="325" y="562" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="339" y="581" class="ai-name">NVIDIA GPU</text>
+  <text x="339" y="597" class="ai-kind">hardware</text>
+</g>
+</svg></div>
+      <aside class="ai-detail" aria-live="polite"><p class="ai-detail-hint">Select a stage or an arrow to see what it does and the source behind it.</p></aside>
+    </div>
+    <ul class="ai-legend" aria-label="Legend"><li><span class="ai-swatch" style="--kc:#60a5fa"></span>Your program</li><li><span class="ai-swatch" style="--kc:#93c5fd"></span>Runtime</li><li><span class="ai-swatch" style="--kc:#e3a008"></span>Framework core</li><li><span class="ai-swatch" style="--kc:#f472b6"></span>Kernel</li><li><span class="ai-swatch" style="--kc:#4ade80"></span>Hardware</li></ul>
+  </section>
+
+  <h2 id="the-selected-path-step-by-step">The selected path, step by step</h2>
+  <ol class="ai-path-list">
+<li>Your app or client <em>sends a request to</em> HTTP server: Your client sends an HTTP request to the server.</li>
+<li>HTTP server <em>hands the request to</em> TokenizerManager: The HTTP server and the TokenizerManager share the main process.</li>
+<li>TokenizerManager <em>sends tokens over ZMQ to</em> Scheduler: Tokenized requests go to the scheduler process over ZMQ.</li>
+<li>Scheduler <em>matches prefixes in</em> Radix prefix cache: The scheduler matches each request against the cached prefixes, so the KV cache of tokens shared with earlier requests is reused rather than computed again.</li>
+<li>Scheduler <em>forwards each batch to</em> ModelRunner: The scheduler forms a batch and runs it through the model.</li>
+<li>ModelRunner <em>replays decode steps as</em> Decode CUDA graphs: Decode batches replay captured CUDA graphs, one per batch shape by default.</li>
+<li>ModelRunner <em>computes attention with</em> FlashAttention 3: With no --attention-backend set, Hopper GPUs use FlashAttention 3.</li>
+<li>FlashAttention 3 <em>runs on</em> NVIDIA GPU: The attention kernels run on the GPU.</li>
+<li>Decode CUDA graphs <em>replayed on</em> NVIDIA GPU: Replaying a graph launches the step's kernels together.</li>
+<li>Scheduler <em>sends output tokens to</em> DetokenizerManager: Output tokens go to the detokenizer process.</li>
+<li>DetokenizerManager <em>returns text to</em> TokenizerManager: Decoded text goes back to the TokenizerManager, which returns it to the client.</li>
+  </ol>
+
+  <h2 id="why-prefix-caching-matters">Why prefix caching matters</h2>
+  <p>When many requests share the same prefix, the KV cache for that prefix is identical. SGLang keeps the KV cache of those tokens in a radix tree, where each node covers a span of tokens and a path from the root is a request's prefix. A new request that shares the path skips computing it, and the shared nodes are stored once.</p>
+
+  <h2 id="how-this-compares-with-vllm">How this compares with vLLM</h2>
+  <p>Both engines split serving into processes: SGLang uses a TokenizerManager, a scheduler process and a DetokenizerManager talking over ZMQ; <a href="/ai/how-vllm-runs">vLLM</a> uses an API server, an engine core and GPU workers. Both replay CUDA graphs and choose an attention backend by GPU. Which one is faster depends on the workload and version, so this page does not compare speed.</p>
+
+  <h2 id="every-stage">Every stage</h2>
+  <div class="ai-stage-list">
+<article class="ai-stage-detail" id="detail-stage-client" data-stage="client">
+<h3>Your app or client</h3>
+<p class="ai-kind-tag" style="--kc:#60a5fa">application</p>
+<p>Any program that sends requests to SGLang's HTTP API.</p>
+
+<ul class="ai-sources"><li><blockquote>This file implements HTTP APIs for the inference engine via fastapi.</blockquote><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/entrypoints/http_server.py" rel="noopener noreferrer" target="_blank">python/sglang/srt/entrypoints/http_server.py (sgl-project/sglang)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-http_server" data-stage="http_server">
+<h3>HTTP server</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>SGLang's FastAPI server, running in the main process alongside the engine and the TokenizerManager.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/sglang">SGLang</a></p>
+<ul class="ai-sources"><li><blockquote>This file implements HTTP APIs for the inference engine via fastapi.</blockquote><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/entrypoints/http_server.py" rel="noopener noreferrer" target="_blank">python/sglang/srt/entrypoints/http_server.py (sgl-project/sglang)</a> <span class="src-type">Source repository</span></li><li><blockquote>The HTTP server, Engine, and TokenizerManager all run in the main process.</blockquote><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/entrypoints/engine.py" rel="noopener noreferrer" target="_blank">python/sglang/srt/entrypoints/engine.py (sgl-project/sglang)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-tokenizer_manager" data-stage="tokenizer_manager">
+<h3>TokenizerManager</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>Tokenizes each request and hands it to the scheduler process.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/sglang">SGLang</a></p>
+<ul class="ai-sources"><li><blockquote>TokenizerManager: Tokenizes the requests and sends them to the scheduler.</blockquote><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/entrypoints/engine.py" rel="noopener noreferrer" target="_blank">python/sglang/srt/entrypoints/engine.py (sgl-project/sglang)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-scheduler" data-stage="scheduler">
+<h3>Scheduler</h3>
+<p class="ai-kind-tag" style="--kc:#93c5fd">runtime</p>
+<p>A separate process that receives requests, forms batches, runs them through the model and sends the output tokens on.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/sglang">SGLang</a></p>
+<ul class="ai-sources"><li><blockquote>Scheduler (subprocess): Receives requests from the Tokenizer Manager, schedules batches, forwards them, and sends the output tokens to the Detokenizer Manager.</blockquote><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/entrypoints/engine.py" rel="noopener noreferrer" target="_blank">python/sglang/srt/entrypoints/engine.py (sgl-project/sglang)</a> <span class="src-type">Source repository</span></li><li><blockquote>A scheduler that manages a tensor parallel GPU worker.</blockquote><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/managers/scheduler.py" rel="noopener noreferrer" target="_blank">python/sglang/srt/managers/scheduler.py (sgl-project/sglang)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-detokenizer" data-stage="detokenizer">
+<h3>DetokenizerManager</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>A separate process that turns output token ids back into text and returns it to the TokenizerManager.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/sglang">SGLang</a></p>
+<ul class="ai-sources"><li><blockquote>DetokenizerManager (subprocess): Detokenizes the output tokens and sends the result back to the Tokenizer Manager.</blockquote><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/entrypoints/engine.py" rel="noopener noreferrer" target="_blank">python/sglang/srt/entrypoints/engine.py (sgl-project/sglang)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-radix_cache" data-stage="radix_cache">
+<h3>Radix prefix cache</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>RadixAttention's radix tree over the KV cache: each node holds the KV of a span of tokens, so requests that share a prefix reuse it instead of recomputing it.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/sglang">SGLang</a></p>
+<ul class="ai-sources"><li><blockquote>The radix tree data structure for managing the KV cache.</blockquote><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/mem_cache/radix_cache.py" rel="noopener noreferrer" target="_blank">python/sglang/srt/mem_cache/radix_cache.py (sgl-project/sglang)</a> <span class="src-type">Source repository</span></li><li><blockquote>In RadixAttention, each node of the RadixTree corresponds to the KV cache of a consecutive span of tokens in GPU memory.</blockquote><a href="https://github.com/sgl-project/sglang/blob/main/docs/docs/advanced_features/hicache_design.mdx" rel="noopener noreferrer" target="_blank">HiCache design (SGLang documentation source)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-model_runner" data-stage="model_runner">
+<h3>ModelRunner</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>Runs the model's forward pass for each batch.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/sglang">SGLang</a></p>
+<ul class="ai-sources"><li><blockquote>ModelRunner runs the forward passes of the models.</blockquote><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/model_executor/model_runner.py" rel="noopener noreferrer" target="_blank">python/sglang/srt/model_executor/model_runner.py (sgl-project/sglang)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-cuda_graph" data-stage="cuda_graph">
+<h3>Decode CUDA graphs</h3>
+<p class="ai-kind-tag" style="--kc:#93c5fd">runtime</p>
+<p>Decode steps run as captured CUDA graphs; the default backend keeps one full graph per batch shape.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/cuda">CUDA</a></p>
+<ul class="ai-sources"><li><blockquote>DecodeCudaGraphRunner — runs DECODE / TARGET_VERIFY / DLLM_EXTEND under</blockquote><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/model_executor/runner/decode_cuda_graph_runner.py" rel="noopener noreferrer" target="_blank">python/sglang/srt/model_executor/runner/decode_cuda_graph_runner.py (sgl-project/sglang)</a> <span class="src-type">Source repository</span></li><li><blockquote>default, FullCudaGraphBackend: one</blockquote><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/model_executor/runner/decode_cuda_graph_runner.py" rel="noopener noreferrer" target="_blank">python/sglang/srt/model_executor/runner/decode_cuda_graph_runner.py (sgl-project/sglang)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-flashinfer" data-stage="flashinfer">
+<h3>FlashInfer</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel</p>
+<p>Default attention backend for standard (MHA) models on Ampere, Ada and other non-Hopper, non-Blackwell NVIDIA GPUs, when available.</p>
+
+<ul class="ai-sources"><li><blockquote>Defaults to flashinfer if available; otherwise falls back to triton.</blockquote><a href="https://github.com/sgl-project/sglang/blob/main/docs/docs/advanced_features/attention_backend.mdx" rel="noopener noreferrer" target="_blank">Attention backend (SGLang documentation source)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-fa3" data-stage="fa3">
+<h3>FlashAttention 3</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel</p>
+<p>Default attention backend on Hopper GPUs (H100, H200) with CUDA 12.3 or newer, for supported models.</p>
+
+<ul class="ai-sources"><li><blockquote>Defaults to fa3 if using CUDA 12.3+ and the model configuration is supported.</blockquote><a href="https://github.com/sgl-project/sglang/blob/main/docs/docs/advanced_features/attention_backend.mdx" rel="noopener noreferrer" target="_blank">Attention backend (SGLang documentation source)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-trtllm_mha" data-stage="trtllm_mha">
+<h3>TRT-LLM MHA</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel</p>
+<p>Default attention backend on Blackwell GPUs (B200), unless speculative decoding uses topk &gt; 1.</p>
+
+<ul class="ai-sources"><li><blockquote>Defaults to trtllm_mha, unless using speculative decoding with topk &gt; 1.</blockquote><a href="https://github.com/sgl-project/sglang/blob/main/docs/docs/advanced_features/attention_backend.mdx" rel="noopener noreferrer" target="_blank">Attention backend (SGLang documentation source)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-gpu" data-stage="gpu">
+<h3>NVIDIA GPU</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">hardware</p>
+<p>The GPU that runs the batch.</p>
+
+<ul class="ai-sources"><li><blockquote>If the --attention-backend argument is not specified, SGLang automatically selects the best backend based on the hardware (CUDA) and model architecture.</blockquote><a href="https://github.com/sgl-project/sglang/blob/main/docs/docs/advanced_features/attention_backend.mdx" rel="noopener noreferrer" target="_blank">Attention backend (SGLang documentation source)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+  </div>
+
+  <h2 id="every-step">Every step</h2>
+  <div class="table-wrap"><table class="ai-steps">
+    <thead><tr><th>From</th><th>Step</th><th>To</th><th>When</th><th>What happens</th><th>Source</th></tr></thead>
+    <tbody>
+<tr id="detail-step-client--http_server" data-step="client--http_server" data-from="client" data-to="http_server" data-when="{}" class="on">
+<td>Your app or client</td><td>sends a request to</td><td>HTTP server</td><td>any gpu generation</td><td>Your client sends an HTTP request to the server.</td><td><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/entrypoints/http_server.py" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-http_server--tokenizer_manager" data-step="http_server--tokenizer_manager" data-from="http_server" data-to="tokenizer_manager" data-when="{}" class="on">
+<td>HTTP server</td><td>hands the request to</td><td>TokenizerManager</td><td>any gpu generation</td><td>The HTTP server and the TokenizerManager share the main process.</td><td><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/entrypoints/engine.py" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-tokenizer_manager--scheduler" data-step="tokenizer_manager--scheduler" data-from="tokenizer_manager" data-to="scheduler" data-when="{}" class="on">
+<td>TokenizerManager</td><td>sends tokens over ZMQ to</td><td>Scheduler</td><td>any gpu generation</td><td>Tokenized requests go to the scheduler process over ZMQ.</td><td><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/entrypoints/engine.py" rel="noopener noreferrer" target="_blank">Source repository</a><br><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/entrypoints/engine.py" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-scheduler--radix_cache" data-step="scheduler--radix_cache" data-from="scheduler" data-to="radix_cache" data-when="{}" class="on">
+<td>Scheduler</td><td>matches prefixes in</td><td>Radix prefix cache</td><td>any gpu generation</td><td>The scheduler matches each request against the cached prefixes, so the KV cache of tokens shared with earlier requests is reused rather than computed again.</td><td><a href="https://github.com/sgl-project/sglang/blob/main/docs/docs/advanced_features/hicache_design.mdx" rel="noopener noreferrer" target="_blank">Source repository</a><br><a href="https://github.com/sgl-project/sglang/blob/main/docs/docs/advanced_features/hicache_design.mdx" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-scheduler--model_runner" data-step="scheduler--model_runner" data-from="scheduler" data-to="model_runner" data-when="{}" class="on">
+<td>Scheduler</td><td>forwards each batch to</td><td>ModelRunner</td><td>any gpu generation</td><td>The scheduler forms a batch and runs it through the model.</td><td><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/entrypoints/engine.py" rel="noopener noreferrer" target="_blank">Source repository</a><br><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/model_executor/model_runner.py" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-model_runner--cuda_graph" data-step="model_runner--cuda_graph" data-from="model_runner" data-to="cuda_graph" data-when="{}" class="on">
+<td>ModelRunner</td><td>replays decode steps as</td><td>Decode CUDA graphs</td><td>any gpu generation</td><td>Decode batches replay captured CUDA graphs, one per batch shape by default.</td><td><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/model_executor/runner/decode_cuda_graph_runner.py" rel="noopener noreferrer" target="_blank">Source repository</a><br><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/model_executor/runner/decode_cuda_graph_runner.py" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-model_runner--flashinfer" data-step="model_runner--flashinfer" data-from="model_runner" data-to="flashinfer" data-when="{&quot;gpu&quot;:[&quot;ampere&quot;]}">
+<td>ModelRunner</td><td>computes attention with</td><td>FlashInfer</td><td>Ampere / Ada</td><td>With no --attention-backend set, Ampere and Ada GPUs use FlashInfer when it is available.</td><td><a href="https://github.com/sgl-project/sglang/blob/main/docs/docs/advanced_features/attention_backend.mdx" rel="noopener noreferrer" target="_blank">Source repository</a><br><a href="https://github.com/sgl-project/sglang/blob/main/docs/docs/advanced_features/attention_backend.mdx" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-model_runner--fa3" data-step="model_runner--fa3" data-from="model_runner" data-to="fa3" data-when="{&quot;gpu&quot;:[&quot;hopper&quot;]}" class="on">
+<td>ModelRunner</td><td>computes attention with</td><td>FlashAttention 3</td><td>Hopper (H100)</td><td>With no --attention-backend set, Hopper GPUs use FlashAttention 3.</td><td><a href="https://github.com/sgl-project/sglang/blob/main/docs/docs/advanced_features/attention_backend.mdx" rel="noopener noreferrer" target="_blank">Source repository</a><br><a href="https://github.com/sgl-project/sglang/blob/main/docs/docs/advanced_features/attention_backend.mdx" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-model_runner--trtllm_mha" data-step="model_runner--trtllm_mha" data-from="model_runner" data-to="trtllm_mha" data-when="{&quot;gpu&quot;:[&quot;blackwell&quot;]}">
+<td>ModelRunner</td><td>computes attention with</td><td>TRT-LLM MHA</td><td>Blackwell (B200)</td><td>With no --attention-backend set, Blackwell GPUs use TensorRT-LLM's MHA kernels.</td><td><a href="https://github.com/sgl-project/sglang/blob/main/docs/docs/advanced_features/attention_backend.mdx" rel="noopener noreferrer" target="_blank">Source repository</a><br><a href="https://github.com/sgl-project/sglang/blob/main/docs/docs/advanced_features/attention_backend.mdx" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-flashinfer--gpu" data-step="flashinfer--gpu" data-from="flashinfer" data-to="gpu" data-when="{&quot;gpu&quot;:[&quot;ampere&quot;]}">
+<td>FlashInfer</td><td>runs on</td><td>NVIDIA GPU</td><td>Ampere / Ada</td><td>The attention kernels run on the GPU.</td><td><a href="https://github.com/sgl-project/sglang/blob/main/docs/docs/advanced_features/attention_backend.mdx" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-fa3--gpu" data-step="fa3--gpu" data-from="fa3" data-to="gpu" data-when="{&quot;gpu&quot;:[&quot;hopper&quot;]}" class="on">
+<td>FlashAttention 3</td><td>runs on</td><td>NVIDIA GPU</td><td>Hopper (H100)</td><td>The attention kernels run on the GPU.</td><td><a href="https://github.com/sgl-project/sglang/blob/main/docs/docs/advanced_features/attention_backend.mdx" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-trtllm_mha--gpu" data-step="trtllm_mha--gpu" data-from="trtllm_mha" data-to="gpu" data-when="{&quot;gpu&quot;:[&quot;blackwell&quot;]}">
+<td>TRT-LLM MHA</td><td>runs on</td><td>NVIDIA GPU</td><td>Blackwell (B200)</td><td>The attention kernels run on the GPU.</td><td><a href="https://github.com/sgl-project/sglang/blob/main/docs/docs/advanced_features/attention_backend.mdx" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-cuda_graph--gpu" data-step="cuda_graph--gpu" data-from="cuda_graph" data-to="gpu" data-when="{}" class="on">
+<td>Decode CUDA graphs</td><td>replayed on</td><td>NVIDIA GPU</td><td>any gpu generation</td><td>Replaying a graph launches the step's kernels together.</td><td><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/model_executor/runner/decode_cuda_graph_runner.py" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-scheduler--detokenizer" data-step="scheduler--detokenizer" data-from="scheduler" data-to="detokenizer" data-when="{}" class="on">
+<td>Scheduler</td><td>sends output tokens to</td><td>DetokenizerManager</td><td>any gpu generation</td><td>Output tokens go to the detokenizer process.</td><td><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/entrypoints/engine.py" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-detokenizer--tokenizer_manager" data-step="detokenizer--tokenizer_manager" data-from="detokenizer" data-to="tokenizer_manager" data-when="{}" class="on">
+<td>DetokenizerManager</td><td>returns text to</td><td>TokenizerManager</td><td>any gpu generation</td><td>Decoded text goes back to the TokenizerManager, which returns it to the client.</td><td><a href="https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/entrypoints/engine.py" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="what-this-does-not-show">What this does not show</h2>
+  <p>Documented paths for one standard (MHA) model such as Llama or Qwen served on a single NVIDIA GPU with default settings, by GPU generation. MLA models, AMD and other hardware, tensor and data parallelism, speculative decoding, HiCache's host and remote tiers, the optional torch.compile mode and SGLang's frontend language are out of scope.</p>
+
+  <h2 id="how-this-page-is-checked">How this page is checked</h2>
+  <p>Every stage and step above quotes the source that supports it. The quotes were checked against the SGLang source (engine, HTTP server, scheduler, model runner, radix cache and decode CUDA graph runner) and its documentation sources for HiCache design and attention backends on 2026-11-12. The data is a <a href="/dataset/ai/how-sglang-runs.json">versioned JSON file</a> under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. Found something wrong or out of date? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
+  <p><a class="ai-graph-link" href="/explore?view=ai&amp;path=how-sglang-runs&amp;gpu=hopper">See this path in the graph explorer &rarr;</a></p>
+  <p>What these tools are written in is in the main atlas: <a href="/tools/sglang">SGLang</a>, <a href="/tools/cuda">CUDA</a>. More execution paths: <a href="/ai/how-jax-runs">What Actually Happens When You Run JAX Code</a>, <a href="/ai/how-keras-runs">What Runs Underneath a Keras 3 Model</a>, <a href="/ai/how-llama-cpp-runs">How Does llama.cpp Run a Model on Your Hardware</a>, <a href="/ai/how-mlx-runs">What Actually Happens When You Run MLX on a Mac</a>, <a href="/ai/how-ollama-runs">What Actually Runs When You Send Ollama a Prompt</a>, <a href="/ai/how-onnx-runtime-runs">How Does ONNX Runtime Execute a Model Across Hardware</a>, <a href="/ai/how-pytorch-runs">What Actually Happens When You Run a PyTorch Model</a>, <a href="/ai/how-tensorflow-runs">How Does TensorFlow Run Python on a CPU or GPU</a>, <a href="/ai/how-tensorrt-llm-runs">What Actually Happens When TensorRT-LLM Runs a Model</a>, <a href="/ai/how-vllm-runs">What Actually Happens When vLLM Serves a Request</a>, or <a href="/ai">compare them all</a>.</p>
+
+  <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>
+</main>
+<footer class="seo-footer-rich">
+  <div data-nosnippet>
+  <div class="footer-grid">
+    <div class="footer-col">
+      <span class="footer-col-head">Explore</span>
+      <a href="/programming-language-graph">Programming language graph</a>
+      <a href="/rankings/most-influential">Most influential languages</a>
+      <a href="/rss.xml">RSS feed</a>
+      <a href="/embed-kit">Embed the graph</a>
+      <a href="/guides/programming-language-family-tree">Language family tree</a>
+      <a href="/programming-language-evolution">Evolution timeline</a>
+      <a href="/what-are-programming-languages-written-in">What languages are written in</a>
+      <a href="/ai">How AI frameworks run code</a>
+      <a href="/explore">Interactive Graph</a>
+      <a href="/dataset">Dataset</a>
+      <a href="/directory">Site Directory</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Popular Languages</span>
+      <a href="/languages/python">Python</a>
+      <a href="/languages/javascript">JavaScript</a>
+      <a href="/languages/rust">Rust</a>
+      <a href="/languages/go">Go</a>
+      <a href="/languages/java">Java</a>
+      <a href="/languages/c">C</a>
+      <a href="/languages/cxx">C++</a>
+      <a href="/languages/typescript">TypeScript</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Questions</span>
+      <a href="/questions/what-is-python-written-in">What is Python written in?</a>
+      <a href="/questions/what-is-javascript-written-in">What is JavaScript written in?</a>
+      <a href="/questions/what-is-rust-written-in">What is Rust written in?</a>
+      <a href="/questions/what-is-go-written-in">What is Go written in?</a>
+      <a href="/questions/what-is-compiler-bootstrapping">What is compiler bootstrapping?</a>
+      <a href="/questions">All questions &rarr;</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Tools &amp; Guides</span>
+      <a href="/tools/v8">V8</a>
+      <a href="/tools/llvm">LLVM</a>
+      <a href="/tools/gcc">GCC</a>
+      <a href="/tools/ghc">GHC</a>
+      <a href="/guides">All guides</a>
+      <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </div>
+  <p class="footer-note">The Language Lineage dataset is meticulously curated and verified by human researchers. We use AI agents to assist with large-scale data gathering and modeling, but every implementation fact is manually reviewed for accuracy. Spot an error? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue on GitHub</a> and it gets fixed. <a href="/how-it-works">Learn how it works &rarr;</a></p>
+  <div class="footer-bottom">Made with <span style="color:#fb7185">❤️</span> by <a href="https://github.com/sanketmuchhala" rel="noopener noreferrer">Sanket Muchhala</a> &middot; <a href="/">Language Lineage</a></div>
+  </div>
+</footer>
+</body>
+</html>

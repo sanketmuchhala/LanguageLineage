@@ -36,10 +36,10 @@
     "enrichment_records": 148,
     "logo_overrides": 22,
     "ai_execution_paths": {
-      "total": 10,
-      "stages": 135,
-      "steps": 158,
-      "sources": 70
+      "total": 11,
+      "stages": 147,
+      "steps": 173,
+      "sources": 78
     }
   },
   "files": [
@@ -151,6 +151,17 @@
       "sources": 13,
       "sha256": "b8c21c09fbddec3152eed2eefc73da0664e2ee158d77d5623523af16a8ec483d",
       "bytes": 39214
+    },
+    {
+      "slug": "how-sglang-runs",
+      "name": "SGLang",
+      "path": "dataset/ai/how-sglang-runs.json",
+      "verified_on": "2026-11-12",
+      "stages": 12,
+      "steps": 15,
+      "sources": 8,
+      "sha256": "f1850248316a1b1c8e8ac9bdacb1a03f6607ed5ec72eff4e64d554231ed70ad1",
+      "bytes": 19816
     },
     {
       "slug": "how-tensorflow-runs",

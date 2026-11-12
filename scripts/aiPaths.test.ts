@@ -181,6 +181,23 @@ describe('how-pytorch-runs on AMD (ROCm) and Apple (MPS) GPUs', () => {
   });
 });
 
+describe('how-sglang-runs semantics', () => {
+  const data = bySlug('how-sglang-runs');
+  const path = (gpu: string) => activePath(data, { gpu });
+  const BACKEND: Record<string, string> = { ampere: 'flashinfer', hopper: 'fa3', blackwell: 'trtllm_mha' };
+
+  it.each(Object.keys(BACKEND))('%s goes through the serving processes, the radix cache and only its default attention backend', (gpu) => {
+    const p = path(gpu);
+    for (const id of ['http_server', 'tokenizer_manager', 'scheduler', 'radix_cache', 'model_runner', 'cuda_graph', 'detokenizer', 'gpu']) expect(p.stages.has(id), id).toBe(true);
+    for (const [other, backend] of Object.entries(BACKEND)) expect(p.stages.has(backend), `${gpu} uses ${backend}`).toBe(other === gpu);
+  });
+
+  it('requests reach the scheduler over ZMQ and output returns through the detokenizer', () => {
+    const p = path('hopper');
+    for (const s of ['tokenizer_manager--scheduler', 'scheduler--detokenizer', 'detokenizer--tokenizer_manager']) expect(p.steps.has(s), s).toBe(true);
+  });
+});
+
 describe('how-vllm-runs semantics', () => {
   const data = bySlug('how-vllm-runs');
   const path = (mode: string, attention: string) => activePath(data, { mode, attention });
