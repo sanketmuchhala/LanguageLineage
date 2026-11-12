@@ -6512,6 +6512,7 @@ ${stepRows}
 
   <h2>How this page is checked</h2>
   <p>Every stage and step above quotes the source that supports it. The quotes were checked against ${escapeHtml(data.verified_against)} on ${escapeHtml(data.verified_on)}. The data is a <a href="/dataset/ai/${data.slug}.json">versioned JSON file</a> under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. Found something wrong or out of date? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
+  <p><a class="ai-graph-link" href="/explore?${escapeHtml(new URLSearchParams({ view: 'ai', path: data.slug, ...sel }).toString())}">See this path in the graph explorer &rarr;</a></p>
   <p>What these tools are written in is in the main atlas: ${atlasLinks.join(', ')}.${otherPages.length ? ` More execution paths: ${otherPages.join(', ')}, or <a href="/ai">compare them all</a>.` : ''}</p>
 
   <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>

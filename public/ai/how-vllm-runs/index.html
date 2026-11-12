@@ -279,7 +279,7 @@
 <h3>TorchDynamo</h3>
 <p class="ai-kind-tag" style="--kc:#a78bfa">compiler</p>
 <p>PyTorch's graph capture. vLLM runs it on the model's forward function once, at startup.</p>
-
+<p class="ai-lineage">In the atlas: <a href="/tools/pytorch">PyTorch</a></p>
 <ul class="ai-sources"><li><blockquote>In vLLM's V1 architecture, torch.compile is enabled by default and is a critical part of the framework.</blockquote><a href="https://docs.vllm.ai/en/latest/design/torch_compile/" rel="noopener noreferrer" target="_blank">torch.compile integration (vLLM documentation)</a> <span class="src-type">Project docs</span></li><li><blockquote>This is about the Python code compilation, i.e. graph capture by Dynamo.</blockquote><a href="https://docs.vllm.ai/en/latest/design/torch_compile/" rel="noopener noreferrer" target="_blank">torch.compile integration (vLLM documentation)</a> <span class="src-type">Project docs</span></li></ul>
 </article>
 <article class="ai-stage-detail" id="detail-stage-flash_attn" data-stage="flash_attn">
@@ -307,7 +307,7 @@
 <h3>TorchInductor</h3>
 <p class="ai-kind-tag" style="--kc:#a78bfa">compiler</p>
 <p>PyTorch's compiler backend. It compiles each graph piece; vLLM caches the results on disk.</p>
-
+<p class="ai-lineage">In the atlas: <a href="/tools/pytorch">PyTorch</a></p>
 <ul class="ai-sources"><li><blockquote>This means the first piece of computation graph (with shape None for symbolic shape) is compiled by Inductor</blockquote><a href="https://docs.vllm.ai/en/latest/design/torch_compile/" rel="noopener noreferrer" target="_blank">torch.compile integration (vLLM documentation)</a> <span class="src-type">Project docs</span></li></ul>
 </article>
 <article class="ai-stage-detail" id="detail-stage-triton_kernels" data-stage="triton_kernels">
@@ -399,6 +399,7 @@
 
   <h2 id="how-this-page-is-checked">How this page is checked</h2>
   <p>Every stage and step above quotes the source that supports it. The quotes were checked against the vLLM documentation (Architecture Overview, torch.compile integration, CUDA Graphs, CustomOp, Attention Backend Feature Support, Paged Attention, Optimization and Tuning), the vLLM README and the PyTorch ATen documentation on 2026-11-11. The data is a <a href="/dataset/ai/how-vllm-runs.json">versioned JSON file</a> under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. Found something wrong or out of date? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
+  <p><a class="ai-graph-link" href="/explore?view=ai&amp;path=how-vllm-runs&amp;mode=compiled&amp;attention=flash">See this path in the graph explorer &rarr;</a></p>
   <p>What these tools are written in is in the main atlas: <a href="/tools/vllm">vLLM</a>, <a href="/tools/pytorch">PyTorch</a>, <a href="/tools/cuda">CUDA</a>, <a href="/tools/triton">Triton</a>. More execution paths: <a href="/ai/how-jax-runs">What Actually Happens When You Run JAX Code</a>, <a href="/ai/how-llama-cpp-runs">How Does llama.cpp Run a Model on Your Hardware</a>, <a href="/ai/how-mlx-runs">What Actually Happens When You Run MLX on a Mac</a>, <a href="/ai/how-onnx-runtime-runs">How Does ONNX Runtime Execute a Model Across Hardware</a>, <a href="/ai/how-pytorch-runs">What Actually Happens When You Run a PyTorch Model</a>, or <a href="/ai">compare them all</a>.</p>
 
   <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>

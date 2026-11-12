@@ -17,6 +17,10 @@
 import { readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { z } from 'zod';
+import { stepId, activePath, type Selection } from '../src/data/aiPathLogic.js';
+
+// Path selection is shared with the graph explorer; re-exported for the generators and tests.
+export { stepId, defaultSelection, allSelections, stepApplies, activePath, type Selection } from '../src/data/aiPathLogic.js';
 
 export const STAGE_KINDS = [
   'application', 'programming_language', 'runtime', 'framework_component', 'compiler',
@@ -84,7 +88,6 @@ export const PathsFile = z.object({
 export type PathsData = z.infer<typeof PathsFile>;
 export type StageT = PathsData['stages'][number];
 export type StepT = PathsData['steps'][number];
-export type Selection = Record<string, string>;
 
 /** Parse and cross-check one file. Throws with every problem listed. */
 export function parsePaths(raw: unknown): PathsData {
@@ -128,39 +131,6 @@ export function loadAllPaths(root: string): PathsData[] {
   });
 }
 
-export const stepId = (s: StepT) => `${s.from}--${s.to}`;
-
-export function defaultSelection(data: PathsData): Selection {
-  return Object.fromEntries(data.dimensions.map(d => [d.id, d.default]));
-}
-
-/** Every combination of dimension values. */
-export function allSelections(data: PathsData): Selection[] {
-  return data.dimensions.reduce<Selection[]>((acc, d) => acc.flatMap(sel => d.options.map(o => ({ ...sel, [d.id]: o.value }))), [{}]);
-}
-
-export function stepApplies(s: StepT, sel: Selection): boolean {
-  return Object.entries(s.when).every(([dim, values]) => values.includes(sel[dim]));
-}
-
-/** The stages and steps reachable from the first stage under one selection. */
-export function activePath(data: PathsData, sel: Selection): { stages: Set<string>; steps: Set<string> } {
-  const steps = data.steps.filter(s => stepApplies(s, sel));
-  const reached = new Set([data.stages[0].id]);
-  const used = new Set<string>();
-  let grew = true;
-  while (grew) {
-    grew = false;
-    for (const s of steps) {
-      if (reached.has(s.from) && !used.has(stepId(s))) {
-        used.add(stepId(s));
-        reached.add(s.to);
-        grew = true;
-      }
-    }
-  }
-  return { stages: reached, steps: used };
-}
 
 export function statusText(data: PathsData, sel: Selection, nStages: number, nSteps: number): string {
   let text = data.status_template;

@@ -88,7 +88,18 @@
     }
   }
 
+  // "See this path in the graph" link: carry the current choices to /explore?view=ai&path=...
+  function syncGraphLink() {
+    var link = document.querySelector('a.ai-graph-link');
+    if (!link) return;
+    var parts = link.getAttribute('href').split('?');
+    var q = new URLSearchParams(parts[1] || '');
+    Object.keys(dims).forEach(function (d) { q.set(d, state.sel[d]); });
+    link.setAttribute('href', parts[0] + '?' + q.toString());
+  }
+
   function render() {
+    syncGraphLink();
     var p = path();
     root.querySelectorAll('.ai-stage').forEach(function (g) { g.classList.toggle('on', !!p.stages[g.id.slice(6)]); });
     root.querySelectorAll('.ai-step').forEach(function (e) { e.classList.toggle('on', !!p.steps[e.id.slice(5)]); });

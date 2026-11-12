@@ -1,3 +1,4 @@
+import { loadExplainer, overlayNodeIds, selectionFrom } from '../data/aiExplainers';
 import { Suspense, lazy, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useGraphStore } from '../store/useGraphStore';
@@ -39,9 +40,29 @@ export function GraphExplorer() {
     const nodeId = searchParams.get('node');
     if (nodeId) setPendingFocusNodeId(nodeId);
     // ?view=ai opens the explorer with the AI infrastructure filter on (linked from /ai).
-    if (searchParams.get('view') === 'ai') useGraphStore.getState().setAttributeFilters({ ai: true });
+    if (searchParams.get('view') === 'ai') {
+      useGraphStore.getState().setAttributeFilters({ ai: true });
+      // ?path=<explainer slug> plus its dimension values (as on the /ai pages) overlays that path.
+      const slug = searchParams.get('path');
+      if (slug) {
+        loadExplainer(slug).then((data) => {
+          if (data) useGraphStore.getState().setAiOverlay({ slug, selection: selectionFrom(data, Object.fromEntries(searchParams)) });
+        });
+      }
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Resolve the requested AI path overlay to atlas node ids once its explainer file has loaded
+  const aiOverlay = useGraphStore((s) => s.aiOverlay);
+  useEffect(() => {
+    if (!aiOverlay) return;
+    let current = true;
+    loadExplainer(aiOverlay.slug).then((data) => {
+      if (current && data) useGraphStore.getState().setAiOverlayNodeIds(overlayNodeIds(data, aiOverlay.selection));
+    });
+    return () => { current = false; };
+  }, [aiOverlay]);
 
   // Load dataset when graph explorer mounts (not on landing page)
   useEffect(() => {

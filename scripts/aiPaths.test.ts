@@ -229,6 +229,18 @@ describe('how-onnx-runtime-runs semantics', () => {
   });
 });
 
+describe('explainer pages link their path to the graph explorer', () => {
+  it.each(files.map(f => [f.slug, f] as const))('%s links /explore with view=ai, its slug and default choices', (_slug, data) => {
+    const href = page(data).match(/<a class="ai-graph-link" href="([^"]+)"/)?.[1];
+    expect(href).toBeDefined();
+    const q = new URLSearchParams(href!.replace(/&amp;/g, '&').split('?')[1]);
+    expect(href!.startsWith('/explore?')).toBe(true);
+    expect(q.get('view')).toBe('ai');
+    expect(q.get('path')).toBe(data.slug);
+    for (const [dim, value] of Object.entries(defaultSelection(data))) expect(q.get(dim)).toBe(value);
+  });
+});
+
 describe('/ai hub page', () => {
   const hub = readFileSync(join(ROOT, 'public/ai/index.html'), 'utf8');
   const table = (id: string) => hub.match(new RegExp(`<table id="${id}">[\\s\\S]*?</table>`))?.[0] ?? '';
