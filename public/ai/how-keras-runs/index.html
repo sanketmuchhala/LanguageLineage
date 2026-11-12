@@ -149,23 +149,23 @@
   </ol>
 
   <h2 id="is-keras-the-same-thing-as-tensorflow">Is Keras the same thing as TensorFlow?</h2>
-  <p>No. Keras 3 can use TensorFlow, JAX or PyTorch as a numerical backend, and also documents an OpenVINO inference-only option. The [Keras README](https://github.com/keras-team/keras/blob/master/README.md) describes these choices. A tutorial using tf.keras tells you something about that tutorial’s integration; the broader Keras 3 project is not limited to that one stack.</p>
+  <p>No. Keras 3 can use TensorFlow, JAX or PyTorch as a numerical backend, and also documents an OpenVINO inference-only option. The <a href="https://github.com/keras-team/keras/blob/master/README.md" rel="noopener noreferrer" target="_blank">Keras README</a> describes these choices. A tutorial using tf.keras tells you something about that tutorial’s integration; the broader Keras 3 project is not limited to that one stack.</p>
   <p>This page separates the Python-facing API from numerical execution. Building layers, configuring a loss and handling model structure belong to the Keras interface. The selected backend determines which tensor implementation and hardware runtime actually carry out the work. Different backend choices therefore lead to different implementation paths even when the Keras model looks similar.</p>
 
   <h2 id="when-does-keras-backend-take-effect">When does KERAS_BACKEND take effect?</h2>
-  <p>The [getting-started guide](https://keras.io/getting_started/) documents KERAS_BACKEND and the Keras configuration file. Configure the backend before importing Keras. This is a process-level choice in the documented startup workflow, not a per-layer switch that can be changed at an arbitrary point in an already imported program.</p>
+  <p>The <a href="https://keras.io/getting_started/" rel="noopener noreferrer" target="_blank">getting-started guide</a> documents KERAS_BACKEND and the Keras configuration file. Configure the backend before importing Keras. This is a process-level choice in the documented startup workflow, not a per-layer switch that can be changed at an arbitrary point in an already imported program.</p>
   <p>Use the control above to compare routes conceptually. It does not execute a model or rewrite the local environment. A working installation still needs the selected backend package and its appropriate CPU or GPU dependencies.</p>
 
   <h2 id="what-changes-with-tensorflow-jax-or-pytorch">What changes with TensorFlow, JAX or PyTorch?</h2>
   <p>With <a href="/ai/how-tensorflow-runs">TensorFlow</a>, operations can follow eager execution, traced graph execution or explicit XLA compilation. With <a href="/ai/how-jax-runs">JAX</a>, tracing, XLA lowering and device execution have their own rules. With <a href="/ai/how-pytorch-runs">PyTorch</a>, eager dispatch and torch.compile are distinct paths. The diagram ends at the backend’s device target so it does not incorrectly present one compiler pipeline as common to all three.</p>
-  <p>The [backend dispatch source](https://github.com/keras-team/keras/blob/master/keras/src/backend/__init__.py) shows separate imports for those implementations. That is stronger evidence for the routing boundary than inferring execution from the language percentages reported on a repository page.</p>
+  <p>The <a href="https://github.com/keras-team/keras/blob/master/keras/src/backend/__init__.py" rel="noopener noreferrer" target="_blank">backend dispatch source</a> shows separate imports for those implementations. That is stronger evidence for the routing boundary than inferring execution from the language percentages reported on a repository page.</p>
 
   <h2 id="does-model-compile-mean-the-same-thing-on-every-backend">Does model.compile mean the same thing on every backend?</h2>
   <p>Treat the high-level compile API as model configuration, and inspect the documented backend settings before drawing conclusions about machine-code compilation. TensorFlow’s tf.function, JAX’s jit and PyTorch’s torch.compile are different mechanisms. Their names are not interchangeable evidence that a particular kernel fusion or compiler was used.</p>
   <p>The same caution applies to performance comparisons: keep model, shapes, precision, device configuration and warmup behavior comparable. This page does not rank frameworks or assume that changing a backend preserves every custom operation or execution detail.</p>
 
   <h2 id="does-selecting-a-gpu-remove-python-and-cpu-work">Does selecting a GPU remove Python and CPU work?</h2>
-  <p>No. The selected framework manages device placement and its CPU-side orchestration. The Keras device context exposes backend-independent placement controls, but each backend still needs its own working GPU runtime. The [implementation](https://github.com/keras-team/keras/blob/master/keras/src/backend/__init__.py) explicitly maps PyTorch’s GPU terminology to CUDA. This page’s GPU route covers supported device operations, not every line of Python.</p>
+  <p>No. The selected framework manages device placement and its CPU-side orchestration. The Keras device context exposes backend-independent placement controls, but each backend still needs its own working GPU runtime. The <a href="https://github.com/keras-team/keras/blob/master/keras/src/backend/__init__.py" rel="noopener noreferrer" target="_blank">implementation</a> explicitly maps PyTorch’s GPU terminology to CUDA. This page’s GPU route covers supported device operations, not every line of Python.</p>
 
   <h2 id="every-stage">Every stage</h2>
   <div class="ai-stage-list">

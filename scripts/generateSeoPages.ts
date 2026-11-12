@@ -6397,11 +6397,13 @@ function aiQuotes(data: PathsData, evidence: Array<{ source: string; quote: stri
   }).join('')}</ul>`;
 }
 
-// Plain text with **bold** spans and internal [links](/path) only.
+// Plain text with **bold** spans, internal [links](/path) and external https [links](https://...).
 function aiInline(text: string): string {
   return escapeHtml(text)
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\[([^\]]+)\]\((\/[a-z0-9\/-]*)\)/g, '<a href="$2">$1</a>');
+    .replace(/\[([^\]]+)\]\((\/[a-z0-9\/-]*)\)/g, '<a href="$2">$1</a>')
+    // External citations in prose, https only (path files cite primary sources this way).
+    .replace(/\[([^\]]+)\]\((https:\/\/[^\s)"<>]+)\)/g, '<a href="$2" rel="noopener noreferrer" target="_blank">$1</a>');
 }
 
 function buildAiPathPage(data: PathsData, nodeMap: Map<string, Language>): string {
