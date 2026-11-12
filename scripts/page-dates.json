@@ -4,20 +4,24 @@
     "lastmod": "2026-07-02"
   },
   "/ai": {
-    "hash": "89967983013ef119",
+    "hash": "68c44684024fe167",
     "lastmod": "2026-11-12"
   },
   "/ai/how-jax-runs": {
-    "hash": "cc4b67bd40909b05",
+    "hash": "37708afabd6ad459",
     "lastmod": "2026-11-12"
   },
   "/ai/how-llama-cpp-runs": {
-    "hash": "4e15e2d19a3769d8",
-    "lastmod": "2026-11-11"
+    "hash": "fbb6be604bd8f050",
+    "lastmod": "2026-11-12"
   },
   "/ai/how-pytorch-runs": {
-    "hash": "1189d5aae32fb8a3",
-    "lastmod": "2026-11-11"
+    "hash": "a5facba90d6c68cb",
+    "lastmod": "2026-11-12"
+  },
+  "/ai/how-vllm-runs": {
+    "hash": "f1dffa0219adac50",
+    "lastmod": "2026-11-12"
   },
   "/compiler-runtime-bootstrap": {
     "hash": "9e1f05000495f1cd",
@@ -1236,7 +1240,7 @@
     "lastmod": "2026-11-11"
   },
   "/tools/cuda": {
-    "hash": "87a7ddfa27587166",
+    "hash": "16d8543e2a3ed049",
     "lastmod": "2026-11-12"
   },
   "/tools/deno": {
@@ -1312,7 +1316,7 @@
     "lastmod": "2026-11-11"
   },
   "/tools/pytorch": {
-    "hash": "1c75c0a04df0780e",
+    "hash": "209483fa5622d87e",
     "lastmod": "2026-11-12"
   },
   "/tools/quickjs": {
@@ -1332,7 +1336,7 @@
     "lastmod": "2026-11-11"
   },
   "/tools/triton": {
-    "hash": "844631d0b37025ba",
+    "hash": "5fbdf3d516333787",
     "lastmod": "2026-11-12"
   },
   "/tools/v8": {
@@ -1340,7 +1344,7 @@
     "lastmod": "2026-11-11"
   },
   "/tools/vllm": {
-    "hash": "704521ab46598ffd",
+    "hash": "5b72edc559612d34",
     "lastmod": "2026-11-12"
   },
   "/tools/xla": {

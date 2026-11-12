@@ -149,6 +149,37 @@ describe('how-pytorch-runs semantics', () => {
   });
 });
 
+describe('how-vllm-runs semantics', () => {
+  const data = bySlug('how-vllm-runs');
+  const path = (mode: string, attention: string) => activePath(data, { mode, attention });
+  const COMPILER = ['dynamo', 'graph_pieces', 'inductor', 'triton_kernels', 'cuda_graphs'];
+  const SERVING = ['client', 'api_server', 'engine_core', 'gpu_worker', 'model_runner', 'model', 'attention_op'];
+
+  it.each([['compiled', 'flash'], ['compiled', 'triton'], ['eager', 'flash'], ['eager', 'triton']])('%s with %s attention goes through the whole serving stack', (mode, attention) => {
+    const p = path(mode, attention);
+    for (const id of SERVING) expect(p.stages.has(id), id).toBe(true);
+  });
+
+  it.each(['flash', 'triton'])('--enforce-eager with %s attention involves no compiler stage and no CUDA Graphs', (attention) => {
+    const p = path('eager', attention);
+    for (const id of COMPILER) expect(p.stages.has(id), id).toBe(false);
+    expect(p.stages.has('eager_kernels')).toBe(true);
+  });
+
+  it('the compiled mode follows Dynamo, piecewise graph, Inductor, Triton, CUDA Graphs, GPU in order, and skips the eager kernels', () => {
+    const p = path('compiled', 'flash');
+    const chain = ['model', 'dynamo', 'graph_pieces', 'inductor', 'triton_kernels', 'cuda_graphs', 'gpu'];
+    for (let i = 0; i < chain.length - 1; i++) expect(p.steps.has(`${chain[i]}--${chain[i + 1]}`), `${chain[i]} -> ${chain[i + 1]}`).toBe(true);
+    expect(p.stages.has('eager_kernels')).toBe(false);
+  });
+
+  it('each attention choice uses only its own backend', () => {
+    expect(path('compiled', 'flash').stages.has('triton_attn')).toBe(false);
+    expect(path('compiled', 'triton').stages.has('flash_attn')).toBe(false);
+    expect(path('eager', 'triton').stages.has('triton_attn')).toBe(true);
+  });
+});
+
 describe('/ai hub page', () => {
   const hub = readFileSync(join(ROOT, 'public/ai/index.html'), 'utf8');
   const table = (id: string) => hub.match(new RegExp(`<table id="${id}">[\\s\\S]*?</table>`))?.[0] ?? '';

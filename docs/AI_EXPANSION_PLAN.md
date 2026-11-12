@@ -50,7 +50,7 @@ Static page generator and templates (`scripts/generateSeoPages.ts`), source-type
 
 ## 4. Data and ontology
 
-One file per page, `dataset/ai/<slug>.json` (currently `how-pytorch-runs.json`, `how-llama-cpp-runs.json` and `how-jax-runs.json`; each has a short `name` used by the `/ai` hub), validated by `scripts/aiPaths.ts` (Zod, strict). Each file declares its own page text, choices (`dimensions`), diagram positions and sections; the generator, sitemap, OG cards and quote checker loop over all files.
+One file per page, `dataset/ai/<slug>.json` (currently `how-pytorch-runs.json`, `how-llama-cpp-runs.json`, `how-jax-runs.json` and `how-vllm-runs.json`; each has a short `name` used by the `/ai` hub), validated by `scripts/aiPaths.ts` (Zod, strict). Each file declares its own page text, choices (`dimensions`), diagram positions and sections; the generator, sitemap, OG cards and quote checker loop over all files.
 
 - **Stage kinds:** `application`, `programming_language`, `runtime`, `framework_component`, `compiler`, `intermediate_representation`, `model_format`, `kernel_language`, `kernel`, `machine_code`, `hardware`. Model files appear only as a format (GGUF), never as a model family.
 - **Step kinds:** `runs_in`, `calls`, `loads`, `builds`, `dispatches_to`, `executes_on`, `launches_on`, `intercepted_by`, `captures`, `compiled_by`, `compiles_for`, `generates`, `written_in`, `falls_back_to`, `lowers_to`, `translated_to`.
@@ -74,7 +74,7 @@ Effort in hours. "Gate" = `npm run verify` green plus the listed check.
 | AI-06 | Second path file: llama.cpp (CPU / CUDA / Metal backends) from its README and build docs | 5 | AI-02 | Same schema, tests, quote check | done (`/ai/how-llama-cpp-runs`) |
 | AI-07 | AI mode in the Cytoscape explorer: filter to AI-tagged lineage nodes + overlay of path files | 8 | AI-04, AI-06 | Existing modes unaffected (tree-view and graph tests green) | later |
 | AI-08 | JAX/OpenXLA path (StableHLO, XLA, PJRT) | 6 | AI-02 | Same as AI-06 | done (`/ai/how-jax-runs`) |
-| AI-09 | Inference engines comparison (vLLM, llama.cpp, TensorRT-LLM, MLX) | 8 | AI-06 | Each engine row sourced; no model families | later |
+| AI-09 | Inference engines comparison (vLLM, llama.cpp, TensorRT-LLM, MLX) | 8 | AI-06 | Each engine row sourced; no model families | first slices done: `/ai` hub, `/ai/how-vllm-runs` |
 | AI-10 | Expert review: ask PyTorch/Triton maintainers for corrections where welcome | 2 | AI-03 deployed | Feedback logged in worklog | later, owner |
 
 ## 6. Risks

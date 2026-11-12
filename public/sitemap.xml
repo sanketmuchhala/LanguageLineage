@@ -50,11 +50,15 @@
   </url>
   <url>
     <loc>https://www.languagelineage.org/ai/how-llama-cpp-runs</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/ai/how-pytorch-runs</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.languagelineage.org/ai/how-vllm-runs</loc>
+    <lastmod>2026-11-12</lastmod>
   </url>
   <url>
     <loc>https://www.languagelineage.org/questions</loc>
