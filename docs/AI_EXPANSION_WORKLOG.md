@@ -107,3 +107,8 @@ Checked and **not** used: the dispatcher tutorial (deprecated as of PyTorch 2.4;
 - Out of scope: the CUDA backend on Linux, distributed, `mx.fast.metal_kernel`, the C++/C/Swift APIs.
 - `check:ai-quotes` fix: tags are stripped only from HTML responses. Raw source files (text/plain) lost text between `<<` and `>` to the tag regex, so two C++ quotes were reported missing. All 102 distinct quotes found after the fix.
 - `npm run verify`: 246 tests, sitemap 336. Browser: switching, deep link, keyboard selection, 320/390px without horizontal scroll, no page errors.
+
+## 2026-11-11 — ONNX Runtime execution-path explainer (`agy-agent/ai-content`)
+
+- **`/ai/how-onnx-runtime-runs`** (`dataset/ai/how-onnx-runtime-runs.json`): execution provider (`CPU (Default)` / `CUDA (NVIDIA)` / `TensorRT (NVIDIA)`); 11 stages, 13 steps, 6 primary sources (ONNX README, ONNX Runtime README, Execution Providers docs, Graph Optimizations docs, CUDA EP docs, TensorRT EP docs).
+- Added `how-onnx-runtime-runs` semantics tests in `scripts/aiPaths.test.ts`; regenerated `/ai` hub (now 6 explainers), OG cards (`ai-how-onnx-runtime-runs.png`, `ai-index.png`), and `sitemap.xml` (337 indexable URLs).

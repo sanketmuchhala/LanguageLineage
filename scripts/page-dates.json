@@ -4,27 +4,31 @@
     "lastmod": "2026-07-02"
   },
   "/ai": {
-    "hash": "5b9dcf1b1ff649ac",
+    "hash": "b766964af10c6c72",
     "lastmod": "2026-11-12"
   },
   "/ai/how-jax-runs": {
-    "hash": "dd7c93b3e414be80",
+    "hash": "e4d0563e7ded3aae",
     "lastmod": "2026-11-12"
   },
   "/ai/how-llama-cpp-runs": {
-    "hash": "20a25dea70861fa6",
+    "hash": "612b178703e4b4c3",
     "lastmod": "2026-11-12"
   },
   "/ai/how-mlx-runs": {
-    "hash": "dcf4fb1ba91a09fd",
+    "hash": "5748680793670fd3",
+    "lastmod": "2026-11-12"
+  },
+  "/ai/how-onnx-runtime-runs": {
+    "hash": "0a16d939c8f8e546",
     "lastmod": "2026-11-12"
   },
   "/ai/how-pytorch-runs": {
-    "hash": "0b19752a31b41f8a",
+    "hash": "309d6be77a781363",
     "lastmod": "2026-11-12"
   },
   "/ai/how-vllm-runs": {
-    "hash": "4e4b14803c7ee359",
+    "hash": "4c93a66e17556228",
     "lastmod": "2026-11-12"
   },
   "/compiler-runtime-bootstrap": {
@@ -232,7 +236,7 @@
     "lastmod": "2026-11-11"
   },
   "/languages/cxx": {
-    "hash": "6433925ca7fbeb92",
+    "hash": "315f178d004cfec9",
     "lastmod": "2026-11-12"
   },
   "/languages/cyclone": {
@@ -544,7 +548,7 @@
     "lastmod": "2026-11-11"
   },
   "/languages/python": {
-    "hash": "322173e234912a65",
+    "hash": "071b58b2d0e2b6c0",
     "lastmod": "2026-11-12"
   },
   "/languages/qsharp": {
@@ -1244,7 +1248,7 @@
     "lastmod": "2026-11-11"
   },
   "/tools/cuda": {
-    "hash": "4f2c2d25950aa1e0",
+    "hash": "f8bc99c60d892ec5",
     "lastmod": "2026-11-12"
   },
   "/tools/deno": {

@@ -1,0 +1,533 @@
+{
+  "version": "1.0",
+  "slug": "how-onnx-runtime-runs",
+  "name": "ONNX Runtime",
+  "title": "How Does ONNX Runtime Run a Model? Graph Passes & EPs | Language Lineage",
+  "h1": "How Does ONNX Runtime Execute a Model Across Hardware?",
+  "description": "Trace an ONNX model through ONNX Runtime: .onnx graph loading, Basic and Extended graph optimizations, GetCapability partitioning, and CPU, CUDA or TensorRT execution.",
+  "og_subtitle": "Your app → .onnx → InferenceSession → Graph Opt → GetCapability → CPU · CUDA · TensorRT",
+  "verified_on": "2026-11-11",
+  "verified_against": "the ONNX specification README and the ONNX Runtime documentation (Execution Providers, Graph Optimizations, CUDA Execution Provider, TensorRT Execution Provider)",
+  "scope": "Documented inference paths for an ONNX (.onnx) model in ONNX Runtime using three execution providers: the default CPU provider, the NVIDIA CUDA provider, and the NVIDIA TensorRT provider. Other execution providers (CoreML, DirectML, OpenVINO, QNN, ROCm, WebGPU) and ONNX Runtime Training are out of scope.",
+  "answer": "ONNX Runtime loads an **.onnx** model into an in-memory computation graph inside its C++ **InferenceSession**, runs provider-independent **Basic graph optimizations** (constant folding, redundant node elimination, and basic fusions), and then partitions the graph across registered **Execution Providers** in priority order using **GetCapability()**. On the **CPU** and **CUDA** providers it applies **Extended graph optimizations** (such as Attention and LayerNorm fusion) before running C++ kernels or **CUDA / cuDNN / cuBLAS** kernels; with the **TensorRT** provider, supported subgraphs are compiled into an NVIDIA TensorRT engine while unsupported operators fall back to CUDA or the CPU.",
+  "status_template": "Showing {provider}",
+  "dimensions": [
+    {
+      "id": "provider",
+      "legend": "Execution provider",
+      "default": "cuda",
+      "options": [
+        {
+          "value": "cpu",
+          "label": "CPU (Default)",
+          "phrase": "the default CPU execution provider"
+        },
+        {
+          "value": "cuda",
+          "label": "CUDA (NVIDIA)",
+          "phrase": "the CUDA execution provider"
+        },
+        {
+          "value": "tensorrt",
+          "label": "TensorRT (NVIDIA)",
+          "phrase": "the TensorRT execution provider"
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "heading": "Why graph optimizations happen in two stages",
+      "paragraphs": [
+        "ONNX Runtime splits graph transformations into levels that run before and after hardware partitioning. Basic graph optimizations—constant folding, dead-node elimination, and simple operator fusions like Conv+Add—are semantics-preserving rewrites that run before partitioning, so every execution provider benefits from them.",
+        "Extended graph optimizations (such as multi-node Attention, LayerNorm, and Bias+GELU fusions) and NCHWc layout transformations run after GetCapability() partitioning, because they emit fused operator nodes implemented specifically by the CPU, CUDA, or ROCm execution providers."
+      ]
+    },
+    {
+      "heading": "How GetCapability() partitions a model with fallbacks",
+      "paragraphs": [
+        "Unlike a single-backend engine, an ONNX Runtime session takes a priority-ordered list of execution providers—for example, TensorrtExecutionProvider, then CUDAExecutionProvider, then CPUExecutionProvider. ONNX Runtime queries each provider's GetCapability() interface in order to claim subgraphs or individual nodes.",
+        "Any operator that a higher-priority accelerator provider cannot run is automatically assigned to the next provider in the list, with the built-in CPU execution provider acting as the final fallback."
+      ]
+    }
+  ],
+  "out_of_scope_note": "ONNX Runtime uses the same GetCapability() partitioning architecture for more than a dozen other execution providers, including CoreML, DirectML, OpenVINO, and WebGPU.",
+  "link_from": [
+    "lang:python",
+    "lang:cxx",
+    "tool:cuda"
+  ],
+  "sources": {
+    "onnx_readme": {
+      "url": "https://github.com/onnx/onnx/blob/main/README.md",
+      "title": "ONNX README (onnx/onnx)"
+    },
+    "ort_readme": {
+      "url": "https://github.com/microsoft/onnxruntime/blob/main/README.md",
+      "title": "ONNX Runtime README (microsoft/onnxruntime)"
+    },
+    "ort_ep": {
+      "url": "https://onnxruntime.ai/docs/execution-providers/",
+      "title": "ONNX Runtime Execution Providers (ONNX Runtime documentation)"
+    },
+    "ort_graph_opt": {
+      "url": "https://onnxruntime.ai/docs/performance/model-optimizations/graph-optimizations.html",
+      "title": "Graph Optimizations in ONNX Runtime (ONNX Runtime documentation)"
+    },
+    "ort_cuda": {
+      "url": "https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html",
+      "title": "CUDA Execution Provider (ONNX Runtime documentation)"
+    },
+    "ort_trt": {
+      "url": "https://onnxruntime.ai/docs/execution-providers/TensorRT-ExecutionProvider.html",
+      "title": "TensorRT Execution Provider (ONNX Runtime documentation)"
+    }
+  },
+  "stages": [
+    {
+      "id": "app",
+      "name": "Your application",
+      "kind": "application",
+      "layer": "application",
+      "lineage_id": "lang:python",
+      "pos": [
+        1.5,
+        0
+      ],
+      "summary": "Your Python, C++, C#, C, Java, or Node.js code that configures an ONNX Runtime session with a priority-ordered list of execution providers.",
+      "evidence": [
+        {
+          "source": "ort_ep",
+          "quote": "The APIs to set EP options are available across Python, C/C++/C#, Java and node.js."
+        },
+        {
+          "source": "ort_ep",
+          "quote": "The list of providers is ordered by Priority."
+        }
+      ]
+    },
+    {
+      "id": "onnx_model",
+      "name": "ONNX model (.onnx)",
+      "kind": "model_format",
+      "layer": "application",
+      "lineage_id": null,
+      "pos": [
+        1.5,
+        1
+      ],
+      "summary": "A serialized ONNX computation graph containing standard operators, tensor types, and constant weight initializers exported from PyTorch, TensorFlow, or scikit-learn.",
+      "evidence": [
+        {
+          "source": "onnx_readme",
+          "quote": "ONNX provides an open source format for AI models, both deep learning and traditional ML. It defines an extensible computation graph model, as well as definitions of built-in operators and standard data types."
+        },
+        {
+          "source": "ort_readme",
+          "quote": "supporting models from deep learning frameworks such as PyTorch and TensorFlow/Keras as well as classical machine learning libraries such as scikit-learn, LightGBM, XGBoost, etc."
+        }
+      ]
+    },
+    {
+      "id": "ort_session",
+      "name": "InferenceSession",
+      "kind": "runtime",
+      "layer": "framework",
+      "lineage_id": "lang:cxx",
+      "pos": [
+        1.5,
+        2
+      ],
+      "summary": "ONNX Runtime's C++ session engine. When initialized, it parses the model into an in-memory graph, runs graph optimizations, and coordinates execution providers.",
+      "evidence": [
+        {
+          "source": "ort_readme",
+          "quote": "ONNX Runtime is compatible with different hardware, drivers, and operating systems, and provides optimal performance by leveraging hardware accelerators where applicable alongside graph optimizations and transforms."
+        },
+        {
+          "source": "ort_graph_opt",
+          "quote": "In online mode, when initializing an inference session, we also apply all enabled graph optimizations before performing model inference."
+        }
+      ]
+    },
+    {
+      "id": "basic_opt",
+      "name": "Basic graph passes",
+      "kind": "compiler",
+      "layer": "compiler",
+      "lineage_id": null,
+      "pos": [
+        1.5,
+        3
+      ],
+      "summary": "Level-1 semantics-preserving graph rewrites—constant folding, redundant node elimination, and Conv/Add/BatchNorm fusions—applied before partitioning.",
+      "evidence": [
+        {
+          "source": "ort_graph_opt",
+          "quote": "These are semantics-preserving graph rewrites which remove redundant nodes and redundant computation. They run before graph partitioning and thus apply to all the execution providers."
+        },
+        {
+          "source": "ort_graph_opt",
+          "quote": "Constant Folding: Statically computes parts of the graph that rely only on constant initializers."
+        }
+      ]
+    },
+    {
+      "id": "partitioner",
+      "name": "GetCapability split",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": "lang:cxx",
+      "pos": [
+        1.5,
+        4
+      ],
+      "summary": "Queries registered execution providers via GetCapability() in priority order to allocate supported subgraphs or nodes to each provider.",
+      "evidence": [
+        {
+          "source": "ort_ep",
+          "quote": "ONNX Runtime works with the execution provider(s) using the GetCapability() interface to allocate specific nodes or sub-graphs for execution by the EP library in supported hardware."
+        }
+      ]
+    },
+    {
+      "id": "extended_opt",
+      "name": "Extended & layout opt",
+      "kind": "compiler",
+      "layer": "compiler",
+      "lineage_id": null,
+      "pos": [
+        1,
+        5
+      ],
+      "summary": "Post-partitioning complex operator fusions (Attention, LayerNormalization, SkipLayerNorm, BiasGelu on CPU/CUDA) and NCHWc data layout transforms on CPU.",
+      "evidence": [
+        {
+          "source": "ort_graph_opt",
+          "quote": "These optimizations include complex node fusions. They are run after graph partitioning and are only applied to the nodes assigned to the CPU or CUDA or ROCm execution provider."
+        },
+        {
+          "source": "ort_graph_opt",
+          "quote": "NCHWc Optimizer: Optimizes the graph by using NCHWc layout instead of NCHW layout."
+        }
+      ]
+    },
+    {
+      "id": "trt_ep",
+      "name": "TensorRT EP",
+      "kind": "compiler",
+      "layer": "compiler",
+      "lineage_id": null,
+      "pos": [
+        2.5,
+        5
+      ],
+      "summary": "Compiles supported ONNX subgraphs into optimized NVIDIA TensorRT engines for the target GPU.",
+      "evidence": [
+        {
+          "source": "ort_trt",
+          "quote": "The TensorRT execution provider in the ONNX Runtime makes use of NVIDIA’s TensorRT Deep Learning inferencing engine to accelerate ONNX model in their family of GPUs."
+        }
+      ]
+    },
+    {
+      "id": "cuda_ep",
+      "name": "CUDA EP (cuDNN/CUDA)",
+      "kind": "kernel",
+      "layer": "kernel",
+      "lineage_id": "tool:cuda",
+      "pos": [
+        1.5,
+        6
+      ],
+      "summary": "Runs assigned operators on the NVIDIA GPU using precompiled CUDA kernels and NVIDIA libraries including cuDNN, cuBLAS, and cuBLASLt.",
+      "evidence": [
+        {
+          "source": "ort_cuda",
+          "quote": "The CUDA Execution Provider enables hardware accelerated computation on Nvidia CUDA-enabled GPUs."
+        },
+        {
+          "source": "ort_cuda",
+          "quote": "libcudart 11.4.43 libcufft 10.5.2.100 libcurand 10.2.5.120 libcublasLt 11.6.5.2 libcublas 11.6.5.2 libcudnn 8.2.4"
+        }
+      ]
+    },
+    {
+      "id": "cpu_ep",
+      "name": "CPU EP kernels",
+      "kind": "kernel",
+      "layer": "kernel",
+      "lineage_id": "lang:cxx",
+      "pos": [
+        0,
+        6
+      ],
+      "summary": "ONNX Runtime's built-in C++ CPU execution provider. Runs the full graph on CPU or any operator nodes not claimed by a higher-priority GPU provider.",
+      "evidence": [
+        {
+          "source": "ort_ep",
+          "quote": "The ONNX Runtime package can be built with any combination of the EPs along with the default CPU execution provider."
+        },
+        {
+          "source": "ort_ep",
+          "quote": "For example ['CUDAExecutionProvider', 'CPUExecutionProvider'] means execute a node using CUDAExecutionProvider if capable, otherwise execute using CPUExecutionProvider."
+        }
+      ]
+    },
+    {
+      "id": "cpu_hw",
+      "name": "CPU",
+      "kind": "hardware",
+      "layer": "hardware",
+      "lineage_id": null,
+      "pos": [
+        0,
+        7
+      ],
+      "summary": "The host CPU executing the CPU execution provider's C++ kernels.",
+      "evidence": [
+        {
+          "source": "ort_ep",
+          "quote": "This architecture abstracts out the details of the hardware specific libraries that are essential to optimize the execution of deep neural networks across hardware platforms like CPU, GPU, FPGA or specialized NPUs."
+        }
+      ]
+    },
+    {
+      "id": "nvidia_gpu",
+      "name": "NVIDIA GPU",
+      "kind": "hardware",
+      "layer": "hardware",
+      "lineage_id": null,
+      "pos": [
+        2,
+        7
+      ],
+      "summary": "The NVIDIA GPU executing compiled TensorRT engines and CUDA / cuDNN / cuBLAS kernels.",
+      "evidence": [
+        {
+          "source": "ort_cuda",
+          "quote": "The CUDA Execution Provider enables hardware accelerated computation on Nvidia CUDA-enabled GPUs."
+        }
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "from": "app",
+      "to": "onnx_model",
+      "kind": "loads",
+      "when": {},
+      "label": "passes model path to",
+      "explanation": "Your application passes the .onnx model file (or bytes) and the priority-ordered execution provider list when creating an InferenceSession.",
+      "evidence": [
+        {
+          "source": "ort_trt",
+          "quote": "sess = ort . InferenceSession ( 'model.onnx' , providers = [ 'TensorrtExecutionProvider' , 'CUDAExecutionProvider' ])"
+        }
+      ]
+    },
+    {
+      "from": "onnx_model",
+      "to": "ort_session",
+      "kind": "loads",
+      "when": {},
+      "label": "loaded into",
+      "explanation": "InferenceSession parses the ONNX protobuf graph, operator nodes, and initializers into ONNX Runtime's in-memory Graph representation.",
+      "evidence": [
+        {
+          "source": "ort_graph_opt",
+          "quote": "In online mode, when initializing an inference session, we also apply all enabled graph optimizations before performing model inference."
+        }
+      ]
+    },
+    {
+      "from": "ort_session",
+      "to": "basic_opt",
+      "kind": "compiled_by",
+      "when": {},
+      "label": "runs level-1 passes in",
+      "explanation": "Before partitioning the graph across providers, ONNX Runtime applies Basic graph optimizations such as constant folding, dead-node elimination, and Conv+Add fusion.",
+      "evidence": [
+        {
+          "source": "ort_graph_opt",
+          "quote": "These are semantics-preserving graph rewrites which remove redundant nodes and redundant computation. They run before graph partitioning and thus apply to all the execution providers."
+        }
+      ]
+    },
+    {
+      "from": "basic_opt",
+      "to": "partitioner",
+      "kind": "lowers_to",
+      "when": {},
+      "label": "handed to",
+      "explanation": "The simplified graph is passed to ONNX Runtime's graph partitioner to assign nodes or subgraphs to registered execution providers.",
+      "evidence": [
+        {
+          "source": "ort_ep",
+          "quote": "ONNX Runtime works with the execution provider(s) using the GetCapability() interface to allocate specific nodes or sub-graphs for execution by the EP library in supported hardware."
+        }
+      ]
+    },
+    {
+      "from": "partitioner",
+      "to": "extended_opt",
+      "kind": "compiled_by",
+      "when": {
+        "provider": [
+          "cpu",
+          "cuda"
+        ]
+      },
+      "label": "fuses CPU/CUDA nodes in",
+      "explanation": "For nodes assigned to the CPU or CUDA execution providers, ONNX Runtime runs Extended graph optimizations (complex node fusions) and CPU layout optimizations.",
+      "evidence": [
+        {
+          "source": "ort_graph_opt",
+          "quote": "These optimizations include complex node fusions. They are run after graph partitioning and are only applied to the nodes assigned to the CPU or CUDA or ROCm execution provider."
+        }
+      ]
+    },
+    {
+      "from": "extended_opt",
+      "to": "cpu_ep",
+      "kind": "dispatches_to",
+      "when": {
+        "provider": [
+          "cpu"
+        ]
+      },
+      "label": "dispatches fused graph to",
+      "explanation": "When using the default CPU execution provider, all optimized and layout-transformed nodes are executed by the CPU EP's C++ kernels.",
+      "evidence": [
+        {
+          "source": "ort_graph_opt",
+          "quote": "They are run after graph partitioning and are only applied to nodes assigned to CPU execution provider."
+        }
+      ]
+    },
+    {
+      "from": "extended_opt",
+      "to": "cuda_ep",
+      "kind": "dispatches_to",
+      "when": {
+        "provider": [
+          "cuda"
+        ]
+      },
+      "label": "dispatches GPU nodes to",
+      "explanation": "Nodes claimed by CUDAExecutionProvider (including fused Attention, LayerNorm, and BiasGelu nodes) run through the CUDA execution provider.",
+      "evidence": [
+        {
+          "source": "ort_cuda",
+          "quote": "The CUDA Execution Provider enables hardware accelerated computation on Nvidia CUDA-enabled GPUs."
+        }
+      ]
+    },
+    {
+      "from": "partitioner",
+      "to": "trt_ep",
+      "kind": "dispatches_to",
+      "when": {
+        "provider": [
+          "tensorrt"
+        ]
+      },
+      "label": "allocates subgraphs to",
+      "explanation": "With TensorrtExecutionProvider registered first, GetCapability() assigns supported ONNX subgraphs to TensorRT to be compiled into TensorRT engines.",
+      "evidence": [
+        {
+          "source": "ort_trt",
+          "quote": "The TensorRT execution provider in the ONNX Runtime makes use of NVIDIA’s TensorRT Deep Learning inferencing engine to accelerate ONNX model in their family of GPUs."
+        }
+      ]
+    },
+    {
+      "from": "trt_ep",
+      "to": "nvidia_gpu",
+      "kind": "executes_on",
+      "when": {
+        "provider": [
+          "tensorrt"
+        ]
+      },
+      "label": "runs TensorRT engine on",
+      "explanation": "The compiled TensorRT engine executes its fused layers directly on the NVIDIA GPU.",
+      "evidence": [
+        {
+          "source": "ort_trt",
+          "quote": "With the TensorRT execution provider, the ONNX Runtime delivers better inferencing performance on the same hardware compared to generic GPU acceleration."
+        }
+      ]
+    },
+    {
+      "from": "trt_ep",
+      "to": "cuda_ep",
+      "kind": "falls_back_to",
+      "when": {
+        "provider": [
+          "tensorrt"
+        ]
+      },
+      "label": "unsupported GPU ops fall back to",
+      "explanation": "Operators that TensorRT does not support are assigned to the second-priority CUDAExecutionProvider rather than dropping all the way to the CPU.",
+      "evidence": [
+        {
+          "source": "ort_trt",
+          "quote": "Note that it is recommended you also register CUDAExecutionProvider to allow Onnx Runtime to assign nodes to CUDA execution provider that TensorRT does not support."
+        }
+      ]
+    },
+    {
+      "from": "partitioner",
+      "to": "cpu_ep",
+      "kind": "falls_back_to",
+      "when": {
+        "provider": [
+          "cuda",
+          "tensorrt"
+        ]
+      },
+      "label": "unclaimed ops fall back to",
+      "explanation": "Any operator node not supported by the GPU execution providers is assigned to the built-in CPUExecutionProvider.",
+      "evidence": [
+        {
+          "source": "ort_ep",
+          "quote": "For example ['CUDAExecutionProvider', 'CPUExecutionProvider'] means execute a node using CUDAExecutionProvider if capable, otherwise execute using CPUExecutionProvider."
+        }
+      ]
+    },
+    {
+      "from": "cuda_ep",
+      "to": "nvidia_gpu",
+      "kind": "executes_on",
+      "when": {
+        "provider": [
+          "cuda",
+          "tensorrt"
+        ]
+      },
+      "label": "launches CUDA/cuDNN kernels on",
+      "explanation": "The CUDA execution provider launches CUDA, cuDNN, and cuBLAS kernels on the NVIDIA GPU.",
+      "evidence": [
+        {
+          "source": "ort_cuda",
+          "quote": "The CUDA Execution Provider enables hardware accelerated computation on Nvidia CUDA-enabled GPUs."
+        }
+      ]
+    },
+    {
+      "from": "cpu_ep",
+      "to": "cpu_hw",
+      "kind": "executes_on",
+      "when": {},
+      "label": "runs on",
+      "explanation": "The CPU execution provider runs its C++ kernels on the host CPU.",
+      "evidence": [
+        {
+          "source": "ort_ep",
+          "quote": "The EP libraries that are pre-installed in the execution environment process and execute the ONNX sub-graph on the hardware."
+        }
+      ]
+    }
+  ]
+}

@@ -204,6 +204,31 @@ describe('how-mlx-runs semantics', () => {
   });
 });
 
+describe('how-onnx-runtime-runs semantics', () => {
+  const data = bySlug('how-onnx-runtime-runs');
+  const path = (provider: string) => activePath(data, { provider });
+
+  it('CPU provider stays on CPU without touching CUDA or TensorRT', () => {
+    const p = path('cpu');
+    expect(p.stages.has('cpu_hw')).toBe(true);
+    expect(p.stages.has('nvidia_gpu')).toBe(false);
+    expect(p.stages.has('cuda_ep')).toBe(false);
+    expect(p.stages.has('trt_ep')).toBe(false);
+  });
+
+  it('CUDA and TensorRT providers partition through GetCapability with fallback to lower-priority providers', () => {
+    const cuda = path('cuda');
+    expect(cuda.stages.has('cuda_ep')).toBe(true);
+    expect(cuda.stages.has('trt_ep')).toBe(false);
+    expect(cuda.steps.has('partitioner--cpu_ep')).toBe(true);
+
+    const trt = path('tensorrt');
+    expect(trt.stages.has('trt_ep')).toBe(true);
+    expect(trt.steps.has('trt_ep--cuda_ep')).toBe(true);
+    expect(trt.steps.has('partitioner--cpu_ep')).toBe(true);
+  });
+});
+
 describe('/ai hub page', () => {
   const hub = readFileSync(join(ROOT, 'public/ai/index.html'), 'utf8');
   const table = (id: string) => hub.match(new RegExp(`<table id="${id}">[\\s\\S]*?</table>`))?.[0] ?? '';
