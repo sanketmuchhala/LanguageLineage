@@ -93,3 +93,9 @@ Checked and **not** used: the dispatcher tutorial (deprecated as of PyTorch 2.4;
 - `check:ai-quotes`: all 84 distinct quotes found live (23 new).
 - `seo.css`: quotes, stage summaries and step cells wrap long identifiers (`overflow-wrap: anywhere`); the vLLM page scrolled 34px sideways at 320px because of `torch.ops.vllm.unified_attention_with_output`.
 - Tests: vLLM semantics (every selection goes through the serving stack; eager has no compiler stage or CUDA Graphs; compiled order Dynamo → pieces → Inductor → Triton → CUDA Graphs → GPU; each attention choice uses only its backend). `npm run verify`: 227 tests, seo:validate 0/0, links 0/0/0, sitemap 334. Browser: all four AI pages and the hub at 320/390px with no horizontal scroll, switching and deep links work, no page errors.
+
+## 2026-11-11 — data PR: MLX
+
+- Merged **#50** (vLLM explainer); production checked (334 URLs, `/ai/how-vllm-runs`, `/tools/vllm|jax|xla` 200).
+- Branch `data/admit-mlx`: `tool:mlx` (2023, first PyPI upload 2023-12-05; README "MLX is an array framework for machine learning on Apple silicon"). Edges: C++ 0.92 (`mlx/`: array, compile, backends), Python 0.85 (`python/mlx/nn`, optimizers), CUDA 0.88 (`mlx/backend/cuda/*.cu`). Its Metal kernels are noted, not an edge: the dataset has no Metal Shading Language node and adding one is a separate admission decision.
+- Counts 176 nodes, 35 tools, 504 relationships (runtime 102); og-image re-rendered; poster regenerated. `npm run verify`: 227 tests, sitemap 335.
