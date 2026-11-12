@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>128 Runtime Implementation Relationships | Language Lineage</title>
+  <title>133 Runtime Implementation Relationships | Language Lineage</title>
   <meta name="description" content="These relationships document what programming language each runtime or interpreter is written in. For example, CPython (the reference Python interpreter) is wri" />
   <link rel="canonical" href="https://www.languagelineage.org/relationships/runtime-written-in" />
   <link rel="icon" href="/favicon.svg" />
   <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><script defer src="/fx.js"></script><script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script><link rel="alternate" type="application/rss+xml" title="Language Lineage" href="/rss.xml" /><link rel="stylesheet" href="/seo.css" />
-  <meta property="og:title" content="128 Runtime Implementation Relationships | Language Lineage" />
+  <meta property="og:title" content="133 Runtime Implementation Relationships | Language Lineage" />
   <meta property="og:url" content="https://www.languagelineage.org/relationships/runtime-written-in" />
   <meta property="og:image" content="https://www.languagelineage.org/og/relationships-runtime-written-in.png" />
   <meta property="og:image:width" content="1200" />
@@ -38,7 +38,7 @@
 
   <div class="answer-box" style="border-left:3px solid #34d399">These relationships document what programming language each runtime or interpreter is written in. For example, CPython (the reference Python interpreter) is written in C.</div>
 
-  <h2>All 128 Relationships</h2>
+  <h2>All 133 Relationships</h2>
   <div class="table-wrap"><table>
     <thead><tr><th>From</th><th>To</th><th>Confidence</th><th>Notes</th><th>Source</th></tr></thead>
     <tbody><tr>
@@ -196,6 +196,13 @@
       <td><a href="https://github.com/huggingface/candle/blob/main/README.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
     </tr>
 <tr>
+      <td><a href="/languages/cxx">C++</a></td>
+      <td><a href="/tools/whisper-cpp">whisper.cpp</a></td>
+      <td class="confidence-high">98%</td>
+      <td>The official README describes a plain C/C++ implementation and identifies src/whisper.cpp as the high-level model implementation.</td>
+      <td><a href="https://github.com/ggml-org/whisper.cpp/blob/master/README.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
       <td><a href="/languages/c">C</a></td>
       <td><a href="/tools/ghc">GHC</a></td>
       <td class="confidence-high">97%</td>
@@ -252,6 +259,20 @@
       <td><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/tensorrt_llm/_torch/pyexecutor/py_executor.py" rel="noopener noreferrer" target="_blank">Source repository</a></td>
     </tr>
 <tr>
+      <td><a href="/languages/c">C</a></td>
+      <td><a href="/tools/whisper-cpp">whisper.cpp</a></td>
+      <td class="confidence-high">97%</td>
+      <td>The official README describes a plain C/C++ implementation. C covers the tensor-library portion; the high-level model implementation is whisper.cpp.</td>
+      <td><a href="https://github.com/ggml-org/whisper.cpp/blob/master/README.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
+      <td><a href="/tools/ggml">ggml</a></td>
+      <td><a href="/tools/whisper-cpp">whisper.cpp</a></td>
+      <td class="confidence-high">97%</td>
+      <td>The README states that the high-level model code is whisper.h/whisper.cpp and the rest is part of the ggml machine-learning library. This edge represents its tensor execution implementation.</td>
+      <td><a href="https://github.com/ggml-org/whisper.cpp/blob/master/README.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
       <td><a href="/languages/go">Go</a></td>
       <td><a href="/languages/cue">CUE</a></td>
       <td class="confidence-high">96%</td>
@@ -285,6 +306,20 @@
       <td class="confidence-high">96%</td>
       <td>The included LAPACK linear-system solver DGESV is Fortran. This edge applies to the included Fortran LAPACK build, not builds omitting LAPACK or selecting translated C fallback sources.</td>
       <td><a href="https://github.com/OpenMathLib/OpenBLAS/blob/develop/lapack-netlib/SRC/dgesv.f" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
+      <td><a href="/languages/cxx">C++</a></td>
+      <td><a href="/tools/litert">LiteRT</a></td>
+      <td class="confidence-high">96%</td>
+      <td>LiteRT compiled-model runtime implementation uses C++ classes, namespaces, templates and standard-library containers. Scoped to the published native runtime.</td>
+      <td><a href="https://github.com/google-ai-edge/LiteRT/blob/main/litert/runtime/compiled_model.cc" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+    </tr>
+<tr>
+      <td><a href="/languages/cxx">C++</a></td>
+      <td><a href="/tools/mlc-llm">MLC LLM</a></td>
+      <td class="confidence-high">96%</td>
+      <td>The serving engine runtime module is implemented in C++, including request and engine-state handling using TVM runtime and FFI types.</td>
+      <td><a href="https://github.com/mlc-ai/mlc-llm/blob/main/cpp/serve/engine.cc" rel="noopener noreferrer" target="_blank">Source repository</a></td>
     </tr>
 <tr>
       <td><a href="/languages/c">C</a></td>
