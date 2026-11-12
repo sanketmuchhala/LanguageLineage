@@ -1,5 +1,5 @@
 import { useGraphStore } from '../store/useGraphStore';
-import { DAG_LAYOUT, FORCE_LAYOUT, CLUSTER_LAYOUT, buildTimelineLayout } from '../graph/layouts';
+import { DAG_LAYOUT, FORCE_LAYOUT, buildClusterLayout, buildTimelineLayout } from '../graph/layouts';
 import './NavigationControls.css';
 
 /** True when the tree is the mounted view, in which case Cytoscape is absent
@@ -41,7 +41,7 @@ export function NavigationControls() {
     if (!cy) return;
     let layout;
     switch (filters.layoutMode) {
-      case 'cluster': layout = CLUSTER_LAYOUT; break;
+      case 'cluster': layout = buildClusterLayout(cy); break;
       case 'timeline': layout = buildTimelineLayout(cy); break;
       case 'dag': layout = DAG_LAYOUT; break;
       case 'force':

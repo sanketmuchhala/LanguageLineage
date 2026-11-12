@@ -14,7 +14,7 @@ import { EdgeTooltip } from '../ui/EdgeTooltip';
 import { TimelineControls } from '../ui/TimelineControls';
 import { NavigationControls } from '../ui/NavigationControls';
 import { deactivateFocusMode } from '../graph/selectors';
-import { FORCE_LAYOUT, CLUSTER_LAYOUT, buildTimelineLayout } from '../graph/layouts';
+import { FORCE_LAYOUT, buildClusterLayout, buildTimelineLayout } from '../graph/layouts';
 
 // d3 only ships to users who actually open Tree view.
 const TreeView = lazy(() => import('../graph/tree/TreeView'));
@@ -126,7 +126,7 @@ export function GraphExplorer() {
           if (!cy) break;
           let layout;
           switch (filters.layoutMode) {
-            case 'cluster': layout = CLUSTER_LAYOUT; break;
+            case 'cluster': layout = buildClusterLayout(cy); break;
             case 'timeline': layout = buildTimelineLayout(cy); break;
             case 'force':
             default: layout = FORCE_LAYOUT; break;
