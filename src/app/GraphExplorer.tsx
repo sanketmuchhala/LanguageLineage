@@ -1,5 +1,6 @@
+import { exploreUrl } from './exploreUrl';
 import { loadExplainer, overlayNodeIds, selectionFrom } from '../data/aiExplainers';
-import { Suspense, lazy, useEffect } from 'react';
+import { Suspense, lazy, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useGraphStore } from '../store/useGraphStore';
 import { loadDataset } from '../data/loadDataset';
@@ -55,6 +56,20 @@ export function GraphExplorer() {
 
   // Resolve the requested AI path overlay to atlas node ids once its explainer file has loaded
   const aiOverlay = useGraphStore((s) => s.aiOverlay);
+
+  // Keep the address bar a shareable link to what is shown (node, AI view, overlaid path).
+  // Only changes after mount are written, so an incoming deep link is not overwritten
+  // before it applies (and React's dev double-run of effects writes nothing).
+  const selectedNodeId = useGraphStore((s) => s.selectedNodeId);
+  const aiView = useGraphStore((s) => s.attributeFilters.ai);
+  const lastUrlState = useRef<string | null>(null);
+  useEffect(() => {
+    const url = exploreUrl({ selectedNodeId, ai: aiView, aiOverlay });
+    if (lastUrlState.current === null) { lastUrlState.current = url; return; }
+    if (url === lastUrlState.current) return;
+    lastUrlState.current = url;
+    if (url !== location.pathname + location.search) history.replaceState(null, '', url);
+  }, [selectedNodeId, aiView, aiOverlay]);
   useEffect(() => {
     if (!aiOverlay) return;
     let current = true;
@@ -114,7 +129,6 @@ export function GraphExplorer() {
             state.setSelectedNode(null);
             state.setSelectedEdge(null);
             if (state.cy) deactivateFocusMode(state.cy);
-            history.replaceState(null, '', '/explore');
           }
           break;
         case 'r': {
