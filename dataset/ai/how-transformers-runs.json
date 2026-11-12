@@ -45,7 +45,7 @@
     {
       "heading": "Where Python hands off",
       "paragraphs": [
-        "Most of the work in this path is not Python: tokenization runs in Rust, and the model's layers run as PyTorch kernels. For what PyTorch does with those operations on each device, see [what happens when you run a PyTorch model](/ai/how-pytorch-runs). For serving many requests at once, engines such as [vLLM](/ai/how-vllm-runs) add batching schedulers and KV-cache management on top of the same kind of model."
+        "Most of the work in this path is not Python: tokenization runs in Rust, and the model's layers run as PyTorch kernels. For what PyTorch does with those operations on each device, see [what happens when you run a PyTorch model](/ai/how-pytorch-runs). For serving many requests at once, engines such as [vLLM](/ai/how-vllm-runs) and [SGLang](/ai/how-sglang-runs) add batching schedulers and KV-cache management on top of the same kind of model."
       ]
     }
   ],
