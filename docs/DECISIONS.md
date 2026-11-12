@@ -77,6 +77,23 @@ The plan and tickets are in `docs/AI_EXPANSION_PLAN.md`.
 **Revisit if.** A path needs a concept the stage or step kinds cannot express;
 extend `scripts/aiPaths.ts` in its own reviewed PR.
 
+## Broader language and AI coverage (2026-11-11, owner-directed)
+
+The owner requested extensive programming-language coverage and more detailed
+AI content informed by Google search questions. This authorizes further cited
+language/tool records and distinct AI execution paths beyond the earlier pilot
+size. It does not claim that a prior engagement target has been met. Keep the
+existing schemas, separate execution paths from provenance, and retain source
+verification and human confidence review. Do not treat the old approximate
+12-tool pilot ceiling as a reason to discard this authorized expansion.
+
+The November batch and its source/demand limitations are documented in
+[research/2026-11-content-expansion.md](research/2026-11-content-expansion.md).
+The existing boundaries on generic tutorials, closed-system speculation,
+model trackers and low-value bulk pages remain in effect. Target-query lists
+are hypotheses unless dated search data establishes demand; never invent
+search volumes or ranking guarantees.
+
 ## No machine-generated edges
 
 Do not build a job that writes edges automatically from GitHub's languages API,

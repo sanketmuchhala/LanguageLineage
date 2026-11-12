@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How Ollama Runs Locally: GGUF, CUDA and MLX | Language Lineage</title>
+  <meta name="description" content="Trace a local Ollama request through its Go service and a supported llama.cpp or MLX engine, separating CPU, NVIDIA CUDA and Apple-silicon Metal execution." />
+  <link rel="canonical" href="https://www.languagelineage.org/ai/how-ollama-runs" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><script defer src="/fx.js"></script><script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script><link rel="alternate" type="application/rss+xml" title="Language Lineage" href="/rss.xml" /><link rel="stylesheet" href="/seo.css" />
+  <script defer src="/ai-path.js"></script>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="How Ollama Runs Locally: GGUF, CUDA and MLX | Language Lineage" />
+  <meta property="og:description" content="Trace a local Ollama request through its Go service and a supported llama.cpp or MLX engine, separating CPU, NVIDIA CUDA and Apple-silicon Metal execution." />
+  <meta property="og:url" content="https://www.languagelineage.org/ai/how-ollama-runs" />
+  <meta property="og:image" content="https://www.languagelineage.org/og/ai-how-ollama-runs.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What Actually Runs When You Send Ollama a Prompt?","description":"Trace a local Ollama request through its Go service and a supported llama.cpp or MLX engine, separating CPU, NVIDIA CUDA and Apple-silicon Metal execution.","url":"https://www.languagelineage.org/ai/how-ollama-runs","datePublished":"2026-11-11","dateModified":"2026-11-12","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"citation":["https://docs.ollama.com/api/introduction","https://github.com/ollama/ollama/blob/main/server/routes.go","https://ollama.com/blog/improved-performance-and-model-support-with-gguf","https://ollama.com/blog/mlx","https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md","https://github.com/ggml-org/llama.cpp/blob/master/README.md","https://ml-explore.github.io/mlx/build/html/dev/extensions.html","https://docs.ollama.com/faq"],"inLanguage":"en"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"AI execution paths","item":"https://www.languagelineage.org/ai"},{"@type":"ListItem","position":3,"name":"What Actually Runs When You Send Ollama a Prompt?","item":"https://www.languagelineage.org/ai/how-ollama-runs"}]}</script>
+</head>
+<body class="seo-page">
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<nav class="seo-nav">
+  <a href="/" class="nav-brand"><img class="nav-logo-mark" src="/logo-mark.svg" width="22" height="22" alt="" aria-hidden="true">Language Lineage</a>
+  <a href="/relationships">Relationships</a>
+  <a href="/languages">Languages</a>
+  <a href="/tools">Tools</a>
+  <a href="/guides">Guides</a>
+  <a href="/timeline">Timeline</a>
+  <a href="/dataset">Dataset</a>
+  <a href="/how-it-works">How It Works</a>
+  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
+</nav>
+<main class="seo-main" id="main-content">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; <a href="/ai">AI execution paths</a> &rsaquo; What Actually Runs When You Send Ollama a Prompt
+  </nav>
+
+  <h1>What Actually Runs When You Send Ollama a Prompt?</h1>
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#the-selected-path-step-by-step">The selected path, step by step</a></li>
+    <li><a href="#is-ollama-itself-the-model-or-the-inference-engine">Is Ollama itself the model or the inference engine?</a></li>
+    <li><a href="#does-every-ollama-model-use-llama-cpp">Does every Ollama model use llama.cpp?</a></li>
+    <li><a href="#why-does-ollama-use-the-cpu-instead-of-the-gpu">Why does Ollama use the CPU instead of the GPU?</a></li>
+    <li><a href="#what-changes-on-apple-silicon">What changes on Apple silicon?</a></li>
+    <li><a href="#does-using-the-ollama-api-mean-my-request-stays-local">Does using the Ollama API mean my request stays local?</a></li>
+    <li><a href="#how-do-gguf-model-size-and-hardware-fit-together">How do GGUF, model size and hardware fit together?</a></li>
+    <li><a href="#every-stage">Every stage</a></li>
+    <li><a href="#every-step">Every step</a></li>
+    <li><a href="#what-this-does-not-show">What this does not show</a></li>
+    <li><a href="#how-this-page-is-checked">How this page is checked</a></li>
+  </ol>
+</nav>
+
+  <div class="answer-box"><strong>Ollama serves requests and selects a compatible model runner; the runner executes numerical work.</strong> Current documented local paths include llama.cpp-backed GGUF support and an MLX engine for supported Apple-silicon models. A Go service does not mean the matrix kernels are Go code, and an Ollama API request does not prove inference is local: cloud endpoints are separate.</div>
+
+  <section class="ai-explorer" id="explorer" aria-label="Execution path explorer">
+    <form class="ai-controls" onsubmit="return false">
+      <fieldset><legend>Supported local route</legend>
+        <label><input type="radio" name="route" value="gguf_cpu" data-phrase="a compatible GGUF model on CPU" checked> GGUF / CPU</label>
+        <label><input type="radio" name="route" value="gguf_cuda" data-phrase="a compatible GGUF model with CUDA"> GGUF / NVIDIA CUDA</label>
+        <label><input type="radio" name="route" value="mlx_metal" data-phrase="a supported MLX model on Apple silicon"> MLX / Apple silicon</label>
+      </fieldset>
+      <button type="button" class="ai-copy" hidden>Copy link to this path</button>
+    </form>
+    <p class="ai-status" aria-live="polite" data-template="Showing {route}">Showing a compatible GGUF model on CPU: 6 stages, 5 steps.</p>
+    <div class="ai-layout">
+      <div class="ai-diagram-wrap"><svg class="ai-path-svg" viewBox="0 0 826 468" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Execution path diagram: select a stage or step for details">
+<defs><marker id="ai-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9a9a9a"/></marker></defs>
+<path id="step-request--server" class="ai-step on" d="M413,62 C413,78 413,78 413,88" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Your local request sends local API request Ollama Go service"><title>Your local request sends local API request Ollama Go service</title></path>
+<path id="step-server--runner" class="ai-step on" d="M413,140 C413,156 413,156 413,166" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Ollama Go service validates and schedules Runner scheduling"><title>Ollama Go service validates and schedules Runner scheduling</title></path>
+<path id="step-runner--llama" class="ai-step on" d="M413,218 C413,234 207,234 207,244" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Runner scheduling uses compatible GGUF engine llama.cpp GGUF path"><title>Runner scheduling uses compatible GGUF engine llama.cpp GGUF path</title></path>
+<path id="step-runner--mlx" class="ai-step" d="M413,218 C413,234 722,234 722,244" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Runner scheduling uses MLX engine MLX engine"><title>Runner scheduling uses MLX engine MLX engine</title></path>
+<path id="step-llama--cpu_kernel" class="ai-step on" d="M207,296 C207,312 104,312 104,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="llama.cpp GGUF path uses CPU backend ggml CPU kernels"><title>llama.cpp GGUF path uses CPU backend ggml CPU kernels</title></path>
+<path id="step-llama--cuda_kernel" class="ai-step" d="M207,296 C207,312 413,312 413,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="llama.cpp GGUF path uses CUDA backend CUDA kernels"><title>llama.cpp GGUF path uses CUDA backend CUDA kernels</title></path>
+<path id="step-mlx--metal_kernel" class="ai-step" d="M722,296 C722,312 722,312 722,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="MLX engine uses Metal primitives MLX Metal kernels"><title>MLX engine uses Metal primitives MLX Metal kernels</title></path>
+<path id="step-cpu_kernel--cpu" class="ai-step on" d="M104,374 C104,390 104,390 104,400" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="ggml CPU kernels executes on CPU"><title>ggml CPU kernels executes on CPU</title></path>
+<path id="step-cuda_kernel--gpu" class="ai-step" d="M413,374 C413,390 413,390 413,400" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="CUDA kernels executes on NVIDIA GPU"><title>CUDA kernels executes on NVIDIA GPU</title></path>
+<path id="step-metal_kernel--apple_gpu" class="ai-step" d="M722,374 C722,390 722,390 722,400" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="MLX Metal kernels executes on Apple silicon GPU"><title>MLX Metal kernels executes on Apple silicon GPU</title></path>
+<g id="stage-request" class="ai-stage on" tabindex="0" role="button" aria-label="Your local request: Your program">
+  <rect x="325" y="16" width="176" height="46" rx="7" style="--kc:#60a5fa"/>
+  <rect x="325" y="16" width="4" height="46" rx="2" fill="#60a5fa"/>
+  <text x="339" y="35" class="ai-name">Your local request</text>
+  <text x="339" y="51" class="ai-kind">application</text>
+</g>
+<g id="stage-server" class="ai-stage on" tabindex="0" role="button" aria-label="Ollama Go service: Runtime">
+  <rect x="325" y="94" width="176" height="46" rx="7" style="--kc:#93c5fd"/>
+  <rect x="325" y="94" width="4" height="46" rx="2" fill="#93c5fd"/>
+  <text x="339" y="113" class="ai-name">Ollama Go service</text>
+  <text x="339" y="129" class="ai-kind">runtime</text>
+</g>
+<g id="stage-runner" class="ai-stage on" tabindex="0" role="button" aria-label="Runner scheduling: Runtime">
+  <rect x="325" y="172" width="176" height="46" rx="7" style="--kc:#93c5fd"/>
+  <rect x="325" y="172" width="4" height="46" rx="2" fill="#93c5fd"/>
+  <text x="339" y="191" class="ai-name">Runner scheduling</text>
+  <text x="339" y="207" class="ai-kind">runtime</text>
+</g>
+<g id="stage-llama" class="ai-stage on" tabindex="0" role="button" aria-label="llama.cpp GGUF path: Runtime">
+  <rect x="119" y="250" width="176" height="46" rx="7" style="--kc:#93c5fd"/>
+  <rect x="119" y="250" width="4" height="46" rx="2" fill="#93c5fd"/>
+  <text x="133" y="269" class="ai-name">llama.cpp GGUF path</text>
+  <text x="133" y="285" class="ai-kind">runtime</text>
+</g>
+<g id="stage-mlx" class="ai-stage" tabindex="0" role="button" aria-label="MLX engine: Runtime">
+  <rect x="634" y="250" width="176" height="46" rx="7" style="--kc:#93c5fd"/>
+  <rect x="634" y="250" width="4" height="46" rx="2" fill="#93c5fd"/>
+  <text x="648" y="269" class="ai-name">MLX engine</text>
+  <text x="648" y="285" class="ai-kind">runtime</text>
+</g>
+<g id="stage-cpu_kernel" class="ai-stage on" tabindex="0" role="button" aria-label="ggml CPU kernels: Kernel">
+  <rect x="16" y="328" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="16" y="328" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="30" y="347" class="ai-name">ggml CPU kernels</text>
+  <text x="30" y="363" class="ai-kind">kernel</text>
+</g>
+<g id="stage-cuda_kernel" class="ai-stage" tabindex="0" role="button" aria-label="CUDA kernels: Kernel">
+  <rect x="325" y="328" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="325" y="328" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="339" y="347" class="ai-name">CUDA kernels</text>
+  <text x="339" y="363" class="ai-kind">kernel</text>
+</g>
+<g id="stage-metal_kernel" class="ai-stage" tabindex="0" role="button" aria-label="MLX Metal kernels: Kernel">
+  <rect x="634" y="328" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="634" y="328" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="648" y="347" class="ai-name">MLX Metal kernels</text>
+  <text x="648" y="363" class="ai-kind">kernel</text>
+</g>
+<g id="stage-cpu" class="ai-stage on" tabindex="0" role="button" aria-label="CPU: Hardware">
+  <rect x="16" y="406" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="16" y="406" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="30" y="425" class="ai-name">CPU</text>
+  <text x="30" y="441" class="ai-kind">hardware</text>
+</g>
+<g id="stage-gpu" class="ai-stage" tabindex="0" role="button" aria-label="NVIDIA GPU: Hardware">
+  <rect x="325" y="406" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="325" y="406" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="339" y="425" class="ai-name">NVIDIA GPU</text>
+  <text x="339" y="441" class="ai-kind">hardware</text>
+</g>
+<g id="stage-apple_gpu" class="ai-stage" tabindex="0" role="button" aria-label="Apple silicon GPU: Hardware">
+  <rect x="634" y="406" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="634" y="406" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="648" y="425" class="ai-name">Apple silicon GPU</text>
+  <text x="648" y="441" class="ai-kind">hardware</text>
+</g>
+</svg></div>
+      <aside class="ai-detail" aria-live="polite"><p class="ai-detail-hint">Select a stage or an arrow to see what it does and the source behind it.</p></aside>
+    </div>
+    <ul class="ai-legend" aria-label="Legend"><li><span class="ai-swatch" style="--kc:#60a5fa"></span>Your program</li><li><span class="ai-swatch" style="--kc:#93c5fd"></span>Runtime</li><li><span class="ai-swatch" style="--kc:#f472b6"></span>Kernel</li><li><span class="ai-swatch" style="--kc:#4ade80"></span>Hardware</li></ul>
+  </section>
+
+  <h2 id="the-selected-path-step-by-step">The selected path, step by step</h2>
+  <ol class="ai-path-list">
+<li>Your local request <em>sends local API request</em> Ollama Go service: This path uses the local endpoint, not an Ollama-hosted cloud request.</li>
+<li>Ollama Go service <em>validates and schedules</em> Runner scheduling: The Go service resolves a compatible runner after validating options and capabilities.</li>
+<li>Runner scheduling <em>uses compatible GGUF engine</em> llama.cpp GGUF path: This selection describes the documented llama.cpp-backed GGUF integration.</li>
+<li>llama.cpp GGUF path <em>uses CPU backend</em> ggml CPU kernels: The CPU-only route executes supported work through CPU kernels.</li>
+<li>ggml CPU kernels <em>executes on</em> CPU: The CPU-only numerical path terminates at CPU hardware.</li>
+  </ol>
+
+  <h2 id="is-ollama-itself-the-model-or-the-inference-engine">Is Ollama itself the model or the inference engine?</h2>
+  <p>Ollama provides request handling, model management and compatible runners. The [Go server source](https://github.com/ollama/ollama/blob/main/server/routes.go) shows validation and scheduling before inference. The model’s weights are data consumed by an execution engine; neither the model nor the chat endpoint is a programming language.</p>
+  <p>The diagram distinguishes the service layer from the numerical runtime. This matters when answering what Ollama is written in: Go is evidence for its service implementation, while the selected native engine has its own implementation and kernels. The <a href="/ai/how-llama-cpp-runs">llama.cpp path</a> and <a href="/ai/how-mlx-runs">MLX path</a> explain those layers in more detail.</p>
+
+  <h2 id="does-every-ollama-model-use-llama-cpp">Does every Ollama model use llama.cpp?</h2>
+  <p>No. The [GGUF support announcement](https://ollama.com/blog/improved-performance-and-model-support-with-gguf) documents llama.cpp integration alongside Ollama’s MLX engine. The [MLX announcement](https://ollama.com/blog/mlx) describes an Apple-silicon path for supported architectures. Model compatibility and the installed version determine which claims apply.</p>
+  <p>The controls compare documented paths; they do not expose a real Ollama engine-selection API. A compatible GGUF route and an MLX route need not accept identical model files or support identical features. Do not infer the engine from a model’s marketing name alone.</p>
+
+  <h2 id="why-does-ollama-use-the-cpu-instead-of-the-gpu">Why does Ollama use the CPU instead of the GPU?</h2>
+  <p>A CPU-only model can run in system memory. GPU execution additionally needs a compatible engine, hardware support, dependencies and enough available memory for the configured workload. The [FAQ](https://docs.ollama.com/faq) documents ollama ps and its PROCESSOR column, including fully CPU, fully GPU and mixed placement. That report is more informative than assuming a GPU installation guarantees full offload.</p>
+  <p>The CUDA choice illustrates supported offloaded work. Real deployments can use a mixture of CPU and GPU, especially when the model does not fit entirely on a device. The diagram excludes that partial-offload detail rather than asserting that all CUDA requests are GPU-only.</p>
+
+  <h2 id="what-changes-on-apple-silicon">What changes on Apple silicon?</h2>
+  <p>The documented MLX engine uses Apple’s array framework and unified-memory architecture for supported models. MLX GPU primitives are implemented using Metal, as the [extension guide](https://ml-explore.github.io/mlx/build/html/dev/extensions.html) explains. This is different from treating a Mac as an NVIDIA CUDA system.</p>
+  <p>Other local routes can still exist on Macs. The point of the MLX branch is to show one verified engine path, not to claim every model on every Apple computer uses it. Check installed-version release notes and model support before applying this diagram to a specific deployment.</p>
+
+  <h2 id="does-using-the-ollama-api-mean-my-request-stays-local">Does using the Ollama API mean my request stays local?</h2>
+  <p>No. The [API introduction](https://docs.ollama.com/api/introduction) documents both local and cloud base URLs, and local servers can also be used with cloud models. This page deliberately chooses a downloaded local model. Endpoint, model selection and serving configuration establish the execution boundary; the client library name alone does not.</p>
+
+  <h2 id="how-do-gguf-model-size-and-hardware-fit-together">How do GGUF, model size and hardware fit together?</h2>
+  <p>GGUF is a model file format consumed by a compatible runtime. It does not describe one fixed processor or make all model architectures interchangeable. Memory placement and the chosen backend determine where computation occurs. This page avoids model rankings, speed promises and guessed internals, and records the engine and device conditions for each illustrated path.</p>
+
+  <h2 id="every-stage">Every stage</h2>
+  <div class="ai-stage-list">
+<article class="ai-stage-detail" id="detail-stage-request" data-stage="request">
+<h3>Your local request</h3>
+<p class="ai-kind-tag" style="--kc:#60a5fa">application</p>
+<p>A client sends a chat request to the local Ollama service using an already downloaded supported model.</p>
+
+<ul class="ai-sources"><li><blockquote>For local inference, use http://localhost:11434/api/chat with a downloaded model and omit the authorization header.</blockquote><a href="https://docs.ollama.com/api/introduction" rel="noopener noreferrer" target="_blank">Ollama API: local and cloud endpoints</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-server" data-stage="server">
+<h3>Ollama Go service</h3>
+<p class="ai-kind-tag" style="--kc:#93c5fd">runtime</p>
+<p>The service handles the request and validates model capabilities and options before selecting a runner.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/ollama">Ollama</a></p>
+<ul class="ai-sources"><li><blockquote>scheduleRunner schedules a runner after validating inputs such as capabilities and model options.</blockquote><a href="https://github.com/ollama/ollama/blob/main/server/routes.go" rel="noopener noreferrer" target="_blank">Ollama Go request handling and runner scheduling</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-runner" data-stage="runner">
+<h3>Runner scheduling</h3>
+<p class="ai-kind-tag" style="--kc:#93c5fd">runtime</p>
+<p>Ollama schedules a compatible engine for the chosen model. This is not a promise that every architecture uses llama.cpp.</p>
+
+<ul class="ai-sources"><li><blockquote>scheduleRunner schedules a runner after validating inputs such as capabilities and model options.</blockquote><a href="https://github.com/ollama/ollama/blob/main/server/routes.go" rel="noopener noreferrer" target="_blank">Ollama Go request handling and runner scheduling</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-llama" data-stage="llama">
+<h3>llama.cpp GGUF path</h3>
+<p class="ai-kind-tag" style="--kc:#93c5fd">runtime</p>
+<p>The selected compatible GGUF model runs through Ollama’s documented llama.cpp integration.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/llama-cpp">llama.cpp</a></p>
+<ul class="ai-sources"><li><blockquote>GGUF model compatibility through llama.cpp</blockquote><a href="https://ollama.com/blog/improved-performance-and-model-support-with-gguf" rel="noopener noreferrer" target="_blank">Ollama 0.30 GGUF/llama.cpp support announcement</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-mlx" data-stage="mlx">
+<h3>MLX engine</h3>
+<p class="ai-kind-tag" style="--kc:#93c5fd">runtime</p>
+<p>Supported Apple-silicon model paths can use Ollama’s MLX engine, which is distinct from the GGUF/llama.cpp route.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/mlx">MLX</a></p>
+<ul class="ai-sources"><li><blockquote>Ollama on Apple silicon is now built on top of Apple’s machine learning framework, MLX</blockquote><a href="https://ollama.com/blog/mlx" rel="noopener noreferrer" target="_blank">Ollama MLX engine on Apple silicon announcement</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-cpu_kernel" data-stage="cpu_kernel">
+<h3>ggml CPU kernels</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel</p>
+<p>The selected CPU-only llama.cpp route uses CPU numerical kernels. No universal GPU requirement is implied.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/ggml">ggml</a></p>
+<ul class="ai-sources"><li><blockquote>AVX, AVX2, AVX512 and AMX support for x86 architectures</blockquote><a href="https://github.com/ggml-org/llama.cpp/blob/master/README.md" rel="noopener noreferrer" target="_blank">llama.cpp architecture and hardware support</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-cuda_kernel" data-stage="cuda_kernel">
+<h3>CUDA kernels</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel</p>
+<p>The compatible CUDA route uses NVIDIA GPU acceleration through llama.cpp’s configured GPU backend.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/cuda">CUDA</a></p>
+<ul class="ai-sources"><li><blockquote>This provides GPU acceleration using an NVIDIA GPU.</blockquote><a href="https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md" rel="noopener noreferrer" target="_blank">llama.cpp CPU and CUDA backend build guide</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-metal_kernel" data-stage="metal_kernel">
+<h3>MLX Metal kernels</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel</p>
+<p>MLX primitives for the illustrated Apple-silicon GPU work use Metal kernels.</p>
+
+<ul class="ai-sources"><li><blockquote>Apple silicon devices address their GPUs using the Metal shading language, and GPU kernels in MLX are written using Metal.</blockquote><a href="https://ml-explore.github.io/mlx/build/html/dev/extensions.html" rel="noopener noreferrer" target="_blank">MLX device primitive and Metal kernel implementation</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-cpu" data-stage="cpu">
+<h3>CPU</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">hardware</p>
+<p>The CPU-only example keeps the selected model in system memory and executes its numerical work on CPU.</p>
+
+<ul class="ai-sources"><li><blockquote>100% CPU means the model was loaded entirely in system memory</blockquote><a href="https://docs.ollama.com/faq" rel="noopener noreferrer" target="_blank">Ollama FAQ: processor placement and memory</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-gpu" data-stage="gpu">
+<h3>NVIDIA GPU</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">hardware</p>
+<p>The CUDA example executes supported offloaded work on a compatible NVIDIA GPU; partial CPU offload is not shown.</p>
+
+<ul class="ai-sources"><li><blockquote>This provides GPU acceleration using an NVIDIA GPU.</blockquote><a href="https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md" rel="noopener noreferrer" target="_blank">llama.cpp CPU and CUDA backend build guide</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-apple_gpu" data-stage="apple_gpu">
+<h3>Apple silicon GPU</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">hardware</p>
+<p>The supported MLX route executes its GPU primitives through Metal on Apple silicon.</p>
+
+<ul class="ai-sources"><li><blockquote>Apple silicon devices address their GPUs using the Metal shading language, and GPU kernels in MLX are written using Metal.</blockquote><a href="https://ml-explore.github.io/mlx/build/html/dev/extensions.html" rel="noopener noreferrer" target="_blank">MLX device primitive and Metal kernel implementation</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+  </div>
+
+  <h2 id="every-step">Every step</h2>
+  <div class="table-wrap"><table class="ai-steps">
+    <thead><tr><th>From</th><th>Step</th><th>To</th><th>When</th><th>What happens</th><th>Source</th></tr></thead>
+    <tbody>
+<tr id="detail-step-request--server" data-step="request--server" data-from="request" data-to="server" data-when="{}" class="on">
+<td>Your local request</td><td>sends local API request</td><td>Ollama Go service</td><td>any supported local route</td><td>This path uses the local endpoint, not an Ollama-hosted cloud request.</td><td><a href="https://docs.ollama.com/api/introduction" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-server--runner" data-step="server--runner" data-from="server" data-to="runner" data-when="{}" class="on">
+<td>Ollama Go service</td><td>validates and schedules</td><td>Runner scheduling</td><td>any supported local route</td><td>The Go service resolves a compatible runner after validating options and capabilities.</td><td><a href="https://github.com/ollama/ollama/blob/main/server/routes.go" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-runner--llama" data-step="runner--llama" data-from="runner" data-to="llama" data-when="{&quot;route&quot;:[&quot;gguf_cpu&quot;,&quot;gguf_cuda&quot;]}" class="on">
+<td>Runner scheduling</td><td>uses compatible GGUF engine</td><td>llama.cpp GGUF path</td><td>GGUF / CPU or GGUF / NVIDIA CUDA</td><td>This selection describes the documented llama.cpp-backed GGUF integration.</td><td><a href="https://ollama.com/blog/improved-performance-and-model-support-with-gguf" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-runner--mlx" data-step="runner--mlx" data-from="runner" data-to="mlx" data-when="{&quot;route&quot;:[&quot;mlx_metal&quot;]}">
+<td>Runner scheduling</td><td>uses MLX engine</td><td>MLX engine</td><td>MLX / Apple silicon</td><td>This selection assumes a model supported by the MLX engine on Apple silicon.</td><td><a href="https://ollama.com/blog/mlx" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-llama--cpu_kernel" data-step="llama--cpu_kernel" data-from="llama" data-to="cpu_kernel" data-when="{&quot;route&quot;:[&quot;gguf_cpu&quot;]}" class="on">
+<td>llama.cpp GGUF path</td><td>uses CPU backend</td><td>ggml CPU kernels</td><td>GGUF / CPU</td><td>The CPU-only route executes supported work through CPU kernels.</td><td><a href="https://github.com/ggml-org/llama.cpp/blob/master/README.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-llama--cuda_kernel" data-step="llama--cuda_kernel" data-from="llama" data-to="cuda_kernel" data-when="{&quot;route&quot;:[&quot;gguf_cuda&quot;]}">
+<td>llama.cpp GGUF path</td><td>uses CUDA backend</td><td>CUDA kernels</td><td>GGUF / NVIDIA CUDA</td><td>The configured CUDA route executes supported device work through GPU kernels.</td><td><a href="https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-mlx--metal_kernel" data-step="mlx--metal_kernel" data-from="mlx" data-to="metal_kernel" data-when="{&quot;route&quot;:[&quot;mlx_metal&quot;]}">
+<td>MLX engine</td><td>uses Metal primitives</td><td>MLX Metal kernels</td><td>MLX / Apple silicon</td><td>MLX’s supported GPU primitives are implemented with Metal kernels.</td><td><a href="https://ml-explore.github.io/mlx/build/html/dev/extensions.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-cpu_kernel--cpu" data-step="cpu_kernel--cpu" data-from="cpu_kernel" data-to="cpu" data-when="{}" class="on">
+<td>ggml CPU kernels</td><td>executes on</td><td>CPU</td><td>any supported local route</td><td>The CPU-only numerical path terminates at CPU hardware.</td><td><a href="https://docs.ollama.com/faq" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-cuda_kernel--gpu" data-step="cuda_kernel--gpu" data-from="cuda_kernel" data-to="gpu" data-when="{}">
+<td>CUDA kernels</td><td>executes on</td><td>NVIDIA GPU</td><td>any supported local route</td><td>The configured CUDA backend executes device work on the NVIDIA GPU.</td><td><a href="https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-metal_kernel--apple_gpu" data-step="metal_kernel--apple_gpu" data-from="metal_kernel" data-to="apple_gpu" data-when="{}">
+<td>MLX Metal kernels</td><td>executes on</td><td>Apple silicon GPU</td><td>any supported local route</td><td>Metal primitives execute on the Apple-silicon GPU.</td><td><a href="https://ml-explore.github.io/mlx/build/html/dev/extensions.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="what-this-does-not-show">What this does not show</h2>
+  <p>Local text inference with downloaded models supported by the selected engine: GGUF/llama.cpp on CPU or NVIDIA CUDA, or the documented MLX engine on Apple silicon. These are version- and model-dependent illustrative paths, not a user-facing engine-switch command or a guarantee of universal model compatibility. Cloud models, AMD/Vulkan routes, partial offload, multimodal processing and detailed token sampling are not depicted.</p>
+
+  <h2 id="how-this-page-is-checked">How this page is checked</h2>
+  <p>Every stage and step above quotes the source that supports it. The quotes were checked against the Ollama API and FAQ, Go server source, GGUF and MLX announcements, llama.cpp build documentation and MLX kernel documentation on 2026-11-11. The data is a <a href="/dataset/ai/how-ollama-runs.json">versioned JSON file</a> under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. Found something wrong or out of date? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
+  <p><a class="ai-graph-link" href="/explore?view=ai&amp;path=how-ollama-runs&amp;route=gguf_cpu">See this path in the graph explorer &rarr;</a></p>
+  <p>What these tools are written in is in the main atlas: <a href="/tools/ollama">Ollama</a>, <a href="/tools/llama-cpp">llama.cpp</a>, <a href="/tools/mlx">MLX</a>, <a href="/tools/ggml">ggml</a>, <a href="/tools/cuda">CUDA</a>. More execution paths: <a href="/ai/how-jax-runs">What Actually Happens When You Run JAX Code</a>, <a href="/ai/how-keras-runs">What Runs Underneath a Keras 3 Model</a>, <a href="/ai/how-llama-cpp-runs">How Does llama.cpp Run a Model on Your Hardware</a>, <a href="/ai/how-mlx-runs">What Actually Happens When You Run MLX on a Mac</a>, <a href="/ai/how-onnx-runtime-runs">How Does ONNX Runtime Execute a Model Across Hardware</a>, <a href="/ai/how-pytorch-runs">What Actually Happens When You Run a PyTorch Model</a>, <a href="/ai/how-tensorflow-runs">How Does TensorFlow Run Python on a CPU or GPU</a>, <a href="/ai/how-tensorrt-llm-runs">How Does TensorRT-LLM Execute an Inference Request</a>, <a href="/ai/how-vllm-runs">What Actually Happens When vLLM Serves a Request</a>, or <a href="/ai">compare them all</a>.</p>
+
+  <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>
+</main>
+<footer class="seo-footer-rich">
+  <div data-nosnippet>
+  <div class="footer-grid">
+    <div class="footer-col">
+      <span class="footer-col-head">Explore</span>
+      <a href="/programming-language-graph">Programming language graph</a>
+      <a href="/rankings/most-influential">Most influential languages</a>
+      <a href="/rss.xml">RSS feed</a>
+      <a href="/embed-kit">Embed the graph</a>
+      <a href="/guides/programming-language-family-tree">Language family tree</a>
+      <a href="/programming-language-evolution">Evolution timeline</a>
+      <a href="/what-are-programming-languages-written-in">What languages are written in</a>
+      <a href="/ai">How AI frameworks run code</a>
+      <a href="/explore">Interactive Graph</a>
+      <a href="/dataset">Dataset</a>
+      <a href="/directory">Site Directory</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Popular Languages</span>
+      <a href="/languages/python">Python</a>
+      <a href="/languages/javascript">JavaScript</a>
+      <a href="/languages/rust">Rust</a>
+      <a href="/languages/go">Go</a>
+      <a href="/languages/java">Java</a>
+      <a href="/languages/c">C</a>
+      <a href="/languages/cxx">C++</a>
+      <a href="/languages/typescript">TypeScript</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Questions</span>
+      <a href="/questions/what-is-python-written-in">What is Python written in?</a>
+      <a href="/questions/what-is-javascript-written-in">What is JavaScript written in?</a>
+      <a href="/questions/what-is-rust-written-in">What is Rust written in?</a>
+      <a href="/questions/what-is-go-written-in">What is Go written in?</a>
+      <a href="/questions/what-is-compiler-bootstrapping">What is compiler bootstrapping?</a>
+      <a href="/questions">All questions &rarr;</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Tools &amp; Guides</span>
+      <a href="/tools/v8">V8</a>
+      <a href="/tools/llvm">LLVM</a>
+      <a href="/tools/gcc">GCC</a>
+      <a href="/tools/ghc">GHC</a>
+      <a href="/guides">All guides</a>
+      <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </div>
+  <p class="footer-note">The Language Lineage dataset is meticulously curated and verified by human researchers. We use AI agents to assist with large-scale data gathering and modeling, but every implementation fact is manually reviewed for accuracy. Spot an error? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue on GitHub</a> and it gets fixed. <a href="/how-it-works">Learn how it works &rarr;</a></p>
+  <div class="footer-bottom">Made with <span style="color:#fb7185">❤️</span> by <a href="https://github.com/sanketmuchhala" rel="noopener noreferrer">Sanket Muchhala</a> &middot; <a href="/">Language Lineage</a></div>
+  </div>
+</footer>
+</body>
+</html>

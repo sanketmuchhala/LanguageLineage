@@ -4,6 +4,12 @@ This is the source-level companion to [languagelineage.org/how-it-works](https:/
 
 The short version: research agents harvest cited facts from public structured data, a deterministic build assembles them into one dataset file, a person reviews every diff, three mechanical gates check the result, and the entire site is regenerated from that one file on every deploy.
 
+For agents adding or correcting content, the mandatory finish procedure is in
+[docs/CONTENT_PIPELINE.md](docs/CONTENT_PIPELINE.md#required-content-task-handoff).
+After the final content edit, run `npm run seo:generate` and then
+`npm run verify` in your own worktree. Include generated artifacts and actual
+check results in the handoff; do not leave generation for the owner.
+
 ## Repository map
 
 | Path | Role |
@@ -139,8 +145,8 @@ The required result is 0 errors, 0 warnings.
 `npm run build` regenerates the entire site from the dataset:
 
 - `scripts/generateSeoPages.ts` renders every language, tool, question, guide, relationship, timeline, and dataset page as static HTML into `public/`
-- `scripts/generateSitemap.ts` and `scripts/generateLlmsTxt.ts` derive the sitemap and the `llms.txt` index from the rendered pages rather than a hand-maintained list
-- `scripts/generateOgImages.ts` renders the social preview images
+- `scripts/generateSitemap.ts` discovers dataset-driven routes using shared eligibility rules, with explicit catalogs for existing editorial pages; `scripts/generateLlmsTxt.ts` reads that sitemap and the rendered page metadata to build the llms catalogs
+- `scripts/generateOgImages.ts` renders per-page social preview images before HTML generation, as part of `seo:generate`
 - every generated page carries the Vercel Analytics beacon, injected by `generateSeoPages.ts`; `validateSeo.ts` fails the build if one is missing, so the measurement surface cannot silently regress
 - the interactive graph at `/explore` fetches the exact same `lineage_v5.json` at runtime, and the downloadable dataset is that same file, not an export
 
@@ -160,7 +166,7 @@ A correction is never a patch to one page. It becomes a dataset or generator cha
 | `npm run logos:wikimedia` | Harvest `P154` logos from Commons with license metadata |
 | `npm run dataset:v5` | Deterministically assemble `lineage_v5.json` |
 | `npm run type-check` | Gate 1: strict TypeScript |
-| `npm run seo:generate` | Regenerate all static pages, the sitemap, and `llms.txt` |
+| `npm run seo:generate` | Regenerate per-page social cards, static pages, sitemap, feeds, llms catalogs and dataset releases |
 | `npm run seo:validate` | Gates 2 and 3: dataset integrity and full site audit |
 | `npm run seo:links` | Audit internal links across generated pages |
 | `npm run og:generate` | Render OG preview images |

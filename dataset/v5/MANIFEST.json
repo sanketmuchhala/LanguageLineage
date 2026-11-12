@@ -6,27 +6,27 @@
   "license": "CC-BY-4.0",
   "counts": {
     "nodes": {
-      "total": 176,
-      "languages": 141,
-      "tools": 35,
-      "self_hosting": 44
+      "total": 191,
+      "languages": 151,
+      "tools": 40,
+      "self_hosting": 45
     },
     "relationships": {
-      "total": 504,
+      "total": 527,
       "dated": 397,
       "ended": 20,
       "by_type": {
-        "influenced": 263,
-        "compiler_written_in": 107,
-        "runtime_written_in": 102,
+        "influenced": 264,
+        "runtime_written_in": 115,
+        "compiler_written_in": 114,
         "bootstrap_written_in": 15,
-        "transpiled_to": 13,
+        "transpiled_to": 15,
         "rewritten_in": 4
       },
       "by_source_type": {
         "wikipedia": 302,
-        "docs": 100,
-        "repository": 89,
+        "repository": 107,
+        "docs": 105,
         "paper": 6,
         "article": 4,
         "forum": 2,
@@ -36,17 +36,17 @@
     "enrichment_records": 148,
     "logo_overrides": 22,
     "ai_execution_paths": {
-      "total": 6,
-      "stages": 82,
-      "steps": 94,
-      "sources": 44
+      "total": 10,
+      "stages": 121,
+      "steps": 138,
+      "sources": 66
     }
   },
   "files": [
     {
       "path": "dataset/v5/lineage_v5.json",
-      "sha256": "d00c288e6c930887747f39400f5cbc45aee8ba8468c0dba0bf8043fe4c1b7d9d",
-      "bytes": 309605
+      "sha256": "4bd4ee6908137df60ebd7cb4c758d9877140fda90a9a1c9f3fab46e2870b6647",
+      "bytes": 334717
     },
     {
       "path": "dataset/v5/enrichment_v5.json",
@@ -60,18 +60,18 @@
     },
     {
       "path": "dataset/v5/lineage_v5_nodes.csv",
-      "sha256": "fbbea88ab0e395efba32a0fe74757fbc243d075d5a589eeb9ea3ae1f60556c5d",
-      "bytes": 33458
+      "sha256": "512c4e6f7532ec865b2d5ad43816e238f701948f6eabe20c4449f15816e5d864",
+      "bytes": 41714
     },
     {
       "path": "dataset/v5/lineage_v5_edges.csv",
-      "sha256": "1b2b830a2855dfeb0c51403840bdb2d3d63c0c5168407855c61a71604ef995dc",
-      "bytes": 82030
+      "sha256": "5d69c72c3b55a34da9e84722c21099c378e29998c0c9daef391c5711dfa7becb",
+      "bytes": 87307
     },
     {
       "path": "dataset/v5/DATACARD.md",
-      "sha256": "7574b15c504d27d7c5a5915d7094472e065c6797c4dac2ccc9addaeb14d104da",
-      "bytes": 4120
+      "sha256": "8b03252fcc89d7b2aea1eb03a312a9b991e8a0c7ad2491464714925837fecf80",
+      "bytes": 4122
     }
   ],
   "ai_paths": [
@@ -85,6 +85,17 @@
       "sources": 6,
       "sha256": "527467e4cef2b4057245c804eaf532ee0965e3ea8c202e5c33ba6754750a024d",
       "bytes": 25513
+    },
+    {
+      "slug": "how-keras-runs",
+      "name": "Keras",
+      "path": "dataset/ai/how-keras-runs.json",
+      "verified_on": "2026-11-11",
+      "stages": 8,
+      "steps": 11,
+      "sources": 3,
+      "sha256": "6b4f70326d61a852efe9577bd95080f3a5cdb5e1d69a75def3c06518a3498a0f",
+      "bytes": 16124
     },
     {
       "slug": "how-llama-cpp-runs",
@@ -109,6 +120,17 @@
       "bytes": 17017
     },
     {
+      "slug": "how-ollama-runs",
+      "name": "Ollama",
+      "path": "dataset/ai/how-ollama-runs.json",
+      "verified_on": "2026-11-11",
+      "stages": 11,
+      "steps": 10,
+      "sources": 8,
+      "sha256": "e3506f0eb5149ecaaafe598439d564a82c5f060a859344e5e3a3cb560a0e69ef",
+      "bytes": 17676
+    },
+    {
       "slug": "how-onnx-runtime-runs",
       "name": "ONNX Runtime",
       "path": "dataset/ai/how-onnx-runtime-runs.json",
@@ -116,8 +138,8 @@
       "stages": 11,
       "steps": 13,
       "sources": 6,
-      "sha256": "503dfb14be89abb8aa23c9348cc85ee3a091e97538fe8057c75430f590176ec3",
-      "bytes": 20915
+      "sha256": "8619baa009583e1f6dc6529810d40a3796ec2e40e2c00ce077b1dc1f403d7585",
+      "bytes": 24925
     },
     {
       "slug": "how-pytorch-runs",
@@ -129,6 +151,28 @@
       "sources": 10,
       "sha256": "adab61ec207be99c192f570ebcc63f66c63ff898e5bb0daaea65b1089dde2532",
       "bytes": 26998
+    },
+    {
+      "slug": "how-tensorflow-runs",
+      "name": "TensorFlow",
+      "path": "dataset/ai/how-tensorflow-runs.json",
+      "verified_on": "2026-11-11",
+      "stages": 12,
+      "steps": 15,
+      "sources": 4,
+      "sha256": "f8192868c2a91797748893a744edb22df353a46d82dd2910c9019b885f9cfe3d",
+      "bytes": 19657
+    },
+    {
+      "slug": "how-tensorrt-llm-runs",
+      "name": "TensorRT-LLM",
+      "path": "dataset/ai/how-tensorrt-llm-runs.json",
+      "verified_on": "2026-11-11",
+      "stages": 8,
+      "steps": 8,
+      "sources": 7,
+      "sha256": "0ac1f7d1bc713e1fde456278ab7dd1e094f4325c84f49f04e660771ca5617ce4",
+      "bytes": 15268
     },
     {
       "slug": "how-vllm-runs",

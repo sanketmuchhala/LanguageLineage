@@ -1,0 +1,485 @@
+{
+  "version": "1.0",
+  "slug": "how-ollama-runs",
+  "name": "Ollama",
+  "title": "How Ollama Runs Locally: GGUF, CUDA and MLX | Language Lineage",
+  "h1": "What Actually Runs When You Send Ollama a Prompt?",
+  "description": "Trace a local Ollama request through its Go service and a supported llama.cpp or MLX engine, separating CPU, NVIDIA CUDA and Apple-silicon Metal execution.",
+  "og_subtitle": "Local request → Go service → compatible engine → CPU / CUDA / Metal",
+  "verified_on": "2026-11-11",
+  "verified_against": "the Ollama API and FAQ, Go server source, GGUF and MLX announcements, llama.cpp build documentation and MLX kernel documentation",
+  "scope": "Local text inference with downloaded models supported by the selected engine: GGUF/llama.cpp on CPU or NVIDIA CUDA, or the documented MLX engine on Apple silicon. These are version- and model-dependent illustrative paths, not a user-facing engine-switch command or a guarantee of universal model compatibility. Cloud models, AMD/Vulkan routes, partial offload, multimodal processing and detailed token sampling are not depicted.",
+  "answer": "**Ollama serves requests and selects a compatible model runner; the runner executes numerical work.** Current documented local paths include llama.cpp-backed GGUF support and an MLX engine for supported Apple-silicon models. A Go service does not mean the matrix kernels are Go code, and an Ollama API request does not prove inference is local: cloud endpoints are separate.",
+  "status_template": "Showing {route}",
+  "dimensions": [
+    {
+      "id": "route",
+      "legend": "Supported local route",
+      "default": "gguf_cpu",
+      "options": [
+        {
+          "value": "gguf_cpu",
+          "label": "GGUF / CPU",
+          "phrase": "a compatible GGUF model on CPU"
+        },
+        {
+          "value": "gguf_cuda",
+          "label": "GGUF / NVIDIA CUDA",
+          "phrase": "a compatible GGUF model with CUDA"
+        },
+        {
+          "value": "mlx_metal",
+          "label": "MLX / Apple silicon",
+          "phrase": "a supported MLX model on Apple silicon"
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "heading": "Is Ollama itself the model or the inference engine?",
+      "paragraphs": [
+        "Ollama provides request handling, model management and compatible runners. The [Go server source](https://github.com/ollama/ollama/blob/main/server/routes.go) shows validation and scheduling before inference. The model’s weights are data consumed by an execution engine; neither the model nor the chat endpoint is a programming language.",
+        "The diagram distinguishes the service layer from the numerical runtime. This matters when answering what Ollama is written in: Go is evidence for its service implementation, while the selected native engine has its own implementation and kernels. The [llama.cpp path](/ai/how-llama-cpp-runs) and [MLX path](/ai/how-mlx-runs) explain those layers in more detail."
+      ]
+    },
+    {
+      "heading": "Does every Ollama model use llama.cpp?",
+      "paragraphs": [
+        "No. The [GGUF support announcement](https://ollama.com/blog/improved-performance-and-model-support-with-gguf) documents llama.cpp integration alongside Ollama’s MLX engine. The [MLX announcement](https://ollama.com/blog/mlx) describes an Apple-silicon path for supported architectures. Model compatibility and the installed version determine which claims apply.",
+        "The controls compare documented paths; they do not expose a real Ollama engine-selection API. A compatible GGUF route and an MLX route need not accept identical model files or support identical features. Do not infer the engine from a model’s marketing name alone."
+      ]
+    },
+    {
+      "heading": "Why does Ollama use the CPU instead of the GPU?",
+      "paragraphs": [
+        "A CPU-only model can run in system memory. GPU execution additionally needs a compatible engine, hardware support, dependencies and enough available memory for the configured workload. The [FAQ](https://docs.ollama.com/faq) documents ollama ps and its PROCESSOR column, including fully CPU, fully GPU and mixed placement. That report is more informative than assuming a GPU installation guarantees full offload.",
+        "The CUDA choice illustrates supported offloaded work. Real deployments can use a mixture of CPU and GPU, especially when the model does not fit entirely on a device. The diagram excludes that partial-offload detail rather than asserting that all CUDA requests are GPU-only."
+      ]
+    },
+    {
+      "heading": "What changes on Apple silicon?",
+      "paragraphs": [
+        "The documented MLX engine uses Apple’s array framework and unified-memory architecture for supported models. MLX GPU primitives are implemented using Metal, as the [extension guide](https://ml-explore.github.io/mlx/build/html/dev/extensions.html) explains. This is different from treating a Mac as an NVIDIA CUDA system.",
+        "Other local routes can still exist on Macs. The point of the MLX branch is to show one verified engine path, not to claim every model on every Apple computer uses it. Check installed-version release notes and model support before applying this diagram to a specific deployment."
+      ]
+    },
+    {
+      "heading": "Does using the Ollama API mean my request stays local?",
+      "paragraphs": [
+        "No. The [API introduction](https://docs.ollama.com/api/introduction) documents both local and cloud base URLs, and local servers can also be used with cloud models. This page deliberately chooses a downloaded local model. Endpoint, model selection and serving configuration establish the execution boundary; the client library name alone does not."
+      ]
+    },
+    {
+      "heading": "How do GGUF, model size and hardware fit together?",
+      "paragraphs": [
+        "GGUF is a model file format consumed by a compatible runtime. It does not describe one fixed processor or make all model architectures interchangeable. Memory placement and the chosen backend determine where computation occurs. This page avoids model rankings, speed promises and guessed internals, and records the engine and device conditions for each illustrated path."
+      ]
+    }
+  ],
+  "out_of_scope_note": "",
+  "link_from": [
+    "tool:ollama",
+    "tool:llama_cpp",
+    "tool:mlx",
+    "tool:ggml",
+    "lang:go"
+  ],
+  "sources": {
+    "api": {
+      "url": "https://docs.ollama.com/api/introduction",
+      "title": "Ollama API: local and cloud endpoints"
+    },
+    "server": {
+      "url": "https://github.com/ollama/ollama/blob/main/server/routes.go",
+      "title": "Ollama Go request handling and runner scheduling"
+    },
+    "gguf": {
+      "url": "https://ollama.com/blog/improved-performance-and-model-support-with-gguf",
+      "title": "Ollama 0.30 GGUF/llama.cpp support announcement"
+    },
+    "mlx": {
+      "url": "https://ollama.com/blog/mlx",
+      "title": "Ollama MLX engine on Apple silicon announcement"
+    },
+    "llama_build": {
+      "url": "https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md",
+      "title": "llama.cpp CPU and CUDA backend build guide"
+    },
+    "llama_readme": {
+      "url": "https://github.com/ggml-org/llama.cpp/blob/master/README.md",
+      "title": "llama.cpp architecture and hardware support"
+    },
+    "metal": {
+      "url": "https://ml-explore.github.io/mlx/build/html/dev/extensions.html",
+      "title": "MLX device primitive and Metal kernel implementation"
+    },
+    "faq": {
+      "url": "https://docs.ollama.com/faq",
+      "title": "Ollama FAQ: processor placement and memory"
+    }
+  },
+  "stages": [
+    {
+      "id": "request",
+      "name": "Your local request",
+      "kind": "application",
+      "layer": "application",
+      "lineage_id": null,
+      "pos": [
+        1.5,
+        0
+      ],
+      "summary": "A client sends a chat request to the local Ollama service using an already downloaded supported model.",
+      "evidence": [
+        {
+          "source": "api",
+          "quote": "For local inference, use http://localhost:11434/api/chat with a downloaded model and omit the authorization header."
+        }
+      ]
+    },
+    {
+      "id": "server",
+      "name": "Ollama Go service",
+      "kind": "runtime",
+      "layer": "application",
+      "lineage_id": "tool:ollama",
+      "pos": [
+        1.5,
+        1
+      ],
+      "summary": "The service handles the request and validates model capabilities and options before selecting a runner.",
+      "evidence": [
+        {
+          "source": "server",
+          "quote": "scheduleRunner schedules a runner after validating inputs such as capabilities and model options."
+        }
+      ]
+    },
+    {
+      "id": "runner",
+      "name": "Runner scheduling",
+      "kind": "runtime",
+      "layer": "framework",
+      "lineage_id": null,
+      "pos": [
+        1.5,
+        2
+      ],
+      "summary": "Ollama schedules a compatible engine for the chosen model. This is not a promise that every architecture uses llama.cpp.",
+      "evidence": [
+        {
+          "source": "server",
+          "quote": "scheduleRunner schedules a runner after validating inputs such as capabilities and model options."
+        }
+      ]
+    },
+    {
+      "id": "llama",
+      "name": "llama.cpp GGUF path",
+      "kind": "runtime",
+      "layer": "framework",
+      "lineage_id": "tool:llama_cpp",
+      "pos": [
+        0.5,
+        3
+      ],
+      "summary": "The selected compatible GGUF model runs through Ollama’s documented llama.cpp integration.",
+      "evidence": [
+        {
+          "source": "gguf",
+          "quote": "GGUF model compatibility through llama.cpp"
+        }
+      ]
+    },
+    {
+      "id": "mlx",
+      "name": "MLX engine",
+      "kind": "runtime",
+      "layer": "framework",
+      "lineage_id": "tool:mlx",
+      "pos": [
+        3,
+        3
+      ],
+      "summary": "Supported Apple-silicon model paths can use Ollama’s MLX engine, which is distinct from the GGUF/llama.cpp route.",
+      "evidence": [
+        {
+          "source": "mlx",
+          "quote": "Ollama on Apple silicon is now built on top of Apple’s machine learning framework, MLX"
+        }
+      ]
+    },
+    {
+      "id": "cpu_kernel",
+      "name": "ggml CPU kernels",
+      "kind": "kernel",
+      "layer": "kernel",
+      "lineage_id": "tool:ggml",
+      "pos": [
+        0,
+        4
+      ],
+      "summary": "The selected CPU-only llama.cpp route uses CPU numerical kernels. No universal GPU requirement is implied.",
+      "evidence": [
+        {
+          "source": "llama_readme",
+          "quote": "AVX, AVX2, AVX512 and AMX support for x86 architectures"
+        }
+      ]
+    },
+    {
+      "id": "cuda_kernel",
+      "name": "CUDA kernels",
+      "kind": "kernel",
+      "layer": "kernel",
+      "lineage_id": "tool:cuda",
+      "pos": [
+        1.5,
+        4
+      ],
+      "summary": "The compatible CUDA route uses NVIDIA GPU acceleration through llama.cpp’s configured GPU backend.",
+      "evidence": [
+        {
+          "source": "llama_build",
+          "quote": "This provides GPU acceleration using an NVIDIA GPU."
+        }
+      ]
+    },
+    {
+      "id": "metal_kernel",
+      "name": "MLX Metal kernels",
+      "kind": "kernel",
+      "layer": "kernel",
+      "lineage_id": null,
+      "pos": [
+        3,
+        4
+      ],
+      "summary": "MLX primitives for the illustrated Apple-silicon GPU work use Metal kernels.",
+      "evidence": [
+        {
+          "source": "metal",
+          "quote": "Apple silicon devices address their GPUs using the Metal shading language, and GPU kernels in MLX are written using Metal."
+        }
+      ]
+    },
+    {
+      "id": "cpu",
+      "name": "CPU",
+      "kind": "hardware",
+      "layer": "hardware",
+      "lineage_id": null,
+      "pos": [
+        0,
+        5
+      ],
+      "summary": "The CPU-only example keeps the selected model in system memory and executes its numerical work on CPU.",
+      "evidence": [
+        {
+          "source": "faq",
+          "quote": "100% CPU means the model was loaded entirely in system memory"
+        }
+      ]
+    },
+    {
+      "id": "gpu",
+      "name": "NVIDIA GPU",
+      "kind": "hardware",
+      "layer": "hardware",
+      "lineage_id": null,
+      "pos": [
+        1.5,
+        5
+      ],
+      "summary": "The CUDA example executes supported offloaded work on a compatible NVIDIA GPU; partial CPU offload is not shown.",
+      "evidence": [
+        {
+          "source": "llama_build",
+          "quote": "This provides GPU acceleration using an NVIDIA GPU."
+        }
+      ]
+    },
+    {
+      "id": "apple_gpu",
+      "name": "Apple silicon GPU",
+      "kind": "hardware",
+      "layer": "hardware",
+      "lineage_id": null,
+      "pos": [
+        3,
+        5
+      ],
+      "summary": "The supported MLX route executes its GPU primitives through Metal on Apple silicon.",
+      "evidence": [
+        {
+          "source": "metal",
+          "quote": "Apple silicon devices address their GPUs using the Metal shading language, and GPU kernels in MLX are written using Metal."
+        }
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "to": "server",
+      "kind": "calls",
+      "when": {},
+      "label": "sends local API request",
+      "explanation": "This path uses the local endpoint, not an Ollama-hosted cloud request.",
+      "evidence": [
+        {
+          "source": "api",
+          "quote": "For local inference, use http://localhost:11434/api/chat with a downloaded model and omit the authorization header."
+        }
+      ],
+      "from": "request"
+    },
+    {
+      "to": "runner",
+      "kind": "calls",
+      "when": {},
+      "label": "validates and schedules",
+      "explanation": "The Go service resolves a compatible runner after validating options and capabilities.",
+      "evidence": [
+        {
+          "source": "server",
+          "quote": "scheduleRunner schedules a runner after validating inputs such as capabilities and model options."
+        }
+      ],
+      "from": "server"
+    },
+    {
+      "to": "llama",
+      "kind": "dispatches_to",
+      "when": {
+        "route": [
+          "gguf_cpu",
+          "gguf_cuda"
+        ]
+      },
+      "label": "uses compatible GGUF engine",
+      "explanation": "This selection describes the documented llama.cpp-backed GGUF integration.",
+      "evidence": [
+        {
+          "source": "gguf",
+          "quote": "GGUF model compatibility through llama.cpp"
+        }
+      ],
+      "from": "runner"
+    },
+    {
+      "to": "mlx",
+      "kind": "dispatches_to",
+      "when": {
+        "route": [
+          "mlx_metal"
+        ]
+      },
+      "label": "uses MLX engine",
+      "explanation": "This selection assumes a model supported by the MLX engine on Apple silicon.",
+      "evidence": [
+        {
+          "source": "mlx",
+          "quote": "Ollama on Apple silicon is now built on top of Apple’s machine learning framework, MLX"
+        }
+      ],
+      "from": "runner"
+    },
+    {
+      "to": "cpu_kernel",
+      "kind": "dispatches_to",
+      "when": {
+        "route": [
+          "gguf_cpu"
+        ]
+      },
+      "label": "uses CPU backend",
+      "explanation": "The CPU-only route executes supported work through CPU kernels.",
+      "evidence": [
+        {
+          "source": "llama_readme",
+          "quote": "AVX, AVX2, AVX512 and AMX support for x86 architectures"
+        }
+      ],
+      "from": "llama"
+    },
+    {
+      "to": "cuda_kernel",
+      "kind": "dispatches_to",
+      "when": {
+        "route": [
+          "gguf_cuda"
+        ]
+      },
+      "label": "uses CUDA backend",
+      "explanation": "The configured CUDA route executes supported device work through GPU kernels.",
+      "evidence": [
+        {
+          "source": "llama_build",
+          "quote": "This provides GPU acceleration using an NVIDIA GPU."
+        }
+      ],
+      "from": "llama"
+    },
+    {
+      "to": "metal_kernel",
+      "kind": "dispatches_to",
+      "when": {
+        "route": [
+          "mlx_metal"
+        ]
+      },
+      "label": "uses Metal primitives",
+      "explanation": "MLX’s supported GPU primitives are implemented with Metal kernels.",
+      "evidence": [
+        {
+          "source": "metal",
+          "quote": "Apple silicon devices address their GPUs using the Metal shading language, and GPU kernels in MLX are written using Metal."
+        }
+      ],
+      "from": "mlx"
+    },
+    {
+      "to": "cpu",
+      "kind": "executes_on",
+      "when": {},
+      "label": "executes on",
+      "explanation": "The CPU-only numerical path terminates at CPU hardware.",
+      "evidence": [
+        {
+          "source": "faq",
+          "quote": "100% CPU means the model was loaded entirely in system memory"
+        }
+      ],
+      "from": "cpu_kernel"
+    },
+    {
+      "to": "gpu",
+      "kind": "executes_on",
+      "when": {},
+      "label": "executes on",
+      "explanation": "The configured CUDA backend executes device work on the NVIDIA GPU.",
+      "evidence": [
+        {
+          "source": "llama_build",
+          "quote": "This provides GPU acceleration using an NVIDIA GPU."
+        }
+      ],
+      "from": "cuda_kernel"
+    },
+    {
+      "to": "apple_gpu",
+      "kind": "executes_on",
+      "when": {},
+      "label": "executes on",
+      "explanation": "Metal primitives execute on the Apple-silicon GPU.",
+      "evidence": [
+        {
+          "source": "metal",
+          "quote": "Apple silicon devices address their GPUs using the Metal shading language, and GPU kernels in MLX are written using Metal."
+        }
+      ],
+      "from": "metal_kernel"
+    }
+  ]
+}

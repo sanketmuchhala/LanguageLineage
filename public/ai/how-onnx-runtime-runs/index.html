@@ -46,6 +46,11 @@
     <li><a href="#the-selected-path-step-by-step">The selected path, step by step</a></li>
     <li><a href="#why-graph-optimizations-happen-in-two-stages">Why graph optimizations happen in two stages</a></li>
     <li><a href="#how-getcapability-partitions-a-model-with-fallbacks">How GetCapability() partitions a model with fallbacks</a></li>
+    <li><a href="#what-is-the-difference-between-onnx-and-onnx-runtime">What is the difference between ONNX and ONNX Runtime?</a></li>
+    <li><a href="#why-does-onnx-runtime-still-use-the-cpu-with-cuda">Why does ONNX Runtime still use the CPU with CUDA?</a></li>
+    <li><a href="#does-graph-optimization-compile-every-model-into-one-gpu-ker">Does graph optimization compile every model into one GPU kernel?</a></li>
+    <li><a href="#why-can-data-transfers-matter-as-much-as-compute">Why can data transfers matter as much as compute?</a></li>
+    <li><a href="#how-is-cuda-different-from-the-tensorrt-execution-provider">How is CUDA different from the TensorRT execution provider?</a></li>
     <li><a href="#every-stage">Every stage</a></li>
     <li><a href="#every-step">Every step</a></li>
     <li><a href="#what-this-does-not-show">What this does not show</a></li>
@@ -173,6 +178,24 @@
   <h2 id="how-getcapability-partitions-a-model-with-fallbacks">How GetCapability() partitions a model with fallbacks</h2>
   <p>Unlike a single-backend engine, an ONNX Runtime session takes a priority-ordered list of execution providers—for example, TensorrtExecutionProvider, then CUDAExecutionProvider, then CPUExecutionProvider. ONNX Runtime queries each provider's GetCapability() interface in order to claim subgraphs or individual nodes.</p>
   <p>Any operator that a higher-priority accelerator provider cannot run is automatically assigned to the next provider in the list, with the built-in CPU execution provider acting as the final fallback.</p>
+
+  <h2 id="what-is-the-difference-between-onnx-and-onnx-runtime">What is the difference between ONNX and ONNX Runtime?</h2>
+  <p>An ONNX file describes a computation in a portable graph format. ONNX Runtime supplies the machinery to load and execute that graph. Exporting a <a href="/ai/how-pytorch-runs">PyTorch model</a> to ONNX does not leave the ordinary PyTorch eager interpreter in charge of numerical execution. The [Python API overview](https://onnxruntime.ai/docs/api/python/api_summary.html) describes sessions, inputs, outputs and provider configuration.</p>
+  <p>A session is worth distinguishing from one inference call. Session initialization can parse the model, apply optimizations and prepare provider assignments. Repeated session.run calls then use that prepared configuration. Recreating the session for every request measures more than model execution.</p>
+
+  <h2 id="why-does-onnx-runtime-still-use-the-cpu-with-cuda">Why does ONNX Runtime still use the CPU with CUDA?</h2>
+  <p>Execution providers advertise the operators or subgraphs they can handle. ONNX Runtime considers them in priority order. With CUDA before CPU, supported operations can go to CUDA while other supported CPU operations remain on the host. The [architecture document](https://onnxruntime.ai/docs/reference/high-level-design.html) explains this partitioning rather than treating the entire model as an indivisible GPU job.</p>
+  <p>The CUDA and TensorRT selections retain fallback paths because provider registration does not prove complete operator coverage. The diagram shows possible fallback work, not a measurement that every model necessarily executes on both processors. If the installed package cannot load CUDA dependencies, that is a provider-availability problem, distinct from an individual operator being assigned to the CPU.</p>
+
+  <h2 id="does-graph-optimization-compile-every-model-into-one-gpu-ker">Does graph optimization compile every model into one GPU kernel?</h2>
+  <p>No. Graph optimizations include simplifications and selected fusions, and the available transformations depend on provider and optimization level. Some occur before partitioning; others operate on provider-assigned graph portions. The optimization box is a summary of this preparation work, not a promise of one fused executable. Read the [optimization guide](https://onnxruntime.ai/docs/performance/model-optimizations/graph-optimizations.html) before assuming a particular fusion is enabled.</p>
+  <p>Optimizations can run at session initialization or be saved in an optimized model ahead of deployment. Offline optimization must match the target options and hardware constraints. An optimized artifact for one provider or CPU instruction set is not automatically portable to every other environment.</p>
+
+  <h2 id="why-can-data-transfers-matter-as-much-as-compute">Why can data transfers matter as much as compute?</h2>
+  <p>The default Python API commonly accepts and returns host-resident data. For GPU execution this can introduce transfers between host and device. I/O binding allows the application to manage device-resident inputs and outputs. It changes where the data lives, rather than changing the model into a different neural network. See the I/O binding examples in the [API overview](https://onnxruntime.ai/docs/api/python/api_summary.html).</p>
+
+  <h2 id="how-is-cuda-different-from-the-tensorrt-execution-provider">How is CUDA different from the TensorRT execution provider?</h2>
+  <p>CUDAExecutionProvider and TensorRTExecutionProvider are distinct plugins in the [execution-provider catalog](https://onnxruntime.ai/docs/execution-providers/). The controls preserve separate CPU, CUDA and TensorRT provider paths. The TensorRT execution provider can compile supported graph partitions into an engine, while other operations can use fallback providers. Also distinguish this integration from <a href="/ai/how-tensorrt-llm-runs">TensorRT-LLM</a>, which is a separate serving stack with its own current PyTorch execution backend.</p>
 
   <h2 id="every-stage">Every stage</h2>
   <div class="ai-stage-list">
@@ -307,7 +330,7 @@
   <h2 id="how-this-page-is-checked">How this page is checked</h2>
   <p>Every stage and step above quotes the source that supports it. The quotes were checked against the ONNX specification README and the ONNX Runtime documentation (Execution Providers, Graph Optimizations, CUDA Execution Provider, TensorRT Execution Provider) on 2026-11-11. The data is a <a href="/dataset/ai/how-onnx-runtime-runs.json">versioned JSON file</a> under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. Found something wrong or out of date? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
   <p><a class="ai-graph-link" href="/explore?view=ai&amp;path=how-onnx-runtime-runs&amp;provider=cuda">See this path in the graph explorer &rarr;</a></p>
-  <p>What these tools are written in is in the main atlas: <a href="/languages/python">Python</a>, <a href="/languages/cxx">C++</a>, <a href="/tools/cuda">CUDA</a>. More execution paths: <a href="/ai/how-jax-runs">What Actually Happens When You Run JAX Code</a>, <a href="/ai/how-llama-cpp-runs">How Does llama.cpp Run a Model on Your Hardware</a>, <a href="/ai/how-mlx-runs">What Actually Happens When You Run MLX on a Mac</a>, <a href="/ai/how-pytorch-runs">What Actually Happens When You Run a PyTorch Model</a>, <a href="/ai/how-vllm-runs">What Actually Happens When vLLM Serves a Request</a>, or <a href="/ai">compare them all</a>.</p>
+  <p>What these tools are written in is in the main atlas: <a href="/languages/python">Python</a>, <a href="/languages/cxx">C++</a>, <a href="/tools/cuda">CUDA</a>. More execution paths: <a href="/ai/how-jax-runs">What Actually Happens When You Run JAX Code</a>, <a href="/ai/how-keras-runs">What Runs Underneath a Keras 3 Model</a>, <a href="/ai/how-llama-cpp-runs">How Does llama.cpp Run a Model on Your Hardware</a>, <a href="/ai/how-mlx-runs">What Actually Happens When You Run MLX on a Mac</a>, <a href="/ai/how-ollama-runs">What Actually Runs When You Send Ollama a Prompt</a>, <a href="/ai/how-pytorch-runs">What Actually Happens When You Run a PyTorch Model</a>, <a href="/ai/how-tensorflow-runs">How Does TensorFlow Run Python on a CPU or GPU</a>, <a href="/ai/how-tensorrt-llm-runs">How Does TensorRT-LLM Execute an Inference Request</a>, <a href="/ai/how-vllm-runs">What Actually Happens When vLLM Serves a Request</a>, or <a href="/ai">compare them all</a>.</p>
 
   <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>
 </main>

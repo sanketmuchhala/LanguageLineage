@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How Keras 3 Runs: TensorFlow, JAX or PyTorch | Language Lineage</title>
+  <meta name="description" content="Trace Keras 3 backend selection into TensorFlow, JAX or PyTorch and the configured CPU or GPU, separating Python APIs from compilers and numerical execution." />
+  <link rel="canonical" href="https://www.languagelineage.org/ai/how-keras-runs" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><script defer src="/fx.js"></script><script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script><link rel="alternate" type="application/rss+xml" title="Language Lineage" href="/rss.xml" /><link rel="stylesheet" href="/seo.css" />
+  <script defer src="/ai-path.js"></script>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="How Keras 3 Runs: TensorFlow, JAX or PyTorch | Language Lineage" />
+  <meta property="og:description" content="Trace Keras 3 backend selection into TensorFlow, JAX or PyTorch and the configured CPU or GPU, separating Python APIs from compilers and numerical execution." />
+  <meta property="og:url" content="https://www.languagelineage.org/ai/how-keras-runs" />
+  <meta property="og:image" content="https://www.languagelineage.org/og/ai-how-keras-runs.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What Runs Underneath a Keras 3 Model?","description":"Trace Keras 3 backend selection into TensorFlow, JAX or PyTorch and the configured CPU or GPU, separating Python APIs from compilers and numerical execution.","url":"https://www.languagelineage.org/ai/how-keras-runs","datePublished":"2026-11-11","dateModified":"2026-11-12","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"citation":["https://github.com/keras-team/keras/blob/master/README.md","https://keras.io/getting_started/","https://github.com/keras-team/keras/blob/master/keras/src/backend/__init__.py"],"inLanguage":"en"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"AI execution paths","item":"https://www.languagelineage.org/ai"},{"@type":"ListItem","position":3,"name":"What Runs Underneath a Keras 3 Model?","item":"https://www.languagelineage.org/ai/how-keras-runs"}]}</script>
+</head>
+<body class="seo-page">
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<nav class="seo-nav">
+  <a href="/" class="nav-brand"><img class="nav-logo-mark" src="/logo-mark.svg" width="22" height="22" alt="" aria-hidden="true">Language Lineage</a>
+  <a href="/relationships">Relationships</a>
+  <a href="/languages">Languages</a>
+  <a href="/tools">Tools</a>
+  <a href="/guides">Guides</a>
+  <a href="/timeline">Timeline</a>
+  <a href="/dataset">Dataset</a>
+  <a href="/how-it-works">How It Works</a>
+  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
+</nav>
+<main class="seo-main" id="main-content">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; <a href="/ai">AI execution paths</a> &rsaquo; What Runs Underneath a Keras 3 Model
+  </nav>
+
+  <h1>What Runs Underneath a Keras 3 Model?</h1>
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#the-selected-path-step-by-step">The selected path, step by step</a></li>
+    <li><a href="#is-keras-the-same-thing-as-tensorflow">Is Keras the same thing as TensorFlow?</a></li>
+    <li><a href="#when-does-keras-backend-take-effect">When does KERAS_BACKEND take effect?</a></li>
+    <li><a href="#what-changes-with-tensorflow-jax-or-pytorch">What changes with TensorFlow, JAX or PyTorch?</a></li>
+    <li><a href="#does-model-compile-mean-the-same-thing-on-every-backend">Does model.compile mean the same thing on every backend?</a></li>
+    <li><a href="#does-selecting-a-gpu-remove-python-and-cpu-work">Does selecting a GPU remove Python and CPU work?</a></li>
+    <li><a href="#every-stage">Every stage</a></li>
+    <li><a href="#every-step">Every step</a></li>
+    <li><a href="#what-this-does-not-show">What this does not show</a></li>
+    <li><a href="#how-this-page-is-checked">How this page is checked</a></li>
+  </ol>
+</nav>
+
+  <div class="answer-box"><strong>Keras 3 is a Python API with selectable numerical backends.</strong> TensorFlow, JAX and PyTorch provide different execution stacks beneath it. Choosing the backend determines which framework handles tensor operations and devices; calling model.compile does not establish one universal compiler path. This diagram shows the routing boundary and links to the detailed execution path for each framework.</div>
+
+  <section class="ai-explorer" id="explorer" aria-label="Execution path explorer">
+    <form class="ai-controls" onsubmit="return false">
+      <fieldset><legend>Backend</legend>
+        <label><input type="radio" name="backend" value="tensorflow" data-phrase="the TensorFlow backend" checked> TensorFlow</label>
+        <label><input type="radio" name="backend" value="jax" data-phrase="the JAX backend"> JAX</label>
+        <label><input type="radio" name="backend" value="torch" data-phrase="the PyTorch backend"> PyTorch</label>
+      </fieldset>
+      <fieldset><legend>Device</legend>
+        <label><input type="radio" name="device" value="cpu" data-phrase="the CPU" checked> CPU</label>
+        <label><input type="radio" name="device" value="gpu" data-phrase="a supported configured GPU"> Configured GPU</label>
+      </fieldset>
+      <button type="button" class="ai-copy" hidden>Copy link to this path</button>
+    </form>
+    <p class="ai-status" aria-live="polite" data-template="Showing {backend} on {device}">Showing the TensorFlow backend on the CPU: 5 stages, 4 steps.</p>
+    <div class="ai-layout">
+      <div class="ai-diagram-wrap"><svg class="ai-path-svg" viewBox="0 0 826 390" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Execution path diagram: select a stage or step for details">
+<defs><marker id="ai-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9a9a9a"/></marker></defs>
+<path id="step-python--keras" class="ai-step on" d="M413,62 C413,78 413,78 413,88" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Your Keras code calls Keras Keras 3 API"><title>Your Keras code calls Keras Keras 3 API</title></path>
+<path id="step-keras--dispatch" class="ai-step on" d="M413,140 C413,156 413,156 413,166" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Keras 3 API uses configured backend Backend dispatch"><title>Keras 3 API uses configured backend Backend dispatch</title></path>
+<path id="step-dispatch--tensorflow" class="ai-step on" d="M413,218 C413,234 104,234 104,244" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Backend dispatch routes to tensorflow TensorFlow backend"><title>Backend dispatch routes to tensorflow TensorFlow backend</title></path>
+<path id="step-tensorflow--cpu" class="ai-step on" d="M104,296 C104,312 207,312 207,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="TensorFlow backend targets CPU CPU"><title>TensorFlow backend targets CPU CPU</title></path>
+<path id="step-tensorflow--gpu" class="ai-step" d="M104,296 C104,312 619,312 619,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="TensorFlow backend targets GPU Configured GPU"><title>TensorFlow backend targets GPU Configured GPU</title></path>
+<path id="step-dispatch--jax" class="ai-step" d="M413,218 C413,234 413,234 413,244" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Backend dispatch routes to jax JAX backend"><title>Backend dispatch routes to jax JAX backend</title></path>
+<path id="step-jax--cpu" class="ai-step" d="M413,296 C413,312 207,312 207,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="JAX backend targets CPU CPU"><title>JAX backend targets CPU CPU</title></path>
+<path id="step-jax--gpu" class="ai-step" d="M413,296 C413,312 619,312 619,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="JAX backend targets GPU Configured GPU"><title>JAX backend targets GPU Configured GPU</title></path>
+<path id="step-dispatch--torch" class="ai-step" d="M413,218 C413,234 722,234 722,244" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Backend dispatch routes to torch PyTorch backend"><title>Backend dispatch routes to torch PyTorch backend</title></path>
+<path id="step-torch--cpu" class="ai-step" d="M722,296 C722,312 207,312 207,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="PyTorch backend targets CPU CPU"><title>PyTorch backend targets CPU CPU</title></path>
+<path id="step-torch--gpu" class="ai-step" d="M722,296 C722,312 619,312 619,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="PyTorch backend targets GPU Configured GPU"><title>PyTorch backend targets GPU Configured GPU</title></path>
+<g id="stage-python" class="ai-stage on" tabindex="0" role="button" aria-label="Your Keras code: Your program">
+  <rect x="325" y="16" width="176" height="46" rx="7" style="--kc:#60a5fa"/>
+  <rect x="325" y="16" width="4" height="46" rx="2" fill="#60a5fa"/>
+  <text x="339" y="35" class="ai-name">Your Keras code</text>
+  <text x="339" y="51" class="ai-kind">programming language</text>
+</g>
+<g id="stage-keras" class="ai-stage on" tabindex="0" role="button" aria-label="Keras 3 API: Framework core">
+  <rect x="325" y="94" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="325" y="94" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="339" y="113" class="ai-name">Keras 3 API</text>
+  <text x="339" y="129" class="ai-kind">framework component</text>
+</g>
+<g id="stage-dispatch" class="ai-stage on" tabindex="0" role="button" aria-label="Backend dispatch: Framework core">
+  <rect x="325" y="172" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="325" y="172" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="339" y="191" class="ai-name">Backend dispatch</text>
+  <text x="339" y="207" class="ai-kind">framework component</text>
+</g>
+<g id="stage-tensorflow" class="ai-stage on" tabindex="0" role="button" aria-label="TensorFlow backend: Framework core">
+  <rect x="16" y="250" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="16" y="250" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="30" y="269" class="ai-name">TensorFlow backend</text>
+  <text x="30" y="285" class="ai-kind">framework component</text>
+</g>
+<g id="stage-jax" class="ai-stage" tabindex="0" role="button" aria-label="JAX backend: Framework core">
+  <rect x="325" y="250" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="325" y="250" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="339" y="269" class="ai-name">JAX backend</text>
+  <text x="339" y="285" class="ai-kind">framework component</text>
+</g>
+<g id="stage-torch" class="ai-stage" tabindex="0" role="button" aria-label="PyTorch backend: Framework core">
+  <rect x="634" y="250" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="634" y="250" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="648" y="269" class="ai-name">PyTorch backend</text>
+  <text x="648" y="285" class="ai-kind">framework component</text>
+</g>
+<g id="stage-cpu" class="ai-stage on" tabindex="0" role="button" aria-label="CPU: Hardware">
+  <rect x="119" y="328" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="119" y="328" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="133" y="347" class="ai-name">CPU</text>
+  <text x="133" y="363" class="ai-kind">hardware</text>
+</g>
+<g id="stage-gpu" class="ai-stage" tabindex="0" role="button" aria-label="Configured GPU: Hardware">
+  <rect x="531" y="328" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="531" y="328" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="545" y="347" class="ai-name">Configured GPU</text>
+  <text x="545" y="363" class="ai-kind">hardware</text>
+</g>
+</svg></div>
+      <aside class="ai-detail" aria-live="polite"><p class="ai-detail-hint">Select a stage or an arrow to see what it does and the source behind it.</p></aside>
+    </div>
+    <ul class="ai-legend" aria-label="Legend"><li><span class="ai-swatch" style="--kc:#60a5fa"></span>Your program</li><li><span class="ai-swatch" style="--kc:#e3a008"></span>Framework core</li><li><span class="ai-swatch" style="--kc:#4ade80"></span>Hardware</li></ul>
+  </section>
+
+  <h2 id="the-selected-path-step-by-step">The selected path, step by step</h2>
+  <ol class="ai-path-list">
+<li>Your Keras code <em>calls Keras</em> Keras 3 API: Python enters the shared Keras API rather than selecting numerical kernels directly.</li>
+<li>Keras 3 API <em>uses configured backend</em> Backend dispatch: The selected backend must already be configured when Keras is imported.</li>
+<li>Backend dispatch <em>routes to tensorflow</em> TensorFlow backend: Keras exposes the backend selected for this process.</li>
+<li>TensorFlow backend <em>targets CPU</em> CPU: The selected backend handles supported operations on this configured device; internal compiler stages are linked from the text.</li>
+  </ol>
+
+  <h2 id="is-keras-the-same-thing-as-tensorflow">Is Keras the same thing as TensorFlow?</h2>
+  <p>No. Keras 3 can use TensorFlow, JAX or PyTorch as a numerical backend, and also documents an OpenVINO inference-only option. The [Keras README](https://github.com/keras-team/keras/blob/master/README.md) describes these choices. A tutorial using tf.keras tells you something about that tutorial’s integration; the broader Keras 3 project is not limited to that one stack.</p>
+  <p>This page separates the Python-facing API from numerical execution. Building layers, configuring a loss and handling model structure belong to the Keras interface. The selected backend determines which tensor implementation and hardware runtime actually carry out the work. Different backend choices therefore lead to different implementation paths even when the Keras model looks similar.</p>
+
+  <h2 id="when-does-keras-backend-take-effect">When does KERAS_BACKEND take effect?</h2>
+  <p>The [getting-started guide](https://keras.io/getting_started/) documents KERAS_BACKEND and the Keras configuration file. Configure the backend before importing Keras. This is a process-level choice in the documented startup workflow, not a per-layer switch that can be changed at an arbitrary point in an already imported program.</p>
+  <p>Use the control above to compare routes conceptually. It does not execute a model or rewrite the local environment. A working installation still needs the selected backend package and its appropriate CPU or GPU dependencies.</p>
+
+  <h2 id="what-changes-with-tensorflow-jax-or-pytorch">What changes with TensorFlow, JAX or PyTorch?</h2>
+  <p>With <a href="/ai/how-tensorflow-runs">TensorFlow</a>, operations can follow eager execution, traced graph execution or explicit XLA compilation. With <a href="/ai/how-jax-runs">JAX</a>, tracing, XLA lowering and device execution have their own rules. With <a href="/ai/how-pytorch-runs">PyTorch</a>, eager dispatch and torch.compile are distinct paths. The diagram ends at the backend’s device target so it does not incorrectly present one compiler pipeline as common to all three.</p>
+  <p>The [backend dispatch source](https://github.com/keras-team/keras/blob/master/keras/src/backend/__init__.py) shows separate imports for those implementations. That is stronger evidence for the routing boundary than inferring execution from the language percentages reported on a repository page.</p>
+
+  <h2 id="does-model-compile-mean-the-same-thing-on-every-backend">Does model.compile mean the same thing on every backend?</h2>
+  <p>Treat the high-level compile API as model configuration, and inspect the documented backend settings before drawing conclusions about machine-code compilation. TensorFlow’s tf.function, JAX’s jit and PyTorch’s torch.compile are different mechanisms. Their names are not interchangeable evidence that a particular kernel fusion or compiler was used.</p>
+  <p>The same caution applies to performance comparisons: keep model, shapes, precision, device configuration and warmup behavior comparable. This page does not rank frameworks or assume that changing a backend preserves every custom operation or execution detail.</p>
+
+  <h2 id="does-selecting-a-gpu-remove-python-and-cpu-work">Does selecting a GPU remove Python and CPU work?</h2>
+  <p>No. The selected framework manages device placement and its CPU-side orchestration. The Keras device context exposes backend-independent placement controls, but each backend still needs its own working GPU runtime. The [implementation](https://github.com/keras-team/keras/blob/master/keras/src/backend/__init__.py) explicitly maps PyTorch’s GPU terminology to CUDA. This page’s GPU route covers supported device operations, not every line of Python.</p>
+
+  <h2 id="every-stage">Every stage</h2>
+  <div class="ai-stage-list">
+<article class="ai-stage-detail" id="detail-stage-python" data-stage="python">
+<h3>Your Keras code</h3>
+<p class="ai-kind-tag" style="--kc:#60a5fa">programming language</p>
+<p>A Python program constructs layers or invokes Keras tensor operations.</p>
+<p class="ai-lineage">In the atlas: <a href="/languages/python">Python</a></p>
+<ul class="ai-sources"><li><blockquote>Keras 3 is a multi-backend deep learning framework, with support for JAX, TensorFlow, PyTorch, and OpenVINO (for inference-only).</blockquote><a href="https://github.com/keras-team/keras/blob/master/README.md" rel="noopener noreferrer" target="_blank">Keras 3 README</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-keras" data-stage="keras">
+<h3>Keras 3 API</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>Keras supplies a high-level API; its configured backend supplies tensor execution.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/keras">Keras</a></p>
+<ul class="ai-sources"><li><blockquote>Keras 3 is a multi-backend deep learning framework, with support for JAX, TensorFlow, PyTorch, and OpenVINO (for inference-only).</blockquote><a href="https://github.com/keras-team/keras/blob/master/README.md" rel="noopener noreferrer" target="_blank">Keras 3 README</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-dispatch" data-stage="dispatch">
+<h3>Backend dispatch</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>Keras exposes the selected backend implementation instead of running a second independent tensor engine.</p>
+
+<ul class="ai-sources"><li><blockquote>The backend must be configured before importing Keras, and the backend cannot be changed after the package has been imported.</blockquote><a href="https://keras.io/getting_started/" rel="noopener noreferrer" target="_blank">Getting started and backend selection (Keras)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-tensorflow" data-stage="tensorflow">
+<h3>TensorFlow backend</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>TensorFlow-backed Keras dispatches numerical operations into TensorFlow. Graph and XLA choices are described on the TensorFlow execution page.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/tensorflow">TensorFlow</a></p>
+<ul class="ai-sources"><li><blockquote>from keras.src.backend.tensorflow import *</blockquote><a href="https://github.com/keras-team/keras/blob/master/keras/src/backend/__init__.py" rel="noopener noreferrer" target="_blank">Backend dispatch and device context implementation (Keras)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-jax" data-stage="jax">
+<h3>JAX backend</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>JAX-backed Keras uses JAX tensor execution. The JAX page explains tracing, compilation and device dispatch in that stack.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/jax">JAX</a></p>
+<ul class="ai-sources"><li><blockquote>from keras.src.backend.jax import *</blockquote><a href="https://github.com/keras-team/keras/blob/master/keras/src/backend/__init__.py" rel="noopener noreferrer" target="_blank">Backend dispatch and device context implementation (Keras)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-torch" data-stage="torch">
+<h3>PyTorch backend</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>PyTorch-backed Keras uses PyTorch tensor execution; this alone does not establish that torch.compile is enabled.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/pytorch">PyTorch</a></p>
+<ul class="ai-sources"><li><blockquote>from keras.src.backend.torch import *</blockquote><a href="https://github.com/keras-team/keras/blob/master/keras/src/backend/__init__.py" rel="noopener noreferrer" target="_blank">Backend dispatch and device context implementation (Keras)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-cpu" data-stage="cpu">
+<h3>CPU</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">hardware</p>
+<p>The selected backend performs the scoped numerical computation on CPU. This diagram summarizes routing rather than its internal kernel graph.</p>
+
+<ul class="ai-sources"><li><blockquote>This works across all backends (TensorFlow, JAX, PyTorch).</blockquote><a href="https://github.com/keras-team/keras/blob/master/keras/src/backend/__init__.py" rel="noopener noreferrer" target="_blank">Backend dispatch and device context implementation (Keras)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-gpu" data-stage="gpu">
+<h3>Configured GPU</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">hardware</p>
+<p>The selected backend performs supported computation on a properly configured GPU. Hardware and dependency support depend on that backend.</p>
+
+<ul class="ai-sources"><li><blockquote>This works across all backends (TensorFlow, JAX, PyTorch).</blockquote><a href="https://github.com/keras-team/keras/blob/master/keras/src/backend/__init__.py" rel="noopener noreferrer" target="_blank">Backend dispatch and device context implementation (Keras)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+  </div>
+
+  <h2 id="every-step">Every step</h2>
+  <div class="table-wrap"><table class="ai-steps">
+    <thead><tr><th>From</th><th>Step</th><th>To</th><th>When</th><th>What happens</th><th>Source</th></tr></thead>
+    <tbody>
+<tr id="detail-step-python--keras" data-step="python--keras" data-from="python" data-to="keras" data-when="{}" class="on">
+<td>Your Keras code</td><td>calls Keras</td><td>Keras 3 API</td><td>any backend · any device</td><td>Python enters the shared Keras API rather than selecting numerical kernels directly.</td><td><a href="https://github.com/keras-team/keras/blob/master/README.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-keras--dispatch" data-step="keras--dispatch" data-from="keras" data-to="dispatch" data-when="{}" class="on">
+<td>Keras 3 API</td><td>uses configured backend</td><td>Backend dispatch</td><td>any backend · any device</td><td>The selected backend must already be configured when Keras is imported.</td><td><a href="https://keras.io/getting_started/" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-dispatch--tensorflow" data-step="dispatch--tensorflow" data-from="dispatch" data-to="tensorflow" data-when="{&quot;backend&quot;:[&quot;tensorflow&quot;]}" class="on">
+<td>Backend dispatch</td><td>routes to tensorflow</td><td>TensorFlow backend</td><td>TensorFlow · any device</td><td>Keras exposes the backend selected for this process.</td><td><a href="https://github.com/keras-team/keras/blob/master/keras/src/backend/__init__.py" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-tensorflow--cpu" data-step="tensorflow--cpu" data-from="tensorflow" data-to="cpu" data-when="{&quot;device&quot;:[&quot;cpu&quot;]}" class="on">
+<td>TensorFlow backend</td><td>targets CPU</td><td>CPU</td><td>any backend · CPU</td><td>The selected backend handles supported operations on this configured device; internal compiler stages are linked from the text.</td><td><a href="https://github.com/keras-team/keras/blob/master/keras/src/backend/__init__.py" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-tensorflow--gpu" data-step="tensorflow--gpu" data-from="tensorflow" data-to="gpu" data-when="{&quot;device&quot;:[&quot;gpu&quot;]}">
+<td>TensorFlow backend</td><td>targets GPU</td><td>Configured GPU</td><td>any backend · Configured GPU</td><td>The selected backend handles supported operations on this configured device; internal compiler stages are linked from the text.</td><td><a href="https://github.com/keras-team/keras/blob/master/keras/src/backend/__init__.py" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-dispatch--jax" data-step="dispatch--jax" data-from="dispatch" data-to="jax" data-when="{&quot;backend&quot;:[&quot;jax&quot;]}">
+<td>Backend dispatch</td><td>routes to jax</td><td>JAX backend</td><td>JAX · any device</td><td>Keras exposes the backend selected for this process.</td><td><a href="https://github.com/keras-team/keras/blob/master/keras/src/backend/__init__.py" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-jax--cpu" data-step="jax--cpu" data-from="jax" data-to="cpu" data-when="{&quot;device&quot;:[&quot;cpu&quot;]}">
+<td>JAX backend</td><td>targets CPU</td><td>CPU</td><td>any backend · CPU</td><td>The selected backend handles supported operations on this configured device; internal compiler stages are linked from the text.</td><td><a href="https://github.com/keras-team/keras/blob/master/keras/src/backend/__init__.py" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-jax--gpu" data-step="jax--gpu" data-from="jax" data-to="gpu" data-when="{&quot;device&quot;:[&quot;gpu&quot;]}">
+<td>JAX backend</td><td>targets GPU</td><td>Configured GPU</td><td>any backend · Configured GPU</td><td>The selected backend handles supported operations on this configured device; internal compiler stages are linked from the text.</td><td><a href="https://github.com/keras-team/keras/blob/master/keras/src/backend/__init__.py" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-dispatch--torch" data-step="dispatch--torch" data-from="dispatch" data-to="torch" data-when="{&quot;backend&quot;:[&quot;torch&quot;]}">
+<td>Backend dispatch</td><td>routes to torch</td><td>PyTorch backend</td><td>PyTorch · any device</td><td>Keras exposes the backend selected for this process.</td><td><a href="https://github.com/keras-team/keras/blob/master/keras/src/backend/__init__.py" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-torch--cpu" data-step="torch--cpu" data-from="torch" data-to="cpu" data-when="{&quot;device&quot;:[&quot;cpu&quot;]}">
+<td>PyTorch backend</td><td>targets CPU</td><td>CPU</td><td>any backend · CPU</td><td>The selected backend handles supported operations on this configured device; internal compiler stages are linked from the text.</td><td><a href="https://github.com/keras-team/keras/blob/master/keras/src/backend/__init__.py" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-torch--gpu" data-step="torch--gpu" data-from="torch" data-to="gpu" data-when="{&quot;device&quot;:[&quot;gpu&quot;]}">
+<td>PyTorch backend</td><td>targets GPU</td><td>Configured GPU</td><td>any backend · Configured GPU</td><td>The selected backend handles supported operations on this configured device; internal compiler stages are linked from the text.</td><td><a href="https://github.com/keras-team/keras/blob/master/keras/src/backend/__init__.py" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="what-this-does-not-show">What this does not show</h2>
+  <p>Keras 3 backend routing for compatible tensor operations or models using TensorFlow, JAX or PyTorch on CPU or a supported configured GPU. This is a routing overview, not a complete training loop or a guarantee of identical backend behavior. OpenVINO inference, NumPy fallback, pluggable backends, distributed training, optimizer internals and framework-specific compilation settings are outside the diagram.</p>
+
+  <h2 id="how-this-page-is-checked">How this page is checked</h2>
+  <p>Every stage and step above quotes the source that supports it. The quotes were checked against the Keras 3 README, backend-configuration guide and Python backend-dispatch implementation on 2026-11-11. The data is a <a href="/dataset/ai/how-keras-runs.json">versioned JSON file</a> under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. Found something wrong or out of date? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
+  <p><a class="ai-graph-link" href="/explore?view=ai&amp;path=how-keras-runs&amp;backend=tensorflow&amp;device=cpu">See this path in the graph explorer &rarr;</a></p>
+  <p>What these tools are written in is in the main atlas: <a href="/languages/python">Python</a>, <a href="/tools/keras">Keras</a>, <a href="/tools/tensorflow">TensorFlow</a>, <a href="/tools/jax">JAX</a>, <a href="/tools/pytorch">PyTorch</a>. More execution paths: <a href="/ai/how-jax-runs">What Actually Happens When You Run JAX Code</a>, <a href="/ai/how-llama-cpp-runs">How Does llama.cpp Run a Model on Your Hardware</a>, <a href="/ai/how-mlx-runs">What Actually Happens When You Run MLX on a Mac</a>, <a href="/ai/how-ollama-runs">What Actually Runs When You Send Ollama a Prompt</a>, <a href="/ai/how-onnx-runtime-runs">How Does ONNX Runtime Execute a Model Across Hardware</a>, <a href="/ai/how-pytorch-runs">What Actually Happens When You Run a PyTorch Model</a>, <a href="/ai/how-tensorflow-runs">How Does TensorFlow Run Python on a CPU or GPU</a>, <a href="/ai/how-tensorrt-llm-runs">How Does TensorRT-LLM Execute an Inference Request</a>, <a href="/ai/how-vllm-runs">What Actually Happens When vLLM Serves a Request</a>, or <a href="/ai">compare them all</a>.</p>
+
+  <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>
+</main>
+<footer class="seo-footer-rich">
+  <div data-nosnippet>
+  <div class="footer-grid">
+    <div class="footer-col">
+      <span class="footer-col-head">Explore</span>
+      <a href="/programming-language-graph">Programming language graph</a>
+      <a href="/rankings/most-influential">Most influential languages</a>
+      <a href="/rss.xml">RSS feed</a>
+      <a href="/embed-kit">Embed the graph</a>
+      <a href="/guides/programming-language-family-tree">Language family tree</a>
+      <a href="/programming-language-evolution">Evolution timeline</a>
+      <a href="/what-are-programming-languages-written-in">What languages are written in</a>
+      <a href="/ai">How AI frameworks run code</a>
+      <a href="/explore">Interactive Graph</a>
+      <a href="/dataset">Dataset</a>
+      <a href="/directory">Site Directory</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Popular Languages</span>
+      <a href="/languages/python">Python</a>
+      <a href="/languages/javascript">JavaScript</a>
+      <a href="/languages/rust">Rust</a>
+      <a href="/languages/go">Go</a>
+      <a href="/languages/java">Java</a>
+      <a href="/languages/c">C</a>
+      <a href="/languages/cxx">C++</a>
+      <a href="/languages/typescript">TypeScript</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Questions</span>
+      <a href="/questions/what-is-python-written-in">What is Python written in?</a>
+      <a href="/questions/what-is-javascript-written-in">What is JavaScript written in?</a>
+      <a href="/questions/what-is-rust-written-in">What is Rust written in?</a>
+      <a href="/questions/what-is-go-written-in">What is Go written in?</a>
+      <a href="/questions/what-is-compiler-bootstrapping">What is compiler bootstrapping?</a>
+      <a href="/questions">All questions &rarr;</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Tools &amp; Guides</span>
+      <a href="/tools/v8">V8</a>
+      <a href="/tools/llvm">LLVM</a>
+      <a href="/tools/gcc">GCC</a>
+      <a href="/tools/ghc">GHC</a>
+      <a href="/guides">All guides</a>
+      <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </div>
+  <p class="footer-note">The Language Lineage dataset is meticulously curated and verified by human researchers. We use AI agents to assist with large-scale data gathering and modeling, but every implementation fact is manually reviewed for accuracy. Spot an error? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue on GitHub</a> and it gets fixed. <a href="/how-it-works">Learn how it works &rarr;</a></p>
+  <div class="footer-bottom">Made with <span style="color:#fb7185">❤️</span> by <a href="https://github.com/sanketmuchhala" rel="noopener noreferrer">Sanket Muchhala</a> &middot; <a href="/">Language Lineage</a></div>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How TensorRT-LLM Runs: PyTorch, Scheduling and GPUs | Language Lineage</title>
+  <meta name="description" content="Trace current TensorRT-LLM requests through Python or HTTP, PyExecutor, inflight scheduling and PyTorch model execution, with explicit legacy-backend limits." />
+  <link rel="canonical" href="https://www.languagelineage.org/ai/how-tensorrt-llm-runs" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><script defer src="/fx.js"></script><script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script><link rel="alternate" type="application/rss+xml" title="Language Lineage" href="/rss.xml" /><link rel="stylesheet" href="/seo.css" />
+  <script defer src="/ai-path.js"></script>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="How TensorRT-LLM Runs: PyTorch, Scheduling and GPUs | Language Lineage" />
+  <meta property="og:description" content="Trace current TensorRT-LLM requests through Python or HTTP, PyExecutor, inflight scheduling and PyTorch model execution, with explicit legacy-backend limits." />
+  <meta property="og:url" content="https://www.languagelineage.org/ai/how-tensorrt-llm-runs" />
+  <meta property="og:image" content="https://www.languagelineage.org/og/ai-how-tensorrt-llm-runs.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"How Does TensorRT-LLM Execute an Inference Request?","description":"Trace current TensorRT-LLM requests through Python or HTTP, PyExecutor, inflight scheduling and PyTorch model execution, with explicit legacy-backend limits.","url":"https://www.languagelineage.org/ai/how-tensorrt-llm-runs","datePublished":"2026-11-11","dateModified":"2026-11-12","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"citation":["https://nvidia.github.io/TensorRT-LLM/latest/torch/arch_overview.html","https://nvidia.github.io/TensorRT-LLM/latest/legacy/tensorrt-backend-removal.html","https://nvidia.github.io/TensorRT-LLM/latest/torch/scheduler.html","https://nvidia.github.io/TensorRT-LLM/latest/quick-start-guide.html","https://github.com/NVIDIA/TensorRT-LLM/blob/main/README.md","https://github.com/NVIDIA/TensorRT-LLM/blob/main/tensorrt_llm/_torch/pyexecutor/py_executor.py","https://nvidia.github.io/TensorRT-LLM/latest/supported-hardware.html"],"inLanguage":"en"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"AI execution paths","item":"https://www.languagelineage.org/ai"},{"@type":"ListItem","position":3,"name":"How Does TensorRT-LLM Execute an Inference Request?","item":"https://www.languagelineage.org/ai/how-tensorrt-llm-runs"}]}</script>
+</head>
+<body class="seo-page">
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<nav class="seo-nav">
+  <a href="/" class="nav-brand"><img class="nav-logo-mark" src="/logo-mark.svg" width="22" height="22" alt="" aria-hidden="true">Language Lineage</a>
+  <a href="/relationships">Relationships</a>
+  <a href="/languages">Languages</a>
+  <a href="/tools">Tools</a>
+  <a href="/guides">Guides</a>
+  <a href="/timeline">Timeline</a>
+  <a href="/dataset">Dataset</a>
+  <a href="/how-it-works">How It Works</a>
+  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
+</nav>
+<main class="seo-main" id="main-content">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; <a href="/ai">AI execution paths</a> &rsaquo; How Does TensorRT-LLM Execute an Inference Request
+  </nav>
+
+  <h1>How Does TensorRT-LLM Execute an Inference Request?</h1>
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#the-selected-path-step-by-step">The selected path, step by step</a></li>
+    <li><a href="#is-tensorrt-llm-the-same-product-as-tensorrt">Is TensorRT-LLM the same product as TensorRT?</a></li>
+    <li><a href="#what-happens-after-the-request-arrives">What happens after the request arrives?</a></li>
+    <li><a href="#what-is-inflight-batching">What is inflight batching?</a></li>
+    <li><a href="#where-do-python-c-and-cuda-appear">Where do Python, C++ and CUDA appear?</a></li>
+    <li><a href="#how-does-this-compare-with-vllm-or-llama-cpp">How does this compare with vLLM or llama.cpp?</a></li>
+    <li><a href="#does-the-diagram-describe-every-token-and-every-gpu">Does the diagram describe every token and every GPU?</a></li>
+    <li><a href="#every-stage">Every stage</a></li>
+    <li><a href="#every-step">Every step</a></li>
+    <li><a href="#what-this-does-not-show">What this does not show</a></li>
+    <li><a href="#how-this-page-is-checked">How this page is checked</a></li>
+  </ol>
+</nav>
+
+  <div class="answer-box">Current <strong>TensorRT-LLM uses a PyTorch execution backend</strong>. A Python LLM call or a request to trtllm-serve enters an executor that schedules requests, manages resources and runs the model forward pass using optimized GPU kernels. Older instructions built around the removed TensorRT engine backend describe a different version of the system. An API-compatible server also does not reveal the internals of any unrelated hosted service.</div>
+
+  <section class="ai-explorer" id="explorer" aria-label="Execution path explorer">
+    <form class="ai-controls" onsubmit="return false">
+      <fieldset><legend>Request interface</legend>
+        <label><input type="radio" name="interface" value="python" data-phrase="a Python LLM API call" checked> Python LLM API</label>
+        <label><input type="radio" name="interface" value="http" data-phrase="an HTTP serving request"> HTTP server</label>
+      </fieldset>
+      <button type="button" class="ai-copy" hidden>Copy link to this path</button>
+    </form>
+    <p class="ai-status" aria-live="polite" data-template="Showing {interface}">Showing a Python LLM API call: 7 stages, 6 steps.</p>
+    <div class="ai-layout">
+      <div class="ai-diagram-wrap"><svg class="ai-path-svg" viewBox="0 0 826 546" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Execution path diagram: select a stage or step for details">
+<defs><marker id="ai-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9a9a9a"/></marker></defs>
+<path id="step-application--python_api" class="ai-step on" d="M413,62 C413,78 104,78 104,88" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Your inference call invokes LLM API Python LLM API"><title>Your inference call invokes LLM API Python LLM API</title></path>
+<path id="step-application--http" class="ai-step" d="M413,62 C413,78 722,78 722,88" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Your inference call sends HTTP request trtllm-serve"><title>Your inference call sends HTTP request trtllm-serve</title></path>
+<path id="step-python_api--executor" class="ai-step on" d="M104,140 C104,156 413,156 413,166" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Python LLM API submits inference PyExecutor"><title>Python LLM API submits inference PyExecutor</title></path>
+<path id="step-http--executor" class="ai-step" d="M722,140 C722,156 413,156 413,166" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="trtllm-serve submits server request PyExecutor"><title>trtllm-serve submits server request PyExecutor</title></path>
+<path id="step-executor--scheduler" class="ai-step on" d="M413,218 C413,234 413,234 413,244" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="PyExecutor schedules iteration Inflight scheduler"><title>PyExecutor schedules iteration Inflight scheduler</title></path>
+<path id="step-scheduler--engine" class="ai-step on" d="M413,296 C413,312 413,312 413,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Inflight scheduler runs selected forward PyTorch model engine"><title>Inflight scheduler runs selected forward PyTorch model engine</title></path>
+<path id="step-engine--kernels" class="ai-step on" d="M413,374 C413,390 413,390 413,400" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="PyTorch model engine executes model ops Specialized kernels"><title>PyTorch model engine executes model ops Specialized kernels</title></path>
+<path id="step-kernels--gpu" class="ai-step on" d="M413,452 C413,468 413,468 413,478" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Specialized kernels launches device work NVIDIA GPU"><title>Specialized kernels launches device work NVIDIA GPU</title></path>
+<g id="stage-application" class="ai-stage on" tabindex="0" role="button" aria-label="Your inference call: Your program">
+  <rect x="325" y="16" width="176" height="46" rx="7" style="--kc:#60a5fa"/>
+  <rect x="325" y="16" width="4" height="46" rx="2" fill="#60a5fa"/>
+  <text x="339" y="35" class="ai-name">Your inference call</text>
+  <text x="339" y="51" class="ai-kind">application</text>
+</g>
+<g id="stage-python_api" class="ai-stage on" tabindex="0" role="button" aria-label="Python LLM API: Framework core">
+  <rect x="16" y="94" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="16" y="94" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="30" y="113" class="ai-name">Python LLM API</text>
+  <text x="30" y="129" class="ai-kind">framework component</text>
+</g>
+<g id="stage-http" class="ai-stage" tabindex="0" role="button" aria-label="trtllm-serve: Runtime">
+  <rect x="634" y="94" width="176" height="46" rx="7" style="--kc:#93c5fd"/>
+  <rect x="634" y="94" width="4" height="46" rx="2" fill="#93c5fd"/>
+  <text x="648" y="113" class="ai-name">trtllm-serve</text>
+  <text x="648" y="129" class="ai-kind">runtime</text>
+</g>
+<g id="stage-executor" class="ai-stage on" tabindex="0" role="button" aria-label="PyExecutor: Runtime">
+  <rect x="325" y="172" width="176" height="46" rx="7" style="--kc:#93c5fd"/>
+  <rect x="325" y="172" width="4" height="46" rx="2" fill="#93c5fd"/>
+  <text x="339" y="191" class="ai-name">PyExecutor</text>
+  <text x="339" y="207" class="ai-kind">runtime</text>
+</g>
+<g id="stage-scheduler" class="ai-stage on" tabindex="0" role="button" aria-label="Inflight scheduler: Runtime">
+  <rect x="325" y="250" width="176" height="46" rx="7" style="--kc:#93c5fd"/>
+  <rect x="325" y="250" width="4" height="46" rx="2" fill="#93c5fd"/>
+  <text x="339" y="269" class="ai-name">Inflight scheduler</text>
+  <text x="339" y="285" class="ai-kind">runtime</text>
+</g>
+<g id="stage-engine" class="ai-stage on" tabindex="0" role="button" aria-label="PyTorch model engine: Framework core">
+  <rect x="325" y="328" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="325" y="328" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="339" y="347" class="ai-name">PyTorch model engine</text>
+  <text x="339" y="363" class="ai-kind">framework component</text>
+</g>
+<g id="stage-kernels" class="ai-stage on" tabindex="0" role="button" aria-label="Specialized kernels: Kernel">
+  <rect x="325" y="406" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="325" y="406" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="339" y="425" class="ai-name">Specialized kernels</text>
+  <text x="339" y="441" class="ai-kind">kernel</text>
+</g>
+<g id="stage-gpu" class="ai-stage on" tabindex="0" role="button" aria-label="NVIDIA GPU: Hardware">
+  <rect x="325" y="484" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="325" y="484" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="339" y="503" class="ai-name">NVIDIA GPU</text>
+  <text x="339" y="519" class="ai-kind">hardware</text>
+</g>
+</svg></div>
+      <aside class="ai-detail" aria-live="polite"><p class="ai-detail-hint">Select a stage or an arrow to see what it does and the source behind it.</p></aside>
+    </div>
+    <ul class="ai-legend" aria-label="Legend"><li><span class="ai-swatch" style="--kc:#60a5fa"></span>Your program</li><li><span class="ai-swatch" style="--kc:#93c5fd"></span>Runtime</li><li><span class="ai-swatch" style="--kc:#e3a008"></span>Framework core</li><li><span class="ai-swatch" style="--kc:#f472b6"></span>Kernel</li><li><span class="ai-swatch" style="--kc:#4ade80"></span>Hardware</li></ul>
+  </section>
+
+  <h2 id="the-selected-path-step-by-step">The selected path, step by step</h2>
+  <ol class="ai-path-list">
+<li>Your inference call <em>invokes LLM API</em> Python LLM API: The Python route enters through tensorrt_llm.LLM.</li>
+<li>Python LLM API <em>submits inference</em> PyExecutor: The API uses TensorRT-LLM’s current executor stack for model inference.</li>
+<li>PyExecutor <em>schedules iteration</em> Inflight scheduler: The executor selects runnable requests for the current step.</li>
+<li>Inflight scheduler <em>runs selected forward</em> PyTorch model engine: Only scheduled work is submitted for the model forward pass.</li>
+<li>PyTorch model engine <em>executes model ops</em> Specialized kernels: The current PyTorch stack uses TensorRT-LLM’s optimized numerical kernels where applicable.</li>
+<li>Specialized kernels <em>launches device work</em> NVIDIA GPU: The executor uses CUDA runtime bindings for the supported NVIDIA GPU execution path.</li>
+  </ol>
+
+  <h2 id="is-tensorrt-llm-the-same-product-as-tensorrt">Is TensorRT-LLM the same product as TensorRT?</h2>
+  <p>No. TensorRT-LLM is an LLM inference stack with its own model API, executor and scheduling. The [migration guide](https://nvidia.github.io/TensorRT-LLM/latest/legacy/tensorrt-backend-removal.html) says the legacy TensorRT engine backend has been removed and PyTorch is now the sole execution backend. A familiar product name is not sufficient evidence that a current request first runs trtllm-build.</p>
+  <p>This version boundary matters when following tutorials. Historical conversion and engine-build instructions can be correct for earlier releases while failing to describe the current API. Match the documentation to the installed version before copying commands or assuming one fixed execution architecture.</p>
+
+  <h2 id="what-happens-after-the-request-arrives">What happens after the request arrives?</h2>
+  <p>The [quick-start guide](https://nvidia.github.io/TensorRT-LLM/latest/quick-start-guide.html) documents Python LLM calls and HTTP serving with trtllm-serve. These are entry points to the inference stack. A compatible HTTP endpoint specifies how a client talks to the server; it does not make the server another vendor’s model service.</p>
+  <p>The [architecture overview](https://nvidia.github.io/TensorRT-LLM/latest/torch/arch_overview.html) describes PyExecutor, its model engine and decoding responsibilities. The diagram shows the compute route for one scheduled forward iteration. After model outputs are available, the decoder produces tokens and request state is updated; generation repeats rather than returning to the initial loading step for every token.</p>
+
+  <h2 id="what-is-inflight-batching">What is inflight batching?</h2>
+  <p>The [scheduler documentation](https://nvidia.github.io/TensorRT-LLM/latest/torch/scheduler.html) describes scheduling at each LLM step. CapacityScheduler determines resource fit, including cache capacity. MicroBatchScheduler chooses which fitting requests should actually execute next. This allows an active server to reconsider runnable work across iterations instead of assuming one fixed request batch lasts forever.</p>
+  <p>Resource fit and execution selection are related but distinct. A request can be active without being chosen for the current forward pass. The diagram therefore puts scheduling before model execution; it does not claim that every queued request runs simultaneously or that batching removes latency tradeoffs.</p>
+
+  <h2 id="where-do-python-c-and-cuda-appear">Where do Python, C++ and CUDA appear?</h2>
+  <p>Python is visible in the executor and model-facing interfaces. The architecture documents C++ bindings for scheduler and KV-cache components, and the [executor source](https://github.com/NVIDIA/TensorRT-LLM/blob/main/tensorrt_llm/_torch/pyexecutor/py_executor.py) imports CUDA runtime bindings. Numerical execution uses the optimized kernel stack described in the [project overview](https://github.com/NVIDIA/TensorRT-LLM/blob/main/README.md).</p>
+  <p>These are different responsibilities. A Python implementation edge describes orchestration; a C++ binding does not mean every kernel is C++; and selecting the PyTorch backend does not mean TensorRT-LLM becomes an ordinary unoptimized eager Python loop. Kernel selection and supported model details depend on the actual release and configuration.</p>
+
+  <h2 id="how-does-this-compare-with-vllm-or-llama-cpp">How does this compare with vLLM or llama.cpp?</h2>
+  <p>Compare the documented mechanisms rather than treating the engines as aliases. <a href="/ai/how-vllm-runs">vLLM</a> has its own scheduling and execution stack. <a href="/ai/how-llama-cpp-runs">llama.cpp</a> uses a distinct model/runtime/backend arrangement. This page explains current TensorRT-LLM execution without asserting a universal speed winner or publishing workload-free performance rankings.</p>
+
+  <h2 id="does-the-diagram-describe-every-token-and-every-gpu">Does the diagram describe every token and every GPU?</h2>
+  <p>No. It stops at the hardware work for a scheduled forward iteration. Sampling, caching, repeated decoding and advanced multi-device scheduling add further state transitions. A complete deployment must satisfy supported hardware, model and software requirements; the diagram is a cited architectural trace, not a compatibility certification.</p>
+
+  <h2 id="every-stage">Every stage</h2>
+  <div class="ai-stage-list">
+<article class="ai-stage-detail" id="detail-stage-application" data-stage="application">
+<h3>Your inference call</h3>
+<p class="ai-kind-tag" style="--kc:#60a5fa">application</p>
+<p>The application invokes the Python LLM API or sends an HTTP request to a locally deployed trtllm-serve instance.</p>
+
+<ul class="ai-sources"><li><blockquote>You can use the trtllm-serve command to start an OpenAI compatible server to interact with a model.</blockquote><a href="https://nvidia.github.io/TensorRT-LLM/latest/quick-start-guide.html" rel="noopener noreferrer" target="_blank">TensorRT-LLM HTTP serving and Python LLM API</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-python_api" data-stage="python_api">
+<h3>Python LLM API</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>The tensorrt_llm.LLM interface manages model loading and generation for Python callers.</p>
+<p class="ai-lineage">In the atlas: <a href="/languages/python">Python</a></p>
+<ul class="ai-sources"><li><blockquote>The interface for PyTorch backend is tensorrt_llm.LLM.</blockquote><a href="https://nvidia.github.io/TensorRT-LLM/latest/torch/arch_overview.html" rel="noopener noreferrer" target="_blank">TensorRT-LLM current PyTorch architecture</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-http" data-stage="http">
+<h3>trtllm-serve</h3>
+<p class="ai-kind-tag" style="--kc:#93c5fd">runtime</p>
+<p>The server exposes compatible HTTP endpoints while using the TensorRT-LLM inference stack beneath them.</p>
+
+<ul class="ai-sources"><li><blockquote>You can use the trtllm-serve command to start an OpenAI compatible server to interact with a model.</blockquote><a href="https://nvidia.github.io/TensorRT-LLM/latest/quick-start-guide.html" rel="noopener noreferrer" target="_blank">TensorRT-LLM HTTP serving and Python LLM API</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-executor" data-stage="executor">
+<h3>PyExecutor</h3>
+<p class="ai-kind-tag" style="--kc:#93c5fd">runtime</p>
+<p>The Python executor coordinates requests, scheduling, model forward calls and decoding.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/tensorrt-llm">TensorRT-LLM</a></p>
+<ul class="ai-sources"><li><blockquote>Running model forward for scheduled requests.</blockquote><a href="https://nvidia.github.io/TensorRT-LLM/latest/torch/arch_overview.html" rel="noopener noreferrer" target="_blank">TensorRT-LLM current PyTorch architecture</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-scheduler" data-stage="scheduler">
+<h3>Inflight scheduler</h3>
+<p class="ai-kind-tag" style="--kc:#93c5fd">runtime</p>
+<p>Capacity and microbatch scheduling select work for this iteration based on resources and request state.</p>
+
+<ul class="ai-sources"><li><blockquote>The scheduler is invoked to determine which requests are scheduled at the current step.</blockquote><a href="https://nvidia.github.io/TensorRT-LLM/latest/torch/scheduler.html" rel="noopener noreferrer" target="_blank">TensorRT-LLM inflight scheduler</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-engine" data-stage="engine">
+<h3>PyTorch model engine</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>The current model engine prepares and executes the scheduled model forward pass through the PyTorch backend.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/pytorch">PyTorch</a></p>
+<ul class="ai-sources"><li><blockquote>PyTorch is now the sole execution backend for TensorRT LLM.</blockquote><a href="https://nvidia.github.io/TensorRT-LLM/latest/legacy/tensorrt-backend-removal.html" rel="noopener noreferrer" target="_blank">TensorRT-LLM TensorRT backend removal and migration</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-kernels" data-stage="kernels">
+<h3>Specialized kernels</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel</p>
+<p>Supported model operations execute through the optimized kernel/runtime stack selected by the current implementation.</p>
+
+<ul class="ai-sources"><li><blockquote>specialized kernels for common operations</blockquote><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/README.md" rel="noopener noreferrer" target="_blank">TensorRT-LLM specialized kernels and runtime overview</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-gpu" data-stage="gpu">
+<h3>NVIDIA GPU</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">hardware</p>
+<p>The scoped supported NVIDIA deployment executes device work through its CUDA runtime stack; CPU scheduling remains part of the host process.</p>
+
+<ul class="ai-sources"><li><blockquote>TensorRT LLM supports the full spectrum of NVIDIA GPU architectures:</blockquote><a href="https://nvidia.github.io/TensorRT-LLM/latest/supported-hardware.html" rel="noopener noreferrer" target="_blank">TensorRT-LLM supported NVIDIA GPU hardware</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+  </div>
+
+  <h2 id="every-step">Every step</h2>
+  <div class="table-wrap"><table class="ai-steps">
+    <thead><tr><th>From</th><th>Step</th><th>To</th><th>When</th><th>What happens</th><th>Source</th></tr></thead>
+    <tbody>
+<tr id="detail-step-application--python_api" data-step="application--python_api" data-from="application" data-to="python_api" data-when="{&quot;interface&quot;:[&quot;python&quot;]}" class="on">
+<td>Your inference call</td><td>invokes LLM API</td><td>Python LLM API</td><td>Python LLM API</td><td>The Python route enters through tensorrt_llm.LLM.</td><td><a href="https://nvidia.github.io/TensorRT-LLM/latest/torch/arch_overview.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-application--http" data-step="application--http" data-from="application" data-to="http" data-when="{&quot;interface&quot;:[&quot;http&quot;]}">
+<td>Your inference call</td><td>sends HTTP request</td><td>trtllm-serve</td><td>HTTP server</td><td>The HTTP route assumes a configured trtllm-serve deployment.</td><td><a href="https://nvidia.github.io/TensorRT-LLM/latest/quick-start-guide.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-python_api--executor" data-step="python_api--executor" data-from="python_api" data-to="executor" data-when="{}" class="on">
+<td>Python LLM API</td><td>submits inference</td><td>PyExecutor</td><td>any request interface</td><td>The API uses TensorRT-LLM’s current executor stack for model inference.</td><td><a href="https://nvidia.github.io/TensorRT-LLM/latest/torch/arch_overview.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-http--executor" data-step="http--executor" data-from="http" data-to="executor" data-when="{}">
+<td>trtllm-serve</td><td>submits server request</td><td>PyExecutor</td><td>any request interface</td><td>Serving uses the runtime rather than a separate model implementation invented by this API-compatible interface.</td><td><a href="https://nvidia.github.io/TensorRT-LLM/latest/quick-start-guide.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-executor--scheduler" data-step="executor--scheduler" data-from="executor" data-to="scheduler" data-when="{}" class="on">
+<td>PyExecutor</td><td>schedules iteration</td><td>Inflight scheduler</td><td>any request interface</td><td>The executor selects runnable requests for the current step.</td><td><a href="https://nvidia.github.io/TensorRT-LLM/latest/torch/scheduler.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-scheduler--engine" data-step="scheduler--engine" data-from="scheduler" data-to="engine" data-when="{}" class="on">
+<td>Inflight scheduler</td><td>runs selected forward</td><td>PyTorch model engine</td><td>any request interface</td><td>Only scheduled work is submitted for the model forward pass.</td><td><a href="https://nvidia.github.io/TensorRT-LLM/latest/torch/arch_overview.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-engine--kernels" data-step="engine--kernels" data-from="engine" data-to="kernels" data-when="{}" class="on">
+<td>PyTorch model engine</td><td>executes model ops</td><td>Specialized kernels</td><td>any request interface</td><td>The current PyTorch stack uses TensorRT-LLM’s optimized numerical kernels where applicable.</td><td><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/README.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-kernels--gpu" data-step="kernels--gpu" data-from="kernels" data-to="gpu" data-when="{}" class="on">
+<td>Specialized kernels</td><td>launches device work</td><td>NVIDIA GPU</td><td>any request interface</td><td>The executor uses CUDA runtime bindings for the supported NVIDIA GPU execution path.</td><td><a href="https://github.com/NVIDIA/TensorRT-LLM/blob/main/tensorrt_llm/_torch/pyexecutor/py_executor.py" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="what-this-does-not-show">What this does not show</h2>
+  <p>Current TensorRT-LLM documentation retrieved in November 2026, after removal of the legacy TensorRT engine backend. One supported NVIDIA GPU inference deployment through Python LLM or HTTP serving. This diagram summarizes one scheduled forward iteration, not the full token-generation loop. Historical engine builds, encoder/multimodal paths, speculative decoding, disaggregated serving and distributed parallelism are outside scope.</p>
+
+  <h2 id="how-this-page-is-checked">How this page is checked</h2>
+  <p>Every stage and step above quotes the source that supports it. The quotes were checked against the current TensorRT-LLM architecture, scheduler, migration, quick-start and supported-hardware guides, and Python executor source on 2026-11-11. The data is a <a href="/dataset/ai/how-tensorrt-llm-runs.json">versioned JSON file</a> under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. Found something wrong or out of date? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
+  <p><a class="ai-graph-link" href="/explore?view=ai&amp;path=how-tensorrt-llm-runs&amp;interface=python">See this path in the graph explorer &rarr;</a></p>
+  <p>What these tools are written in is in the main atlas: <a href="/languages/python">Python</a>, <a href="/tools/tensorrt-llm">TensorRT-LLM</a>, <a href="/tools/pytorch">PyTorch</a>. More execution paths: <a href="/ai/how-jax-runs">What Actually Happens When You Run JAX Code</a>, <a href="/ai/how-keras-runs">What Runs Underneath a Keras 3 Model</a>, <a href="/ai/how-llama-cpp-runs">How Does llama.cpp Run a Model on Your Hardware</a>, <a href="/ai/how-mlx-runs">What Actually Happens When You Run MLX on a Mac</a>, <a href="/ai/how-ollama-runs">What Actually Runs When You Send Ollama a Prompt</a>, <a href="/ai/how-onnx-runtime-runs">How Does ONNX Runtime Execute a Model Across Hardware</a>, <a href="/ai/how-pytorch-runs">What Actually Happens When You Run a PyTorch Model</a>, <a href="/ai/how-tensorflow-runs">How Does TensorFlow Run Python on a CPU or GPU</a>, <a href="/ai/how-vllm-runs">What Actually Happens When vLLM Serves a Request</a>, or <a href="/ai">compare them all</a>.</p>
+
+  <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>
+</main>
+<footer class="seo-footer-rich">
+  <div data-nosnippet>
+  <div class="footer-grid">
+    <div class="footer-col">
+      <span class="footer-col-head">Explore</span>
+      <a href="/programming-language-graph">Programming language graph</a>
+      <a href="/rankings/most-influential">Most influential languages</a>
+      <a href="/rss.xml">RSS feed</a>
+      <a href="/embed-kit">Embed the graph</a>
+      <a href="/guides/programming-language-family-tree">Language family tree</a>
+      <a href="/programming-language-evolution">Evolution timeline</a>
+      <a href="/what-are-programming-languages-written-in">What languages are written in</a>
+      <a href="/ai">How AI frameworks run code</a>
+      <a href="/explore">Interactive Graph</a>
+      <a href="/dataset">Dataset</a>
+      <a href="/directory">Site Directory</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Popular Languages</span>
+      <a href="/languages/python">Python</a>
+      <a href="/languages/javascript">JavaScript</a>
+      <a href="/languages/rust">Rust</a>
+      <a href="/languages/go">Go</a>
+      <a href="/languages/java">Java</a>
+      <a href="/languages/c">C</a>
+      <a href="/languages/cxx">C++</a>
+      <a href="/languages/typescript">TypeScript</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Questions</span>
+      <a href="/questions/what-is-python-written-in">What is Python written in?</a>
+      <a href="/questions/what-is-javascript-written-in">What is JavaScript written in?</a>
+      <a href="/questions/what-is-rust-written-in">What is Rust written in?</a>
+      <a href="/questions/what-is-go-written-in">What is Go written in?</a>
+      <a href="/questions/what-is-compiler-bootstrapping">What is compiler bootstrapping?</a>
+      <a href="/questions">All questions &rarr;</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Tools &amp; Guides</span>
+      <a href="/tools/v8">V8</a>
+      <a href="/tools/llvm">LLVM</a>
+      <a href="/tools/gcc">GCC</a>
+      <a href="/tools/ghc">GHC</a>
+      <a href="/guides">All guides</a>
+      <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </div>
+  <p class="footer-note">The Language Lineage dataset is meticulously curated and verified by human researchers. We use AI agents to assist with large-scale data gathering and modeling, but every implementation fact is manually reviewed for accuracy. Spot an error? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue on GitHub</a> and it gets fixed. <a href="/how-it-works">Learn how it works &rarr;</a></p>
+  <div class="footer-bottom">Made with <span style="color:#fb7185">❤️</span> by <a href="https://github.com/sanketmuchhala" rel="noopener noreferrer">Sanket Muchhala</a> &middot; <a href="/">Language Lineage</a></div>
+  </div>
+</footer>
+</body>
+</html>

@@ -14,24 +14,24 @@
 
 # Language Lineage
 
-An interactive, evidence-backed atlas mapping implementation, bootstrapping, runtime, and influence relationships across 176 nodes: 141 programming languages and 35 compiler/runtime tools. 337 indexable pages, 504 sourced relationships.
+An interactive, evidence-backed atlas mapping implementation, bootstrapping, runtime, and influence relationships across 191 nodes: 151 programming languages and 40 compiler/runtime tools. 356 indexable pages, 527 sourced relationships.
 
 ## Live Site
 
 **[languagelineage.org](https://www.languagelineage.org)**
 
 - Interactive graph explorer: [/explore](https://www.languagelineage.org/explore) (deep-linkable via `?node=lang:rust`, trace mode for shortest paths)
-- Language pages: [/languages/python](https://www.languagelineage.org/languages/python) (176 pages with relationship maps, Quick Facts, implementation tables)
+- Language pages: [/languages/python](https://www.languagelineage.org/languages/python) (191 pages with relationship maps, Quick Facts, implementation tables)
 - Question pages: [/questions/what-is-rust-written-in](https://www.languagelineage.org/questions/what-is-rust-written-in) (120 pages, answer-first format)
 - Guides: [/guides](https://www.languagelineage.org/guides) (13 guides including comparisons and bootstrap chain analysis)
-- AI execution paths ([/ai](https://www.languagelineage.org/ai) compares them): [/ai/how-pytorch-runs](https://www.languagelineage.org/ai/how-pytorch-runs), [/ai/how-jax-runs](https://www.languagelineage.org/ai/how-jax-runs), [/ai/how-llama-cpp-runs](https://www.languagelineage.org/ai/how-llama-cpp-runs), [/ai/how-vllm-runs](https://www.languagelineage.org/ai/how-vllm-runs), [/ai/how-mlx-runs](https://www.languagelineage.org/ai/how-mlx-runs), [/ai/how-onnx-runtime-runs](https://www.languagelineage.org/ai/how-onnx-runtime-runs) (interactive, every step quoted from primary docs; data in `dataset/ai/`). In the explorer, [/explore?view=ai](https://www.languagelineage.org/explore?view=ai) shows only the AI tools and what they are written in
+- AI execution paths ([/ai](https://www.languagelineage.org/ai) compares them): [/ai/how-pytorch-runs](https://www.languagelineage.org/ai/how-pytorch-runs), [/ai/how-jax-runs](https://www.languagelineage.org/ai/how-jax-runs), [/ai/how-llama-cpp-runs](https://www.languagelineage.org/ai/how-llama-cpp-runs), [/ai/how-vllm-runs](https://www.languagelineage.org/ai/how-vllm-runs), [/ai/how-mlx-runs](https://www.languagelineage.org/ai/how-mlx-runs), [/ai/how-onnx-runtime-runs](https://www.languagelineage.org/ai/how-onnx-runtime-runs), [/ai/how-tensorflow-runs](https://www.languagelineage.org/ai/how-tensorflow-runs), [/ai/how-keras-runs](https://www.languagelineage.org/ai/how-keras-runs), [/ai/how-ollama-runs](https://www.languagelineage.org/ai/how-ollama-runs), [/ai/how-tensorrt-llm-runs](https://www.languagelineage.org/ai/how-tensorrt-llm-runs) (interactive, every step quoted from primary docs; data in `dataset/ai/`). In the explorer, [/explore?view=ai](https://www.languagelineage.org/explore?view=ai) shows only the AI tools and what they are written in
 - Poster: [/posters/programming-language-implementation-family-tree](https://www.languagelineage.org/posters/programming-language-implementation-family-tree) (SVG/PNG, CC BY 4.0)
 - Dataset: [/dataset](https://www.languagelineage.org/dataset) (JSON-LD, JSON and CSV downloads, data card, citation block, embed kit)
 - Embeddable graph: `<iframe src="https://www.languagelineage.org/embed?lang=rust">` (works from any page)
 - Embed guide: [/embed-kit](https://www.languagelineage.org/embed-kit) (live example, snippet, parameters, sizing, attribution)
 
 <p align="center">
-  <img src="public/og-image.png" alt="Language Lineage: what programming languages are written in. 176 languages and tools, 504 sourced relationships." width="900">
+  <img src="public/og-image.png" alt="Language Lineage: what programming languages are written in. 191 languages and tools, 527 sourced relationships." width="900">
 </p>
 
 ## What You Can Explore
@@ -106,13 +106,13 @@ LanguageLineage/
 │   ├── v2/                            67 languages, 128 edges
 │   ├── v3/                            71 languages, 169 edges
 │   ├── v4/                            112 nodes, 347 relationships
-│   └── v5/                            176 nodes, 504 relationships (current)
+│   └── v5/                            191 nodes, 527 relationships (current)
 │       ├── lineage_v5.json            Primary dataset
-│       └── enrichment_v5.json         Wikidata-sourced facts (148/176 nodes)
+│       └── enrichment_v5.json         Wikidata-sourced facts (148/191 nodes)
 ├── api/
 │   └── propose.ts                     Serverless endpoint: correction form to GitHub issue
 ├── scripts/                           Build and data tooling
-│   ├── generateSeoPages.ts            Static page generator (176 node pages, 120 question pages, 13 guides, 6 relationship pages, etc.)
+│   ├── generateSeoPages.ts            Static page generator (191 node pages, 120 question pages, 13 guides, 6 relationship pages, etc.)
 │   ├── generateSitemap.ts             Sitemap generator (304 URLs, canonical only)
 │   ├── generateLlmsTxt.ts             LLM-readable site index
 │   ├── generateOgImages.ts            Per-page OG social cards (satori + resvg)
@@ -167,11 +167,11 @@ LanguageLineage/
 
 ### Scale
 
-- 176 nodes: 141 languages + 35 tools (compilers, runtimes, engines)
-- 504 relationships, each with confidence score and evidence source URL
+- 191 nodes: 151 languages + 40 tools (compilers, runtimes, engines)
+- 527 relationships, each with confidence score and evidence source URL
 - 100% evidence coverage: every relationship has at least one source
 - 96 logo URLs: 51 Devicon assets + 39 Wikimedia P154 logos + 6 proxy logos
-- 148/176 nodes enriched with Wikidata-sourced facts (designers, developers, license, website, file extensions)
+- 148/191 nodes enriched with Wikidata-sourced facts (designers, developers, license, website, file extensions)
 
 ### Relationship Types
 
@@ -215,11 +215,11 @@ From the dataset analyzer (`npm run analyze:v5`):
 | `/relationships` | Static | 1 | Index of all relationship types |
 | `/relationships/{slug}` | Static | 6 | Individual relationship type pages |
 | `/ai` | Static | 1 | Hub comparing the AI execution-path explainers |
-| `/ai/{slug}` | Static | 6 | Interactive AI execution-path explainers (`dataset/ai/`) |
+| `/ai/{slug}` | Static | 10 | Interactive AI execution-path explainers (`dataset/ai/`) |
 | `/timeline` | Static | 1 | Language timeline page |
 | `/dataset` | Static | 1 | Dataset overview with download, citation, and embed kit |
 | Keyword landings | Static | 6 | Root-level SEO landing pages (5 canonical; `/programming-language-family-tree` canonicalizes to the `/guides/` version) |
-| `/sitemap.xml` | XML | 1 | 337 indexable URLs (canonical only) |
+| `/sitemap.xml` | XML | 1 | 356 indexable URLs (canonical only) |
 | `/robots.txt` | Text | 1 | Crawler directives |
 | `/llms.txt` | Text | 1 | LLM-readable site index |
 | `/llms-full.txt` | Text | 1 | Expanded LLM reference |
@@ -353,7 +353,7 @@ rules. Log each run in the measurement table in `SITE_IMPROVEMENT_PLAN.md`.
 
 ```
 Language Lineage. Programming Language Lineage Dataset, v5.0.
-176 nodes and 504 relationships. Accessed 2026. https://www.languagelineage.org/dataset
+191 nodes and 527 relationships. Accessed 2026. https://www.languagelineage.org/dataset
 ```
 
 ## Contributing
