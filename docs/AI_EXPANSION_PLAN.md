@@ -50,7 +50,7 @@ Static page generator and templates (`scripts/generateSeoPages.ts`), source-type
 
 ## 4. Data and ontology
 
-One file per page, `dataset/ai/<slug>.json` (currently `how-pytorch-runs.json`, `how-llama-cpp-runs.json`, `how-jax-runs.json` and `how-vllm-runs.json`; each has a short `name` used by the `/ai` hub), validated by `scripts/aiPaths.ts` (Zod, strict). Each file declares its own page text, choices (`dimensions`), diagram positions and sections; the generator, sitemap, OG cards and quote checker loop over all files.
+One file per page, `dataset/ai/<slug>.json` (currently `how-pytorch-runs.json`, `how-llama-cpp-runs.json`, `how-jax-runs.json`, `how-vllm-runs.json` and `how-mlx-runs.json`; each has a short `name` used by the `/ai` hub), validated by `scripts/aiPaths.ts` (Zod, strict). Each file declares its own page text, choices (`dimensions`), diagram positions and sections; the generator, sitemap, OG cards and quote checker loop over all files.
 
 - **Stage kinds:** `application`, `programming_language`, `runtime`, `framework_component`, `compiler`, `intermediate_representation`, `model_format`, `kernel_language`, `kernel`, `machine_code`, `hardware`. Model files appear only as a format (GGUF), never as a model family.
 - **Step kinds:** `runs_in`, `calls`, `loads`, `builds`, `dispatches_to`, `executes_on`, `launches_on`, `intercepted_by`, `captures`, `compiled_by`, `compiles_for`, `generates`, `written_in`, `falls_back_to`, `lowers_to`, `translated_to`.

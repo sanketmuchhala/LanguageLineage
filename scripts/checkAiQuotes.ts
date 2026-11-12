@@ -50,7 +50,10 @@ for (const [id, set] of quotes) {
   try {
     const res = await fetch(fetchUrl(src.url), { headers: { 'User-Agent': 'LanguageLineage quote check (+https://www.languagelineage.org)', 'Accept-Language': 'en' }, redirect: 'follow' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    text = norm(toText(await res.text()));
+    // Only HTML is stripped of tags: in source files (raw GitHub, text/plain) a tag
+    // pattern would also swallow C++ text between `<<` and the next `>`.
+    const body = await res.text();
+    text = norm(/html/i.test(res.headers.get('content-type') ?? '') ? toText(body) : body);
   } catch (err) {
     console.log(`FETCH FAILED  ${id}  ${src.url}  (${(err as Error).message})`);
     failures += set.size;

@@ -1,0 +1,287 @@
+{
+  "version": "1.0",
+  "slug": "how-mlx-runs",
+  "name": "MLX",
+  "title": "How MLX Runs on Apple Silicon: Lazy Graphs, Metal | Language Lineage",
+  "h1": "What Actually Happens When You Run MLX on a Mac?",
+  "description": "Trace MLX code on Apple silicon: lazy compute graph, eval(), Metal GPU kernels or C++ CPU kernels, and what mx.compile fuses, in unified memory, with sources.",
+  "og_subtitle": "Python → lazy graph → eval() → Metal kernels · C++ CPU kernels → Apple silicon",
+  "verified_on": "2026-11-11",
+  "verified_against": "the MLX documentation (Lazy Evaluation, Unified Memory, Compilation, Custom Extensions, Build and Install), the MLX README, and the Metal and CPU compile sources in ml-explore/mlx",
+  "scope": "Documented paths for MLX Python code on one Apple silicon Mac, run lazily or with mx.compile, on the GPU or the CPU. MLX's CUDA backend for Linux, distributed training, custom Metal kernels written with mx.fast.metal_kernel, and the C++, C and Swift APIs are out of scope.",
+  "answer": "MLX operations do not compute anything when you call them: they record a **lazy compute graph**. Work happens when the graph is **evaluated**, either by calling **eval()** or implicitly, for example by printing an array. Evaluation runs each operation's primitive on the device you chose: **Metal** kernels on the Apple silicon GPU, or C++ kernels on the CPU. Arrays live in **unified memory**, so both devices use the same data without copies. With **mx.compile**, MLX traces the function once, merges and fuses operations, and generates code: a Metal kernel for the GPU, or a C++ shared library for the CPU.",
+  "status_template": "Showing {mode} on {device}",
+  "dimensions": [
+    {
+      "id": "mode",
+      "legend": "Mode",
+      "default": "lazy",
+      "options": [
+        { "value": "lazy", "label": "Lazy (no compile)", "phrase": "plain lazy evaluation" },
+        { "value": "compiled", "label": "mx.compile", "phrase": "mx.compile" }
+      ]
+    },
+    {
+      "id": "device",
+      "legend": "Device",
+      "default": "gpu",
+      "options": [
+        { "value": "gpu", "label": "GPU (Metal)", "phrase": "the Apple silicon GPU" },
+        { "value": "cpu", "label": "CPU", "phrase": "the CPU" }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "heading": "Lazy by default",
+      "paragraphs": [
+        "Calling **mx.add** or a layer of an **mlx.nn** model only adds a node to a graph. The graph runs when something needs the values: an explicit **mx.eval**, printing an array, converting it to NumPy, or calling **.item()**. A training loop typically evaluates once per step, so each step's forward pass, gradients and optimizer update run as one graph.",
+        "That is the main difference from [PyTorch in eager mode](/ai/how-pytorch-runs) and from [JAX without jit](/ai/how-jax-runs), where each operation is dispatched as Python reaches it. **mx.compile** plays the role that torch.compile and jax.jit play there."
+      ]
+    },
+    {
+      "heading": "One memory, two devices",
+      "paragraphs": [
+        "On Apple silicon the CPU and GPU share one memory pool. MLX arrays do not belong to a device; you pick the device per operation (the **stream** argument), and MLX inserts the dependencies when an operation on one device needs the result of another. That is why the device choice above changes only the kernels, not where the data lives.",
+        "For running LLMs locally on a Mac with hand-written Metal kernels instead, compare [how llama.cpp runs a model](/ai/how-llama-cpp-runs)."
+      ]
+    }
+  ],
+  "out_of_scope_note": "",
+  "link_from": ["tool:mlx", "lang:python"],
+  "sources": {
+    "readme": { "url": "https://github.com/ml-explore/mlx/blob/main/README.md", "title": "MLX README (ml-explore/mlx)" },
+    "lazy": { "url": "https://ml-explore.github.io/mlx/build/html/usage/lazy_evaluation.html", "title": "Lazy Evaluation (MLX documentation)" },
+    "unified": { "url": "https://ml-explore.github.io/mlx/build/html/usage/unified_memory.html", "title": "Unified Memory (MLX documentation)" },
+    "compile": { "url": "https://ml-explore.github.io/mlx/build/html/usage/compile.html", "title": "Compilation (MLX documentation)" },
+    "extensions": { "url": "https://ml-explore.github.io/mlx/build/html/dev/extensions.html", "title": "Custom Extensions in MLX (MLX documentation)" },
+    "install": { "url": "https://ml-explore.github.io/mlx/build/html/install.html", "title": "Build and Install (MLX documentation)" },
+    "metal_compiled": { "url": "https://github.com/ml-explore/mlx/blob/main/mlx/backend/metal/compiled.cpp", "title": "mlx/backend/metal/compiled.cpp (ml-explore/mlx)" },
+    "cpu_compiled": { "url": "https://github.com/ml-explore/mlx/blob/main/mlx/backend/cpu/compiled.cpp", "title": "mlx/backend/cpu/compiled.cpp (ml-explore/mlx)" }
+  },
+  "stages": [
+    {
+      "id": "python_code",
+      "name": "Your MLX code",
+      "kind": "programming_language",
+      "layer": "python",
+      "lineage_id": "lang:python",
+      "pos": [1.5, 0],
+      "summary": "Python code using mlx.core arrays, and often mlx.nn models and mlx.optimizers.",
+      "evidence": [{ "source": "readme", "quote": "MLX has a Python API that closely follows NumPy." }]
+    },
+    {
+      "id": "mlx",
+      "name": "MLX",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": "tool:mlx",
+      "pos": [1.5, 1],
+      "summary": "Apple's array framework. Its operations are thin front ends that add nodes to a graph.",
+      "evidence": [
+        { "source": "readme", "quote": "MLX is an array framework for machine learning on Apple silicon, brought to you by Apple machine learning research." },
+        { "source": "extensions", "quote": "Operations in MLX build the computation graph. Primitives provide the rules for evaluating and transforming the graph." }
+      ]
+    },
+    {
+      "id": "graph",
+      "name": "Lazy compute graph",
+      "kind": "intermediate_representation",
+      "layer": "compiler",
+      "lineage_id": null,
+      "pos": [1.5, 2],
+      "summary": "The recorded operations, each a primitive with its inputs. Nothing has been computed yet.",
+      "evidence": [{ "source": "lazy", "quote": "When you perform operations in MLX, no computation actually happens. Instead a compute graph is recorded." }]
+    },
+    {
+      "id": "compile",
+      "name": "mx.compile",
+      "kind": "compiler",
+      "layer": "compiler",
+      "lineage_id": null,
+      "pos": [3, 3],
+      "summary": "MLX's compiler transformation. On the first call it traces the function with placeholder inputs, shrinks the graph and fuses operations; later calls with the same shapes and types reuse the result.",
+      "evidence": [
+        { "source": "compile", "quote": "Function compilation results in smaller graphs by merging common work and fusing certain operations." },
+        { "source": "compile", "quote": "The first time you call a compiled function, MLX will build the compute graph, optimize it, and generate and compile code." }
+      ]
+    },
+    {
+      "id": "eval",
+      "name": "Evaluation (eval)",
+      "kind": "runtime",
+      "layer": "framework",
+      "lineage_id": "tool:mlx",
+      "pos": [1.5, 4],
+      "summary": "When values are needed, MLX schedules the graph and runs each primitive on the device of its stream.",
+      "evidence": [
+        { "source": "lazy", "quote": "The actual computation only happens if an eval() is performed." },
+        { "source": "extensions", "quote": "When we evaluate the output array, MLX schedules the execution of the computation graph, and calls Axpby::eval_cpu() or Axpby::eval_gpu() depending on the stream/device specified by the user." }
+      ]
+    },
+    {
+      "id": "cpu_kernels",
+      "name": "C++ CPU kernels",
+      "kind": "kernel",
+      "layer": "kernel",
+      "lineage_id": "lang:cxx",
+      "pos": [0, 5],
+      "summary": "Each primitive's CPU implementation (eval_cpu), written in C++.",
+      "evidence": [{ "source": "extensions", "quote": "A Primitive has methods to run on the CPU or GPU and for function transformations such as vjp and jvp." }]
+    },
+    {
+      "id": "fused_cpu",
+      "name": "Fused C++ library",
+      "kind": "machine_code",
+      "layer": "kernel",
+      "lineage_id": "lang:cxx",
+      "pos": [1, 5],
+      "summary": "For the CPU, mx.compile generates C++ source for the fused operations, builds it into a shared library and loads it.",
+      "evidence": [
+        { "source": "cpu_compiled", "quote": "Could not load C++ shared library" },
+        { "source": "compile", "quote": "The first time you call a compiled function, MLX will build the compute graph, optimize it, and generate and compile code." }
+      ]
+    },
+    {
+      "id": "metal_kernels",
+      "name": "Metal kernels",
+      "kind": "kernel",
+      "layer": "kernel",
+      "lineage_id": null,
+      "pos": [2, 5],
+      "summary": "Each primitive's GPU implementation (eval_gpu), a kernel written in the Metal shading language and shipped prebuilt in MLX's Metal library.",
+      "evidence": [
+        { "source": "extensions", "quote": "Apple silicon devices address their GPUs using the Metal shading language, and GPU kernels in MLX are written using Metal." },
+        { "source": "install", "quote": "the MLX Metal library which contains pre-built GPU kernels" }
+      ]
+    },
+    {
+      "id": "fused_metal",
+      "name": "Fused Metal kernel",
+      "kind": "kernel",
+      "layer": "kernel",
+      "lineage_id": null,
+      "pos": [3, 5],
+      "summary": "For the GPU, mx.compile writes Metal source for the fused operations and compiles it into one kernel.",
+      "evidence": [
+        { "source": "metal_compiled", "quote": "Too many inputs/outputs fused in the Metal Compiled" },
+        { "source": "compile", "quote": "all of the operations in the gelu are fusible into a single kernel with compile()" }
+      ]
+    },
+    {
+      "id": "cpu",
+      "name": "Apple silicon CPU",
+      "kind": "hardware",
+      "layer": "hardware",
+      "lineage_id": null,
+      "pos": [0.5, 6],
+      "summary": "The CPU cores, sharing one memory pool with the GPU.",
+      "evidence": [{ "source": "unified", "quote": "Apple silicon has a unified memory architecture. The CPU and GPU have direct access to the same memory pool." }]
+    },
+    {
+      "id": "gpu",
+      "name": "Apple silicon GPU",
+      "kind": "hardware",
+      "layer": "hardware",
+      "lineage_id": null,
+      "pos": [2.5, 6],
+      "summary": "The integrated GPU, sharing one memory pool with the CPU, so arrays need no copies between devices.",
+      "evidence": [{ "source": "unified", "quote": "Apple silicon has a unified memory architecture. The CPU and GPU have direct access to the same memory pool." }]
+    }
+  ],
+  "steps": [
+    {
+      "from": "python_code", "to": "mlx", "kind": "calls", "when": {},
+      "label": "calls",
+      "explanation": "Your code calls MLX operations such as mx.matmul, or runs an mlx.nn model.",
+      "evidence": [{ "source": "readme", "quote": "MLX has a Python API that closely follows NumPy." }]
+    },
+    {
+      "from": "mlx", "to": "graph", "kind": "captures", "when": {},
+      "label": "records",
+      "explanation": "Each operation adds a node to the graph and returns an array that has no data yet.",
+      "evidence": [{ "source": "lazy", "quote": "When you perform operations in MLX, no computation actually happens. Instead a compute graph is recorded." }]
+    },
+    {
+      "from": "graph", "to": "eval", "kind": "calls", "when": { "mode": ["lazy"] },
+      "label": "runs when you call",
+      "explanation": "The graph runs at mx.eval, or implicitly when you print an array, convert it to NumPy, or call .item().",
+      "evidence": [
+        { "source": "lazy", "quote": "The actual computation only happens if an eval() is performed." },
+        { "source": "lazy", "quote": "Anytime you print an array, convert it to an numpy.ndarray, or otherwise access its memory via memoryview, the graph will be evaluated." }
+      ]
+    },
+    {
+      "from": "graph", "to": "compile", "kind": "compiled_by", "when": { "mode": ["compiled"] },
+      "label": "traced and optimized by",
+      "explanation": "On the first call, the compiled function is traced with placeholder inputs and its graph is simplified and fused. Calls with new shapes, types or numbers of inputs compile again.",
+      "evidence": [
+        { "source": "compile", "quote": "When a compiled function is first called, it is traced with placeholder inputs." },
+        { "source": "compile", "quote": "Function compilation results in smaller graphs by merging common work and fusing certain operations." }
+      ]
+    },
+    {
+      "from": "compile", "to": "eval", "kind": "calls", "when": { "mode": ["compiled"] },
+      "label": "smaller graph runs at",
+      "explanation": "The compiled graph is still lazy: it runs when it is evaluated, and later calls reuse the cached compilation.",
+      "evidence": [{ "source": "compile", "quote": "However, MLX will cache compiled functions, so calling a compiled function multiple times will not initiate a new compilation." }]
+    },
+    {
+      "from": "eval", "to": "cpu_kernels", "kind": "dispatches_to", "when": { "device": ["cpu"] },
+      "label": "calls eval_cpu() of",
+      "explanation": "Operations on a CPU stream run their primitive's C++ CPU implementation.",
+      "evidence": [{ "source": "extensions", "quote": "When we evaluate the output array, MLX schedules the execution of the computation graph, and calls Axpby::eval_cpu() or Axpby::eval_gpu() depending on the stream/device specified by the user." }]
+    },
+    {
+      "from": "eval", "to": "metal_kernels", "kind": "dispatches_to", "when": { "device": ["gpu"] },
+      "label": "calls eval_gpu() of",
+      "explanation": "Operations on a GPU stream run their primitive's Metal kernel. In compiled code, operations that were not fused still run here.",
+      "evidence": [
+        { "source": "extensions", "quote": "When we evaluate the output array, MLX schedules the execution of the computation graph, and calls Axpby::eval_cpu() or Axpby::eval_gpu() depending on the stream/device specified by the user." },
+        { "source": "extensions", "quote": "Apple silicon devices address their GPUs using the Metal shading language, and GPU kernels in MLX are written using Metal." }
+      ]
+    },
+    {
+      "from": "compile", "to": "fused_cpu", "kind": "generates", "when": { "mode": ["compiled"], "device": ["cpu"] },
+      "label": "generates and builds",
+      "explanation": "For the CPU, the fused operations become C++ source that is compiled into a shared library and loaded.",
+      "evidence": [
+        { "source": "compile", "quote": "The first time you call a compiled function, MLX will build the compute graph, optimize it, and generate and compile code." },
+        { "source": "cpu_compiled", "quote": "Could not load C++ shared library" }
+      ]
+    },
+    {
+      "from": "compile", "to": "fused_metal", "kind": "generates", "when": { "mode": ["compiled"], "device": ["gpu"] },
+      "label": "generates",
+      "explanation": "For the GPU, the fused element-wise operations become one Metal kernel.",
+      "evidence": [
+        { "source": "compile", "quote": "all of the operations in the gelu are fusible into a single kernel with compile()" },
+        { "source": "metal_compiled", "quote": "Too many inputs/outputs fused in the Metal Compiled" }
+      ]
+    },
+    {
+      "from": "cpu_kernels", "to": "cpu", "kind": "executes_on", "when": { "device": ["cpu"] },
+      "label": "run on",
+      "explanation": "The CPU kernels read and write arrays in unified memory.",
+      "evidence": [{ "source": "unified", "quote": "Apple silicon has a unified memory architecture. The CPU and GPU have direct access to the same memory pool." }]
+    },
+    {
+      "from": "fused_cpu", "to": "cpu", "kind": "executes_on", "when": { "mode": ["compiled"], "device": ["cpu"] },
+      "label": "runs on",
+      "explanation": "The compiled library's functions run on the CPU when the graph is evaluated.",
+      "evidence": [{ "source": "cpu_compiled", "quote": "Could not load C++ shared library" }]
+    },
+    {
+      "from": "metal_kernels", "to": "gpu", "kind": "executes_on", "when": { "device": ["gpu"] },
+      "label": "run on",
+      "explanation": "Metal kernels run on the GPU, reading the same memory the CPU uses.",
+      "evidence": [{ "source": "unified", "quote": "Apple silicon has a unified memory architecture. The CPU and GPU have direct access to the same memory pool." }]
+    },
+    {
+      "from": "fused_metal", "to": "gpu", "kind": "executes_on", "when": { "mode": ["compiled"], "device": ["gpu"] },
+      "label": "runs on",
+      "explanation": "The fused kernel runs on the GPU when the graph is evaluated.",
+      "evidence": [{ "source": "compile", "quote": "all of the operations in the gelu are fusible into a single kernel with compile()" }]
+    }
+  ]
+}

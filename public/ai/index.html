@@ -4,20 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>How AI Frameworks Run Your Code: PyTorch, JAX, llama.cpp</title>
-  <meta name="description" content="Interactive, cited execution paths for JAX, llama.cpp, PyTorch and vLLM: from your Python or C++ call through compilers and kernels to the hardware." />
+  <meta name="description" content="Interactive, cited execution paths for JAX, llama.cpp, MLX, PyTorch and vLLM: from your Python or C++ call through compilers and kernels to the hardware." />
   <link rel="canonical" href="https://www.languagelineage.org/ai" />
   <link rel="icon" href="/favicon.svg" />
   <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><script defer src="/fx.js"></script><script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script><link rel="alternate" type="application/rss+xml" title="Language Lineage" href="/rss.xml" /><link rel="stylesheet" href="/seo.css" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="How AI Frameworks Run Your Code: PyTorch, JAX, llama.cpp" />
-  <meta property="og:description" content="Interactive, cited execution paths for JAX, llama.cpp, PyTorch and vLLM: from your Python or C++ call through compilers and kernels to the hardware." />
+  <meta property="og:description" content="Interactive, cited execution paths for JAX, llama.cpp, MLX, PyTorch and vLLM: from your Python or C++ call through compilers and kernels to the hardware." />
   <meta property="og:url" content="https://www.languagelineage.org/ai" />
   <meta property="og:image" content="https://www.languagelineage.org/og/ai-index.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:type" content="image/png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"How AI frameworks run your code","itemListElement":[{"@type":"ListItem","position":1,"name":"What Actually Happens When You Run JAX Code?","url":"https://www.languagelineage.org/ai/how-jax-runs"},{"@type":"ListItem","position":2,"name":"How Does llama.cpp Run a Model on Your Hardware?","url":"https://www.languagelineage.org/ai/how-llama-cpp-runs"},{"@type":"ListItem","position":3,"name":"What Actually Happens When You Run a PyTorch Model?","url":"https://www.languagelineage.org/ai/how-pytorch-runs"},{"@type":"ListItem","position":4,"name":"What Actually Happens When vLLM Serves a Request?","url":"https://www.languagelineage.org/ai/how-vllm-runs"}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"How AI frameworks run your code","itemListElement":[{"@type":"ListItem","position":1,"name":"What Actually Happens When You Run JAX Code?","url":"https://www.languagelineage.org/ai/how-jax-runs"},{"@type":"ListItem","position":2,"name":"How Does llama.cpp Run a Model on Your Hardware?","url":"https://www.languagelineage.org/ai/how-llama-cpp-runs"},{"@type":"ListItem","position":3,"name":"What Actually Happens When You Run MLX on a Mac?","url":"https://www.languagelineage.org/ai/how-mlx-runs"},{"@type":"ListItem","position":4,"name":"What Actually Happens When You Run a PyTorch Model?","url":"https://www.languagelineage.org/ai/how-pytorch-runs"},{"@type":"ListItem","position":5,"name":"What Actually Happens When vLLM Serves a Request?","url":"https://www.languagelineage.org/ai/how-vllm-runs"}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"AI execution paths","item":"https://www.languagelineage.org/ai"}]}</script>
 </head>
 <body class="seo-page">
@@ -56,6 +56,12 @@
 <p class="ai-hub-meta">13 stages, 12 steps, 40 quoted citations from 6 sources. Checked 2026-11-11.</p>
 </article>
 <article class="ai-hub-card">
+<h2><a href="/ai/how-mlx-runs">What Actually Happens When You Run MLX on a Mac?</a></h2>
+<p>Trace MLX code on Apple silicon: lazy compute graph, eval(), Metal GPU kernels or C++ CPU kernels, and what mx.compile fuses, in unified memory, with sources.</p>
+<ul class="ai-hub-choices"><li><strong>Mode:</strong> Lazy (no compile), mx.compile</li><li><strong>Device:</strong> GPU (Metal), CPU</li></ul>
+<p class="ai-hub-meta">11 stages, 13 steps, 35 quoted citations from 8 sources. Checked 2026-11-11.</p>
+</article>
+<article class="ai-hub-card">
 <h2><a href="/ai/how-pytorch-runs">What Actually Happens When You Run a PyTorch Model?</a></h2>
 <p>Trace a PyTorch model from Python to the hardware: eager mode vs torch.compile, CPU vs GPU, through ATen, TorchDynamo, TorchInductor, Triton, LLVM IR and PTX, with sources.</p>
 <ul class="ai-hub-choices"><li><strong>Mode:</strong> Eager, torch.compile</li><li><strong>Device:</strong> CPU, NVIDIA GPU</li></ul>
@@ -83,6 +89,10 @@
 <tr><td><a href="/ai/how-llama-cpp-runs?backend=cpu">llama.cpp</a></td><td>CPU</td><td>6</td><td>5</td></tr>
 <tr><td><a href="/ai/how-llama-cpp-runs?backend=cuda">llama.cpp</a></td><td>CUDA (NVIDIA)</td><td>10</td><td>9</td></tr>
 <tr><td><a href="/ai/how-llama-cpp-runs?backend=metal">llama.cpp</a></td><td>Metal (Apple)</td><td>9</td><td>8</td></tr>
+<tr><td><a href="/ai/how-mlx-runs?mode=lazy&amp;device=gpu">MLX</a></td><td>Lazy (no compile) · GPU (Metal)</td><td>6</td><td>5</td></tr>
+<tr><td><a href="/ai/how-mlx-runs?mode=lazy&amp;device=cpu">MLX</a></td><td>Lazy (no compile) · CPU</td><td>6</td><td>5</td></tr>
+<tr><td><a href="/ai/how-mlx-runs?mode=compiled&amp;device=gpu">MLX</a></td><td>mx.compile · GPU (Metal)</td><td>8</td><td>8</td></tr>
+<tr><td><a href="/ai/how-mlx-runs?mode=compiled&amp;device=cpu">MLX</a></td><td>mx.compile · CPU</td><td>8</td><td>8</td></tr>
 <tr><td><a href="/ai/how-pytorch-runs?mode=eager&amp;device=cpu">PyTorch</a></td><td>Eager · CPU</td><td>5</td><td>4</td></tr>
 <tr><td><a href="/ai/how-pytorch-runs?mode=eager&amp;device=gpu">PyTorch</a></td><td>Eager · NVIDIA GPU</td><td>5</td><td>4</td></tr>
 <tr><td><a href="/ai/how-pytorch-runs?mode=compile&amp;device=cpu">PyTorch</a></td><td>torch.compile · CPU</td><td>8</td><td>8</td></tr>
@@ -95,27 +105,28 @@
   </table></div></div>
 
   <h2 id="shared-tools">Tools the paths share</h2>
-  <p>Stages that are also nodes in the Language Lineage atlas, so you can see what each tool is written in. CUDA appears in every explainer.</p>
+  <p>Stages that are also nodes in the Language Lineage atlas, so you can see what each tool is written in.</p>
   <div class="table-wrap"><div class="table-wrap"><table id="ai-shared-tools">
-    <thead><tr><th>Tool</th><th><a href="/ai/how-jax-runs">JAX</a></th><th><a href="/ai/how-llama-cpp-runs">llama.cpp</a></th><th><a href="/ai/how-pytorch-runs">PyTorch</a></th><th><a href="/ai/how-vllm-runs">vLLM</a></th></tr></thead>
+    <thead><tr><th>Tool</th><th><a href="/ai/how-jax-runs">JAX</a></th><th><a href="/ai/how-llama-cpp-runs">llama.cpp</a></th><th><a href="/ai/how-mlx-runs">MLX</a></th><th><a href="/ai/how-pytorch-runs">PyTorch</a></th><th><a href="/ai/how-vllm-runs">vLLM</a></th></tr></thead>
     <tbody>
-<tr><td><a href="/tools/cuda">CUDA</a></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td></tr>
-<tr><td><a href="/tools/triton">Triton</a></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td></tr>
-<tr><td><a href="/tools/llvm">LLVM</a></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
-<tr><td><a href="/languages/python">Python</a></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
-<tr><td><a href="/tools/pytorch">PyTorch</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td></tr>
-<tr><td><a href="/languages/cxx">C++</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
-<tr><td><a href="/tools/ggml">ggml</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
-<tr><td><a href="/tools/jax">JAX</a></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
-<tr><td><a href="/tools/llama-cpp">llama.cpp</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
-<tr><td><a href="/languages/machine-code">Machine Code</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
-<tr><td><a href="/tools/vllm">vLLM</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td></tr>
-<tr><td><a href="/tools/xla">XLA</a></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
+<tr><td><a href="/tools/cuda">CUDA</a></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td></tr>
+<tr><td><a href="/languages/python">Python</a></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
+<tr><td><a href="/tools/triton">Triton</a></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td></tr>
+<tr><td><a href="/languages/cxx">C++</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
+<tr><td><a href="/tools/llvm">LLVM</a></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
+<tr><td><a href="/tools/pytorch">PyTorch</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="yes">&#10003;</span></td></tr>
+<tr><td><a href="/tools/ggml">ggml</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
+<tr><td><a href="/tools/jax">JAX</a></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
+<tr><td><a href="/tools/llama-cpp">llama.cpp</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
+<tr><td><a href="/languages/machine-code">Machine Code</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
+<tr><td><a href="/tools/mlx">MLX</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
+<tr><td><a href="/tools/vllm">vLLM</a></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="yes">&#10003;</span></td></tr>
+<tr><td><a href="/tools/xla">XLA</a></td><td><span aria-label="yes">&#10003;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td><td><span aria-label="no">&ndash;</span></td></tr>
     </tbody>
   </table></div></div>
 
   <h2>How these pages are built</h2>
-  <p>Each explainer is one versioned JSON file (<a href="/dataset/ai/how-jax-runs.json">how-jax-runs.json</a>, <a href="/dataset/ai/how-llama-cpp-runs.json">how-llama-cpp-runs.json</a>, <a href="/dataset/ai/how-pytorch-runs.json">how-pytorch-runs.json</a>, <a href="/dataset/ai/how-vllm-runs.json">how-vllm-runs.json</a>) under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. They are kept apart from the language lineage graph on purpose: "lowers to" and "dispatches to" describe how code executes, not what a tool is written in. Closed systems are not guessed at; where the public documentation stops, the diagram stops too. Found a mistake? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
+  <p>Each explainer is one versioned JSON file (<a href="/dataset/ai/how-jax-runs.json">how-jax-runs.json</a>, <a href="/dataset/ai/how-llama-cpp-runs.json">how-llama-cpp-runs.json</a>, <a href="/dataset/ai/how-mlx-runs.json">how-mlx-runs.json</a>, <a href="/dataset/ai/how-pytorch-runs.json">how-pytorch-runs.json</a>, <a href="/dataset/ai/how-vllm-runs.json">how-vllm-runs.json</a>) under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. They are kept apart from the language lineage graph on purpose: "lowers to" and "dispatches to" describe how code executes, not what a tool is written in. Closed systems are not guessed at; where the public documentation stops, the diagram stops too. Found a mistake? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
 
   <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>
 </main>
