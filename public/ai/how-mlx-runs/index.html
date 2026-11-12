@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How MLX Runs on Apple Silicon: Lazy Graphs, Metal | Language Lineage</title>
+  <meta name="description" content="Trace MLX code on Apple silicon: lazy compute graph, eval(), Metal GPU kernels or C++ CPU kernels, and what mx.compile fuses, in unified memory, with sources." />
+  <link rel="canonical" href="https://www.languagelineage.org/ai/how-mlx-runs" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><script defer src="/fx.js"></script><script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script><link rel="alternate" type="application/rss+xml" title="Language Lineage" href="/rss.xml" /><link rel="stylesheet" href="/seo.css" />
+  <script defer src="/ai-path.js"></script>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="How MLX Runs on Apple Silicon: Lazy Graphs, Metal | Language Lineage" />
+  <meta property="og:description" content="Trace MLX code on Apple silicon: lazy compute graph, eval(), Metal GPU kernels or C++ CPU kernels, and what mx.compile fuses, in unified memory, with sources." />
+  <meta property="og:url" content="https://www.languagelineage.org/ai/how-mlx-runs" />
+  <meta property="og:image" content="https://www.languagelineage.org/og/ai-how-mlx-runs.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What Actually Happens When You Run MLX on a Mac?","description":"Trace MLX code on Apple silicon: lazy compute graph, eval(), Metal GPU kernels or C++ CPU kernels, and what mx.compile fuses, in unified memory, with sources.","url":"https://www.languagelineage.org/ai/how-mlx-runs","datePublished":"2026-11-11","dateModified":"2026-11-12","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"citation":["https://github.com/ml-explore/mlx/blob/main/README.md","https://ml-explore.github.io/mlx/build/html/usage/lazy_evaluation.html","https://ml-explore.github.io/mlx/build/html/usage/unified_memory.html","https://ml-explore.github.io/mlx/build/html/usage/compile.html","https://ml-explore.github.io/mlx/build/html/dev/extensions.html","https://ml-explore.github.io/mlx/build/html/install.html","https://github.com/ml-explore/mlx/blob/main/mlx/backend/metal/compiled.cpp","https://github.com/ml-explore/mlx/blob/main/mlx/backend/cpu/compiled.cpp"],"inLanguage":"en"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"AI execution paths","item":"https://www.languagelineage.org/ai"},{"@type":"ListItem","position":3,"name":"What Actually Happens When You Run MLX on a Mac?","item":"https://www.languagelineage.org/ai/how-mlx-runs"}]}</script>
+</head>
+<body class="seo-page">
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<nav class="seo-nav">
+  <a href="/" class="nav-brand"><img class="nav-logo-mark" src="/logo-mark.svg" width="22" height="22" alt="" aria-hidden="true">Language Lineage</a>
+  <a href="/relationships">Relationships</a>
+  <a href="/languages">Languages</a>
+  <a href="/tools">Tools</a>
+  <a href="/guides">Guides</a>
+  <a href="/timeline">Timeline</a>
+  <a href="/dataset">Dataset</a>
+  <a href="/how-it-works">How It Works</a>
+  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
+</nav>
+<main class="seo-main" id="main-content">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; <a href="/ai">AI execution paths</a> &rsaquo; What Actually Happens When You Run MLX on a Mac
+  </nav>
+
+  <h1>What Actually Happens When You Run MLX on a Mac?</h1>
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#the-selected-path-step-by-step">The selected path, step by step</a></li>
+    <li><a href="#lazy-by-default">Lazy by default</a></li>
+    <li><a href="#one-memory-two-devices">One memory, two devices</a></li>
+    <li><a href="#every-stage">Every stage</a></li>
+    <li><a href="#every-step">Every step</a></li>
+    <li><a href="#what-this-does-not-show">What this does not show</a></li>
+    <li><a href="#how-this-page-is-checked">How this page is checked</a></li>
+  </ol>
+</nav>
+
+  <div class="answer-box">MLX operations do not compute anything when you call them: they record a <strong>lazy compute graph</strong>. Work happens when the graph is <strong>evaluated</strong>, either by calling <strong>eval()</strong> or implicitly, for example by printing an array. Evaluation runs each operation's primitive on the device you chose: <strong>Metal</strong> kernels on the Apple silicon GPU, or C++ kernels on the CPU. Arrays live in <strong>unified memory</strong>, so both devices use the same data without copies. With <strong>mx.compile</strong>, MLX traces the function once, merges and fuses operations, and generates code: a Metal kernel for the GPU, or a C++ shared library for the CPU.</div>
+
+  <section class="ai-explorer" id="explorer" aria-label="Execution path explorer">
+    <form class="ai-controls" onsubmit="return false">
+      <fieldset><legend>Mode</legend>
+        <label><input type="radio" name="mode" value="lazy" data-phrase="plain lazy evaluation" checked> Lazy (no compile)</label>
+        <label><input type="radio" name="mode" value="compiled" data-phrase="mx.compile"> mx.compile</label>
+      </fieldset>
+      <fieldset><legend>Device</legend>
+        <label><input type="radio" name="device" value="gpu" data-phrase="the Apple silicon GPU" checked> GPU (Metal)</label>
+        <label><input type="radio" name="device" value="cpu" data-phrase="the CPU"> CPU</label>
+      </fieldset>
+      <button type="button" class="ai-copy" hidden>Copy link to this path</button>
+    </form>
+    <p class="ai-status" aria-live="polite" data-template="Showing {mode} on {device}">Showing plain lazy evaluation on the Apple silicon GPU: 6 stages, 5 steps.</p>
+    <div class="ai-layout">
+      <div class="ai-diagram-wrap"><svg class="ai-path-svg" viewBox="0 0 826 546" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Execution path diagram: select a stage or step for details">
+<defs><marker id="ai-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9a9a9a"/></marker></defs>
+<path id="step-python_code--mlx" class="ai-step on" d="M413,62 C413,78 413,78 413,88" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Your MLX code calls MLX"><title>Your MLX code calls MLX</title></path>
+<path id="step-mlx--graph" class="ai-step on" d="M413,140 C413,156 413,156 413,166" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="MLX records Lazy compute graph"><title>MLX records Lazy compute graph</title></path>
+<path id="step-graph--eval" class="ai-step on" d="M413,218 C413,273 413,273 413,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Lazy compute graph runs when you call Evaluation (eval)"><title>Lazy compute graph runs when you call Evaluation (eval)</title></path>
+<path id="step-graph--compile" class="ai-step" d="M413,218 C413,234 722,234 722,244" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Lazy compute graph traced and optimized by mx.compile"><title>Lazy compute graph traced and optimized by mx.compile</title></path>
+<path id="step-compile--eval" class="ai-step" d="M722,296 C722,312 413,312 413,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="mx.compile smaller graph runs at Evaluation (eval)"><title>mx.compile smaller graph runs at Evaluation (eval)</title></path>
+<path id="step-eval--cpu_kernels" class="ai-step" d="M413,374 C413,390 104,390 104,400" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Evaluation (eval) calls eval_cpu() of C++ CPU kernels"><title>Evaluation (eval) calls eval_cpu() of C++ CPU kernels</title></path>
+<path id="step-eval--metal_kernels" class="ai-step on" d="M413,374 C413,390 516,390 516,400" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Evaluation (eval) calls eval_gpu() of Metal kernels"><title>Evaluation (eval) calls eval_gpu() of Metal kernels</title></path>
+<path id="step-compile--fused_cpu" class="ai-step" d="M722,296 C722,351 310,351 310,400" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="mx.compile generates and builds Fused C++ library"><title>mx.compile generates and builds Fused C++ library</title></path>
+<path id="step-compile--fused_metal" class="ai-step" d="M722,296 C722,351 722,351 722,400" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="mx.compile generates Fused Metal kernel"><title>mx.compile generates Fused Metal kernel</title></path>
+<path id="step-cpu_kernels--cpu" class="ai-step" d="M104,452 C104,468 207,468 207,478" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="C++ CPU kernels run on Apple silicon CPU"><title>C++ CPU kernels run on Apple silicon CPU</title></path>
+<path id="step-fused_cpu--cpu" class="ai-step" d="M310,452 C310,468 207,468 207,478" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Fused C++ library runs on Apple silicon CPU"><title>Fused C++ library runs on Apple silicon CPU</title></path>
+<path id="step-metal_kernels--gpu" class="ai-step on" d="M516,452 C516,468 619,468 619,478" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Metal kernels run on Apple silicon GPU"><title>Metal kernels run on Apple silicon GPU</title></path>
+<path id="step-fused_metal--gpu" class="ai-step" d="M722,452 C722,468 619,468 619,478" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Fused Metal kernel runs on Apple silicon GPU"><title>Fused Metal kernel runs on Apple silicon GPU</title></path>
+<g id="stage-python_code" class="ai-stage on" tabindex="0" role="button" aria-label="Your MLX code: Your program">
+  <rect x="325" y="16" width="176" height="46" rx="7" style="--kc:#60a5fa"/>
+  <rect x="325" y="16" width="4" height="46" rx="2" fill="#60a5fa"/>
+  <text x="339" y="35" class="ai-name">Your MLX code</text>
+  <text x="339" y="51" class="ai-kind">programming language</text>
+</g>
+<g id="stage-mlx" class="ai-stage on" tabindex="0" role="button" aria-label="MLX: Framework core">
+  <rect x="325" y="94" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="325" y="94" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="339" y="113" class="ai-name">MLX</text>
+  <text x="339" y="129" class="ai-kind">framework component</text>
+</g>
+<g id="stage-graph" class="ai-stage on" tabindex="0" role="button" aria-label="Lazy compute graph: Intermediate representation">
+  <rect x="325" y="172" width="176" height="46" rx="7" style="--kc:#22d3ee"/>
+  <rect x="325" y="172" width="4" height="46" rx="2" fill="#22d3ee"/>
+  <text x="339" y="191" class="ai-name">Lazy compute graph</text>
+  <text x="339" y="207" class="ai-kind">intermediate representation</text>
+</g>
+<g id="stage-compile" class="ai-stage" tabindex="0" role="button" aria-label="mx.compile: Compiler">
+  <rect x="634" y="250" width="176" height="46" rx="7" style="--kc:#a78bfa"/>
+  <rect x="634" y="250" width="4" height="46" rx="2" fill="#a78bfa"/>
+  <text x="648" y="269" class="ai-name">mx.compile</text>
+  <text x="648" y="285" class="ai-kind">compiler</text>
+</g>
+<g id="stage-eval" class="ai-stage on" tabindex="0" role="button" aria-label="Evaluation (eval): Runtime">
+  <rect x="325" y="328" width="176" height="46" rx="7" style="--kc:#93c5fd"/>
+  <rect x="325" y="328" width="4" height="46" rx="2" fill="#93c5fd"/>
+  <text x="339" y="347" class="ai-name">Evaluation (eval)</text>
+  <text x="339" y="363" class="ai-kind">runtime</text>
+</g>
+<g id="stage-cpu_kernels" class="ai-stage" tabindex="0" role="button" aria-label="C++ CPU kernels: Kernel">
+  <rect x="16" y="406" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="16" y="406" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="30" y="425" class="ai-name">C++ CPU kernels</text>
+  <text x="30" y="441" class="ai-kind">kernel</text>
+</g>
+<g id="stage-fused_cpu" class="ai-stage" tabindex="0" role="button" aria-label="Fused C++ library: Hardware">
+  <rect x="222" y="406" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="222" y="406" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="236" y="425" class="ai-name">Fused C++ library</text>
+  <text x="236" y="441" class="ai-kind">machine code</text>
+</g>
+<g id="stage-metal_kernels" class="ai-stage on" tabindex="0" role="button" aria-label="Metal kernels: Kernel">
+  <rect x="428" y="406" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="428" y="406" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="442" y="425" class="ai-name">Metal kernels</text>
+  <text x="442" y="441" class="ai-kind">kernel</text>
+</g>
+<g id="stage-fused_metal" class="ai-stage" tabindex="0" role="button" aria-label="Fused Metal kernel: Kernel">
+  <rect x="634" y="406" width="176" height="46" rx="7" style="--kc:#f472b6"/>
+  <rect x="634" y="406" width="4" height="46" rx="2" fill="#f472b6"/>
+  <text x="648" y="425" class="ai-name">Fused Metal kernel</text>
+  <text x="648" y="441" class="ai-kind">kernel</text>
+</g>
+<g id="stage-cpu" class="ai-stage" tabindex="0" role="button" aria-label="Apple silicon CPU: Hardware">
+  <rect x="119" y="484" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="119" y="484" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="133" y="503" class="ai-name">Apple silicon CPU</text>
+  <text x="133" y="519" class="ai-kind">hardware</text>
+</g>
+<g id="stage-gpu" class="ai-stage on" tabindex="0" role="button" aria-label="Apple silicon GPU: Hardware">
+  <rect x="531" y="484" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="531" y="484" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="545" y="503" class="ai-name">Apple silicon GPU</text>
+  <text x="545" y="519" class="ai-kind">hardware</text>
+</g>
+</svg></div>
+      <aside class="ai-detail" aria-live="polite"><p class="ai-detail-hint">Select a stage or an arrow to see what it does and the source behind it.</p></aside>
+    </div>
+    <ul class="ai-legend" aria-label="Legend"><li><span class="ai-swatch" style="--kc:#60a5fa"></span>Your program</li><li><span class="ai-swatch" style="--kc:#93c5fd"></span>Runtime</li><li><span class="ai-swatch" style="--kc:#e3a008"></span>Framework core</li><li><span class="ai-swatch" style="--kc:#f472b6"></span>Kernel</li><li><span class="ai-swatch" style="--kc:#a78bfa"></span>Compiler</li><li><span class="ai-swatch" style="--kc:#22d3ee"></span>Intermediate representation</li><li><span class="ai-swatch" style="--kc:#4ade80"></span>Hardware</li></ul>
+  </section>
+
+  <h2 id="the-selected-path-step-by-step">The selected path, step by step</h2>
+  <ol class="ai-path-list">
+<li>Your MLX code <em>calls</em> MLX: Your code calls MLX operations such as mx.matmul, or runs an mlx.nn model.</li>
+<li>MLX <em>records</em> Lazy compute graph: Each operation adds a node to the graph and returns an array that has no data yet.</li>
+<li>Lazy compute graph <em>runs when you call</em> Evaluation (eval): The graph runs at mx.eval, or implicitly when you print an array, convert it to NumPy, or call .item().</li>
+<li>Evaluation (eval) <em>calls eval_gpu() of</em> Metal kernels: Operations on a GPU stream run their primitive's Metal kernel. In compiled code, operations that were not fused still run here.</li>
+<li>Metal kernels <em>run on</em> Apple silicon GPU: Metal kernels run on the GPU, reading the same memory the CPU uses.</li>
+  </ol>
+
+  <h2 id="lazy-by-default">Lazy by default</h2>
+  <p>Calling <strong>mx.add</strong> or a layer of an <strong>mlx.nn</strong> model only adds a node to a graph. The graph runs when something needs the values: an explicit <strong>mx.eval</strong>, printing an array, converting it to NumPy, or calling <strong>.item()</strong>. A training loop typically evaluates once per step, so each step's forward pass, gradients and optimizer update run as one graph.</p>
+  <p>That is the main difference from <a href="/ai/how-pytorch-runs">PyTorch in eager mode</a> and from <a href="/ai/how-jax-runs">JAX without jit</a>, where each operation is dispatched as Python reaches it. <strong>mx.compile</strong> plays the role that torch.compile and jax.jit play there.</p>
+
+  <h2 id="one-memory-two-devices">One memory, two devices</h2>
+  <p>On Apple silicon the CPU and GPU share one memory pool. MLX arrays do not belong to a device; you pick the device per operation (the <strong>stream</strong> argument), and MLX inserts the dependencies when an operation on one device needs the result of another. That is why the device choice above changes only the kernels, not where the data lives.</p>
+  <p>For running LLMs locally on a Mac with hand-written Metal kernels instead, compare <a href="/ai/how-llama-cpp-runs">how llama.cpp runs a model</a>.</p>
+
+  <h2 id="every-stage">Every stage</h2>
+  <div class="ai-stage-list">
+<article class="ai-stage-detail" id="detail-stage-python_code" data-stage="python_code">
+<h3>Your MLX code</h3>
+<p class="ai-kind-tag" style="--kc:#60a5fa">programming language</p>
+<p>Python code using mlx.core arrays, and often mlx.nn models and mlx.optimizers.</p>
+<p class="ai-lineage">In the atlas: <a href="/languages/python">Python</a></p>
+<ul class="ai-sources"><li><blockquote>MLX has a Python API that closely follows NumPy.</blockquote><a href="https://github.com/ml-explore/mlx/blob/main/README.md" rel="noopener noreferrer" target="_blank">MLX README (ml-explore/mlx)</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-mlx" data-stage="mlx">
+<h3>MLX</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>Apple's array framework. Its operations are thin front ends that add nodes to a graph.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/mlx">MLX</a></p>
+<ul class="ai-sources"><li><blockquote>MLX is an array framework for machine learning on Apple silicon, brought to you by Apple machine learning research.</blockquote><a href="https://github.com/ml-explore/mlx/blob/main/README.md" rel="noopener noreferrer" target="_blank">MLX README (ml-explore/mlx)</a> <span class="src-type">Source repository</span></li><li><blockquote>Operations in MLX build the computation graph. Primitives provide the rules for evaluating and transforming the graph.</blockquote><a href="https://ml-explore.github.io/mlx/build/html/dev/extensions.html" rel="noopener noreferrer" target="_blank">Custom Extensions in MLX (MLX documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-graph" data-stage="graph">
+<h3>Lazy compute graph</h3>
+<p class="ai-kind-tag" style="--kc:#22d3ee">intermediate representation</p>
+<p>The recorded operations, each a primitive with its inputs. Nothing has been computed yet.</p>
+
+<ul class="ai-sources"><li><blockquote>When you perform operations in MLX, no computation actually happens. Instead a compute graph is recorded.</blockquote><a href="https://ml-explore.github.io/mlx/build/html/usage/lazy_evaluation.html" rel="noopener noreferrer" target="_blank">Lazy Evaluation (MLX documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-compile" data-stage="compile">
+<h3>mx.compile</h3>
+<p class="ai-kind-tag" style="--kc:#a78bfa">compiler</p>
+<p>MLX's compiler transformation. On the first call it traces the function with placeholder inputs, shrinks the graph and fuses operations; later calls with the same shapes and types reuse the result.</p>
+
+<ul class="ai-sources"><li><blockquote>Function compilation results in smaller graphs by merging common work and fusing certain operations.</blockquote><a href="https://ml-explore.github.io/mlx/build/html/usage/compile.html" rel="noopener noreferrer" target="_blank">Compilation (MLX documentation)</a> <span class="src-type">Project docs</span></li><li><blockquote>The first time you call a compiled function, MLX will build the compute graph, optimize it, and generate and compile code.</blockquote><a href="https://ml-explore.github.io/mlx/build/html/usage/compile.html" rel="noopener noreferrer" target="_blank">Compilation (MLX documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-eval" data-stage="eval">
+<h3>Evaluation (eval)</h3>
+<p class="ai-kind-tag" style="--kc:#93c5fd">runtime</p>
+<p>When values are needed, MLX schedules the graph and runs each primitive on the device of its stream.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/mlx">MLX</a></p>
+<ul class="ai-sources"><li><blockquote>The actual computation only happens if an eval() is performed.</blockquote><a href="https://ml-explore.github.io/mlx/build/html/usage/lazy_evaluation.html" rel="noopener noreferrer" target="_blank">Lazy Evaluation (MLX documentation)</a> <span class="src-type">Project docs</span></li><li><blockquote>When we evaluate the output array, MLX schedules the execution of the computation graph, and calls Axpby::eval_cpu() or Axpby::eval_gpu() depending on the stream/device specified by the user.</blockquote><a href="https://ml-explore.github.io/mlx/build/html/dev/extensions.html" rel="noopener noreferrer" target="_blank">Custom Extensions in MLX (MLX documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-cpu_kernels" data-stage="cpu_kernels">
+<h3>C++ CPU kernels</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel</p>
+<p>Each primitive's CPU implementation (eval_cpu), written in C++.</p>
+<p class="ai-lineage">In the atlas: <a href="/languages/cxx">C++</a></p>
+<ul class="ai-sources"><li><blockquote>A Primitive has methods to run on the CPU or GPU and for function transformations such as vjp and jvp.</blockquote><a href="https://ml-explore.github.io/mlx/build/html/dev/extensions.html" rel="noopener noreferrer" target="_blank">Custom Extensions in MLX (MLX documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-fused_cpu" data-stage="fused_cpu">
+<h3>Fused C++ library</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">machine code</p>
+<p>For the CPU, mx.compile generates C++ source for the fused operations, builds it into a shared library and loads it.</p>
+<p class="ai-lineage">In the atlas: <a href="/languages/cxx">C++</a></p>
+<ul class="ai-sources"><li><blockquote>Could not load C++ shared library</blockquote><a href="https://github.com/ml-explore/mlx/blob/main/mlx/backend/cpu/compiled.cpp" rel="noopener noreferrer" target="_blank">mlx/backend/cpu/compiled.cpp (ml-explore/mlx)</a> <span class="src-type">Source repository</span></li><li><blockquote>The first time you call a compiled function, MLX will build the compute graph, optimize it, and generate and compile code.</blockquote><a href="https://ml-explore.github.io/mlx/build/html/usage/compile.html" rel="noopener noreferrer" target="_blank">Compilation (MLX documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-metal_kernels" data-stage="metal_kernels">
+<h3>Metal kernels</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel</p>
+<p>Each primitive's GPU implementation (eval_gpu), a kernel written in the Metal shading language and shipped prebuilt in MLX's Metal library.</p>
+
+<ul class="ai-sources"><li><blockquote>Apple silicon devices address their GPUs using the Metal shading language, and GPU kernels in MLX are written using Metal.</blockquote><a href="https://ml-explore.github.io/mlx/build/html/dev/extensions.html" rel="noopener noreferrer" target="_blank">Custom Extensions in MLX (MLX documentation)</a> <span class="src-type">Project docs</span></li><li><blockquote>the MLX Metal library which contains pre-built GPU kernels</blockquote><a href="https://ml-explore.github.io/mlx/build/html/install.html" rel="noopener noreferrer" target="_blank">Build and Install (MLX documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-fused_metal" data-stage="fused_metal">
+<h3>Fused Metal kernel</h3>
+<p class="ai-kind-tag" style="--kc:#f472b6">kernel</p>
+<p>For the GPU, mx.compile writes Metal source for the fused operations and compiles it into one kernel.</p>
+
+<ul class="ai-sources"><li><blockquote>Too many inputs/outputs fused in the Metal Compiled</blockquote><a href="https://github.com/ml-explore/mlx/blob/main/mlx/backend/metal/compiled.cpp" rel="noopener noreferrer" target="_blank">mlx/backend/metal/compiled.cpp (ml-explore/mlx)</a> <span class="src-type">Source repository</span></li><li><blockquote>all of the operations in the gelu are fusible into a single kernel with compile()</blockquote><a href="https://ml-explore.github.io/mlx/build/html/usage/compile.html" rel="noopener noreferrer" target="_blank">Compilation (MLX documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-cpu" data-stage="cpu">
+<h3>Apple silicon CPU</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">hardware</p>
+<p>The CPU cores, sharing one memory pool with the GPU.</p>
+
+<ul class="ai-sources"><li><blockquote>Apple silicon has a unified memory architecture. The CPU and GPU have direct access to the same memory pool.</blockquote><a href="https://ml-explore.github.io/mlx/build/html/usage/unified_memory.html" rel="noopener noreferrer" target="_blank">Unified Memory (MLX documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-gpu" data-stage="gpu">
+<h3>Apple silicon GPU</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">hardware</p>
+<p>The integrated GPU, sharing one memory pool with the CPU, so arrays need no copies between devices.</p>
+
+<ul class="ai-sources"><li><blockquote>Apple silicon has a unified memory architecture. The CPU and GPU have direct access to the same memory pool.</blockquote><a href="https://ml-explore.github.io/mlx/build/html/usage/unified_memory.html" rel="noopener noreferrer" target="_blank">Unified Memory (MLX documentation)</a> <span class="src-type">Project docs</span></li></ul>
+</article>
+  </div>
+
+  <h2 id="every-step">Every step</h2>
+  <div class="table-wrap"><table class="ai-steps">
+    <thead><tr><th>From</th><th>Step</th><th>To</th><th>When</th><th>What happens</th><th>Source</th></tr></thead>
+    <tbody>
+<tr id="detail-step-python_code--mlx" data-step="python_code--mlx" data-from="python_code" data-to="mlx" data-when="{}" class="on">
+<td>Your MLX code</td><td>calls</td><td>MLX</td><td>any mode · any device</td><td>Your code calls MLX operations such as mx.matmul, or runs an mlx.nn model.</td><td><a href="https://github.com/ml-explore/mlx/blob/main/README.md" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-mlx--graph" data-step="mlx--graph" data-from="mlx" data-to="graph" data-when="{}" class="on">
+<td>MLX</td><td>records</td><td>Lazy compute graph</td><td>any mode · any device</td><td>Each operation adds a node to the graph and returns an array that has no data yet.</td><td><a href="https://ml-explore.github.io/mlx/build/html/usage/lazy_evaluation.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-graph--eval" data-step="graph--eval" data-from="graph" data-to="eval" data-when="{&quot;mode&quot;:[&quot;lazy&quot;]}" class="on">
+<td>Lazy compute graph</td><td>runs when you call</td><td>Evaluation (eval)</td><td>Lazy (no compile) · any device</td><td>The graph runs at mx.eval, or implicitly when you print an array, convert it to NumPy, or call .item().</td><td><a href="https://ml-explore.github.io/mlx/build/html/usage/lazy_evaluation.html" rel="noopener noreferrer" target="_blank">Project docs</a><br><a href="https://ml-explore.github.io/mlx/build/html/usage/lazy_evaluation.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-graph--compile" data-step="graph--compile" data-from="graph" data-to="compile" data-when="{&quot;mode&quot;:[&quot;compiled&quot;]}">
+<td>Lazy compute graph</td><td>traced and optimized by</td><td>mx.compile</td><td>mx.compile · any device</td><td>On the first call, the compiled function is traced with placeholder inputs and its graph is simplified and fused. Calls with new shapes, types or numbers of inputs compile again.</td><td><a href="https://ml-explore.github.io/mlx/build/html/usage/compile.html" rel="noopener noreferrer" target="_blank">Project docs</a><br><a href="https://ml-explore.github.io/mlx/build/html/usage/compile.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-compile--eval" data-step="compile--eval" data-from="compile" data-to="eval" data-when="{&quot;mode&quot;:[&quot;compiled&quot;]}">
+<td>mx.compile</td><td>smaller graph runs at</td><td>Evaluation (eval)</td><td>mx.compile · any device</td><td>The compiled graph is still lazy: it runs when it is evaluated, and later calls reuse the cached compilation.</td><td><a href="https://ml-explore.github.io/mlx/build/html/usage/compile.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-eval--cpu_kernels" data-step="eval--cpu_kernels" data-from="eval" data-to="cpu_kernels" data-when="{&quot;device&quot;:[&quot;cpu&quot;]}">
+<td>Evaluation (eval)</td><td>calls eval_cpu() of</td><td>C++ CPU kernels</td><td>any mode · CPU</td><td>Operations on a CPU stream run their primitive's C++ CPU implementation.</td><td><a href="https://ml-explore.github.io/mlx/build/html/dev/extensions.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-eval--metal_kernels" data-step="eval--metal_kernels" data-from="eval" data-to="metal_kernels" data-when="{&quot;device&quot;:[&quot;gpu&quot;]}" class="on">
+<td>Evaluation (eval)</td><td>calls eval_gpu() of</td><td>Metal kernels</td><td>any mode · GPU (Metal)</td><td>Operations on a GPU stream run their primitive's Metal kernel. In compiled code, operations that were not fused still run here.</td><td><a href="https://ml-explore.github.io/mlx/build/html/dev/extensions.html" rel="noopener noreferrer" target="_blank">Project docs</a><br><a href="https://ml-explore.github.io/mlx/build/html/dev/extensions.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-compile--fused_cpu" data-step="compile--fused_cpu" data-from="compile" data-to="fused_cpu" data-when="{&quot;mode&quot;:[&quot;compiled&quot;],&quot;device&quot;:[&quot;cpu&quot;]}">
+<td>mx.compile</td><td>generates and builds</td><td>Fused C++ library</td><td>mx.compile · CPU</td><td>For the CPU, the fused operations become C++ source that is compiled into a shared library and loaded.</td><td><a href="https://ml-explore.github.io/mlx/build/html/usage/compile.html" rel="noopener noreferrer" target="_blank">Project docs</a><br><a href="https://github.com/ml-explore/mlx/blob/main/mlx/backend/cpu/compiled.cpp" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-compile--fused_metal" data-step="compile--fused_metal" data-from="compile" data-to="fused_metal" data-when="{&quot;mode&quot;:[&quot;compiled&quot;],&quot;device&quot;:[&quot;gpu&quot;]}">
+<td>mx.compile</td><td>generates</td><td>Fused Metal kernel</td><td>mx.compile · GPU (Metal)</td><td>For the GPU, the fused element-wise operations become one Metal kernel.</td><td><a href="https://ml-explore.github.io/mlx/build/html/usage/compile.html" rel="noopener noreferrer" target="_blank">Project docs</a><br><a href="https://github.com/ml-explore/mlx/blob/main/mlx/backend/metal/compiled.cpp" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-cpu_kernels--cpu" data-step="cpu_kernels--cpu" data-from="cpu_kernels" data-to="cpu" data-when="{&quot;device&quot;:[&quot;cpu&quot;]}">
+<td>C++ CPU kernels</td><td>run on</td><td>Apple silicon CPU</td><td>any mode · CPU</td><td>The CPU kernels read and write arrays in unified memory.</td><td><a href="https://ml-explore.github.io/mlx/build/html/usage/unified_memory.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-fused_cpu--cpu" data-step="fused_cpu--cpu" data-from="fused_cpu" data-to="cpu" data-when="{&quot;mode&quot;:[&quot;compiled&quot;],&quot;device&quot;:[&quot;cpu&quot;]}">
+<td>Fused C++ library</td><td>runs on</td><td>Apple silicon CPU</td><td>mx.compile · CPU</td><td>The compiled library's functions run on the CPU when the graph is evaluated.</td><td><a href="https://github.com/ml-explore/mlx/blob/main/mlx/backend/cpu/compiled.cpp" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-metal_kernels--gpu" data-step="metal_kernels--gpu" data-from="metal_kernels" data-to="gpu" data-when="{&quot;device&quot;:[&quot;gpu&quot;]}" class="on">
+<td>Metal kernels</td><td>run on</td><td>Apple silicon GPU</td><td>any mode · GPU (Metal)</td><td>Metal kernels run on the GPU, reading the same memory the CPU uses.</td><td><a href="https://ml-explore.github.io/mlx/build/html/usage/unified_memory.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+<tr id="detail-step-fused_metal--gpu" data-step="fused_metal--gpu" data-from="fused_metal" data-to="gpu" data-when="{&quot;mode&quot;:[&quot;compiled&quot;],&quot;device&quot;:[&quot;gpu&quot;]}">
+<td>Fused Metal kernel</td><td>runs on</td><td>Apple silicon GPU</td><td>mx.compile · GPU (Metal)</td><td>The fused kernel runs on the GPU when the graph is evaluated.</td><td><a href="https://ml-explore.github.io/mlx/build/html/usage/compile.html" rel="noopener noreferrer" target="_blank">Project docs</a></td>
+</tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="what-this-does-not-show">What this does not show</h2>
+  <p>Documented paths for MLX Python code on one Apple silicon Mac, run lazily or with mx.compile, on the GPU or the CPU. MLX's CUDA backend for Linux, distributed training, custom Metal kernels written with mx.fast.metal_kernel, and the C++, C and Swift APIs are out of scope.</p>
+
+  <h2 id="how-this-page-is-checked">How this page is checked</h2>
+  <p>Every stage and step above quotes the source that supports it. The quotes were checked against the MLX documentation (Lazy Evaluation, Unified Memory, Compilation, Custom Extensions, Build and Install), the MLX README, and the Metal and CPU compile sources in ml-explore/mlx on 2026-11-11. The data is a <a href="/dataset/ai/how-mlx-runs.json">versioned JSON file</a> under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. Found something wrong or out of date? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
+  <p>What these tools are written in is in the main atlas: <a href="/languages/python">Python</a>, <a href="/tools/mlx">MLX</a>, <a href="/languages/cxx">C++</a>. More execution paths: <a href="/ai/how-jax-runs">What Actually Happens When You Run JAX Code</a>, <a href="/ai/how-llama-cpp-runs">How Does llama.cpp Run a Model on Your Hardware</a>, <a href="/ai/how-pytorch-runs">What Actually Happens When You Run a PyTorch Model</a>, <a href="/ai/how-vllm-runs">What Actually Happens When vLLM Serves a Request</a>, or <a href="/ai">compare them all</a>.</p>
+
+  <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>
+</main>
+<footer class="seo-footer-rich">
+  <div data-nosnippet>
+  <div class="footer-grid">
+    <div class="footer-col">
+      <span class="footer-col-head">Explore</span>
+      <a href="/programming-language-graph">Programming language graph</a>
+      <a href="/rankings/most-influential">Most influential languages</a>
+      <a href="/rss.xml">RSS feed</a>
+      <a href="/embed-kit">Embed the graph</a>
+      <a href="/guides/programming-language-family-tree">Language family tree</a>
+      <a href="/programming-language-evolution">Evolution timeline</a>
+      <a href="/what-are-programming-languages-written-in">What languages are written in</a>
+      <a href="/ai">How AI frameworks run code</a>
+      <a href="/explore">Interactive Graph</a>
+      <a href="/dataset">Dataset</a>
+      <a href="/directory">Site Directory</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Popular Languages</span>
+      <a href="/languages/python">Python</a>
+      <a href="/languages/javascript">JavaScript</a>
+      <a href="/languages/rust">Rust</a>
+      <a href="/languages/go">Go</a>
+      <a href="/languages/java">Java</a>
+      <a href="/languages/c">C</a>
+      <a href="/languages/cxx">C++</a>
+      <a href="/languages/typescript">TypeScript</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Questions</span>
+      <a href="/questions/what-is-python-written-in">What is Python written in?</a>
+      <a href="/questions/what-is-javascript-written-in">What is JavaScript written in?</a>
+      <a href="/questions/what-is-rust-written-in">What is Rust written in?</a>
+      <a href="/questions/what-is-go-written-in">What is Go written in?</a>
+      <a href="/questions/what-is-compiler-bootstrapping">What is compiler bootstrapping?</a>
+      <a href="/questions">All questions &rarr;</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Tools &amp; Guides</span>
+      <a href="/tools/v8">V8</a>
+      <a href="/tools/llvm">LLVM</a>
+      <a href="/tools/gcc">GCC</a>
+      <a href="/tools/ghc">GHC</a>
+      <a href="/guides">All guides</a>
+      <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </div>
+  <p class="footer-note">The Language Lineage dataset is meticulously curated and verified by human researchers. We use AI agents to assist with large-scale data gathering and modeling, but every implementation fact is manually reviewed for accuracy. Spot an error? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue on GitHub</a> and it gets fixed. <a href="/how-it-works">Learn how it works &rarr;</a></p>
+  <div class="footer-bottom">Made with <span style="color:#fb7185">❤️</span> by <a href="https://github.com/sanketmuchhala" rel="noopener noreferrer">Sanket Muchhala</a> &middot; <a href="/">Language Lineage</a></div>
+  </div>
+</footer>
+</body>
+</html>

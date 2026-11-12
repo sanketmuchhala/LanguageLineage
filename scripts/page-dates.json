@@ -4,23 +4,27 @@
     "lastmod": "2026-07-02"
   },
   "/ai": {
-    "hash": "68c44684024fe167",
+    "hash": "5b9dcf1b1ff649ac",
     "lastmod": "2026-11-12"
   },
   "/ai/how-jax-runs": {
-    "hash": "37708afabd6ad459",
+    "hash": "dd7c93b3e414be80",
     "lastmod": "2026-11-12"
   },
   "/ai/how-llama-cpp-runs": {
-    "hash": "fbb6be604bd8f050",
+    "hash": "20a25dea70861fa6",
+    "lastmod": "2026-11-12"
+  },
+  "/ai/how-mlx-runs": {
+    "hash": "dcf4fb1ba91a09fd",
     "lastmod": "2026-11-12"
   },
   "/ai/how-pytorch-runs": {
-    "hash": "a5facba90d6c68cb",
+    "hash": "0b19752a31b41f8a",
     "lastmod": "2026-11-12"
   },
   "/ai/how-vllm-runs": {
-    "hash": "f1dffa0219adac50",
+    "hash": "4e4b14803c7ee359",
     "lastmod": "2026-11-12"
   },
   "/compiler-runtime-bootstrap": {
@@ -540,7 +544,7 @@
     "lastmod": "2026-11-11"
   },
   "/languages/python": {
-    "hash": "23099acc8cb5799d",
+    "hash": "322173e234912a65",
     "lastmod": "2026-11-12"
   },
   "/languages/qsharp": {
@@ -1300,7 +1304,7 @@
     "lastmod": "2026-11-12"
   },
   "/tools/mlx": {
-    "hash": "098f10477c49f0b8",
+    "hash": "3ae06ca31304bebc",
     "lastmod": "2026-11-12"
   },
   "/tools/moarvm": {

@@ -180,6 +180,30 @@ describe('how-vllm-runs semantics', () => {
   });
 });
 
+describe('how-mlx-runs semantics', () => {
+  const data = bySlug('how-mlx-runs');
+  const path = (mode: string, device: string) => activePath(data, { mode, device });
+  const GPU_ONLY = ['metal_kernels', 'fused_metal', 'gpu'];
+  const CPU_ONLY = ['cpu_kernels', 'fused_cpu', 'cpu'];
+
+  it.each([['lazy', 'gpu'], ['lazy', 'cpu'], ['compiled', 'gpu'], ['compiled', 'cpu']])('%s on %s records a lazy graph, evaluates it, and stays on its own device', (mode, device) => {
+    const p = path(mode, device);
+    for (const id of ['python_code', 'mlx', 'graph', 'eval']) expect(p.stages.has(id), id).toBe(true);
+    for (const id of device === 'gpu' ? CPU_ONLY : GPU_ONLY) expect(p.stages.has(id), id).toBe(false);
+  });
+
+  it.each(['gpu', 'cpu'])('without mx.compile on %s there is no compiler or fused code', (device) => {
+    const p = path('lazy', device);
+    for (const id of ['compile', 'fused_metal', 'fused_cpu']) expect(p.stages.has(id), id).toBe(false);
+  });
+
+  it('mx.compile generates a fused Metal kernel on the GPU and a C++ library on the CPU', () => {
+    expect(path('compiled', 'gpu').steps.has('compile--fused_metal')).toBe(true);
+    expect(path('compiled', 'cpu').steps.has('compile--fused_cpu')).toBe(true);
+    expect(path('compiled', 'gpu').steps.has('graph--compile')).toBe(true);
+  });
+});
+
 describe('/ai hub page', () => {
   const hub = readFileSync(join(ROOT, 'public/ai/index.html'), 'utf8');
   const table = (id: string) => hub.match(new RegExp(`<table id="${id}">[\\s\\S]*?</table>`))?.[0] ?? '';

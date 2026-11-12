@@ -99,3 +99,11 @@ Checked and **not** used: the dispatcher tutorial (deprecated as of PyTorch 2.4;
 - Merged **#50** (vLLM explainer); production checked (334 URLs, `/ai/how-vllm-runs`, `/tools/vllm|jax|xla` 200).
 - Branch `data/admit-mlx`: `tool:mlx` (2023, first PyPI upload 2023-12-05; README "MLX is an array framework for machine learning on Apple silicon"). Edges: C++ 0.92 (`mlx/`: array, compile, backends), Python 0.85 (`python/mlx/nn`, optimizers), CUDA 0.88 (`mlx/backend/cuda/*.cu`). Its Metal kernels are noted, not an edge: the dataset has no Metal Shading Language node and adding one is a separate admission decision.
 - Counts 176 nodes, 35 tools, 504 relationships (runtime 102); og-image re-rendered; poster regenerated. `npm run verify`: 227 tests, sitemap 335.
+
+## 2026-11-11 — MLX explainer
+
+- Merged **#51** (MLX node).
+- **`/ai/how-mlx-runs`** (branch `ai/mlx-path`): mode (lazy / `mx.compile`) × device (Apple silicon GPU / CPU); 11 stages, 13 steps. Lazy graph and implicit evaluation (Lazy Evaluation), primitives with `eval_cpu`/`eval_gpu` and Metal GPU kernels (Custom Extensions), prebuilt Metal library (Build and Install), unified memory, `mx.compile` tracing, caching and fusion (Compilation). What compile generates is cited from source: `mlx/backend/metal/compiled.cpp` (fused Metal kernel) and `mlx/backend/cpu/compiled.cpp` (C++ shared library). The Lazy Evaluation page still says "MLX does not compile and rerun compute graphs", which its own Compilation page supersedes; that sentence is not quoted.
+- Out of scope: the CUDA backend on Linux, distributed, `mx.fast.metal_kernel`, the C++/C/Swift APIs.
+- `check:ai-quotes` fix: tags are stripped only from HTML responses. Raw source files (text/plain) lost text between `<<` and `>` to the tag regex, so two C++ quotes were reported missing. All 102 distinct quotes found after the fix.
+- `npm run verify`: 246 tests, sitemap 336. Browser: switching, deep link, keyboard selection, 320/390px without horizontal scroll, no page errors.
