@@ -18,7 +18,7 @@
   <meta property="og:image:height" content="630" />
   <meta property="og:image:type" content="image/png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What Actually Happens When You Run JAX Code?","description":"Trace JAX from Python to the device: op-by-op dispatch vs jax.jit, through jaxpr, StableHLO, the XLA compiler, LLVM or Triton, and the PJRT runtime, with sources.","url":"https://www.languagelineage.org/ai/how-jax-runs","datePublished":"2026-11-11","dateModified":"2026-11-11","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"citation":["https://docs.jax.dev/en/latest/about.html","https://docs.jax.dev/en/latest/201/jit.html","https://docs.jax.dev/en/latest/201/aot.html","https://openxla.org/xla/architecture","https://openxla.org/xla/gpu_architecture","https://openxla.org/xla/pjrt"],"inLanguage":"en"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What Actually Happens When You Run JAX Code?","description":"Trace JAX from Python to the device: op-by-op dispatch vs jax.jit, through jaxpr, StableHLO, the XLA compiler, LLVM or Triton, and the PJRT runtime, with sources.","url":"https://www.languagelineage.org/ai/how-jax-runs","datePublished":"2026-11-11","dateModified":"2026-11-12","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"citation":["https://docs.jax.dev/en/latest/about.html","https://docs.jax.dev/en/latest/201/jit.html","https://docs.jax.dev/en/latest/201/aot.html","https://openxla.org/xla/architecture","https://openxla.org/xla/gpu_architecture","https://openxla.org/xla/pjrt"],"inLanguage":"en"}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"AI execution paths","item":"https://www.languagelineage.org/ai"},{"@type":"ListItem","position":3,"name":"What Actually Happens When You Run JAX Code?","item":"https://www.languagelineage.org/ai/how-jax-runs"}]}</script>
 </head>
 <body class="seo-page">
@@ -224,7 +224,7 @@
 <h3>JAX</h3>
 <p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
 <p>The JAX library. It traces and transforms your functions, and calls out to XLA and PJRT to compile for and run on devices.</p>
-
+<p class="ai-lineage">In the atlas: <a href="/tools/jax">JAX</a></p>
 <ul class="ai-sources"><li><blockquote>To manage hardware devices and memory, and for compilation to such devices, JAX calls out to the open XLA compiler and the PJRT runtime.</blockquote><a href="https://docs.jax.dev/en/latest/about.html" rel="noopener noreferrer" target="_blank">About the project (JAX documentation)</a> <span class="src-type">Project docs</span></li></ul>
 </article>
 <article class="ai-stage-detail" id="detail-stage-jaxpr" data-stage="jaxpr">
@@ -245,7 +245,7 @@
 <h3>XLA compiler</h3>
 <p class="ai-kind-tag" style="--kc:#a78bfa">compiler</p>
 <p>OpenXLA's machine-learning compiler. It optimizes the whole program, fusing operations, and generates code for the target device.</p>
-
+<p class="ai-lineage">In the atlas: <a href="/tools/xla">XLA</a></p>
 <ul class="ai-sources"><li><blockquote>The XLA compiler takes model graphs from ML frameworks defined in StableHLO and compiles them into machine instructions for various architectures.</blockquote><a href="https://openxla.org/xla/architecture" rel="noopener noreferrer" target="_blank">XLA architecture (OpenXLA)</a> <span class="src-type">Project docs</span></li><li><blockquote>It traces the function to a jaxpr (How transformations work: tracing) and hands the whole jaxpr to XLA, which compiles it into a single optimized executable, fusing operations, eliminating temporary arrays, and specializing for your CPU, GPU, or TPU.</blockquote><a href="https://docs.jax.dev/en/latest/201/jit.html" rel="noopener noreferrer" target="_blank">Just-in-time compilation (JAX documentation)</a> <span class="src-type">Project docs</span></li></ul>
 </article>
 <article class="ai-stage-detail" id="detail-stage-llvm_ir" data-stage="llvm_ir">
@@ -389,7 +389,7 @@
 
   <h2 id="how-this-page-is-checked">How this page is checked</h2>
   <p>Every stage and step above quotes the source that supports it. The quotes were checked against the JAX documentation (About, Just-in-time compilation, Ahead-of-time lowering) and the OpenXLA documentation (XLA architecture, XLA:GPU architecture, PJRT) on 2026-11-11. The data is a <a href="/dataset/ai/how-jax-runs.json">versioned JSON file</a> under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. Found something wrong or out of date? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
-  <p>What these tools are written in is in the main atlas: <a href="/languages/python">Python</a>, <a href="/tools/llvm">LLVM</a>, <a href="/tools/triton">Triton</a>, <a href="/tools/cuda">CUDA</a>. More execution paths: <a href="/ai/how-llama-cpp-runs">How Does llama.cpp Run a Model on Your Hardware</a>, <a href="/ai/how-pytorch-runs">What Actually Happens When You Run a PyTorch Model</a>, or <a href="/ai">compare them all</a>.</p>
+  <p>What these tools are written in is in the main atlas: <a href="/languages/python">Python</a>, <a href="/tools/jax">JAX</a>, <a href="/tools/xla">XLA</a>, <a href="/tools/llvm">LLVM</a>, <a href="/tools/triton">Triton</a>, <a href="/tools/cuda">CUDA</a>. More execution paths: <a href="/ai/how-llama-cpp-runs">How Does llama.cpp Run a Model on Your Hardware</a>, <a href="/ai/how-pytorch-runs">What Actually Happens When You Run a PyTorch Model</a>, or <a href="/ai">compare them all</a>.</p>
 
   <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>
 </main>
