@@ -6,13 +6,15 @@
  * wrong number on the landing page undermines the one thing this site sells:
  * that its numbers are checkable.
  *
- * When this fails, update the file it names. If the copy was reworded so a
+ * The React app (src/) has no entries here: it reads build-time totals (see the last
+ * describe block). When this fails, update the file it names. If the copy was reworded so a
  * pattern no longer matches, update the pattern here in the same PR.
  */
 import { readFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { describe, it, expect } from 'vitest';
+import { datasetCounts } from './datasetCounts';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dataset = JSON.parse(readFileSync(join(ROOT, 'dataset/v5/lineage_v5.json'), 'utf8'));
@@ -29,20 +31,6 @@ const EXPECTED = {
 type Check = { file: string; pattern: RegExp; expect: keyof typeof EXPECTED; label: string };
 
 const CHECKS: Check[] = [
-  // Landing page stat tiles
-  { file: 'src/ui/LandingPage.tsx', pattern: /<span className="stat-number">(\d+)<\/span>\s*<span className="stat-label">Languages/, expect: 'nodes', label: 'stat tile: languages & tools' },
-  { file: 'src/ui/LandingPage.tsx', pattern: /<span className="stat-number">(\d+)<\/span>\s*<span className="stat-label">Relationships/, expect: 'relationships', label: 'stat tile: relationships' },
-  // Landing page prose
-  { file: 'src/ui/LandingPage.tsx', pattern: /family tree of (\d+) languages and toolchains/, expect: 'nodes', label: 'hero copy' },
-  { file: 'src/ui/LandingPage.tsx', pattern: /family tree of \d+ languages and toolchains and\s+(\d+) sourced/, expect: 'relationships', label: 'hero copy' },
-  { file: 'src/ui/LandingPage.tsx', pattern: /(\d+) languages and toolchains, \d+\s*\n?\s*evidence-backed/, expect: 'nodes', label: 'section copy' },
-  { file: 'src/ui/LandingPage.tsx', pattern: /between (\d+) programming languages and toolchains/, expect: 'nodes', label: 'closing copy' },
-  { file: 'src/ui/LandingGraphGlimpse.tsx', pattern: /(\d+) nodes\. \d+ sourced edges\./, expect: 'nodes', label: 'graph glimpse caption' },
-  { file: 'src/ui/LandingGraphGlimpse.tsx', pattern: /\d+ nodes\. (\d+) sourced edges\./, expect: 'relationships', label: 'graph glimpse caption' },
-  // SPA meta descriptions
-  { file: 'src/app/App.tsx', pattern: /Interactive graph of (\d+) languages and \d+ relationships/, expect: 'nodes', label: 'home meta description' },
-  { file: 'src/app/App.tsx', pattern: /Interactive graph of \d+ languages and (\d+) relationships/, expect: 'relationships', label: 'home meta description' },
-  { file: 'src/app/App.tsx', pattern: /relationships between (\d+) languages/, expect: 'nodes', label: 'explore meta description' },
   // Static shells
   { file: 'index.html', pattern: /Interactive graph of (\d+) languages and \d+ relationships/, expect: 'nodes', label: 'index.html meta' },
   { file: 'index.html', pattern: /Interactive graph of \d+ languages and (\d+) relationships/, expect: 'relationships', label: 'index.html meta' },
@@ -72,5 +60,28 @@ describe('hand-written counts match the dataset', () => {
     const match = source.match(pattern);
     expect(match, `pattern not found in ${file}: ${pattern}. Update the copy or this pattern.`).toBeTruthy();
     expect(Number(match![1]), `${file} states ${match![1]}, dataset has ${EXPECTED[key]}`).toBe(EXPECTED[key]);
+  });
+});
+
+// The React app states no totals of its own: the landing page and SPA meta descriptions
+// read __DATASET_COUNTS__, which vite.config.ts computes from the dataset at build time.
+const APP_FILES = ['src/ui/LandingPage.tsx', 'src/ui/LandingGraphGlimpse.tsx', 'src/app/App.tsx'];
+
+describe('app copy uses build-time dataset counts', () => {
+  it('computes the injected totals from the dataset', () => {
+    const years = (nodes as Array<{ id: string; first_release_year?: number | null }>)
+      .filter((n) => n.id.startsWith('lang:') && n.first_release_year).map((n) => n.first_release_year!);
+    const expected = { ...EXPECTED, earliestYear: Math.min(...years), latestYear: Math.max(...years) };
+    expect(datasetCounts(ROOT)).toEqual(expected);
+    expect(__DATASET_COUNTS__).toEqual(expected);
+  });
+
+  it.each(APP_FILES)('%s reads __DATASET_COUNTS__ instead of hand-written totals', (file) => {
+    const source = readFileSync(join(ROOT, file), 'utf8');
+    expect(source).toContain('__DATASET_COUNTS__');
+    // Phrases that used to carry a typed number must not carry one again.
+    for (const phrase of [/\b\d{3} (?:programming )?languages(?: and toolchains)?\b/, /\b\d{3} (?:sourced )?(?:relationships|edges)\b/, /\b\d{3} nodes\b/, /\bAll \d+ (?:languages|tools)\b/, /stat-number">\d+</]) {
+      expect(source, `${file} has a hand-written total: ${phrase}`).not.toMatch(phrase);
+    }
   });
 });

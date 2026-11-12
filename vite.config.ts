@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
+import { datasetCounts } from './scripts/datasetCounts';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -29,6 +30,8 @@ export default defineConfig({
       },
     },
   ],
+  // Dataset totals for the app's copy, computed at build time (no hand-written counts in src/).
+  define: { __DATASET_COUNTS__: JSON.stringify(datasetCounts(__dirname)) },
   base: '/',
   build: {
     outDir: 'dist',

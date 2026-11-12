@@ -152,7 +152,7 @@ export function LandingGraphGlimpse({ onOpen }: Props) {
       <div className="atlas-head">
         <p className="section-eyebrow reveal">The atlas, live</p>
         <h2 className="section-title centered reveal">
-          191 nodes. 529 sourced edges.<br /><em>One graph.</em>
+          {__DATASET_COUNTS__.nodes} nodes. {__DATASET_COUNTS__.relationships} sourced edges.<br /><em>One graph.</em>
         </h2>
         <p className="section-text centered reveal">
           Every programming language and toolchain, connected by what implements what.

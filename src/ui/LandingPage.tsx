@@ -90,7 +90,7 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
           <p className="hero-subtitle reveal">
             Trace what programming languages are <em>written in</em>: their compilers,
             runtimes, virtual machines, and bootstrap chains. An interactive programming
-            language family tree of 191 languages and toolchains and 529 sourced
+            language family tree of {__DATASET_COUNTS__.nodes} languages and toolchains and {__DATASET_COUNTS__.relationships} sourced
             relationships, each with a confidence score and citation.
           </p>
           <div className="hero-actions reveal">
@@ -165,22 +165,22 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
       {/* Stats Bar */}
       <section className="stats-bar">
         <div className="stat reveal">
-          <span className="stat-number">191</span>
+          <span className="stat-number">{__DATASET_COUNTS__.nodes}</span>
           <span className="stat-label">Languages &amp; tools</span>
         </div>
         <div className="stat-divider" />
         <div className="stat reveal">
-          <span className="stat-number">529</span>
+          <span className="stat-number">{__DATASET_COUNTS__.relationships}</span>
           <span className="stat-label">Relationships</span>
         </div>
         <div className="stat-divider" />
         <div className="stat reveal">
-          <span className="stat-number">1949</span>
+          <span className="stat-number">{__DATASET_COUNTS__.earliestYear}</span>
           <span className="stat-label">Earliest Language</span>
         </div>
         <div className="stat-divider" />
         <div className="stat reveal">
-          <span className="stat-number">2023</span>
+          <span className="stat-number">{__DATASET_COUNTS__.latestYear}</span>
           <span className="stat-label">Latest Language</span>
         </div>
       </section>
@@ -251,8 +251,8 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
             ))}
           </div>
           <div className="records-browse reveal">
-            <a href="/languages" className="records-all-link">All 131 languages &rarr;</a>
-            <a href="/tools" className="records-all-link">All 21 tools &rarr;</a>
+            <a href="/languages" className="records-all-link">All {__DATASET_COUNTS__.languages} languages &rarr;</a>
+            <a href="/tools" className="records-all-link">All {__DATASET_COUNTS__.tools} tools &rarr;</a>
             <a href="/guides" className="records-all-link">Guides &rarr;</a>
           </div>
         </div>
@@ -348,7 +348,7 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
           <p className="section-text centered reveal">
             Most language family trees show only influence and ancestry. Language Lineage also
             maps implementation relationships: what compilers, runtimes, virtual machines, and
-            bootstrap chains each language actually uses. 191 languages and toolchains, 529
+            bootstrap chains each language actually uses. {__DATASET_COUNTS__.nodes} languages and toolchains, {__DATASET_COUNTS__.relationships}
             evidence-backed relationships.
           </p>
         </div>
@@ -442,7 +442,7 @@ export function LandingPage({ onEnterGraph }: LandingPageProps) {
           </h2>
           <p className="cta-text reveal">
             Explore the implementation, runtime, bootstrap, and influence relationships
-            between 191 programming languages and toolchains, every edge sourced.
+            between {__DATASET_COUNTS__.nodes} programming languages and toolchains, every edge sourced.
           </p>
           <button className="btn-primary large reveal" onClick={onEnterGraph}>
             <span>Launch the graph</span>
