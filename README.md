@@ -14,7 +14,7 @@
 
 # Language Lineage
 
-An interactive, evidence-backed atlas mapping implementation, bootstrapping, runtime, and influence relationships across 204 nodes: 151 programming languages and 53 compiler/runtime tools. 372 indexable pages, 550 sourced relationships.
+An interactive, evidence-backed atlas mapping implementation, bootstrapping, runtime, and influence relationships across 204 nodes: 151 programming languages and 53 compiler/runtime tools. 373 indexable pages, 550 sourced relationships.
 
 ## Live Site
 
@@ -219,7 +219,7 @@ From the dataset analyzer (`npm run analyze:v5`):
 | `/timeline` | Static | 1 | Language timeline page |
 | `/dataset` | Static | 1 | Dataset overview with download, citation, and embed kit |
 | Keyword landings | Static | 6 | Root-level SEO landing pages (5 canonical; `/programming-language-family-tree` canonicalizes to the `/guides/` version) |
-| `/sitemap.xml` | XML | 1 | 372 indexable URLs (canonical only) |
+| `/sitemap.xml` | XML | 1 | 373 indexable URLs (canonical only) |
 | `/robots.txt` | Text | 1 | Crawler directives |
 | `/llms.txt` | Text | 1 | LLM-readable site index |
 | `/llms-full.txt` | Text | 1 | Expanded LLM reference |
