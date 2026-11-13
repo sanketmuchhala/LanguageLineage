@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How Candle Runs an LLM: Rust, KV Cache and GPUs | Language Lineage</title>
+  <meta name="description" content="Follow Candle’s Rust Llama example from safetensors and tokenization to cached decoding, sampling, and CPU, CUDA or Metal tensor computation, with quoted sources." />
+  <link rel="canonical" href="https://www.languagelineage.org/ai/how-candle-runs" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><script defer src="/fx.js"></script><script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script><link rel="alternate" type="application/rss+xml" title="Language Lineage" href="/rss.xml" /><link rel="stylesheet" href="/seo.css" />
+  <script defer src="/ai-path.js"></script>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="How Candle Runs an LLM: Rust, KV Cache and GPUs | Language Lineage" />
+  <meta property="og:description" content="Follow Candle’s Rust Llama example from safetensors and tokenization to cached decoding, sampling, and CPU, CUDA or Metal tensor computation, with quoted sources." />
+  <meta property="og:url" content="https://www.languagelineage.org/ai/how-candle-runs" />
+  <meta property="og:image" content="https://www.languagelineage.org/og/ai-how-candle-runs.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"How Does a Rust LLM Generate Tokens with Candle?","description":"Follow Candle’s Rust Llama example from safetensors and tokenization to cached decoding, sampling, and CPU, CUDA or Metal tensor computation, with quoted sources.","url":"https://www.languagelineage.org/ai/how-candle-runs","datePublished":"2026-11-12","dateModified":"2026-11-13","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"citation":["https://github.com/huggingface/candle/blob/main/candle-examples/examples/llama/main.rs","https://github.com/huggingface/candle/blob/main/candle-transformers/src/models/llama.rs","https://github.com/huggingface/candle/blob/main/candle-core/src/storage.rs","https://github.com/huggingface/candle/blob/main/candle-examples/src/lib.rs"],"inLanguage":"en"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"AI execution paths","item":"https://www.languagelineage.org/ai"},{"@type":"ListItem","position":3,"name":"How Does a Rust LLM Generate Tokens with Candle?","item":"https://www.languagelineage.org/ai/how-candle-runs"}]}</script>
+</head>
+<body class="seo-page">
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<nav class="seo-nav">
+  <a href="/" class="nav-brand"><img class="nav-logo-mark" src="/logo-mark.svg" width="22" height="22" alt="" aria-hidden="true">Language Lineage</a>
+  <a href="/relationships">Relationships</a>
+  <a href="/languages">Languages</a>
+  <a href="/tools">Tools</a>
+  <a href="/ai">AI</a>
+  <a href="/guides">Guides</a>
+  <a href="/timeline">Timeline</a>
+  <a href="/dataset">Dataset</a>
+  <a href="/how-it-works">How It Works</a>
+  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
+</nav>
+<main class="seo-main" id="main-content">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; <a href="/ai">AI execution paths</a> &rsaquo; How Does a Rust LLM Generate Tokens with Candle
+  </nav>
+
+  <h1>How Does a Rust LLM Generate Tokens with Candle?</h1>
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#the-selected-path-step-by-step">The selected path, step by step</a></li>
+    <li><a href="#the-concrete-program-behind-this-page">The concrete program behind this page</a></li>
+    <li><a href="#the-first-prompt-pass-and-the-later-token-loop">The first prompt pass and the later token loop</a></li>
+    <li><a href="#device-support-is-a-build-and-runtime-choice">Device support is a build and runtime choice</a></li>
+    <li><a href="#logits-sampling-and-readable-text">Logits, sampling and readable text</a></li>
+    <li><a href="#every-stage">Every stage</a></li>
+    <li><a href="#every-step">Every step</a></li>
+    <li><a href="#what-this-does-not-show">What this does not show</a></li>
+    <li><a href="#how-this-page-is-checked">How this page is checked</a></li>
+  </ol>
+</nav>
+
+  <div class="answer-box">Candle’s Llama example runs as a <strong>Rust program</strong>. It loads model configuration and <strong>safetensors</strong> parameters, builds the Llama model, and tokenizes the prompt. The first forward pass consumes the prompt context and produces logits. With the <strong>KV cache enabled</strong>, later iterations feed one newly generated token while reusing stored attention keys and values; with caching disabled, the example feeds the accumulated token sequence again. Candle tensor storage dispatches operations to <strong>CPU</strong>, <strong>CUDA</strong>, or <strong>Metal</strong> implementations according to the selected device. A logits processor samples the next token, checks for end-of-sequence, and sends token IDs through a text output stream.</div>
+
+  <section class="ai-explorer" id="explorer" aria-label="Execution path explorer">
+    <form class="ai-controls" onsubmit="return false">
+      <fieldset><legend>Device</legend>
+        <label><input type="radio" name="device" value="cpu" data-phrase="the CPU" checked> CPU</label>
+        <label><input type="radio" name="device" value="cuda" data-phrase="an NVIDIA GPU with CUDA support"> NVIDIA GPU (CUDA)</label>
+        <label><input type="radio" name="device" value="metal" data-phrase="an Apple GPU with Metal support"> Apple GPU (Metal)</label>
+      </fieldset>
+      <fieldset><legend>KV cache</legend>
+        <label><input type="radio" name="cache" value="enabled" data-phrase="cached single-token decoding after prefill" checked> KV cache enabled</label>
+        <label><input type="radio" name="cache" value="disabled" data-phrase="full-context recomputation at each iteration"> KV cache disabled</label>
+      </fieldset>
+      <button type="button" class="ai-copy" hidden>Copy link to this path</button>
+    </form>
+    <p class="ai-status" aria-live="polite" data-template="Showing {cache} on {device}">Showing cached single-token decoding after prefill on the CPU: 12 stages, 13 steps.</p>
+    <div class="ai-layout">
+      <div class="ai-diagram-wrap"><svg class="ai-path-svg" viewBox="0 0 826 702" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Execution path diagram: select a stage or step for details">
+<defs><marker id="ai-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9a9a9a"/></marker></defs>
+<path id="step-rust--weights" class="ai-step on" d="M413,62 C413,78 104,78 104,88" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Rust Llama program loads parameters Safetensors weights"><title>Rust Llama program loads parameters Safetensors weights</title></path>
+<path id="step-rust--tokenizer" class="ai-step on" d="M413,62 C413,78 722,78 722,88" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Rust Llama program loads tokenizer.json Tokenizer"><title>Rust Llama program loads tokenizer.json Tokenizer</title></path>
+<path id="step-weights--model" class="ai-step on" d="M104,140 C104,156 413,156 413,166" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Safetensors weights initializes model Candle Llama model"><title>Safetensors weights initializes model Candle Llama model</title></path>
+<path id="step-tokenizer--prompt" class="ai-step on" d="M722,140 C722,195 104,195 104,244" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Tokenizer encodes prompt IDs Prompt tensor"><title>Tokenizer encodes prompt IDs Prompt tensor</title></path>
+<path id="step-prompt--model" class="ai-step on" d="M192,273 C255.5,273 255.5,195 319,195" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Prompt tensor runs prompt forward Candle Llama model"><title>Prompt tensor runs prompt forward Candle Llama model</title></path>
+<path id="step-model--kv" class="ai-step on" d="M413,218 C413,234 722,234 722,244" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Candle Llama model updates keys and values Per-layer KV cache"><title>Candle Llama model updates keys and values Per-layer KV cache</title></path>
+<path id="step-kv--incremental" class="ai-step on" d="M722,296 C722,312 722,312 722,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Per-layer KV cache reuses history Single-token decode"><title>Per-layer KV cache reuses history Single-token decode</title></path>
+<path id="step-incremental--model" class="ai-step on" d="M634,351 C570.5,351 570.5,195 507,195" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Single-token decode runs next token Candle Llama model"><title>Single-token decode runs next token Candle Llama model</title></path>
+<path id="step-model--full_context" class="ai-step" d="M413,218 C413,273 104,273 104,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Candle Llama model repeats full context Full context again"><title>Candle Llama model repeats full context Full context again</title></path>
+<path id="step-full_context--model" class="ai-step" d="M192,351 C255.5,351 255.5,195 319,195" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Full context again recomputes current sequence Candle Llama model"><title>Full context again recomputes current sequence Candle Llama model</title></path>
+<path id="step-model--ops" class="ai-step on" d="M413,218 C413,312 413,312 413,400" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Candle Llama model performs tensor operations Tensor computation"><title>Candle Llama model performs tensor operations Tensor computation</title></path>
+<path id="step-ops--cpu_ops" class="ai-step on" d="M413,452 C413,468 104,468 104,478" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Tensor computation uses CPU storage CPU tensor backend"><title>Tensor computation uses CPU storage CPU tensor backend</title></path>
+<path id="step-ops--cuda_ops" class="ai-step" d="M413,452 C413,468 413,468 413,478" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Tensor computation uses CUDA storage CUDA tensor backend"><title>Tensor computation uses CUDA storage CUDA tensor backend</title></path>
+<path id="step-ops--metal_ops" class="ai-step" d="M413,452 C413,468 722,468 722,478" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Tensor computation uses Metal storage Metal tensor backend"><title>Tensor computation uses Metal storage Metal tensor backend</title></path>
+<path id="step-cpu_ops--cpu" class="ai-step on" d="M104,530 C104,546 104,546 104,556" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="CPU tensor backend runs on CPU CPU"><title>CPU tensor backend runs on CPU CPU</title></path>
+<path id="step-cuda_ops--cuda" class="ai-step" d="M413,530 C413,546 413,546 413,556" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="CUDA tensor backend runs on NVIDIA GPU NVIDIA GPU"><title>CUDA tensor backend runs on NVIDIA GPU NVIDIA GPU</title></path>
+<path id="step-metal_ops--metal" class="ai-step" d="M722,530 C722,546 722,546 722,556" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Metal tensor backend runs on Apple GPU Apple GPU"><title>Metal tensor backend runs on Apple GPU Apple GPU</title></path>
+<path id="step-model--sample" class="ai-step on" d="M413,218 C413,429 207,429 207,634" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Candle Llama model returns logits for sampling Logits processor"><title>Candle Llama model returns logits for sampling Logits processor</title></path>
+<path id="step-sample--text" class="ai-step on" d="M295,663 C410,663 410,663 525,663" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Logits processor decodes accepted tokens Text output stream"><title>Logits processor decodes accepted tokens Text output stream</title></path>
+<g id="stage-rust" class="ai-stage on" tabindex="0" role="button" aria-label="Rust Llama program: Your program">
+  <rect x="325" y="16" width="176" height="46" rx="7" style="--kc:#60a5fa"/>
+  <rect x="325" y="16" width="4" height="46" rx="2" fill="#60a5fa"/>
+  <text x="339" y="35" class="ai-name">Rust Llama program</text>
+  <text x="339" y="51" class="ai-kind">programming language</text>
+</g>
+<g id="stage-weights" class="ai-stage on" tabindex="0" role="button" aria-label="Safetensors weights: Model file">
+  <rect x="16" y="94" width="176" height="46" rx="7" style="--kc:#fb7185"/>
+  <rect x="16" y="94" width="4" height="46" rx="2" fill="#fb7185"/>
+  <text x="30" y="113" class="ai-name">Safetensors weights</text>
+  <text x="30" y="129" class="ai-kind">model format</text>
+</g>
+<g id="stage-tokenizer" class="ai-stage on" tabindex="0" role="button" aria-label="Tokenizer: Framework core">
+  <rect x="634" y="94" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="634" y="94" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="648" y="113" class="ai-name">Tokenizer</text>
+  <text x="648" y="129" class="ai-kind">framework component</text>
+</g>
+<g id="stage-model" class="ai-stage on" tabindex="0" role="button" aria-label="Candle Llama model: Framework core">
+  <rect x="325" y="172" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="325" y="172" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="339" y="191" class="ai-name">Candle Llama model</text>
+  <text x="339" y="207" class="ai-kind">framework component</text>
+</g>
+<g id="stage-prompt" class="ai-stage on" tabindex="0" role="button" aria-label="Prompt tensor: Framework core">
+  <rect x="16" y="250" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="16" y="250" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="30" y="269" class="ai-name">Prompt tensor</text>
+  <text x="30" y="285" class="ai-kind">framework component</text>
+</g>
+<g id="stage-kv" class="ai-stage on" tabindex="0" role="button" aria-label="Per-layer KV cache: Framework core">
+  <rect x="634" y="250" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="634" y="250" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="648" y="269" class="ai-name">Per-layer KV cache</text>
+  <text x="648" y="285" class="ai-kind">framework component</text>
+</g>
+<g id="stage-full_context" class="ai-stage" tabindex="0" role="button" aria-label="Full context again: Framework core">
+  <rect x="16" y="328" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="16" y="328" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="30" y="347" class="ai-name">Full context again</text>
+  <text x="30" y="363" class="ai-kind">framework component</text>
+</g>
+<g id="stage-incremental" class="ai-stage on" tabindex="0" role="button" aria-label="Single-token decode: Framework core">
+  <rect x="634" y="328" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="634" y="328" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="648" y="347" class="ai-name">Single-token decode</text>
+  <text x="648" y="363" class="ai-kind">framework component</text>
+</g>
+<g id="stage-ops" class="ai-stage on" tabindex="0" role="button" aria-label="Tensor computation: Framework core">
+  <rect x="325" y="406" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="325" y="406" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="339" y="425" class="ai-name">Tensor computation</text>
+  <text x="339" y="441" class="ai-kind">framework component</text>
+</g>
+<g id="stage-cpu_ops" class="ai-stage on" tabindex="0" role="button" aria-label="CPU tensor backend: Runtime">
+  <rect x="16" y="484" width="176" height="46" rx="7" style="--kc:#93c5fd"/>
+  <rect x="16" y="484" width="4" height="46" rx="2" fill="#93c5fd"/>
+  <text x="30" y="503" class="ai-name">CPU tensor backend</text>
+  <text x="30" y="519" class="ai-kind">runtime</text>
+</g>
+<g id="stage-cuda_ops" class="ai-stage" tabindex="0" role="button" aria-label="CUDA tensor backend: Runtime">
+  <rect x="325" y="484" width="176" height="46" rx="7" style="--kc:#93c5fd"/>
+  <rect x="325" y="484" width="4" height="46" rx="2" fill="#93c5fd"/>
+  <text x="339" y="503" class="ai-name">CUDA tensor backend</text>
+  <text x="339" y="519" class="ai-kind">runtime</text>
+</g>
+<g id="stage-metal_ops" class="ai-stage" tabindex="0" role="button" aria-label="Metal tensor backend: Runtime">
+  <rect x="634" y="484" width="176" height="46" rx="7" style="--kc:#93c5fd"/>
+  <rect x="634" y="484" width="4" height="46" rx="2" fill="#93c5fd"/>
+  <text x="648" y="503" class="ai-name">Metal tensor backend</text>
+  <text x="648" y="519" class="ai-kind">runtime</text>
+</g>
+<g id="stage-cpu" class="ai-stage on" tabindex="0" role="button" aria-label="CPU: Hardware">
+  <rect x="16" y="562" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="16" y="562" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="30" y="581" class="ai-name">CPU</text>
+  <text x="30" y="597" class="ai-kind">hardware</text>
+</g>
+<g id="stage-cuda" class="ai-stage" tabindex="0" role="button" aria-label="NVIDIA GPU: Hardware">
+  <rect x="325" y="562" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="325" y="562" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="339" y="581" class="ai-name">NVIDIA GPU</text>
+  <text x="339" y="597" class="ai-kind">hardware</text>
+</g>
+<g id="stage-metal" class="ai-stage" tabindex="0" role="button" aria-label="Apple GPU: Hardware">
+  <rect x="634" y="562" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="634" y="562" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="648" y="581" class="ai-name">Apple GPU</text>
+  <text x="648" y="597" class="ai-kind">hardware</text>
+</g>
+<g id="stage-sample" class="ai-stage on" tabindex="0" role="button" aria-label="Logits processor: Framework core">
+  <rect x="119" y="640" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="119" y="640" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="133" y="659" class="ai-name">Logits processor</text>
+  <text x="133" y="675" class="ai-kind">framework component</text>
+</g>
+<g id="stage-text" class="ai-stage on" tabindex="0" role="button" aria-label="Text output stream: Your program">
+  <rect x="531" y="640" width="176" height="46" rx="7" style="--kc:#60a5fa"/>
+  <rect x="531" y="640" width="4" height="46" rx="2" fill="#60a5fa"/>
+  <text x="545" y="659" class="ai-name">Text output stream</text>
+  <text x="545" y="675" class="ai-kind">application</text>
+</g>
+</svg></div>
+      <aside class="ai-detail" aria-live="polite"><p class="ai-detail-hint">Select a stage or an arrow to see what it does and the source behind it.</p></aside>
+    </div>
+    <ul class="ai-legend" aria-label="Legend"><li><span class="ai-swatch" style="--kc:#60a5fa"></span>Your program</li><li><span class="ai-swatch" style="--kc:#93c5fd"></span>Runtime</li><li><span class="ai-swatch" style="--kc:#e3a008"></span>Framework core</li><li><span class="ai-swatch" style="--kc:#fb7185"></span>Model file</li><li><span class="ai-swatch" style="--kc:#4ade80"></span>Hardware</li></ul>
+  </section>
+
+  <h2 id="the-selected-path-step-by-step">The selected path, step by step</h2>
+  <ol class="ai-path-list">
+<li>Rust Llama program <em>loads parameters</em> Safetensors weights: The example supplies model weight filenames, dtype and device to the safetensors-backed VarBuilder.</li>
+<li>Rust Llama program <em>loads tokenizer.json</em> Tokenizer: A tokenizer is constructed from the model tokenizer file before prompt encoding.</li>
+<li>Safetensors weights <em>initializes model</em> Candle Llama model: The loaded parameter builder and model configuration construct the Rust Llama model.</li>
+<li>Tokenizer <em>encodes prompt IDs</em> Prompt tensor: The tokenized context is converted to a tensor on the chosen device.</li>
+<li>Prompt tensor <em>runs prompt forward</em> Candle Llama model: The model runs on the input tensor, context position and current cache.</li>
+<li>Candle Llama model <em>updates keys and values</em> Per-layer KV cache: With caching enabled, attention records the updated key/value tensors for each block.</li>
+<li>Per-layer KV cache <em>reuses history</em> Single-token decode: After prefill, the loop chooses one input token when KV caching is enabled.</li>
+<li>Single-token decode <em>runs next token</em> Candle Llama model: The next iteration runs the model at the current context position using cached attention history.</li>
+<li>Candle Llama model <em>performs tensor operations</em> Tensor computation: Ordinary Llama attention includes a scaled query/key matrix multiplication.</li>
+<li>Tensor computation <em>uses CPU storage</em> CPU tensor backend: The storage match sends CPU-backed operands to their CPU matmul implementation.</li>
+<li>CPU tensor backend <em>runs on CPU</em> CPU: This branch represents the CPU device selected by the example helper.</li>
+<li>Candle Llama model <em>returns logits for sampling</em> Logits processor: After the forward pass and optional repetition penalty, the logits processor samples the next token.</li>
+<li>Logits processor <em>decodes accepted tokens</em> Text output stream: The loop sends generated token IDs to the tokenizer output stream and prints returned fragments.</li>
+  </ol>
+
+  <h2 id="the-concrete-program-behind-this-page">The concrete program behind this page</h2>
+  <p>The trace follows Candle’s published Llama example rather than combining behavior from unrelated model runners. That program retrieves configuration, tokenizer files and either a safetensors file or indexed shards, then constructs the model with a selected dtype and device. Weight loading and model computation are separate steps.</p>
+  <p>The example uses a VarBuilder backed by memory-mapped safetensors files. Its loader receives the target device and dtype explicitly. Memory mapping is a file-loading technique; the diagram’s tensor backend is the part responsible for the selected device’s computation.</p>
+
+  <h2 id="the-first-prompt-pass-and-the-later-token-loop">The first prompt pass and the later token loop</h2>
+  <p>The example tracks an index into the processed context. When caching is enabled and the iteration index is greater than zero, it selects a context size of one. Otherwise it selects the full length of the current token buffer and starts from position zero. This makes the first prompt evaluation different from subsequent cached decoding.</p>
+  <p>Inside attention, the implementation appends new key/value tensors to previously stored values and updates the per-block cache. Disabling the cache changes the work the loop feeds into the model; it does not change the model into a different tokenizer or a different set of weights. For another implementation of the prefill/decode split, see <a href="/ai/how-mlc-llm-runs">MLC LLM execution</a>.</p>
+
+  <h2 id="device-support-is-a-build-and-runtime-choice">Device support is a build and runtime choice</h2>
+  <p>The example helper honors an explicit CPU request first. Otherwise it checks CUDA availability, then Metal availability, then falls back to CPU. The source prints build-feature guidance when no GPU backend is available. The controls above show documented alternatives, not a promise that every binary contains all three backends.</p>
+  <p>The storage implementation dispatches matrix multiplication by matching CPU, CUDA or Metal storage. The selected branch calls that backend’s matmul implementation. Other tensor operators have their own implementations, and optional acceleration libraries or FlashAttention change details outside this page’s scope. Compare <a href="/ai/how-pytorch-runs">PyTorch’s device dispatch</a> and <a href="/ai/how-mlx-runs">MLX on Apple silicon</a>.</p>
+
+  <h2 id="logits-sampling-and-readable-text">Logits, sampling and readable text</h2>
+  <p>A model forward pass produces logits. The example optionally applies a repetition penalty, then its logits processor samples a token and appends that ID to the running token buffer. Temperature, top-k and top-p are request settings in this example, rather than separate model implementations.</p>
+  <p>The loop checks configured end-of-sequence token IDs before sending accepted output through TokenOutputStream. A tokenizer output stream may need additional tokens before it can emit a text fragment, so one model token should not be treated as one visible word or one printed chunk. The example flushes any remaining decoded text when generation ends.</p>
+
+  <h2 id="every-stage">Every stage</h2>
+  <div class="ai-stage-list">
+<article class="ai-stage-detail" id="detail-stage-rust" data-stage="rust">
+<h3>Rust Llama program</h3>
+<p class="ai-kind-tag" style="--kc:#60a5fa">programming language</p>
+<p>The compiled Rust example coordinates model loading, a generation loop and output streaming.</p>
+<p class="ai-lineage">In the atlas: <a href="/languages/rust">Rust</a></p>
+<ul class="ai-sources"><li><blockquote>use candle_transformers::generation::{LogitsProcessor, Sampling};</blockquote><a href="https://github.com/huggingface/candle/blob/main/candle-examples/examples/llama/main.rs" rel="noopener noreferrer" target="_blank">Candle floating-point Llama example: setup and token loop</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-weights" data-stage="weights">
+<h3>Safetensors weights</h3>
+<p class="ai-kind-tag" style="--kc:#fb7185">model format</p>
+<p>Floating-point model parameters are read through a memory-mapped safetensors VarBuilder with an explicit dtype and device.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/safetensors">Safetensors</a></p>
+<ul class="ai-sources"><li><blockquote>VarBuilder::from_mmaped_safetensors(&amp;filenames, dtype, &amp;device)?</blockquote><a href="https://github.com/huggingface/candle/blob/main/candle-examples/examples/llama/main.rs" rel="noopener noreferrer" target="_blank">Candle floating-point Llama example: setup and token loop</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-tokenizer" data-stage="tokenizer">
+<h3>Tokenizer</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>The example loads tokenizer.json through the Tokenizer API to encode the prompt before model execution.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/hf-tokenizers">HF Tokenizers</a></p>
+<ul class="ai-sources"><li><blockquote>let tokenizer = Tokenizer::from_file(tokenizer_filename).map_err(E::msg)?;</blockquote><a href="https://github.com/huggingface/candle/blob/main/candle-examples/examples/llama/main.rs" rel="noopener noreferrer" target="_blank">Candle floating-point Llama example: setup and token loop</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-model" data-stage="model">
+<h3>Candle Llama model</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>The Rust Llama model is constructed from configuration and loaded parameters. Its forward pass returns logits.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/candle">Candle</a></p>
+<ul class="ai-sources"><li><blockquote>(Llama::load(vb, &amp;config)?, tokenizer_filename, cache, config)</blockquote><a href="https://github.com/huggingface/candle/blob/main/candle-examples/examples/llama/main.rs" rel="noopener noreferrer" target="_blank">Candle floating-point Llama example: setup and token loop</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-prompt" data-stage="prompt">
+<h3>Prompt tensor</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>Prompt token IDs are converted into a tensor on the selected device and given a batch dimension.</p>
+
+<ul class="ai-sources"><li><blockquote>let input = Tensor::new(ctxt, &amp;device)?.unsqueeze(0)?;</blockquote><a href="https://github.com/huggingface/candle/blob/main/candle-examples/examples/llama/main.rs" rel="noopener noreferrer" target="_blank">Candle floating-point Llama example: setup and token loop</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-kv" data-stage="kv">
+<h3>Per-layer KV cache</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>Attention stores per-block key and value tensors and updates them as the sequence grows.</p>
+
+<ul class="ai-sources"><li><blockquote>cache.kvs[block_idx] = Some((k.clone(), v.clone()))</blockquote><a href="https://github.com/huggingface/candle/blob/main/candle-transformers/src/models/llama.rs" rel="noopener noreferrer" target="_blank">Candle Llama attention and cache implementation</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-full_context" data-stage="full_context">
+<h3>Full context again</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>Without the KV cache, each iteration feeds the full accumulated token sequence from position zero.</p>
+
+<ul class="ai-sources"><li><blockquote>let (context_size, context_index) = if cache.use_kv_cache &amp;&amp; index &gt; 0 {
+            (1, index_pos)
+        } else {
+            (tokens.len(), 0)
+        };</blockquote><a href="https://github.com/huggingface/candle/blob/main/candle-examples/examples/llama/main.rs" rel="noopener noreferrer" target="_blank">Candle floating-point Llama example: setup and token loop</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-incremental" data-stage="incremental">
+<h3>Single-token decode</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>After the first iteration, the cached path feeds one token at the current context position.</p>
+
+<ul class="ai-sources"><li><blockquote>let (context_size, context_index) = if cache.use_kv_cache &amp;&amp; index &gt; 0 {
+            (1, index_pos)
+        } else {
+            (tokens.len(), 0)
+        };</blockquote><a href="https://github.com/huggingface/candle/blob/main/candle-examples/examples/llama/main.rs" rel="noopener noreferrer" target="_blank">Candle floating-point Llama example: setup and token loop</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-ops" data-stage="ops">
+<h3>Tensor computation</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>The Llama attention path invokes tensor operations, including query/key matrix multiplication in the ordinary attention implementation.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/candle">Candle</a></p>
+<ul class="ai-sources"><li><blockquote>let att = (q.matmul(&amp;k.t()?)? / (self.head_dim as f64).sqrt())?;</blockquote><a href="https://github.com/huggingface/candle/blob/main/candle-transformers/src/models/llama.rs" rel="noopener noreferrer" target="_blank">Candle Llama attention and cache implementation</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-cpu_ops" data-stage="cpu_ops">
+<h3>CPU tensor backend</h3>
+<p class="ai-kind-tag" style="--kc:#93c5fd">runtime</p>
+<p>Matrix multiplication dispatches to the implementation for CPU-backed tensor storage.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/candle">Candle</a></p>
+<ul class="ai-sources"><li><blockquote>(Self::Cpu(lhs), Self::Cpu(rhs)) =&gt; {</blockquote><a href="https://github.com/huggingface/candle/blob/main/candle-core/src/storage.rs" rel="noopener noreferrer" target="_blank">Candle storage dispatch for matrix multiplication</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-cuda_ops" data-stage="cuda_ops">
+<h3>CUDA tensor backend</h3>
+<p class="ai-kind-tag" style="--kc:#93c5fd">runtime</p>
+<p>Matrix multiplication dispatches to the implementation for CUDA-backed tensor storage.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/cuda">CUDA</a></p>
+<ul class="ai-sources"><li><blockquote>(Self::Cuda(lhs), Self::Cuda(rhs)) =&gt; {</blockquote><a href="https://github.com/huggingface/candle/blob/main/candle-core/src/storage.rs" rel="noopener noreferrer" target="_blank">Candle storage dispatch for matrix multiplication</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-metal_ops" data-stage="metal_ops">
+<h3>Metal tensor backend</h3>
+<p class="ai-kind-tag" style="--kc:#93c5fd">runtime</p>
+<p>Matrix multiplication dispatches to the implementation for Metal-backed tensor storage.</p>
+
+<ul class="ai-sources"><li><blockquote>(Self::Metal(lhs), Self::Metal(rhs)) =&gt; {</blockquote><a href="https://github.com/huggingface/candle/blob/main/candle-core/src/storage.rs" rel="noopener noreferrer" target="_blank">Candle storage dispatch for matrix multiplication</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-cpu" data-stage="cpu">
+<h3>CPU</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">hardware</p>
+<p>The CPU selected explicitly or used when the example has no available GPU backend.</p>
+
+<ul class="ai-sources"><li><blockquote>if cpu {
+        Ok(Device::Cpu)
+    }</blockquote><a href="https://github.com/huggingface/candle/blob/main/candle-examples/src/lib.rs" rel="noopener noreferrer" target="_blank">Example device selection and build features</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-cuda" data-stage="cuda">
+<h3>NVIDIA GPU</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">hardware</p>
+<p>The example helper can construct CUDA device zero when CUDA support is available.</p>
+
+<ul class="ai-sources"><li><blockquote>Ok(Device::new_cuda(0)?)</blockquote><a href="https://github.com/huggingface/candle/blob/main/candle-examples/src/lib.rs" rel="noopener noreferrer" target="_blank">Example device selection and build features</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-metal" data-stage="metal">
+<h3>Apple GPU</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">hardware</p>
+<p>The example helper can construct Metal device zero when Metal support is available.</p>
+
+<ul class="ai-sources"><li><blockquote>Ok(Device::new_metal(0)?)</blockquote><a href="https://github.com/huggingface/candle/blob/main/candle-examples/src/lib.rs" rel="noopener noreferrer" target="_blank">Example device selection and build features</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-sample" data-stage="sample">
+<h3>Logits processor</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>The generation loop samples a token ID from the returned logits according to its sampling configuration.</p>
+
+<ul class="ai-sources"><li><blockquote>let next_token = logits_processor.sample(&amp;logits)?;</blockquote><a href="https://github.com/huggingface/candle/blob/main/candle-examples/examples/llama/main.rs" rel="noopener noreferrer" target="_blank">Candle floating-point Llama example: setup and token loop</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-text" data-stage="text">
+<h3>Text output stream</h3>
+<p class="ai-kind-tag" style="--kc:#60a5fa">application</p>
+<p>Accepted generated token IDs are decoded incrementally; the example prints fragments emitted by the output stream.</p>
+
+<ul class="ai-sources"><li><blockquote>if let Some(t) = tokenizer.next_token(next_token)? {</blockquote><a href="https://github.com/huggingface/candle/blob/main/candle-examples/examples/llama/main.rs" rel="noopener noreferrer" target="_blank">Candle floating-point Llama example: setup and token loop</a> <span class="src-type">Source repository</span></li><li><blockquote>Some(model::LlamaEosToks::Single(eos_tok_id)) if next_token == eos_tok_id =&gt; {</blockquote><a href="https://github.com/huggingface/candle/blob/main/candle-examples/examples/llama/main.rs" rel="noopener noreferrer" target="_blank">Candle floating-point Llama example: setup and token loop</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+  </div>
+
+  <h2 id="every-step">Every step</h2>
+  <div class="table-wrap"><table class="ai-steps">
+    <thead><tr><th>From</th><th>Step</th><th>To</th><th>When</th><th>What happens</th><th>Source</th></tr></thead>
+    <tbody>
+<tr id="detail-step-rust--weights" data-step="rust--weights" data-from="rust" data-to="weights" data-when="{}" class="on">
+<td>Rust Llama program</td><td>loads parameters</td><td>Safetensors weights</td><td>any device · any kv cache</td><td>The example supplies model weight filenames, dtype and device to the safetensors-backed VarBuilder.</td><td><a href="https://github.com/huggingface/candle/blob/main/candle-examples/examples/llama/main.rs" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-rust--tokenizer" data-step="rust--tokenizer" data-from="rust" data-to="tokenizer" data-when="{}" class="on">
+<td>Rust Llama program</td><td>loads tokenizer.json</td><td>Tokenizer</td><td>any device · any kv cache</td><td>A tokenizer is constructed from the model tokenizer file before prompt encoding.</td><td><a href="https://github.com/huggingface/candle/blob/main/candle-examples/examples/llama/main.rs" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-weights--model" data-step="weights--model" data-from="weights" data-to="model" data-when="{}" class="on">
+<td>Safetensors weights</td><td>initializes model</td><td>Candle Llama model</td><td>any device · any kv cache</td><td>The loaded parameter builder and model configuration construct the Rust Llama model.</td><td><a href="https://github.com/huggingface/candle/blob/main/candle-examples/examples/llama/main.rs" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-tokenizer--prompt" data-step="tokenizer--prompt" data-from="tokenizer" data-to="prompt" data-when="{}" class="on">
+<td>Tokenizer</td><td>encodes prompt IDs</td><td>Prompt tensor</td><td>any device · any kv cache</td><td>The tokenized context is converted to a tensor on the chosen device.</td><td><a href="https://github.com/huggingface/candle/blob/main/candle-examples/examples/llama/main.rs" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-prompt--model" data-step="prompt--model" data-from="prompt" data-to="model" data-when="{}" class="on">
+<td>Prompt tensor</td><td>runs prompt forward</td><td>Candle Llama model</td><td>any device · any kv cache</td><td>The model runs on the input tensor, context position and current cache.</td><td><a href="https://github.com/huggingface/candle/blob/main/candle-examples/examples/llama/main.rs" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-model--kv" data-step="model--kv" data-from="model" data-to="kv" data-when="{&quot;cache&quot;:[&quot;enabled&quot;]}" class="on">
+<td>Candle Llama model</td><td>updates keys and values</td><td>Per-layer KV cache</td><td>any device · KV cache enabled</td><td>With caching enabled, attention records the updated key/value tensors for each block.</td><td><a href="https://github.com/huggingface/candle/blob/main/candle-transformers/src/models/llama.rs" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-kv--incremental" data-step="kv--incremental" data-from="kv" data-to="incremental" data-when="{&quot;cache&quot;:[&quot;enabled&quot;]}" class="on">
+<td>Per-layer KV cache</td><td>reuses history</td><td>Single-token decode</td><td>any device · KV cache enabled</td><td>After prefill, the loop chooses one input token when KV caching is enabled.</td><td><a href="https://github.com/huggingface/candle/blob/main/candle-examples/examples/llama/main.rs" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-incremental--model" data-step="incremental--model" data-from="incremental" data-to="model" data-when="{&quot;cache&quot;:[&quot;enabled&quot;]}" class="on">
+<td>Single-token decode</td><td>runs next token</td><td>Candle Llama model</td><td>any device · KV cache enabled</td><td>The next iteration runs the model at the current context position using cached attention history.</td><td><a href="https://github.com/huggingface/candle/blob/main/candle-examples/examples/llama/main.rs" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-model--full_context" data-step="model--full_context" data-from="model" data-to="full_context" data-when="{&quot;cache&quot;:[&quot;disabled&quot;]}">
+<td>Candle Llama model</td><td>repeats full context</td><td>Full context again</td><td>any device · KV cache disabled</td><td>With caching disabled, the context-selection branch uses the full accumulated token sequence.</td><td><a href="https://github.com/huggingface/candle/blob/main/candle-examples/examples/llama/main.rs" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-full_context--model" data-step="full_context--model" data-from="full_context" data-to="model" data-when="{&quot;cache&quot;:[&quot;disabled&quot;]}">
+<td>Full context again</td><td>recomputes current sequence</td><td>Candle Llama model</td><td>any device · KV cache disabled</td><td>The model is called again with the context tensor; the uncached branch starts at position zero.</td><td><a href="https://github.com/huggingface/candle/blob/main/candle-examples/examples/llama/main.rs" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-model--ops" data-step="model--ops" data-from="model" data-to="ops" data-when="{}" class="on">
+<td>Candle Llama model</td><td>performs tensor operations</td><td>Tensor computation</td><td>any device · any kv cache</td><td>Ordinary Llama attention includes a scaled query/key matrix multiplication.</td><td><a href="https://github.com/huggingface/candle/blob/main/candle-transformers/src/models/llama.rs" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-ops--cpu_ops" data-step="ops--cpu_ops" data-from="ops" data-to="cpu_ops" data-when="{&quot;device&quot;:[&quot;cpu&quot;]}" class="on">
+<td>Tensor computation</td><td>uses CPU storage</td><td>CPU tensor backend</td><td>CPU · any kv cache</td><td>The storage match sends CPU-backed operands to their CPU matmul implementation.</td><td><a href="https://github.com/huggingface/candle/blob/main/candle-core/src/storage.rs" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-ops--cuda_ops" data-step="ops--cuda_ops" data-from="ops" data-to="cuda_ops" data-when="{&quot;device&quot;:[&quot;cuda&quot;]}">
+<td>Tensor computation</td><td>uses CUDA storage</td><td>CUDA tensor backend</td><td>NVIDIA GPU (CUDA) · any kv cache</td><td>The storage match sends CUDA-backed operands to their CUDA matmul implementation.</td><td><a href="https://github.com/huggingface/candle/blob/main/candle-core/src/storage.rs" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-ops--metal_ops" data-step="ops--metal_ops" data-from="ops" data-to="metal_ops" data-when="{&quot;device&quot;:[&quot;metal&quot;]}">
+<td>Tensor computation</td><td>uses Metal storage</td><td>Metal tensor backend</td><td>Apple GPU (Metal) · any kv cache</td><td>The storage match sends Metal-backed operands to their Metal matmul implementation.</td><td><a href="https://github.com/huggingface/candle/blob/main/candle-core/src/storage.rs" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-cpu_ops--cpu" data-step="cpu_ops--cpu" data-from="cpu_ops" data-to="cpu" data-when="{&quot;device&quot;:[&quot;cpu&quot;]}" class="on">
+<td>CPU tensor backend</td><td>runs on CPU</td><td>CPU</td><td>CPU · any kv cache</td><td>This branch represents the CPU device selected by the example helper.</td><td><a href="https://github.com/huggingface/candle/blob/main/candle-examples/src/lib.rs" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-cuda_ops--cuda" data-step="cuda_ops--cuda" data-from="cuda_ops" data-to="cuda" data-when="{&quot;device&quot;:[&quot;cuda&quot;]}">
+<td>CUDA tensor backend</td><td>runs on NVIDIA GPU</td><td>NVIDIA GPU</td><td>NVIDIA GPU (CUDA) · any kv cache</td><td>This branch represents a successfully initialized CUDA device.</td><td><a href="https://github.com/huggingface/candle/blob/main/candle-examples/src/lib.rs" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-metal_ops--metal" data-step="metal_ops--metal" data-from="metal_ops" data-to="metal" data-when="{&quot;device&quot;:[&quot;metal&quot;]}">
+<td>Metal tensor backend</td><td>runs on Apple GPU</td><td>Apple GPU</td><td>Apple GPU (Metal) · any kv cache</td><td>This branch represents a successfully initialized Metal device.</td><td><a href="https://github.com/huggingface/candle/blob/main/candle-examples/src/lib.rs" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-model--sample" data-step="model--sample" data-from="model" data-to="sample" data-when="{}" class="on">
+<td>Candle Llama model</td><td>returns logits for sampling</td><td>Logits processor</td><td>any device · any kv cache</td><td>After the forward pass and optional repetition penalty, the logits processor samples the next token.</td><td><a href="https://github.com/huggingface/candle/blob/main/candle-examples/examples/llama/main.rs" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-sample--text" data-step="sample--text" data-from="sample" data-to="text" data-when="{}" class="on">
+<td>Logits processor</td><td>decodes accepted tokens</td><td>Text output stream</td><td>any device · any kv cache</td><td>The loop sends generated token IDs to the tokenizer output stream and prints returned fragments.</td><td><a href="https://github.com/huggingface/candle/blob/main/candle-examples/examples/llama/main.rs" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="what-this-does-not-show">What this does not show</h2>
+  <p>The published candle-examples/examples/llama floating-point, single-request inference loop with the default non-FlashAttention model path. Device options represent appropriately compiled CPU, CUDA or Metal builds; the selector does not install GPU support. CPU discussion excludes optional MKL/Accelerate builds. Quantized examples, FlashAttention, training, model-family variants, distributed serving and proprietary driver internals are out of scope. Tensor matmul is the representative backend-dispatch example, not a claim that every operator uses the same kernel. The diagram separates model control flow from representative tensor execution. Hardware nodes are sinks; arrows to sampling describe model output dependencies rather than a literal GPU scheduling timeline.</p>
+
+  <h2 id="how-this-page-is-checked">How this page is checked</h2>
+  <p>Every stage and step above quotes the source that supports it. The quotes were checked against The official Candle floating-point Llama example, its Llama model implementation, storage dispatch and device-selection helper, fetched/read on 2026-11-12. on 2026-11-12. The data is a <a href="/dataset/ai/how-candle-runs.json">versioned JSON file</a> under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. Found something wrong or out of date? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
+  <p><a class="ai-graph-link" href="/explore?view=ai&amp;path=how-candle-runs&amp;device=cpu&amp;cache=enabled">See this path in the graph explorer &rarr;</a></p>
+  <p>What these tools are written in is in the main atlas: <a href="/languages/rust">Rust</a>, <a href="/tools/safetensors">Safetensors</a>, <a href="/tools/hf-tokenizers">HF Tokenizers</a>, <a href="/tools/candle">Candle</a>, <a href="/tools/cuda">CUDA</a>. More execution paths: <a href="/ai/how-jax-runs">What Actually Happens When You Run JAX Code</a>, <a href="/ai/how-keras-runs">What Runs Underneath a Keras 3 Model</a>, <a href="/ai/how-llama-cpp-runs">How Does llama.cpp Run a Model on Your Hardware</a>, <a href="/ai/how-mlc-llm-runs">How Does MLC LLM Turn a Compiled Model into Generated Tokens</a>, <a href="/ai/how-mlx-runs">What Actually Happens When You Run MLX on a Mac</a>, <a href="/ai/how-ollama-runs">What Actually Runs When You Send Ollama a Prompt</a>, <a href="/ai/how-onnx-runtime-runs">How Does ONNX Runtime Execute a Model Across Hardware</a>, <a href="/ai/how-pytorch-runs">What Actually Happens When You Run a PyTorch Model</a>, <a href="/ai/how-sglang-runs">What Actually Happens When SGLang Serves a Request</a>, <a href="/ai/how-tensorflow-runs">How Does TensorFlow Run Python on a CPU or GPU</a>, <a href="/ai/how-tensorrt-llm-runs">What Actually Happens When TensorRT-LLM Runs a Model</a>, <a href="/ai/how-transformers-runs">What Actually Happens When You Run a Hugging Face Pipeline</a>, <a href="/ai/how-vllm-runs">What Actually Happens When vLLM Serves a Request</a>, or <a href="/ai">compare them all</a>.</p>
+
+  <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>
+</main>
+<footer class="seo-footer-rich">
+  <div data-nosnippet>
+  <div class="footer-grid">
+    <div class="footer-col">
+      <span class="footer-col-head">Explore</span>
+      <a href="/programming-language-graph">Programming language graph</a>
+      <a href="/rankings/most-influential">Most influential languages</a>
+      <a href="/rss.xml">RSS feed</a>
+      <a href="/embed-kit">Embed the graph</a>
+      <a href="/guides/programming-language-family-tree">Language family tree</a>
+      <a href="/programming-language-evolution">Evolution timeline</a>
+      <a href="/what-are-programming-languages-written-in">What languages are written in</a>
+      <a href="/ai">How AI frameworks run code</a>
+      <a href="/explore">Interactive Graph</a>
+      <a href="/dataset">Dataset</a>
+      <a href="/directory">Site Directory</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Popular Languages</span>
+      <a href="/languages/python">Python</a>
+      <a href="/languages/javascript">JavaScript</a>
+      <a href="/languages/rust">Rust</a>
+      <a href="/languages/go">Go</a>
+      <a href="/languages/java">Java</a>
+      <a href="/languages/c">C</a>
+      <a href="/languages/cxx">C++</a>
+      <a href="/languages/typescript">TypeScript</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Questions</span>
+      <a href="/questions/what-is-python-written-in">What is Python written in?</a>
+      <a href="/questions/what-is-javascript-written-in">What is JavaScript written in?</a>
+      <a href="/questions/what-is-rust-written-in">What is Rust written in?</a>
+      <a href="/questions/what-is-go-written-in">What is Go written in?</a>
+      <a href="/questions/what-is-compiler-bootstrapping">What is compiler bootstrapping?</a>
+      <a href="/questions">All questions &rarr;</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Tools &amp; Guides</span>
+      <a href="/tools/v8">V8</a>
+      <a href="/tools/llvm">LLVM</a>
+      <a href="/tools/gcc">GCC</a>
+      <a href="/tools/ghc">GHC</a>
+      <a href="/guides">All guides</a>
+      <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </div>
+  <p class="footer-note">The Language Lineage dataset is meticulously curated and verified by human researchers. We use AI agents to assist with large-scale data gathering and modeling, but every implementation fact is manually reviewed for accuracy. Spot an error? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue on GitHub</a> and it gets fixed. <a href="/how-it-works">Learn how it works &rarr;</a></p>
+  <div class="footer-bottom">Made with <span style="color:#fb7185">❤️</span> by <a href="https://github.com/sanketmuchhala" rel="noopener noreferrer">Sanket Muchhala</a> &middot; <a href="/">Language Lineage</a></div>
+  </div>
+</footer>
+</body>
+</html>

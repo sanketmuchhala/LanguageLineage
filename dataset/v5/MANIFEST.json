@@ -36,10 +36,10 @@
     "enrichment_records": 148,
     "logo_overrides": 22,
     "ai_execution_paths": {
-      "total": 13,
-      "stages": 173,
-      "steps": 203,
-      "sources": 93
+      "total": 14,
+      "stages": 190,
+      "steps": 222,
+      "sources": 97
     }
   },
   "files": [
@@ -75,6 +75,17 @@
     }
   ],
   "ai_paths": [
+    {
+      "slug": "how-candle-runs",
+      "name": "Candle",
+      "path": "dataset/ai/how-candle-runs.json",
+      "verified_on": "2026-11-12",
+      "stages": 17,
+      "steps": 19,
+      "sources": 4,
+      "sha256": "a16b78a25d24f15ac959b6801229b45f783d24e4314d8ef24cbcf74d980708e7",
+      "bytes": 24231
+    },
     {
       "slug": "how-jax-runs",
       "name": "JAX",

@@ -4,59 +4,63 @@
     "lastmod": "2026-07-02"
   },
   "/ai": {
-    "hash": "388173316d80b768",
+    "hash": "d78608b8399cad9d",
+    "lastmod": "2026-11-13"
+  },
+  "/ai/how-candle-runs": {
+    "hash": "e73abca5ccb4f2cb",
     "lastmod": "2026-11-13"
   },
   "/ai/how-jax-runs": {
-    "hash": "c1ffb86112bf39db",
+    "hash": "4c405f1e5391d59b",
     "lastmod": "2026-11-13"
   },
   "/ai/how-keras-runs": {
-    "hash": "4ad209aeeef7ebec",
+    "hash": "8e6f384cdcf0345e",
     "lastmod": "2026-11-13"
   },
   "/ai/how-llama-cpp-runs": {
-    "hash": "e618c3bf70b22a92",
+    "hash": "d09e4405e45aa2b1",
     "lastmod": "2026-11-13"
   },
   "/ai/how-mlc-llm-runs": {
-    "hash": "8ae85c97d10c9244",
+    "hash": "ab986db6bcc7ebfa",
     "lastmod": "2026-11-13"
   },
   "/ai/how-mlx-runs": {
-    "hash": "c6aeb26ae40835b4",
+    "hash": "c2acd512243035cd",
     "lastmod": "2026-11-13"
   },
   "/ai/how-ollama-runs": {
-    "hash": "ef2b96d9a7cca299",
+    "hash": "25187ed758e8b27f",
     "lastmod": "2026-11-13"
   },
   "/ai/how-onnx-runtime-runs": {
-    "hash": "9e977ff9f60e4cbc",
+    "hash": "e6babd9a08b1a119",
     "lastmod": "2026-11-13"
   },
   "/ai/how-pytorch-runs": {
-    "hash": "176acd86a4ce74aa",
+    "hash": "cdeff29b765e0d79",
     "lastmod": "2026-11-13"
   },
   "/ai/how-sglang-runs": {
-    "hash": "c466def9ee254d89",
+    "hash": "b2d99d0129334703",
     "lastmod": "2026-11-13"
   },
   "/ai/how-tensorflow-runs": {
-    "hash": "0e5154a86d3f8576",
+    "hash": "e01f43dcb9f43093",
     "lastmod": "2026-11-13"
   },
   "/ai/how-tensorrt-llm-runs": {
-    "hash": "be0bbe2758c0dbe2",
+    "hash": "c0d0540dab73be32",
     "lastmod": "2026-11-13"
   },
   "/ai/how-transformers-runs": {
-    "hash": "315656c454d3ee54",
+    "hash": "a5e8136a79ca745f",
     "lastmod": "2026-11-13"
   },
   "/ai/how-vllm-runs": {
-    "hash": "fa788bec1d695040",
+    "hash": "86048019e6e61ba0",
     "lastmod": "2026-11-13"
   },
   "/compiler-runtime-bootstrap": {
@@ -648,7 +652,7 @@
     "lastmod": "2026-11-13"
   },
   "/languages/rust": {
-    "hash": "80b8d81fef755ec1",
+    "hash": "b41d3d1a4f9258ea",
     "lastmod": "2026-11-13"
   },
   "/languages/s": {
@@ -1308,7 +1312,7 @@
     "lastmod": "2026-11-13"
   },
   "/tools/candle": {
-    "hash": "aeeb04c97407e1b0",
+    "hash": "08510c5153aa0234",
     "lastmod": "2026-11-13"
   },
   "/tools/chez-scheme": {
@@ -1360,7 +1364,7 @@
     "lastmod": "2026-11-13"
   },
   "/tools/hf-tokenizers": {
-    "hash": "8526acf5e095919d",
+    "hash": "b933815756b93df8",
     "lastmod": "2026-11-13"
   },
   "/tools/hhvm": {
@@ -1452,7 +1456,7 @@
     "lastmod": "2026-11-13"
   },
   "/tools/safetensors": {
-    "hash": "7eb1b096d39c29df",
+    "hash": "f3f3b0cfc036ccbb",
     "lastmod": "2026-11-13"
   },
   "/tools/sglang": {
