@@ -8,6 +8,7 @@ import { LASTMOD_TOKEN, filePathToUrl, resolveDate, flushManifest } from './page
 import { sourceLabel } from './sourceType.js';
 import { buildPosterModel, POSTER_SLUG, POSTER_TYPES, POSTER_MIN_GROUP } from './posterData.js';
 import { loadAllPaths, buildPathSvg, activePath, defaultSelection, allSelections, statusText, whenText, stepId, KIND_STYLE, type PathsData, type Selection } from './aiPaths.js';
+import { buildConvergenceModel, buildConvergenceSvg, buildAnatomy, buildAnatomyHtml, buildLanguageMatrix, buildLanguageTable, NO_SHARED_TOOL, type NodeInfo } from './aiVisuals.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -41,6 +42,7 @@ const NAV_HTML = `<nav class="seo-nav">
   <a href="/relationships">Relationships</a>
   <a href="/languages">Languages</a>
   <a href="/tools">Tools</a>
+  <a href="/ai">AI</a>
   <a href="/guides">Guides</a>
   <a href="/timeline">Timeline</a>
   <a href="/dataset">Dataset</a>
@@ -6599,6 +6601,25 @@ function buildAiHubPage(pages: PathsData[], nodeMap: Map<string, Language>): str
   const sharedRows = sharedIds.map(r => `<tr><td>${linkNode(r.id, nodeMap)}</td>${r.in.map(x => `<td>${x ? '<span aria-label="yes">&#10003;</span>' : '<span aria-label="no">&ndash;</span>'}</td>`).join('')}</tr>`).join('\n');
   const inAll = sharedIds.filter(r => r.in.every(Boolean)).map(r => escapeHtml(nodeMap.get(r.id)!.name));
 
+  // Cross-explainer visuals (scripts/aiVisuals.ts): counted from the same files, no new claims.
+  const info: NodeInfo = {
+    name: id => nameFromId(id, nodeMap),
+    href: id => `/${idToPrefix(id)}/${idToSlug(id)}`,
+    exists: id => nodeMap.has(id),
+  };
+  const conv = buildConvergenceModel(pages, info);
+  const convHw = conv.nodes.filter(n => n.col === 2);
+  const convTop = conv.nodes.filter(n => n.col === 1 && n.id !== NO_SHARED_TOOL).sort((a, b) => b.tokens.length - a.tokens.length).slice(0, 2);
+  const anatomy = buildAnatomy(pages);
+  const total = (r: typeof anatomy[number]) => r.stages.length + r.side.length;
+  const byLen = [...anatomy].sort((a, b) => total(a) - total(b));
+  const shortLen = total(byLen[0]), longLen = total(byLen[byLen.length - 1]);
+  const namesAt = (n: number) => listJoin(anatomy.filter(r => total(r) === n).map(r => escapeHtml(r.name)));
+  const langMatrix = buildLanguageMatrix(pages, rels, info);
+  const langFw = (lang: string) => langMatrix.rows.filter(r => r.cells.has(lang)).length;
+  const langColor = (id: string) => ({ 'lang:cxx': '#659ad2', 'lang:c': '#a8b9cc', 'lang:python': '#4b8bbe', 'lang:rust': '#e0734f', 'lang:go': '#00add8' } as Record<string, string>)[id] ?? LOGO_COLORS[id] ?? '#9a9a9a';
+  const langSummary = langMatrix.languages.map(l => `${escapeHtml(nameFromId(l, nodeMap))} (${langFw(l)} of ${pages.length})`).join(', ');
+
   const itemListJsonLd = JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'ItemList',
@@ -6635,6 +6656,7 @@ function buildAiHubPage(pages: PathsData[], nodeMap: Map<string, Language>): str
   <meta name="twitter:card" content="summary_large_image" />
   <script type="application/ld+json">${itemListJsonLd}</script>
   <script type="application/ld+json">${breadcrumbJsonLd}</script>
+  <script defer src="/ai-hub.js"></script>
 </head>
 <body class="seo-page">
 ${SKIP_LINK}
@@ -6648,6 +6670,26 @@ ${NAV_HTML}
 
   <div class="answer-box">Each explainer below traces one AI framework from the line of code you write to the chip that runs it. Pick a mode and a device, and the diagram shows which stages your code passes through. Every stage and every arrow quotes the official documentation or source code that supports it.</div>
 
+  <nav class="ai-jump" aria-label="On this page">
+    <a href="#convergence">Convergence map</a><a href="#anatomy">Path anatomy</a><a href="#languages">Languages</a><a href="#explainers">All explainers</a><a href="#every-path">Every path</a>
+  </nav>
+
+  <h2 id="convergence">Where every path converges</h2>
+  <p>All ${conv.paths.length} selectable paths across the ${pages.length} explainers, from the framework on the left, through the atlas tools that at least two explainers share, to the hardware they reach. Thicker lines carry more paths. ${convTop.map(n => `<strong>${escapeHtml(n.label)}</strong>`).join(' and ')} sit on the most paths; ${convHw.map(n => `${escapeHtml(n.label)} (${n.tokens.length})`).join(', ')} are the targets. Select a framework, tool or chip to trace only its paths.</p>
+  <figure class="cv-wrap" id="ai-convergence">
+    <div class="cv-scroll">${buildConvergenceSvg(conv)}</div>
+    <figcaption class="cv-detail" aria-live="polite" data-default="Select a framework, tool or chip to highlight its paths. Frameworks and tools open their pages.">Select a framework, tool or chip to highlight its paths. Frameworks and tools open their pages.</figcaption>
+  </figure>
+
+  <h2 id="anatomy">Where your code hands over</h2>
+  <p>The default path of each explainer, one block per stage in execution order, coloured by the layer its data file assigns. The white bar marks where your own code ends and the framework takes over; outlined blocks after the chip are side stages (a cache, a detokenizer, post-processing) whose place along the line the sources do not fix. ${namesAt(shortLen)} ${anatomy.filter(r => total(r) === shortLen).length > 1 ? 'have the shortest default paths' : 'has the shortest default path'} (${shortLen} stages) and ${namesAt(longLen)} the longest (${longLen}). More stages means more documented layers, not slower code. Select a layer to highlight it; each row opens that path.</p>
+  ${buildAnatomyHtml(anatomy)}
+
+  <h2 id="languages">What the AI stack is written in</h2>
+  <p>For each explainer, the languages its atlas tools are written in, from the dataset's current compiler and runtime edges. A bigger dot means more of that explainer's tools use the language: ${langSummary}. Hover a dot for the tools; each language links to its atlas page with the sources.</p>
+  ${buildLanguageTable(langMatrix, info, langColor)}
+
+  <h2 id="explainers">All explainers</h2>
   <div class="ai-hub-cards">
 ${cards}
   </div>
