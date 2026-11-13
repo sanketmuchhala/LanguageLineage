@@ -4,55 +4,59 @@
     "lastmod": "2026-07-02"
   },
   "/ai": {
-    "hash": "9b957f74aef5dfcf",
+    "hash": "388173316d80b768",
     "lastmod": "2026-11-13"
   },
   "/ai/how-jax-runs": {
-    "hash": "8154308bc7b7270a",
+    "hash": "c1ffb86112bf39db",
     "lastmod": "2026-11-13"
   },
   "/ai/how-keras-runs": {
-    "hash": "7f4b00e83813fc56",
+    "hash": "4ad209aeeef7ebec",
     "lastmod": "2026-11-13"
   },
   "/ai/how-llama-cpp-runs": {
-    "hash": "79e37fc56b88ea6c",
+    "hash": "e618c3bf70b22a92",
+    "lastmod": "2026-11-13"
+  },
+  "/ai/how-mlc-llm-runs": {
+    "hash": "8ae85c97d10c9244",
     "lastmod": "2026-11-13"
   },
   "/ai/how-mlx-runs": {
-    "hash": "4327f8bc9ff8d44b",
+    "hash": "c6aeb26ae40835b4",
     "lastmod": "2026-11-13"
   },
   "/ai/how-ollama-runs": {
-    "hash": "7ecabf9cc779a102",
+    "hash": "ef2b96d9a7cca299",
     "lastmod": "2026-11-13"
   },
   "/ai/how-onnx-runtime-runs": {
-    "hash": "2f6790a5338540e5",
+    "hash": "9e977ff9f60e4cbc",
     "lastmod": "2026-11-13"
   },
   "/ai/how-pytorch-runs": {
-    "hash": "9f22c20bf71755b3",
+    "hash": "176acd86a4ce74aa",
     "lastmod": "2026-11-13"
   },
   "/ai/how-sglang-runs": {
-    "hash": "a6863ef10520d08c",
+    "hash": "c466def9ee254d89",
     "lastmod": "2026-11-13"
   },
   "/ai/how-tensorflow-runs": {
-    "hash": "5262ab55969f062e",
+    "hash": "0e5154a86d3f8576",
     "lastmod": "2026-11-13"
   },
   "/ai/how-tensorrt-llm-runs": {
-    "hash": "006e655be979234d",
+    "hash": "be0bbe2758c0dbe2",
     "lastmod": "2026-11-13"
   },
   "/ai/how-transformers-runs": {
-    "hash": "56342c97bbd1a0a8",
+    "hash": "315656c454d3ee54",
     "lastmod": "2026-11-13"
   },
   "/ai/how-vllm-runs": {
-    "hash": "ca8fe32a8b02f773",
+    "hash": "fa788bec1d695040",
     "lastmod": "2026-11-13"
   },
   "/compiler-runtime-bootstrap": {
@@ -272,7 +276,7 @@
     "lastmod": "2026-11-13"
   },
   "/languages/cxx": {
-    "hash": "c9f24b39748743f2",
+    "hash": "872334c76948fa50",
     "lastmod": "2026-11-13"
   },
   "/languages/cyclone": {
@@ -600,7 +604,7 @@
     "lastmod": "2026-11-13"
   },
   "/languages/python": {
-    "hash": "2643bbafb70bebd3",
+    "hash": "b61a996ec9b2fd0e",
     "lastmod": "2026-11-13"
   },
   "/languages/qsharp": {
@@ -1392,7 +1396,7 @@
     "lastmod": "2026-11-13"
   },
   "/tools/mlc-llm": {
-    "hash": "f4f95f2b92c76142",
+    "hash": "c26981f2fce49477",
     "lastmod": "2026-11-13"
   },
   "/tools/mlx": {
@@ -1480,7 +1484,7 @@
     "lastmod": "2026-11-13"
   },
   "/tools/tvm": {
-    "hash": "b723ab7ffa6baa62",
+    "hash": "09b4ab1c1da0ccea",
     "lastmod": "2026-11-13"
   },
   "/tools/v8": {

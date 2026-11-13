@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How MLC LLM Runs: Compilation, KV Cache and Tokens | Language Lineage</title>
+  <meta name="description" content="Trace MLC LLM from converted weights and TVM compilation to native runtime, prompt prefill, KV cache, sampling and token decoding on a local GPU, with primary sources." />
+  <link rel="canonical" href="https://www.languagelineage.org/ai/how-mlc-llm-runs" />
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="/fonts/geist.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><script defer src="/fx.js"></script><script defer src="/_vercel/insights/script.js"></script><script defer src="/_vercel/speed-insights/script.js"></script><link rel="alternate" type="application/rss+xml" title="Language Lineage" href="/rss.xml" /><link rel="stylesheet" href="/seo.css" />
+  <script defer src="/ai-path.js"></script>
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="How MLC LLM Runs: Compilation, KV Cache and Tokens | Language Lineage" />
+  <meta property="og:description" content="Trace MLC LLM from converted weights and TVM compilation to native runtime, prompt prefill, KV cache, sampling and token decoding on a local GPU, with primary sources." />
+  <meta property="og:url" content="https://www.languagelineage.org/ai/how-mlc-llm-runs" />
+  <meta property="og:image" content="https://www.languagelineage.org/og/ai-how-mlc-llm-runs.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"How Does MLC LLM Turn a Compiled Model into Generated Tokens?","description":"Trace MLC LLM from converted weights and TVM compilation to native runtime, prompt prefill, KV cache, sampling and token decoding on a local GPU, with primary sources.","url":"https://www.languagelineage.org/ai/how-mlc-llm-runs","datePublished":"2026-11-12","dateModified":"2026-11-13","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"citation":["https://github.com/mlc-ai/mlc-llm/blob/main/docs/get_started/introduction.rst","https://github.com/mlc-ai/mlc-llm/blob/main/docs/compilation/compile_models.rst","https://github.com/mlc-ai/mlc-llm/blob/main/docs/compilation/convert_weights.rst","https://github.com/mlc-ai/mlc-llm/blob/main/docs/install/tvm.rst","https://github.com/mlc-ai/mlc-llm/blob/main/cpp/serve/model.h","https://github.com/mlc-ai/mlc-llm/blob/main/cpp/serve/sampler/sampler.h","https://github.com/mlc-ai/mlc-llm/blob/main/docs/deploy/python_engine.rst","https://github.com/mlc-ai/mlc-llm/blob/main/cpp/tokenizers/tokenizers.h"],"inLanguage":"en"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"AI execution paths","item":"https://www.languagelineage.org/ai"},{"@type":"ListItem","position":3,"name":"How Does MLC LLM Turn a Compiled Model into Generated Tokens?","item":"https://www.languagelineage.org/ai/how-mlc-llm-runs"}]}</script>
+</head>
+<body class="seo-page">
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<nav class="seo-nav">
+  <a href="/" class="nav-brand"><img class="nav-logo-mark" src="/logo-mark.svg" width="22" height="22" alt="" aria-hidden="true">Language Lineage</a>
+  <a href="/relationships">Relationships</a>
+  <a href="/languages">Languages</a>
+  <a href="/tools">Tools</a>
+  <a href="/ai">AI</a>
+  <a href="/guides">Guides</a>
+  <a href="/timeline">Timeline</a>
+  <a href="/dataset">Dataset</a>
+  <a href="/how-it-works">How It Works</a>
+  <a href="/explore" class="nav-enter-graph">Enter Graph</a>
+</nav>
+<main class="seo-main" id="main-content">
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="/">Home</a> &rsaquo; <a href="/ai">AI execution paths</a> &rsaquo; How Does MLC LLM Turn a Compiled Model into Generated Tokens
+  </nav>
+
+  <h1>How Does MLC LLM Turn a Compiled Model into Generated Tokens?</h1>
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#the-selected-path-step-by-step">The selected path, step by step</a></li>
+    <li><a href="#weights-are-data-the-model-library-is-executable-logic">Weights are data; the model library is executable logic</a></li>
+    <li><a href="#why-the-first-run-can-do-more-work">Why the first run can do more work</a></li>
+    <li><a href="#prefill-and-decode-do-different-jobs">Prefill and decode do different jobs</a></li>
+    <li><a href="#one-request-is-not-a-batching-claim">One request is not a batching claim</a></li>
+    <li><a href="#every-stage">Every stage</a></li>
+    <li><a href="#every-step">Every step</a></li>
+    <li><a href="#what-this-does-not-show">What this does not show</a></li>
+    <li><a href="#how-this-page-is-checked">How this page is checked</a></li>
+  </ol>
+</nav>
+
+  <div class="answer-box">MLC LLM needs <strong>two different artifacts</strong>: converted model <strong>weights</strong> and a target-compatible <strong>model library</strong> containing inference logic. A first run can use <strong>Apache TVM</strong> to compile that library; later runs can reuse matching cached artifacts. The native runtime tokenizes the prompt, embeds its token IDs and performs <strong>prefill</strong> to produce next-token logits. A <strong>sampler</strong> selects a token. Subsequent <strong>decode</strong> calls process the last committed token while the <strong>KV cache</strong> retains earlier attention keys and values. That loop produces more tokens; detokenization converts their IDs back into text. GPU execution and Python compilation are distinct parts of the system.</div>
+
+  <section class="ai-explorer" id="explorer" aria-label="Execution path explorer">
+    <form class="ai-controls" onsubmit="return false">
+      <fieldset><legend>Startup</legend>
+        <label><input type="radio" name="startup" value="first_run" data-phrase="a first run with compilation" checked> First run / missing artifacts</label>
+        <label><input type="radio" name="startup" value="cached" data-phrase="a run reusing cached artifacts"> Matching local cache</label>
+      </fieldset>
+      <button type="button" class="ai-copy" hidden>Copy link to this path</button>
+    </form>
+    <p class="ai-status" aria-live="polite" data-template="Showing {startup} for a supported single-GPU MLC model">Showing a first run with compilation for a supported single-GPU MLC model: 12 stages, 15 steps.</p>
+    <div class="ai-layout">
+      <div class="ai-diagram-wrap"><svg class="ai-path-svg" viewBox="0 0 826 624" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Execution path diagram: select a stage or step for details">
+<defs><marker id="ai-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9a9a9a"/></marker></defs>
+<path id="step-request--weights" class="ai-step on" d="M413,62 C413,78 104,78 104,88" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="MLC chat request obtains model parameters Converted weights"><title>MLC chat request obtains model parameters Converted weights</title></path>
+<path id="step-request--compiler" class="ai-step on" d="M413,62 C413,78 722,78 722,88" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="MLC chat request compiles when needed TVM compilation"><title>MLC chat request compiles when needed TVM compilation</title></path>
+<path id="step-compiler--library" class="ai-step on" d="M722,140 C722,156 722,156 722,166" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="TVM compilation generates inference logic Native model library"><title>TVM compilation generates inference logic Native model library</title></path>
+<path id="step-request--library" class="ai-step" d="M413,62 C413,117 722,117 722,166" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="MLC chat request reuses matching library Native model library"><title>MLC chat request reuses matching library Native model library</title></path>
+<path id="step-library--engine" class="ai-step on" d="M722,218 C722,234 413,234 413,244" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Native model library is loaded into Native chat runtime"><title>Native model library is loaded into Native chat runtime</title></path>
+<path id="step-weights--engine" class="ai-step on" d="M104,140 C104,195 413,195 413,244" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Converted weights supply model parameters Native chat runtime"><title>Converted weights supply model parameters Native chat runtime</title></path>
+<path id="step-engine--tokenizer" class="ai-step on" d="M413,296 C413,312 104,312 104,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Native chat runtime encodes prompt text Prompt tokenization"><title>Native chat runtime encodes prompt text Prompt tokenization</title></path>
+<path id="step-tokenizer--prefill" class="ai-step on" d="M104,374 C104,390 207,390 207,400" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Prompt tokenization embeds prompt IDs Prompt prefill"><title>Prompt tokenization embeds prompt IDs Prompt prefill</title></path>
+<path id="step-engine--kv" class="ai-step on" d="M413,296 C413,312 722,312 722,322" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Native chat runtime maintains sequence state Attention KV cache"><title>Native chat runtime maintains sequence state Attention KV cache</title></path>
+<path id="step-kv--prefill" class="ai-step on" d="M722,374 C722,390 207,390 207,400" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Attention KV cache provides sequence state Prompt prefill"><title>Attention KV cache provides sequence state Prompt prefill</title></path>
+<path id="step-prefill--sample" class="ai-step on" d="M207,452 C207,468 413,468 413,478" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Prompt prefill returns next-token logits Token sampling"><title>Prompt prefill returns next-token logits Token sampling</title></path>
+<path id="step-sample--decode" class="ai-step on" d="M501,507 C513,507 513,429 525,429" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Token sampling commits the next token Next-token decode"><title>Token sampling commits the next token Next-token decode</title></path>
+<path id="step-decode--sample" class="ai-step on" d="M619,452 C619,468 413,468 413,478" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Next-token decode returns new logits Token sampling"><title>Next-token decode returns new logits Token sampling</title></path>
+<path id="step-sample--text" class="ai-step on" d="M413,530 C413,546 207,546 207,556" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Token sampling decodes selected IDs Detokenized output"><title>Token sampling decodes selected IDs Detokenized output</title></path>
+<path id="step-prefill--gpu" class="ai-step on" d="M207,452 C207,507 619,507 619,556" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Prompt prefill executes compiled model on Selected local GPU"><title>Prompt prefill executes compiled model on Selected local GPU</title></path>
+<path id="step-decode--gpu" class="ai-step on" d="M619,452 C619,507 619,507 619,556" marker-end="url(#ai-arrow)" tabindex="0" role="button" aria-label="Next-token decode executes compiled model on Selected local GPU"><title>Next-token decode executes compiled model on Selected local GPU</title></path>
+<g id="stage-request" class="ai-stage on" tabindex="0" role="button" aria-label="MLC chat request: Your program">
+  <rect x="325" y="16" width="176" height="46" rx="7" style="--kc:#60a5fa"/>
+  <rect x="325" y="16" width="4" height="46" rx="2" fill="#60a5fa"/>
+  <text x="339" y="35" class="ai-name">MLC chat request</text>
+  <text x="339" y="51" class="ai-kind">application</text>
+</g>
+<g id="stage-weights" class="ai-stage on" tabindex="0" role="button" aria-label="Converted weights: Model file">
+  <rect x="16" y="94" width="176" height="46" rx="7" style="--kc:#fb7185"/>
+  <rect x="16" y="94" width="4" height="46" rx="2" fill="#fb7185"/>
+  <text x="30" y="113" class="ai-name">Converted weights</text>
+  <text x="30" y="129" class="ai-kind">model format</text>
+</g>
+<g id="stage-compiler" class="ai-stage on" tabindex="0" role="button" aria-label="TVM compilation: Compiler">
+  <rect x="634" y="94" width="176" height="46" rx="7" style="--kc:#a78bfa"/>
+  <rect x="634" y="94" width="4" height="46" rx="2" fill="#a78bfa"/>
+  <text x="648" y="113" class="ai-name">TVM compilation</text>
+  <text x="648" y="129" class="ai-kind">compiler</text>
+</g>
+<g id="stage-library" class="ai-stage on" tabindex="0" role="button" aria-label="Native model library: Hardware">
+  <rect x="634" y="172" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="634" y="172" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="648" y="191" class="ai-name">Native model library</text>
+  <text x="648" y="207" class="ai-kind">machine code</text>
+</g>
+<g id="stage-engine" class="ai-stage on" tabindex="0" role="button" aria-label="Native chat runtime: Runtime">
+  <rect x="325" y="250" width="176" height="46" rx="7" style="--kc:#93c5fd"/>
+  <rect x="325" y="250" width="4" height="46" rx="2" fill="#93c5fd"/>
+  <text x="339" y="269" class="ai-name">Native chat runtime</text>
+  <text x="339" y="285" class="ai-kind">runtime</text>
+</g>
+<g id="stage-tokenizer" class="ai-stage on" tabindex="0" role="button" aria-label="Prompt tokenization: Framework core">
+  <rect x="16" y="328" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="16" y="328" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="30" y="347" class="ai-name">Prompt tokenization</text>
+  <text x="30" y="363" class="ai-kind">framework component</text>
+</g>
+<g id="stage-kv" class="ai-stage on" tabindex="0" role="button" aria-label="Attention KV cache: Framework core">
+  <rect x="634" y="328" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="634" y="328" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="648" y="347" class="ai-name">Attention KV cache</text>
+  <text x="648" y="363" class="ai-kind">framework component</text>
+</g>
+<g id="stage-prefill" class="ai-stage on" tabindex="0" role="button" aria-label="Prompt prefill: Framework core">
+  <rect x="119" y="406" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="119" y="406" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="133" y="425" class="ai-name">Prompt prefill</text>
+  <text x="133" y="441" class="ai-kind">framework component</text>
+</g>
+<g id="stage-decode" class="ai-stage on" tabindex="0" role="button" aria-label="Next-token decode: Framework core">
+  <rect x="531" y="406" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="531" y="406" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="545" y="425" class="ai-name">Next-token decode</text>
+  <text x="545" y="441" class="ai-kind">framework component</text>
+</g>
+<g id="stage-sample" class="ai-stage on" tabindex="0" role="button" aria-label="Token sampling: Framework core">
+  <rect x="325" y="484" width="176" height="46" rx="7" style="--kc:#e3a008"/>
+  <rect x="325" y="484" width="4" height="46" rx="2" fill="#e3a008"/>
+  <text x="339" y="503" class="ai-name">Token sampling</text>
+  <text x="339" y="519" class="ai-kind">framework component</text>
+</g>
+<g id="stage-text" class="ai-stage on" tabindex="0" role="button" aria-label="Detokenized output: Your program">
+  <rect x="119" y="562" width="176" height="46" rx="7" style="--kc:#60a5fa"/>
+  <rect x="119" y="562" width="4" height="46" rx="2" fill="#60a5fa"/>
+  <text x="133" y="581" class="ai-name">Detokenized output</text>
+  <text x="133" y="597" class="ai-kind">application</text>
+</g>
+<g id="stage-gpu" class="ai-stage on" tabindex="0" role="button" aria-label="Selected local GPU: Hardware">
+  <rect x="531" y="562" width="176" height="46" rx="7" style="--kc:#4ade80"/>
+  <rect x="531" y="562" width="4" height="46" rx="2" fill="#4ade80"/>
+  <text x="545" y="581" class="ai-name">Selected local GPU</text>
+  <text x="545" y="597" class="ai-kind">hardware</text>
+</g>
+</svg></div>
+      <aside class="ai-detail" aria-live="polite"><p class="ai-detail-hint">Select a stage or an arrow to see what it does and the source behind it.</p></aside>
+    </div>
+    <ul class="ai-legend" aria-label="Legend"><li><span class="ai-swatch" style="--kc:#60a5fa"></span>Your program</li><li><span class="ai-swatch" style="--kc:#93c5fd"></span>Runtime</li><li><span class="ai-swatch" style="--kc:#e3a008"></span>Framework core</li><li><span class="ai-swatch" style="--kc:#fb7185"></span>Model file</li><li><span class="ai-swatch" style="--kc:#a78bfa"></span>Compiler</li><li><span class="ai-swatch" style="--kc:#4ade80"></span>Hardware</li></ul>
+  </section>
+
+  <h2 id="the-selected-path-step-by-step">The selected path, step by step</h2>
+  <ol class="ai-path-list">
+<li>MLC chat request <em>obtains model parameters</em> Converted weights: The request needs converted weights; cold startup may download them and matching cached weights may be reused.</li>
+<li>MLC chat request <em>compiles when needed</em> TVM compilation: The first-run path includes target-specific model compilation rather than assuming downloaded weights are executable.</li>
+<li>TVM compilation <em>generates inference logic</em> Native model library: TVM-based compilation produces the binary library consumed by the native chat runtime.</li>
+<li>Native model library <em>is loaded into</em> Native chat runtime: The native runtime consumes the compiled library as one of its execution inputs.</li>
+<li>Converted weights <em>supply model parameters</em> Native chat runtime: Converted weights supply the learned parameters, separately from the model library implementing inference.</li>
+<li>Native chat runtime <em>encodes prompt text</em> Prompt tokenization: The tokenizer interface converts text into token IDs before model computation.</li>
+<li>Prompt tokenization <em>embeds prompt IDs</em> Prompt prefill: The model interface embeds token IDs before the prompt prefill computation.</li>
+<li>Native chat runtime <em>maintains sequence state</em> Attention KV cache: The native model maintains historical attention key/value states for processed tokens.</li>
+<li>Attention KV cache <em>provides sequence state</em> Prompt prefill: Prefill is associated with a sequence in the model KV cache; the cache stores history as the request progresses.</li>
+<li>Prompt prefill <em>returns next-token logits</em> Token sampling: Prompt prefill produces logits used to choose the first generated token.</li>
+<li>Token sampling <em>commits the next token</em> Next-token decode: A subsequent decode call takes embeddings of the last committed token; generation repeats while the request remains active.</li>
+<li>Next-token decode <em>returns new logits</em> Token sampling: The decode interface returns model logits, which feed the next sampling decision.</li>
+<li>Token sampling <em>decodes selected IDs</em> Detokenized output: Selected token IDs are turned into text through the tokenizer decode interface.</li>
+<li>Prompt prefill <em>executes compiled model on</em> Selected local GPU: The documented first-run compiler prepares inference logic for execution on the selected local GPU.</li>
+<li>Next-token decode <em>executes compiled model on</em> Selected local GPU: Repeated model execution uses the compatible target-specific model library on the local GPU.</li>
+  </ol>
+
+  <h2 id="weights-are-data-the-model-library-is-executable-logic">Weights are data; the model library is executable logic</h2>
+  <p>A weight download is not a complete executable model. MLC documents converted weights and a model library as separate inputs. The conversion command transforms or quantizes parameters; compilation specializes inference logic for the model architecture, quantization, memory-related metadata and target platform. This page follows the documented flow rather than treating a weight file as a GPU program.</p>
+  <p>The compilation documentation says converted weights can be shared across platforms. That does not make a compiled library interchangeable between targets. Its build specification includes the platform. A CUDA or Metal build and its matching configuration must be chosen for the deployment.</p>
+
+  <h2 id="why-the-first-run-can-do-more-work">Why the first run can do more work</h2>
+  <p>The first-run diagram includes compilation. The cached path skips that branch and reuses a matching library, but still starts the runtime and consumes model parameters. Cache reuse here assumes the same relevant artifacts and target; it is not a guarantee that changing the architecture, quantization or configuration never triggers a rebuild.</p>
+  <p>MLC describes its compiler implementation as Python code using TVM APIs. The published serving interfaces are C++. An application may expose a Python chat API while the native runtime drives compiled model functions. Compare <a href="/ai/how-transformers-runs">Transformers pipeline execution</a>, where Python model orchestration delegates operations to PyTorch.</p>
+
+  <h2 id="prefill-and-decode-do-different-jobs">Prefill and decode do different jobs</h2>
+  <p>Prefill consumes prompt embeddings and returns logits for the next token. Decode consumes embeddings of the last committed token and returns logits for subsequent sampling. The model interface separately exposes a KV cache maintaining the history of processed tokens. Reusing these stored attention states is different from caching compiled code.</p>
+  <p>The feedback arrow represents repeated generation while the request remains active. It does not mean the GPU computes meaningful text directly: model functions produce logits, sampling chooses token IDs, and tokenizer decoding produces text. Exact stopping rules, sampling settings and prompt formatting depend on the request and model configuration.</p>
+
+  <h2 id="one-request-is-not-a-batching-claim">One request is not a batching claim</h2>
+  <p>This is a logical single-request path. MLC distinguishes synchronous MLCEngine from AsyncMLCEngine and recommends the asynchronous API for concurrent request batching. Streaming describes how output is delivered to the caller; it does not, by itself, prove how many requests the engine schedules together.</p>
+  <p>For the scheduling and cache-management layers of other serving engines, compare <a href="/ai/how-vllm-runs">vLLM</a> and <a href="/ai/how-sglang-runs">SGLang</a>. Their architectures should not be copied onto MLC simply because all three generate tokens.</p>
+
+  <h2 id="every-stage">Every stage</h2>
+  <div class="ai-stage-list">
+<article class="ai-stage-detail" id="detail-stage-request" data-stage="request">
+<h3>MLC chat request</h3>
+<p class="ai-kind-tag" style="--kc:#60a5fa">application</p>
+<p>A text-generation request through the documented MLC chat API or CLI. The page follows one request, not a batch scheduler.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/mlc-llm">MLC LLM</a></p>
+<ul class="ai-sources"><li><blockquote>MLC LLM is a machine learning compiler and high-performance deployment</blockquote><a href="https://github.com/mlc-ai/mlc-llm/blob/main/docs/get_started/introduction.rst" rel="noopener noreferrer" target="_blank">MLC LLM introduction and cached startup phases</a> <span class="src-type">Source repository</span></li><li><blockquote>engine.chat.completions.create(</blockquote><a href="https://github.com/mlc-ai/mlc-llm/blob/main/docs/deploy/python_engine.rst" rel="noopener noreferrer" target="_blank">MLCEngine synchronous and streaming responses</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-weights" data-stage="weights">
+<h3>Converted weights</h3>
+<p class="ai-kind-tag" style="--kc:#fb7185">model format</p>
+<p>Model parameters converted or quantized into MLC-compatible format; a separate artifact from the compiled inference library.</p>
+
+<ul class="ai-sources"><li><blockquote>takes a huggingface model as input and converts/quantizes into MLC-compatible weights.</blockquote><a href="https://github.com/mlc-ai/mlc-llm/blob/main/docs/compilation/convert_weights.rst" rel="noopener noreferrer" target="_blank">Weight conversion and model configuration</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-compiler" data-stage="compiler">
+<h3>TVM compilation</h3>
+<p class="ai-kind-tag" style="--kc:#a78bfa">compiler</p>
+<p>Python compiler code uses TVM APIs to produce a model library for the selected configuration and target.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/tvm">Apache TVM</a></p>
+<ul class="ai-sources"><li><blockquote>MLC LLM compilation is implemented in pure python using its API.</blockquote><a href="https://github.com/mlc-ai/mlc-llm/blob/main/docs/install/tvm.rst" rel="noopener noreferrer" target="_blank">TVM compiler integration</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-library" data-stage="library">
+<h3>Native model library</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">machine code</p>
+<p>The compiled model library contains inference logic. A compatible library can be reused from the local artifact cache.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/mlc-llm">MLC LLM</a></p>
+<ul class="ai-sources"><li><blockquote>**Model library** that comprises the inference logic</blockquote><a href="https://github.com/mlc-ai/mlc-llm/blob/main/docs/compilation/compile_models.rst" rel="noopener noreferrer" target="_blank">Model libraries, target configuration and weight portability</a> <span class="src-type">Source repository</span></li><li><blockquote>all platforms can share the same compiled/quantized weights.</blockquote><a href="https://github.com/mlc-ai/mlc-llm/blob/main/docs/compilation/compile_models.rst" rel="noopener noreferrer" target="_blank">Model libraries, target configuration and weight portability</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-engine" data-stage="engine">
+<h3>Native chat runtime</h3>
+<p class="ai-kind-tag" style="--kc:#93c5fd">runtime</p>
+<p>The native runtime consumes the model library and converted weights and drives model execution.</p>
+<p class="ai-lineage">In the atlas: <a href="/tools/mlc-llm">MLC LLM</a></p>
+<ul class="ai-sources"><li><blockquote>launches a platform-native chat runtime to drive the execution of Llama-3 model.</blockquote><a href="https://github.com/mlc-ai/mlc-llm/blob/main/docs/get_started/introduction.rst" rel="noopener noreferrer" target="_blank">MLC LLM introduction and cached startup phases</a> <span class="src-type">Source repository</span></li><li><blockquote>**to batch concurrent request for better throughput.**</blockquote><a href="https://github.com/mlc-ai/mlc-llm/blob/main/docs/deploy/python_engine.rst" rel="noopener noreferrer" target="_blank">MLCEngine synchronous and streaming responses</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-tokenizer" data-stage="tokenizer">
+<h3>Prompt tokenization</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>The tokenizer wrapper encodes input text as token IDs; model token embedding turns those IDs into embeddings.</p>
+
+<ul class="ai-sources"><li><blockquote>std::vector&lt;int32_t&gt; Encode(const std::string&amp; text) const;</blockquote><a href="https://github.com/mlc-ai/mlc-llm/blob/main/cpp/tokenizers/tokenizers.h" rel="noopener noreferrer" target="_blank">Native tokenizer encode and decode interface</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-kv" data-stage="kv">
+<h3>Attention KV cache</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>Stores historical attention keys and values for processed tokens. This is distinct from the on-disk compilation cache.</p>
+
+<ul class="ai-sources"><li><blockquote>the history KV values of all processed tokens.</blockquote><a href="https://github.com/mlc-ai/mlc-llm/blob/main/cpp/serve/model.h" rel="noopener noreferrer" target="_blank">Native model interface: prefill, decode and KV cache</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-prefill" data-stage="prefill">
+<h3>Prompt prefill</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>Runs prompt embeddings through the model and produces logits used to select the next token.</p>
+
+<ul class="ai-sources"><li><blockquote>Batch prefill function. Embedding in, logits out.</blockquote><a href="https://github.com/mlc-ai/mlc-llm/blob/main/cpp/serve/model.h" rel="noopener noreferrer" target="_blank">Native model interface: prefill, decode and KV cache</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-decode" data-stage="decode">
+<h3>Next-token decode</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>Runs the last committed token through the model while retaining attention state for the sequence.</p>
+
+<ul class="ai-sources"><li><blockquote>&quot;decode&quot;: take the embeddings of the last-committed token of an</blockquote><a href="https://github.com/mlc-ai/mlc-llm/blob/main/cpp/serve/model.h" rel="noopener noreferrer" target="_blank">Native model interface: prefill, decode and KV cache</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-sample" data-stage="sample">
+<h3>Token sampling</h3>
+<p class="ai-kind-tag" style="--kc:#e3a008">framework component</p>
+<p>Sampling uses model outputs and generation configuration to choose token IDs, rather than returning a text string directly.</p>
+
+<ul class="ai-sources"><li><blockquote>logits and corresponding configuration, and sample one token</blockquote><a href="https://github.com/mlc-ai/mlc-llm/blob/main/cpp/serve/sampler/sampler.h" rel="noopener noreferrer" target="_blank">Native sampler interface</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-text" data-stage="text">
+<h3>Detokenized output</h3>
+<p class="ai-kind-tag" style="--kc:#60a5fa">application</p>
+<p>The tokenizer decodes generated token IDs to text delivered by the application.</p>
+
+<ul class="ai-sources"><li><blockquote>std::string Decode(const std::vector&lt;int32_t&gt;&amp; token_ids) const;</blockquote><a href="https://github.com/mlc-ai/mlc-llm/blob/main/cpp/tokenizers/tokenizers.h" rel="noopener noreferrer" target="_blank">Native tokenizer encode and decode interface</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+<article class="ai-stage-detail" id="detail-stage-gpu" data-stage="gpu">
+<h3>Selected local GPU</h3>
+<p class="ai-kind-tag" style="--kc:#4ade80">hardware</p>
+<p>A compatible local GPU executes the target-specific compiled model. Backend and build compatibility remain required.</p>
+
+<ul class="ai-sources"><li><blockquote>This phase automatically optimizes the Llama-3 model to accelerate model inference on GPU</blockquote><a href="https://github.com/mlc-ai/mlc-llm/blob/main/docs/get_started/introduction.rst" rel="noopener noreferrer" target="_blank">MLC LLM introduction and cached startup phases</a> <span class="src-type">Source repository</span></li></ul>
+</article>
+  </div>
+
+  <h2 id="every-step">Every step</h2>
+  <div class="table-wrap"><table class="ai-steps">
+    <thead><tr><th>From</th><th>Step</th><th>To</th><th>When</th><th>What happens</th><th>Source</th></tr></thead>
+    <tbody>
+<tr id="detail-step-request--weights" data-step="request--weights" data-from="request" data-to="weights" data-when="{}" class="on">
+<td>MLC chat request</td><td>obtains model parameters</td><td>Converted weights</td><td>any startup</td><td>The request needs converted weights; cold startup may download them and matching cached weights may be reused.</td><td><a href="https://github.com/mlc-ai/mlc-llm/blob/main/docs/get_started/introduction.rst" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-request--compiler" data-step="request--compiler" data-from="request" data-to="compiler" data-when="{&quot;startup&quot;:[&quot;first_run&quot;]}" class="on">
+<td>MLC chat request</td><td>compiles when needed</td><td>TVM compilation</td><td>First run / missing artifacts</td><td>The first-run path includes target-specific model compilation rather than assuming downloaded weights are executable.</td><td><a href="https://github.com/mlc-ai/mlc-llm/blob/main/docs/get_started/introduction.rst" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-compiler--library" data-step="compiler--library" data-from="compiler" data-to="library" data-when="{&quot;startup&quot;:[&quot;first_run&quot;]}" class="on">
+<td>TVM compilation</td><td>generates inference logic</td><td>Native model library</td><td>First run / missing artifacts</td><td>TVM-based compilation produces the binary library consumed by the native chat runtime.</td><td><a href="https://github.com/mlc-ai/mlc-llm/blob/main/docs/compilation/compile_models.rst" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-request--library" data-step="request--library" data-from="request" data-to="library" data-when="{&quot;startup&quot;:[&quot;cached&quot;]}">
+<td>MLC chat request</td><td>reuses matching library</td><td>Native model library</td><td>Matching local cache</td><td>The cached path reuses compatible local compiled artifacts instead of traversing the compiler branch.</td><td><a href="https://github.com/mlc-ai/mlc-llm/blob/main/docs/get_started/introduction.rst" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-library--engine" data-step="library--engine" data-from="library" data-to="engine" data-when="{}" class="on">
+<td>Native model library</td><td>is loaded into</td><td>Native chat runtime</td><td>any startup</td><td>The native runtime consumes the compiled library as one of its execution inputs.</td><td><a href="https://github.com/mlc-ai/mlc-llm/blob/main/docs/get_started/introduction.rst" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-weights--engine" data-step="weights--engine" data-from="weights" data-to="engine" data-when="{}" class="on">
+<td>Converted weights</td><td>supply model parameters</td><td>Native chat runtime</td><td>any startup</td><td>Converted weights supply the learned parameters, separately from the model library implementing inference.</td><td><a href="https://github.com/mlc-ai/mlc-llm/blob/main/docs/compilation/convert_weights.rst" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-engine--tokenizer" data-step="engine--tokenizer" data-from="engine" data-to="tokenizer" data-when="{}" class="on">
+<td>Native chat runtime</td><td>encodes prompt text</td><td>Prompt tokenization</td><td>any startup</td><td>The tokenizer interface converts text into token IDs before model computation.</td><td><a href="https://github.com/mlc-ai/mlc-llm/blob/main/cpp/tokenizers/tokenizers.h" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-tokenizer--prefill" data-step="tokenizer--prefill" data-from="tokenizer" data-to="prefill" data-when="{}" class="on">
+<td>Prompt tokenization</td><td>embeds prompt IDs</td><td>Prompt prefill</td><td>any startup</td><td>The model interface embeds token IDs before the prompt prefill computation.</td><td><a href="https://github.com/mlc-ai/mlc-llm/blob/main/cpp/serve/model.h" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-engine--kv" data-step="engine--kv" data-from="engine" data-to="kv" data-when="{}" class="on">
+<td>Native chat runtime</td><td>maintains sequence state</td><td>Attention KV cache</td><td>any startup</td><td>The native model maintains historical attention key/value states for processed tokens.</td><td><a href="https://github.com/mlc-ai/mlc-llm/blob/main/cpp/serve/model.h" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-kv--prefill" data-step="kv--prefill" data-from="kv" data-to="prefill" data-when="{}" class="on">
+<td>Attention KV cache</td><td>provides sequence state</td><td>Prompt prefill</td><td>any startup</td><td>Prefill is associated with a sequence in the model KV cache; the cache stores history as the request progresses.</td><td><a href="https://github.com/mlc-ai/mlc-llm/blob/main/cpp/serve/model.h" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-prefill--sample" data-step="prefill--sample" data-from="prefill" data-to="sample" data-when="{}" class="on">
+<td>Prompt prefill</td><td>returns next-token logits</td><td>Token sampling</td><td>any startup</td><td>Prompt prefill produces logits used to choose the first generated token.</td><td><a href="https://github.com/mlc-ai/mlc-llm/blob/main/cpp/serve/model.h" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-sample--decode" data-step="sample--decode" data-from="sample" data-to="decode" data-when="{}" class="on">
+<td>Token sampling</td><td>commits the next token</td><td>Next-token decode</td><td>any startup</td><td>A subsequent decode call takes embeddings of the last committed token; generation repeats while the request remains active.</td><td><a href="https://github.com/mlc-ai/mlc-llm/blob/main/cpp/serve/model.h" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-decode--sample" data-step="decode--sample" data-from="decode" data-to="sample" data-when="{}" class="on">
+<td>Next-token decode</td><td>returns new logits</td><td>Token sampling</td><td>any startup</td><td>The decode interface returns model logits, which feed the next sampling decision.</td><td><a href="https://github.com/mlc-ai/mlc-llm/blob/main/cpp/serve/sampler/sampler.h" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-sample--text" data-step="sample--text" data-from="sample" data-to="text" data-when="{}" class="on">
+<td>Token sampling</td><td>decodes selected IDs</td><td>Detokenized output</td><td>any startup</td><td>Selected token IDs are turned into text through the tokenizer decode interface.</td><td><a href="https://github.com/mlc-ai/mlc-llm/blob/main/cpp/tokenizers/tokenizers.h" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-prefill--gpu" data-step="prefill--gpu" data-from="prefill" data-to="gpu" data-when="{}" class="on">
+<td>Prompt prefill</td><td>executes compiled model on</td><td>Selected local GPU</td><td>any startup</td><td>The documented first-run compiler prepares inference logic for execution on the selected local GPU.</td><td><a href="https://github.com/mlc-ai/mlc-llm/blob/main/docs/get_started/introduction.rst" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+<tr id="detail-step-decode--gpu" data-step="decode--gpu" data-from="decode" data-to="gpu" data-when="{}" class="on">
+<td>Next-token decode</td><td>executes compiled model on</td><td>Selected local GPU</td><td>any startup</td><td>Repeated model execution uses the compatible target-specific model library on the local GPU.</td><td><a href="https://github.com/mlc-ai/mlc-llm/blob/main/docs/get_started/introduction.rst" rel="noopener noreferrer" target="_blank">Source repository</a></td>
+</tr>
+    </tbody>
+  </table></div>
+
+  <h2 id="what-this-does-not-show">What this does not show</h2>
+  <p>One supported, text-only autoregressive model on one compatible local GPU. The startup toggle assumes an unchanged model, quantization, configuration and target: either missing compiled artifacts or a valid local cache. The diagram separates artifact dependencies from the logical generation loop; it is not a thread timeline or a claim that every kernel follows one universal backend. Distributed serving, speculative decoding, multimodal inputs, browser/mobile packaging, CPU execution and proprietary GPU-driver internals are out of scope. The GPU node represents the selected compatible target, not a claim about undocumented CUDA or Metal driver internals. The diagram is a logical dependency and token-generation view.</p>
+
+  <h2 id="how-this-page-is-checked">How this page is checked</h2>
+  <p>Every stage and step above quotes the source that supports it. The quotes were checked against MLC LLM official compilation/deployment documentation and the published C++ model, tokenizer and sampler interfaces, fetched and read on 2026-11-12. on 2026-11-12. The data is a <a href="/dataset/ai/how-mlc-llm-runs.json">versioned JSON file</a> under the same CC BY 4.0 license as the <a href="/dataset">dataset</a>. Found something wrong or out of date? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue</a> with the better source.</p>
+  <p><a class="ai-graph-link" href="/explore?view=ai&amp;path=how-mlc-llm-runs&amp;startup=first_run">See this path in the graph explorer &rarr;</a></p>
+  <p>What these tools are written in is in the main atlas: <a href="/tools/mlc-llm">MLC LLM</a>, <a href="/tools/tvm">Apache TVM</a>. More execution paths: <a href="/ai/how-jax-runs">What Actually Happens When You Run JAX Code</a>, <a href="/ai/how-keras-runs">What Runs Underneath a Keras 3 Model</a>, <a href="/ai/how-llama-cpp-runs">How Does llama.cpp Run a Model on Your Hardware</a>, <a href="/ai/how-mlx-runs">What Actually Happens When You Run MLX on a Mac</a>, <a href="/ai/how-ollama-runs">What Actually Runs When You Send Ollama a Prompt</a>, <a href="/ai/how-onnx-runtime-runs">How Does ONNX Runtime Execute a Model Across Hardware</a>, <a href="/ai/how-pytorch-runs">What Actually Happens When You Run a PyTorch Model</a>, <a href="/ai/how-sglang-runs">What Actually Happens When SGLang Serves a Request</a>, <a href="/ai/how-tensorflow-runs">How Does TensorFlow Run Python on a CPU or GPU</a>, <a href="/ai/how-tensorrt-llm-runs">What Actually Happens When TensorRT-LLM Runs a Model</a>, <a href="/ai/how-transformers-runs">What Actually Happens When You Run a Hugging Face Pipeline</a>, <a href="/ai/how-vllm-runs">What Actually Happens When vLLM Serves a Request</a>, or <a href="/ai">compare them all</a>.</p>
+
+  <a class="explore-btn" href="/explore">Explore the full graph &rarr;</a>
+</main>
+<footer class="seo-footer-rich">
+  <div data-nosnippet>
+  <div class="footer-grid">
+    <div class="footer-col">
+      <span class="footer-col-head">Explore</span>
+      <a href="/programming-language-graph">Programming language graph</a>
+      <a href="/rankings/most-influential">Most influential languages</a>
+      <a href="/rss.xml">RSS feed</a>
+      <a href="/embed-kit">Embed the graph</a>
+      <a href="/guides/programming-language-family-tree">Language family tree</a>
+      <a href="/programming-language-evolution">Evolution timeline</a>
+      <a href="/what-are-programming-languages-written-in">What languages are written in</a>
+      <a href="/ai">How AI frameworks run code</a>
+      <a href="/explore">Interactive Graph</a>
+      <a href="/dataset">Dataset</a>
+      <a href="/directory">Site Directory</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Popular Languages</span>
+      <a href="/languages/python">Python</a>
+      <a href="/languages/javascript">JavaScript</a>
+      <a href="/languages/rust">Rust</a>
+      <a href="/languages/go">Go</a>
+      <a href="/languages/java">Java</a>
+      <a href="/languages/c">C</a>
+      <a href="/languages/cxx">C++</a>
+      <a href="/languages/typescript">TypeScript</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Questions</span>
+      <a href="/questions/what-is-python-written-in">What is Python written in?</a>
+      <a href="/questions/what-is-javascript-written-in">What is JavaScript written in?</a>
+      <a href="/questions/what-is-rust-written-in">What is Rust written in?</a>
+      <a href="/questions/what-is-go-written-in">What is Go written in?</a>
+      <a href="/questions/what-is-compiler-bootstrapping">What is compiler bootstrapping?</a>
+      <a href="/questions">All questions &rarr;</a>
+    </div>
+    <div class="footer-col">
+      <span class="footer-col-head">Tools &amp; Guides</span>
+      <a href="/tools/v8">V8</a>
+      <a href="/tools/llvm">LLVM</a>
+      <a href="/tools/gcc">GCC</a>
+      <a href="/tools/ghc">GHC</a>
+      <a href="/guides">All guides</a>
+      <a href="https://github.com/sanketmuchhala/LanguageLineage" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </div>
+  <p class="footer-note">The Language Lineage dataset is meticulously curated and verified by human researchers. We use AI agents to assist with large-scale data gathering and modeling, but every implementation fact is manually reviewed for accuracy. Spot an error? <a href="https://github.com/sanketmuchhala/LanguageLineage/issues" rel="noopener noreferrer">Open an issue on GitHub</a> and it gets fixed. <a href="/how-it-works">Learn how it works &rarr;</a></p>
+  <div class="footer-bottom">Made with <span style="color:#fb7185">❤️</span> by <a href="https://github.com/sanketmuchhala" rel="noopener noreferrer">Sanket Muchhala</a> &middot; <a href="/">Language Lineage</a></div>
+  </div>
+</footer>
+</body>
+</html>

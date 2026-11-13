@@ -1,0 +1,572 @@
+{
+  "version": "1.0",
+  "slug": "how-mlc-llm-runs",
+  "name": "MLC LLM",
+  "title": "How MLC LLM Runs: Compilation, KV Cache and Tokens | Language Lineage",
+  "h1": "How Does MLC LLM Turn a Compiled Model into Generated Tokens?",
+  "description": "Trace MLC LLM from converted weights and TVM compilation to native runtime, prompt prefill, KV cache, sampling and token decoding on a local GPU, with primary sources.",
+  "og_subtitle": "Weights + TVM library → native engine → prefill → KV cache → decode → text",
+  "verified_on": "2026-11-12",
+  "verified_against": "MLC LLM official compilation/deployment documentation and the published C++ model, tokenizer and sampler interfaces, fetched and read on 2026-11-12.",
+  "scope": "One supported, text-only autoregressive model on one compatible local GPU. The startup toggle assumes an unchanged model, quantization, configuration and target: either missing compiled artifacts or a valid local cache. The diagram separates artifact dependencies from the logical generation loop; it is not a thread timeline or a claim that every kernel follows one universal backend. Distributed serving, speculative decoding, multimodal inputs, browser/mobile packaging, CPU execution and proprietary GPU-driver internals are out of scope.",
+  "answer": "MLC LLM needs **two different artifacts**: converted model **weights** and a target-compatible **model library** containing inference logic. A first run can use **Apache TVM** to compile that library; later runs can reuse matching cached artifacts. The native runtime tokenizes the prompt, embeds its token IDs and performs **prefill** to produce next-token logits. A **sampler** selects a token. Subsequent **decode** calls process the last committed token while the **KV cache** retains earlier attention keys and values. That loop produces more tokens; detokenization converts their IDs back into text. GPU execution and Python compilation are distinct parts of the system.",
+  "status_template": "Showing {startup} for a supported single-GPU MLC model",
+  "dimensions": [
+    {
+      "id": "startup",
+      "legend": "Startup",
+      "default": "first_run",
+      "options": [
+        {
+          "value": "first_run",
+          "label": "First run / missing artifacts",
+          "phrase": "a first run with compilation"
+        },
+        {
+          "value": "cached",
+          "label": "Matching local cache",
+          "phrase": "a run reusing cached artifacts"
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "heading": "Weights are data; the model library is executable logic",
+      "paragraphs": [
+        "A weight download is not a complete executable model. MLC documents converted weights and a model library as separate inputs. The conversion command transforms or quantizes parameters; compilation specializes inference logic for the model architecture, quantization, memory-related metadata and target platform. This page follows the documented flow rather than treating a weight file as a GPU program.",
+        "The compilation documentation says converted weights can be shared across platforms. That does not make a compiled library interchangeable between targets. Its build specification includes the platform. A CUDA or Metal build and its matching configuration must be chosen for the deployment."
+      ]
+    },
+    {
+      "heading": "Why the first run can do more work",
+      "paragraphs": [
+        "The first-run diagram includes compilation. The cached path skips that branch and reuses a matching library, but still starts the runtime and consumes model parameters. Cache reuse here assumes the same relevant artifacts and target; it is not a guarantee that changing the architecture, quantization or configuration never triggers a rebuild.",
+        "MLC describes its compiler implementation as Python code using TVM APIs. The published serving interfaces are C++. An application may expose a Python chat API while the native runtime drives compiled model functions. Compare [Transformers pipeline execution](/ai/how-transformers-runs), where Python model orchestration delegates operations to PyTorch."
+      ]
+    },
+    {
+      "heading": "Prefill and decode do different jobs",
+      "paragraphs": [
+        "Prefill consumes prompt embeddings and returns logits for the next token. Decode consumes embeddings of the last committed token and returns logits for subsequent sampling. The model interface separately exposes a KV cache maintaining the history of processed tokens. Reusing these stored attention states is different from caching compiled code.",
+        "The feedback arrow represents repeated generation while the request remains active. It does not mean the GPU computes meaningful text directly: model functions produce logits, sampling chooses token IDs, and tokenizer decoding produces text. Exact stopping rules, sampling settings and prompt formatting depend on the request and model configuration."
+      ]
+    },
+    {
+      "heading": "One request is not a batching claim",
+      "paragraphs": [
+        "This is a logical single-request path. MLC distinguishes synchronous MLCEngine from AsyncMLCEngine and recommends the asynchronous API for concurrent request batching. Streaming describes how output is delivered to the caller; it does not, by itself, prove how many requests the engine schedules together.",
+        "For the scheduling and cache-management layers of other serving engines, compare [vLLM](/ai/how-vllm-runs) and [SGLang](/ai/how-sglang-runs). Their architectures should not be copied onto MLC simply because all three generate tokens."
+      ]
+    }
+  ],
+  "out_of_scope_note": "The GPU node represents the selected compatible target, not a claim about undocumented CUDA or Metal driver internals. The diagram is a logical dependency and token-generation view.",
+  "link_from": [
+    "tool:mlc_llm",
+    "tool:tvm",
+    "lang:python",
+    "lang:cxx"
+  ],
+  "sources": {
+    "intro": {
+      "url": "https://github.com/mlc-ai/mlc-llm/blob/main/docs/get_started/introduction.rst",
+      "title": "MLC LLM introduction and cached startup phases"
+    },
+    "compile": {
+      "url": "https://github.com/mlc-ai/mlc-llm/blob/main/docs/compilation/compile_models.rst",
+      "title": "Model libraries, target configuration and weight portability"
+    },
+    "weights": {
+      "url": "https://github.com/mlc-ai/mlc-llm/blob/main/docs/compilation/convert_weights.rst",
+      "title": "Weight conversion and model configuration"
+    },
+    "compiler": {
+      "url": "https://github.com/mlc-ai/mlc-llm/blob/main/docs/install/tvm.rst",
+      "title": "TVM compiler integration"
+    },
+    "model": {
+      "url": "https://github.com/mlc-ai/mlc-llm/blob/main/cpp/serve/model.h",
+      "title": "Native model interface: prefill, decode and KV cache"
+    },
+    "sampler": {
+      "url": "https://github.com/mlc-ai/mlc-llm/blob/main/cpp/serve/sampler/sampler.h",
+      "title": "Native sampler interface"
+    },
+    "api": {
+      "url": "https://github.com/mlc-ai/mlc-llm/blob/main/docs/deploy/python_engine.rst",
+      "title": "MLCEngine synchronous and streaming responses"
+    },
+    "tokenizer": {
+      "url": "https://github.com/mlc-ai/mlc-llm/blob/main/cpp/tokenizers/tokenizers.h",
+      "title": "Native tokenizer encode and decode interface"
+    }
+  },
+  "stages": [
+    {
+      "id": "request",
+      "name": "MLC chat request",
+      "kind": "application",
+      "layer": "application",
+      "lineage_id": "tool:mlc_llm",
+      "pos": [
+        1.5,
+        0
+      ],
+      "summary": "A text-generation request through the documented MLC chat API or CLI. The page follows one request, not a batch scheduler.",
+      "evidence": [
+        {
+          "source": "intro",
+          "quote": "MLC LLM is a machine learning compiler and high-performance deployment"
+        },
+        {
+          "source": "api",
+          "quote": "engine.chat.completions.create("
+        }
+      ]
+    },
+    {
+      "id": "weights",
+      "name": "Converted weights",
+      "kind": "model_format",
+      "layer": "framework",
+      "lineage_id": null,
+      "pos": [
+        0,
+        1
+      ],
+      "summary": "Model parameters converted or quantized into MLC-compatible format; a separate artifact from the compiled inference library.",
+      "evidence": [
+        {
+          "source": "weights",
+          "quote": "takes a huggingface model as input and converts/quantizes into MLC-compatible weights."
+        }
+      ]
+    },
+    {
+      "id": "compiler",
+      "name": "TVM compilation",
+      "kind": "compiler",
+      "layer": "compiler",
+      "lineage_id": "tool:tvm",
+      "pos": [
+        3,
+        1
+      ],
+      "summary": "Python compiler code uses TVM APIs to produce a model library for the selected configuration and target.",
+      "evidence": [
+        {
+          "source": "compiler",
+          "quote": "MLC LLM compilation is implemented in pure python using its API."
+        }
+      ]
+    },
+    {
+      "id": "library",
+      "name": "Native model library",
+      "kind": "machine_code",
+      "layer": "compiler",
+      "lineage_id": "tool:mlc_llm",
+      "pos": [
+        3,
+        2
+      ],
+      "summary": "The compiled model library contains inference logic. A compatible library can be reused from the local artifact cache.",
+      "evidence": [
+        {
+          "source": "compile",
+          "quote": "**Model library** that comprises the inference logic"
+        },
+        {
+          "source": "compile",
+          "quote": "all platforms can share the same compiled/quantized weights."
+        }
+      ]
+    },
+    {
+      "id": "engine",
+      "name": "Native chat runtime",
+      "kind": "runtime",
+      "layer": "framework",
+      "lineage_id": "tool:mlc_llm",
+      "pos": [
+        1.5,
+        3
+      ],
+      "summary": "The native runtime consumes the model library and converted weights and drives model execution.",
+      "evidence": [
+        {
+          "source": "intro",
+          "quote": "launches a platform-native chat runtime to drive the execution of Llama-3 model."
+        },
+        {
+          "source": "api",
+          "quote": "**to batch concurrent request for better throughput.**"
+        }
+      ]
+    },
+    {
+      "id": "tokenizer",
+      "name": "Prompt tokenization",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": null,
+      "pos": [
+        0,
+        4
+      ],
+      "summary": "The tokenizer wrapper encodes input text as token IDs; model token embedding turns those IDs into embeddings.",
+      "evidence": [
+        {
+          "source": "tokenizer",
+          "quote": "std::vector<int32_t> Encode(const std::string& text) const;"
+        }
+      ]
+    },
+    {
+      "id": "kv",
+      "name": "Attention KV cache",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": null,
+      "pos": [
+        3,
+        4
+      ],
+      "summary": "Stores historical attention keys and values for processed tokens. This is distinct from the on-disk compilation cache.",
+      "evidence": [
+        {
+          "source": "model",
+          "quote": "the history KV values of all processed tokens."
+        }
+      ]
+    },
+    {
+      "id": "prefill",
+      "name": "Prompt prefill",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": null,
+      "pos": [
+        0.5,
+        5
+      ],
+      "summary": "Runs prompt embeddings through the model and produces logits used to select the next token.",
+      "evidence": [
+        {
+          "source": "model",
+          "quote": "Batch prefill function. Embedding in, logits out."
+        }
+      ]
+    },
+    {
+      "id": "decode",
+      "name": "Next-token decode",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": null,
+      "pos": [
+        2.5,
+        5
+      ],
+      "summary": "Runs the last committed token through the model while retaining attention state for the sequence.",
+      "evidence": [
+        {
+          "source": "model",
+          "quote": "\"decode\": take the embeddings of the last-committed token of an"
+        }
+      ]
+    },
+    {
+      "id": "sample",
+      "name": "Token sampling",
+      "kind": "framework_component",
+      "layer": "framework",
+      "lineage_id": null,
+      "pos": [
+        1.5,
+        6
+      ],
+      "summary": "Sampling uses model outputs and generation configuration to choose token IDs, rather than returning a text string directly.",
+      "evidence": [
+        {
+          "source": "sampler",
+          "quote": "logits and corresponding configuration, and sample one token"
+        }
+      ]
+    },
+    {
+      "id": "text",
+      "name": "Detokenized output",
+      "kind": "application",
+      "layer": "application",
+      "lineage_id": null,
+      "pos": [
+        0.5,
+        7
+      ],
+      "summary": "The tokenizer decodes generated token IDs to text delivered by the application.",
+      "evidence": [
+        {
+          "source": "tokenizer",
+          "quote": "std::string Decode(const std::vector<int32_t>& token_ids) const;"
+        }
+      ]
+    },
+    {
+      "id": "gpu",
+      "name": "Selected local GPU",
+      "kind": "hardware",
+      "layer": "hardware",
+      "lineage_id": null,
+      "pos": [
+        2.5,
+        7
+      ],
+      "summary": "A compatible local GPU executes the target-specific compiled model. Backend and build compatibility remain required.",
+      "evidence": [
+        {
+          "source": "intro",
+          "quote": "This phase automatically optimizes the Llama-3 model to accelerate model inference on GPU"
+        }
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "to": "weights",
+      "kind": "loads",
+      "when": {},
+      "label": "obtains model parameters",
+      "explanation": "The request needs converted weights; cold startup may download them and matching cached weights may be reused.",
+      "evidence": [
+        {
+          "source": "intro",
+          "quote": "We cache the pre-quantized model weights and compiled model library locally."
+        }
+      ],
+      "from": "request"
+    },
+    {
+      "to": "compiler",
+      "kind": "compiled_by",
+      "when": {
+        "startup": [
+          "first_run"
+        ]
+      },
+      "label": "compiles when needed",
+      "explanation": "The first-run path includes target-specific model compilation rather than assuming downloaded weights are executable.",
+      "evidence": [
+        {
+          "source": "intro",
+          "quote": "This phase automatically optimizes the Llama-3 model to accelerate model inference on GPU"
+        }
+      ],
+      "from": "request"
+    },
+    {
+      "to": "library",
+      "kind": "generates",
+      "when": {
+        "startup": [
+          "first_run"
+        ]
+      },
+      "label": "generates inference logic",
+      "explanation": "TVM-based compilation produces the binary library consumed by the native chat runtime.",
+      "evidence": [
+        {
+          "source": "compile",
+          "quote": "**Model library** that comprises the inference logic"
+        }
+      ],
+      "from": "compiler"
+    },
+    {
+      "to": "library",
+      "kind": "loads",
+      "when": {
+        "startup": [
+          "cached"
+        ]
+      },
+      "label": "reuses matching library",
+      "explanation": "The cached path reuses compatible local compiled artifacts instead of traversing the compiler branch.",
+      "evidence": [
+        {
+          "source": "intro",
+          "quote": "We cache the pre-quantized model weights and compiled model library locally."
+        }
+      ],
+      "from": "request"
+    },
+    {
+      "to": "engine",
+      "kind": "loads",
+      "when": {},
+      "label": "is loaded into",
+      "explanation": "The native runtime consumes the compiled library as one of its execution inputs.",
+      "evidence": [
+        {
+          "source": "intro",
+          "quote": "launches a platform-native chat runtime to drive the execution of Llama-3 model."
+        }
+      ],
+      "from": "library"
+    },
+    {
+      "to": "engine",
+      "kind": "loads",
+      "when": {},
+      "label": "supply model parameters",
+      "explanation": "Converted weights supply the learned parameters, separately from the model library implementing inference.",
+      "evidence": [
+        {
+          "source": "weights",
+          "quote": "takes a huggingface model as input and converts/quantizes into MLC-compatible weights."
+        }
+      ],
+      "from": "weights"
+    },
+    {
+      "to": "tokenizer",
+      "kind": "calls",
+      "when": {},
+      "label": "encodes prompt text",
+      "explanation": "The tokenizer interface converts text into token IDs before model computation.",
+      "evidence": [
+        {
+          "source": "tokenizer",
+          "quote": "std::vector<int32_t> Encode(const std::string& text) const;"
+        }
+      ],
+      "from": "engine"
+    },
+    {
+      "to": "prefill",
+      "kind": "calls",
+      "when": {},
+      "label": "embeds prompt IDs",
+      "explanation": "The model interface embeds token IDs before the prompt prefill computation.",
+      "evidence": [
+        {
+          "source": "model",
+          "quote": "\"token_embed\": take token ids as input and return the embeddings,"
+        }
+      ],
+      "from": "tokenizer"
+    },
+    {
+      "to": "kv",
+      "kind": "builds",
+      "when": {},
+      "label": "maintains sequence state",
+      "explanation": "The native model maintains historical attention key/value states for processed tokens.",
+      "evidence": [
+        {
+          "source": "model",
+          "quote": "the history KV values of all processed tokens."
+        }
+      ],
+      "from": "engine"
+    },
+    {
+      "to": "prefill",
+      "kind": "calls",
+      "when": {},
+      "label": "provides sequence state",
+      "explanation": "Prefill is associated with a sequence in the model KV cache; the cache stores history as the request progresses.",
+      "evidence": [
+        {
+          "source": "model",
+          "quote": "the history KV values of all processed tokens."
+        }
+      ],
+      "from": "kv"
+    },
+    {
+      "to": "sample",
+      "kind": "calls",
+      "when": {},
+      "label": "returns next-token logits",
+      "explanation": "Prompt prefill produces logits used to choose the first generated token.",
+      "evidence": [
+        {
+          "source": "model",
+          "quote": "Batch prefill function. Embedding in, logits out."
+        }
+      ],
+      "from": "prefill"
+    },
+    {
+      "to": "decode",
+      "kind": "calls",
+      "when": {},
+      "label": "commits the next token",
+      "explanation": "A subsequent decode call takes embeddings of the last committed token; generation repeats while the request remains active.",
+      "evidence": [
+        {
+          "source": "model",
+          "quote": "\"decode\": take the embeddings of the last-committed token of an"
+        }
+      ],
+      "from": "sample"
+    },
+    {
+      "to": "sample",
+      "kind": "calls",
+      "when": {},
+      "label": "returns new logits",
+      "explanation": "The decode interface returns model logits, which feed the next sampling decision.",
+      "evidence": [
+        {
+          "source": "sampler",
+          "quote": "logits and corresponding configuration, and sample one token"
+        }
+      ],
+      "from": "decode"
+    },
+    {
+      "to": "text",
+      "kind": "calls",
+      "when": {},
+      "label": "decodes selected IDs",
+      "explanation": "Selected token IDs are turned into text through the tokenizer decode interface.",
+      "evidence": [
+        {
+          "source": "tokenizer",
+          "quote": "std::string Decode(const std::vector<int32_t>& token_ids) const;"
+        }
+      ],
+      "from": "sample"
+    },
+    {
+      "to": "gpu",
+      "kind": "executes_on",
+      "when": {},
+      "label": "executes compiled model on",
+      "explanation": "The documented first-run compiler prepares inference logic for execution on the selected local GPU.",
+      "evidence": [
+        {
+          "source": "intro",
+          "quote": "This phase automatically optimizes the Llama-3 model to accelerate model inference on GPU"
+        }
+      ],
+      "from": "prefill"
+    },
+    {
+      "to": "gpu",
+      "kind": "executes_on",
+      "when": {},
+      "label": "executes compiled model on",
+      "explanation": "Repeated model execution uses the compatible target-specific model library on the local GPU.",
+      "evidence": [
+        {
+          "source": "intro",
+          "quote": "This phase automatically optimizes the Llama-3 model to accelerate model inference on GPU"
+        }
+      ],
+      "from": "decode"
+    }
+  ]
+}
