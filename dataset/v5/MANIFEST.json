@@ -36,10 +36,10 @@
     "enrichment_records": 148,
     "logo_overrides": 22,
     "ai_execution_paths": {
-      "total": 12,
-      "stages": 161,
-      "steps": 187,
-      "sources": 85
+      "total": 13,
+      "stages": 173,
+      "steps": 203,
+      "sources": 93
     }
   },
   "files": [
@@ -107,6 +107,17 @@
       "sources": 6,
       "sha256": "42617f40e96e0158974c14cc7a10b4e204d160c37c77be9aad17ef6f299427e2",
       "bytes": 19295
+    },
+    {
+      "slug": "how-mlc-llm-runs",
+      "name": "MLC LLM",
+      "path": "dataset/ai/how-mlc-llm-runs.json",
+      "verified_on": "2026-11-12",
+      "stages": 12,
+      "steps": 16,
+      "sources": 8,
+      "sha256": "89cbaf82efb7b39bdc0cb45a14715037c50ed27bff768d0e09d45894916e3ad4",
+      "bytes": 20785
     },
     {
       "slug": "how-mlx-runs",
