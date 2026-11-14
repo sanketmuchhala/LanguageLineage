@@ -31,6 +31,7 @@ is already readable without running the graph app, and it is cached by hosting.
 | Content | Source | What is automatic |
 | --- | --- | --- |
 | Language or implementation tool | `dataset/v5/lineage_v5.json` | Detail page, directory/hub membership, graph, sitemap, catalog, social card |
+| Detailed tool article | New `dataset/tool-articles/<node_slug>.json` | Sourced introduction and sections on the existing tool page; no new route or registration |
 | AI execution path | New `dataset/ai/<slug>.json` | Interactive detail page, AI hub, configured lineage backlinks, sitemap, catalog, social card |
 | Eligible implementation question | Lineage edges plus `dataset/v5/enrichment_v5.json` | Existing question template and canonical eligibility rules |
 | Editorial guide or special landing page | Existing generator definitions | Still requires editorial code/catalog updates; it is not a data-only family yet |
@@ -210,3 +211,27 @@ useful, sourced content is the publishing criterion. Google's guidance:
 
 - https://developers.google.com/search/docs/fundamentals/creating-helpful-content
 - https://developers.google.com/search/docs/essentials/spam-policies
+
+## Detailed articles on existing tool pages
+
+`dataset/tool-articles/<node_slug>.json` enriches an existing `tool:` record;
+it does not create a node or change implementation evidence. The filename uses
+the node id suffix, including underscores. `scripts/toolArticles.ts` validates
+and discovers every file automatically.
+
+Each record has `node_id`, a cited `introduction`, at least three `sections`
+(`heading` and cited `paragraphs`), and `sources` (`id`, descriptive `title`,
+HTTPS `url`). Each paragraph is plain `text` and a nonempty array of source ids.
+HTML is escaped. Every source must be used and every reference must resolve.
+Unknown nodes, mismatched filenames and extra fields fail generation.
+
+Explain the tool's purpose, concrete execution boundaries, implementation layers
+and limitations. Fetch and read primary sources before authoring each claim.
+Keep CUDA/LLVM-style infrastructure dependencies separate from implementation
+languages. Preserve the lineage record's evidence and confidence. An article
+is not a new lineage relationship or a substitute for quoted execution paths.
+
+Run `npm run seo:generate` and `npm run verify` after the final edit; inspect the
+existing `/tools/<slug>` page, citations, contents links, FAQ structured data
+and sitemap URL preservation. A later article needs only a JSON record, not
+changes to the renderer. Submit content separately from model/schema changes.
