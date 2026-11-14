@@ -1,0 +1,85 @@
+{
+  "node_id": "tool:onnx_runtime",
+  "introduction": {
+    "text": "ONNX Runtime executes models through a common runtime interface and a set of execution providers. The model describes computation; the runtime prepares that graph and assigns supported work to available backends. This separates a portable model representation from the libraries and devices that actually calculate its outputs. A Python caller and a CUDA provider can therefore be parts of the same run without doing the same job.",
+    "sources": [
+      "architecture",
+      "providers"
+    ]
+  },
+  "sections": [
+    {
+      "heading": "From model graph to executable work",
+      "paragraphs": [
+        {
+          "text": "The documented architecture starts by loading an ONNX model into an in-memory graph, applying provider-independent optimizations and partitioning the graph into subgraphs. The runtime queries provider capabilities before assigning work. An execution provider supplies implementations of operations, potentially including fused groups of nodes. This is why a portable graph alone does not establish the exact kernels used on every machine.",
+          "sources": [
+            "architecture"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "What an execution provider is responsible for",
+      "paragraphs": [
+        {
+          "text": "An execution provider connects the runtime to hardware-specific libraries. Providers expose the operations or subgraphs they can handle, and the runtime uses that information to choose execution assignments. The application uses a consistent runtime API across providers, while the provider owns hardware-specific execution. A language binding determines how the application calls that API; it is a separate concern from which device performs the arithmetic.",
+          "sources": [
+            "providers"
+          ]
+        },
+        {
+          "text": "Provider lists have priority. The documentation illustrates CUDA followed by CPU: CUDA handles an operation when capable, otherwise CPU can handle it. Selecting a GPU provider therefore does not establish that the whole model runs on that GPU. Available operator implementations and provider configuration determine the actual partitioning. Check those boundaries before describing a deployment as an entirely GPU execution path.",
+          "sources": [
+            "providers"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "Why CPU fallback can still be part of a successful run",
+      "paragraphs": [
+        {
+          "text": "The architecture deliberately supports heterogeneous execution because an accelerator may not handle an entire model. A default provider supplies fallback work after more specialized providers are considered. This is a feature of the partitioning model, not automatically an error. It also means correctness and placement are separate questions: receiving an output does not by itself show where every operation was executed.",
+          "sources": [
+            "architecture"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "I/O binding and the cost of moving tensors",
+      "paragraphs": [
+        {
+          "text": "When inputs for a non-CPU provider are on the host, ONNX Runtime may copy them to the target device during Run. If an output has not been arranged on that device, the runtime normally returns it to the CPU. Those transfers can become part of the latency attributed to inference. Measuring only the mathematical operators misses part of the work the application actually requests.",
+          "sources": [
+            "binding"
+          ]
+        },
+        {
+          "text": "I/O binding lets an application arrange input and output buffers on the target device. This can avoid transfers when surrounding computation already uses device-resident data. It does not change the model’s learned parameters or make an unsupported operator available on a provider. Keep buffer placement, graph partitioning and model compatibility separate when investigating performance.",
+          "sources": [
+            "binding"
+          ]
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "architecture",
+      "title": "ONNX Runtime graph preparation",
+      "url": "https://onnxruntime.ai/docs/reference/high-level-design.html"
+    },
+    {
+      "id": "providers",
+      "title": "Execution-provider capabilities and priority",
+      "url": "https://onnxruntime.ai/docs/execution-providers/"
+    },
+    {
+      "id": "binding",
+      "title": "ONNX Runtime I/O binding",
+      "url": "https://onnxruntime.ai/docs/performance/tune-performance/iobinding.html"
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "node_id": "tool:pytorch",
+  "introduction": {
+    "text": "PyTorch combines tensor computation with automatic differentiation. Its Python interface lets an application describe operations and neural-network modules, while tensors may live on a CPU or an accelerator. The useful implementation question is how those pieces cooperate: the Python program, the differentiation machinery and the backend executing each operation do different jobs.",
+    "sources": [
+      "readme"
+    ]
+  },
+  "sections": [
+    {
+      "heading": "Tensors are the boundary between application code and computation",
+      "paragraphs": [
+        {
+          "text": "A tensor is an array with properties such as shape, element type and device placement. PyTorch exposes indexing, linear algebra, reductions and other operations through its tensor library. A model expressed in Python composes those operations; the arithmetic does not need to be implemented as a Python loop over every element. This separation is the reason a convenient application language and efficient native computation can coexist.",
+          "sources": [
+            "readme"
+          ]
+        },
+        {
+          "text": "The top-level package is only part of the system. torch.nn supplies neural-network modules, torch.autograd supplies differentiation, and data utilities help feed work into the computation. A source investigation should follow the component responsible for the behavior in question. Looking only at a model class answers how operations are assembled, not how a backend implements matrix multiplication.",
+          "sources": [
+            "readme"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "What autograd records during a forward pass",
+      "paragraphs": [
+        {
+          "text": "PyTorch’s differentiation system uses the operations performed during execution to support reverse-mode automatic differentiation. This lets the structure of a computation depend on the Python program being run. The distinction between tensor arithmetic and gradient tracking matters: the forward pass computes values, while the recorded computation supports calculating derivatives. They are related responsibilities, not two names for the same result.",
+          "sources": [
+            "readme"
+          ]
+        },
+        {
+          "text": "The repository describes a Python-first system with several cooperating libraries rather than one monolithic C++ program with a thin wrapper. User-defined layers can be written in Python, and extension mechanisms allow native code where needed. Thus “written in Python and C++” is an implementation summary, not a claim that every operation passes through an identical stack or spends the same fraction of its time in each language.",
+          "sources": [
+            "readme"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "What changes when a tensor lives on CUDA",
+      "paragraphs": [
+        {
+          "text": "A CUDA tensor carries device placement, and operations on it use that device. Moving data and choosing where operations run are explicit concerns. The Python interpreter remains the application’s control layer; GPU execution concerns the work submitted to the accelerator. This distinction helps explain why moving only some tensors can lead to device mismatches rather than automatic acceleration of the whole program.",
+          "sources": [
+            "cuda"
+          ]
+        },
+        {
+          "text": "GPU operations are normally asynchronous. A function can return after queuing work, and an error can surface later. PyTorch documents CUDA events and synchronization for measuring completion accurately. It also uses a caching allocator, so memory visible as reserved by the process is not necessarily all occupied by live tensors. Distinguish live allocation, reserved memory and completed execution before diagnosing a memory or timing problem.",
+          "sources": [
+            "cuda"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "How to investigate a PyTorch execution",
+      "paragraphs": [
+        {
+          "text": "Start with the operation and the device of its inputs. Then separate model composition, differentiation and backend work. This gives a more precise question than asking whether the model “runs in Python”: Python can select and compose an operation whose calculation is implemented elsewhere. The linked execution explainer follows concrete eager and compiled routes; the lineage graph separately records the implementation languages behind the tools involved.",
+          "sources": [
+            "readme"
+          ]
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "readme",
+      "title": "PyTorch components and architecture",
+      "url": "https://github.com/pytorch/pytorch/blob/main/README.md"
+    },
+    {
+      "id": "cuda",
+      "title": "PyTorch CUDA semantics",
+      "url": "https://docs.pytorch.org/docs/2.15/notes/cuda.html"
+    }
+  ]
+}

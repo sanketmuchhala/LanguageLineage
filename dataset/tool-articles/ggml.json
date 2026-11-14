@@ -1,0 +1,87 @@
+{
+  "node_id": "tool:ggml",
+  "introduction": {
+    "text": "ggml is a tensor library implemented in C and C++ for portable machine-learning computation. It provides operations and backends used by applications such as llama.cpp. Its role is below a complete chat application: it represents tensor work and executes that work through available computational backends. A model file, application and tensor engine are distinct parts of this arrangement.",
+    "sources": [
+      "readme",
+      "example"
+    ]
+  },
+  "sections": [
+    {
+      "heading": "What the tensor library is responsible for",
+      "paragraphs": [
+        {
+          "text": "ggml supplies a portable implementation of tensor computation, including optimized kernels and quantized numerical representations. Its documented targets include CPUs and several accelerator backends. These features concern how numerical work is represented and carried out; a higher-level application still decides which model to load and how to turn user input into an inference request.",
+          "sources": [
+            "readme",
+            "llama"
+          ]
+        },
+        {
+          "text": "For a concrete example, the repository contains a small matrix-multiplication program. It creates two tensors, defines their multiplication and expands that operation into a computation graph. This shows a useful separation: constructing an operation describes work, while running a backend scheduler performs it. Defining a graph is not itself evidence that the GPU has already completed the calculation.",
+          "sources": [
+            "example"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "From graph construction to backend execution",
+      "paragraphs": [
+        {
+          "text": "The example initializes backends, creates a scheduler and prepares storage for graph metadata. It then allocates the graph through the scheduler and copies the two input matrices into backend tensors. Only after that does it ask the scheduler to compute the graph. The returned output tensor is read back into a host-side vector for printing. These explicit phases show where memory movement enters even a tiny computation.",
+          "sources": [
+            "example"
+          ]
+        },
+        {
+          "text": "The same source selects a preferred backend and also registers a CPU backend with the scheduler. That is a more accurate picture than imagining every build has one universal execution path. Backend selection and the available implementation of an operation are important context when following code. CPU and accelerator support are capabilities of a configured runtime, not properties of a filename alone.",
+          "sources": [
+            "example"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "Quantization and portability are implementation choices",
+      "paragraphs": [
+        {
+          "text": "The project documents several low-bit quantization formats and optimized kernels for different processor families. Quantization changes the numerical representation that kernels consume; it is distinct from choosing a programming language for the application. Backend support also means that “written in C/C++” does not imply that the CPU executes every operation. The selected backend may use accelerator-specific code.",
+          "sources": [
+            "readme"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "How ggml differs from llama.cpp",
+      "paragraphs": [
+        {
+          "text": "llama.cpp builds on ggml to provide model inference, command-line tools and a server. ggml is the lower-level tensor computation library. That distinction is useful when investigating a problem: graph allocation and tensor execution belong to a different layer from prompt handling or an HTTP response. Follow the source owning the responsibility rather than treating every component in an inference application as the same runtime.",
+          "sources": [
+            "llama",
+            "example"
+          ]
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "readme",
+      "title": "ggml design and supported backends",
+      "url": "https://github.com/ggml-org/ggml/blob/master/README.md"
+    },
+    {
+      "id": "example",
+      "title": "ggml backend matrix-multiplication example",
+      "url": "https://github.com/ggml-org/ggml/blob/master/examples/simple/simple-backend.cpp"
+    },
+    {
+      "id": "llama",
+      "title": "llama.cpp and its ggml foundation",
+      "url": "https://github.com/ggml-org/llama.cpp/blob/master/README.md"
+    }
+  ]
+}

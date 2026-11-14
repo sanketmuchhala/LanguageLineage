@@ -65,14 +65,34 @@
 </figure>
 
 
-  <p class="tool-intro">Array-computing library from Google: NumPy-style API with automatic differentiation and jax.jit.</p>
+  <p>JAX is a Python library for numerical arrays and composable program transformations. It can differentiate a function, vectorize it across an array axis and compile it with XLA. That combination makes its implementation interesting: Python expresses the calculation, transformations change that calculation, and a compiler produces an executable for the selected backend. <span class="src-type">[<a href="https://github.com/jax-ml/jax/blob/main/README.md" rel="noopener noreferrer">JAX transformations</a>]</span></p>
 
   <h2 class="lang-written-q">What is JAX written in?</h2>
   <div class="answer-box">JAX compiler is built on <strong>XLA</strong> (well-documented). Its runtime is implemented in <strong>Python and C++</strong> (documented).</div>
-  
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#what-grad-vmap-and-jit-each-contribute">What grad, vmap and jit each contribute</a></li>
+    <li><a href="#what-happens-the-first-time-a-compiled-function-runs">What happens the first time a compiled function runs</a></li>
+    <li><a href="#why-ordinary-python-side-effects-can-be-surprising">Why ordinary Python side effects can be surprising</a></li>
+    <li><a href="#dispatch-is-different-from-completion">Dispatch is different from completion</a></li>
+    <li><a href="#spot-something-wrong">Spot something wrong?</a></li>
+  </ol>
+</nav>
 
   
 
+
+  <section class="intent-section"><h2 id="what-grad-vmap-and-jit-each-contribute">What grad, vmap and jit each contribute</h2>
+<p>jax.grad creates a function computing derivatives. jax.vmap maps a function over array axes by transforming its primitive operations, rather than simply writing a Python loop around repeated calls. jax.jit compiles a function. These transformations can be composed: for example, a batched gradient calculation can itself be compiled. The order and meaning of those transformations are part of the program, not merely installation settings. <span class="src-type">[<a href="https://github.com/jax-ml/jax/blob/main/README.md" rel="noopener noreferrer">JAX transformations</a>]</span></p>
+<p>JAX offers a NumPy-like interface, but its central idea extends beyond an array library. Transformations operate on numerical functions and can be combined with device placement and distributed array facilities. This separates the language used to express the computation from the mechanism that executes it. The graph’s XLA connection records a compiler relationship, not a programming language in which every part of JAX was authored. <span class="src-type">[<a href="https://github.com/jax-ml/jax/blob/main/README.md" rel="noopener noreferrer">JAX transformations</a>]</span></p></section>
+<section class="intent-section"><h2 id="what-happens-the-first-time-a-compiled-function-runs">What happens the first time a compiled function runs</h2>
+<p>During tracing, JAX wraps arguments in tracer objects and records the operations performed on them. The resulting jaxpr represents the numerical computation. XLA compiles the traced computation, and later compatible calls reuse compiled code. The first invocation therefore includes work that steady-state calls may avoid. A cold-call measurement and a reused-executable measurement answer different performance questions. <span class="src-type">[<a href="https://docs.jax.dev/en/latest/jit-compilation.html" rel="noopener noreferrer">JAX tracing and JIT compilation</a>]</span></p></section>
+<section class="intent-section"><h2 id="why-ordinary-python-side-effects-can-be-surprising">Why ordinary Python side effects can be surprising</h2>
+<p>A Python print or mutation can happen while JAX traces the function without becoming an operation in the compiled computation. JAX transformations are designed around pure functions, so modifying global state is not a reliable way to express repeated device-side behavior. The documentation provides dedicated debugging and callback facilities. A function being valid Python is therefore insufficient to establish that its behavior survives transformation as intended. <span class="src-type">[<a href="https://docs.jax.dev/en/latest/jit-compilation.html" rel="noopener noreferrer">JAX tracing and JIT compilation</a>]</span></p></section>
+<section class="intent-section"><h2 id="dispatch-is-different-from-completion">Dispatch is different from completion</h2>
+<p>JAX can return an array representing a result that the accelerator has not finished computing. The host may inspect shape and type or enqueue dependent operations without waiting for the actual values. Reading a value on the host forces the relevant computation to complete. This lets Python submit work ahead of the device, reducing avoidable gaps between operations. <span class="src-type">[<a href="https://github.com/jax-ml/jax/blob/main/docs/async_dispatch.rst" rel="noopener noreferrer">JAX asynchronous dispatch</a>]</span></p>
+<p>A benchmark that stops when the Python call returns can therefore measure dispatch rather than execution. The documented block_until_ready method waits for the result without requiring a host-side NumPy conversion. Distinguish compilation time, submission time, execution time and data-transfer time when comparing results. Otherwise a seemingly fast calculation may simply be unfinished when the stopwatch stops. <span class="src-type">[<a href="https://github.com/jax-ml/jax/blob/main/docs/async_dispatch.rst" rel="noopener noreferrer">JAX asynchronous dispatch</a>]</span></p></section>
 
   
 <h2>Frequently Asked Questions</h2>

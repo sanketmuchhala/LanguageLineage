@@ -1,0 +1,84 @@
+{
+  "node_id": "tool:jax",
+  "introduction": {
+    "text": "JAX is a Python library for numerical arrays and composable program transformations. It can differentiate a function, vectorize it across an array axis and compile it with XLA. That combination makes its implementation interesting: Python expresses the calculation, transformations change that calculation, and a compiler produces an executable for the selected backend.",
+    "sources": [
+      "readme"
+    ]
+  },
+  "sections": [
+    {
+      "heading": "What grad, vmap and jit each contribute",
+      "paragraphs": [
+        {
+          "text": "jax.grad creates a function computing derivatives. jax.vmap maps a function over array axes by transforming its primitive operations, rather than simply writing a Python loop around repeated calls. jax.jit compiles a function. These transformations can be composed: for example, a batched gradient calculation can itself be compiled. The order and meaning of those transformations are part of the program, not merely installation settings.",
+          "sources": [
+            "readme"
+          ]
+        },
+        {
+          "text": "JAX offers a NumPy-like interface, but its central idea extends beyond an array library. Transformations operate on numerical functions and can be combined with device placement and distributed array facilities. This separates the language used to express the computation from the mechanism that executes it. The graph’s XLA connection records a compiler relationship, not a programming language in which every part of JAX was authored.",
+          "sources": [
+            "readme"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "What happens the first time a compiled function runs",
+      "paragraphs": [
+        {
+          "text": "During tracing, JAX wraps arguments in tracer objects and records the operations performed on them. The resulting jaxpr represents the numerical computation. XLA compiles the traced computation, and later compatible calls reuse compiled code. The first invocation therefore includes work that steady-state calls may avoid. A cold-call measurement and a reused-executable measurement answer different performance questions.",
+          "sources": [
+            "jit"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "Why ordinary Python side effects can be surprising",
+      "paragraphs": [
+        {
+          "text": "A Python print or mutation can happen while JAX traces the function without becoming an operation in the compiled computation. JAX transformations are designed around pure functions, so modifying global state is not a reliable way to express repeated device-side behavior. The documentation provides dedicated debugging and callback facilities. A function being valid Python is therefore insufficient to establish that its behavior survives transformation as intended.",
+          "sources": [
+            "jit"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "Dispatch is different from completion",
+      "paragraphs": [
+        {
+          "text": "JAX can return an array representing a result that the accelerator has not finished computing. The host may inspect shape and type or enqueue dependent operations without waiting for the actual values. Reading a value on the host forces the relevant computation to complete. This lets Python submit work ahead of the device, reducing avoidable gaps between operations.",
+          "sources": [
+            "async"
+          ]
+        },
+        {
+          "text": "A benchmark that stops when the Python call returns can therefore measure dispatch rather than execution. The documented block_until_ready method waits for the result without requiring a host-side NumPy conversion. Distinguish compilation time, submission time, execution time and data-transfer time when comparing results. Otherwise a seemingly fast calculation may simply be unfinished when the stopwatch stops.",
+          "sources": [
+            "async"
+          ]
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "readme",
+      "title": "JAX transformations",
+      "url": "https://github.com/jax-ml/jax/blob/main/README.md"
+    },
+    {
+      "id": "jit",
+      "title": "JAX tracing and JIT compilation",
+      "url": "https://docs.jax.dev/en/latest/jit-compilation.html"
+    },
+    {
+      "id": "async",
+      "title": "JAX asynchronous dispatch",
+      "url": "https://github.com/jax-ml/jax/blob/main/docs/async_dispatch.rst"
+    }
+  ]
+}
