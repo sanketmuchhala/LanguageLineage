@@ -1,0 +1,81 @@
+{
+  "node_id": "tool:vllm",
+  "introduction": {
+    "text": "vLLM is an inference and serving system for language models. It adds request scheduling, attention-cache management and model execution around an application-facing interface. Its value is in coordinating many requests and their changing state, not just wrapping a single model forward call in an HTTP endpoint. The project supports offline Python use as well as online serving.",
+    "sources": [
+      "readme",
+      "architecture"
+    ]
+  },
+  "sections": [
+    {
+      "heading": "Where serving adds work beyond a model call",
+      "paragraphs": [
+        {
+          "text": "An inference service must accept inputs, decide which requests to advance, execute the selected work and return results. vLLM’s architecture separates these responsibilities. In its documented V1 process arrangement, the API server handles requests and input processing, while the engine core schedules work and manages KV-cache state. Worker processes execute the model. This explains why a serving deployment needs CPU resources as well as accelerator capacity.",
+          "sources": [
+            "architecture"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "What continuous batching is trying to improve",
+      "paragraphs": [
+        {
+          "text": "The project lists continuous batching, chunked prefill and prefix caching among its serving capabilities. These mechanisms address different sources of inefficiency: coordinating incoming requests, dividing prompt processing into manageable work, and avoiding repeated computation for reusable prefixes. They are parts of a serving strategy, not guarantees that every model and workload receives an identical speedup.",
+          "sources": [
+            "readme"
+          ]
+        },
+        {
+          "text": "A useful way to think about the engine is as a coordinator of requests that are at different stages. Input processing and output processing surround model execution, while scheduling decides which work enters an execution step. The HTTP response seen by a client is the result of that larger process. The time a user waits cannot be inferred solely from the duration of one matrix kernel.",
+          "sources": [
+            "architecture"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "Why KV-cache management matters",
+      "paragraphs": [
+        {
+          "text": "vLLM documents PagedAttention as a mechanism for managing attention key/value memory efficiently. The cache is request-related execution state, distinct from the model’s persistent weights. Prefix caching and attention-memory management concern reuse and allocation of that state. They do not change the implementation language of the model code, and they should not be confused with changing the model’s learned parameters.",
+          "sources": [
+            "readme"
+          ]
+        },
+        {
+          "text": "The project supports multiple numerical formats, attention implementations and parallel execution strategies. That makes the chosen model, backend and configuration essential context for any execution explanation. A Python control layer can coordinate native kernels and compiler-generated work; describing vLLM as a Python library is useful but incomplete as an account of where numerical computation happens.",
+          "sources": [
+            "readme"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "Offline inference and an online API share an engine role",
+      "paragraphs": [
+        {
+          "text": "The Python LLM interface supports inference without launching a separate model server, while the command-line serving entrypoint exposes an online service. These are application interfaces over the inference system. API compatibility describes how clients submit and receive requests; it does not imply that the service has the same implementation or behavior as another provider. For the internal route, follow the concrete model runner and selected backend.",
+          "sources": [
+            "architecture",
+            "readme"
+          ]
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "readme",
+      "title": "vLLM capabilities and implementation layers",
+      "url": "https://github.com/vllm-project/vllm/blob/main/README.md"
+    },
+    {
+      "id": "architecture",
+      "title": "vLLM serving architecture",
+      "url": "https://docs.vllm.ai/en/latest/design/arch_overview/"
+    }
+  ]
+}

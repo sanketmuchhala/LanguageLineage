@@ -22,7 +22,7 @@
   <meta name="twitter:title" content="What is vLLM written in? Python | Language Lineage" />
   <meta name="twitter:description" content="vLLM is written in Python, built on CUDA and PyTorch. vLLM was first released in 2023. Explore the full lineage." />
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What is vLLM written in?","description":"vLLM is written in Python, built on CUDA and PyTorch. vLLM was first released in 2023. Explore the full lineage.","url":"https://www.languagelineage.org/tools/vllm","datePublished":"2023-01-01","dateModified":"2026-11-13","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":{"@type":"SoftwareApplication","name":"vLLM","dateCreated":"2023"}}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is vLLM written in?","acceptedAnswer":{"@type":"Answer","text":"vLLM is primarily implemented in Python and CUDA and PyTorch and Triton."}},{"@type":"Question","name":"When was vLLM first released?","acceptedAnswer":{"@type":"Answer","text":"vLLM was first released in 2023."}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is vLLM written in?","acceptedAnswer":{"@type":"Answer","text":"vLLM is implemented in Python. vLLM is built on CUDA, PyTorch and Triton."}},{"@type":"Question","name":"When was vLLM first released?","acceptedAnswer":{"@type":"Answer","text":"vLLM was first released in 2023."}}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://www.languagelineage.org/tools"},{"@type":"ListItem","position":3,"name":"vLLM","item":"https://www.languagelineage.org/tools/vllm"}]}</script>
 </head>
 <body class="seo-page">
@@ -53,7 +53,7 @@
   </div>
   <div class="lang-logo-tile lang-logo-tile--mark" aria-hidden="true">v</div>
 </header>
-<div class="spec-rail"><div class="spec-cell"><span class="spec-val"><a href="/languages/python">Python</a>, <a href="/tools/cuda">CUDA</a>, <a href="/tools/pytorch">PyTorch</a>, <a href="/tools/triton">Triton</a></span><span class="spec-lab">Written in</span></div><div class="spec-cell"><span class="spec-val">2023</span><span class="spec-lab">First released</span></div></div>
+<div class="spec-rail"><div class="spec-cell"><span class="spec-val"><a href="/languages/python">Python</a></span><span class="spec-lab">Written in</span></div><div class="spec-cell"><span class="spec-val"><a href="/tools/cuda">CUDA</a>, <a href="/tools/pytorch">PyTorch</a>, <a href="/tools/triton">Triton</a></span><span class="spec-lab">Built on</span></div><div class="spec-cell"><span class="spec-val">2023</span><span class="spec-lab">First released</span></div></div>
 <figure class="rel-map">
   <svg viewBox="0 0 760 280" role="img" aria-label="vLLM relationship map" preserveAspectRatio="xMidYMid meet">
     <text x="150" y="20" text-anchor="middle" class="rel-col-head">Built from</text>
@@ -65,20 +65,40 @@
 </figure>
 
 
-  <p class="tool-intro">LLM inference and serving engine, started at UC Berkeley (PagedAttention paper, 2023).</p>
+  <p>vLLM is an inference and serving system for language models. It adds request scheduling, attention-cache management and model execution around an application-facing interface. Its value is in coordinating many requests and their changing state, not just wrapping a single model forward call in an HTTP endpoint. The project supports offline Python use as well as online serving. <span class="src-type">[<a href="https://github.com/vllm-project/vllm/blob/main/README.md" rel="noopener noreferrer">vLLM capabilities and implementation layers</a>; <a href="https://docs.vllm.ai/en/latest/design/arch_overview/" rel="noopener noreferrer">vLLM serving architecture</a>]</span></p>
 
   <h2 class="lang-written-q">What is vLLM written in?</h2>
-  <div class="answer-box">Its runtime is implemented in <strong>Python, CUDA, PyTorch, and Triton</strong> (documented).</div>
-  
+  <div class="answer-box">vLLM is built on <strong>CUDA</strong> (documented). vLLM is built on <strong>PyTorch</strong> (documented). vLLM is built on <strong>Triton</strong> (documented). Its runtime is implemented in <strong>Python</strong> (well-documented).</div>
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#where-serving-adds-work-beyond-a-model-call">Where serving adds work beyond a model call</a></li>
+    <li><a href="#what-continuous-batching-is-trying-to-improve">What continuous batching is trying to improve</a></li>
+    <li><a href="#why-kv-cache-management-matters">Why KV-cache management matters</a></li>
+    <li><a href="#offline-inference-and-an-online-api-share-an-engine-role">Offline inference and an online API share an engine role</a></li>
+    <li><a href="#spot-something-wrong">Spot something wrong?</a></li>
+  </ol>
+</nav>
 
   
 
+
+  <section class="intent-section"><h2 id="where-serving-adds-work-beyond-a-model-call">Where serving adds work beyond a model call</h2>
+<p>An inference service must accept inputs, decide which requests to advance, execute the selected work and return results. vLLM’s architecture separates these responsibilities. In its documented V1 process arrangement, the API server handles requests and input processing, while the engine core schedules work and manages KV-cache state. Worker processes execute the model. This explains why a serving deployment needs CPU resources as well as accelerator capacity. <span class="src-type">[<a href="https://docs.vllm.ai/en/latest/design/arch_overview/" rel="noopener noreferrer">vLLM serving architecture</a>]</span></p></section>
+<section class="intent-section"><h2 id="what-continuous-batching-is-trying-to-improve">What continuous batching is trying to improve</h2>
+<p>The project lists continuous batching, chunked prefill and prefix caching among its serving capabilities. These mechanisms address different sources of inefficiency: coordinating incoming requests, dividing prompt processing into manageable work, and avoiding repeated computation for reusable prefixes. They are parts of a serving strategy, not guarantees that every model and workload receives an identical speedup. <span class="src-type">[<a href="https://github.com/vllm-project/vllm/blob/main/README.md" rel="noopener noreferrer">vLLM capabilities and implementation layers</a>]</span></p>
+<p>A useful way to think about the engine is as a coordinator of requests that are at different stages. Input processing and output processing surround model execution, while scheduling decides which work enters an execution step. The HTTP response seen by a client is the result of that larger process. The time a user waits cannot be inferred solely from the duration of one matrix kernel. <span class="src-type">[<a href="https://docs.vllm.ai/en/latest/design/arch_overview/" rel="noopener noreferrer">vLLM serving architecture</a>]</span></p></section>
+<section class="intent-section"><h2 id="why-kv-cache-management-matters">Why KV-cache management matters</h2>
+<p>vLLM documents PagedAttention as a mechanism for managing attention key/value memory efficiently. The cache is request-related execution state, distinct from the model’s persistent weights. Prefix caching and attention-memory management concern reuse and allocation of that state. They do not change the implementation language of the model code, and they should not be confused with changing the model’s learned parameters. <span class="src-type">[<a href="https://github.com/vllm-project/vllm/blob/main/README.md" rel="noopener noreferrer">vLLM capabilities and implementation layers</a>]</span></p>
+<p>The project supports multiple numerical formats, attention implementations and parallel execution strategies. That makes the chosen model, backend and configuration essential context for any execution explanation. A Python control layer can coordinate native kernels and compiler-generated work; describing vLLM as a Python library is useful but incomplete as an account of where numerical computation happens. <span class="src-type">[<a href="https://github.com/vllm-project/vllm/blob/main/README.md" rel="noopener noreferrer">vLLM capabilities and implementation layers</a>]</span></p></section>
+<section class="intent-section"><h2 id="offline-inference-and-an-online-api-share-an-engine-role">Offline inference and an online API share an engine role</h2>
+<p>The Python LLM interface supports inference without launching a separate model server, while the command-line serving entrypoint exposes an online service. These are application interfaces over the inference system. API compatibility describes how clients submit and receive requests; it does not imply that the service has the same implementation or behavior as another provider. For the internal route, follow the concrete model runner and selected backend. <span class="src-type">[<a href="https://docs.vllm.ai/en/latest/design/arch_overview/" rel="noopener noreferrer">vLLM serving architecture</a>; <a href="https://github.com/vllm-project/vllm/blob/main/README.md" rel="noopener noreferrer">vLLM capabilities and implementation layers</a>]</span></p></section>
 
   
 <h2>Frequently Asked Questions</h2>
 <div class="faq-item">
   <div class="faq-question">What language is vLLM written in?</div>
-  <div class="faq-answer">vLLM is primarily implemented in Python and CUDA and PyTorch and Triton.</div>
+  <div class="faq-answer">vLLM is implemented in Python. vLLM is built on CUDA, PyTorch and Triton.</div>
 </div>
 <div class="faq-item">
   <div class="faq-question">When was vLLM first released?</div>

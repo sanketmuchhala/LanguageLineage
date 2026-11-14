@@ -1,3 +1,4 @@
+import { loadToolArticles, renderToolArticle, renderToolParagraph } from './toolArticles.js';
 import { idToSlug, idToPrefix, discoverAutoQuestions, QUESTION_CANONICAL_TO_LANG } from './contentPages.js';
 import { readFileSync, mkdirSync, writeFileSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
@@ -1656,7 +1657,10 @@ function buildLanguageHeader(node: Language, rels: Relationship[], nodeMap: Map<
   }
 
   const implTypes = ['compiler_written_in', 'runtime_written_in', 'bootstrap_written_in'];
-  const writtenInIds = [...new Set(rels.filter(r => r.to_language === node.id && implTypes.includes(r.relationship)).map(r => r.from_language))];
+  const allIncoming = rels.filter(r => r.to_language === node.id && implTypes.includes(r.relationship));
+  const incoming = isTool ? currentRels(allIncoming) : allIncoming;
+  const writtenInIds = [...new Set(incoming.filter(r => !isTool || r.from_language.startsWith('lang:')).map(r => r.from_language))];
+  const builtOnIds = isTool ? [...new Set(incoming.filter(r => r.from_language.startsWith('tool:')).map(r => r.from_language))] : [];
   const writtenIn = writtenInIds.length
     ? writtenInIds.map(id => linkNode(id, nodeMap)).join(', ')
     : (node.self_hosting ? `${escapeHtml(node.name)} (self-hosting)` : '');
@@ -1670,6 +1674,7 @@ function buildLanguageHeader(node: Language, rels: Relationship[], nodeMap: Map<
   // than boxed into a card. Each cell is a value over a small monospace label.
   const cells: Array<[string, string]> = [];
   if (writtenIn) cells.push([writtenIn, 'Written in']);
+  if (builtOnIds.length) cells.push([builtOnIds.map(id => linkNode(id, nodeMap)).join(', '), 'Built on']);
   if (node.first_release_year && node.first_release_year > 0) cells.push([String(node.first_release_year), 'First released']);
   if (developer) cells.push([escapeHtml(developer), isTool ? 'Built by' : 'Developer']);
   if (typing) cells.push([escapeHtml(typing), 'Typing']);
@@ -1718,7 +1723,8 @@ function buildAnswerBox(node: Language, rels: Relationship[], nodeMap: Map<strin
   }
 
   const implTypes = new Set(['compiler_written_in', 'runtime_written_in', 'bootstrap_written_in', 'rewritten_in']);
-  const implRels = rels.filter(r => r.to_language === id && implTypes.has(r.relationship));
+  const incoming = rels.filter(r => r.to_language === id && implTypes.has(r.relationship));
+  const implRels = id.startsWith('tool:') ? currentRels(incoming) : incoming;
 
   if (implRels.length === 0) {
     return `<div class="answer-box">The Language Lineage dataset does not currently include compiler or runtime implementation relationships for <strong>${escapeHtml(node.name)}</strong>. It may appear in influence relationships with other languages.</div>`;
@@ -1726,10 +1732,16 @@ function buildAnswerBox(node: Language, rels: Relationship[], nodeMap: Map<strin
 
   const parts: string[] = [];
 
-  const compilerRels = implRels.filter(r => r.relationship === 'compiler_written_in');
-  const runtimeRels = implRels.filter(r => r.relationship === 'runtime_written_in');
-  const bootstrapRels = implRels.filter(r => r.relationship === 'bootstrap_written_in');
-  const rewrittenRels = implRels.filter(r => r.relationship === 'rewritten_in');
+  const dependencies = id.startsWith('tool:') ? implRels.filter(r => r.from_language.startsWith('tool:')) : [];
+  for (const dependency of dependencies) {
+    const component = dependency.relationship === 'compiler_written_in' ? ' compiler' : '';
+    parts.push(`${escapeHtml(node.name)}${component} is built on <strong>${escapeHtml(nameFromId(dependency.from_language, nodeMap))}</strong>${confidenceNote(dependency.confidence)}.`);
+  }
+  const languageRels = implRels.filter(r => !dependencies.includes(r));
+  const compilerRels = languageRels.filter(r => r.relationship === 'compiler_written_in');
+  const runtimeRels = languageRels.filter(r => r.relationship === 'runtime_written_in');
+  const bootstrapRels = languageRels.filter(r => r.relationship === 'bootstrap_written_in');
+  const rewrittenRels = languageRels.filter(r => r.relationship === 'rewritten_in');
 
   if (compilerRels.length > 0) {
     const names = compilerRels.map(r => nameFromId(r.from_language, nodeMap));
@@ -1845,18 +1857,27 @@ function buildInfluenceSection(node: Language, rels: Relationship[], nodeMap: Ma
   return parts.join('\n');
 }
 
+function toolImplementationAnswer(name: string, impl: ReturnType<typeof toolImplementation>): string {
+  const languages = impl.languages.length ? `${name} is implemented in ${listJoin(impl.languages)}.` : '';
+  const dependencies = impl.builtOn.length ? `${name}${impl.compilerOnly ? "'s compiler" : ''} is built on ${listJoin(impl.builtOn)}.` : '';
+  return [languages, dependencies].filter(Boolean).join(' ');
+}
+
 function buildFaqs(node: Language, rels: Relationship[], nodeMap: Map<string, Language>): { q: string; a: string }[] {
   const id = node.id;
   const priority = PRIORITY_CONTENT[idToSlug(id)];
   const faqs: { q: string; a: string }[] = [];
   const implTypes = new Set(['compiler_written_in', 'runtime_written_in', 'bootstrap_written_in']);
-  const implRels = rels.filter(r => r.to_language === id && implTypes.has(r.relationship));
+  const incoming = rels.filter(r => r.to_language === id && implTypes.has(r.relationship));
+  const implRels = id.startsWith('tool:') ? currentRels(incoming) : incoming;
 
   if (implRels.length > 0) {
     const names = [...new Set(currentRels(implRels).map(r => nameFromId(r.from_language, nodeMap)))];
     faqs.push({
       q: `What language is ${node.name} written in?`,
-      a: priority?.faqAnswer ?? `${node.name} is primarily implemented in ${names.join(' and ')}.`,
+      a: priority?.faqAnswer ?? (id.startsWith('tool:')
+        ? toolImplementationAnswer(node.name, toolImplementation(implRels, nodeMap))
+        : `${node.name} is primarily implemented in ${names.join(' and ')}.`),
     });
   }
 
@@ -2046,7 +2067,7 @@ function buildSources(node: Language, rels: Relationship[]): string {
 
 function buildToolIntro(node: Language): string {
   if (!node.id.startsWith('tool:') || !node.notes) return '';
-  const firstSentence = node.notes.split('.')[0].trim();
+  const firstSentence = node.notes.split(/\.(?:\s|$)/)[0].trim();
   if (!firstSentence) return '';
   return `<p class="tool-intro">${escapeHtml(firstSentence)}.</p>`;
 }
@@ -2177,7 +2198,8 @@ function buildNodePage(node: Language, rels: Relationship[], nodeMap: Map<string
   }
   const description = truncateMetaDescription(priorityOverride ? priorityOverride.description : buildDefaultDesc(), 160);
   const priorityHtml = buildPriorityContent(node);
-  const priorityContentHtml = priorityHtml
+  const article = TOOL_ARTICLES.get(node.id);
+  const priorityContentHtml = article ? renderToolArticle(article) : priorityHtml
     ? `${buildEnrichedOverview(node, rels, nodeMap, false)}\n${priorityHtml}`
     : buildEnrichedContent(node, rels, nodeMap);
 
@@ -2264,7 +2286,7 @@ ${NAV_HTML}
 
   ${buildLanguageHeader(node, rels, nodeMap, buildRelationshipMap(node, rels, nodeMap))}
 
-  ${buildToolIntro(node)}
+  ${article ? renderToolParagraph(article, article.introduction) : buildToolIntro(node)}
 
   <h2 class="lang-written-q">What is ${escapeHtml(node.name)} written in?</h2>
   ${buildAnswerBox(node, rels, nodeMap)}
@@ -4596,6 +4618,7 @@ const raw = JSON.parse(readFileSync(DATASET_PATH, 'utf8'));
 const languages: Language[] = raw.languages ?? [];
 const rels: Relationship[] = raw.relationships ?? [];
 const nodeMap = new Map(languages.map(l => [l.id, l]));
+const TOOL_ARTICLES = loadToolArticles(ROOT, nodeMap);
 
 const AUTO_QUESTION_NODES: AutoQNode[] = discoverAutoQuestions(languages, rels, ENRICHMENT);
 // Add auto slugs to QUESTION_PAGE_LANGS so language pages get cross-reference links

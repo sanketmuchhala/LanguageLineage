@@ -22,7 +22,7 @@
   <meta name="twitter:title" content="What is ggml written in? C and C++ | Language Lineage" />
   <meta name="twitter:description" content="ggml is written in C and C++, built on CUDA. ggml was first released in 2022. Explore the full lineage." />
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What is ggml written in?","description":"ggml is written in C and C++, built on CUDA. ggml was first released in 2022. Explore the full lineage.","url":"https://www.languagelineage.org/tools/ggml","datePublished":"2022-01-01","dateModified":"2026-11-13","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":{"@type":"SoftwareApplication","name":"ggml","dateCreated":"2022"}}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is ggml written in?","acceptedAnswer":{"@type":"Answer","text":"ggml is primarily implemented in C and C++ and CUDA."}},{"@type":"Question","name":"When was ggml first released?","acceptedAnswer":{"@type":"Answer","text":"ggml was first released in 2022."}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is ggml written in?","acceptedAnswer":{"@type":"Answer","text":"ggml is implemented in C and C++. ggml is built on CUDA."}},{"@type":"Question","name":"When was ggml first released?","acceptedAnswer":{"@type":"Answer","text":"ggml was first released in 2022."}}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://www.languagelineage.org/tools"},{"@type":"ListItem","position":3,"name":"ggml","item":"https://www.languagelineage.org/tools/ggml"}]}</script>
 </head>
 <body class="seo-page">
@@ -53,7 +53,7 @@
   </div>
   <div class="lang-logo-tile lang-logo-tile--mark" aria-hidden="true">g</div>
 </header>
-<div class="spec-rail"><div class="spec-cell"><span class="spec-val"><a href="/languages/c">C</a>, <a href="/languages/cxx">C++</a>, <a href="/tools/cuda">CUDA</a></span><span class="spec-lab">Written in</span></div><div class="spec-cell"><span class="spec-val">2022</span><span class="spec-lab">First released</span></div></div>
+<div class="spec-rail"><div class="spec-cell"><span class="spec-val"><a href="/languages/c">C</a>, <a href="/languages/cxx">C++</a></span><span class="spec-lab">Written in</span></div><div class="spec-cell"><span class="spec-val"><a href="/tools/cuda">CUDA</a></span><span class="spec-lab">Built on</span></div><div class="spec-cell"><span class="spec-val">2022</span><span class="spec-lab">First released</span></div></div>
 <figure class="rel-map">
   <svg viewBox="0 0 760 224" role="img" aria-label="ggml relationship map" preserveAspectRatio="xMidYMid meet">
     <text x="150" y="20" text-anchor="middle" class="rel-col-head">Built from</text>
@@ -65,20 +65,40 @@
 </figure>
 
 
-  <p class="tool-intro">Tensor library for machine learning by Georgi Gerganov.</p>
+  <p>ggml is a tensor library implemented in C and C++ for portable machine-learning computation. It provides operations and backends used by applications such as llama.cpp. Its role is below a complete chat application: it represents tensor work and executes that work through available computational backends. A model file, application and tensor engine are distinct parts of this arrangement. <span class="src-type">[<a href="https://github.com/ggml-org/ggml/blob/master/README.md" rel="noopener noreferrer">ggml design and supported backends</a>; <a href="https://github.com/ggml-org/ggml/blob/master/examples/simple/simple-backend.cpp" rel="noopener noreferrer">ggml backend matrix-multiplication example</a>]</span></p>
 
   <h2 class="lang-written-q">What is ggml written in?</h2>
-  <div class="answer-box">Its runtime is implemented in <strong>C, C++, and CUDA</strong> (documented).</div>
-  
+  <div class="answer-box">ggml is built on <strong>CUDA</strong> (documented). Its runtime is implemented in <strong>C and C++</strong> (documented).</div>
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#what-the-tensor-library-is-responsible-for">What the tensor library is responsible for</a></li>
+    <li><a href="#from-graph-construction-to-backend-execution">From graph construction to backend execution</a></li>
+    <li><a href="#quantization-and-portability-are-implementation-choices">Quantization and portability are implementation choices</a></li>
+    <li><a href="#how-ggml-differs-from-llama-cpp">How ggml differs from llama.cpp</a></li>
+    <li><a href="#spot-something-wrong">Spot something wrong?</a></li>
+  </ol>
+</nav>
 
   
 
+
+  <section class="intent-section"><h2 id="what-the-tensor-library-is-responsible-for">What the tensor library is responsible for</h2>
+<p>ggml supplies a portable implementation of tensor computation, including optimized kernels and quantized numerical representations. Its documented targets include CPUs and several accelerator backends. These features concern how numerical work is represented and carried out; a higher-level application still decides which model to load and how to turn user input into an inference request. <span class="src-type">[<a href="https://github.com/ggml-org/ggml/blob/master/README.md" rel="noopener noreferrer">ggml design and supported backends</a>; <a href="https://github.com/ggml-org/llama.cpp/blob/master/README.md" rel="noopener noreferrer">llama.cpp and its ggml foundation</a>]</span></p>
+<p>For a concrete example, the repository contains a small matrix-multiplication program. It creates two tensors, defines their multiplication and expands that operation into a computation graph. This shows a useful separation: constructing an operation describes work, while running a backend scheduler performs it. Defining a graph is not itself evidence that the GPU has already completed the calculation. <span class="src-type">[<a href="https://github.com/ggml-org/ggml/blob/master/examples/simple/simple-backend.cpp" rel="noopener noreferrer">ggml backend matrix-multiplication example</a>]</span></p></section>
+<section class="intent-section"><h2 id="from-graph-construction-to-backend-execution">From graph construction to backend execution</h2>
+<p>The example initializes backends, creates a scheduler and prepares storage for graph metadata. It then allocates the graph through the scheduler and copies the two input matrices into backend tensors. Only after that does it ask the scheduler to compute the graph. The returned output tensor is read back into a host-side vector for printing. These explicit phases show where memory movement enters even a tiny computation. <span class="src-type">[<a href="https://github.com/ggml-org/ggml/blob/master/examples/simple/simple-backend.cpp" rel="noopener noreferrer">ggml backend matrix-multiplication example</a>]</span></p>
+<p>The same source selects a preferred backend and also registers a CPU backend with the scheduler. That is a more accurate picture than imagining every build has one universal execution path. Backend selection and the available implementation of an operation are important context when following code. CPU and accelerator support are capabilities of a configured runtime, not properties of a filename alone. <span class="src-type">[<a href="https://github.com/ggml-org/ggml/blob/master/examples/simple/simple-backend.cpp" rel="noopener noreferrer">ggml backend matrix-multiplication example</a>]</span></p></section>
+<section class="intent-section"><h2 id="quantization-and-portability-are-implementation-choices">Quantization and portability are implementation choices</h2>
+<p>The project documents several low-bit quantization formats and optimized kernels for different processor families. Quantization changes the numerical representation that kernels consume; it is distinct from choosing a programming language for the application. Backend support also means that “written in C/C++” does not imply that the CPU executes every operation. The selected backend may use accelerator-specific code. <span class="src-type">[<a href="https://github.com/ggml-org/ggml/blob/master/README.md" rel="noopener noreferrer">ggml design and supported backends</a>]</span></p></section>
+<section class="intent-section"><h2 id="how-ggml-differs-from-llama-cpp">How ggml differs from llama.cpp</h2>
+<p>llama.cpp builds on ggml to provide model inference, command-line tools and a server. ggml is the lower-level tensor computation library. That distinction is useful when investigating a problem: graph allocation and tensor execution belong to a different layer from prompt handling or an HTTP response. Follow the source owning the responsibility rather than treating every component in an inference application as the same runtime. <span class="src-type">[<a href="https://github.com/ggml-org/llama.cpp/blob/master/README.md" rel="noopener noreferrer">llama.cpp and its ggml foundation</a>; <a href="https://github.com/ggml-org/ggml/blob/master/examples/simple/simple-backend.cpp" rel="noopener noreferrer">ggml backend matrix-multiplication example</a>]</span></p></section>
 
   
 <h2>Frequently Asked Questions</h2>
 <div class="faq-item">
   <div class="faq-question">What language is ggml written in?</div>
-  <div class="faq-answer">ggml is primarily implemented in C and C++ and CUDA.</div>
+  <div class="faq-answer">ggml is implemented in C and C++. ggml is built on CUDA.</div>
 </div>
 <div class="faq-item">
   <div class="faq-question">When was ggml first released?</div>

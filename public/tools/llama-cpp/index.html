@@ -22,7 +22,7 @@
   <meta name="twitter:title" content="What is llama.cpp written in? C++ and C | Language Lineage" />
   <meta name="twitter:description" content="llama.cpp is written in C++ and C. llama.cpp was first released in 2023. Explore the full lineage." />
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What is llama.cpp written in?","description":"llama.cpp is written in C++ and C. llama.cpp was first released in 2023. Explore the full lineage.","url":"https://www.languagelineage.org/tools/llama-cpp","datePublished":"2023-01-01","dateModified":"2026-11-13","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":{"@type":"SoftwareApplication","name":"llama.cpp","dateCreated":"2023"}}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is llama.cpp written in?","acceptedAnswer":{"@type":"Answer","text":"llama.cpp is primarily implemented in C++ and C."}},{"@type":"Question","name":"When was llama.cpp first released?","acceptedAnswer":{"@type":"Answer","text":"llama.cpp was first released in 2023."}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is llama.cpp written in?","acceptedAnswer":{"@type":"Answer","text":"llama.cpp is implemented in C++ and C."}},{"@type":"Question","name":"When was llama.cpp first released?","acceptedAnswer":{"@type":"Answer","text":"llama.cpp was first released in 2023."}}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://www.languagelineage.org/tools"},{"@type":"ListItem","position":3,"name":"llama.cpp","item":"https://www.languagelineage.org/tools/llama-cpp"}]}</script>
 </head>
 <body class="seo-page">
@@ -65,20 +65,41 @@
 </figure>
 
 
-  <p class="tool-intro">LLM inference engine in C/C++, built on the ggml tensor library.</p>
+  <p>llama.cpp is a C/C++ inference project that runs language and vision-language models across several hardware backends. It builds on ggml and supplies applications as well as a library interface. Its portability comes from separating model handling and generation control from the tensor operations performed by a selected CPU or accelerator backend. <span class="src-type">[<a href="https://github.com/ggml-org/llama.cpp/blob/master/README.md" rel="noopener noreferrer">llama.cpp architecture and backends</a>]</span></p>
 
   <h2 class="lang-written-q">What is llama.cpp written in?</h2>
   <div class="answer-box">Its runtime is implemented in <strong>C++ and C</strong> (reported).</div>
-  
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#a-runtime-model-file-and-server-are-different-things">A runtime, model file and server are different things</a></li>
+    <li><a href="#follow-one-generation-loop-through-the-code">Follow one generation loop through the code</a></li>
+    <li><a href="#what-cpu-and-gpu-offload-mean-here">What CPU and GPU offload mean here</a></li>
+    <li><a href="#what-to-check-when-reading-a-performance-claim">What to check when reading a performance claim</a></li>
+    <li><a href="#spot-something-wrong">Spot something wrong?</a></li>
+  </ol>
+</nav>
 
   
 
+
+  <section class="intent-section"><h2 id="a-runtime-model-file-and-server-are-different-things">A runtime, model file and server are different things</h2>
+<p>The project offers command-line inference and an API server, while model data is loaded separately. Its minimal example accepts a GGUF model path, initializes the backend and loads the model before creating an inference context. Downloading weights is therefore not equivalent to having the execution machinery that interprets them. The runtime supplies the operations and control flow needed to turn those weights into output. <span class="src-type">[<a href="https://github.com/ggml-org/llama.cpp/blob/master/README.md" rel="noopener noreferrer">llama.cpp architecture and backends</a>; <a href="https://github.com/ggml-org/llama.cpp/blob/master/examples/simple/simple.cpp" rel="noopener noreferrer">llama.cpp minimal generation example</a>]</span></p>
+<p>ggml supplies the tensor foundation beneath llama.cpp. The application layer adds model-specific loading, tokenization, inference state and generation control. This separation is helpful when reading the source: a failure parsing a model file and a slow matrix operation are problems at different layers, even when both occur during one command. The graph describes implementation provenance rather than collapsing all those responsibilities into one name. <span class="src-type">[<a href="https://github.com/ggml-org/llama.cpp/blob/master/README.md" rel="noopener noreferrer">llama.cpp architecture and backends</a>; <a href="https://github.com/ggml-org/llama.cpp/blob/master/examples/simple/simple.cpp" rel="noopener noreferrer">llama.cpp minimal generation example</a>]</span></p></section>
+<section class="intent-section"><h2 id="follow-one-generation-loop-through-the-code">Follow one generation loop through the code</h2>
+<p>The minimal example obtains a vocabulary from the model and tokenizes the prompt. It creates a context with a configured capacity, initializes a sampler and prepares a batch containing prompt tokens. For the decoder path, it evaluates that batch, samples the next token, checks for an end-of-generation token and converts the selected token into printable text. It then prepares the next batch and repeats. <span class="src-type">[<a href="https://github.com/ggml-org/llama.cpp/blob/master/examples/simple/simple.cpp" rel="noopener noreferrer">llama.cpp minimal generation example</a>]</span></p>
+<p>The sequence matters: evaluating a model produces information used by the sampler; sampling chooses a token; converting a token to a text piece makes it printable. These are separate operations. A stream of visible text is the application’s presentation of repeated inference steps, not evidence that the tensor engine directly emits complete words or sentences in one calculation. <span class="src-type">[<a href="https://github.com/ggml-org/llama.cpp/blob/master/examples/simple/simple.cpp" rel="noopener noreferrer">llama.cpp minimal generation example</a>]</span></p></section>
+<section class="intent-section"><h2 id="what-cpu-and-gpu-offload-mean-here">What CPU and GPU offload mean here</h2>
+<p>The source example exposes a GPU-layer setting as a model-loading parameter. The project also documents CPU/GPU hybrid inference and several accelerator backends, including CUDA and Metal. Execution therefore depends on the build, backend and offload configuration. The project being implemented in C/C++ does not determine which physical device performs every tensor operation. <span class="src-type">[<a href="https://github.com/ggml-org/llama.cpp/blob/master/examples/simple/simple.cpp" rel="noopener noreferrer">llama.cpp minimal generation example</a>; <a href="https://github.com/ggml-org/llama.cpp/blob/master/README.md" rel="noopener noreferrer">llama.cpp architecture and backends</a>]</span></p>
+<p>The README describes quantized model support and CPU-specific instruction optimizations alongside accelerator kernels. These are different approaches to executing inference efficiently. A low-bit model representation and a GPU backend are not interchangeable settings: one concerns how values are represented, while the other concerns where supported operations execute. Both must be understood when comparing configurations. <span class="src-type">[<a href="https://github.com/ggml-org/llama.cpp/blob/master/README.md" rel="noopener noreferrer">llama.cpp architecture and backends</a>]</span></p></section>
+<section class="intent-section"><h2 id="what-to-check-when-reading-a-performance-claim">What to check when reading a performance claim</h2>
+<p>Identify the model, numerical representation, device backend and offload setting before treating two runs as equivalent. The minimal example also distinguishes prompt evaluation from repeated token generation in its control flow. Use that structure to ask which part of the workload a timing covers. A result from one configuration does not establish a universal property of the runtime or its implementation language. <span class="src-type">[<a href="https://github.com/ggml-org/llama.cpp/blob/master/examples/simple/simple.cpp" rel="noopener noreferrer">llama.cpp minimal generation example</a>; <a href="https://github.com/ggml-org/llama.cpp/blob/master/README.md" rel="noopener noreferrer">llama.cpp architecture and backends</a>]</span></p></section>
 
   
 <h2>Frequently Asked Questions</h2>
 <div class="faq-item">
   <div class="faq-question">What language is llama.cpp written in?</div>
-  <div class="faq-answer">llama.cpp is primarily implemented in C++ and C.</div>
+  <div class="faq-answer">llama.cpp is implemented in C++ and C.</div>
 </div>
 <div class="faq-item">
   <div class="faq-question">When was llama.cpp first released?</div>

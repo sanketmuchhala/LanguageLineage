@@ -22,7 +22,7 @@
   <meta name="twitter:title" content="What is PyTorch written in? C++ and Python | Language Lineage" />
   <meta name="twitter:description" content="PyTorch is written in C++ and Python, built on CUDA. PyTorch was first released in 2016. Explore the full lineage." />
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What is PyTorch written in?","description":"PyTorch is written in C++ and Python, built on CUDA. PyTorch was first released in 2016. Explore the full lineage.","url":"https://www.languagelineage.org/tools/pytorch","datePublished":"2016-01-01","dateModified":"2026-11-13","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":{"@type":"SoftwareApplication","name":"PyTorch","dateCreated":"2016"}}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is PyTorch written in?","acceptedAnswer":{"@type":"Answer","text":"PyTorch is primarily implemented in C++ and Python and CUDA."}},{"@type":"Question","name":"When was PyTorch first released?","acceptedAnswer":{"@type":"Answer","text":"PyTorch was first released in 2016."}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is PyTorch written in?","acceptedAnswer":{"@type":"Answer","text":"PyTorch is implemented in C++ and Python. PyTorch is built on CUDA."}},{"@type":"Question","name":"When was PyTorch first released?","acceptedAnswer":{"@type":"Answer","text":"PyTorch was first released in 2016."}}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://www.languagelineage.org/tools"},{"@type":"ListItem","position":3,"name":"PyTorch","item":"https://www.languagelineage.org/tools/pytorch"}]}</script>
 </head>
 <body class="seo-page">
@@ -53,7 +53,7 @@
   </div>
   <div class="lang-logo-tile" style="background:#111820;border-color:#2b3440"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/pytorch/pytorch-original.svg" alt="PyTorch logo" width="56" height="56" loading="eager" decoding="async" /></div>
 </header>
-<div class="spec-rail"><div class="spec-cell"><span class="spec-val"><a href="/languages/cxx">C++</a>, <a href="/languages/python">Python</a>, <a href="/tools/cuda">CUDA</a></span><span class="spec-lab">Written in</span></div><div class="spec-cell"><span class="spec-val">2016</span><span class="spec-lab">First released</span></div></div>
+<div class="spec-rail"><div class="spec-cell"><span class="spec-val"><a href="/languages/cxx">C++</a>, <a href="/languages/python">Python</a></span><span class="spec-lab">Written in</span></div><div class="spec-cell"><span class="spec-val"><a href="/tools/cuda">CUDA</a></span><span class="spec-lab">Built on</span></div><div class="spec-cell"><span class="spec-val">2016</span><span class="spec-lab">First released</span></div></div>
 <figure class="rel-map">
   <svg viewBox="0 0 760 224" role="img" aria-label="PyTorch relationship map" preserveAspectRatio="xMidYMid meet">
     <text x="150" y="20" text-anchor="middle" class="rel-col-head">Built from</text>
@@ -65,20 +65,41 @@
 </figure>
 
 
-  <p class="tool-intro">Deep learning framework originally from Meta AI.</p>
+  <p>PyTorch combines tensor computation with automatic differentiation. Its Python interface lets an application describe operations and neural-network modules, while tensors may live on a CPU or an accelerator. The useful implementation question is how those pieces cooperate: the Python program, the differentiation machinery and the backend executing each operation do different jobs. <span class="src-type">[<a href="https://github.com/pytorch/pytorch/blob/main/README.md" rel="noopener noreferrer">PyTorch components and architecture</a>]</span></p>
 
   <h2 class="lang-written-q">What is PyTorch written in?</h2>
-  <div class="answer-box">Its runtime is implemented in <strong>C++, Python, and CUDA</strong> (documented).</div>
-  
+  <div class="answer-box">PyTorch is built on <strong>CUDA</strong> (documented). Its runtime is implemented in <strong>C++ and Python</strong> (documented).</div>
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#tensors-are-the-boundary-between-application-code-and-comput">Tensors are the boundary between application code and computation</a></li>
+    <li><a href="#what-autograd-records-during-a-forward-pass">What autograd records during a forward pass</a></li>
+    <li><a href="#what-changes-when-a-tensor-lives-on-cuda">What changes when a tensor lives on CUDA</a></li>
+    <li><a href="#how-to-investigate-a-pytorch-execution">How to investigate a PyTorch execution</a></li>
+    <li><a href="#spot-something-wrong">Spot something wrong?</a></li>
+  </ol>
+</nav>
 
   
 
+
+  <section class="intent-section"><h2 id="tensors-are-the-boundary-between-application-code-and-comput">Tensors are the boundary between application code and computation</h2>
+<p>A tensor is an array with properties such as shape, element type and device placement. PyTorch exposes indexing, linear algebra, reductions and other operations through its tensor library. A model expressed in Python composes those operations; the arithmetic does not need to be implemented as a Python loop over every element. This separation is the reason a convenient application language and efficient native computation can coexist. <span class="src-type">[<a href="https://github.com/pytorch/pytorch/blob/main/README.md" rel="noopener noreferrer">PyTorch components and architecture</a>]</span></p>
+<p>The top-level package is only part of the system. torch.nn supplies neural-network modules, torch.autograd supplies differentiation, and data utilities help feed work into the computation. A source investigation should follow the component responsible for the behavior in question. Looking only at a model class answers how operations are assembled, not how a backend implements matrix multiplication. <span class="src-type">[<a href="https://github.com/pytorch/pytorch/blob/main/README.md" rel="noopener noreferrer">PyTorch components and architecture</a>]</span></p></section>
+<section class="intent-section"><h2 id="what-autograd-records-during-a-forward-pass">What autograd records during a forward pass</h2>
+<p>PyTorch’s differentiation system uses the operations performed during execution to support reverse-mode automatic differentiation. This lets the structure of a computation depend on the Python program being run. The distinction between tensor arithmetic and gradient tracking matters: the forward pass computes values, while the recorded computation supports calculating derivatives. They are related responsibilities, not two names for the same result. <span class="src-type">[<a href="https://github.com/pytorch/pytorch/blob/main/README.md" rel="noopener noreferrer">PyTorch components and architecture</a>]</span></p>
+<p>The repository describes a Python-first system with several cooperating libraries rather than one monolithic C++ program with a thin wrapper. User-defined layers can be written in Python, and extension mechanisms allow native code where needed. Thus “written in Python and C++” is an implementation summary, not a claim that every operation passes through an identical stack or spends the same fraction of its time in each language. <span class="src-type">[<a href="https://github.com/pytorch/pytorch/blob/main/README.md" rel="noopener noreferrer">PyTorch components and architecture</a>]</span></p></section>
+<section class="intent-section"><h2 id="what-changes-when-a-tensor-lives-on-cuda">What changes when a tensor lives on CUDA</h2>
+<p>A CUDA tensor carries device placement, and operations on it use that device. Moving data and choosing where operations run are explicit concerns. The Python interpreter remains the application’s control layer; GPU execution concerns the work submitted to the accelerator. This distinction helps explain why moving only some tensors can lead to device mismatches rather than automatic acceleration of the whole program. <span class="src-type">[<a href="https://docs.pytorch.org/docs/2.15/notes/cuda.html" rel="noopener noreferrer">PyTorch CUDA semantics</a>]</span></p>
+<p>GPU operations are normally asynchronous. A function can return after queuing work, and an error can surface later. PyTorch documents CUDA events and synchronization for measuring completion accurately. It also uses a caching allocator, so memory visible as reserved by the process is not necessarily all occupied by live tensors. Distinguish live allocation, reserved memory and completed execution before diagnosing a memory or timing problem. <span class="src-type">[<a href="https://docs.pytorch.org/docs/2.15/notes/cuda.html" rel="noopener noreferrer">PyTorch CUDA semantics</a>]</span></p></section>
+<section class="intent-section"><h2 id="how-to-investigate-a-pytorch-execution">How to investigate a PyTorch execution</h2>
+<p>Start with the operation and the device of its inputs. Then separate model composition, differentiation and backend work. This gives a more precise question than asking whether the model “runs in Python”: Python can select and compose an operation whose calculation is implemented elsewhere. The linked execution explainer follows concrete eager and compiled routes; the lineage graph separately records the implementation languages behind the tools involved. <span class="src-type">[<a href="https://github.com/pytorch/pytorch/blob/main/README.md" rel="noopener noreferrer">PyTorch components and architecture</a>]</span></p></section>
 
   
 <h2>Frequently Asked Questions</h2>
 <div class="faq-item">
   <div class="faq-question">What language is PyTorch written in?</div>
-  <div class="faq-answer">PyTorch is primarily implemented in C++ and Python and CUDA.</div>
+  <div class="faq-answer">PyTorch is implemented in C++ and Python. PyTorch is built on CUDA.</div>
 </div>
 <div class="faq-item">
   <div class="faq-question">When was PyTorch first released?</div>

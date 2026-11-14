@@ -1,0 +1,89 @@
+{
+  "node_id": "tool:llama_cpp",
+  "introduction": {
+    "text": "llama.cpp is a C/C++ inference project that runs language and vision-language models across several hardware backends. It builds on ggml and supplies applications as well as a library interface. Its portability comes from separating model handling and generation control from the tensor operations performed by a selected CPU or accelerator backend.",
+    "sources": [
+      "readme"
+    ]
+  },
+  "sections": [
+    {
+      "heading": "A runtime, model file and server are different things",
+      "paragraphs": [
+        {
+          "text": "The project offers command-line inference and an API server, while model data is loaded separately. Its minimal example accepts a GGUF model path, initializes the backend and loads the model before creating an inference context. Downloading weights is therefore not equivalent to having the execution machinery that interprets them. The runtime supplies the operations and control flow needed to turn those weights into output.",
+          "sources": [
+            "readme",
+            "simple"
+          ]
+        },
+        {
+          "text": "ggml supplies the tensor foundation beneath llama.cpp. The application layer adds model-specific loading, tokenization, inference state and generation control. This separation is helpful when reading the source: a failure parsing a model file and a slow matrix operation are problems at different layers, even when both occur during one command. The graph describes implementation provenance rather than collapsing all those responsibilities into one name.",
+          "sources": [
+            "readme",
+            "simple"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "Follow one generation loop through the code",
+      "paragraphs": [
+        {
+          "text": "The minimal example obtains a vocabulary from the model and tokenizes the prompt. It creates a context with a configured capacity, initializes a sampler and prepares a batch containing prompt tokens. For the decoder path, it evaluates that batch, samples the next token, checks for an end-of-generation token and converts the selected token into printable text. It then prepares the next batch and repeats.",
+          "sources": [
+            "simple"
+          ]
+        },
+        {
+          "text": "The sequence matters: evaluating a model produces information used by the sampler; sampling chooses a token; converting a token to a text piece makes it printable. These are separate operations. A stream of visible text is the application’s presentation of repeated inference steps, not evidence that the tensor engine directly emits complete words or sentences in one calculation.",
+          "sources": [
+            "simple"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "What CPU and GPU offload mean here",
+      "paragraphs": [
+        {
+          "text": "The source example exposes a GPU-layer setting as a model-loading parameter. The project also documents CPU/GPU hybrid inference and several accelerator backends, including CUDA and Metal. Execution therefore depends on the build, backend and offload configuration. The project being implemented in C/C++ does not determine which physical device performs every tensor operation.",
+          "sources": [
+            "simple",
+            "readme"
+          ]
+        },
+        {
+          "text": "The README describes quantized model support and CPU-specific instruction optimizations alongside accelerator kernels. These are different approaches to executing inference efficiently. A low-bit model representation and a GPU backend are not interchangeable settings: one concerns how values are represented, while the other concerns where supported operations execute. Both must be understood when comparing configurations.",
+          "sources": [
+            "readme"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "What to check when reading a performance claim",
+      "paragraphs": [
+        {
+          "text": "Identify the model, numerical representation, device backend and offload setting before treating two runs as equivalent. The minimal example also distinguishes prompt evaluation from repeated token generation in its control flow. Use that structure to ask which part of the workload a timing covers. A result from one configuration does not establish a universal property of the runtime or its implementation language.",
+          "sources": [
+            "simple",
+            "readme"
+          ]
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "readme",
+      "title": "llama.cpp architecture and backends",
+      "url": "https://github.com/ggml-org/llama.cpp/blob/master/README.md"
+    },
+    {
+      "id": "simple",
+      "title": "llama.cpp minimal generation example",
+      "url": "https://github.com/ggml-org/llama.cpp/blob/master/examples/simple/simple.cpp"
+    }
+  ]
+}

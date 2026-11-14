@@ -22,7 +22,7 @@
   <meta name="twitter:title" content="CUDA: Implementation, History, and Lineage | Language Lineage" />
   <meta name="twitter:description" content="CUDA's compiler is built on LLVM. CUDA was first released in 2007. Explore the full lineage." />
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What is CUDA written in?","description":"CUDA's compiler is built on LLVM. CUDA was first released in 2007. Explore the full lineage.","url":"https://www.languagelineage.org/tools/cuda","datePublished":"2007-01-01","dateModified":"2026-11-13","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":{"@type":"SoftwareApplication","name":"CUDA","dateCreated":"2007"}}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is CUDA written in?","acceptedAnswer":{"@type":"Answer","text":"CUDA is primarily implemented in LLVM."}},{"@type":"Question","name":"What languages influenced CUDA?","acceptedAnswer":{"@type":"Answer","text":"CUDA was influenced by C++ among others. See the influence section above for the full list."}},{"@type":"Question","name":"When was CUDA first released?","acceptedAnswer":{"@type":"Answer","text":"CUDA was first released in 2007."}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is CUDA written in?","acceptedAnswer":{"@type":"Answer","text":"CUDA's compiler is built on LLVM."}},{"@type":"Question","name":"What languages influenced CUDA?","acceptedAnswer":{"@type":"Answer","text":"CUDA was influenced by C++ among others. See the influence section above for the full list."}},{"@type":"Question","name":"When was CUDA first released?","acceptedAnswer":{"@type":"Answer","text":"CUDA was first released in 2007."}}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://www.languagelineage.org/tools"},{"@type":"ListItem","position":3,"name":"CUDA","item":"https://www.languagelineage.org/tools/cuda"}]}</script>
 </head>
 <body class="seo-page">
@@ -53,7 +53,7 @@
   </div>
   <div class="lang-logo-tile lang-logo-tile--mark" aria-hidden="true">C</div>
 </header>
-<div class="spec-rail"><div class="spec-cell"><span class="spec-val"><a href="/tools/llvm">LLVM</a></span><span class="spec-lab">Written in</span></div><div class="spec-cell"><span class="spec-val">2007</span><span class="spec-lab">First released</span></div><div class="spec-cell"><span class="spec-val">NVIDIA</span><span class="spec-lab">Built by</span></div></div>
+<div class="spec-rail"><div class="spec-cell"><span class="spec-val"><a href="/tools/llvm">LLVM</a></span><span class="spec-lab">Built on</span></div><div class="spec-cell"><span class="spec-val">2007</span><span class="spec-lab">First released</span></div><div class="spec-cell"><span class="spec-val">NVIDIA</span><span class="spec-lab">Built by</span></div></div>
 <figure class="rel-map">
   <svg viewBox="0 0 760 184" role="img" aria-label="CUDA relationship map" preserveAspectRatio="xMidYMid meet">
     <text x="150" y="20" text-anchor="middle" class="rel-col-head">Built from</text>
@@ -65,20 +65,49 @@
 </figure>
 
 
-  <p class="tool-intro">NVIDIA GPU computing platform.</p>
+  <p>CUDA is NVIDIA’s platform for running general-purpose computations on its GPUs. In AI, it supplies part of the machinery underneath a framework: the application describes tensor operations, while GPU code performs the parallel arithmetic. Understanding CUDA means separating the programming model, the compiler toolchain, the runtime libraries and the driver. These are cooperating layers, not interchangeable names for one program. <span class="src-type">[<a href="https://docs.nvidia.com/cuda/cuda-programming-guide/index.html" rel="noopener noreferrer">CUDA Programming Guide overview</a>; <a href="https://github.com/pytorch/pytorch/blob/main/README.md" rel="noopener noreferrer">PyTorch tensors and GPU acceleration</a>]</span></p>
 
   <h2 class="lang-written-q">What is CUDA written in?</h2>
-  <div class="answer-box">The <strong>CUDA</strong> compiler is written in <strong>LLVM</strong> (documented).</div>
-  
+  <div class="answer-box">CUDA compiler is built on <strong>LLVM</strong> (documented).</div>
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#what-cuda-does-in-an-ai-application">What CUDA does in an AI application</a></li>
+    <li><a href="#what-is-cuda-actually-written-in">What is CUDA actually written in?</a></li>
+    <li><a href="#from-cuda-c-to-gpu-instructions">From CUDA C++ to GPU instructions</a></li>
+    <li><a href="#toolkit-runtime-and-driver-which-layer-does-what">Toolkit, runtime and driver: which layer does what?</a></li>
+    <li><a href="#why-a-returned-function-call-may-not-mean-finished-work">Why a returned function call may not mean finished work</a></li>
+    <li><a href="#how-to-read-cuda-s-place-in-the-lineage-graph">How to read CUDA’s place in the lineage graph</a></li>
+    <li><a href="#spot-something-wrong">Spot something wrong?</a></li>
+  </ol>
+</nav>
 
   
 
+
+  <section class="intent-section"><h2 id="what-cuda-does-in-an-ai-application">What CUDA does in an AI application</h2>
+<p>A CUDA application has a host side running on the CPU and a device side running on the GPU. The host starts the application, prepares work and launches GPU functions called kernels. A kernel launch starts many threads that execute that function in parallel. The CPU and GPU can make progress at the same time; moving an operation onto a GPU does not move the entire application there. <span class="src-type">[<a href="https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html" rel="noopener noreferrer">CUDA programming model</a>]</span></p>
+<p>For example, PyTorch tracks which device holds a tensor and performs operations on that device. A Python program can therefore control a calculation whose tensor arithmetic runs on an NVIDIA GPU. CUDA is relevant beneath that interface, even when the application author never writes a CUDA C++ kernel. Device placement still matters: a CPU tensor does not become a CUDA tensor merely because the machine has a GPU. <span class="src-type">[<a href="https://github.com/pytorch/pytorch/blob/main/README.md" rel="noopener noreferrer">PyTorch tensors and GPU acceleration</a>]</span></p></section>
+<section class="intent-section"><h2 id="what-is-cuda-actually-written-in">What is CUDA actually written in?</h2>
+<p>There is no single implementation-language answer for the whole CUDA platform. CUDA C++ describes a language interface used to write host and device code. NVCC is the compiler driver coordinating that build. NVIDIA documents proprietary device compilers and an assembler alongside a separate host C++ compiler. That public documentation does not establish the implementation language of every proprietary component. <span class="src-type">[<a href="https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html" rel="noopener noreferrer">NVCC compilation trajectory</a>]</span></p>
+<p>LLVM belongs to the compiler-infrastructure layer. NVIDIA’s NVVM specification says that NVVM IR is based on LLVM IR and that its LLVM-based compiler produces PTX from NVVM IR. So the lineage edge here describes a compiler foundation. It does not mean CUDA is a program written in a language named LLVM, nor that every piece of CUDA is open source. This article describes documented interfaces and architecture rather than inferring unavailable internals. <span class="src-type">[<a href="https://docs.nvidia.com/cuda/nvvm-ir-spec/index.html" rel="noopener noreferrer">NVVM and LLVM IR</a>]</span></p></section>
+<section class="intent-section"><h2 id="from-cuda-c-to-gpu-instructions">From CUDA C++ to GPU instructions</h2>
+<p>Consider a source file containing CPU control code and GPU kernels. NVCC separates these paths: a supported C++ compiler handles the host portion, while NVIDIA’s device tools compile the GPU portion. The build embeds device images into host objects and links the support libraries. This is why building CUDA code can involve both a host compiler and a GPU toolchain, with different compatibility requirements. <span class="src-type">[<a href="https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html" rel="noopener noreferrer">NVCC compilation trajectory</a>]</span></p>
+<p>Inside the documented compiler path, NVVM IR represents GPU computation using LLVM-derived rules. PTX is a virtual instruction set for NVIDIA GPUs rather than the physical instruction set of one chip. The distinction explains why “LLVM-based,” “PTX” and “runs on the GPU” describe different points in the stack. An intermediate representation is neither the original application source nor proof of a component’s implementation language. <span class="src-type">[<a href="https://docs.nvidia.com/cuda/nvvm-ir-spec/index.html" rel="noopener noreferrer">NVVM and LLVM IR</a>; <a href="https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/cuda-platform.html" rel="noopener noreferrer">CUDA platform components</a>]</span></p></section>
+<section class="intent-section"><h2 id="toolkit-runtime-and-driver-which-layer-does-what">Toolkit, runtime and driver: which layer does what?</h2>
+<p>The CUDA Toolkit contains development tools, headers and libraries. The CUDA runtime is one of those libraries: it exposes operations such as memory allocation, copies and kernel launches. Below it, the NVIDIA driver exposes a lower-level driver API. Applications may use either interface, and the runtime API builds on the driver API. Installing a development toolkit and having a suitable driver are therefore separate concerns. <span class="src-type">[<a href="https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/cuda-platform.html" rel="noopener noreferrer">CUDA platform components</a>]</span></p>
+<p>The GPU also has a compute capability describing its supported features and architectural properties. This is distinct from a toolkit release number. When diagnosing compatibility, keep the GPU capability, driver and toolkit separate rather than treating a single “CUDA version” as a complete description of the machine. NVIDIA links a dedicated compatibility guide from its platform documentation. <span class="src-type">[<a href="https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/cuda-platform.html" rel="noopener noreferrer">CUDA platform components</a>]</span></p></section>
+<section class="intent-section"><h2 id="why-a-returned-function-call-may-not-mean-finished-work">Why a returned function call may not mean finished work</h2>
+<p>CUDA exposes asynchronous execution: a launch can return control to the host before the GPU work has completed. A stream orders operations within a queue, while synchronization establishes when the host or another operation can depend on results. This enables overlapping work, but actual concurrency depends on the hardware and the operations being submitted. Separate streams do not guarantee simultaneous execution. <span class="src-type">[<a href="https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/asynchronous-execution.html" rel="noopener noreferrer">CUDA asynchronous execution</a>]</span></p>
+<p>This changes how timings should be interpreted. Timing only the CPU call can measure the cost of submitting work rather than completing it. NVIDIA’s best-practices guide explains how to use synchronization with CPU timers or CUDA events to measure GPU work. A short Python call is not sufficient evidence that the underlying kernel was fast. <span class="src-type">[<a href="https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#timing" rel="noopener noreferrer">Measuring CUDA execution time</a>]</span></p></section>
+<section class="intent-section"><h2 id="how-to-read-cuda-s-place-in-the-lineage-graph">How to read CUDA’s place in the lineage graph</h2>
+<p>Use the graph’s compiler link to understand the documented NVVM/LLVM foundation, and use the execution articles linked below to follow a particular framework’s route to GPU work. The distinction is useful when reading source: a framework API, compiler intermediate representation and GPU kernel are different kinds of implementation artifact. NVIDIA’s programming model also makes clear that host orchestration and device execution remain separate responsibilities. <span class="src-type">[<a href="https://docs.nvidia.com/cuda/nvvm-ir-spec/index.html" rel="noopener noreferrer">NVVM and LLVM IR</a>; <a href="https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html" rel="noopener noreferrer">CUDA programming model</a>]</span></p></section>
 
   
 <h2>Frequently Asked Questions</h2>
 <div class="faq-item">
   <div class="faq-question">What language is CUDA written in?</div>
-  <div class="faq-answer">CUDA is primarily implemented in LLVM.</div>
+  <div class="faq-answer">CUDA's compiler is built on LLVM.</div>
 </div>
 <div class="faq-item">
   <div class="faq-question">What languages influenced CUDA?</div>

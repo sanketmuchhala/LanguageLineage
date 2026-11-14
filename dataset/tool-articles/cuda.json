@@ -1,0 +1,152 @@
+{
+  "node_id": "tool:cuda",
+  "introduction": {
+    "text": "CUDA is NVIDIA’s platform for running general-purpose computations on its GPUs. In AI, it supplies part of the machinery underneath a framework: the application describes tensor operations, while GPU code performs the parallel arithmetic. Understanding CUDA means separating the programming model, the compiler toolchain, the runtime libraries and the driver. These are cooperating layers, not interchangeable names for one program.",
+    "sources": [
+      "overview",
+      "pytorch"
+    ]
+  },
+  "sections": [
+    {
+      "heading": "What CUDA does in an AI application",
+      "paragraphs": [
+        {
+          "text": "A CUDA application has a host side running on the CPU and a device side running on the GPU. The host starts the application, prepares work and launches GPU functions called kernels. A kernel launch starts many threads that execute that function in parallel. The CPU and GPU can make progress at the same time; moving an operation onto a GPU does not move the entire application there.",
+          "sources": [
+            "model"
+          ]
+        },
+        {
+          "text": "For example, PyTorch tracks which device holds a tensor and performs operations on that device. A Python program can therefore control a calculation whose tensor arithmetic runs on an NVIDIA GPU. CUDA is relevant beneath that interface, even when the application author never writes a CUDA C++ kernel. Device placement still matters: a CPU tensor does not become a CUDA tensor merely because the machine has a GPU.",
+          "sources": [
+            "pytorch"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "What is CUDA actually written in?",
+      "paragraphs": [
+        {
+          "text": "There is no single implementation-language answer for the whole CUDA platform. CUDA C++ describes a language interface used to write host and device code. NVCC is the compiler driver coordinating that build. NVIDIA documents proprietary device compilers and an assembler alongside a separate host C++ compiler. That public documentation does not establish the implementation language of every proprietary component.",
+          "sources": [
+            "nvcc"
+          ]
+        },
+        {
+          "text": "LLVM belongs to the compiler-infrastructure layer. NVIDIA’s NVVM specification says that NVVM IR is based on LLVM IR and that its LLVM-based compiler produces PTX from NVVM IR. So the lineage edge here describes a compiler foundation. It does not mean CUDA is a program written in a language named LLVM, nor that every piece of CUDA is open source. This article describes documented interfaces and architecture rather than inferring unavailable internals.",
+          "sources": [
+            "nvvm"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "From CUDA C++ to GPU instructions",
+      "paragraphs": [
+        {
+          "text": "Consider a source file containing CPU control code and GPU kernels. NVCC separates these paths: a supported C++ compiler handles the host portion, while NVIDIA’s device tools compile the GPU portion. The build embeds device images into host objects and links the support libraries. This is why building CUDA code can involve both a host compiler and a GPU toolchain, with different compatibility requirements.",
+          "sources": [
+            "nvcc"
+          ]
+        },
+        {
+          "text": "Inside the documented compiler path, NVVM IR represents GPU computation using LLVM-derived rules. PTX is a virtual instruction set for NVIDIA GPUs rather than the physical instruction set of one chip. The distinction explains why “LLVM-based,” “PTX” and “runs on the GPU” describe different points in the stack. An intermediate representation is neither the original application source nor proof of a component’s implementation language.",
+          "sources": [
+            "nvvm",
+            "platform"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "Toolkit, runtime and driver: which layer does what?",
+      "paragraphs": [
+        {
+          "text": "The CUDA Toolkit contains development tools, headers and libraries. The CUDA runtime is one of those libraries: it exposes operations such as memory allocation, copies and kernel launches. Below it, the NVIDIA driver exposes a lower-level driver API. Applications may use either interface, and the runtime API builds on the driver API. Installing a development toolkit and having a suitable driver are therefore separate concerns.",
+          "sources": [
+            "platform"
+          ]
+        },
+        {
+          "text": "The GPU also has a compute capability describing its supported features and architectural properties. This is distinct from a toolkit release number. When diagnosing compatibility, keep the GPU capability, driver and toolkit separate rather than treating a single “CUDA version” as a complete description of the machine. NVIDIA links a dedicated compatibility guide from its platform documentation.",
+          "sources": [
+            "platform"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "Why a returned function call may not mean finished work",
+      "paragraphs": [
+        {
+          "text": "CUDA exposes asynchronous execution: a launch can return control to the host before the GPU work has completed. A stream orders operations within a queue, while synchronization establishes when the host or another operation can depend on results. This enables overlapping work, but actual concurrency depends on the hardware and the operations being submitted. Separate streams do not guarantee simultaneous execution.",
+          "sources": [
+            "async"
+          ]
+        },
+        {
+          "text": "This changes how timings should be interpreted. Timing only the CPU call can measure the cost of submitting work rather than completing it. NVIDIA’s best-practices guide explains how to use synchronization with CPU timers or CUDA events to measure GPU work. A short Python call is not sufficient evidence that the underlying kernel was fast.",
+          "sources": [
+            "timing"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "How to read CUDA’s place in the lineage graph",
+      "paragraphs": [
+        {
+          "text": "Use the graph’s compiler link to understand the documented NVVM/LLVM foundation, and use the execution articles linked below to follow a particular framework’s route to GPU work. The distinction is useful when reading source: a framework API, compiler intermediate representation and GPU kernel are different kinds of implementation artifact. NVIDIA’s programming model also makes clear that host orchestration and device execution remain separate responsibilities.",
+          "sources": [
+            "nvvm",
+            "model"
+          ]
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "platform",
+      "title": "CUDA platform components",
+      "url": "https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/cuda-platform.html"
+    },
+    {
+      "id": "model",
+      "title": "CUDA programming model",
+      "url": "https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html"
+    },
+    {
+      "id": "nvcc",
+      "title": "NVCC compilation trajectory",
+      "url": "https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html"
+    },
+    {
+      "id": "nvvm",
+      "title": "NVVM and LLVM IR",
+      "url": "https://docs.nvidia.com/cuda/nvvm-ir-spec/index.html"
+    },
+    {
+      "id": "async",
+      "title": "CUDA asynchronous execution",
+      "url": "https://docs.nvidia.com/cuda/cuda-programming-guide/02-basics/asynchronous-execution.html"
+    },
+    {
+      "id": "pytorch",
+      "title": "PyTorch tensors and GPU acceleration",
+      "url": "https://github.com/pytorch/pytorch/blob/main/README.md"
+    },
+    {
+      "id": "overview",
+      "title": "CUDA Programming Guide overview",
+      "url": "https://docs.nvidia.com/cuda/cuda-programming-guide/index.html"
+    },
+    {
+      "id": "timing",
+      "title": "Measuring CUDA execution time",
+      "url": "https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html#timing"
+    }
+  ]
+}

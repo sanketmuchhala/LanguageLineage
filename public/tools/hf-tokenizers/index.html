@@ -22,7 +22,7 @@
   <meta name="twitter:title" content="What is HF Tokenizers written in? Rust | Language Lineage" />
   <meta name="twitter:description" content="HF Tokenizers is written in Rust. HF Tokenizers was first released in 2019. Explore the full lineage." />
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"What is HF Tokenizers written in?","description":"HF Tokenizers is written in Rust. HF Tokenizers was first released in 2019. Explore the full lineage.","url":"https://www.languagelineage.org/tools/hf-tokenizers","datePublished":"2019-01-01","dateModified":"2026-11-13","author":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"publisher":{"@type":"Organization","name":"Language Lineage","url":"https://www.languagelineage.org"},"about":{"@type":"SoftwareApplication","name":"HF Tokenizers","dateCreated":"2019"}}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is HF Tokenizers written in?","acceptedAnswer":{"@type":"Answer","text":"HF Tokenizers is primarily implemented in Rust."}},{"@type":"Question","name":"When was HF Tokenizers first released?","acceptedAnswer":{"@type":"Answer","text":"HF Tokenizers was first released in 2019."}}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What language is HF Tokenizers written in?","acceptedAnswer":{"@type":"Answer","text":"HF Tokenizers is implemented in Rust."}},{"@type":"Question","name":"When was HF Tokenizers first released?","acceptedAnswer":{"@type":"Answer","text":"HF Tokenizers was first released in 2019."}}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.languagelineage.org"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://www.languagelineage.org/tools"},{"@type":"ListItem","position":3,"name":"HF Tokenizers","item":"https://www.languagelineage.org/tools/hf-tokenizers"}]}</script>
 </head>
 <body class="seo-page">
@@ -65,20 +65,40 @@
 </figure>
 
 
-  <p class="tool-intro">Hugging Face tokenization library with a Rust reference implementation and bindings for other languages.</p>
+  <p>Hugging Face Tokenizers converts text into token IDs and decodes IDs back into text. Its reference implementation is Rust, with bindings for application languages including Python. It occupies a different layer from the neural model: tokenization prepares the symbols a model consumes, while model execution performs numerical computation over those symbols and learned parameters. <span class="src-type">[<a href="https://github.com/huggingface/tokenizers/blob/main/README.md" rel="noopener noreferrer">Tokenizers implementation and bindings</a>; <a href="https://github.com/huggingface/transformers/blob/main/docs/source/en/generation_strategies.md" rel="noopener noreferrer">Tokenizer and model boundaries in generation</a>]</span></p>
 
   <h2 class="lang-written-q">What is HF Tokenizers written in?</h2>
   <div class="answer-box">Its runtime is implemented in <strong>Rust</strong> (well-documented).</div>
-  
+  <nav class="page-toc" aria-label="Page contents">
+  <p class="page-toc-label">On this page</p>
+  <ol class="page-toc-list">
+    <li><a href="#what-the-text-to-id-boundary-does">What the text-to-ID boundary does</a></li>
+    <li><a href="#the-stages-inside-tokenization">The stages inside tokenization</a></li>
+    <li><a href="#rust-execution-behind-a-python-facing-api">Rust execution behind a Python-facing API</a></li>
+    <li><a href="#what-a-token-count-does-and-does-not-tell-you">What a token count does and does not tell you</a></li>
+    <li><a href="#spot-something-wrong">Spot something wrong?</a></li>
+  </ol>
+</nav>
 
   
 
+
+  <section class="intent-section"><h2 id="what-the-text-to-id-boundary-does">What the text-to-ID boundary does</h2>
+<p>An application begins with text, but model inputs contain numerical token IDs. The tokenizer owns the conversion rules and vocabulary that connect those representations. In the Transformers generation example, the tokenizer is loaded alongside the model, encodes the prompt and later decodes the generated IDs. A tokenizer and a language model are therefore cooperating components, not interchangeable names for the same computation. <span class="src-type">[<a href="https://github.com/huggingface/transformers/blob/main/docs/source/en/generation_strategies.md" rel="noopener noreferrer">Tokenizer and model boundaries in generation</a>]</span></p></section>
+<section class="intent-section"><h2 id="the-stages-inside-tokenization">The stages inside tokenization</h2>
+<p>The documented pipeline separates normalization, pre-tokenization, the tokenization model and post-processing. Normalization can apply Unicode or case transformations. Pre-tokenization divides the input into pieces before the model applies rules such as BPE or WordPiece. That tokenization model maps pieces to vocabulary IDs; it is not the neural network predicting the next token. Post-processing can add special tokens required by the downstream model. <span class="src-type">[<a href="https://huggingface.co/docs/tokenizers/pipeline" rel="noopener noreferrer">Tokenization pipeline stages</a>]</span></p>
+<p>These stages explain why tokenization is not simply splitting a sentence on spaces. For example, a pre-tokenizer may split punctuation and the tokenization model may split a word into smaller units. Changing normalization or pre-tokenization changes the input presented to the learned tokenizer. The documentation therefore warns that such changes can require retraining the tokenizer. <span class="src-type">[<a href="https://huggingface.co/docs/tokenizers/pipeline" rel="noopener noreferrer">Tokenization pipeline stages</a>]</span></p></section>
+<section class="intent-section"><h2 id="rust-execution-behind-a-python-facing-api">Rust execution behind a Python-facing API</h2>
+<p>The repository identifies Rust as the reference implementation and lists the supported bindings separately. Using the Python package does not imply that the core tokenization algorithm is a Python loop. This is a useful example of implementation provenance: an application-level API can delegate work to a native library while preserving a familiar interface for the caller. <span class="src-type">[<a href="https://github.com/huggingface/tokenizers/blob/main/README.md" rel="noopener noreferrer">Tokenizers implementation and bindings</a>]</span></p>
+<p>The current development README also distinguishes a configurable Tokenizer from a compiled tokenizer used to encode and decode, and documents a transition toward version 1.0. APIs and available features therefore depend on the installed release. When reproducing behavior, record the tokenizer configuration and package version rather than assuming the latest development example exactly matches a stable installation. <span class="src-type">[<a href="https://github.com/huggingface/tokenizers/blob/main/README.md" rel="noopener noreferrer">Tokenizers implementation and bindings</a>]</span></p></section>
+<section class="intent-section"><h2 id="what-a-token-count-does-and-does-not-tell-you">What a token count does and does not tell you</h2>
+<p>A token count measures the length of the encoded sequence under a particular tokenizer. It is not generally a count of words, characters or visible output fragments. The generation workflow also separates choosing output IDs from decoding them into text. When text appears surprising, inspect both the generated IDs and the tokenizer configuration before attributing the behavior entirely to the model’s numerical computation. <span class="src-type">[<a href="https://huggingface.co/docs/tokenizers/pipeline" rel="noopener noreferrer">Tokenization pipeline stages</a>; <a href="https://github.com/huggingface/transformers/blob/main/docs/source/en/generation_strategies.md" rel="noopener noreferrer">Tokenizer and model boundaries in generation</a>]</span></p></section>
 
   
 <h2>Frequently Asked Questions</h2>
 <div class="faq-item">
   <div class="faq-question">What language is HF Tokenizers written in?</div>
-  <div class="faq-answer">HF Tokenizers is primarily implemented in Rust.</div>
+  <div class="faq-answer">HF Tokenizers is implemented in Rust.</div>
 </div>
 <div class="faq-item">
   <div class="faq-question">When was HF Tokenizers first released?</div>

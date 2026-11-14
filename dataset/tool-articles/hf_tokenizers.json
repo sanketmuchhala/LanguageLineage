@@ -1,0 +1,86 @@
+{
+  "node_id": "tool:hf_tokenizers",
+  "introduction": {
+    "text": "Hugging Face Tokenizers converts text into token IDs and decodes IDs back into text. Its reference implementation is Rust, with bindings for application languages including Python. It occupies a different layer from the neural model: tokenization prepares the symbols a model consumes, while model execution performs numerical computation over those symbols and learned parameters.",
+    "sources": [
+      "readme",
+      "generation"
+    ]
+  },
+  "sections": [
+    {
+      "heading": "What the text-to-ID boundary does",
+      "paragraphs": [
+        {
+          "text": "An application begins with text, but model inputs contain numerical token IDs. The tokenizer owns the conversion rules and vocabulary that connect those representations. In the Transformers generation example, the tokenizer is loaded alongside the model, encodes the prompt and later decodes the generated IDs. A tokenizer and a language model are therefore cooperating components, not interchangeable names for the same computation.",
+          "sources": [
+            "generation"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "The stages inside tokenization",
+      "paragraphs": [
+        {
+          "text": "The documented pipeline separates normalization, pre-tokenization, the tokenization model and post-processing. Normalization can apply Unicode or case transformations. Pre-tokenization divides the input into pieces before the model applies rules such as BPE or WordPiece. That tokenization model maps pieces to vocabulary IDs; it is not the neural network predicting the next token. Post-processing can add special tokens required by the downstream model.",
+          "sources": [
+            "pipeline"
+          ]
+        },
+        {
+          "text": "These stages explain why tokenization is not simply splitting a sentence on spaces. For example, a pre-tokenizer may split punctuation and the tokenization model may split a word into smaller units. Changing normalization or pre-tokenization changes the input presented to the learned tokenizer. The documentation therefore warns that such changes can require retraining the tokenizer.",
+          "sources": [
+            "pipeline"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "Rust execution behind a Python-facing API",
+      "paragraphs": [
+        {
+          "text": "The repository identifies Rust as the reference implementation and lists the supported bindings separately. Using the Python package does not imply that the core tokenization algorithm is a Python loop. This is a useful example of implementation provenance: an application-level API can delegate work to a native library while preserving a familiar interface for the caller.",
+          "sources": [
+            "readme"
+          ]
+        },
+        {
+          "text": "The current development README also distinguishes a configurable Tokenizer from a compiled tokenizer used to encode and decode, and documents a transition toward version 1.0. APIs and available features therefore depend on the installed release. When reproducing behavior, record the tokenizer configuration and package version rather than assuming the latest development example exactly matches a stable installation.",
+          "sources": [
+            "readme"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "What a token count does and does not tell you",
+      "paragraphs": [
+        {
+          "text": "A token count measures the length of the encoded sequence under a particular tokenizer. It is not generally a count of words, characters or visible output fragments. The generation workflow also separates choosing output IDs from decoding them into text. When text appears surprising, inspect both the generated IDs and the tokenizer configuration before attributing the behavior entirely to the model’s numerical computation.",
+          "sources": [
+            "pipeline",
+            "generation"
+          ]
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "readme",
+      "title": "Tokenizers implementation and bindings",
+      "url": "https://github.com/huggingface/tokenizers/blob/main/README.md"
+    },
+    {
+      "id": "pipeline",
+      "title": "Tokenization pipeline stages",
+      "url": "https://huggingface.co/docs/tokenizers/pipeline"
+    },
+    {
+      "id": "generation",
+      "title": "Tokenizer and model boundaries in generation",
+      "url": "https://github.com/huggingface/transformers/blob/main/docs/source/en/generation_strategies.md"
+    }
+  ]
+}
